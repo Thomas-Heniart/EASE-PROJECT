@@ -49646,7 +49646,7 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'submitStep8',
     value: function submitStep8() {
-      window.location.href = '/teams#/teams/' + this.state.teamId;
+      window.location.href = '/';
     }
   }, {
     key: 'handleInput',
@@ -50167,13 +50167,13 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
 
       if (this.canSkip()) {
         post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(function (response) {
-          window.location.href = '/teams#/teams/' + _this5.state.teamUser.team_id;
+          window.location.href = '/';
           //        this.props.history.push('/teams/' + this.state.teamUser.team_id);
         });
       } else {
         post_api.common.registration(this.state.teamUser.email, this.state.username, this.state.password, null, this.state.code, false).then(function (r) {
           post_api.teams.finalizeRegistration(_this5.props.common.ws_id, _this5.state.fname, _this5.state.lname, _this5.state.username, _this5.state.jobRole, _this5.state.jobDetails, _this5.state.code).then(function (response) {
-            window.location.href = '/teams#/teams/' + _this5.state.teamUser.team_id;
+            window.location.href = '/';
             //          this.props.history.push('/teams/' + this.state.teamUser.team_id);
           });
         });
@@ -52445,7 +52445,7 @@ var FirstStepAddUser2 = function (_React$Component2) {
           ),
           React.createElement(
             _semanticUiReact.Form,
-            { onSubmit: this.props.validateStep },
+            { onSubmit: this.props.validateStep, error: this.props.errorMessage.length > 0 },
             React.createElement(
               _semanticUiReact.Form.Group,
               null,
@@ -52492,8 +52492,9 @@ var FirstStepAddUser2 = function (_React$Component2) {
               value: this.props.value,
               onChange: this.props.dropdownChange,
               renderLabel: _renderHelpers.renderRoomLabel,
-              placeholder: 'Tag users here...',
-              label: 'Team(s)' }),
+              placeholder: 'Choose room(s)',
+              label: 'Room(s)' }),
+            React.createElement(_semanticUiReact.Message, { error: true, content: this.props.errorMessage }),
             React.createElement(
               _semanticUiReact.Form.Field,
               null,
@@ -52687,6 +52688,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
       options: [],
       value: [],
       step: 0,
+      firstStepErrorMessage: '',
       channelStep: 0,
       maxChannelStep: 0
     };
@@ -52739,13 +52741,15 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
       var _this7 = this;
 
       e.preventDefault();
-      console.log('lala');
+      this.setState({ firstStepErrorMessage: '' });
       var channels = this.state.value.map(function (item) {
         return (0, _helperFunctions.selectChannelFromListById)(_this7.state.channels, item);
       });
       if (!channels.length) {
         this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
           _this7.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+        }).catch(function (err) {
+          _this7.setState({ firstStepErrorMessage: err });
         });
         return;
       }
@@ -52772,6 +52776,8 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
           });
           _this7.setState({ step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length, user_id: user_id });
         });
+      }).catch(function (err) {
+        _this7.setState({ firstStepErrorMessage: err });
       });
     }
   }, {
@@ -52979,6 +52985,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               validateStep: this.validateFirstStep,
               options: this.state.options,
               value: this.state.value,
+              errorMessage: this.state.firstStepErrorMessage,
               dropdownChange: this.dropdownChange,
               dispatch: this.props.dispatch }),
             this.state.step === 1 && React.createElement(SecondStep, { key: '2',

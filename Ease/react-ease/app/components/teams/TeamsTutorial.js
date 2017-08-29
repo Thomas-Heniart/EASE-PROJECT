@@ -60,7 +60,7 @@ class TeamsTutorial extends React.Component {
   skipTutorial(){
     if (this.state.enabledTooltip != null)
       ReactTooltip.hide(this.getRef(this.state.step));
-    this.props.dispatch(setTeamsTutorial(false));
+    this.props.dispatch(setTeamsTutorial(true));
   }
   incrementStep(){
     var state = {...this.state};

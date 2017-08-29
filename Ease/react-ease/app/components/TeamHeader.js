@@ -2,6 +2,9 @@ var React = require('react');
 var classnames = require('classnames');
 var TeamAddAppsButton = require('./TeamAddAppsButton');
 var EaseMainNavbar = require('./common/EaseMainNavbar');
+import { NavLink } from 'react-router-dom';
+import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+
 function TeamHeader(props){
   return (
       <header id="client_header">
@@ -11,30 +14,26 @@ function TeamHeader(props){
             <div className="channel_title">
               <div id="channel_name_container" className="channel_name_container">
                             <span id="channel_name" className="channel_name">
-                              <i className={classnames("fa fa-user icon_wrapper", props.icons[props.selectedItem.type])}/>
-                              {props.selectedItem.item.name ? props.selectedItem.item.name : props.selectedItem.item.username}
+                              <i className={classnames("fa icon_wrapper", props.item.username != undefined ? 'fa-user' : 'fa-users')}/>
+                              {props.item.name ? props.item.name : props.item.username}
                             </span>
-                <button className={classnames("button-unstyle mrgnLeft5", props.flexActive ? 'active' : '')}
-                        data-tip="Room Settings"
-                        id="open_card_button"
-                        onClick={props.toggleFlexFunc}>
+                <NavLink class="mrgnLeft5" to={`${props.match.url}/flexPanel`} id="open_card_button">
                   <i className="fa fa-cog"/>
-                </button>
+                </NavLink>
               </div>
               <div className="channel_header_info">
-                {props.selectedItem.item.apps &&
                 <div className="channel_header_info_item" id="apps_number">
                   <i className="icon_left fa fa-share-alt-square"/>
-                  <span className="value">{props.selectedItem.item.apps.length}</span>
-                </div>}
-                {props.selectedItem.item.userIds &&
+                  <span className="value">{props.appsLength}</span>
+                </div>
+                {props.item.userIds &&
                 <div className="channel_header_info_item" id="users_number">
                   <i className="icon_left fa fa-user-o"/>
-                  <span className="value">{props.selectedItem.item.userIds.length}</span>
+                  <span className="value">{props.item.userIds.length}</span>
                 </div>}
-                {props.selectedItem.type === 'channel' && props.selectedItem.item.purpose.length > 0 &&
+                {props.purpose != undefined && props.item.purpose.length > 0 &&
                 <div className="channel_header_info_item" id="channel_purpose">
-                  <span className="value">{props.selectedItem.item.purpose}</span>
+                  <span className="value">{props.item.purpose}</span>
                 </div>}
               </div>
             </div>

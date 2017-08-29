@@ -4,12 +4,15 @@ import {showTeamMenu} from "../actions/teamActions";
 import * as channelActions from "../actions/channelActions";
 import * as userActions from "../actions/userActions";
 import * as teamModalsActions from "../actions/teamModalActions";
+import {isAdmin} from "../utils/helperFunctions";
+import { NavLink } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
 import {findDOMNode} from 'react-dom';
 
 function ChannelList(props){
   return (
       <div className="section-holder" id="team_channels">
+        {isAdmin(props.me.role) &&
         <button className="heading-button button-unstyle"
                 ref={(ref) => {window.refs.roomAdd = ref}}
                 data-tip="Create Room"
@@ -17,7 +20,7 @@ function ChannelList(props){
                 id="new_channel_button"
                 onClick={e => {props.dispatch(teamModalsActions.showAddTeamChannelModal(true))}}>
           <i className="fa fa-plus-square-o"/>
-        </button>
+        </button>}
         <div className="section-header" onClick={e => {props.dispatch(teamModalsActions.showTeamBrowseChannelsModal(true))}}>
           <span class="inline-tooltipped" data-tip="Browse all Rooms" data-place="right">
             Rooms&nbsp;
@@ -27,15 +30,17 @@ function ChannelList(props){
         <div className="section-list">
           {
             props.items.map(function(channel){
-              return (
-                  <li onClick={(e) => {props.dispatch(channelActions.selectTeamChannel(channel.id))}} className={props.selectedItem.type === 'channel' && props.selectedItem.item.id === channel.id ? "section-list-item channel active" : "section-list-item channel"} key={channel.id}>
+              if (channel.userIds.indexOf(props.me.id) !== -1)
+                return (
+                  <NavLink to={`/teams/${props.team_id}/${channel.id}`} className="section-list-item channel" key={channel.id}>
                     <div className="primary_action channel_name">
                       <i className="fa fa-users prefix"/>
                       <span className="overflow-ellipsis full_flex">{channel.name}</span>
-                      <span class="inline-notification">3</span>
+                      <span class="inline-notification" style={{display:'none'}}>3</span>
                     </div>
-                  </li>
-              )
+                  </NavLink>);
+              else
+                return null
             }, this)
           }
         </div>
@@ -46,13 +51,14 @@ function ChannelList(props){
 function UserList(props){
   return (
       <div className="section-holder" id="team_channels">
+        {isAdmin(props.me.role) &&
         <button className="heading-button button-unstyle"
                 data-tip="Invite new user"
                 data-place="top"
                 id="new_member_button"
                 onClick={e => {props.dispatch(teamModalsActions.showAddTeamUserModal(true))}}>
           <i className="ease-icon fa fa-plus-square-o"/>
-        </button>
+        </button>}
         <div className="section-header">
           <span class="inline-tooltipped" data-tip="Open a Personal Space" data-place="right">
             People
@@ -63,12 +69,12 @@ function UserList(props){
           {
             props.items.map(function(user){
               return (
-                  <li onClick={(e) => {props.dispatch(userActions.selectTeamUser(user.id))}} className={props.selectedItem.type === 'user' && props.selectedItem.item.id === user.id ? "section-list-item channel active" : "section-list-item channel"} key={user.id}>
+                  <NavLink to={`/teams/${props.team_id}/@${user.id}`} className="section-list-item channel" key={user.id}>
                     <div className="primary_action channel_name">
                       <i className="fa fa-user prefix"/>
                       <span className="overflow-ellipsis">{user.username}</span>
                     </div>
-                  </li>
+                  </NavLink>
               )
             }, this)
           }
@@ -80,6 +86,7 @@ function UserList(props){
 @connect((store)=>{
   return {
     team_name: store.team.name,
+    team_id: store.team.id,
     users: store.users.users,
     me: store.users.me,
     channels: store.channels.channels,
@@ -108,10 +115,14 @@ class TeamSideBar extends React.Component{
           <div id="col_channels">
             <div id="col_channels_scroller">
               <ChannelList
+                  me={this.props.me}
                   selectedItem={this.props.selectedItem}
+                  team_id={this.props.team_id}
                   items={this.props.channels}
                   dispatch={this.props.dispatch}/>
               <UserList
+                  me={this.props.me}
+                  team_id={this.props.team_id}
                   selectedItem={this.props.selectedItem}
                   items={this.props.users}
                   dispatch={this.props.dispatch}/>

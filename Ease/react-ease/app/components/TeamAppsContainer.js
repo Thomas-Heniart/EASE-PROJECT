@@ -21,8 +21,7 @@ class TeamAppsContainer extends React.Component{
     return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
-            {this.props.selectedItem.item != null &&
-              this.props.selectedItem.item.apps.map(function(item){
+            {this.props.selectedItem.apps.map(function(item){
                 if (item.type === 'simple')
                   return (
                       <TeamSimpleApp

@@ -4,6 +4,7 @@ var api = require('../utils/api');
 var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var MultiTeamAppAdd = require('./MultiTeamAppAdd');
 import {connect} from "react-redux";
+import {selectUserFromListById} from "../utils/helperFunctions";
 import * as appActions from "../actions/appsActions";
 import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 
@@ -135,13 +136,13 @@ class LinkTeamAppAdd extends React.Component {
     };
     this.state.users = [];
     if (this.props.selectedItem.type === 'channel'){
-      this.props.selectedItem.item.userIds.map(function(item){
+      this.props.item.userIds.map(function(item){
         var user = this.props.userSelectFunc(item);
         user.selected = false;
         this.state.users.push(user);
       }, this);
     } else {
-      var item = this.props.selectedItem.item;
+      var item = this.props.item;
       item.selected = false;
       this.state.users.push(item);
     }
@@ -159,9 +160,9 @@ class LinkTeamAppAdd extends React.Component {
       description: this.state.comment
     };
     if (this.props.selectedItem.type === 'channel')
-      app.channel_id = this.props.selectedItem.item.id;
+      app.channel_id = this.props.item.id;
     else
-      app.team_user_id = this.props.selectedItem.item.id;
+      app.team_user_id = this.props.item.id;
     var selectedUsers = this.state.selectedUsers;
     this.props.dispatch(appActions.teamCreateLinkApp(app)).then(response => {
       var id = response.id;
@@ -214,13 +215,13 @@ class LinkTeamAppAdd extends React.Component {
     if (props != this.props){
       var users = [];
       if (props.selectedItem.type === 'channel'){
-        props.selectedItem.item.userIds.map(function(item){
+        props.item.userIds.map(function(item){
           var user = props.userSelectFunc(item);
           user.selected = false;
           users.push(user);
         }, this);
       } else {
-        var item = props.selectedItem.item;
+        var item = props.item;
         item.selected = false;
         users.push(item);
       }
@@ -296,6 +297,7 @@ class LinkTeamAppAdd extends React.Component {
     )
   }
 }
+
 class SimpleTeamAppAdd extends React.Component {
   constructor(props){
     super(props);
@@ -310,14 +312,14 @@ class SimpleTeamAppAdd extends React.Component {
     };
     this.state.users = [];
     if (this.props.selectedItem.type === 'channel'){
-      this.props.selectedItem.item.userIds.map(function(item){
+      this.props.item.userIds.map(function(item){
         var user = {...this.props.userSelectFunc(item)};
         user.selected = false;
         user.can_see_information = false;
         this.state.users.push(user);
       }, this);
     } else {
-      var item = {...this.props.selectedItem.item};
+      var item = {...this.props.item};
       item.selected = false;
       item.can_see_information = true;
       this.state.users.push(item);
@@ -344,9 +346,9 @@ class SimpleTeamAppAdd extends React.Component {
       account_information: []
     };
     if (this.props.selectedItem.type === 'channel')
-      app.channel_id = this.props.selectedItem.item.id;
+      app.channel_id = this.props.item.id;
     else
-      app.team_user_id = this.props.selectedItem.item.id;
+      app.team_user_id = this.props.item.id;
     Object.keys(this.state.credentials).map(function(item){
       app.account_information.push({info_name: item, info_value: this.state.credentials[item]});
     }, this);
@@ -375,13 +377,13 @@ class SimpleTeamAppAdd extends React.Component {
     if (props != this.props){
       var users = [];
       if (props.selectedItem.type === 'channel'){
-        props.selectedItem.item.userIds.map(function(item){
+        props.item.userIds.map(function(item){
           var user = {...props.userSelectFunc(item)};
           user.selected = false;
           users.push(user);
         }, this);
       } else {
-        var item = {...props.selectedItem.item};
+        var item = {...props.item};
         item.selected = false;
         item.can_see_information = true;
         users.push(item);
@@ -506,7 +508,7 @@ class SimpleTeamAppAdd extends React.Component {
                 <div className="credentials_holder">
                   <div className="credentials">
                     {
-                      Object.keys(this.state.credentials).map(function(item){
+                      Object.keys(this.state.credentials).reverse().map(function(item){
                         return (
                             <div className="credentials_line" key={item}>
                               <i className={classnames("fa icon_handler credentials_type_icon", this.state.choosenApp.inputs[item].placeholderIcon)}/>
@@ -570,7 +572,8 @@ class SimpleTeamAppAdd extends React.Component {
   return {
     selectedItem: store.selection,
     team_id: store.team.id,
-    addAppUI: store.teamAppsAddUI
+    addAppUI: store.teamAppsAddUI,
+    users: store.users.users
   };
 })
 class TeamAppAddingUi extends React.Component {
@@ -578,25 +581,29 @@ class TeamAppAddingUi extends React.Component {
     super(props);
   }
   render(){
+    const item = this.props.selection;
     return (
         <div className="add_actions_container" id="app_add_actions">
           {this.props.addAppUI.TeamSimpleAppAddActive &&
           <SimpleTeamAppAdd
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
-              userSelectFunc={this.props.userSelectFunc}
+              item={item}
+              userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
               dispatch={this.props.dispatch}/>}
           {this.props.addAppUI.TeamLinkAppAddActive &&
               <LinkTeamAppAdd
                   team_id={this.props.team_id}
                   selectedItem={this.props.selectedItem}
-                  userSelectFunc={this.props.userSelectFunc}
+                  item={item}
+                  userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
                   dispatch={this.props.dispatch}/>}
           {this.props.addAppUI.TeamMultiAppAddActive &&
             <MultiTeamAppAdd
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
-              userSelectFunc={this.props.userSelectFunc}
+              item={item}
+              userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
               dispatch={this.props.dispatch}/>}
         </div>
     )

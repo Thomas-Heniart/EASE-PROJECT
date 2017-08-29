@@ -2,6 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import {showTeamBrowseChannelsModal} from '../../actions/teamModalActions';
 import {isUserInChannel} from "../../utils/helperFunctions";
+import {askJoinChannel, addTeamUserToChannel} from "../../actions/channelActions";
 import {connect} from "react-redux";
 
 @connect((store)=>{
@@ -36,6 +37,8 @@ class TeamBrowseChannelsModal extends React.Component {
                 <div class="mrgnTop5">
                   {this.props.channels.map(function (item) {
                     const inChannel = isUserInChannel(item, this.props.me);
+                    const isAsked = item.join_requests.indexOf(this.props.me.id) !== -1;
+
                     return (
                         <div class="channel_card display-flex" key={item.id}>
                           <div class="display-flex flex_direction_column full_flex">
@@ -47,10 +50,18 @@ class TeamBrowseChannelsModal extends React.Component {
                               <i class="fa fa-user-o"/>&nbsp;{item.userIds.length}
                             </div>
                             <div>
-                              {!inChannel &&
-                                <button class="button-unstyle big-button action">
-                                  Ask to join
-                                </button>}
+                              {!inChannel && this.props.me.role > 1 &&
+                              <button class="button-unstyle big-button action"
+                                      onClick={e => {this.props.dispatch(addTeamUserToChannel(item.id, this.props.me.id))}}>
+                                Join this channel
+                              </button>}
+                              {!inChannel && !isAsked && this.props.me.role === 1 &&
+                              <button class="button-unstyle big-button action"
+                                      onClick={e => {this.props.dispatch(askJoinChannel(item.id))}}>
+                                Ask to join
+                              </button>}
+                              {!inChannel && isAsked && this.props.me.role === 1 &&
+                              <span>Join request sent</span>}
                             </div>
                           </div>
                         </div>

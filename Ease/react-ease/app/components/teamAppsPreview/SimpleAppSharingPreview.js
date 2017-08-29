@@ -41,7 +41,7 @@ class SimpleAppSharingPreview extends React.Component {
                   <div class="credentials_holder">
                     <div class="credentials">
                       {
-                        Object.keys(app.account_information).map(function(item){
+                        Object.keys(app.account_information).reverse().map(function(item){
                           return (
                               <div class="credentials_line" key={item}>
                                 <div class="credentials_type_icon">

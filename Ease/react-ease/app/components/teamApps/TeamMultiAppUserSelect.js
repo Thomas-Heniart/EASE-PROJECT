@@ -48,7 +48,7 @@ class TeamMultiAppUserSelect extends React.Component {
             </div>
             <div class="credentials">
               {
-                Object.keys(webInfo).map(function(item){
+                Object.keys(webInfo).reverse().map(function(item){
                   return (
                       <div class="credential_container" key={item}>
                         <i class={classnames("fa", "mrgnRight5", webInfo[item].placeholderIcon)}/>

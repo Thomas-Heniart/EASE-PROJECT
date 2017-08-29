@@ -3,6 +3,7 @@ var classnames = require('classnames');
 import {showTeamMenu} from "../actions/teamActions";
 import {setTeamsTutorial} from "../actions/commonActions";
 import {showAddTeamUserModal, showTeamSettingsModal} from "../actions/teamModalActions";
+import {isAdmin, isOwner} from "../utils/helperFunctions";
 
 class TeamMenu extends React.Component {
   constructor(props){
@@ -28,19 +29,21 @@ class TeamMenu extends React.Component {
               <div class="border"></div>
               <div class="dropdown_row flex_direction_column section user">
                 <span class="selectable">Profile information</span>
-                <span class="selectable" onClick={e => {this.props.dispatch(setTeamsTutorial(true)); this.hideIt();}}>
+                <span class="selectable" onClick={e => {this.props.dispatch(setTeamsTutorial(false)); this.hideIt();}}>
                   Re-start tutorial
                 </span>
               </div>
+              {isAdmin(me.role) &&
               <div class="dropdown_row flex_direction_column section team">
                 <strong class="teamName">{team.name}</strong>
                 <span class="selectable" onClick={e => {this.props.dispatch(showAddTeamUserModal(true)); this.hideIt();}}>
                   Invite new members
                 </span>
-                <span class="selectable" onClick={e => {this.props.dispatch(showTeamSettingsModal(true)); this.hideIt();}}>
+                {isOwner(me.role) &&
+                  <span class="selectable" onClick={e => {this.props.dispatch(showTeamSettingsModal(true)); this.hideIt();}}>
                   Team settings
-                </span>
-              </div>
+                </span>}
+              </div>}
             </div>
           </div>
         </div>

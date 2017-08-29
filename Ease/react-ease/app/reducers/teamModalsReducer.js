@@ -46,6 +46,17 @@ const initialState = {
     active: false,
     user:null,
     app: null
+  },
+  verifyTeamUserModal: {
+    active: false,
+    user: null
+  },
+  teamTransferOwnershipModal: {
+    active: false,
+    user: null
+  },
+  teamPhoneNumberModal: {
+    active: false
   }
 };
 export default function reducer(state=initialState, action){
@@ -132,6 +143,24 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         teamSettingsModalActive: action.payload.active
+      }
+    }
+    case 'SHOW_VERIFY_TEAM_USER_MODAL': {
+      return {
+          ...state,
+        verifyTeamUserModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_TRANSFER_OWNERSHIP_MODAL': {
+      return {
+          ...state,
+        teamTransferOwnershipModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_PHONE_NUMBER_MODAL': {
+      return {
+          ...state,
+        teamPhoneNumberModal: action.payload
       }
     }
   }

@@ -22,11 +22,12 @@ function TeamMultiAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
+        {app.sharing_requests.length > 0 &&
         <button class="button-unstyle team_app_requests"
                 data-tip="User(s) would like to access this app"
                 onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
-        </button>
+        </button>}
         {meReceiver != null &&
         <button class="button-unstyle team_app_pin"
                 data-tip="Pin App in your Personal space"
@@ -280,9 +281,12 @@ class TeamMultiApp extends React.Component {
           <div class="display-flex team_app_indicators">
             {!this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 &&
             <span>
-                    <i class="fa fa-thumb-tack"/>
-                  </span>
-            }
+             <i class="fa fa-thumb-tack"/>
+            </span>}
+            {!this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) &&
+            <span>
+              <i class="fa fa-user"/>
+            </span>}
           </div>
           <div class="team_app_sender_info">
             <span class="team_app_sender_name">
@@ -324,7 +328,7 @@ class TeamMultiApp extends React.Component {
                 <div class="credentials_holder">
                   <div class="credentials">
                     {meReceiver !== null &&
-                    Object.keys(meReceiver.account_information).map(function(item){
+                    Object.keys(meReceiver.account_information).reverse().map(function(item){
                       return (
                           <div class="credentials_line" key={item}>
                             <div class="credentials_type_icon">
@@ -384,7 +388,7 @@ class TeamMultiApp extends React.Component {
                               </AppReceiverTooltip>
                               <div class="credentials">
                                 {
-                                  Object.keys(item.account_information).map(function(info){
+                                  Object.keys(item.account_information).reverse().map(function(info){
                                     return (
                                         <div class="credential_container" key={info}>
                                           <i class={classnames('fa', 'mrgnRight5', webInfo[info].placeholderIcon)}/>

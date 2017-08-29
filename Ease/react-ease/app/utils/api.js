@@ -155,7 +155,7 @@ module.exports = {
   fetchWebsiteInfo: function (website_id) {
     return axios.get('/api/v1/catalog/GetWebsiteInformation',{
       params:{
-        'id': website_id,
+        id: website_id,
         timestamp: new Date().getTime()
       }
     }).then(function (response) {
@@ -198,6 +198,17 @@ module.exports = {
       return axios.get('/api/v1/common/GetMyInformation').then(response => {
         return response.data;
       });
+    },
+    getNotifications: function (offset) {
+      return axios.get('/api/v1/common/GetNotifications', {
+        params: {
+          offset: offset
+        }
+      }).then(r => {
+        return r.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
     }
   }
 };

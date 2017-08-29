@@ -133,7 +133,7 @@ class SecondStep extends React.Component {
 
 @connect((store)=>{
   return {
-    selectedChannel: store.selection.item,
+    selectedChannelId: store.selection.id,
     users: store.users.users,
     channels: store.channels.channels,
     modal : store.teamModals.teamChannelAddUserModal,
@@ -149,8 +149,9 @@ class TeamChannelAddUserModal extends React.Component{
       choosenUser: null
     };
 
+    const channel = selectChannelFromListById(this.props.channels, this.props.selectedChannelId);
     this.state.users = this.props.users.filter(function(item){
-      return this.props.selectedChannel.userIds.indexOf(item.id) < 0;
+      return channel.userIds.indexOf(item.id) < 0;
     }.bind(this));
     this.state.channel = selectChannelFromListById(this.props.channels, this.props.modal.channel_id);
     this.stepBack = this.stepBack.bind(this);

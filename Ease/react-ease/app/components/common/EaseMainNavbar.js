@@ -1,121 +1,86 @@
 var React = require('react');
 var classnames = require('classnames');
+import {fetchNotifications, validateNotification} from "../../actions/notificationsActions";
+import {checkForNewNotifications} from "../../utils/helperFunctions";
 import ReactTooltip from 'react-tooltip';
 import {withRouter} from "react-router-dom";
 import {processLogout} from "../../actions/commonActions";
 import { NavLink } from 'react-router-dom';
 import {connect} from "react-redux";
-
+import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 
 class TeamsList extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      dropdown: false
-    };
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.pageClick = this.pageClick.bind(this);
-  }
-  onMouseDown(){
-    this.mouseInDropDown = true;
-  }
-  onMouseUp(){
-    this.mouseInDropDown = false;
-  }
-  pageClick(e){
-    if (this.mouseInDropDown)
-      return;
-    this.setState({dropdown: false});
-  }
-  componentDidMount(){
-    window.addEventListener('mousedown', this.pageClick, false);
-  }
-  componentWillUnmount(){
-    window.removeEventListener('mousedown', this.pageClick, false);
   }
   render(){
     return (
-        <button class="button-unstyle" id="teams_button"
-                onClick={e => {this.setState({dropdown: true})}}
-                onMouseDown={this.onMouseDown}
-                onMouseUp={this.onMouseUp}>
-          <img src="/resources/icons/users.svg" data-tip="Team Space"/>
-          <div class={classnames('menu menu_arrow display_flex flex_direction_column', this.state.dropdown ? 'show': null)}>
+        <Dropdown icon={<Icon name="users" data-tip="Team Space"/>} item floating id="teams_list">
+          <Dropdown.Menu>
             {this.props.user != null &&
             this.props.user.teams.map(function (item) {
               return (
-                  <div class="menu_row team_select" key={item.id}>
-                    <NavLink to={`/teams/${item.id}`} activeClassName="active">
-                      <i class="fa fa-users icon"/>
-                      {item.name}
-                    </NavLink>
-                  </div>
+                  <Dropdown.Item key={item.id} as={NavLink} to={`/teams/${item.id}`} activeClassName="active">
+                    <Icon name="users"/>
+                    {item.name}
+                  </Dropdown.Item>
               )})}
-            <div class="menu_row display_flex align_items_center" id="team_adder">
-              <NavLink to={'/main/teamsPreview'}>
-                <i class="fa fa-plus-square icon"/>
-                Create a new team...
-              </NavLink>
-            </div>
-          </div>
-        </button>
+            <Dropdown.Item as={NavLink} to={'/main/teamsPreview'}>
+              <Icon name="add square"/>
+              Create a new team...
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
     )
   }
 }
 
+const newNotificationIcon = () => (<Icon.Group><Icon name="bell" data-tip="Notifications"/><Icon corner color="red" size="massive" name='circle'/></Icon.Group>);
 class NotificationList extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      dropdown: false
-    };
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.pageClick = this.pageClick.bind(this);
+    this.executeNotification = this.executeNotification.bind(this);
+    this.onClose = this.onClose.bind(this);
+    this.onScroll = this.onScroll.bind(this);
+    this.lastScrollTop = 0;
   }
-  onMouseDown(){
-    this.mouseInDropDown = true;
+  onClose(){
+    if (checkForNewNotifications(this.props.notifications.notifications))
+      this.props.dispatch(validateNotification());
   }
-  onMouseUp(){
-    this.mouseInDropDown = false;
+  onScroll(e){
+    if (!this.props.notifications.fetching && this.lastScrollTop < e.target.scrollTop && (e.target.scrollTop > (e.target.scrollHeight - e.target.offsetHeight))){
+      this.props.dispatch(fetchNotifications(this.props.notifications.notifications.length));
+    }
+    this.lastScrollTop = e.target.scrollTop;
   }
-  pageClick(e){
-    if (this.mouseInDropDown)
-      return;
-    this.setState({dropdown: false});
-  }
-  componentDidMount(){
-    window.addEventListener('mousedown', this.pageClick, false);
-  }
-  componentWillUnmount(){
-    window.removeEventListener('mousedown', this.pageClick, false);
+  executeNotification(notification){
+    if (notification.url.length > 0){
+      this.props.history.push(notification.url);
+    }
   }
   render(){
+    const newNotifs = checkForNewNotifications(this.props.notifications.notifications);
     return (
-        <button class="button-unstyle bordered_scrollbar notify" id="notification_button"
-                onClick={e => {this.setState({dropdown: true})}}
-                onMouseDown={this.onMouseDown}
-                onMouseUp={this.onMouseUp}>
-          <img src="/resources/icons/notification.svg" data-tip="Notifications"/>
-          <div class={classnames('menu menu_arrow display_flex flex_direction_column ', this.state.dropdown ? 'show': null)}>
-            {this.props.notifications.map(function (item) {
+        <Dropdown class="bordered_scrollbar" icon={newNotifs ? newNotificationIcon() : <Icon name="bell" data-tip="Notifications"/>} item floating scrolling onClose={this.onClose} id="notifications_menu">
+          <Dropdown.Menu onScroll={this.onScroll}>
+            {this.props.notifications.notifications.length === 0 &&
+            <Dropdown.Item>There isn't notifications yet</Dropdown.Item>}
+            {this.props.notifications.notifications.map(function (item) {
               return (
-                  <div class="menu_row display_flex align_items_center" key={item.id}>
-                    <div class={classnames("notification-card display-flex", item.isNew ? 'new': null)}>
-                      <div class="squared_image_handler icon">
-                        <img src={item.icon} alt="icon"/>
-                      </div>
-                      <div class="display-flex flex_direction_column">
-                        <span>{item.content}</span>
-                        <span class="date">il y a {item.date} heures</span>
-                      </div>
+                  <Dropdown.Item key={item.id} active={item.is_new} class="notification-card" onClick={this.executeNotification.bind(null, item)}>
+                    <div class="squared_image_handler icon">
+                      <img src={item.icon} alt="icon"/>
                     </div>
-                  </div>
+                    <div class="display-flex flex_direction_column">
+                      <span>{item.content}</span>
+                      <span class="date">{moment(item.date).fromNow()}</span>
+                    </div>
+                  </Dropdown.Item>
               )
             }, this)}
-          </div>
-        </button>
+          </Dropdown.Menu>
+        </Dropdown>
     )
   }
 }
@@ -123,7 +88,7 @@ class NotificationList extends React.Component {
 @connect((store)=>{
   return {
     user: store.common.user,
-    notifications: store.common.notifications
+    notifications: store.notifications
   };
 })
 class EaseMainNavbar extends React.Component {
@@ -134,7 +99,7 @@ class EaseMainNavbar extends React.Component {
   }
   processLogout(){
     this.props.dispatch(processLogout()).then(response => {
-      window.location.href = "/login";
+      window.location.href = "/#/login";
 //      this.props.history.push('/login');
     })
   }
@@ -147,27 +112,22 @@ class EaseMainNavbar extends React.Component {
   render(){
     const user = this.props.user;
     return (
-        <nav class="nav display_flex" id="ease_main_navbar">
-          <button class="button-unstyle" id="settings_button" onClick={this.goHome} data-tip="Apps Dashboard">
-            <span>{user !== null ? user.first_name : '...'}</span>
-          </button>
-          <button class="button-unstyle" id="logout_button" >
-            <img src="/resources/icons/logout.svg" data-tip="Logout Menu"/>
-            <div class="menu menu_arrow display_flex flex_direction_column">
-              <div class="menu_row" id="simple_logout" onClick={this.processLogout}>
-                Logout from Ease
-              </div>
-              <div class="menu_row" id="general_logout">
-                Logout from all apps
-              </div>
-            </div>
-          </button>
-          <NotificationList notifications={this.props.notifications}/>
+        <Menu id="main_navbar">
+          <Menu.Item onClick={this.goHome} data-tip="Apps Dashboard" >
+            {user !== null ? user.first_name : '...'}
+          </Menu.Item>
+          <Dropdown icon={<Icon name="log out" data-tip="Logout Menu"/>} item floating id="logout_button">
+            <Dropdown.Menu>
+              <Dropdown.Item text="Logout from Ease" onClick={this.processLogout}/>
+              <Dropdown.Item text="Logout from all apps"/>
+            </Dropdown.Menu>
+          </Dropdown>
+          <NotificationList notifications={this.props.notifications} history={this.props.history} dispatch={this.props.dispatch}/>
           <TeamsList user={this.props.user}/>
-          <button class="button-unstyle action_button" id="catalog_button">
-            <img src="/resources/icons/plus.svg" data-tip="Apps Catalogue"/>
-          </button>
-        </nav>
+          <Menu.Item id="catalog_button" data-tip="Apps Catalogue">
+            <Icon name="plus"/>
+          </Menu.Item>
+        </Menu>
     )
   }
 }

@@ -9,7 +9,8 @@ import {
     getChannelUsers,
     findMeInReceivers,
     getReceiverInList,
-    isUserInList
+    isUserInList,
+    isAdmin
 } from "../../utils/helperFunctions"
 
 function TeamLinkAppButtonSet(props) {
@@ -20,11 +21,12 @@ function TeamLinkAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
+        {app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) &&
         <button class="button-unstyle team_app_requests"
                 data-tip="User(s) would like to access this app"
                 onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
-        </button>
+        </button>}
         {meReceiver != null &&
         <button class="button-unstyle team_app_pin"
                 data-tip="Pin App in your Personal space"
@@ -110,7 +112,9 @@ class TeamLinkApp extends React.Component {
     }
   }
   selfJoinApp(){
-    this.props.dispatch(appActions.teamShareApp(this.props.app.id, {team_user_id:this.props.me.id}));
+    this.props.dispatch(appActions.teamShareApp(this.props.app.id, {team_user_id:this.props.me.id})).then(() => {
+      this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, this.props.app));
+    });
   }
   setupModifying(state){
     if (state) {
@@ -198,14 +202,16 @@ class TeamLinkApp extends React.Component {
               app={app}
               me={me}
               setupModifying={this.setupModifying}
-              dispatch={this.props.dispatch}/>
-          }
+              dispatch={this.props.dispatch}/>}
           <div class="display-flex team_app_indicators">
             {!this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 &&
             <span>
-                    <i class="fa fa-thumb-tack"/>
-                  </span>
-            }
+              <i class="fa fa-thumb-tack"/>
+            </span>}
+            {!this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) &&
+            <span>
+              <i class="fa fa-user"/>
+            </span>}
           </div>
           <div class="team_app_sender_info">
             <span class="team_app_sender_name">

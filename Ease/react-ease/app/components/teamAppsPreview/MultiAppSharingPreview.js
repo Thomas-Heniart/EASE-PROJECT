@@ -73,7 +73,7 @@ class MultiAppSharingPreview extends React.Component {
                     </div>
                     <div class="credentials">
                       {
-                        Object.keys(credentials).map(function(item){
+                        Object.keys(credentials).reverse().map(function(item){
                           return (
                               <div class="credential_container" key={item}>
                                 <i class={classnames("fa", "mrgnRight5", webInfo[item].placeholderIcon)}/>

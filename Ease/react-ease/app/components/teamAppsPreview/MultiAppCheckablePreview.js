@@ -78,7 +78,7 @@ class MultiAppCheckablePreview extends React.Component {
                               </div>
                               <div class="credentials">
                                 {
-                                  Object.keys(item.account_information).map(function(info){
+                                  Object.keys(item.account_information).reverse().map(function(info){
                                     return (
                                         <div class="credential_container" key={info}>
                                           <i class={classnames('fa', 'mrgnRight5', webInfo[info].placeholderIcon)}/>

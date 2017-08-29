@@ -23,16 +23,20 @@ var TeamManageAppRequestModal = require('./teamModals/TeamManageAppRequestModal'
 var TeamAcceptMultiAppModal = require('./teamModals/TeamAcceptMultiAppModal');
 var TeamJoinMultiAppModal = require('./teamModals/TeamJoinMultiAppModal');
 var TeamSettingsModal = require('./teamModals/TeamSettingsModal');
+var TeamTransferOwnershipModal = require('./teamModals/TeamTransferOwnershipModal');
+var TeamPhoneNumberModal = require('./teamModals/TeamPhoneNumberModal');
+import queryString from "query-string";
+import VerifyTeamUserModal from './teamModals/VerifyTeamUserModal';
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
+import * as modalActions from "../actions/teamModalActions"
 import  {LeftRightTransition, OpacityTransition} from "../utils/transitions";
-import {withRouter} from "react-router-dom";
+import {selectUserFromListById, selectChannelFromListById} from "../utils/helperFunctions";
+import {withRouter, Switch, Route} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
 import {findDOMNode} from 'react-dom';
-import ReactTooltip from 'react-tooltip';
-
 var api = require('../utils/api');
 
 import {connect} from "react-redux"
@@ -42,7 +46,6 @@ import {connect} from "react-redux"
     team: store.team,
     common: store.common,
     users: store.users.users,
-    me: store.users.me,
     channels: store.channels.channels,
     selectedItem: store.selection,
     addUserModalActive: store.teamModals.addUserModalActive,
@@ -58,72 +61,98 @@ import {connect} from "react-redux"
     teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
     teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
     teamBrowseChannelsModalActive: store.teamModals.teamBrowseChannelsModalActive,
-    teamSettingsModalActive: store.teamModals.teamSettingsModalActive
+    teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
+    verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
+    teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
+    teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal
   };
 })
 class TeamView extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      icons : {
-        user: 'fa-user',
-        channel: 'fa-users'
-      },
-      flexActive : false,
-      loadingInfo : true,
-      team_id: 2
+      loadingInfo : true
     };
-    this.toggleAddUserModal = this.toggleAddUserModal.bind(this);
-    this.toggleAddChannelModal = this.toggleAddChannelModal.bind(this);
-    this.toggleFlexPanel = this.toggleFlexPanel.bind(this);
-    this.getChannelById = this.getChannelById.bind(this);
-    this.getUserById = this.getUserById.bind(this);
-  }
-
-  getUserById(id){
-    for (var i = 0; i < this.props.users.length; i++){
-      if (this.props.users[i].id === id)
-        return this.props.users[i];
-    }
-  }
-  getChannelById(id){
-    for (var i = 0; i < this.props.channels.length; i++){
-      if (this.props.channels[i].id === id)
-        return this.props.channels[i];
-    }
-  }
-  toggleAddChannelModal(){
-    this.setState({addChannelModalActive: !this.state.addChannelModalActive});
-  }
-  toggleAddUserModal(){
-    this.setState({addUserModalActive: !this.state.addUserModalActive});
-  }
-  toggleFlexPanel(){
-    this.setState({
-      flexActive: !this.state.flexActive
-    });
+    this.getSelectedItem = this.getSelectedItem.bind(this);
+    this.autoSelectItem = this.autoSelectItem.bind(this);
+    this.isValidTeamItemId = this.isValidTeamItemId.bind(this);
   }
   componentWillReceiveProps(nextProps){
-    if (this.props.match.params.teamId !== nextProps.match.params.teamId){
+    const itemId = nextProps.match.params.itemId;
+    if (this.props.match.params.teamId != nextProps.match.params.teamId){
       this.setState({loadingInfo: true});
       this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(nextProps.match.params.teamId)).then(()=>{
         this.setState({loadingInfo: false});
-        this.props.dispatch(channelActions.selectTeamChannel(this.props.channels[0].id));
+        if (this.isValidTeamItemId(itemId)) {
+          this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
+        }else
+          this.autoSelectItem();
       });
+    }
+    else if (this.props.match.params.itemId != itemId) {
+      if (this.isValidTeamItemId(itemId)) {
+        this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
+      }else
+        this.autoSelectItem();
+    }
+  }
+  componentDidUpdate(){
+    if (!this.state.loadingInfo && !this.isValidTeamItemId(this.props.match.params.itemId)) {
+      this.autoSelectItem();
     }
   }
   componentDidMount(){
+    const itemId = this.props.match.params.itemId;
     if (!this.props.common.authenticated){
-      window.location.href = "/login";
-//      this.props.history.push('/login');
+      this.props.history.push('/login');
       return;
     }
     this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(this.props.match.params.teamId)).then(()=>{
       this.setState({loadingInfo: false});
-      this.props.dispatch(channelActions.selectTeamChannel(this.props.channels[0].id));
+      const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
+      if (me.phone_number === null && me.role === 3){
+        this.props.dispatch(modalActions.showTeamPhoneNumberModal(true));
+      }
+      if (this.isValidTeamItemId(itemId)) {
+        this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
+      }else
+        this.autoSelectItem();
     });
+  };
+  isValidTeamItemId(itemId){
+    if (itemId == undefined)
+      return false;
+    const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
+    if (itemId[0] != '@' && me.channel_ids.indexOf(Number(itemId)) !== -1)
+      return true;
+    if (selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length))) != null)
+      return true;
+    return false;
+  }
+  autoSelectItem(){
+    const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
+    const teamId = this.props.match.params.teamId;
+
+    if (me.channel_ids.length > 0)
+      this.props.history.push(`/teams/${teamId}/${me.channel_ids[0]}`);
+    else
+      this.props.history.push(`/teams/${teamId}/@${me.id}`);
+  }
+  getSelectedItem(){
+    const itemId = this.props.match.params.itemId;
+    if (itemId === undefined)
+      return null;
+    var item = (itemId[0] === '@') ?
+       selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length)))
+    :
+     selectChannelFromListById(this.props.channels, Number(itemId));
+    return item;
   }
   render(){
+    const selectedItem = this.getSelectedItem();
+    const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
+    const flexPanel = queryString.parse(this.props.location.search).flexPanel !== undefined;
+
     return (
         <div id="teamsHandler">
           <div className="team_view" id="team_view">
@@ -131,63 +160,67 @@ class TeamView extends React.Component {
             {!this.state.loadingInfo && <TeamSideBar/>}
             {this.props.team.teamMenuActive &&
             <TeamMenu
-                me={this.props.me}
+                me={me}
                 team={this.props.team}
                 dispatch={this.props.dispatch}/>}
-            {!this.state.loadingInfo && this.props.selectedItem.item &&
+            {!this.state.loadingInfo && selectedItem != null &&
             <div className="client_main_container">
               <TeamHeader
-                  selectedItem={this.props.selectedItem}
-                  icons={this.state.icons}
-                  flexActive={this.state.flexActive}
-                  toggleFlexFunc={this.toggleFlexPanel}/>
+                  item={selectedItem}
+                  match={this.props.match}
+                  appsLength={this.props.selectedItem.apps.length}/>
               <div className="team_client_body">
                 <OpacityTransition appear={true}>
-                  {this.props.common.teamsTutorial &&
+                  {this.props.common.user != null && !this.props.common.user.status.team_tuto_done &&
                   <TeamsTutorial/>}
                 </OpacityTransition>
                 <div id="col_main">
                   <TeamAppAddingUi
-                      userSelectFunc={this.getUserById}/>
+                      selection={selectedItem}/>
                   <TeamAppsContainer />
                 </div>
                 <div id="col_flex">
-                  <FlexPanels flexActive={this.state.flexActive}
-                              toggleFlexFunc={this.toggleFlexPanel}
-                              userGetter={this.getUserById}/>
+                  <Route path={`${this.props.match.url}/flexPanel`} render={(props) => <FlexPanels item={selectedItem}
+                                                                                                     me={me}
+                                                                                                      backLink={this.props.match.url}
+                                                                                                      {...props}/>} />
                 </div>
               </div>
             </div>}
-            <LeftRightTransition appear={true}>
-              {this.props.addUserModalActive &&
-              <TeamAddUserModal key="1"/>}
-              {this.props.addChannelModalActive &&
-              <TeamAddChannelModal/>}
-              {this.props.teamChannelAddUserModal.active &&
-              <TeamChannelAddUserModal/>}
-              {this.props.teamDeleteUserModal.active &&
-              <TeamDeleteUserModal/>}
-              {this.props.teamDeleteChannelModal.active &&
-              <TeamDeleteChannelModal/>}
-              {this.props.teamDeleteUserFromChannelModal.active &&
-              <TeamDeleteUserFromChannelModal/>}
-              {this.props.teamDeleteAppModal.active &&
-              <TeamDeleteAppModal/>}
-              {this.props.pinTeamAppToDashboardModal.active &&
-              <PinTeamAppToDashboardModal/>}
-              {this.props.teamLeaveAppModal.active &&
-              <TeamLeaveAppModal/>}
-              {this.props.teamManageAppRequestModal.active &&
-              <TeamManageAppRequestModal/>}
-              {this.props.teamAcceptMultiAppModal.active &&
-              <TeamAcceptMultiAppModal/>}
-              {this.props.teamJoinMultiAppModal.active &&
-              <TeamJoinMultiAppModal/>}
-              {this.props.teamBrowseChannelsModalActive &&
-              <TeamBrowseChannelsModal/>}
-              {this.props.teamSettingsModalActive &&
-              <TeamSettingsModal/>}
-            </LeftRightTransition>
+            {this.props.addUserModalActive &&
+            <TeamAddUserModal key="1"/>}
+            {this.props.addChannelModalActive &&
+            <TeamAddChannelModal/>}
+            {this.props.teamChannelAddUserModal.active &&
+            <TeamChannelAddUserModal/>}
+            {this.props.teamDeleteUserModal.active &&
+            <TeamDeleteUserModal/>}
+            {this.props.teamDeleteChannelModal.active &&
+            <TeamDeleteChannelModal/>}
+            {this.props.teamDeleteUserFromChannelModal.active &&
+            <TeamDeleteUserFromChannelModal/>}
+            {this.props.teamDeleteAppModal.active &&
+            <TeamDeleteAppModal/>}
+            {this.props.pinTeamAppToDashboardModal.active &&
+            <PinTeamAppToDashboardModal/>}
+            {this.props.teamLeaveAppModal.active &&
+            <TeamLeaveAppModal/>}
+            {this.props.teamManageAppRequestModal.active &&
+            <TeamManageAppRequestModal/>}
+            {this.props.teamAcceptMultiAppModal.active &&
+            <TeamAcceptMultiAppModal/>}
+            {this.props.teamJoinMultiAppModal.active &&
+            <TeamJoinMultiAppModal/>}
+            {this.props.teamBrowseChannelsModalActive &&
+            <TeamBrowseChannelsModal/>}
+            {this.props.teamSettingsModalActive &&
+            <TeamSettingsModal/>}
+            {this.props.verifyTeamUserModal.active &&
+            <VerifyTeamUserModal/>}
+            {this.props.teamTransferOwnershipModal.active &&
+            <TeamTransferOwnershipModal/>}
+            {this.props.teamPhoneNumberModal.active &&
+            <TeamPhoneNumberModal/>}
           </div>
         </div>
     )

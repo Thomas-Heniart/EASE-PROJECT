@@ -2,8 +2,9 @@ var axios = require('axios');
 
 module.exports = {
   teamChannel: {
-    editName : function(team_id, channel_id, name){
+    editName : function(ws_id, team_id, channel_id, name){
       return axios.post('/api/v1/teams/EditChannelName', {
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: channel_id,
         name: name,
@@ -12,8 +13,9 @@ module.exports = {
         return response.data;
       });
     },
-    editPurpose: function(team_id, channel_id, purpose){
+    editPurpose: function(ws_id, team_id, channel_id, purpose){
       return axios.post('/api/v1/teams/EditChannelPurpose',{
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: channel_id,
         purpose: purpose,
@@ -22,8 +24,9 @@ module.exports = {
         return response.data;
       });
     },
-    addTeamUserToChannel: function(team_id, channel_id, team_user_id){
+    addTeamUserToChannel: function(ws_id, team_id, channel_id, team_user_id){
       return axios.post('/api/v1/teams/AddTeamUserToChannel', {
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: channel_id,
         team_user_id: team_user_id,
@@ -32,8 +35,9 @@ module.exports = {
         return response.data;
       });
     },
-    removeTeamUserFromChannel: function(team_id, channel_id, team_user_id){
+    removeTeamUserFromChannel: function(ws_id, team_id, channel_id, team_user_id){
       return axios.post('/api/v1/teams/RemoveUserFromChannel', {
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: channel_id,
         team_user_id: team_user_id,
@@ -42,30 +46,57 @@ module.exports = {
         return response.data;
       });
     },
-    createChannel: function (team_id, name, purpose) {
+    createChannel: function (ws_id, team_id, name, purpose) {
       return axios.post('/api/v1/teams/CreateChannel', {
+        ws_id: ws_id,
         team_id: team_id,
         name: name,
         purpose: purpose,
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
-      });
+      }).catch(err => {
+        throw err.response.data;
+      })
     },
-    deleteChannel: function (team_id, channel_id){
+    deleteChannel: function (ws_id, team_id, channel_id){
       return axios.post('/api/v1/teams/DeleteChannel', {
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: channel_id,
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       });
+    },
+    askJoinChannel: function (ws_id, team_id, channel_id){
+      return axios.post('/api/v1/teams/AskJoinChannel', {
+        ws_id: ws_id,
+        team_id: team_id,
+        channel_id: channel_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      })
+    },
+    deleteJoinChannelRequest: function(ws_id, team_id, channel_id, team_user_id){
+      return axios.post('/api/v1/teams/DeleteJoinChannelRequest', {
+        ws_id: ws_id,
+        team_id: team_id,
+        channel_id: channel_id,
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
+      }).then(r => {
+          return r.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
     }
-  }
-  ,
+  },
   teamUser: {
-    createTeamUser: function(team_id, first_name, last_name, email, username, departure_date, role){
+    createTeamUser: function(ws_id, team_id, first_name, last_name, email, username, departure_date, role){
       return axios.post('/api/v1/teams/StartTeamUserCreation', {
+        ws_id: ws_id,
         team_id: team_id,
         first_name:first_name,
         last_name: last_name,
@@ -78,8 +109,9 @@ module.exports = {
         return response.data;
       });
     },
-    deleteTeamUser: function(team_id, team_user_id){
+    deleteTeamUser: function(ws_id, team_id, team_user_id){
       return axios.post('/api/v1/teams/DeleteTeamUser', {
+        ws_id: ws_id,
         team_id: team_id,
         team_user_id: team_user_id,
         timestamp: new Date().getTime()
@@ -87,8 +119,21 @@ module.exports = {
         return response.data;
       });
     },
-    editRole : function(team_id, user_id, role){
+    verifyTeamUser: function(ws_id, team_id, team_user_id){
+      return axios.post('/api/v1/teams/VerifyTeamUser', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
+      }).then(r => {
+        return r.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    editRole : function(ws_id, team_id, user_id, role){
       return axios.post('/api/v1/teams/EditTeamUserRole', {
+        ws_id: ws_id,
         team_id: team_id,
         team_user_id: user_id,
         role: role,
@@ -97,8 +142,9 @@ module.exports = {
         return response.data;
       });
     },
-    editDepartureDate : function(team_id, user_id, departure_date){
+    editDepartureDate : function(ws_id, team_id, user_id, departure_date){
       return axios.post('/api/v1/teams/EditTeamUserDepartureDate', {
+        ws_id: ws_id,
         team_id: team_id,
         team_user_id: user_id,
         departure_date: departure_date,
@@ -107,8 +153,9 @@ module.exports = {
         return response.data;
       });
     },
-    editFirstName : function(team_id, user_id, first_name){
+    editFirstName : function(ws_id, team_id, user_id, first_name){
       return axios.post('/api/v1/teams/EditTeamUserFirstName', {
+        ws_id: ws_id,
         team_id: team_id,
         team_user_id: user_id,
         first_name: first_name,
@@ -117,8 +164,9 @@ module.exports = {
         return response.data;
       });
     },
-    editLastName : function(team_id, user_id, last_name){
+    editLastName : function(ws_id, team_id, user_id, last_name){
       return axios.post('/api/v1/teams/EditTeamUserLastName', {
+        ws_id: ws_id,
         team_id: team_id,
         team_user_id: user_id,
         last_name: last_name,
@@ -127,8 +175,9 @@ module.exports = {
         return response.data;
       });
     },
-    editUsername : function(team_id, user_id, username){
+    editUsername : function(ws_id, team_id, user_id, username){
       return axios.post('/api/v1/teams/EditTeamUserUsername', {
+        ws_id: ws_id,
         team_id: team_id,
         team_user_id: user_id,
         username: username,
@@ -136,11 +185,36 @@ module.exports = {
       }).then(response => {
         return response.data;
       });
+    },
+    transferTeamOwnership : function (ws_id, team_id, password, team_user_id){
+      return axios.post('/api/v1/teams/TransferOwnership', {
+        ws_id: ws_id,
+        team_id: team_id,
+        password: password,
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
+      }).then(r => {
+        return r.data;
+      })
+    },
+    editPhoneNumber: function (ws_id, team_id, team_user_id, phone){
+      return axios.post('/api/v1/teams/EditTeamUserPhoneNumber', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_user_id: team_user_id,
+        phone_number: phone,
+        timestamp: new Date().getTime()
+      }).then(r => {
+        return r.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
     }
   },
   teamApps: {
-    createSingleApp: function(team_id, app){
+    createSingleApp: function(ws_id, team_id, app){
       return axios.post('/api/v1/teams/CreateShareableSingleApp', {
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: app.channel_id,
         team_user_id: app.team_user_id,
@@ -154,8 +228,9 @@ module.exports = {
         return response.data;
       });
     },
-    createMultiApp: function(team_id, app){
+    createMultiApp: function(ws_id, team_id, app){
       return axios.post('/api/v1/teams/CreateShareableMultiApp', {
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: app.channel_id,
         team_user_id: app.team_user_id,
@@ -168,8 +243,9 @@ module.exports = {
         return response.data;
       });
     },
-    createLinkApp: function(team_id, app){
+    createLinkApp: function(ws_id, team_id, app){
       return axios.post('/api/v1/teams/CreateShareableLinkApp', {
+        ws_id: ws_id,
         team_id: team_id,
         channel_id: app.channel_id,
         team_user_id: app.team_user_id,
@@ -181,8 +257,9 @@ module.exports = {
         return response.data;
       });
     },
-    deleteApp: function (team_id, app_id) {
+    deleteApp: function (ws_id, team_id, app_id) {
       return axios.post('/api/v1/teams/DeleteShareableApp', {
+        ws_id: ws_id,
         team_id: team_id,
         app_id: app_id,
         timestamp: new Date().getTime()
@@ -190,8 +267,9 @@ module.exports = {
         return response.data;
       })
     },
-    shareMultiApp: function(team_id, app_id, user_info){
+    shareMultiApp: function(ws_id, team_id, app_id, user_info){
       return axios.post('/api/v1/teams/ShareApp', {
+        ws_id: ws_id,
         team_id: team_id,
         app_id: app_id,
         team_user_id: user_info.user_id,
@@ -202,8 +280,9 @@ module.exports = {
         return response.data;
       });
     },
-    shareApp: function(team_id, app_id, user_info){
+    shareApp: function(ws_id, team_id, app_id, user_info){
       return axios.post('/api/v1/teams/ShareApp', {
+        ws_id: ws_id,
         team_id: team_id,
         app_id: app_id,
         team_user_id: user_info.team_user_id,
@@ -214,8 +293,9 @@ module.exports = {
         return response.data;
       });
     },
-    modifyApp: function(team_id, app_id, app_info){
+    modifyApp: function(ws_id, team_id, app_id, app_info){
       return axios.post('/api/v1/teams/EditShareableApp', {
+        ws_id: ws_id,
         team_id: team_id,
         app_id: app_id,
         name: app_info.name,
@@ -228,8 +308,9 @@ module.exports = {
         return response.data;
       });
     },
-    deleteReceiver: function(team_id, app_id, team_user_id){
+    deleteReceiver: function(ws_id, team_id, app_id, team_user_id){
       return axios.post('/api/v1/teams/DeleteSharedApp', {
+        ws_id: ws_id,
         team_id: team_id,
         app_id: app_id,
         team_user_id: team_user_id,
@@ -238,8 +319,9 @@ module.exports = {
         return response.data;
       });
     },
-    editReceiver: function(team_id, app_id, receiver_info){
+    editReceiver: function(ws_id, team_id, app_id, receiver_info){
       return axios.post('/api/v1/teams/EditSharedApp', {
+        ws_id: ws_id,
         team_id: team_id,
         app_id: app_id,
         can_see_information: receiver_info.can_see_information,
@@ -250,8 +332,9 @@ module.exports = {
         return response.data;
       });
     },
-    acceptSharedApp: function(team_id, shared_app_id){
+    acceptSharedApp: function(ws_id, team_id, shared_app_id){
       return axios.post('/api/v1/teams/AcceptSharedApp', {
+        ws_id: ws_id,
         team_id: team_id,
         shared_app_id: shared_app_id,
         timestamp: new Date().getTime()
@@ -259,8 +342,9 @@ module.exports = {
         return response.data;
       });
     },
-    transferOwnership: function (team_id, app_id, team_user_id) {
+    transferOwnership: function (ws_id, team_id, app_id, team_user_id) {
       return axios.post('/api/v1/teams/TransferShareableAppOwner', {
+        ws_id: ws_id,
         team_id: team_id,
         app_id: app_id,
         team_user_id: team_user_id,
@@ -269,8 +353,9 @@ module.exports = {
         return response.data;
       })
     },
-    pinToDashboard: function(team_id, shared_app_id, profile_id, app_name){
+    pinToDashboard: function(ws_id, team_id, shared_app_id, profile_id, app_name){
       return axios.post('/api/v1/teams/PinAppToDashboard', {
+        ws_id: ws_id,
         team_id: team_id,
         shared_app_id: shared_app_id,
         profile_id: profile_id,
@@ -278,6 +363,31 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      })
+    },
+    askJoinApp: function(ws_id, team_id, app_id){
+      return axios.post('/api/v1/teams/AskJoinApp', {
+        ws_id: ws_id,
+        team_id: team_id,
+        app_id: app_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    deleteJoinAppRequest: function(ws_id, team_id, app_id, team_user_id){
+      return axios.post('/api/v1/teams/DeleteJoinAppRequest', {
+        ws_id: ws_id,
+        team_id: team_id,
+        app_id: app_id,
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
+      }).then(r => {
+        return r.data;
+      }).catch(err => {
+        throw err.response.data;
       })
     }
   },
@@ -310,14 +420,16 @@ module.exports = {
         throw err.response.data;
       })
     },
-    finalizeRegistration: function(fname, lname, username, jobRole, jobDetails, code){
+    finalizeRegistration: function(ws_id, fname, lname, username, jobRole, jobDetails, code){
       return axios.post('/api/v1/teams/FinalizeRegistration', {
+        ws_id: ws_id,
         first_name: fname,
         last_name: lname,
         username: username,
         job_index: jobRole,
         job_details: jobDetails,
-        code: code
+        code: code,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       }).catch(err => {
@@ -373,7 +485,16 @@ module.exports = {
       }).then(response => {
         return response.data;
       }).catch(err => {
-        throw err;
+        throw err.response.data;
+      })
+    },
+    validateTutorial : function(){
+      return axios.post('/api/v1/teams/TutoDone', {
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
       })
     }
   },
@@ -407,18 +528,26 @@ module.exports = {
         throw err.response.data;
       })
     },
-    registration: function(email, username, password, digits, newsletter){
+    registration: function(email, username, password, digits, code, newsletter){
       return axios.post('/api/v1/common/Registration', {
         email: email,
         username: username,
         password: password,
         digits: digits,
+        code: code,
         newsletter: newsletter,
         registration_date: new Date().getTime()
       }).then(response => {
         return response.data;
       }).catch(err => {
         throw err.response.data;
+      })
+    },
+    validateNotifications: function () {
+      return axios.post('/api/v1/common/ValidateNotifications', {}).then(r => {
+        return r.data;
+      }).catch(err => {
+        throw err;
       })
     }
   }
