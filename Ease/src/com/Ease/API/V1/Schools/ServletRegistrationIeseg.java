@@ -6,7 +6,10 @@ import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Utils.*;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
 import org.json.simple.JSONObject;
@@ -20,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/api/v1/common/RegistrationIscParis")
-public class ServletRegistrationIscParis extends HttpServlet {
+@WebServlet("/api/v1/common/RegistrationIeseg")
+public class ServletRegistrationIeseg extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -37,7 +40,7 @@ public class ServletRegistrationIscParis extends HttpServlet {
             JSONObject errors = new JSONObject();
             if (username == null || username.length() < 2 || username.length() > 30)
                 errors.put("username", "Invalid username");
-            if (email == null || !Regex.isEmail(email) || !email.endsWith("@iscparis.com"))
+            if (email == null || !Regex.isEmail(email) || !email.endsWith("@ieseg.fr"))
                 errors.put("email", "Invalid email");
             if (password == null || !Regex.isPassword(password))
                 errors.put("password", "Invalid password");
@@ -72,33 +75,24 @@ public class ServletRegistrationIscParis extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
-            /* Isc Paris profile */
-            Profile iscProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);
+            /* ieseg profile */
+            Profile ieseg_profile = newUser.getDashboardManager().addProfile("IESEG", "#FFC300", db);
 
-            /* Isc Paris apps in profile */
+            /* ieseg apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website myIsc = catalog.getWebsiteWithName("My ISC");
-            iscProfile.addEmptyApp(myIsc.getName(), myIsc, db);
-            Website moodle = catalog.getWebsiteWithName("Moodle");
-            iscProfile.addEmptyApp(moodle.getName(), moodle, db);
-            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser ISC");
-            iscProfile.addEmptyApp("JobTeaser", jobTeaser, db);
-            Website iagora = catalog.getWebsiteWithName("Iagora");
-            iscProfile.addEmptyApp(iagora.getName(), iagora, db);
-            Website talentoday = catalog.getWebsiteWithName("Talentoday");
-            iscProfile.addEmptyApp(talentoday.getName(), talentoday, db);
-            Website scholarvox = catalog.getWebsiteWithName("Scholarvox");
-            iscProfile.addEmptyApp(scholarvox.getName(), scholarvox, db);
-            Website housing_center = catalog.getWebsiteWithName("Housing Center");
-            iscProfile.addEmptyApp(housing_center.getName(), housing_center, db);
-            Website centralTest = catalog.getWebsiteWithName("CentralTest");
-            iscProfile.addEmptyApp(centralTest.getName(), centralTest, db);
-
+            Website ieseg_online = catalog.getWebsiteWithName("IESEG Online");
+            ieseg_profile.addEmptyApp(ieseg_online.getName(), ieseg_online, db);
+            Website ieseg_network = catalog.getWebsiteWithName("Ieseg Network");
+            ieseg_profile.addEmptyApp(ieseg_network.getName(), ieseg_network, db);
+            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Ieseg");
+            ieseg_profile.addEmptyApp("JobTeaser", jobTeaser, db);
+            Website unify = catalog.getWebsiteWithName("Unify Iéseg");
+            ieseg_profile.addEmptyApp(unify.getName(), unify, db);
+            Website office_mail = catalog.getWebsiteWithName("Office365 Mails");
+            ieseg_profile.addEmptyApp(office_mail.getName(), office_mail, db);
+            
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());
-
-        } catch (GeneralException e) {
-            sm.setError(new HttpServletException(HttpStatus.BadRequest, e.getMsg()));
         } catch (Exception e) {
             sm.setError(e);
         }

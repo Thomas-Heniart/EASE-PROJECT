@@ -37,7 +37,7 @@ public class ServletRegistrationEdhec extends HttpServlet {
             JSONObject errors = new JSONObject();
             if (username == null || username.length() < 2 || username.length() > 30)
                 errors.put("username", "Invalid username");
-            if (email == null || !Regex.isEmail(email) || !email.endsWith("@iscparis.com"))
+            if (email == null || !Regex.isEmail(email) || !email.endsWith("@edhec.com"))
                 errors.put("email", "Invalid email");
             if (password == null || !Regex.isPassword(password))
                 errors.put("password", "Invalid password");

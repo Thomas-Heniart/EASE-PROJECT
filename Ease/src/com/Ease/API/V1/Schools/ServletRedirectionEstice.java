@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Servlet implementation class ServletRedirectionEstice
  */
-@WebServlet({"/espas-estice-icm"})
+@WebServlet("/espas-estice-icm")
 public class ServletRedirectionEstice extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
