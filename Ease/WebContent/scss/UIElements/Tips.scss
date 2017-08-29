@@ -42,9 +42,21 @@
 		}
 	}
 	.tip[step='2'], .tip[step='3'] {
-		right: 1%;
+		right: 7px;
+		top:15px;
 	}
 	.tip {
+		.arrow {
+			position: absolute;
+			bottom: 90%;
+			width: 30px;
+			height: 30px;
+			right: 95px;
+			background: #efefef;
+			transform: rotateZ(45deg);
+			border-left: 1px solid #ccc;
+			border-top: 1px solid #ccc;
+		}
 		h3 {
 			font-weight: bold;
 			margin-top: 0;
@@ -56,10 +68,21 @@
 		}
 		.buttonHandler {
 			margin-top: 20px;
-			text-align: right;
+			overflow: hidden;
+			.skip {
+				float: left;
+				& > * {
+					display: block;
+				}
+				.action{
+					cursor: pointer;
+					text-decoration: underline;
+				}
+			}
 			.btn {
 				width: 150px;
 				height: 50px;
+				float: right;
 				background-color: #4990e2;
 				border-radius: 8px;
 				color: white;
@@ -69,8 +92,7 @@
 	}
 	.tip {
 		transition: opacity .3s, visibility .3s, transform .3s cubic-bezier(.62,-0.66,.27,1.63);
-		overflow: hidden;
-		opacity: 0;	
+		opacity: 0;
 		visibility: hidden;
 		pointer-events: none;
 		z-index: -1;
