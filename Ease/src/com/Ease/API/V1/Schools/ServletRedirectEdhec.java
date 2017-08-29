@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Servlet implementation class ServletRedirectEdhec
  */
-@WebServlet("/edhec")
+@WebServlet("/edhec-school")
 public class ServletRedirectEdhec extends HttpServlet {
     private static final long serialVersionUID = 1L;
        
