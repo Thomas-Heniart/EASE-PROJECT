@@ -103,7 +103,17 @@ public class ServletRegistration extends HttpServlet {
                 Website centralTest = catalog.getWebsiteWithName("CentralTest");
                 school_profile.addEmptyApp(centralTest.getName(), centralTest, db);
             } else if (email.endsWith("@ieseg.fr")) {
-
+                school_profile = newUser.getDashboardManager().addProfile("IESEG", "#FFC300", db);
+                Website ieseg_online = catalog.getWebsiteWithName("IESEG Online");
+                school_profile.addEmptyApp(ieseg_online.getName(), ieseg_online, db);
+                Website ieseg_network = catalog.getWebsiteWithName("Ieseg Network");
+                school_profile.addEmptyApp(ieseg_network.getName(), ieseg_network, db);
+                Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Ieseg");
+                school_profile.addEmptyApp("JobTeaser", jobTeaser, db);
+                Website unify = catalog.getWebsiteWithName("Unify Iéseg");
+                school_profile.addEmptyApp(unify.getName(), unify, db);
+                Website office_mail = catalog.getWebsiteWithName("Office365 Mails");
+                school_profile.addEmptyApp(office_mail.getName(), office_mail, db);
             } else if (email.endsWith("@edhec.com")) {
                 school_profile = newUser.getDashboardManager().addProfile("EDHEC", "#A51B35", db);
                 Website aurion = catalog.getWebsiteWithName("Aurion");

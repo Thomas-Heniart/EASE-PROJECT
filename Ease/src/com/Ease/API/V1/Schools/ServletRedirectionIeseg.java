@@ -26,7 +26,7 @@ public class ServletRedirectionIeseg extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/ieseg.png&schoolName=IÉSEG&commentFile=iesegComments.jsp&emailPlaceholder=ieseg.fr&video=ieseg.mp4");
+        RequestDispatcher rd = request.getRequestDispatcher("schoolLandingTemplate.jsp?schoolImageSrcs=/resources/landing/school/ieseg.png&schoolName=IÉSEG&school=Ieseg&commentFile=iesegComments.jsp&emailPlaceholder=ieseg.fr&video=ieseg.mp4");
         rd.forward(request, response);
 	}
 
