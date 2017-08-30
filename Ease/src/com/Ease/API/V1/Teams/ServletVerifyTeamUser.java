@@ -38,6 +38,7 @@ public class ServletVerifyTeamUser extends HttpServlet {
             if (teamUser.getDashboard_user() != null)
                 teamUser.finalizeRegistration();
             sm.saveOrUpdate(teamUser);
+            teamUser.addNotification(teamUser_connected.getUsername() + " validated your access to " + team.getName(), "", "/resources/notifications/flag.png", sm.getTimestamp(), sm.getDB());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

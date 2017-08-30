@@ -34,7 +34,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
             channel.addPendingTeamUser(teamUser, sm.getDB());
-            team.getTeamUserWithId(channel.getCreator_id()).addNotification(teamUser.getUsername() + " would like to join " + channel.getName(), channel.getDb_id() + "/flexPanel", "/resrouces/notifications/sign_in.png", sm.getTimestamp(), sm.getDB());
+            team.getTeamUserWithId(channel.getCreator_id()).addNotification(teamUser.getUsername() + " would like to join " + channel.getName(), channel.getDb_id() + "/flexPanel", "/resources/notifications/sign_in.png", sm.getTimestamp(), sm.getDB());
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
