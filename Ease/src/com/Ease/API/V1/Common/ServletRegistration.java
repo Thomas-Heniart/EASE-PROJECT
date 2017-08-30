@@ -9,7 +9,6 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,19 +34,17 @@ public class ServletRegistration extends HttpServlet {
             String code = sm.getStringParam("code", false);
             Long registration_date = sm.getLongParam("registration_date", true);
             Boolean send_news = sm.getBooleanParam("newsletter", true);
-            JSONObject errors = new JSONObject();
-            if (username == null || username.length() < 2 || username.length() > 30)
-                errors.put("username", "Invalid username");
+            checkUsernameIntegrity(username);
             if (email == null || !Regex.isEmail(email))
-                errors.put("email", "Invalid email");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             if (password == null || !Regex.isPassword(password))
-                errors.put("password", "Invalid password");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
             if (registration_date == null)
-                errors.put("registration_date", "Invalid registration date");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
             if ((digits == null || digits.length() != 6) && (code == null || code.equals("")))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
             if (send_news == null)
-                errors.put("newsletter", "Newsletter cannot be null");
+                throw new HttpServletException(HttpStatus.BadRequest, "Newsletter cannot be null");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
                 hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations JOIN teamUsers ON pendingTeamInvitations.teamUser_id = teamUsers.id WHERE teamUsers.email = ?");
@@ -66,8 +63,6 @@ public class ServletRegistration extends HttpServlet {
                 if (!db_digits.equals(digits))
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             }
-            if (!errors.isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, errors);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
@@ -139,6 +134,15 @@ public class ServletRegistration extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void checkUsernameIntegrity(String username) throws HttpServletException {
+        if (username == null || username.equals(""))
+            throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
+        if (username.length() >= 22 || username.length() < 4)
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be between 4 and 21 characters.");
+        if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must contain only lowercase characters.");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
