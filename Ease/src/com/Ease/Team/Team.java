@@ -27,6 +27,8 @@ import java.util.*;
 @Table(name = "teams")
 public class Team {
 
+    private static final String DEFAULT_CHANNEL_NAME = "openspace";
+
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         //query.querySQLString("SELECT id FROM teams");
@@ -100,6 +102,9 @@ public class Team {
 
     @Transient
     private WebSocketManager webSocketManager = new WebSocketManager();
+
+    @Transient
+    private Channel default_channel;
 
     public Team(String name) {
         this.name = name;
@@ -209,12 +214,15 @@ public class Team {
         this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
-    public Channel getGeneralChannel() throws HttpServletException {
-        for (Channel channel : this.getChannels()) {
-            if (channel.getName().equals("General"))
-                return channel;
+    public Channel getDefaultChannel() throws HttpServletException {
+        if (this.default_channel == null) {
+            for (Channel channel : this.getChannels()) {
+                if (channel.getName().equals(DEFAULT_CHANNEL_NAME))
+                    this.default_channel = channel;
+            }
         }
-        throw new HttpServletException(HttpStatus.BadRequest, "No general channel");
+        System.out.println("Default channel is null: " + (this.default_channel == null));
+        return this.default_channel;
     }
 
     public void removeTeamUser(TeamUser teamUser) {
@@ -459,5 +467,10 @@ public class Team {
 
     public WebSocketManager getWebSocketManager() {
         return webSocketManager;
+    }
+
+    public Channel createDefaultChannel(Integer owner_id) {
+        this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "This is the general channel", owner_id);
+        return this.default_channel;
     }
 }

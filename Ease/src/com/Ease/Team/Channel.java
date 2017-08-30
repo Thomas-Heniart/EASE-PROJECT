@@ -117,14 +117,14 @@ public class Channel {
     }
 
     private void addTeamUser(TeamUser teamUser) {
-        this.teamUsers.add(teamUser);
+        this.getTeamUsers().add(teamUser);
     }
 
     public void addTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         try {
-            int transaction = db.startTransaction();
             if (this.getTeamUsers().contains(teamUser))
                 throw new HttpServletException(HttpStatus.BadRequest, "This channel already contains this user");
+            int transaction = db.startTransaction();
             if (this.getPending_teamUsers().contains(teamUser))
                 this.removePendingTeamUser(teamUser, db);
             DatabaseRequest request = db.prepareRequest("INSERT INTO channelAndTeamUserMap values (null, ?, ?);");
@@ -221,7 +221,12 @@ public class Channel {
         for (TeamUser teamUser : this.getPending_teamUsers())
             joinRequests.add(teamUser.getDb_id());
         jsonObject.put("join_requests", joinRequests);
+        jsonObject.put("default", this.isDefault());
         return jsonObject;
+    }
+
+    public boolean isDefault() {
+        return this.getName().equals("openspace");
     }
 
     public void editName(String name) {
