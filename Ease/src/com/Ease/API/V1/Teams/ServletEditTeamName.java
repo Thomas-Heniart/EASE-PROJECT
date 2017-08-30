@@ -23,7 +23,7 @@ public class ServletEditTeamName extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true));
-            sm.needToBeAdminOfTeam(team_id);
+            sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             String name = (String) sm.getParam("name", true);
