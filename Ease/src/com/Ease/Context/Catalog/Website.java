@@ -592,6 +592,7 @@ public class Website {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("website_name", this.name);
         jsonObject.put("logo", this.getLogo());
+        jsonObject.put("pinneable", this.isIntegrated());
         return jsonObject;
     }
 

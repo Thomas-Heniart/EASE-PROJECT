@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Common;
+package com.Ease.API.V1.Teams;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
