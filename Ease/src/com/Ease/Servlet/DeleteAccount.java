@@ -1,6 +1,8 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,10 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
 
 /**
  * Servlet implementation class DeleteAccount
@@ -49,7 +48,8 @@ public class DeleteAccount extends HttpServlet {
             String password = sm.getServletParam("password", false);
             if (password == null || password.equals(""))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
-            user.getKeys().isGoodPassword(password);
+            if (!user.getKeys().isGoodPassword(password))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
             user.deleteFromDb(sm);
             user.deconnect(sm);
             sm.setResponse(ServletManager.Code.Success, "Account deleted");
