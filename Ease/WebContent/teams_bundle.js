@@ -263,7 +263,7 @@ process.umask = function() { return 0; };
 "use strict";
 
 
-module.exports = __webpack_require__(97);
+module.exports = __webpack_require__(98);
 
 
 /***/ }),
@@ -677,7 +677,7 @@ var _create = __webpack_require__(604);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _typeof2 = __webpack_require__(85);
+var _typeof2 = __webpack_require__(86);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -708,7 +708,7 @@ exports.default = function (subClass, superClass) {
 
 exports.__esModule = true;
 
-var _typeof2 = __webpack_require__(85);
+var _typeof2 = __webpack_require__(86);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -1682,7 +1682,7 @@ module.exports = map;
 "use strict";
 
 
-var axios = __webpack_require__(99);
+var axios = __webpack_require__(100);
 
 module.exports = {
   fetchTeams: function fetchTeams() {
@@ -2967,7 +2967,7 @@ module.exports = {
 "use strict";
 
 
-var axios = __webpack_require__(99);
+var axios = __webpack_require__(100);
 
 module.exports = {
   teamChannel: {
@@ -3076,6 +3076,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(function (response) {
         return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
       });
     },
     deleteTeamUser: function deleteTeamUser(ws_id, team_id, team_user_id) {
@@ -3864,7 +3866,7 @@ exports.editTeamUserPhone = editTeamUserPhone;
 
 var _teamModalActions = __webpack_require__(16);
 
-var _utils = __webpack_require__(100);
+var _utils = __webpack_require__(85);
 
 var _helperFunctions = __webpack_require__(13);
 
@@ -4205,7 +4207,7 @@ var _prodInvariant = __webpack_require__(14),
 var CallbackQueue = __webpack_require__(396);
 var PooledClass = __webpack_require__(81);
 var ReactFeatureFlags = __webpack_require__(401);
-var ReactReconciler = __webpack_require__(96);
+var ReactReconciler = __webpack_require__(97);
 var Transaction = __webpack_require__(167);
 
 var invariant = __webpack_require__(6);
@@ -4581,7 +4583,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Icon", function() { return __WEBPACK_IMPORTED_MODULE_48__elements_Icon__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_49__elements_Icon_IconGroup__ = __webpack_require__(466);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "IconGroup", function() { return __WEBPACK_IMPORTED_MODULE_49__elements_Icon_IconGroup__["a"]; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__elements_Image__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_50__elements_Image__ = __webpack_require__(99);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Image", function() { return __WEBPACK_IMPORTED_MODULE_50__elements_Image__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_51__elements_Image_ImageGroup__ = __webpack_require__(468);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "ImageGroup", function() { return __WEBPACK_IMPORTED_MODULE_51__elements_Image_ImageGroup__["a"]; });
@@ -5002,6 +5004,7 @@ var _reactRouterRedux = __webpack_require__(995);
 var api = __webpack_require__(26);
 var post_api = __webpack_require__(37);
 
+
 function getMyChannel(channels, myId) {
   for (var i = 0; i < channels.length; i++) {
     if (channels[i].userIds.indexOf(myId) !== -1) return channels[i].id;
@@ -5132,7 +5135,7 @@ module.exports = arrayMap;
 /* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(92),
+var Symbol = __webpack_require__(93),
     getRawTag = __webpack_require__(786),
     objectToString = __webpack_require__(817);
 
@@ -5709,7 +5712,7 @@ process.env.NODE_ENV !== "production" ? FormField.propTypes = {
 var global    = __webpack_require__(61)
   , core      = __webpack_require__(29)
   , ctx       = __webpack_require__(184)
-  , hide      = __webpack_require__(87)
+  , hide      = __webpack_require__(88)
   , PROTOTYPE = 'prototype';
 
 var $export = function(type, name, source){
@@ -6361,7 +6364,7 @@ module.exports = function(it){
 /***/ (function(module, exports, __webpack_require__) {
 
 // Thank's IE8 for his funny defineProperty
-module.exports = !__webpack_require__(86)(function(){
+module.exports = !__webpack_require__(87)(function(){
   return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
 });
 
@@ -7022,6 +7025,41 @@ module.exports = g;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.checkTeamUsernameErrors = checkTeamUsernameErrors;
+var passwordRegexp = exports.passwordRegexp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/;
+var emailRegexp = exports.emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+var usernameRegexp = exports.usernameRegexp = /^[a-z0-9]{4,21}$/;
+
+function checkTeamUsernameErrors(username) {
+    var value = {
+        error: false,
+        message: ''
+    };
+    if (username.length < 4 || username.length > 21) value.message = "Sorry, usernames must be greater than 3 characters and fewer than 22 characters.";else if (username.match(usernameRegexp) === null) value.message = "Sorry, usernames must contain only lowercase characters.";
+    if (value.message.length > 0) value.error = true;
+    return value;
+}
+
+var jobRoles = exports.jobRoles = ['Administrative/Facilities', 'Accounting/Finance', 'Business Development', 'Business Owner', 'Customer Support', 'Data/Analytics/Business Intelligence', 'Design', 'Engineering (Software)', 'Marketing', 'Media/Communications', 'Operations', 'Product Management', 'Program/Project Management', 'Research', 'Sales', 'Other'];
+var teamUserState = exports.teamUserState = {
+    invited: 0,
+    registered: 1,
+    accepted: 2
+};
+
+var teamUserRoleValues = exports.teamUserRoleValues = [{ key: '1', text: 'member', value: 1 }, { key: '2', text: 'admin', value: 2 }, { key: '3', text: 'owner', value: 3 }];
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 exports.__esModule = true;
 
 var _iterator = __webpack_require__(609);
@@ -7043,7 +7081,7 @@ exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.d
 };
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports) {
 
 module.exports = function(exec){
@@ -7055,7 +7093,7 @@ module.exports = function(exec){
 };
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var dP         = __webpack_require__(62)
@@ -7068,13 +7106,13 @@ module.exports = __webpack_require__(75) ? function(object, key, value){
 };
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports) {
 
 module.exports = {};
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
@@ -7086,7 +7124,7 @@ module.exports = Object.keys || function keys(O){
 };
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7277,7 +7315,7 @@ function get_country_phone_code(country, country_metadata) {
 //# sourceMappingURL=metadata.js.map
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7298,7 +7336,7 @@ function get_country_phone_code(country, country_metadata) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_extends__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_extends__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__common__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(91);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__format__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__get_number_type__ = __webpack_require__(132);
 
@@ -7924,7 +7962,7 @@ function sort_out_arguments(first_argument, second_argument, third_argument) {
 //# sourceMappingURL=parse.js.map
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var root = __webpack_require__(31);
@@ -7936,7 +7974,7 @@ module.exports = Symbol;
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var assignValue = __webpack_require__(138),
@@ -7982,7 +8020,7 @@ module.exports = copyObject;
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8001,7 +8039,7 @@ module.exports = __webpack_require__(1021);
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8124,7 +8162,7 @@ DOMLazyTree.queueText = queueText;
 module.exports = DOMLazyTree;
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8298,7 +8336,7 @@ module.exports = ReactReconciler;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8408,7 +8446,7 @@ module.exports = React;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8418,45 +8456,10 @@ module.exports = React;
 
 
 /***/ }),
-/* 99 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(538);
-
-/***/ }),
 /* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.checkTeamUsernameErrors = checkTeamUsernameErrors;
-var passwordRegexp = exports.passwordRegexp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/;
-var emailRegexp = exports.emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-var usernameRegexp = exports.usernameRegexp = /^[a-z0-9]{4,21}$/;
-
-function checkTeamUsernameErrors(username) {
-    var value = {
-        error: false,
-        message: ''
-    };
-    if (username.length < 4 || username.length > 21) value.message = "Sorry, usernames must be greater than 3 characters and fewer than 22 characters.";else if (username.match(usernameRegexp) === null) value.message = "Sorry, usernames must contain only lowercase characters.";
-    if (value.message.length > 0) value.error = true;
-    return value;
-}
-
-var jobRoles = exports.jobRoles = ['Administrative/Facilities', 'Accounting/Finance', 'Business Development', 'Business Owner', 'Customer Support', 'Data/Analytics/Business Intelligence', 'Design', 'Engineering (Software)', 'Marketing', 'Media/Communications', 'Operations', 'Product Management', 'Program/Project Management', 'Research', 'Sales', 'Other'];
-var teamUserState = exports.teamUserState = {
-    invited: 0,
-    registered: 1,
-    accepted: 2
-};
-
-var teamUserRoleValues = exports.teamUserRoleValues = [{ key: '1', text: 'member', value: 1 }, { key: '2', text: 'admin', value: 2 }, { key: '3', text: 'owner', value: 3 }];
+module.exports = __webpack_require__(538);
 
 /***/ }),
 /* 101 */
@@ -10155,7 +10158,7 @@ exports.newNotification = newNotification;
 var post_api = __webpack_require__(37);
 var api = __webpack_require__(26);
 
-var sound = new Audio('/resources/credulous.mp3');
+var sound = new Audio('/resources/notification_sound.mp3');
 
 function fetchNotifications(offset) {
   return function (dispatch, getState) {
@@ -10165,6 +10168,7 @@ function fetchNotifications(offset) {
       return r;
     }).catch(function (err) {
       dispatch({ type: 'FETCH_NOTIFICATIONS_REJECTED' });
+      throw err;
     });
   };
 }
@@ -10204,7 +10208,7 @@ exports.fetchTeamItemApps = fetchTeamItemApps;
 exports.showTeamMenu = showTeamMenu;
 exports.editTeamName = editTeamName;
 
-var _axios = __webpack_require__(99);
+var _axios = __webpack_require__(100);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -10215,6 +10219,8 @@ var UserActions = _interopRequireWildcard(_userActions);
 var _channelActions = __webpack_require__(43);
 
 var ChannelActions = _interopRequireWildcard(_channelActions);
+
+var _teamAppsAddUIActions = __webpack_require__(181);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -10246,6 +10252,7 @@ function fetchTeamAndUsersAndChannels(team_id) {
 
 function fetchTeamItemApps(itemId) {
   return function (dispatch, getState) {
+    dispatch((0, _teamAppsAddUIActions.closeAppAddUI)());
     if (itemId[0] !== '@') return dispatch(ChannelActions.fetchTeamChannelApps(Number(itemId)));else return dispatch(UserActions.fetchTeamUserApps(Number(itemId.slice(1, itemId.length))));
   };
 }
@@ -10688,8 +10695,8 @@ function matches_entirely() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_get_iterator__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_get_iterator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_get_iterator__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__parse__ = __webpack_require__(91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__parse__ = __webpack_require__(92);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(91);
 
 // This is a port of Google Android `libphonenumber`'s
 // `phonenumberutil.js` of 17th November, 2016.
@@ -10922,9 +10929,9 @@ function sort_out_arguments() {
 /* harmony export (immutable) */ __webpack_exports__["a"] = get_number_type;
 /* unused harmony export is_of_type */
 /* harmony export (immutable) */ __webpack_exports__["b"] = sort_out_arguments;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__parse__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__parse__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__common__ = __webpack_require__(130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__metadata__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__metadata__ = __webpack_require__(91);
 
 
 
@@ -14147,7 +14154,7 @@ exports.f = Object.getOwnPropertySymbols;
 // most Object methods by ES6 should accept primitives
 var $export = __webpack_require__(60)
   , core    = __webpack_require__(29)
-  , fails   = __webpack_require__(86);
+  , fails   = __webpack_require__(87);
 module.exports = function(KEY, exec){
   var fn  = (core.Object || {})[KEY] || Object[KEY]
     , exp = {};
@@ -14242,8 +14249,8 @@ exports.f = __webpack_require__(45);
 
 __webpack_require__(646);
 var global        = __webpack_require__(61)
-  , hide          = __webpack_require__(87)
-  , Iterators     = __webpack_require__(88)
+  , hide          = __webpack_require__(88)
+  , Iterators     = __webpack_require__(89)
   , TO_STRING_TAG = __webpack_require__(45)('toStringTag');
 
 for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'], i = 0; i < 5; i++){
@@ -15131,7 +15138,7 @@ module.exports = baseLodash;
 /* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(92),
+var Symbol = __webpack_require__(93),
     arrayMap = __webpack_require__(53),
     isArray = __webpack_require__(17),
     isSymbol = __webpack_require__(80);
@@ -15621,7 +15628,7 @@ var arrayMap = __webpack_require__(53),
     baseClone = __webpack_require__(213),
     baseUnset = __webpack_require__(750),
     castPath = __webpack_require__(78),
-    copyObject = __webpack_require__(93),
+    copyObject = __webpack_require__(94),
     customOmitClone = __webpack_require__(781),
     flatRest = __webpack_require__(150),
     getAllKeysIn = __webpack_require__(352);
@@ -15745,7 +15752,7 @@ module.exports = ReactPropTypesSecret;
 
 
 
-var DOMLazyTree = __webpack_require__(95);
+var DOMLazyTree = __webpack_require__(96);
 var Danger = __webpack_require__(900);
 var ReactDOMComponentTree = __webpack_require__(23);
 var ReactInstrumentation = __webpack_require__(40);
@@ -16302,7 +16309,7 @@ var _prodInvariant = __webpack_require__(14);
 var ReactPropTypesSecret = __webpack_require__(406);
 var propTypesFactory = __webpack_require__(392);
 
-var React = __webpack_require__(97);
+var React = __webpack_require__(98);
 var PropTypes = propTypesFactory(React.isValidElement);
 
 var invariant = __webpack_require__(6);
@@ -18643,7 +18650,7 @@ process.env.NODE_ENV !== "production" ? StepTitle.propTypes = {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return numberToWordMap; });
 /* harmony export (immutable) */ __webpack_exports__["b"] = numberToWord;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__);
 
 var numberToWordMap = {
@@ -21530,7 +21537,7 @@ module.exports = function(it){
 /* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(75) && !__webpack_require__(86)(function(){
+module.exports = !__webpack_require__(75) && !__webpack_require__(87)(function(){
   return Object.defineProperty(__webpack_require__(302)('div'), 'a', {get: function(){ return 7; }}).a != 7;
 });
 
@@ -21553,9 +21560,9 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
 var LIBRARY        = __webpack_require__(187)
   , $export        = __webpack_require__(60)
   , redefine       = __webpack_require__(309)
-  , hide           = __webpack_require__(87)
+  , hide           = __webpack_require__(88)
   , has            = __webpack_require__(76)
-  , Iterators      = __webpack_require__(88)
+  , Iterators      = __webpack_require__(89)
   , $iterCreate    = __webpack_require__(632)
   , setToStringTag = __webpack_require__(192)
   , getPrototypeOf = __webpack_require__(307)
@@ -21676,7 +21683,7 @@ module.exports = function(object, names){
 /* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(87);
+module.exports = __webpack_require__(88);
 
 /***/ }),
 /* 310 */
@@ -21695,7 +21702,7 @@ module.exports = function(it){
 
 var classof   = __webpack_require__(301)
   , ITERATOR  = __webpack_require__(45)('iterator')
-  , Iterators = __webpack_require__(88);
+  , Iterators = __webpack_require__(89);
 module.exports = __webpack_require__(29).getIteratorMethod = function(it){
   if(it != undefined)return it[ITERATOR]
     || it['@@iterator']
@@ -22478,8 +22485,8 @@ function template_formatter(template) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__parse__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__parse__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__format__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__common__ = __webpack_require__(130);
 
@@ -23345,9 +23352,9 @@ function repeat(string, times) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = is_valid;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__parse__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__parse__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__get_number_type__ = __webpack_require__(132);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__metadata__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__metadata__ = __webpack_require__(91);
 
 
 
@@ -23415,12 +23422,12 @@ function is_valid(first_argument, second_argument, third_argument) {
 /* unused harmony export getPhoneCodeCustom */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__metadata_min_json__ = __webpack_require__(325);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__metadata_min_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__metadata_min_json__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__es6_parse__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__es6_parse__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__es6_get_number_type__ = __webpack_require__(132);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__es6_format__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__es6_validate__ = __webpack_require__(323);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__es6_as_you_type__ = __webpack_require__(322);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__es6_metadata__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__es6_metadata__ = __webpack_require__(91);
 /* unused harmony reexport parseCustom */
 /* unused harmony reexport formatCustom */
 /* unused harmony reexport isValidNumberCustom */
@@ -32078,7 +32085,7 @@ module.exports = arraySome;
 /* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(93),
+var copyObject = __webpack_require__(94),
     keys = __webpack_require__(33);
 
 /**
@@ -36043,9 +36050,9 @@ module.exports = ReactInputSelection;
 
 var _prodInvariant = __webpack_require__(14);
 
-var DOMLazyTree = __webpack_require__(95);
+var DOMLazyTree = __webpack_require__(96);
 var DOMProperty = __webpack_require__(70);
-var React = __webpack_require__(97);
+var React = __webpack_require__(98);
 var ReactBrowserEventEmitter = __webpack_require__(165);
 var ReactCurrentOwner = __webpack_require__(50);
 var ReactDOMComponentTree = __webpack_require__(23);
@@ -36055,7 +36062,7 @@ var ReactFeatureFlags = __webpack_require__(401);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
 var ReactMarkupChecksum = __webpack_require__(932);
-var ReactReconciler = __webpack_require__(96);
+var ReactReconciler = __webpack_require__(97);
 var ReactUpdateQueue = __webpack_require__(241);
 var ReactUpdates = __webpack_require__(49);
 
@@ -36588,7 +36595,7 @@ module.exports = ReactMount;
 
 var _prodInvariant = __webpack_require__(14);
 
-var React = __webpack_require__(97);
+var React = __webpack_require__(98);
 
 var invariant = __webpack_require__(6);
 
@@ -41975,7 +41982,7 @@ process.env.NODE_ENV !== "production" ? LabelGroup.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__elements_Image__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__elements_Image__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__ListContent__ = __webpack_require__(260);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__ListDescription__ = __webpack_require__(176);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__ListHeader__ = __webpack_require__(177);
@@ -42896,7 +42903,7 @@ process.env.NODE_ENV !== "production" ? StepGroup.propTypes = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__);
 
 var hasDocument = (typeof document === 'undefined' ? 'undefined' : __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof___default()(document)) === 'object' && document !== null;
@@ -43410,7 +43417,7 @@ DropdownHeader.create = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__lib__
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__elements_Flag__ = __webpack_require__(463);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__elements_Icon__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__elements_Image__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__elements_Image__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__elements_Label__ = __webpack_require__(175);
 
 
@@ -45539,7 +45546,7 @@ process.env.NODE_ENV !== "production" ? TransitionGroup.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__elements_Image__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__elements_Image__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__CardContent__ = __webpack_require__(507);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__CardDescription__ = __webpack_require__(266);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__CardGroup__ = __webpack_require__(508);
@@ -46859,7 +46866,7 @@ process.env.NODE_ENV !== "production" ? ItemGroup.propTypes = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__elements_Image__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__elements_Image__ = __webpack_require__(99);
 
 
 
@@ -47748,7 +47755,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
       var _this2 = this;
 
       var itemId = nextProps.match.params.itemId;
-      if (this.props.match.params.teamId != nextProps.match.params.teamId) {
+      if (this.props.match.params.teamId !== nextProps.match.params.teamId) {
         this.setState({ loadingInfo: true });
         this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(nextProps.match.params.teamId)).then(function () {
           _this2.setState({ loadingInfo: false });
@@ -47756,7 +47763,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
             _this2.props.dispatch(teamActions.fetchTeamItemApps(itemId));
           } else _this2.autoSelectItem();
         });
-      } else if (this.props.match.params.itemId != itemId) {
+      } else if (this.props.match.params.itemId !== itemId) {
         if (this.isValidTeamItemId(itemId)) {
           this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
         } else this.autoSelectItem();
@@ -47836,7 +47843,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
             me: me,
             team: this.props.team,
             dispatch: this.props.dispatch }),
-          !this.state.loadingInfo && selectedItem != null && React.createElement(
+          !this.state.loadingInfo && selectedItem !== null && React.createElement(
             'div',
             { className: 'client_main_container' },
             React.createElement(TeamHeader, {
@@ -47849,7 +47856,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
               React.createElement(
                 _transitions.OpacityTransition,
                 { appear: true },
-                this.props.common.user != null && !this.props.common.user.status.team_tuto_done && React.createElement(_TeamsTutorial2.default, null)
+                this.props.common.user !== null && !this.props.common.user.status.team_tuto_done && React.createElement(_TeamsTutorial2.default, null)
               ),
               React.createElement(
                 'div',
@@ -48645,13 +48652,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _reactRouterDom = __webpack_require__(35);
 
-var _utils = __webpack_require__(100);
+var _utils = __webpack_require__(85);
 
 var _FormComponents = __webpack_require__(291);
 
 var _reactStripeElements = __webpack_require__(424);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(94);
+var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -48677,7 +48684,7 @@ var React = __webpack_require__(1);
 var classnames = __webpack_require__(2);
 var post_api = __webpack_require__(37);
 var api = __webpack_require__(26);
-var axios = __webpack_require__(99);
+var axios = __webpack_require__(100);
 var StripeCardForm = __webpack_require__(293);
 var CompanyInformationForm = __webpack_require__(288);
 
@@ -49217,7 +49224,7 @@ var Step7 = function (_React$Component6) {
       var calls = [];
       this.props.invitations.map(function (item) {
         if (item.email.match(_utils.emailRegexp) !== null && item.username.length > 0) {
-          calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, '1'));
+          calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, 1));
         }
       }, this);
       this.setState({ loading: true });
@@ -49785,11 +49792,11 @@ var _classnames2 = _interopRequireDefault(_classnames);
 
 var _FormComponents = __webpack_require__(291);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(94);
+var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
-var _utils = __webpack_require__(100);
+var _utils = __webpack_require__(85);
 
 var _queryString = __webpack_require__(394);
 
@@ -52116,7 +52123,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _reactRedux = __webpack_require__(12);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(94);
+var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -52166,271 +52173,13 @@ var FirstStepAddUser = function (_React$Component) {
   function FirstStepAddUser(props) {
     _classCallCheck(this, FirstStepAddUser);
 
-    var _this = _possibleConstructorReturn(this, (FirstStepAddUser.__proto__ || Object.getPrototypeOf(FirstStepAddUser)).call(this, props));
-
-    _this.state = {
-      dropdown: false
-    };
-    _this.onMouseDown = _this.onMouseDown.bind(_this);
-    _this.onMouseUp = _this.onMouseUp.bind(_this);
-    _this.pageClick = _this.pageClick.bind(_this);
-    return _this;
+    return _possibleConstructorReturn(this, (FirstStepAddUser.__proto__ || Object.getPrototypeOf(FirstStepAddUser)).call(this, props));
   }
 
   _createClass(FirstStepAddUser, [{
-    key: 'onMouseDown',
-    value: function onMouseDown() {
-      this.mouseInDropDown = true;
-    }
-  }, {
-    key: 'onMouseUp',
-    value: function onMouseUp() {
-      this.mouseInDropDown = false;
-    }
-  }, {
-    key: 'pageClick',
-    value: function pageClick(e) {
-      if (this.mouseInDropDown) return;
-      this.setState({ dropdown: false });
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      window.addEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      window.removeEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
-
-      return React.createElement(
-        'div',
-        { className: 'contents', id: 'first_step' },
-        React.createElement(
-          'div',
-          { className: 'content_row' },
-          React.createElement(
-            'h1',
-            { className: 'full_width' },
-            'Invite a team member'
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'content_row' },
-          React.createElement(
-            'div',
-            { className: 'signed_input' },
-            React.createElement(
-              'label',
-              { htmlFor: 'email_input' },
-              'Email address'
-            ),
-            React.createElement('input', { value: this.props.email,
-              onChange: function onChange(e) {
-                _this2.props.handleInputs(e.target.name, e.target.value);
-              },
-              id: 'email_input', name: 'email', type: 'email', placeholder: 'name@company.com', className: 'full_width modal_input' })
-          ),
-          React.createElement(
-            'div',
-            { className: 'signed_input' },
-            React.createElement(
-              'label',
-              { htmlFor: 'fname_input' },
-              'First name'
-            ),
-            React.createElement('input', { value: this.props.fname,
-              onChange: function onChange(e) {
-                _this2.props.handleInputs(e.target.name, e.target.value);
-              },
-              id: 'fname_input', name: 'fname', type: 'text', placeholder: 'Optional', className: 'full_width modal_input' })
-          ),
-          React.createElement(
-            'div',
-            { className: 'signed_input' },
-            React.createElement(
-              'label',
-              { htmlFor: 'lname_input' },
-              'Last name'
-            ),
-            React.createElement('input', { value: this.props.lname,
-              onChange: function onChange(e) {
-                _this2.props.handleInputs(e.target.name, e.target.value);
-              },
-              id: 'lname_input', name: 'lname', type: 'text', placeholder: 'Optional', className: 'full_width modal_input' })
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'content_row' },
-          React.createElement(
-            'div',
-            { className: 'signed_input' },
-            React.createElement(
-              'label',
-              { htmlFor: 'username_input' },
-              'Username'
-            ),
-            React.createElement('input', { value: this.props.username,
-              onChange: function onChange(e) {
-                _this2.props.handleInputs(e.target.name, e.target.value);
-              },
-              id: 'username_input', name: 'username', type: 'text', className: 'full_width modal_input', placeholder: 'Username' })
-          ),
-          React.createElement(
-            'div',
-            { className: 'signed_input' },
-            React.createElement(
-              'label',
-              { htmlFor: 'user_role_select' },
-              'User role'
-            ),
-            React.createElement(
-              'select',
-              { value: this.props.role,
-                onChange: function onChange(e) {
-                  _this2.props.handleInputs(e.target.name, e.target.value);
-                },
-                id: 'user_role_select', name: 'role', className: 'full_width select_unstyle modal_input' },
-              React.createElement(
-                'option',
-                { value: '1' },
-                'Member'
-              ),
-              React.createElement(
-                'option',
-                { value: '2' },
-                'Admin'
-              )
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'signed_input' },
-            React.createElement(
-              'label',
-              { htmlFor: 'departure_date_input' },
-              'Departure date (optional)'
-            ),
-            React.createElement('input', { value: this.props.departure_date,
-              onChange: function onChange(e) {
-                _this2.props.handleInputs(e.target.name, e.target.value);
-              },
-              id: 'departure_date_input', name: 'departure_date', type: 'date', className: 'full_width modal_input', placeholder: 'Optional' })
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'content_row' },
-          React.createElement(
-            'div',
-            { className: 'tagged_input_container full_width' },
-            React.createElement(
-              'label',
-              { htmlFor: 'teams_input' },
-              'Team(s)'
-            ),
-            React.createElement(
-              'div',
-              { className: 'modal_input_wrapper full_width item_list',
-                onMouseDown: this.onMouseDown,
-                onMouseUp: this.onMouseUp },
-              this.props.selectedChannels.map(function (item) {
-                return React.createElement(
-                  'div',
-                  { className: 'input_tag', key: item.id },
-                  React.createElement(
-                    'span',
-                    null,
-                    item.name
-                  ),
-                  React.createElement(
-                    'button',
-                    { className: 'button-unstyle', onClick: this.props.deselectChannelFunc.bind(null, item.id) },
-                    React.createElement('i', { className: 'fa fa-times' })
-                  )
-                );
-              }, this),
-              React.createElement('input', { id: 'teams_input', className: 'full_width input_unstyle', name: 'teams', type: 'text', placeholder: 'Search by name',
-                onFocus: function onFocus(e) {
-                  _this2.setState({ dropdown: true });
-                } }),
-              React.createElement(
-                'div',
-                { className: classnames("floating_dropdown", this.state.dropdown ? "show" : null) },
-                React.createElement(
-                  'div',
-                  { className: 'dropdown_content' },
-                  this.props.channels.map(function (item) {
-                    return React.createElement(
-                      'div',
-                      { onClick: this.props.selectChannelFunc.bind(null, item.id), className: classnames("dropdown_row selectable", item.selected ? "selected" : null), key: item.id },
-                      React.createElement(
-                        'span',
-                        { className: 'main_value' },
-                        item.name
-                      ),
-                      item.purpose.length && React.createElement(
-                        'span',
-                        { className: 'text-muted' },
-                        '\xA0- ',
-                        item.purpose
-                      )
-                    );
-                  }, this)
-                )
-              )
-            )
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'content_row buttons_row' },
-          React.createElement(
-            'div',
-            { className: 'buttons_wrapper' },
-            React.createElement(
-              'button',
-              { className: 'button-unstyle neutral_background action_text_button cancel_button',
-                onClick: function onClick(e) {
-                  _this2.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
-                } },
-              'Cancel'
-            ),
-            React.createElement(
-              'button',
-              { className: 'button-unstyle positive_background action_text_button next_button',
-                onClick: this.props.validateStep },
-              'Next'
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return FirstStepAddUser;
-}(React.Component);
-
-var FirstStepAddUser2 = function (_React$Component2) {
-  _inherits(FirstStepAddUser2, _React$Component2);
-
-  function FirstStepAddUser2(props) {
-    _classCallCheck(this, FirstStepAddUser2);
-
-    return _possibleConstructorReturn(this, (FirstStepAddUser2.__proto__ || Object.getPrototypeOf(FirstStepAddUser2)).call(this, props));
-  }
-
-  _createClass(FirstStepAddUser2, [{
-    key: 'render',
-    value: function render() {
-      var _this4 = this;
 
       return React.createElement(
         'div',
@@ -52476,8 +52225,7 @@ var FirstStepAddUser2 = function (_React$Component2) {
                 onChange: this.props.handleReactInput,
                 label: 'User role',
                 width: 4,
-                options: [{ key: 1, value: 1, text: 'Member' }, { key: 2, value: 2, text: 'Admin' }]
-              }),
+                options: [{ key: 1, value: 1, text: 'Member' }, { key: 2, value: 2, text: 'Admin' }] }),
               React.createElement(_semanticUiReact.Form.Input, { label: 'Departure date (optional)', type: 'date',
                 onChange: this.props.handleReactInput,
                 name: 'departure_date',
@@ -52503,13 +52251,14 @@ var FirstStepAddUser2 = function (_React$Component2) {
                 {
                   positive: true,
                   floated: 'right',
+                  loading: this.props.loading,
                   type: 'submit' },
                 'Next'
               ),
               React.createElement(
                 _semanticUiReact.Button,
                 { floated: 'right', onClick: function onClick(e) {
-                    _this4.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+                    _this2.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
                   } },
                 'Cancel'
               )
@@ -52520,11 +52269,11 @@ var FirstStepAddUser2 = function (_React$Component2) {
     }
   }]);
 
-  return FirstStepAddUser2;
+  return FirstStepAddUser;
 }(React.Component);
 
-var SecondStep = function (_React$Component3) {
-  _inherits(SecondStep, _React$Component3);
+var SecondStep = function (_React$Component2) {
+  _inherits(SecondStep, _React$Component2);
 
   function SecondStep(props) {
     _classCallCheck(this, SecondStep);
@@ -52634,7 +52383,7 @@ var SecondStep = function (_React$Component3) {
           React.createElement(
             'div',
             { className: 'buttons_wrapper' },
-            React.createElement(
+            !channel.default && React.createElement(
               'button',
               { className: 'button-unstyle action-text-button only-text-button',
                 onClick: this.props.incrementAndReject.bind(null, channel.id) },
@@ -52667,15 +52416,15 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
     team_id: store.team.id,
     me: store.users.me
   };
-}), _dec(_class = function (_React$Component4) {
-  _inherits(TeamAddUserModal, _React$Component4);
+}), _dec(_class = function (_React$Component3) {
+  _inherits(TeamAddUserModal, _React$Component3);
 
   function TeamAddUserModal(props) {
     _classCallCheck(this, TeamAddUserModal);
 
-    var _this6 = _possibleConstructorReturn(this, (TeamAddUserModal.__proto__ || Object.getPrototypeOf(TeamAddUserModal)).call(this, props));
+    var _this4 = _possibleConstructorReturn(this, (TeamAddUserModal.__proto__ || Object.getPrototypeOf(TeamAddUserModal)).call(this, props));
 
-    _this6.state = {
+    _this4.state = {
       user_id: null,
       email: '',
       fname: '',
@@ -52686,17 +52435,19 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
       selectedChannels: [],
       channels: [],
       options: [],
+      defaultRooms: [],
       value: [],
       step: 0,
+      firstStepLoading: false,
       firstStepErrorMessage: '',
       channelStep: 0,
       maxChannelStep: 0
     };
-    _this6.state.channels = _this6.props.channels.map(function (item) {
+    _this4.state.channels = _this4.props.channels.map(function (item) {
       item.selected = false;
       return item;
     });
-    _this6.state.options = _this6.props.channels.map(function (item) {
+    _this4.state.options = _this4.props.channels.map(function (item) {
       return {
         key: item.id,
         text: item.purpose.length > 0 ? item.name + ' - ' + item.purpose : item.name,
@@ -52704,20 +52455,29 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
         name: item.name
       };
     });
-    _this6.handleInputs = _this6.handleInputs.bind(_this6);
-    _this6.handleReactInput = _this6.handleReactInput.bind(_this6);
-    _this6.selectChannel = _this6.selectChannel.bind(_this6);
-    _this6.deselectChannel = _this6.deselectChannel.bind(_this6);
-    _this6.validateFirstStep = _this6.validateFirstStep.bind(_this6);
-    _this6.incrementStep = _this6.incrementStep.bind(_this6);
-    _this6.decrementStep = _this6.decrementStep.bind(_this6);
-    _this6.checkChannelApp = _this6.checkChannelApp.bind(_this6);
-    _this6.handleCredentialsInput = _this6.handleCredentialsInput.bind(_this6);
-    _this6.incrementStepAndRejectChannel = _this6.incrementStepAndRejectChannel.bind(_this6);
-    _this6.incrementStepAndValidateChannel = _this6.incrementStepAndValidateChannel.bind(_this6);
-    _this6.validateSecondStep = _this6.validateSecondStep.bind(_this6);
-    _this6.dropdownChange = _this6.dropdownChange.bind(_this6);
-    return _this6;
+    _this4.state.value = _this4.props.channels.map(function (item) {
+      if (item.default) return item.id;
+      return null;
+    }).filter(function (item) {
+      return item !== null;
+    });
+    _this4.state.defaultRooms = _this4.state.value.map(function (item) {
+      return item;
+    });
+
+    _this4.handleReactInput = _this4.handleReactInput.bind(_this4);
+    _this4.selectChannel = _this4.selectChannel.bind(_this4);
+    _this4.deselectChannel = _this4.deselectChannel.bind(_this4);
+    _this4.validateFirstStep = _this4.validateFirstStep.bind(_this4);
+    _this4.incrementStep = _this4.incrementStep.bind(_this4);
+    _this4.decrementStep = _this4.decrementStep.bind(_this4);
+    _this4.checkChannelApp = _this4.checkChannelApp.bind(_this4);
+    _this4.handleCredentialsInput = _this4.handleCredentialsInput.bind(_this4);
+    _this4.incrementStepAndRejectChannel = _this4.incrementStepAndRejectChannel.bind(_this4);
+    _this4.incrementStepAndValidateChannel = _this4.incrementStepAndValidateChannel.bind(_this4);
+    _this4.validateSecondStep = _this4.validateSecondStep.bind(_this4);
+    _this4.dropdownChange = _this4.dropdownChange.bind(_this4);
+    return _this4;
   }
 
   _createClass(TeamAddUserModal, [{
@@ -52733,23 +52493,31 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function dropdownChange(e, _ref2) {
       var value = _ref2.value;
 
+      var defaultRooms = this.state.defaultRooms;
+
+      for (var i = 0; defaultRooms.length; i++) {
+        if (value.indexOf(defaultRooms[i]) === -1) return;
+      }
       this.setState({ value: value });
     }
   }, {
     key: 'validateFirstStep',
     value: function validateFirstStep(e) {
-      var _this7 = this;
+      var _this5 = this;
 
       e.preventDefault();
       this.setState({ firstStepErrorMessage: '' });
       var channels = this.state.value.map(function (item) {
-        return (0, _helperFunctions.selectChannelFromListById)(_this7.state.channels, item);
+        return (0, _helperFunctions.selectChannelFromListById)(_this5.state.channels, item);
       });
+      this.setState({ firstStepLoading: true });
       if (!channels.length) {
         this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username, this.state.departure_date, this.state.role)).then(function (response) {
-          _this7.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+          _this5.setState({ firstStepLoading: false });
+          _this5.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
         }).catch(function (err) {
-          _this7.setState({ firstStepErrorMessage: err });
+          _this5.setState({ firstStepLoading: false });
+          _this5.setState({ firstStepErrorMessage: err });
         });
         return;
       }
@@ -52774,10 +52542,12 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
             item.confirmed = false;
             return item;
           });
-          _this7.setState({ step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length, user_id: user_id });
+          _this5.setState({ firstStepLoading: false });
+          _this5.setState({ step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length, user_id: user_id });
         });
       }).catch(function (err) {
-        _this7.setState({ firstStepErrorMessage: err });
+        _this5.setState({ firstStepLoading: false });
+        _this5.setState({ firstStepErrorMessage: err });
       });
     }
   }, {
@@ -52867,7 +52637,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'validateSecondStep',
     value: function validateSecondStep() {
-      var _this8 = this;
+      var _this6 = this;
 
       var joinChannels = [];
       var shareApps = [];
@@ -52877,26 +52647,24 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
         return item.confirmed;
       });
       joinChannels = channels.map(function (item) {
-        return this.props.dispatch(channelActions.addTeamUserToChannel(item.id, this.state.user_id));
-      }, this);
+        if (!item.default) return this.props.dispatch(channelActions.addTeamUserToChannel(item.id, this.state.user_id));
+        return null;
+      }, this).filter(function (item) {
+        return item !== null;
+      });
       Promise.all(joinChannels).then(function () {
         for (var i = 0; i < channels.length; i++) {
           for (var j = 0; j < channels[i].apps.length; j++) {
             app = channels[i].apps[j];
             if (app.selected) {
-              shareApps.push(_this8.props.dispatch(appActions.teamShareApp(app.id, { team_user_id: _this8.state.user_id, account_information: app.credentials })));
+              shareApps.push(_this6.props.dispatch(appActions.teamShareApp(app.id, { team_user_id: _this6.state.user_id, account_information: app.credentials })));
             }
           }
         }
         Promise.all(shareApps).then(function () {
-          _this8.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+          _this6.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
         });
       });
-    }
-  }, {
-    key: 'handleInputs',
-    value: function handleInputs(name, value) {
-      this.setState(_defineProperty({}, name, value));
     }
   }, {
     key: 'deselectChannel',
@@ -52928,7 +52696,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'render',
     value: function render() {
-      var _this9 = this;
+      var _this7 = this;
 
       return React.createElement(
         'div',
@@ -52948,7 +52716,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
         React.createElement(
           'a',
           { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: function onClick(e) {
-              _this9.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+              _this7.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
             } },
           React.createElement('i', { className: 'ease_icon fa fa-times' }),
           React.createElement(
@@ -52968,7 +52736,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               transitionAppearTimeout: 200,
               transitionEnterTimeout: 200,
               transitionLeaveTimeout: 200 },
-            this.state.step === 0 && React.createElement(FirstStepAddUser2, { key: '1',
+            this.state.step === 0 && React.createElement(FirstStepAddUser, { key: '1',
               me: this.props.me,
               email: this.state.email,
               fname: this.state.fname,
@@ -52977,7 +52745,6 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               username: this.state.username,
               handleReactInput: this.handleReactInput,
               departure_date: this.state.departure_date,
-              handleInputs: this.handleInputs,
               channels: this.state.channels,
               selectedChannels: this.state.selectedChannels,
               selectChannelFunc: this.selectChannel,
@@ -52986,6 +52753,7 @@ var TeamAddUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
               options: this.state.options,
               value: this.state.value,
               errorMessage: this.state.firstStepErrorMessage,
+              loading: this.state.firstStepLoading,
               dropdownChange: this.dropdownChange,
               dispatch: this.props.dispatch }),
             this.state.step === 1 && React.createElement(SecondStep, { key: '2',
@@ -53073,7 +52841,7 @@ var DashboardAndTeamAppSearch = function (_React$Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(props) {
-      props != this.props && this.updateList(props.team_id, props.query);
+      props !== this.props && this.updateList(props.team_id, props.query);
     }
   }, {
     key: 'componentDidMount',
@@ -55247,7 +55015,7 @@ var userActions = _interopRequireWildcard(_userActions);
 
 var _helperFunctions = __webpack_require__(13);
 
-var _utils = __webpack_require__(100);
+var _utils = __webpack_require__(85);
 
 var _semanticUiReact = __webpack_require__(51);
 
@@ -55398,6 +55166,8 @@ var TeamChannelFlexTab = function (_React$Component) {
       var _this5 = this;
 
       var me = this.props.me;
+      var channel = this.props.item;
+
       return React.createElement(
         'div',
         { className: 'flex_contents_panel active', id: 'team_tab' },
@@ -55434,8 +55204,8 @@ var TeamChannelFlexTab = function (_React$Component) {
                 !this.state.nameModifying ? React.createElement(
                   'h4',
                   null,
-                  this.props.item.name,
-                  (0, _helperFunctions.isAdmin)(me.role) && React.createElement(
+                  channel.name,
+                  (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(
                     'button',
                     { className: 'button-unstyle mrgnLeft5 action_button',
                       onClick: this.setNameModifying.bind(null, true) },
@@ -55552,7 +55322,7 @@ var TeamChannelFlexTab = function (_React$Component) {
                         { size: 'mini' },
                         React.createElement(_semanticUiReact.Icon, { name: 'user' }),
                         user.username,
-                        ((0, _helperFunctions.isSuperior)(user, me) || user.id === me.id) && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
+                        ((0, _helperFunctions.isSuperior)(user, me) || user.id === me.id) && !channel.default && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
                           onClick: function onClick(e) {
                             _this4.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, _this4.props.item.id, user.id));
                           } })
@@ -55565,7 +55335,7 @@ var TeamChannelFlexTab = function (_React$Component) {
                   users: this.props.users,
                   requests: this.props.item.join_requests,
                   dispatch: this.props.dispatch }),
-                (0, _helperFunctions.isAdmin)(me.role) && React.createElement(
+                (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(
                   _semanticUiReact.Button,
                   { primary: true, size: 'mini',
                     onClick: function onClick(e) {
@@ -55576,7 +55346,7 @@ var TeamChannelFlexTab = function (_React$Component) {
                 )
               )
             ),
-            (0, _helperFunctions.isAdmin)(me.role) && React.createElement(
+            (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(
               _semanticUiReact.Grid.Row,
               null,
               React.createElement(
@@ -55725,7 +55495,7 @@ var TeamUserFlexTab = function (_React$Component2) {
     value: function confirmUserRoleChange() {
       var _this9 = this;
 
-      if (this.state.role == 3) {
+      if (this.state.role === 3) {
         this.props.dispatch((0, _teamModalActions.showTeamTransferOwnershipModal)(true, this.props.item));
         this.setState({ roleModifying: false });
         return;
@@ -55741,7 +55511,7 @@ var TeamUserFlexTab = function (_React$Component2) {
     value: function confirmUserDepartureDateChange() {
       var _this10 = this;
 
-      if (this.state.departureDate != this.props.item.departureDate) {
+      if (this.state.departureDate !== this.props.item.departureDate) {
         this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate)).then(function (response) {
           _this10.setState({ departureDateModifying: false });
         });
@@ -55896,7 +55666,7 @@ var TeamUserFlexTab = function (_React$Component2) {
                   'span',
                   null,
                   _helperFunctions.teamUserRoles[user.role],
-                  (0, _helperFunctions.isSuperior)(user, me) && user.id != me.id && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', onClick: this.setRoleModifying.bind(null, true) })
+                  (0, _helperFunctions.isSuperior)(user, me) && user.id !== me.id && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', onClick: this.setRoleModifying.bind(null, true) })
                 ) : React.createElement(
                   'span',
                   null,
@@ -55972,7 +55742,7 @@ var TeamUserFlexTab = function (_React$Component2) {
                         { size: 'mini' },
                         React.createElement(_semanticUiReact.Icon, { name: 'users' }),
                         channel.name,
-                        (0, _helperFunctions.isAdmin)(me.role) && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
+                        (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
                           onClick: function onClick(e) {
                             _this11.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, channel.id, _this11.props.item.id));
                           } })
@@ -56040,7 +55810,7 @@ var FlexPanels = (_dec = (0, _reactRedux.connect)(function (store) {
       return React.createElement(
         'div',
         { id: 'flex_contents' },
-        item.purpose != undefined && React.createElement(TeamChannelFlexTab, {
+        item.purpose !== undefined && React.createElement(TeamChannelFlexTab, {
           me: me,
           item: item,
           apps: selectionProps.apps,
@@ -56048,7 +55818,7 @@ var FlexPanels = (_dec = (0, _reactRedux.connect)(function (store) {
           toggleFlexFunc: this.closePanel,
           users: this.props.users,
           dispatch: this.props.dispatch }),
-        item.username != undefined && React.createElement(TeamUserFlexTab, {
+        item.username !== undefined && React.createElement(TeamUserFlexTab, {
           me: me,
           item: item,
           apps: selectionProps.apps,
@@ -56135,7 +55905,7 @@ function TeamHeader(props) {
                 props.item.userIds.length
               )
             ),
-            props.purpose != undefined && props.item.purpose.length > 0 && React.createElement(
+            props.item.purpose !== undefined && props.item.purpose.length > 0 && React.createElement(
               'div',
               { className: 'channel_header_info_item', id: 'channel_purpose' },
               React.createElement(
@@ -56171,6 +55941,8 @@ var _teamModalActions = __webpack_require__(16);
 
 var _helperFunctions = __webpack_require__(13);
 
+var _reactRouterDom = __webpack_require__(35);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -56189,6 +55961,7 @@ var TeamMenu = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (TeamMenu.__proto__ || Object.getPrototypeOf(TeamMenu)).call(this, props));
 
     _this.hideIt = _this.hideIt.bind(_this);
+    _this.goToPersonalSpace = _this.goToPersonalSpace.bind(_this);
     return _this;
   }
 
@@ -56196,6 +55969,15 @@ var TeamMenu = function (_React$Component) {
     key: 'hideIt',
     value: function hideIt() {
       this.props.dispatch((0, _teamActions.showTeamMenu)(false));
+    }
+  }, {
+    key: 'goToPersonalSpace',
+    value: function goToPersonalSpace() {
+      var team = this.props.team;
+      var me = this.props.me;
+
+      this.props.history.push('/teams/' + team.id + '/@' + me.id + '/flexPanel');
+      this.hideIt();
     }
   }, {
     key: 'render',
@@ -56238,7 +56020,7 @@ var TeamMenu = function (_React$Component) {
               { className: 'dropdown_row flex_direction_column section user' },
               React.createElement(
                 'span',
-                { className: 'selectable' },
+                { className: 'selectable', onClick: this.goToPersonalSpace },
                 'Profile information'
               ),
               React.createElement(
@@ -56281,7 +56063,7 @@ var TeamMenu = function (_React$Component) {
   return TeamMenu;
 }(React.Component);
 
-module.exports = TeamMenu;
+module.exports = (0, _reactRouterDom.withRouter)(TeamMenu);
 
 /***/ }),
 /* 568 */
@@ -56843,8 +56625,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function teamAppDispatcher(action, app, target) {
   return function (dispatch, getState) {
-    var state = getState();
-    if (state.selection.type === target.type && state.selection.id === target.id) dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
+    dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
   };
 }
 
@@ -57396,7 +57177,7 @@ function TeamMultiAppButtonSet(props) {
   return React.createElement(
     'div',
     { className: 'team_app_actions_holder' },
-    app.sharing_requests.length > 0 && React.createElement(
+    app.sharing_requests.length > 0 && (0, _helperFunctions.isAdmin)(me) && React.createElement(
       'button',
       { className: 'button-unstyle team_app_requests',
         'data-tip': 'User(s) would like to access this app',
@@ -57713,7 +57494,7 @@ var TeamMultiApp = function (_React$Component) {
             null,
             React.createElement('i', { className: 'fa fa-thumb-tack' })
           ),
-          !this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) && React.createElement(
+          !this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || (0, _helperFunctions.isAdmin)(me.role)) && React.createElement(
             'span',
             null,
             React.createElement('i', { className: 'fa fa-user' })
@@ -58142,7 +57923,7 @@ function TeamSimpleAppButtonSet(props) {
   return React.createElement(
     'div',
     { className: 'team_app_actions_holder' },
-    app.sharing_requests.length > 0 && React.createElement(
+    app.sharing_requests.length > 0 && (0, _helperFunctions.isAdmin)(me) && React.createElement(
       'button',
       { className: 'button-unstyle team_app_requests',
         'data-tip': 'User(s) would like to access this app',
@@ -58473,7 +58254,7 @@ var TeamSimpleApp = function (_React$Component) {
             null,
             React.createElement('i', { className: 'fa fa-thumb-tack' })
           ),
-          !this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) && React.createElement(
+          !this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || (0, _helperFunctions.isAdmin)(me.role)) && React.createElement(
             'span',
             null,
             React.createElement('i', { className: 'fa fa-user' })
@@ -60705,13 +60486,13 @@ var _dec, _class;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _utils = __webpack_require__(100);
+var _utils = __webpack_require__(85);
 
 var _reactRedux = __webpack_require__(12);
 
 var _reactStripeElements = __webpack_require__(424);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(94);
+var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -60731,7 +60512,7 @@ var React = __webpack_require__(1);
 var classnames = __webpack_require__(2);
 var post_api = __webpack_require__(37);
 var api = __webpack_require__(26);
-var axios = __webpack_require__(99);
+var axios = __webpack_require__(100);
 var StripeCardForm = __webpack_require__(293);
 var CompanyInformationForm = __webpack_require__(288);
 
@@ -61155,7 +60936,7 @@ var Step7 = function (_React$Component5) {
       var calls = [];
       this.props.invitations.map(function (item) {
         if (item.email.match(_utils.emailRegexp) !== null && item.username.length > 0) {
-          calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, '1'));
+          calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, 1));
         }
       }, this);
       this.setState({ loading: true });
@@ -62139,7 +61920,7 @@ var _reactTooltip = __webpack_require__(120);
 
 var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(94);
+var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -62455,6 +62236,17 @@ function reducer() {
           channels: nChannels
         });
       }
+    case 'CREATE_TEAM_USER_FULFILLED':
+      {
+        var user = action.payload;
+        var _channels = state.channels.map(function (item) {
+          if (item.default) item.userIds.push(user.id);
+          return item;
+        });
+        return _extends({}, state, {
+          channels: _channels
+        });
+      }
     case 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED':
       {
         var nChannels = state.channels.map(function (item) {
@@ -62583,7 +62375,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 exports.default = reducer;
 var initialState = {
   user: null,
-  ws_id: -1,
+  ws_id: '-1',
   authenticated: false,
   loginRedirectUrl: '',
   teamsTutorial: false
@@ -63340,7 +63132,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = reducer;
 
-var _utils = __webpack_require__(100);
+var _utils = __webpack_require__(85);
 
 var _helperFunctions = __webpack_require__(13);
 
@@ -63476,6 +63268,16 @@ function reducer() {
           users: users
         });
       }
+    case 'EDIT_TEAM_USER_ROLE_FULFILLED':
+      {
+        var _users = state.users.map(function (item) {
+          if (item.id === action.payload.id) item.role = action.payload.role;
+          return item;
+        });
+        return _extends({}, state, {
+          users: _users
+        });
+      }
     case 'TEAM_TRANSFER_OWNERSHIP_FULFILLED':
       {
         var users = state.users.map(function (item) {
@@ -63509,7 +63311,7 @@ function reducer() {
     case 'TEAM_USER_ADDED':
       {
         var users = state.users;
-        if ((0, _helperFunctions.selectUserFromListById)(state.users, action.payload.user.id) != null) break;
+        if ((0, _helperFunctions.selectUserFromListById)(state.users, action.payload.user.id) !== null) break;
         users.push(action.payload.user);
         return _extends({}, state, {
           users: users
@@ -63560,7 +63362,7 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(94);
+var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -63836,7 +63638,7 @@ module.exports = function(object, index, value){
 /***/ (function(module, exports, __webpack_require__) {
 
 // all enumerable object keys, includes symbols
-var getKeys = __webpack_require__(89)
+var getKeys = __webpack_require__(90)
   , gOPS    = __webpack_require__(190)
   , pIE     = __webpack_require__(127);
 module.exports = function(it){
@@ -63862,7 +63664,7 @@ module.exports = __webpack_require__(61).document && document.documentElement;
 /***/ (function(module, exports, __webpack_require__) {
 
 // check on default Array iterator
-var Iterators  = __webpack_require__(88)
+var Iterators  = __webpack_require__(89)
   , ITERATOR   = __webpack_require__(45)('iterator')
   , ArrayProto = Array.prototype;
 
@@ -63909,7 +63711,7 @@ var create         = __webpack_require__(188)
   , IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(87)(IteratorPrototype, __webpack_require__(45)('iterator'), function(){ return this; });
+__webpack_require__(88)(IteratorPrototype, __webpack_require__(45)('iterator'), function(){ return this; });
 
 module.exports = function(Constructor, NAME, next){
   Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
@@ -63954,7 +63756,7 @@ module.exports = function(done, value){
 /* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getKeys   = __webpack_require__(89)
+var getKeys   = __webpack_require__(90)
   , toIObject = __webpack_require__(63);
 module.exports = function(object, el){
   var O      = toIObject(object)
@@ -63977,7 +63779,7 @@ var META     = __webpack_require__(128)('meta')
 var isExtensible = Object.isExtensible || function(){
   return true;
 };
-var FREEZE = !__webpack_require__(86)(function(){
+var FREEZE = !__webpack_require__(87)(function(){
   return isExtensible(Object.preventExtensions({}));
 });
 var setMeta = function(it){
@@ -64030,7 +63832,7 @@ var meta = module.exports = {
 "use strict";
 
 // 19.1.2.1 Object.assign(target, source, ...)
-var getKeys  = __webpack_require__(89)
+var getKeys  = __webpack_require__(90)
   , gOPS     = __webpack_require__(190)
   , pIE      = __webpack_require__(127)
   , toObject = __webpack_require__(105)
@@ -64038,7 +63840,7 @@ var getKeys  = __webpack_require__(89)
   , $assign  = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
-module.exports = !$assign || __webpack_require__(86)(function(){
+module.exports = !$assign || __webpack_require__(87)(function(){
   var A = {}
     , B = {}
     , S = Symbol()
@@ -64068,7 +63870,7 @@ module.exports = !$assign || __webpack_require__(86)(function(){
 
 var dP       = __webpack_require__(62)
   , anObject = __webpack_require__(74)
-  , getKeys  = __webpack_require__(89);
+  , getKeys  = __webpack_require__(90);
 
 module.exports = __webpack_require__(75) ? Object.defineProperties : function defineProperties(O, Properties){
   anObject(O);
@@ -64187,7 +63989,7 @@ module.exports = __webpack_require__(29).getIterator = function(it){
 
 var classof   = __webpack_require__(301)
   , ITERATOR  = __webpack_require__(45)('iterator')
-  , Iterators = __webpack_require__(88);
+  , Iterators = __webpack_require__(89);
 module.exports = __webpack_require__(29).isIterable = function(it){
   var O = Object(it);
   return O[ITERATOR] !== undefined
@@ -64247,7 +64049,7 @@ $export($export.S + $export.F * !__webpack_require__(633)(function(iter){ Array.
 
 var addToUnscopables = __webpack_require__(624)
   , step             = __webpack_require__(634)
-  , Iterators        = __webpack_require__(88)
+  , Iterators        = __webpack_require__(89)
   , toIObject        = __webpack_require__(63);
 
 // 22.1.3.4 Array.prototype.entries()
@@ -64338,7 +64140,7 @@ __webpack_require__(191)('getPrototypeOf', function(){
 
 // 19.1.2.14 Object.keys(O)
 var toObject = __webpack_require__(105)
-  , $keys    = __webpack_require__(89);
+  , $keys    = __webpack_require__(90);
 
 __webpack_require__(191)('keys', function(){
   return function keys(it){
@@ -64373,7 +64175,7 @@ var global         = __webpack_require__(61)
   , $export        = __webpack_require__(60)
   , redefine       = __webpack_require__(309)
   , META           = __webpack_require__(636).KEY
-  , $fails         = __webpack_require__(86)
+  , $fails         = __webpack_require__(87)
   , shared         = __webpack_require__(194)
   , setToStringTag = __webpack_require__(192)
   , uid            = __webpack_require__(128)
@@ -64391,7 +64193,7 @@ var global         = __webpack_require__(61)
   , gOPNExt        = __webpack_require__(639)
   , $GOPD          = __webpack_require__(189)
   , $DP            = __webpack_require__(62)
-  , $keys          = __webpack_require__(89)
+  , $keys          = __webpack_require__(90)
   , gOPD           = $GOPD.f
   , dP             = $DP.f
   , gOPN           = gOPNExt.f
@@ -64593,7 +64395,7 @@ $JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function(){
 });
 
 // 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
-$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(87)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(88)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
 // 19.4.3.5 Symbol.prototype[@@toStringTag]
 setToStringTag($Symbol, 'Symbol');
 // 20.2.1.9 Math[@@toStringTag]
@@ -70193,7 +69995,7 @@ module.exports = baseAggregator;
 /* 718 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(93),
+var copyObject = __webpack_require__(94),
     keysIn = __webpack_require__(381);
 
 /**
@@ -71575,7 +71377,7 @@ module.exports = cloneSet;
 /* 760 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(92);
+var Symbol = __webpack_require__(93);
 
 /** Used to convert symbols to primitives and strings. */
 var symbolProto = Symbol ? Symbol.prototype : undefined,
@@ -71718,7 +71520,7 @@ module.exports = compareMultiple;
 /* 764 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(93),
+var copyObject = __webpack_require__(94),
     getSymbols = __webpack_require__(222);
 
 /**
@@ -71740,7 +71542,7 @@ module.exports = copySymbols;
 /* 765 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var copyObject = __webpack_require__(93),
+var copyObject = __webpack_require__(94),
     getSymbolsIn = __webpack_require__(354);
 
 /**
@@ -72424,7 +72226,7 @@ module.exports = deburrLetter;
 /* 783 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(92),
+var Symbol = __webpack_require__(93),
     Uint8Array = __webpack_require__(328),
     eq = __webpack_require__(113),
     equalArrays = __webpack_require__(349),
@@ -72667,7 +72469,7 @@ module.exports = getMatchData;
 /* 786 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(92);
+var Symbol = __webpack_require__(93);
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -73091,7 +72893,7 @@ module.exports = insertWrapDetails;
 /* 799 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Symbol = __webpack_require__(92),
+var Symbol = __webpack_require__(93),
     isArguments = __webpack_require__(157),
     isArray = __webpack_require__(17);
 
@@ -74131,7 +73933,7 @@ module.exports = ary;
 /***/ (function(module, exports, __webpack_require__) {
 
 var assignValue = __webpack_require__(138),
-    copyObject = __webpack_require__(93),
+    copyObject = __webpack_require__(94),
     createAssigner = __webpack_require__(769),
     isArrayLike = __webpack_require__(48),
     isPrototype = __webpack_require__(112),
@@ -78406,7 +78208,7 @@ module.exports = ChangeEventPlugin;
 
 var _prodInvariant = __webpack_require__(14);
 
-var DOMLazyTree = __webpack_require__(95);
+var DOMLazyTree = __webpack_require__(96);
 var ExecutionEnvironment = __webpack_require__(24);
 
 var createNodesFromMarkup = __webpack_require__(678);
@@ -78935,7 +78737,7 @@ module.exports = HTMLDOMPropertyConfig;
 
 
 
-var ReactReconciler = __webpack_require__(96);
+var ReactReconciler = __webpack_require__(97);
 
 var instantiateReactComponent = __webpack_require__(412);
 var KeyEscapeUtils = __webpack_require__(237);
@@ -79133,14 +78935,14 @@ module.exports = ReactComponentBrowserEnvironment;
 var _prodInvariant = __webpack_require__(14),
     _assign = __webpack_require__(19);
 
-var React = __webpack_require__(97);
+var React = __webpack_require__(98);
 var ReactComponentEnvironment = __webpack_require__(239);
 var ReactCurrentOwner = __webpack_require__(50);
 var ReactErrorUtils = __webpack_require__(240);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
 var ReactNodeTypes = __webpack_require__(405);
-var ReactReconciler = __webpack_require__(96);
+var ReactReconciler = __webpack_require__(97);
 
 if (process.env.NODE_ENV !== 'production') {
   var checkReactTypeSpec = __webpack_require__(955);
@@ -80043,7 +79845,7 @@ module.exports = ReactCompositeComponent;
 var ReactDOMComponentTree = __webpack_require__(23);
 var ReactDefaultInjection = __webpack_require__(925);
 var ReactMount = __webpack_require__(404);
-var ReactReconciler = __webpack_require__(96);
+var ReactReconciler = __webpack_require__(97);
 var ReactUpdates = __webpack_require__(49);
 var ReactVersion = __webpack_require__(940);
 
@@ -80162,7 +79964,7 @@ var _prodInvariant = __webpack_require__(14),
 
 var AutoFocusUtils = __webpack_require__(896);
 var CSSPropertyOperations = __webpack_require__(898);
-var DOMLazyTree = __webpack_require__(95);
+var DOMLazyTree = __webpack_require__(96);
 var DOMNamespaces = __webpack_require__(235);
 var DOMProperty = __webpack_require__(70);
 var DOMPropertyOperations = __webpack_require__(397);
@@ -81203,7 +81005,7 @@ module.exports = ReactDOMContainerInfo;
 
 var _assign = __webpack_require__(19);
 
-var DOMLazyTree = __webpack_require__(95);
+var DOMLazyTree = __webpack_require__(96);
 var ReactDOMComponentTree = __webpack_require__(23);
 
 var ReactDOMEmptyComponent = function (instantiate) {
@@ -81770,7 +81572,7 @@ module.exports = ReactDOMNullInputValuePropHook;
 
 var _assign = __webpack_require__(19);
 
-var React = __webpack_require__(97);
+var React = __webpack_require__(98);
 var ReactDOMComponentTree = __webpack_require__(23);
 var ReactDOMSelect = __webpack_require__(399);
 
@@ -82118,7 +81920,7 @@ var _prodInvariant = __webpack_require__(14),
     _assign = __webpack_require__(19);
 
 var DOMChildrenOperations = __webpack_require__(234);
-var DOMLazyTree = __webpack_require__(95);
+var DOMLazyTree = __webpack_require__(96);
 var ReactDOMComponentTree = __webpack_require__(23);
 
 var escapeTextContentForBrowser = __webpack_require__(168);
@@ -83645,7 +83447,7 @@ var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
 
 var ReactCurrentOwner = __webpack_require__(50);
-var ReactReconciler = __webpack_require__(96);
+var ReactReconciler = __webpack_require__(97);
 var ReactChildReconciler = __webpack_require__(905);
 
 var emptyFunction = __webpack_require__(30);
@@ -101138,7 +100940,7 @@ Flag.create = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_4__lib__["j" /* cr
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__elements_Icon__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__elements_Image__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__elements_Image__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__HeaderSubheader__ = __webpack_require__(465);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__HeaderContent__ = __webpack_require__(464);
 
@@ -102783,7 +102585,7 @@ var isNil = function isNil(children) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return useTextAlignProp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return useVerticalAlignProp; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return useWidthProp; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__numberToWord__ = __webpack_require__(264);
 
@@ -103389,7 +103191,7 @@ var debug = makeDebugger('log');
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return createHTMLParagraph; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_typeof__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_typeof__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_typeof___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_typeof__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lodash_uniq__ = __webpack_require__(885);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lodash_uniq___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_lodash_uniq__);
