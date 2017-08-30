@@ -9,6 +9,13 @@ var signUpPopup = function (elem) {
         self.qRoot.find("#3").addClass("show");
         self.qRoot.find("#1").removeClass("show");
         self.qRoot.find("#2").removeClass("show");
+        $("#3 #digits-email", self.qRoot).click(function (e) {
+            e.preventDefault();
+            ajaxHandler.post($("#1 form", self.qRoot).attr("action"),
+                {
+                    email: self.email,
+                });
+        });
         self.handler.addClass('myshow');
         $('body').css('overflow', 'hidden');
     }
