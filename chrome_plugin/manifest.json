@@ -7,9 +7,9 @@
       "default_icon": "images/logo_296.png",
       "default_popup": "functionnalities/popup.html"
    },
-   "chrome_url_overrides": {
+   /*"chrome_url_overrides": {
       "newtab": "functionnalities/homepage.html"
-   },
+   },*/
    "commands": {
       "logout-ease": {
          "description": "Logout from ease and all connected websites.",

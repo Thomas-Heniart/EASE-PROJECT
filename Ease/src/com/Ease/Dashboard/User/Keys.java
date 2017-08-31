@@ -203,11 +203,8 @@ public class Keys {
 	 * 
 	 */
 
-    public boolean isGoodPassword(String password) throws GeneralException {
-        if (Hashing.compare(password, hashed_password))
-            return true;
-        else
-            throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
+    public boolean isGoodPassword(String password) {
+        return Hashing.compare(password, hashed_password);
     }
 
     public void changePassword(String new_password, ServletManager sm) throws GeneralException {

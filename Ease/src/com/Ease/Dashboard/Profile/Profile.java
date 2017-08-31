@@ -388,7 +388,8 @@ public class Profile {
         if (this.apps.size() > 0) {
             if (password == null)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Password confirmation needed.");
-            this.user.getKeys().isGoodPassword(password);
+            if (!this.user.getKeys().isGoodPassword(password))
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
         }
         this.removeFromDB(sm);
         db.commitTransaction(transaction);

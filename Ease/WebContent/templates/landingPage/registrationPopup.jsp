@@ -16,7 +16,9 @@
                             <fmt:message key="landing.signup-popup.page-3.digits-title"/>
                         </p>
                         <p class="row-heading">
-                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle"/>
+                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle"/> <a id="digits-email"
+                                                                                                href="#"><fmt:message
+                                key="landing.signup-popup.page-3.digits-subtitle2"/></a>
                         </p>
                     </div>
                     <div class="row">

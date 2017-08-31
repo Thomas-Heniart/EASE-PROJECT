@@ -118,7 +118,7 @@ public class PostServletManager extends ServletManager {
             return;
         try {
             String ws_id = this.getStringParam("ws_id", false);
-            if (ws_id == null)
+            if (ws_id == null || ws_id.equals("-1"))
                 return;
             Integer team_id = this.getIntParam("team_id", false);
             if (team_id != null) {

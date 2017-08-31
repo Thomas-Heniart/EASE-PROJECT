@@ -38,11 +38,8 @@ public class User {
         Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
         User connectedUser = usersMap.get(email);
         if (connectedUser != null) {
-            try {
-                connectedUser.getKeys().isGoodPassword(password);
-            } catch (GeneralException e) {
+            if (!connectedUser.getKeys().isGoodPassword(password))
                 throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
-            }
             return connectedUser;
         }
         DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE email = ?");

@@ -3,8 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -32,8 +30,6 @@ public class ServletEditChannelPurpose extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true);
             Channel channel = team.getChannelWithId(channel_id);
-            if (channel.isDefault())
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             String purpose = sm.getStringParam("purpose", true);
             if (purpose == null)
                 purpose = "";
