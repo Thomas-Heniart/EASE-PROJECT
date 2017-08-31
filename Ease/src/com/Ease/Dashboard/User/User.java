@@ -636,7 +636,7 @@ public class User {
         JSONArray teams = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers()) {
             JSONObject teamObject = teamUser.getTeam().getSimpleJson();
-            teamObject.put("disabled", teamUser.isDisabled() || teamUser.isVerified());
+            teamObject.put("disabled", teamUser.isDisabled() || !teamUser.isVerified());
             teams.add(teamObject);
         }
 
