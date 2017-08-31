@@ -534,7 +534,7 @@ public class Website {
             if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
                 return true;
         }
-        return (this.groupIds.isEmpty() && this.teamIds.isEmpty());
+        return (this.groupIds.isEmpty() && this.teamIds.isEmpty() && this.isPublic());
     }
 
     public boolean isInCatalogForTeam(String team_id) {
