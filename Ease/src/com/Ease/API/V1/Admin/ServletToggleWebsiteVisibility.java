@@ -1,0 +1,35 @@
+package com.Ease.API.V1.Admin;
+
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Utils.Servlets.PostServletManager;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/api/v1/admin/ToggleWebsiteVisibility")
+public class ServletToggleWebsiteVisibility extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
+        try {
+            sm.needToBeEaseAdmin();
+            Integer website_id = sm.getIntParam("id", true);
+            Boolean is_private = sm.getBooleanParam("private", true);
+            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            catalog.getWebsiteWithId(website_id).setPublic(!is_private, sm.getDB());
+            sm.setSuccess("Website edited");
+        } catch (Exception e) {
+            sm.setError(e);
+        }
+        sm.sendResponse();
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
+    }
+}

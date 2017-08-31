@@ -112,6 +112,7 @@ public class WebsiteAttributes {
             DatabaseRequest request = db.prepareRequest("UPDATE websiteAttributes SET public = ?, noScrap = ? WHERE id = ?;");
             request.setBoolean(false);
             request.setBoolean(true);
+            request.setInt(this.getDbId());
             request.set();
             this.is_public = false;
             this.noScrap = true;
@@ -127,6 +128,7 @@ public class WebsiteAttributes {
             DatabaseRequest request = db.prepareRequest("UPDATE websiteAttributes SET public = ?, noScrap = ? WHERE id = ?;");
             request.setBoolean(true);
             request.setBoolean(false);
+            request.setInt(this.getDbId());
             request.set();
             this.is_public = true;
             this.noScrap = false;

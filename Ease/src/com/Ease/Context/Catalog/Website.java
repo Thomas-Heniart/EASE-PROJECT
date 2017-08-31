@@ -404,6 +404,13 @@ public class Website {
         return this.websiteAttributes.isPublic();
     }
 
+    public void setPublic(boolean is_public, DataBaseConnection db) throws HttpServletException {
+        if (is_public)
+            this.websiteAttributes.bePublic(db);
+        else
+            this.websiteAttributes.bePrivate(db);
+    }
+
     public boolean isIntegrated() {
         return this.websiteAttributes.isIntegrated();
     }

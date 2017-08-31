@@ -634,8 +634,12 @@ public class User {
         res.put("email", this.getEmail());
         res.put("first_name", this.getFirstName());
         JSONArray teams = new JSONArray();
-        for (TeamUser teamUser : this.getTeamUsers())
-            teams.add(teamUser.getTeam().getSimpleJson());
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            JSONObject teamObject = teamUser.getTeam().getSimpleJson();
+            teamObject.put("disabled", teamUser.isDisabled() || teamUser.isVerified());
+            teams.add(teamObject);
+        }
+
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
         return res;
