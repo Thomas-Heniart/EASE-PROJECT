@@ -13,16 +13,18 @@
                 <form class="handler" action="/api/v1/common/CheckRegistrationDigits">
                     <div class="row">
                         <p class="row-heading">
-                            <fmt:message key="landing.signup-popup.page-3.digits-title"/>
-                        </p>
-                        <p class="row-heading">
-                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle"/> <a id="digits-email"
-                                                                                                href="#"><fmt:message
-                                key="landing.signup-popup.page-3.digits-subtitle2"/></a>
+                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle"/>
                         </p>
                     </div>
                     <div class="row">
                         <input name="digits"/>
+                    </div>
+                    <div class="infoText">
+                        <p class="row-heading">
+                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle2"></fmt:message> <a
+                                id="digits-email" href="#"><fmt:message
+                                key="landing.signup-popup.page-3.digits-subtitle3"/></a>
+                        </p>
                     </div>
                     <div class="row text-center">
                         <img class="loading" src="resources/other/facebook-loading.svg"/>
