@@ -524,6 +524,8 @@ public class Website {
     }
 
     public boolean isInPublicCatalogForUser(User user) {
+        if (!this.isIntegrated())
+            return false;
         if (user.isAdmin())
             return true;
         for (Group group : user.getGroups()) {
