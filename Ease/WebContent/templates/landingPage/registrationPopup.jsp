@@ -21,9 +21,13 @@
                     </div>
                     <div class="infoText">
                         <p class="row-heading">
-                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle2"></fmt:message> <a
-                                id="digits-email" href="#"><fmt:message
-                                key="landing.signup-popup.page-3.digits-subtitle3"/></a>
+                            <fmt:message key="landing.signup-popup.page-3.digits-subtitle2"></fmt:message> <span
+                                id="digits-email"><fmt:message
+                                key="landing.signup-popup.page-3.digits-subtitle3"/> <a
+                                href="#"><fmt:message
+                                key="landing.signup-popup.page-3.digits-subtitle4"/></a></span><span
+                                id="digits-email-sent" style="display: none"><fmt:message
+                                key="landing.signup-popup.page-3.digits-subtitle5"/></span>
                         </p>
                     </div>
                     <div class="row text-center">
