@@ -33,8 +33,8 @@ public class ServletCreateChannel extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             String name = sm.getStringParam("name", true);
             String purpose = sm.getStringParam("purpose", true);
-            if (name == null || name.equals("") || !Regex.isValidSimpleString(name))
-                throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation. Try again?");
+            if (name == null || name.equals("") || !Regex.isValidRoomName(name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation and must be shorter than 22 characters.");
             if (purpose == null)
                 purpose = "";
             if (team.getChannelNamed(name) != null)

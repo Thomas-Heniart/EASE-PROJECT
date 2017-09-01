@@ -86,6 +86,7 @@ public class ServletCreateTeam extends HttpServlet {
             channel.addTeamUser(owner, sm.getDB());
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
+            team.lazyInitialize();
             UserEmail userEmail = user.getUserEmails().get(email);
             if (userEmail != null && !userEmail.isVerified())
                 userEmail.beVerified(sm.getDB());
