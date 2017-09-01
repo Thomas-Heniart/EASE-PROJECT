@@ -977,6 +977,7 @@ exports.showTeamSettingsModal = showTeamSettingsModal;
 exports.showVerifyTeamUserModal = showVerifyTeamUserModal;
 exports.showTeamTransferOwnershipModal = showTeamTransferOwnershipModal;
 exports.showTeamPhoneNumberModal = showTeamPhoneNumberModal;
+exports.showRequestWebsiteModal = showRequestWebsiteModal;
 function showAddTeamUserModal(state) {
   return {
     type: 'SHOW_ADD_TEAM_USER_MODAL',
@@ -1136,6 +1137,15 @@ function showTeamTransferOwnershipModal(state, user) {
 function showTeamPhoneNumberModal(state) {
   return {
     type: 'SHOW_TEAM_PHONE_NUMBER_MODAL',
+    payload: {
+      active: state
+    }
+  };
+}
+
+function showRequestWebsiteModal(state) {
+  return {
+    type: 'SHOW_REQUEST_WEBSITE_MODAL',
     payload: {
       active: state
     }
@@ -2263,7 +2273,7 @@ module.exports = isObject;
 
 var arrayLikeKeys = __webpack_require__(331),
     baseKeys = __webpack_require__(216),
-    isArrayLike = __webpack_require__(48);
+    isArrayLike = __webpack_require__(50);
 
 /**
  * Creates an array of the own enumerable property names of `object`.
@@ -2320,7 +2330,7 @@ module.exports = keys;
 
 var _prodInvariant = __webpack_require__(83);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -3699,7 +3709,7 @@ exports.deleteJoinChannelRequest = deleteJoinChannelRequest;
 
 var _helperFunctions = __webpack_require__(13);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var api = __webpack_require__(26);
 var post_api = __webpack_require__(37);
@@ -4147,338 +4157,6 @@ module.exports = isObjectLike;
 
 /***/ }),
 /* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isFunction = __webpack_require__(69),
-    isLength = __webpack_require__(230);
-
-/**
- * Checks if `value` is array-like. A value is considered array-like if it's
- * not a function and has a `value.length` that's an integer greater than or
- * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- * @example
- *
- * _.isArrayLike([1, 2, 3]);
- * // => true
- *
- * _.isArrayLike(document.body.children);
- * // => true
- *
- * _.isArrayLike('abc');
- * // => true
- *
- * _.isArrayLike(_.noop);
- * // => false
- */
-function isArrayLike(value) {
-  return value != null && isLength(value.length) && !isFunction(value);
-}
-
-module.exports = isArrayLike;
-
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-
-
-var _prodInvariant = __webpack_require__(14),
-    _assign = __webpack_require__(19);
-
-var CallbackQueue = __webpack_require__(396);
-var PooledClass = __webpack_require__(81);
-var ReactFeatureFlags = __webpack_require__(401);
-var ReactReconciler = __webpack_require__(97);
-var Transaction = __webpack_require__(168);
-
-var invariant = __webpack_require__(6);
-
-var dirtyComponents = [];
-var updateBatchNumber = 0;
-var asapCallbackQueue = CallbackQueue.getPooled();
-var asapEnqueued = false;
-
-var batchingStrategy = null;
-
-function ensureInjected() {
-  !(ReactUpdates.ReactReconcileTransaction && batchingStrategy) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must inject a reconcile transaction class and batching strategy') : _prodInvariant('123') : void 0;
-}
-
-var NESTED_UPDATES = {
-  initialize: function () {
-    this.dirtyComponentsLength = dirtyComponents.length;
-  },
-  close: function () {
-    if (this.dirtyComponentsLength !== dirtyComponents.length) {
-      // Additional updates were enqueued by componentDidUpdate handlers or
-      // similar; before our own UPDATE_QUEUEING wrapper closes, we want to run
-      // these new updates so that if A's componentDidUpdate calls setState on
-      // B, B will update before the callback A's updater provided when calling
-      // setState.
-      dirtyComponents.splice(0, this.dirtyComponentsLength);
-      flushBatchedUpdates();
-    } else {
-      dirtyComponents.length = 0;
-    }
-  }
-};
-
-var UPDATE_QUEUEING = {
-  initialize: function () {
-    this.callbackQueue.reset();
-  },
-  close: function () {
-    this.callbackQueue.notifyAll();
-  }
-};
-
-var TRANSACTION_WRAPPERS = [NESTED_UPDATES, UPDATE_QUEUEING];
-
-function ReactUpdatesFlushTransaction() {
-  this.reinitializeTransaction();
-  this.dirtyComponentsLength = null;
-  this.callbackQueue = CallbackQueue.getPooled();
-  this.reconcileTransaction = ReactUpdates.ReactReconcileTransaction.getPooled(
-  /* useCreateElement */true);
-}
-
-_assign(ReactUpdatesFlushTransaction.prototype, Transaction, {
-  getTransactionWrappers: function () {
-    return TRANSACTION_WRAPPERS;
-  },
-
-  destructor: function () {
-    this.dirtyComponentsLength = null;
-    CallbackQueue.release(this.callbackQueue);
-    this.callbackQueue = null;
-    ReactUpdates.ReactReconcileTransaction.release(this.reconcileTransaction);
-    this.reconcileTransaction = null;
-  },
-
-  perform: function (method, scope, a) {
-    // Essentially calls `this.reconcileTransaction.perform(method, scope, a)`
-    // with this transaction's wrappers around it.
-    return Transaction.perform.call(this, this.reconcileTransaction.perform, this.reconcileTransaction, method, scope, a);
-  }
-});
-
-PooledClass.addPoolingTo(ReactUpdatesFlushTransaction);
-
-function batchedUpdates(callback, a, b, c, d, e) {
-  ensureInjected();
-  return batchingStrategy.batchedUpdates(callback, a, b, c, d, e);
-}
-
-/**
- * Array comparator for ReactComponents by mount ordering.
- *
- * @param {ReactComponent} c1 first component you're comparing
- * @param {ReactComponent} c2 second component you're comparing
- * @return {number} Return value usable by Array.prototype.sort().
- */
-function mountOrderComparator(c1, c2) {
-  return c1._mountOrder - c2._mountOrder;
-}
-
-function runBatchedUpdates(transaction) {
-  var len = transaction.dirtyComponentsLength;
-  !(len === dirtyComponents.length) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected flush transaction\'s stored dirty-components length (%s) to match dirty-components array length (%s).', len, dirtyComponents.length) : _prodInvariant('124', len, dirtyComponents.length) : void 0;
-
-  // Since reconciling a component higher in the owner hierarchy usually (not
-  // always -- see shouldComponentUpdate()) will reconcile children, reconcile
-  // them before their children by sorting the array.
-  dirtyComponents.sort(mountOrderComparator);
-
-  // Any updates enqueued while reconciling must be performed after this entire
-  // batch. Otherwise, if dirtyComponents is [A, B] where A has children B and
-  // C, B could update twice in a single batch if C's render enqueues an update
-  // to B (since B would have already updated, we should skip it, and the only
-  // way we can know to do so is by checking the batch counter).
-  updateBatchNumber++;
-
-  for (var i = 0; i < len; i++) {
-    // If a component is unmounted before pending changes apply, it will still
-    // be here, but we assume that it has cleared its _pendingCallbacks and
-    // that performUpdateIfNecessary is a noop.
-    var component = dirtyComponents[i];
-
-    // If performUpdateIfNecessary happens to enqueue any new updates, we
-    // shouldn't execute the callbacks until the next render happens, so
-    // stash the callbacks first
-    var callbacks = component._pendingCallbacks;
-    component._pendingCallbacks = null;
-
-    var markerName;
-    if (ReactFeatureFlags.logTopLevelRenders) {
-      var namedComponent = component;
-      // Duck type TopLevelWrapper. This is probably always true.
-      if (component._currentElement.type.isReactTopLevelWrapper) {
-        namedComponent = component._renderedComponent;
-      }
-      markerName = 'React update: ' + namedComponent.getName();
-      console.time(markerName);
-    }
-
-    ReactReconciler.performUpdateIfNecessary(component, transaction.reconcileTransaction, updateBatchNumber);
-
-    if (markerName) {
-      console.timeEnd(markerName);
-    }
-
-    if (callbacks) {
-      for (var j = 0; j < callbacks.length; j++) {
-        transaction.callbackQueue.enqueue(callbacks[j], component.getPublicInstance());
-      }
-    }
-  }
-}
-
-var flushBatchedUpdates = function () {
-  // ReactUpdatesFlushTransaction's wrappers will clear the dirtyComponents
-  // array and perform any updates enqueued by mount-ready handlers (i.e.,
-  // componentDidUpdate) but we need to check here too in order to catch
-  // updates enqueued by setState callbacks and asap calls.
-  while (dirtyComponents.length || asapEnqueued) {
-    if (dirtyComponents.length) {
-      var transaction = ReactUpdatesFlushTransaction.getPooled();
-      transaction.perform(runBatchedUpdates, null, transaction);
-      ReactUpdatesFlushTransaction.release(transaction);
-    }
-
-    if (asapEnqueued) {
-      asapEnqueued = false;
-      var queue = asapCallbackQueue;
-      asapCallbackQueue = CallbackQueue.getPooled();
-      queue.notifyAll();
-      CallbackQueue.release(queue);
-    }
-  }
-};
-
-/**
- * Mark a component as needing a rerender, adding an optional callback to a
- * list of functions which will be executed once the rerender occurs.
- */
-function enqueueUpdate(component) {
-  ensureInjected();
-
-  // Various parts of our code (such as ReactCompositeComponent's
-  // _renderValidatedComponent) assume that calls to render aren't nested;
-  // verify that that's the case. (This is called by each top-level update
-  // function, like setState, forceUpdate, etc.; creation and
-  // destruction of top-level components is guarded in ReactMount.)
-
-  if (!batchingStrategy.isBatchingUpdates) {
-    batchingStrategy.batchedUpdates(enqueueUpdate, component);
-    return;
-  }
-
-  dirtyComponents.push(component);
-  if (component._updateBatchNumber == null) {
-    component._updateBatchNumber = updateBatchNumber + 1;
-  }
-}
-
-/**
- * Enqueue a callback to be run at the end of the current batching cycle. Throws
- * if no updates are currently being performed.
- */
-function asap(callback, context) {
-  !batchingStrategy.isBatchingUpdates ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates.asap: Can\'t enqueue an asap callback in a context whereupdates are not being batched.') : _prodInvariant('125') : void 0;
-  asapCallbackQueue.enqueue(callback, context);
-  asapEnqueued = true;
-}
-
-var ReactUpdatesInjection = {
-  injectReconcileTransaction: function (ReconcileTransaction) {
-    !ReconcileTransaction ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a reconcile transaction class') : _prodInvariant('126') : void 0;
-    ReactUpdates.ReactReconcileTransaction = ReconcileTransaction;
-  },
-
-  injectBatchingStrategy: function (_batchingStrategy) {
-    !_batchingStrategy ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batching strategy') : _prodInvariant('127') : void 0;
-    !(typeof _batchingStrategy.batchedUpdates === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batchedUpdates() function') : _prodInvariant('128') : void 0;
-    !(typeof _batchingStrategy.isBatchingUpdates === 'boolean') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide an isBatchingUpdates boolean attribute') : _prodInvariant('129') : void 0;
-    batchingStrategy = _batchingStrategy;
-  }
-};
-
-var ReactUpdates = {
-  /**
-   * React references `ReactReconcileTransaction` using this property in order
-   * to allow dependency injection.
-   *
-   * @internal
-   */
-  ReactReconcileTransaction: null,
-
-  batchedUpdates: batchedUpdates,
-  enqueueUpdate: enqueueUpdate,
-  flushBatchedUpdates: flushBatchedUpdates,
-  injection: ReactUpdatesInjection,
-  asap: asap
-};
-
-module.exports = ReactUpdates;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-
-
-/**
- * Keeps track of the current owner.
- *
- * The current owner is the component who should own any components that are
- * currently being constructed.
- */
-var ReactCurrentOwner = {
-
-  /**
-   * @internal
-   * @type {ReactComponent}
-   */
-  current: null
-
-};
-
-module.exports = ReactCurrentOwner;
-
-/***/ }),
-/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4977,7 +4655,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 52 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5103,6 +4781,338 @@ function setWSId(id) {
     }
   };
 }
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isFunction = __webpack_require__(69),
+    isLength = __webpack_require__(230);
+
+/**
+ * Checks if `value` is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ * @example
+ *
+ * _.isArrayLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isArrayLike(document.body.children);
+ * // => true
+ *
+ * _.isArrayLike('abc');
+ * // => true
+ *
+ * _.isArrayLike(_.noop);
+ * // => false
+ */
+function isArrayLike(value) {
+  return value != null && isLength(value.length) && !isFunction(value);
+}
+
+module.exports = isArrayLike;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+
+
+var _prodInvariant = __webpack_require__(14),
+    _assign = __webpack_require__(19);
+
+var CallbackQueue = __webpack_require__(396);
+var PooledClass = __webpack_require__(81);
+var ReactFeatureFlags = __webpack_require__(401);
+var ReactReconciler = __webpack_require__(97);
+var Transaction = __webpack_require__(168);
+
+var invariant = __webpack_require__(6);
+
+var dirtyComponents = [];
+var updateBatchNumber = 0;
+var asapCallbackQueue = CallbackQueue.getPooled();
+var asapEnqueued = false;
+
+var batchingStrategy = null;
+
+function ensureInjected() {
+  !(ReactUpdates.ReactReconcileTransaction && batchingStrategy) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must inject a reconcile transaction class and batching strategy') : _prodInvariant('123') : void 0;
+}
+
+var NESTED_UPDATES = {
+  initialize: function () {
+    this.dirtyComponentsLength = dirtyComponents.length;
+  },
+  close: function () {
+    if (this.dirtyComponentsLength !== dirtyComponents.length) {
+      // Additional updates were enqueued by componentDidUpdate handlers or
+      // similar; before our own UPDATE_QUEUEING wrapper closes, we want to run
+      // these new updates so that if A's componentDidUpdate calls setState on
+      // B, B will update before the callback A's updater provided when calling
+      // setState.
+      dirtyComponents.splice(0, this.dirtyComponentsLength);
+      flushBatchedUpdates();
+    } else {
+      dirtyComponents.length = 0;
+    }
+  }
+};
+
+var UPDATE_QUEUEING = {
+  initialize: function () {
+    this.callbackQueue.reset();
+  },
+  close: function () {
+    this.callbackQueue.notifyAll();
+  }
+};
+
+var TRANSACTION_WRAPPERS = [NESTED_UPDATES, UPDATE_QUEUEING];
+
+function ReactUpdatesFlushTransaction() {
+  this.reinitializeTransaction();
+  this.dirtyComponentsLength = null;
+  this.callbackQueue = CallbackQueue.getPooled();
+  this.reconcileTransaction = ReactUpdates.ReactReconcileTransaction.getPooled(
+  /* useCreateElement */true);
+}
+
+_assign(ReactUpdatesFlushTransaction.prototype, Transaction, {
+  getTransactionWrappers: function () {
+    return TRANSACTION_WRAPPERS;
+  },
+
+  destructor: function () {
+    this.dirtyComponentsLength = null;
+    CallbackQueue.release(this.callbackQueue);
+    this.callbackQueue = null;
+    ReactUpdates.ReactReconcileTransaction.release(this.reconcileTransaction);
+    this.reconcileTransaction = null;
+  },
+
+  perform: function (method, scope, a) {
+    // Essentially calls `this.reconcileTransaction.perform(method, scope, a)`
+    // with this transaction's wrappers around it.
+    return Transaction.perform.call(this, this.reconcileTransaction.perform, this.reconcileTransaction, method, scope, a);
+  }
+});
+
+PooledClass.addPoolingTo(ReactUpdatesFlushTransaction);
+
+function batchedUpdates(callback, a, b, c, d, e) {
+  ensureInjected();
+  return batchingStrategy.batchedUpdates(callback, a, b, c, d, e);
+}
+
+/**
+ * Array comparator for ReactComponents by mount ordering.
+ *
+ * @param {ReactComponent} c1 first component you're comparing
+ * @param {ReactComponent} c2 second component you're comparing
+ * @return {number} Return value usable by Array.prototype.sort().
+ */
+function mountOrderComparator(c1, c2) {
+  return c1._mountOrder - c2._mountOrder;
+}
+
+function runBatchedUpdates(transaction) {
+  var len = transaction.dirtyComponentsLength;
+  !(len === dirtyComponents.length) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected flush transaction\'s stored dirty-components length (%s) to match dirty-components array length (%s).', len, dirtyComponents.length) : _prodInvariant('124', len, dirtyComponents.length) : void 0;
+
+  // Since reconciling a component higher in the owner hierarchy usually (not
+  // always -- see shouldComponentUpdate()) will reconcile children, reconcile
+  // them before their children by sorting the array.
+  dirtyComponents.sort(mountOrderComparator);
+
+  // Any updates enqueued while reconciling must be performed after this entire
+  // batch. Otherwise, if dirtyComponents is [A, B] where A has children B and
+  // C, B could update twice in a single batch if C's render enqueues an update
+  // to B (since B would have already updated, we should skip it, and the only
+  // way we can know to do so is by checking the batch counter).
+  updateBatchNumber++;
+
+  for (var i = 0; i < len; i++) {
+    // If a component is unmounted before pending changes apply, it will still
+    // be here, but we assume that it has cleared its _pendingCallbacks and
+    // that performUpdateIfNecessary is a noop.
+    var component = dirtyComponents[i];
+
+    // If performUpdateIfNecessary happens to enqueue any new updates, we
+    // shouldn't execute the callbacks until the next render happens, so
+    // stash the callbacks first
+    var callbacks = component._pendingCallbacks;
+    component._pendingCallbacks = null;
+
+    var markerName;
+    if (ReactFeatureFlags.logTopLevelRenders) {
+      var namedComponent = component;
+      // Duck type TopLevelWrapper. This is probably always true.
+      if (component._currentElement.type.isReactTopLevelWrapper) {
+        namedComponent = component._renderedComponent;
+      }
+      markerName = 'React update: ' + namedComponent.getName();
+      console.time(markerName);
+    }
+
+    ReactReconciler.performUpdateIfNecessary(component, transaction.reconcileTransaction, updateBatchNumber);
+
+    if (markerName) {
+      console.timeEnd(markerName);
+    }
+
+    if (callbacks) {
+      for (var j = 0; j < callbacks.length; j++) {
+        transaction.callbackQueue.enqueue(callbacks[j], component.getPublicInstance());
+      }
+    }
+  }
+}
+
+var flushBatchedUpdates = function () {
+  // ReactUpdatesFlushTransaction's wrappers will clear the dirtyComponents
+  // array and perform any updates enqueued by mount-ready handlers (i.e.,
+  // componentDidUpdate) but we need to check here too in order to catch
+  // updates enqueued by setState callbacks and asap calls.
+  while (dirtyComponents.length || asapEnqueued) {
+    if (dirtyComponents.length) {
+      var transaction = ReactUpdatesFlushTransaction.getPooled();
+      transaction.perform(runBatchedUpdates, null, transaction);
+      ReactUpdatesFlushTransaction.release(transaction);
+    }
+
+    if (asapEnqueued) {
+      asapEnqueued = false;
+      var queue = asapCallbackQueue;
+      asapCallbackQueue = CallbackQueue.getPooled();
+      queue.notifyAll();
+      CallbackQueue.release(queue);
+    }
+  }
+};
+
+/**
+ * Mark a component as needing a rerender, adding an optional callback to a
+ * list of functions which will be executed once the rerender occurs.
+ */
+function enqueueUpdate(component) {
+  ensureInjected();
+
+  // Various parts of our code (such as ReactCompositeComponent's
+  // _renderValidatedComponent) assume that calls to render aren't nested;
+  // verify that that's the case. (This is called by each top-level update
+  // function, like setState, forceUpdate, etc.; creation and
+  // destruction of top-level components is guarded in ReactMount.)
+
+  if (!batchingStrategy.isBatchingUpdates) {
+    batchingStrategy.batchedUpdates(enqueueUpdate, component);
+    return;
+  }
+
+  dirtyComponents.push(component);
+  if (component._updateBatchNumber == null) {
+    component._updateBatchNumber = updateBatchNumber + 1;
+  }
+}
+
+/**
+ * Enqueue a callback to be run at the end of the current batching cycle. Throws
+ * if no updates are currently being performed.
+ */
+function asap(callback, context) {
+  !batchingStrategy.isBatchingUpdates ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates.asap: Can\'t enqueue an asap callback in a context whereupdates are not being batched.') : _prodInvariant('125') : void 0;
+  asapCallbackQueue.enqueue(callback, context);
+  asapEnqueued = true;
+}
+
+var ReactUpdatesInjection = {
+  injectReconcileTransaction: function (ReconcileTransaction) {
+    !ReconcileTransaction ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a reconcile transaction class') : _prodInvariant('126') : void 0;
+    ReactUpdates.ReactReconcileTransaction = ReconcileTransaction;
+  },
+
+  injectBatchingStrategy: function (_batchingStrategy) {
+    !_batchingStrategy ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batching strategy') : _prodInvariant('127') : void 0;
+    !(typeof _batchingStrategy.batchedUpdates === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batchedUpdates() function') : _prodInvariant('128') : void 0;
+    !(typeof _batchingStrategy.isBatchingUpdates === 'boolean') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide an isBatchingUpdates boolean attribute') : _prodInvariant('129') : void 0;
+    batchingStrategy = _batchingStrategy;
+  }
+};
+
+var ReactUpdates = {
+  /**
+   * React references `ReactReconcileTransaction` using this property in order
+   * to allow dependency injection.
+   *
+   * @internal
+   */
+  ReactReconcileTransaction: null,
+
+  batchedUpdates: batchedUpdates,
+  enqueueUpdate: enqueueUpdate,
+  flushBatchedUpdates: flushBatchedUpdates,
+  injection: ReactUpdatesInjection,
+  asap: asap
+};
+
+module.exports = ReactUpdates;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+
+
+/**
+ * Keeps track of the current owner.
+ *
+ * The current owner is the component who should own any components that are
+ * currently being constructed.
+ */
+var ReactCurrentOwner = {
+
+  /**
+   * @internal
+   * @type {ReactComponent}
+   */
+  current: null
+
+};
+
+module.exports = ReactCurrentOwner;
 
 /***/ }),
 /* 53 */
@@ -5935,7 +5945,7 @@ module.exports = identity;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIndexOf = __webpack_require__(144),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isString = __webpack_require__(380),
     toInteger = __webpack_require__(56),
     values = __webpack_require__(164);
@@ -6619,7 +6629,7 @@ module.exports = PooledClass;
 
 var _assign = __webpack_require__(19);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 
 var warning = __webpack_require__(9);
 var canDefineProperty = __webpack_require__(171);
@@ -11793,7 +11803,7 @@ module.exports = getPrototype;
 /***/ (function(module, exports, __webpack_require__) {
 
 var eq = __webpack_require__(113),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isIndex = __webpack_require__(111),
     isObject = __webpack_require__(33);
 
@@ -11941,7 +11951,7 @@ module.exports = isArguments;
 /* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isArrayLike = __webpack_require__(48),
+var isArrayLike = __webpack_require__(50),
     isObjectLike = __webpack_require__(47);
 
 /**
@@ -15463,7 +15473,7 @@ var baseKeys = __webpack_require__(216),
     getTag = __webpack_require__(223),
     isArguments = __webpack_require__(158),
     isArray = __webpack_require__(17),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isBuffer = __webpack_require__(115),
     isPrototype = __webpack_require__(112),
     isTypedArray = __webpack_require__(161);
@@ -16584,10 +16594,10 @@ module.exports = ReactErrorUtils;
 
 var _prodInvariant = __webpack_require__(14);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -20366,11 +20376,11 @@ var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
 
 var _reactRouterDom = __webpack_require__(32);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20401,7 +20411,17 @@ var TeamsList = function (_React$Component) {
         React.createElement(
           _semanticUiReact.Dropdown.Menu,
           null,
-          this.props.user != null && this.props.user.teams.map(function (item) {
+          this.props.user !== null && this.props.user.teams.map(function (item) {
+            if (item.disabled) return React.createElement(_semanticUiReact.Popup, { key: item.id,
+              size: 'mini',
+              position: 'left center',
+              trigger: React.createElement(
+                _semanticUiReact.Dropdown.Item,
+                { style: { opacity: '0.45' } },
+                React.createElement(_semanticUiReact.Icon, { name: 'users' }),
+                item.name
+              ),
+              content: 'You need to wait until an admin accept you.' });
             return React.createElement(
               _semanticUiReact.Dropdown.Item,
               { key: item.id, as: _reactRouterDom.NavLink, to: '/teams/' + item.id, activeClassName: 'active' },
@@ -32266,7 +32286,7 @@ module.exports = baseGetAllKeys;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseEach = __webpack_require__(77),
-    isArrayLike = __webpack_require__(48);
+    isArrayLike = __webpack_require__(50);
 
 /**
  * The base implementation of `_.map` without support for iteratee shorthands.
@@ -33803,7 +33823,7 @@ module.exports = isString;
 
 var arrayLikeKeys = __webpack_require__(331),
     baseKeysIn = __webpack_require__(734),
-    isArrayLike = __webpack_require__(48);
+    isArrayLike = __webpack_require__(50);
 
 /**
  * Creates an array of the own and inherited enumerable property names of `object`.
@@ -35581,7 +35601,7 @@ var _assign = __webpack_require__(19);
 
 var LinkedValueUtils = __webpack_require__(238);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var warning = __webpack_require__(9);
 
@@ -36054,7 +36074,7 @@ var DOMLazyTree = __webpack_require__(96);
 var DOMProperty = __webpack_require__(70);
 var React = __webpack_require__(98);
 var ReactBrowserEventEmitter = __webpack_require__(166);
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactDOMComponentTree = __webpack_require__(23);
 var ReactDOMContainerInfo = __webpack_require__(910);
 var ReactDOMFeatureFlags = __webpack_require__(912);
@@ -36064,7 +36084,7 @@ var ReactInstrumentation = __webpack_require__(40);
 var ReactMarkupChecksum = __webpack_require__(932);
 var ReactReconciler = __webpack_require__(97);
 var ReactUpdateQueue = __webpack_require__(241);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var emptyObject = __webpack_require__(106);
 var instantiateReactComponent = __webpack_require__(412);
@@ -37115,7 +37135,7 @@ module.exports = setTextContent;
 
 var _prodInvariant = __webpack_require__(14);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var REACT_ELEMENT_TYPE = __webpack_require__(926);
 
 var getIteratorFn = __webpack_require__(960);
@@ -38186,7 +38206,7 @@ module.exports = REACT_ELEMENT_TYPE;
 
 
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactComponentTreeHook = __webpack_require__(35);
 var ReactElement = __webpack_require__(82);
 
@@ -47702,6 +47722,7 @@ var TeamJoinMultiAppModal = __webpack_require__(580);
 var TeamSettingsModal = __webpack_require__(584);
 var TeamTransferOwnershipModal = __webpack_require__(585);
 var TeamPhoneNumberModal = __webpack_require__(583);
+var RequestWebsiteModal = __webpack_require__(1141);
 
 var EaseHeader = __webpack_require__(289);
 
@@ -47730,7 +47751,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
     teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
     verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
     teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
-    teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal
+    teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
+    requestWebsiteModal: store.teamModals.requestWebsiteModal
   };
 }), _dec(_class = function (_React$Component) {
   _inherits(TeamView, _React$Component);
@@ -47800,10 +47822,10 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'isValidTeamItemId',
     value: function isValidTeamItemId(itemId) {
-      if (itemId == undefined) return false;
+      if (itemId === undefined) return false;
       var me = (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.team.myTeamUserId);
-      if (itemId[0] != '@' && me.channel_ids.indexOf(Number(itemId)) !== -1) return true;
-      if ((0, _helperFunctions.selectUserFromListById)(this.props.users, Number(itemId.slice(1, itemId.length))) != null) return true;
+      if (itemId[0] !== '@' && me.channel_ids.indexOf(Number(itemId)) !== -1) return true;
+      if ((0, _helperFunctions.selectUserFromListById)(this.props.users, Number(itemId.slice(1, itemId.length))) !== null) return true;
       return false;
     }
   }, {
@@ -47829,7 +47851,6 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
 
       var selectedItem = this.getSelectedItem();
       var me = (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.team.myTeamUserId);
-      var flexPanel = _queryString2.default.parse(this.props.location.search).flexPanel !== undefined;
 
       return React.createElement(
         'div',
@@ -47847,6 +47868,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
             'div',
             { className: 'client_main_container' },
             React.createElement(TeamHeader, {
+              dispatch: this.props.dispatch,
               item: selectedItem,
               match: this.props.match,
               appsLength: this.props.selectedItem.apps.length }),
@@ -47893,7 +47915,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
           this.props.teamSettingsModalActive && React.createElement(TeamSettingsModal, null),
           this.props.verifyTeamUserModal.active && React.createElement(_VerifyTeamUserModal2.default, null),
           this.props.teamTransferOwnershipModal.active && React.createElement(TeamTransferOwnershipModal, null),
-          this.props.teamPhoneNumberModal.active && React.createElement(TeamPhoneNumberModal, null)
+          this.props.teamPhoneNumberModal.active && React.createElement(TeamPhoneNumberModal, null),
+          this.props.requestWebsiteModal.active && React.createElement(RequestWebsiteModal, null)
         )
       );
     }
@@ -47922,7 +47945,7 @@ var _reactRouterDom = __webpack_require__(32);
 
 var _notificationsActions = __webpack_require__(122);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactTooltip = __webpack_require__(120);
 
@@ -47969,9 +47992,12 @@ var Base = (_dec = (0, _reactRedux.connect)(function (store) {
       if (!this.props.common.authenticated) {
         this.props.dispatch((0, _commonActions.fetchMyInformation)()).then(function (response) {
           _this2.setState({ fetching: false });
+          if (_this2.props.common.authenticated) _this2.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
         });
-      } else this.setState({ fetching: false });
-      this.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
+      } else {
+        this.setState({ fetching: false });
+        this.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
+      }
     }
   }, {
     key: 'render',
@@ -48074,7 +48100,7 @@ var _post_api2 = _interopRequireDefault(_post_api);
 
 var _reactRedux = __webpack_require__(12);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48519,7 +48545,8 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
       lastActive: '',
       knownFname: _this6.props.cookies.get('fname'),
       knownEmail: _this6.props.cookies.get('email'),
-      knownUser: false
+      knownUser: false,
+      redirect: ''
     };
     if (_this6.props.authenticated) window.location.href = "/home";
     _this6.state.knownUser = _this6.state.knownFname !== undefined && _this6.state.knownEmail !== undefined;
@@ -48534,15 +48561,21 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
   }
 
   _createClass(Login, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.redirect.length > 0) {
+        this.state.redirect = this.props.redirect;
+        this.props.dispatch((0, _commonActions.setLoginRedirectUrl)(''));
+      }
+    }
+  }, {
     key: 'finishLoggingIn',
     value: function finishLoggingIn() {
       var _this7 = this;
 
-      if (this.props.redirect.length > 0) {
-        var redirectUrl = this.props.redirect;
+      if (this.state.redirect.length > 0) {
         this.props.dispatch((0, _commonActions.fetchMyInformation)()).then(function (response) {
-          _this7.props.dispatch((0, _commonActions.setLoginRedirectUrl)(''));
-          _this7.props.history.push(redirectUrl);
+          _this7.props.history.push(_this7.state.redirect);
         });
       } else {
         window.location.href = "/home";
@@ -48658,6 +48691,8 @@ var _FormComponents = __webpack_require__(291);
 
 var _reactStripeElements = __webpack_require__(424);
 
+var _commonActions = __webpack_require__(49);
+
 var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
@@ -48668,7 +48703,7 @@ var _SingleEaseLogo2 = _interopRequireDefault(_SingleEaseLogo);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48701,10 +48736,17 @@ var Step1 = function (_React$Component) {
       processing: false
     };
     _this.onSubmit = _this.onSubmit.bind(_this);
+    _this.login = _this.login.bind(_this);
     return _this;
   }
 
   _createClass(Step1, [{
+    key: 'login',
+    value: function login() {
+      this.props.dispatch((0, _commonActions.setLoginRedirectUrl)('/main/simpleTeamCreation'));
+      this.props.history.replace('/login');
+    }
+  }, {
     key: 'onSubmit',
     value: function onSubmit(e) {
       var _this2 = this;
@@ -48750,8 +48792,8 @@ var Step1 = function (_React$Component) {
                 placeholder: 'name@company.com',
                 required: true }),
               React.createElement(
-                _reactRouterDom.NavLink,
-                { to: '/login', style: { float: 'right' } },
+                'a',
+                { onClick: this.login, style: { float: 'right' } },
                 'I already have an account'
               )
             ),
@@ -48783,9 +48825,12 @@ var Step2 = function (_React$Component2) {
 
     _this3.state = {
       errorMessage: '',
-      loading: false
+      loading: false,
+      sendingEmail: false,
+      sendEmailButtonText: 'Resend email'
     };
     _this3.onSubmit = _this3.onSubmit.bind(_this3);
+    _this3.resendDigits = _this3.resendDigits.bind(_this3);
     return _this3;
   }
 
@@ -48796,11 +48841,27 @@ var Step2 = function (_React$Component2) {
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
-      post_api.teams.checkTeamCreationDigits(this.props.email, this.props.digits).then(function (response) {
+      post_api.common.checkRegistrationDigits(this.props.email, this.props.digits).then(function (response) {
         _this4.setState({ loading: false });
         _this4.props.onStepValidated();
       }).catch(function (err) {
-        _this4.setState({ loading: false, errorMesage: err });
+        _this4.setState({ loading: false, errorMessage: err });
+      });
+    }
+  }, {
+    key: 'resendDigits',
+    value: function resendDigits() {
+      var _this5 = this;
+
+      this.setState({ sendingEmail: true });
+      post_api.common.askRegistration(this.props.email).then(function (response) {
+        _this5.setState({ sendingEmail: false });
+        _this5.setState({ sendEmailButtonText: 'Sent!' });
+        window.setTimeout(function () {
+          _this5.setState({ sendEmailButtonText: 'Resend email' });
+        }, 2000);
+      }).catch(function (err) {
+        _this5.setState({ sendingEmail: false });
       });
     }
   }, {
@@ -48840,10 +48901,12 @@ var Step2 = function (_React$Component2) {
               required: true }),
             React.createElement(
               _semanticUiReact.Message,
-              { color: 'yellow' },
+              { color: 'yellow', size: 'mini' },
               'Keep this window open while checking for your code.',
               React.createElement('br', null),
-              ' Haven\'t received our email ? Try your spam folder!'
+              ' Haven\'t received our email ? Try your spam folder! Or ',
+              React.createElement(_semanticUiReact.Button, { basic: true, type: 'button', className: 'textlike', size: 'mini', loading: this.state.sendingEmail, onClick: this.resendDigits, content: this.state.sendEmailButtonText }),
+              '.'
             ),
             React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
             React.createElement(
@@ -48866,15 +48929,15 @@ var Step3 = function (_React$Component3) {
   function Step3(props) {
     _classCallCheck(this, Step3);
 
-    var _this5 = _possibleConstructorReturn(this, (Step3.__proto__ || Object.getPrototypeOf(Step3)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (Step3.__proto__ || Object.getPrototypeOf(Step3)).call(this, props));
 
-    _this5.state = {
+    _this6.state = {
       errorMessage: '',
       passwordError: false,
       confirmPasswordMessage: "Passwords doesn't match"
     };
-    _this5.onSubmit = _this5.onSubmit.bind(_this5);
-    return _this5;
+    _this6.onSubmit = _this6.onSubmit.bind(_this6);
+    return _this6;
   }
 
   _createClass(Step3, [{
@@ -48965,28 +49028,28 @@ var Step4 = function (_React$Component4) {
   function Step4(props) {
     _classCallCheck(this, Step4);
 
-    var _this6 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
 
-    _this6.state = {
+    _this7.state = {
       errorMessage: '',
       loading: false
     };
-    _this6.onSubmit = _this6.onSubmit.bind(_this6);
-    return _this6;
+    _this7.onSubmit = _this7.onSubmit.bind(_this7);
+    return _this7;
   }
 
   _createClass(Step4, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this7 = this;
+      var _this8 = this;
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
       post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(function (response) {
-        _this7.setState({ loading: false });
-        _this7.props.onStepValidated();
+        _this8.setState({ loading: false });
+        _this8.props.onStepValidated();
       }).catch(function (err) {
-        _this7.setState({ errorMessage: error, loading: false });
+        _this8.setState({ errorMessage: error, loading: false });
       });
     }
   }, {
@@ -49118,30 +49181,30 @@ var Step6 = function (_React$Component5) {
   function Step6(props) {
     _classCallCheck(this, Step6);
 
-    var _this8 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
 
-    _this8.state = {
+    _this9.state = {
       errorMessage: '',
       loading: false
     };
-    _this8.onSubmit = _this8.onSubmit.bind(_this8);
-    return _this8;
+    _this9.onSubmit = _this9.onSubmit.bind(_this9);
+    return _this9;
   }
 
   _createClass(Step6, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this9 = this;
+      var _this10 = this;
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
       post_api.teams.createTeam(this.props.teamName, this.props.email, this.props.first_name, this.props.last_name, this.props.username, this.props.jobRole, this.props.jobDetails, this.props.digits).then(function (response) {
         var teamId = response.id;
-        _this9.props.handleInput(null, { name: "teamId", value: teamId });
-        _this9.setState({ loading: false });
-        _this9.props.onStepValidated();
+        _this10.props.handleInput(null, { name: "teamId", value: teamId });
+        _this10.setState({ loading: false });
+        _this10.props.onStepValidated();
       }).catch(function (err) {
-        _this9.setState({ errorMessage: err, loading: false });
+        _this10.setState({ errorMessage: err, loading: false });
       });
     }
   }, {
@@ -49206,19 +49269,19 @@ var Step7 = function (_React$Component6) {
   function Step7(props) {
     _classCallCheck(this, Step7);
 
-    var _this10 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
+    var _this11 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
 
-    _this10.state = {
+    _this11.state = {
       loading: false
     };
-    _this10.onSubmit = _this10.onSubmit.bind(_this10);
-    return _this10;
+    _this11.onSubmit = _this11.onSubmit.bind(_this11);
+    return _this11;
   }
 
   _createClass(Step7, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this11 = this;
+      var _this12 = this;
 
       e.preventDefault();
       var calls = [];
@@ -49229,15 +49292,15 @@ var Step7 = function (_React$Component6) {
       }, this);
       this.setState({ loading: true });
       axios.all(calls).then(function () {
-        _this11.props.handleInput(null, { name: "invitedPeople", value: calls.length });
-        _this11.setState({ loading: false });
-        _this11.props.onStepValidated();
+        _this12.props.handleInput(null, { name: "invitedPeople", value: calls.length });
+        _this12.setState({ loading: false });
+        _this12.props.onStepValidated();
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this12 = this;
+      var _this13 = this;
 
       var fields = this.props.invitations.map(function (item, idx) {
         return React.createElement(
@@ -49247,7 +49310,7 @@ var Step7 = function (_React$Component6) {
             _semanticUiReact.Form.Field,
             { width: 9 },
             React.createElement(_semanticUiReact.Input, {
-              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this12.props.removeInvitationField.bind(null, idx) }),
+              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this13.props.removeInvitationField.bind(null, idx) }),
               actionPosition: 'left',
               type: 'email',
               value: item.email,
@@ -49255,7 +49318,7 @@ var Step7 = function (_React$Component6) {
               onChange: function onChange(e, _ref) {
                 var value = _ref.value;
 
-                _this12.props.editInvitationEmail(value, idx);
+                _this13.props.editInvitationEmail(value, idx);
               } })
           ),
           React.createElement(_semanticUiReact.Form.Input, { width: 7, type: 'text',
@@ -49264,7 +49327,7 @@ var Step7 = function (_React$Component6) {
             onChange: function onChange(e, _ref2) {
               var value = _ref2.value;
 
-              _this12.props.editInvitationUsername(value, idx);
+              _this13.props.editInvitationUsername(value, idx);
             } })
         );
       }, this);
@@ -49346,34 +49409,34 @@ var Step8 = function (_React$Component7) {
   function Step8(props) {
     _classCallCheck(this, Step8);
 
-    var _this13 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
+    var _this14 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
 
-    _this13.state = {
+    _this14.state = {
       companyInfoConfirmed: false,
       friendsInvited: false,
       errorMessage: '',
       loading: false
     };
-    _this13.confirmCompanyInfo = _this13.confirmCompanyInfo.bind(_this13);
-    _this13.tokenCallback = _this13.tokenCallback.bind(_this13);
-    _this13.inviteFriends = _this13.inviteFriends.bind(_this13);
-    return _this13;
+    _this14.confirmCompanyInfo = _this14.confirmCompanyInfo.bind(_this14);
+    _this14.tokenCallback = _this14.tokenCallback.bind(_this14);
+    _this14.inviteFriends = _this14.inviteFriends.bind(_this14);
+    return _this14;
   }
 
   _createClass(Step8, [{
     key: 'inviteFriends',
     value: function inviteFriends(e) {
-      var _this14 = this;
+      var _this15 = this;
 
       e.preventDefault();
       var f = this.props.friends;
 
       this.setState({ erorrMessage: '', loading: true });
       post_api.teams.inviteFriends(this.props.teamId, f[0].email, f[1].email, f[2].email).then(function (response) {
-        _this14.props.handleInput({ target: { value: 15, name: 'credits' } });
-        _this14.setState({ friendsInvited: true, errorMessage: '', loading: false });
+        _this15.props.handleInput({ target: { value: 15, name: 'credits' } });
+        _this15.setState({ friendsInvited: true, errorMessage: '', loading: false });
       }).catch(function (err) {
-        _this14.setState({ errorMessage: '', loading: false });
+        _this15.setState({ errorMessage: '', loading: false });
       });
     }
   }, {
@@ -49384,17 +49447,17 @@ var Step8 = function (_React$Component7) {
   }, {
     key: 'tokenCallback',
     value: function tokenCallback(token) {
-      var _this15 = this;
+      var _this16 = this;
 
       var i = this.props.companyInfo;
       post_api.teams.subscribeToPlan(this.props.teamId, token, i.vat_id, i.company_name, i.street_address, i.unit, i.zip, i.state, i.country, i.city).then(function (response) {
-        _this15.props.onStepValidated();
+        _this16.props.onStepValidated();
       }).catch(function (err) {});
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this16 = this;
+      var _this17 = this;
 
       return React.createElement(
         'div',
@@ -49433,7 +49496,7 @@ var Step8 = function (_React$Component7) {
                 onChange: function onChange(e, _ref3) {
                   var value = _ref3.value;
 
-                  _this16.props.editFriendsEmail(value, idx);
+                  _this17.props.editFriendsEmail(value, idx);
                 },
                 placeholder: 'friend@company.com',
                 key: idx,
@@ -49466,7 +49529,7 @@ var Step8 = function (_React$Component7) {
 }(React.Component);
 
 function test(props) {
-  var _this17 = this;
+  var _this18 = this;
 
   return React.createElement(
     'div',
@@ -49484,7 +49547,7 @@ function test(props) {
         companyInfo: this.props.companyInfo,
         handleCompanyInfoInput: this.props.handleCompanyInfoInput,
         onSubmit: function onSubmit(e) {
-          e.preventDefault();_this17.confirmCompanyInfo(true);
+          e.preventDefault();_this18.confirmCompanyInfo(true);
         } }) : React.createElement(
         'div',
         { className: 'display_flex' },
@@ -49549,9 +49612,9 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   function TeamCreationView(props) {
     _classCallCheck(this, TeamCreationView);
 
-    var _this18 = _possibleConstructorReturn(this, (TeamCreationView.__proto__ || Object.getPrototypeOf(TeamCreationView)).call(this, props));
+    var _this19 = _possibleConstructorReturn(this, (TeamCreationView.__proto__ || Object.getPrototypeOf(TeamCreationView)).call(this, props));
 
-    _this18.state = {
+    _this19.state = {
       currentStep: 0,
       steps: [],
       email: '',
@@ -49582,17 +49645,17 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       },
       stripeToken: null
     };
-    _this18.incrementStep = _this18.incrementStep.bind(_this18);
-    _this18.handleInput = _this18.handleInput.bind(_this18);
-    _this18.switchNewsletter = _this18.switchNewsletter.bind(_this18);
-    _this18.addInvitationField = _this18.addInvitationField.bind(_this18);
-    _this18.removeInvitationField = _this18.removeInvitationField.bind(_this18);
-    _this18.editInvitationEmail = _this18.editInvitationEmail.bind(_this18);
-    _this18.editInvitationUsername = _this18.editInvitationUsername.bind(_this18);
-    _this18.editFriendsEmail = _this18.editFriendsEmail.bind(_this18);
-    _this18.handleCompanyInfoInput = _this18.handleCompanyInfoInput.bind(_this18);
-    _this18.submitStep8 = _this18.submitStep8.bind(_this18);
-    return _this18;
+    _this19.incrementStep = _this19.incrementStep.bind(_this19);
+    _this19.handleInput = _this19.handleInput.bind(_this19);
+    _this19.switchNewsletter = _this19.switchNewsletter.bind(_this19);
+    _this19.addInvitationField = _this19.addInvitationField.bind(_this19);
+    _this19.removeInvitationField = _this19.removeInvitationField.bind(_this19);
+    _this19.editInvitationEmail = _this19.editInvitationEmail.bind(_this19);
+    _this19.editInvitationUsername = _this19.editInvitationUsername.bind(_this19);
+    _this19.editFriendsEmail = _this19.editFriendsEmail.bind(_this19);
+    _this19.handleCompanyInfoInput = _this19.handleCompanyInfoInput.bind(_this19);
+    _this19.submitStep8 = _this19.submitStep8.bind(_this19);
+    return _this19;
   }
 
   _createClass(TeamCreationView, [{
@@ -49684,6 +49747,8 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         email: this.state.email,
         switchNewsletter: this.switchNewsletter,
         newsletter: this.state.newsletter,
+        dispatch: this.props.dispatch,
+        history: this.props.history,
         key: '1' }));
       steps.push(React.createElement(Step2, { onStepValidated: this.incrementStep,
         digits: this.state.digits,
@@ -49802,11 +49867,11 @@ var _queryString = __webpack_require__(394);
 
 var _queryString2 = _interopRequireDefault(_queryString);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -49846,7 +49911,7 @@ var Step1 = function (_React$Component) {
     key: "login",
     value: function login() {
       this.props.dispatch((0, _commonActions.setLoginRedirectUrl)(this.props.match.url + '?skip'));
-      this.props.history.push('/login');
+      this.props.history.replace('/login');
     }
   }, {
     key: "render",
@@ -51361,18 +51426,6 @@ var MultiTeamAppAdd = function (_React$Component2) {
       users: [],
       dropdown: false
     };
-    _this2.state.users = [];
-    if (_this2.props.selectedItem.type === 'channel') {
-      _this2.props.item.userIds.map(function (item) {
-        var user = this.props.userSelectFunc(item);
-        user.selected = false;
-        this.state.users.push(user);
-      }, _this2);
-    } else {
-      var item = _this2.props.item;
-      item.selected = false;
-      _this2.state.users.push(item);
-    }
     _this2.handleAppNameChange = _this2.handleAppNameChange.bind(_this2);
     _this2.chooseApp = _this2.chooseApp.bind(_this2);
     _this2.resetApp = _this2.resetApp.bind(_this2);
@@ -51388,6 +51441,23 @@ var MultiTeamAppAdd = function (_React$Component2) {
   }
 
   _createClass(MultiTeamAppAdd, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.selectedItem.type === 'channel') {
+        this.props.item.userIds.map(function (item) {
+          var user = this.props.userSelectFunc(item);
+          user.selected = false;
+          user.removable = true;
+          this.state.users.push(user);
+        }, this);
+      } else {
+        var item = this.props.item;
+        item.selected = false;
+        item.removable = false;
+        this.state.users.push(item);
+      }
+    }
+  }, {
     key: 'shareApp',
     value: function shareApp() {
       var _this3 = this;
@@ -51428,7 +51498,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(props) {
-      if (props != this.props) {
+      if (props !== this.props) {
         var users = [];
         if (props.selectedItem.type === 'channel') {
           props.item.userIds.map(function (item) {
@@ -51511,6 +51581,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
           credentials[item] = '';
         });
         this.setState({ choosenApp: { info: app, inputs: data.information }, appName: app.website_name, credentials: credentials });
+        if (this.props.selectedItem.type === 'user') this.handleUserSelect(this.state.users[0].id);
       }.bind(this));
     }
   }, {
@@ -51612,7 +51683,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
                             { className: 'value overflow-ellipsis' },
                             user.username
                           ),
-                          React.createElement(
+                          user.removable === true && React.createElement(
                             'button',
                             { className: 'button-unstyle button_delete', onClick: this.handleUserDeselect.bind(null, user.id) },
                             React.createElement('i', { className: 'fa fa-times' })
@@ -51763,6 +51834,8 @@ var _teamAppsAddUIActions = __webpack_require__(124);
 
 var _reactRedux = __webpack_require__(12);
 
+var _semanticUiReact = __webpack_require__(48);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -51770,7 +51843,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = __webpack_require__(1);
-var classnames = __webpack_require__(2);
 var TeamAddAppsButton = (_dec = (0, _reactRedux.connect)(), _dec(_class = function (_React$Component) {
   _inherits(TeamAddAppsButton, _React$Component);
 
@@ -51779,111 +51851,80 @@ var TeamAddAppsButton = (_dec = (0, _reactRedux.connect)(), _dec(_class = functi
 
     var _this = _possibleConstructorReturn(this, (TeamAddAppsButton.__proto__ || Object.getPrototypeOf(TeamAddAppsButton)).call(this, props));
 
-    _this.state = {
-      dropdown: false
-    };
-    _this.showDropdown = _this.showDropdown.bind(_this);
-    _this.onMouseDown = _this.onMouseDown.bind(_this);
-    _this.onMouseUp = _this.onMouseUp.bind(_this);
-    _this.pageClick = _this.pageClick.bind(_this);
     _this.selectItem = _this.selectItem.bind(_this);
     return _this;
   }
 
   _createClass(TeamAddAppsButton, [{
-    key: 'selectItem',
+    key: "selectItem",
     value: function selectItem(type) {
       this.props.dispatch((0, _teamAppsAddUIActions.showAppAddUIElement)(type, true));
-      this.showDropdown(false);
     }
   }, {
-    key: 'showDropdown',
-    value: function showDropdown(state) {
-      if (state === this.state.dropdown) return;
-      this.setState({ dropdown: state });
-    }
-  }, {
-    key: 'onMouseDown',
-    value: function onMouseDown() {
-      this.mouseInDropDown = true;
-    }
-  }, {
-    key: 'onMouseUp',
-    value: function onMouseUp() {
-      this.mouseInDropDown = false;
-    }
-  }, {
-    key: 'pageClick',
-    value: function pageClick(e) {
-      if (this.mouseInDropDown) return;
-      this.setState({ dropdown: false });
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      window.addEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      window.removeEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'render',
+    key: "render",
     value: function render() {
+      var targetType = this.props.target.purpose !== undefined ? 1 : 2;
       return React.createElement(
-        'button',
-        { className: 'button-unstyle', id: 'add_team_apps_button',
-          onMouseDown: this.onMouseDown,
-          onMouseUp: this.onMouseUp,
-          onClick: this.showDropdown.bind(null, true) },
-        React.createElement(
-          'div',
-          { className: 'button-unstyle display-flex justify_content_center align_items_center', style: { width: '100%', height: '100%', borderRadius: '5px' },
-            'data-tip': 'Share apps here', ref: function ref(_ref) {
+        _semanticUiReact.Dropdown,
+        {
+          id: "share_app_dropdown",
+          size: "mini",
+          floating: true,
+          button: true,
+          icon: React.createElement("i", { className: "icon plus single", "data-tip": "Share apps here", ref: function ref(_ref) {
               window.refs.shareAppsButton = _ref;
-            } },
-          React.createElement('i', { className: 'fa fa-plus' })
-        ),
+            } }) },
         React.createElement(
-          'div',
-          { className: classnames('floating_dropdown', this.state.dropdown ? 'show' : null) },
-          React.createElement(
-            'div',
-            { className: 'dropdown_content' },
+          _semanticUiReact.Dropdown.Menu,
+          null,
+          targetType === 2 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { style: { whiteSpace: 'inherit', lineHeight: '1.3' } },
+            "Send apps directly to User desk will be available soon. To help us build this feature ",
             React.createElement(
-              'div',
-              { className: 'dropdown_row selectable', onClick: this.selectItem.bind(null, 'Simple') },
-              React.createElement('i', { className: 'fa fa-square' }),
-              React.createElement(
-                'span',
-                null,
-                'Single app'
-              ),
-              React.createElement('i', { className: 'fa fa-info info_icon', 'data-place': 'right', 'data-tip': 'Let multiple people have access to one<br>account. Like your Twitter, Wordpress etc.' })
-            ),
-            React.createElement(
-              'div',
-              { className: 'dropdown_row selectable', onClick: this.selectItem.bind(null, 'Multi') },
-              React.createElement('i', { className: 'fa fa-sitemap' }),
-              React.createElement(
-                'span',
-                null,
-                'Entreprise app'
-              ),
-              React.createElement('i', { className: 'fa fa-info info_icon', 'data-place': 'right', 'data-tip': 'Share an account where each member uses<br>his/her own ID and password to login to one<br>website. Like Gmail, Trello, Slack... You can fill<br>the credentials for your team members or let<br>them do it.' })
-            ),
-            React.createElement(
-              'div',
-              { className: 'dropdown_row selectable', onClick: this.selectItem.bind(null, 'Link') },
-              React.createElement('i', { className: 'fa fa-link' }),
-              React.createElement(
-                'span',
-                null,
-                'Link app'
-              ),
-              React.createElement('i', { className: 'fa fa-info info_icon', 'data-place': 'right', 'data-tip': 'Are you using tools without accounts?<br>Need to share a blog or a source your team<br>frequently uses? Here it is!' })
+              "a",
+              { href: "mailto:victor@ease.space" },
+              "give us your insights!"
             )
+          ),
+          targetType === 1 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { onClick: this.selectItem.bind(null, 'Simple') },
+            React.createElement(_semanticUiReact.Icon, { name: "square" }),
+            "Single app",
+            React.createElement(_semanticUiReact.Popup, {
+              size: "mini",
+              style: { fontWeight: 'bold', textAlign: 'center' },
+              inverted: true,
+              position: "right center",
+              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
+              content: "Let multiple people have access to one account. Like your Twitter, Wordpress etc." })
+          ),
+          targetType === 1 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { onClick: this.selectItem.bind(null, 'Multi') },
+            React.createElement(_semanticUiReact.Icon, { name: "sitemap" }),
+            "Enterprise app",
+            React.createElement(_semanticUiReact.Popup, {
+              size: "mini",
+              style: { fontWeight: 'bold', textAlign: 'center' },
+              inverted: true,
+              position: "right center",
+              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
+              content: "Share an account where each member uses his/her own ID and password to login to one website. Like Gmail, Trello, Slack... You can fill the credentials for your team members or let them do it." })
+          ),
+          targetType === 1 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { onClick: this.selectItem.bind(null, 'Link') },
+            React.createElement(_semanticUiReact.Icon, { name: "linkify" }),
+            "Link app",
+            React.createElement(_semanticUiReact.Popup, {
+              size: "mini",
+              style: { fontWeight: 'bold', textAlign: 'center' },
+              inverted: true,
+              position: "right center",
+              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
+              content: "Are you using tools without accounts? Need to share a blog or a source your team frequently uses? Here it is!" })
           )
         )
       );
@@ -51917,7 +51958,7 @@ var channelActions = _interopRequireWildcard(_channelActions);
 
 var _renderHelpers = __webpack_require__(298);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -52145,7 +52186,7 @@ var _helperFunctions = __webpack_require__(13);
 
 var _renderHelpers = __webpack_require__(298);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -52953,12 +52994,12 @@ var SimpleUserSelect = function (_React$Component2) {
                 { className: 'name_hodler overflow-ellipsis' },
                 item.username
               ),
-              item.can_see_information != undefined && React.createElement(
+              item.can_see_information !== undefined && React.createElement(
                 'button',
                 { className: 'action_button button-unstyle mrgnLeft5', onClick: this.props.switchCanSeeInformationFunc.bind(null, item.id) },
                 React.createElement('i', { className: classnames('fa', item.can_see_information ? 'fa-eye' : 'fa-eye-slash') })
               ),
-              React.createElement(
+              item.removable === true && React.createElement(
                 'button',
                 { className: 'button_delete action_button button-unstyle', onClick: this.props.deselectFunc.bind(null, item.id) },
                 React.createElement('i', { className: 'fa fa-times' })
@@ -53016,18 +53057,6 @@ var LinkTeamAppAdd = function (_React$Component3) {
       selectedUsers: [],
       users: []
     };
-    _this3.state.users = [];
-    if (_this3.props.selectedItem.type === 'channel') {
-      _this3.props.item.userIds.map(function (item) {
-        var user = this.props.userSelectFunc(item);
-        user.selected = false;
-        this.state.users.push(user);
-      }, _this3);
-    } else {
-      var item = _this3.props.item;
-      item.selected = false;
-      _this3.state.users.push(item);
-    }
     _this3.handleAppNameChange = _this3.handleAppNameChange.bind(_this3);
     _this3.handleUrlInput = _this3.handleUrlInput.bind(_this3);
     _this3.handleUserSelect = _this3.handleUserSelect.bind(_this3);
@@ -53038,6 +53067,24 @@ var LinkTeamAppAdd = function (_React$Component3) {
   }
 
   _createClass(LinkTeamAppAdd, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.selectedItem.type === 'channel') {
+        this.props.item.userIds.map(function (item) {
+          var user = this.props.userSelectFunc(item);
+          user.selected = false;
+          user.removable = true;
+          this.state.users.push(user);
+        }, this);
+      } else {
+        var item = this.props.item;
+        item.selected = false;
+        item.removable = false;
+        this.state.users.push(item);
+        this.handleUserSelect(item.id);
+      }
+    }
+  }, {
     key: 'shareApp',
     value: function shareApp() {
       var _this4 = this;
@@ -53197,8 +53244,7 @@ var LinkTeamAppAdd = function (_React$Component3) {
                       type: 'text',
                       name: 'url',
                       value: this.state.url,
-                      onChange: this.handleUrlInput
-                    })
+                      onChange: this.handleUrlInput })
                   )
                 )
               )
@@ -53253,21 +53299,6 @@ var SimpleTeamAppAdd = function (_React$Component4) {
       selectedUsers: [],
       users: []
     };
-    _this6.state.users = [];
-    if (_this6.props.selectedItem.type === 'channel') {
-      _this6.props.item.userIds.map(function (item) {
-        var user = _extends({}, this.props.userSelectFunc(item));
-        user.selected = false;
-        user.can_see_information = false;
-        this.state.users.push(user);
-      }, _this6);
-    } else {
-      var item = _extends({}, _this6.props.item);
-      item.selected = false;
-      item.can_see_information = true;
-      _this6.state.users.push(item);
-    }
-
     _this6.handleAppNameChange = _this6.handleAppNameChange.bind(_this6);
     _this6.chooseApp = _this6.chooseApp.bind(_this6);
     _this6.resetApp = _this6.resetApp.bind(_this6);
@@ -53283,6 +53314,26 @@ var SimpleTeamAppAdd = function (_React$Component4) {
   }
 
   _createClass(SimpleTeamAppAdd, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.selectedItem.type === 'channel') {
+        this.props.item.userIds.map(function (item) {
+          var user = _extends({}, this.props.userSelectFunc(item));
+          user.selected = false;
+          user.removable = true;
+          user.can_see_information = false;
+          this.state.users.push(user);
+        }, this);
+      } else {
+        var item = _extends({}, this.props.item);
+        item.removable = false;
+        item.selected = false;
+        item.can_see_information = true;
+        this.state.users.push(item);
+        this.handleUserSelect(item.id);
+      }
+    }
+  }, {
     key: 'shareApp',
     value: function shareApp() {
       var _this7 = this;
@@ -53324,7 +53375,7 @@ var SimpleTeamAppAdd = function (_React$Component4) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(props) {
-      if (props != this.props) {
+      if (props !== this.props) {
         var users = [];
         if (props.selectedItem.type === 'channel') {
           props.item.userIds.map(function (item) {
@@ -55017,7 +55068,7 @@ var _helperFunctions = __webpack_require__(13);
 
 var _utils = __webpack_require__(85);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 var _reactRouterDom = __webpack_require__(32);
 
@@ -55845,7 +55896,9 @@ module.exports = (0, _reactRouterDom.withRouter)(FlexPanels);
 
 var _reactRouterDom = __webpack_require__(32);
 
-var _semanticUiReact = __webpack_require__(51);
+var _teamModalActions = __webpack_require__(16);
+
+var _semanticUiReact = __webpack_require__(48);
 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(2);
@@ -55863,7 +55916,14 @@ function TeamHeader(props) {
       React.createElement(
         'div',
         { className: 'tab_header' },
-        React.createElement(TeamAddAppsButton, null),
+        React.createElement(TeamAddAppsButton, { target: props.item }),
+        React.createElement(
+          'button',
+          { onClick: function onClick(e) {
+              props.dispatch((0, _teamModalActions.showRequestWebsiteModal)(true));
+            } },
+          'open'
+        ),
         React.createElement(
           'div',
           { className: 'channel_title' },
@@ -55873,7 +55933,7 @@ function TeamHeader(props) {
             React.createElement(
               'span',
               { id: 'channel_name', className: 'channel_name' },
-              React.createElement('i', { className: classnames("fa icon_wrapper", props.item.username != undefined ? 'fa-user' : 'fa-users') }),
+              React.createElement('i', { className: classnames("fa icon_wrapper", props.item.username !== undefined ? 'fa-user' : 'fa-users') }),
               props.item.name ? props.item.name : props.item.username
             ),
             React.createElement(
@@ -55935,7 +55995,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _teamActions = __webpack_require__(123);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _teamModalActions = __webpack_require__(16);
 
@@ -56334,11 +56394,11 @@ var _helperFunctions = __webpack_require__(13);
 
 var _reactRouterDom = __webpack_require__(32);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -56369,7 +56429,18 @@ var TeamsList = function (_React$Component) {
         React.createElement(
           _semanticUiReact.Dropdown.Menu,
           null,
-          this.props.user != null && this.props.user.teams.map(function (item) {
+          this.props.user !== null && this.props.user.teams.map(function (item) {
+            if (item.disabled) return React.createElement(_semanticUiReact.Popup, {
+              key: item.id,
+              size: 'mini',
+              position: 'left center',
+              trigger: React.createElement(
+                _semanticUiReact.Dropdown.Item,
+                { style: { opacity: '0.45' } },
+                React.createElement(_semanticUiReact.Icon, { name: 'users' }),
+                item.name
+              ),
+              content: 'You need to wait until an admin accept you.' });
             return React.createElement(
               _semanticUiReact.Dropdown.Item,
               { key: item.id, as: 'a', href: '/teams#/teams/' + item.id },
@@ -56605,7 +56676,7 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _notificationsActions = __webpack_require__(122);
 
@@ -56645,6 +56716,12 @@ function teamChannelDispatcher(action, channel, target) {
   };
 }
 
+function teamDispatcher(action, team) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_' + action, payload: { team: team } });
+  };
+}
+
 var WebsocketClient = (_dec = (0, _reactRedux.connect)(), _dec(_class = function (_React$Component) {
   _inherits(WebsocketClient, _React$Component);
 
@@ -56656,7 +56733,8 @@ var WebsocketClient = (_dec = (0, _reactRedux.connect)(), _dec(_class = function
     _this.listeners = {
       'TEAM_APP': teamAppDispatcher,
       'TEAM_USER': teamUserDispatcher,
-      'TEAM_ROOM': teamChannelDispatcher
+      'TEAM_ROOM': teamChannelDispatcher,
+      'TEAM': teamDispatcher
     };
     _this.onMessage = _this.onMessage.bind(_this);
     return _this;
@@ -57898,7 +57976,7 @@ var modalActions = _interopRequireWildcard(_teamModalActions);
 
 var _helperFunctions = __webpack_require__(13);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -57934,7 +58012,7 @@ function TeamSimpleAppButtonSet(props) {
         } },
       React.createElement('i', { className: 'fa fa-user' })
     ),
-    meReceiver != null && meReceiver.accepted && React.createElement(
+    meReceiver !== null && meReceiver.accepted && React.createElement(
       'button',
       { className: 'button-unstyle team_app_pin',
         'data-tip': 'Pin App in your Personal space',
@@ -58272,7 +58350,7 @@ var TeamSimpleApp = function (_React$Component) {
             senderUser.username,
             me.id === senderUser.id && "(you)"
           ),
-          meReceiver != null && !meReceiver.accepted ? React.createElement(
+          meReceiver !== null && !meReceiver.accepted ? React.createElement(
             'span',
             null,
             '\xA0tagged you in a Single App,\xA0',
@@ -58297,7 +58375,7 @@ var TeamSimpleApp = function (_React$Component) {
         React.createElement(
           'div',
           { className: 'team_app' },
-          meReceiver != null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
+          meReceiver !== null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
           React.createElement(
             'div',
             { className: 'name_holder' },
@@ -59388,8 +59466,7 @@ var TeamJoinMultiAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
                   value: credentials[item],
                   onChange: this.handleInput,
                   id: item,
-                  className: 'modal_input input_unstyle'
-                })
+                  className: 'modal_input input_unstyle' })
               );
             }, this)
           ),
@@ -60498,7 +60575,7 @@ var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60600,9 +60677,12 @@ var Step2 = function (_React$Component2) {
 
     _this3.state = {
       errorMessage: '',
-      loading: false
+      loading: false,
+      sendingEmail: false,
+      sendEmailButtonText: 'Resend email'
     };
     _this3.onSubmit = _this3.onSubmit.bind(_this3);
+    _this3.resendDigits = _this3.resendDigits.bind(_this3);
     return _this3;
   }
 
@@ -60618,6 +60698,22 @@ var Step2 = function (_React$Component2) {
         _this4.props.onStepValidated();
       }).catch(function (err) {
         _this4.setState({ loading: false, errorMesage: err });
+      });
+    }
+  }, {
+    key: 'resendDigits',
+    value: function resendDigits() {
+      var _this5 = this;
+
+      this.setState({ sendingEmail: true });
+      post_api.teams.askTeamCreation(this.props.email).then(function (response) {
+        _this5.setState({ sendingEmail: false });
+        _this5.setState({ sendEmailButtonText: 'Sent!' });
+        window.setTimeout(function () {
+          _this5.setState({ sendEmailButtonText: 'Resend email' });
+        }, 2000);
+      }).catch(function (err) {
+        _this5.setState({ sendingEmail: false });
       });
     }
   }, {
@@ -60657,10 +60753,12 @@ var Step2 = function (_React$Component2) {
               required: true }),
             React.createElement(
               _semanticUiReact.Message,
-              { color: 'yellow' },
+              { color: 'yellow', size: 'mini' },
               'Keep this window open while checking for your code.',
               React.createElement('br', null),
-              ' Haven\'t received our email ? Try your spam folder!'
+              ' Haven\'t received our email ? Try your spam folder! Or ',
+              React.createElement(_semanticUiReact.Button, { basic: true, type: 'button', className: 'textlike', size: 'mini', loading: this.state.sendingEmail, onClick: this.resendDigits, content: this.state.sendEmailButtonText }),
+              '.'
             ),
             React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
             React.createElement(
@@ -60683,13 +60781,13 @@ var Step4 = function (_React$Component3) {
   function Step4(props) {
     _classCallCheck(this, Step4);
 
-    var _this5 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
 
-    _this5.state = {
+    _this6.state = {
       errorMessage: ''
     };
-    _this5.onSubmit = _this5.onSubmit.bind(_this5);
-    return _this5;
+    _this6.onSubmit = _this6.onSubmit.bind(_this6);
+    return _this6;
   }
 
   _createClass(Step4, [{
@@ -60832,30 +60930,30 @@ var Step6 = function (_React$Component4) {
   function Step6(props) {
     _classCallCheck(this, Step6);
 
-    var _this6 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
 
-    _this6.state = {
+    _this7.state = {
       errorMessage: '',
       loading: false
     };
-    _this6.onSubmit = _this6.onSubmit.bind(_this6);
-    return _this6;
+    _this7.onSubmit = _this7.onSubmit.bind(_this7);
+    return _this7;
   }
 
   _createClass(Step6, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this7 = this;
+      var _this8 = this;
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
       post_api.teams.createTeam(this.props.teamName, this.props.email, this.props.first_name, this.props.last_name, this.props.username, this.props.jobRole, this.props.jobDetails, this.props.digits).then(function (response) {
         var teamId = response.id;
-        _this7.props.handleInput(null, { name: "teamId", value: teamId });
-        _this7.setState({ loading: false });
-        _this7.props.onStepValidated();
+        _this8.props.handleInput(null, { name: "teamId", value: teamId });
+        _this8.setState({ loading: false });
+        _this8.props.onStepValidated();
       }).catch(function (err) {
-        _this7.setState({ errorMessage: err, loading: false });
+        _this8.setState({ errorMessage: err, loading: false });
       });
     }
   }, {
@@ -60920,19 +61018,19 @@ var Step7 = function (_React$Component5) {
   function Step7(props) {
     _classCallCheck(this, Step7);
 
-    var _this8 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
 
-    _this8.state = {
+    _this9.state = {
       loading: false
     };
-    _this8.onSubmit = _this8.onSubmit.bind(_this8);
-    return _this8;
+    _this9.onSubmit = _this9.onSubmit.bind(_this9);
+    return _this9;
   }
 
   _createClass(Step7, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this9 = this;
+      var _this10 = this;
 
       e.preventDefault();
       var calls = [];
@@ -60943,15 +61041,15 @@ var Step7 = function (_React$Component5) {
       }, this);
       this.setState({ loading: true });
       axios.all(calls).then(function () {
-        _this9.props.handleInput(null, { name: "invitedPeople", value: calls.length });
-        _this9.setState({ loading: false });
-        _this9.props.onStepValidated();
+        _this10.props.handleInput(null, { name: "invitedPeople", value: calls.length });
+        _this10.setState({ loading: false });
+        _this10.props.onStepValidated();
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this10 = this;
+      var _this11 = this;
 
       var fields = this.props.invitations.map(function (item, idx) {
         return React.createElement(
@@ -60961,7 +61059,7 @@ var Step7 = function (_React$Component5) {
             _semanticUiReact.Form.Field,
             { width: 9 },
             React.createElement(_semanticUiReact.Input, {
-              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this10.props.removeInvitationField.bind(null, idx) }),
+              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this11.props.removeInvitationField.bind(null, idx) }),
               actionPosition: 'left',
               type: 'email',
               value: item.email,
@@ -60969,7 +61067,7 @@ var Step7 = function (_React$Component5) {
               onChange: function onChange(e, _ref) {
                 var value = _ref.value;
 
-                _this10.props.editInvitationEmail(value, idx);
+                _this11.props.editInvitationEmail(value, idx);
               } })
           ),
           React.createElement(_semanticUiReact.Form.Input, { width: 7, type: 'text',
@@ -60978,7 +61076,7 @@ var Step7 = function (_React$Component5) {
             onChange: function onChange(e, _ref2) {
               var value = _ref2.value;
 
-              _this10.props.editInvitationUsername(value, idx);
+              _this11.props.editInvitationUsername(value, idx);
             } })
         );
       }, this);
@@ -61060,34 +61158,34 @@ var Step8 = function (_React$Component6) {
   function Step8(props) {
     _classCallCheck(this, Step8);
 
-    var _this11 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
+    var _this12 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
 
-    _this11.state = {
+    _this12.state = {
       companyInfoConfirmed: false,
       friendsInvited: false,
       errorMessage: '',
       loading: false
     };
-    _this11.confirmCompanyInfo = _this11.confirmCompanyInfo.bind(_this11);
-    _this11.tokenCallback = _this11.tokenCallback.bind(_this11);
-    _this11.inviteFriends = _this11.inviteFriends.bind(_this11);
-    return _this11;
+    _this12.confirmCompanyInfo = _this12.confirmCompanyInfo.bind(_this12);
+    _this12.tokenCallback = _this12.tokenCallback.bind(_this12);
+    _this12.inviteFriends = _this12.inviteFriends.bind(_this12);
+    return _this12;
   }
 
   _createClass(Step8, [{
     key: 'inviteFriends',
     value: function inviteFriends(e) {
-      var _this12 = this;
+      var _this13 = this;
 
       e.preventDefault();
       var f = this.props.friends;
 
       this.setState({ erorrMessage: '', loading: true });
       post_api.teams.inviteFriends(this.props.teamId, f[0].email, f[1].email, f[2].email).then(function (response) {
-        _this12.props.handleInput({ target: { value: 15, name: 'credits' } });
-        _this12.setState({ friendsInvited: true, errorMessage: '', loading: false });
+        _this13.props.handleInput({ target: { value: 15, name: 'credits' } });
+        _this13.setState({ friendsInvited: true, errorMessage: '', loading: false });
       }).catch(function (err) {
-        _this12.setState({ errorMessage: '', loading: false });
+        _this13.setState({ errorMessage: '', loading: false });
       });
     }
   }, {
@@ -61098,17 +61196,17 @@ var Step8 = function (_React$Component6) {
   }, {
     key: 'tokenCallback',
     value: function tokenCallback(token) {
-      var _this13 = this;
+      var _this14 = this;
 
       var i = this.props.companyInfo;
       post_api.teams.subscribeToPlan(this.props.teamId, token, i.vat_id, i.company_name, i.street_address, i.unit, i.zip, i.state, i.country, i.city).then(function (response) {
-        _this13.props.onStepValidated();
+        _this14.props.onStepValidated();
       }).catch(function (err) {});
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this14 = this;
+      var _this15 = this;
 
       return React.createElement(
         'div',
@@ -61147,7 +61245,7 @@ var Step8 = function (_React$Component6) {
                 onChange: function onChange(e, _ref3) {
                   var value = _ref3.value;
 
-                  _this14.props.editFriendsEmail(value, idx);
+                  _this15.props.editFriendsEmail(value, idx);
                 },
                 placeholder: 'friend@company.com',
                 key: idx,
@@ -61180,7 +61278,7 @@ var Step8 = function (_React$Component6) {
 }(React.Component);
 
 function test(props) {
-  var _this15 = this;
+  var _this16 = this;
 
   return React.createElement(
     'div',
@@ -61198,7 +61296,7 @@ function test(props) {
         companyInfo: this.props.companyInfo,
         handleCompanyInfoInput: this.props.handleCompanyInfoInput,
         onSubmit: function onSubmit(e) {
-          e.preventDefault();_this15.confirmCompanyInfo(true);
+          e.preventDefault();_this16.confirmCompanyInfo(true);
         } }) : React.createElement(
         'div',
         { className: 'display_flex' },
@@ -61262,9 +61360,9 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   function SimpleTeamCreationView(props) {
     _classCallCheck(this, SimpleTeamCreationView);
 
-    var _this16 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
+    var _this17 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
 
-    _this16.state = {
+    _this17.state = {
       currentStep: 0,
       steps: [],
       email: '',
@@ -61296,18 +61394,18 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       },
       stripeToken: null
     };
-    _this16.incrementStep = _this16.incrementStep.bind(_this16);
-    _this16.handleInput = _this16.handleInput.bind(_this16);
-    _this16.switchNewsletter = _this16.switchNewsletter.bind(_this16);
-    _this16.addInvitationField = _this16.addInvitationField.bind(_this16);
-    _this16.removeInvitationField = _this16.removeInvitationField.bind(_this16);
-    _this16.editInvitationEmail = _this16.editInvitationEmail.bind(_this16);
-    _this16.editInvitationUsername = _this16.editInvitationUsername.bind(_this16);
-    _this16.editFriendsEmail = _this16.editFriendsEmail.bind(_this16);
-    _this16.handleCompanyInfoInput = _this16.handleCompanyInfoInput.bind(_this16);
-    _this16.submitStep8 = _this16.submitStep8.bind(_this16);
-    _this16.incrementStepByValue = _this16.incrementStepByValue.bind(_this16);
-    return _this16;
+    _this17.incrementStep = _this17.incrementStep.bind(_this17);
+    _this17.handleInput = _this17.handleInput.bind(_this17);
+    _this17.switchNewsletter = _this17.switchNewsletter.bind(_this17);
+    _this17.addInvitationField = _this17.addInvitationField.bind(_this17);
+    _this17.removeInvitationField = _this17.removeInvitationField.bind(_this17);
+    _this17.editInvitationEmail = _this17.editInvitationEmail.bind(_this17);
+    _this17.editInvitationUsername = _this17.editInvitationUsername.bind(_this17);
+    _this17.editFriendsEmail = _this17.editFriendsEmail.bind(_this17);
+    _this17.handleCompanyInfoInput = _this17.handleCompanyInfoInput.bind(_this17);
+    _this17.submitStep8 = _this17.submitStep8.bind(_this17);
+    _this17.incrementStepByValue = _this17.incrementStepByValue.bind(_this17);
+    return _this17;
   }
 
   _createClass(SimpleTeamCreationView, [{
@@ -61916,7 +62014,7 @@ var _reactRedux = __webpack_require__(12);
 
 var _reactDom = __webpack_require__(42);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactTooltip = __webpack_require__(120);
 
@@ -61950,7 +62048,7 @@ function TeamsTutorialTip(props) {
       null,
       props.title
     ),
-    props.body != undefined && _react2.default.createElement(
+    props.body !== undefined && _react2.default.createElement(
       'span',
       { className: 'body' },
       props.body
@@ -61958,7 +62056,7 @@ function TeamsTutorialTip(props) {
     _react2.default.createElement(
       'div',
       { className: 'display-flex' },
-      props.skip != undefined && _react2.default.createElement(
+      props.skip !== undefined && _react2.default.createElement(
         'span',
         { style: { fontSize: '14px' } },
         'Already know how Ease.space works?',
@@ -62023,17 +62121,17 @@ var TeamsTutorial = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'skipTutorial',
     value: function skipTutorial() {
-      if (this.state.enabledTooltip != null) _reactTooltip2.default.hide(this.getRef(this.state.step));
+      if (this.state.enabledTooltip !== null) _reactTooltip2.default.hide(this.getRef(this.state.step));
       this.props.dispatch((0, _commonActions.setTeamsTutorial)(true));
     }
   }, {
     key: 'incrementStep',
     value: function incrementStep() {
       var state = _extends({}, this.state);
-      if (state.enabledTooltip != null) _reactTooltip2.default.hide(this.getRef(state.step));
+      if (state.enabledTooltip !== null) _reactTooltip2.default.hide(this.getRef(state.step));
       state.enabledTooltip = null;
       state.step++;
-      if (this.getRef(state.step) != null) {
+      if (this.getRef(state.step) !== null) {
         state.enabledTooltip = state.step;
         setTimeout(function () {
           _reactTooltip2.default.show(this.getRef(state.step));
@@ -62338,7 +62436,7 @@ function reducer() {
     case 'TEAM_ROOM_ADDED':
       {
         var channels = state.channels;
-        if (selectUserFromListById(state.channels, action.payload.channel.id) != null) break;
+        if (selectUserFromListById(state.channels, action.payload.channel.id) !== null) break;
         users.push(action.payload.channel);
         return _extends({}, state, {
           channels: channels
@@ -62356,6 +62454,7 @@ function reducer() {
             });
           }
         }
+        break;
       }
   }
   return state;
@@ -62424,6 +62523,41 @@ function reducer() {
       {
         return _extends({}, state, {
           ws_id: action.payload.ws_id
+        });
+      }
+    case 'TEAM_ADDED':
+      {
+        if (!state.user) break;
+        var _user = state.user;
+        _user.teams.push(action.payload.team);
+        return _extends({}, state, {
+          user: _user
+        });
+      }
+    case 'TEAM_REMOVED':
+      {
+        if (!state.user) break;
+        var _user2 = state.user;
+        for (var i = 0; i < _user2.teams.length; i++) {
+          if (_user2.teams[i].id === action.payload.team.id) {
+            _user2.teams.splice(i, 1);
+            return _extends({}, state, {
+              user: _user2
+            });
+          }
+        }
+        break;
+      }
+    case 'TEAM_CHANGED':
+      {
+        if (!state.user) break;
+        var _user3 = state.user;
+        _user3.teams = _user3.teams.map(function (item) {
+          if (item.id === action.payload.team.id) return action.payload.team;
+          return item;
+        });
+        return _extends({}, state, {
+          user: _user3
         });
       }
   }
@@ -62958,6 +63092,9 @@ var initialState = {
   },
   teamPhoneNumberModal: {
     active: false
+  },
+  requestWebsiteModal: {
+    active: false
   }
 };
 function reducer() {
@@ -63065,6 +63202,12 @@ function reducer() {
       {
         return _extends({}, state, {
           teamPhoneNumberModal: action.payload
+        });
+      }
+    case 'SHOW_REQUEST_WEBSITE_MODAL':
+      {
+        return _extends({}, state, {
+          requestWebsiteModal: action.payload
         });
       }
   }
@@ -71677,7 +71820,7 @@ module.exports = createAssigner;
 /* 770 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isArrayLike = __webpack_require__(48);
+var isArrayLike = __webpack_require__(50);
 
 /**
  * Creates a `baseEach` or `baseEachRight` function.
@@ -71902,7 +72045,7 @@ module.exports = createCurry;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIteratee = __webpack_require__(38),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     keys = __webpack_require__(34);
 
 /**
@@ -73937,7 +74080,7 @@ module.exports = ary;
 var assignValue = __webpack_require__(139),
     copyObject = __webpack_require__(94),
     createAssigner = __webpack_require__(769),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isPrototype = __webpack_require__(112),
     keys = __webpack_require__(34);
 
@@ -77861,7 +78004,7 @@ var EventPluginHub = __webpack_require__(116);
 var EventPropagators = __webpack_require__(117);
 var ExecutionEnvironment = __webpack_require__(24);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 var SyntheticEvent = __webpack_require__(58);
 
 var getEventTarget = __webpack_require__(245);
@@ -78939,7 +79082,7 @@ var _prodInvariant = __webpack_require__(14),
 
 var React = __webpack_require__(98);
 var ReactComponentEnvironment = __webpack_require__(239);
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactErrorUtils = __webpack_require__(240);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
@@ -79848,7 +79991,7 @@ var ReactDOMComponentTree = __webpack_require__(23);
 var ReactDefaultInjection = __webpack_require__(925);
 var ReactMount = __webpack_require__(404);
 var ReactReconciler = __webpack_require__(97);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 var ReactVersion = __webpack_require__(940);
 
 var findDOMNode = __webpack_require__(957);
@@ -81139,7 +81282,7 @@ var _prodInvariant = __webpack_require__(14),
 var DOMPropertyOperations = __webpack_require__(397);
 var LinkedValueUtils = __webpack_require__(238);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -82093,7 +82236,7 @@ var _prodInvariant = __webpack_require__(14),
 
 var LinkedValueUtils = __webpack_require__(238);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -82881,7 +83024,7 @@ module.exports = ReactDebugTool;
 
 var _assign = __webpack_require__(19);
 
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 var Transaction = __webpack_require__(168);
 
 var emptyFunction = __webpack_require__(30);
@@ -83112,7 +83255,7 @@ var EventListener = __webpack_require__(314);
 var ExecutionEnvironment = __webpack_require__(24);
 var PooledClass = __webpack_require__(81);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var getEventTarget = __webpack_require__(245);
 var getUnboundedScrollPosition = __webpack_require__(680);
@@ -83312,7 +83455,7 @@ var ReactComponentEnvironment = __webpack_require__(239);
 var ReactEmptyComponent = __webpack_require__(400);
 var ReactBrowserEventEmitter = __webpack_require__(166);
 var ReactHostComponent = __webpack_require__(402);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var ReactInjection = {
   Component: ReactComponentEnvironment.injection,
@@ -83448,7 +83591,7 @@ var ReactComponentEnvironment = __webpack_require__(239);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactReconciler = __webpack_require__(97);
 var ReactChildReconciler = __webpack_require__(905);
 
@@ -86027,7 +86170,7 @@ module.exports = dangerousStyleValue;
 
 var _prodInvariant = __webpack_require__(14);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactDOMComponentTree = __webpack_require__(23);
 var ReactInstanceMap = __webpack_require__(118);
 
@@ -97593,7 +97736,7 @@ module.exports = onlyChild;
 
 var _prodInvariant = __webpack_require__(83);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var REACT_ELEMENT_TYPE = __webpack_require__(427);
 
 var getIteratorFn = __webpack_require__(430);
@@ -110333,6 +110476,137 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _teamModalActions = __webpack_require__(16);
+
+var _reactRedux = __webpack_require__(12);
+
+var _semanticUiReact = __webpack_require__(48);
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(2);
+
+
+function Step1(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      _semanticUiReact.Form,
+      { className: 'container' },
+      React.createElement(_semanticUiReact.Form.Input, {
+        label: 'Website URL',
+        placeholder: 'Paste website URL' }),
+      React.createElement(_semanticUiReact.Form.Checkbox, {
+        toggle: true,
+        label: 'I wish this website to be private and do not appear in the public catalog of Apps' }),
+      React.createElement(
+        _semanticUiReact.Form.Field,
+        { className: 'infoColor' },
+        'In order to add this website to my apps I authorize Ease.space to use my credentials for a temporarily period of time (72 hours). \xA0',
+        React.createElement(
+          'span',
+          { className: 'inline-text-button' },
+          'More info'
+        )
+      ),
+      React.createElement(_semanticUiReact.Form.Checkbox, {
+        label: 'Yes, I give my authorization' }),
+      React.createElement(_semanticUiReact.Button, { attached: 'bottom', className: 'modal-button', type: 'submit', content: 'lalalal' })
+    )
+  );
+}
+
+var RequestWebsiteModal = (_dec = (0, _reactRedux.connect)(), _dec(_class = function (_React$Component) {
+  _inherits(RequestWebsiteModal, _React$Component);
+
+  function RequestWebsiteModal(props) {
+    _classCallCheck(this, RequestWebsiteModal);
+
+    var _this = _possibleConstructorReturn(this, (RequestWebsiteModal.__proto__ || Object.getPrototypeOf(RequestWebsiteModal)).call(this, props));
+
+    _this.state = {
+      url: '',
+      private: false,
+      authorization: false,
+      login: '',
+      password: '',
+      view: 0
+    };
+    _this.handleInput = _this.handleInput.bind(_this);
+    _this.setStep = _this.setStep.bind(_this);
+    return _this;
+  }
+
+  _createClass(RequestWebsiteModal, [{
+    key: 'handleInput',
+    value: function handleInput(e, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'setStep',
+    value: function setStep(step) {
+      this.setState({ view: step });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return React.createElement(
+        'div',
+        { className: 'popupHandler myshow' },
+        React.createElement('div', { className: 'popover_mask', onClick: function onClick(e) {
+            _this2.props.dispatch((0, _teamModalActions.showRequestWebsiteModal)(false));
+          } }),
+        React.createElement(
+          'div',
+          { className: 'ease_popup ease_team_popup', id: 'modal_team_leave_app' },
+          React.createElement(
+            'button',
+            { className: 'button-unstyle action_button close_button', onClick: function onClick(e) {
+                _this2.props.dispatch((0, _teamModalActions.showRequestWebsiteModal)(false));
+              } },
+            React.createElement('i', { className: 'fa fa-times' })
+          ),
+          React.createElement(
+            _semanticUiReact.Header,
+            { as: 'h3', attached: 'top' },
+            'Request a website'
+          ),
+          React.createElement(Step1, null)
+        )
+      );
+    }
+  }]);
+
+  return RequestWebsiteModal;
+}(React.Component)) || _class);
+
+
+module.exports = RequestWebsiteModal;
 
 /***/ })
 /******/ ]);
