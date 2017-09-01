@@ -977,6 +977,7 @@ exports.showTeamSettingsModal = showTeamSettingsModal;
 exports.showVerifyTeamUserModal = showVerifyTeamUserModal;
 exports.showTeamTransferOwnershipModal = showTeamTransferOwnershipModal;
 exports.showTeamPhoneNumberModal = showTeamPhoneNumberModal;
+exports.showRequestWebsiteModal = showRequestWebsiteModal;
 function showAddTeamUserModal(state) {
   return {
     type: 'SHOW_ADD_TEAM_USER_MODAL',
@@ -1136,6 +1137,15 @@ function showTeamTransferOwnershipModal(state, user) {
 function showTeamPhoneNumberModal(state) {
   return {
     type: 'SHOW_TEAM_PHONE_NUMBER_MODAL',
+    payload: {
+      active: state
+    }
+  };
+}
+
+function showRequestWebsiteModal(state) {
+  return {
+    type: 'SHOW_REQUEST_WEBSITE_MODAL',
     payload: {
       active: state
     }
@@ -2263,7 +2273,7 @@ module.exports = isObject;
 
 var arrayLikeKeys = __webpack_require__(331),
     baseKeys = __webpack_require__(216),
-    isArrayLike = __webpack_require__(48);
+    isArrayLike = __webpack_require__(50);
 
 /**
  * Creates an array of the own enumerable property names of `object`.
@@ -2320,7 +2330,7 @@ module.exports = keys;
 
 var _prodInvariant = __webpack_require__(83);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -3699,7 +3709,7 @@ exports.deleteJoinChannelRequest = deleteJoinChannelRequest;
 
 var _helperFunctions = __webpack_require__(13);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var api = __webpack_require__(26);
 var post_api = __webpack_require__(37);
@@ -4147,338 +4157,6 @@ module.exports = isObjectLike;
 
 /***/ }),
 /* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isFunction = __webpack_require__(69),
-    isLength = __webpack_require__(230);
-
-/**
- * Checks if `value` is array-like. A value is considered array-like if it's
- * not a function and has a `value.length` that's an integer greater than or
- * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- * @example
- *
- * _.isArrayLike([1, 2, 3]);
- * // => true
- *
- * _.isArrayLike(document.body.children);
- * // => true
- *
- * _.isArrayLike('abc');
- * // => true
- *
- * _.isArrayLike(_.noop);
- * // => false
- */
-function isArrayLike(value) {
-  return value != null && isLength(value.length) && !isFunction(value);
-}
-
-module.exports = isArrayLike;
-
-
-/***/ }),
-/* 49 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-
-
-var _prodInvariant = __webpack_require__(14),
-    _assign = __webpack_require__(19);
-
-var CallbackQueue = __webpack_require__(396);
-var PooledClass = __webpack_require__(81);
-var ReactFeatureFlags = __webpack_require__(401);
-var ReactReconciler = __webpack_require__(97);
-var Transaction = __webpack_require__(168);
-
-var invariant = __webpack_require__(6);
-
-var dirtyComponents = [];
-var updateBatchNumber = 0;
-var asapCallbackQueue = CallbackQueue.getPooled();
-var asapEnqueued = false;
-
-var batchingStrategy = null;
-
-function ensureInjected() {
-  !(ReactUpdates.ReactReconcileTransaction && batchingStrategy) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must inject a reconcile transaction class and batching strategy') : _prodInvariant('123') : void 0;
-}
-
-var NESTED_UPDATES = {
-  initialize: function () {
-    this.dirtyComponentsLength = dirtyComponents.length;
-  },
-  close: function () {
-    if (this.dirtyComponentsLength !== dirtyComponents.length) {
-      // Additional updates were enqueued by componentDidUpdate handlers or
-      // similar; before our own UPDATE_QUEUEING wrapper closes, we want to run
-      // these new updates so that if A's componentDidUpdate calls setState on
-      // B, B will update before the callback A's updater provided when calling
-      // setState.
-      dirtyComponents.splice(0, this.dirtyComponentsLength);
-      flushBatchedUpdates();
-    } else {
-      dirtyComponents.length = 0;
-    }
-  }
-};
-
-var UPDATE_QUEUEING = {
-  initialize: function () {
-    this.callbackQueue.reset();
-  },
-  close: function () {
-    this.callbackQueue.notifyAll();
-  }
-};
-
-var TRANSACTION_WRAPPERS = [NESTED_UPDATES, UPDATE_QUEUEING];
-
-function ReactUpdatesFlushTransaction() {
-  this.reinitializeTransaction();
-  this.dirtyComponentsLength = null;
-  this.callbackQueue = CallbackQueue.getPooled();
-  this.reconcileTransaction = ReactUpdates.ReactReconcileTransaction.getPooled(
-  /* useCreateElement */true);
-}
-
-_assign(ReactUpdatesFlushTransaction.prototype, Transaction, {
-  getTransactionWrappers: function () {
-    return TRANSACTION_WRAPPERS;
-  },
-
-  destructor: function () {
-    this.dirtyComponentsLength = null;
-    CallbackQueue.release(this.callbackQueue);
-    this.callbackQueue = null;
-    ReactUpdates.ReactReconcileTransaction.release(this.reconcileTransaction);
-    this.reconcileTransaction = null;
-  },
-
-  perform: function (method, scope, a) {
-    // Essentially calls `this.reconcileTransaction.perform(method, scope, a)`
-    // with this transaction's wrappers around it.
-    return Transaction.perform.call(this, this.reconcileTransaction.perform, this.reconcileTransaction, method, scope, a);
-  }
-});
-
-PooledClass.addPoolingTo(ReactUpdatesFlushTransaction);
-
-function batchedUpdates(callback, a, b, c, d, e) {
-  ensureInjected();
-  return batchingStrategy.batchedUpdates(callback, a, b, c, d, e);
-}
-
-/**
- * Array comparator for ReactComponents by mount ordering.
- *
- * @param {ReactComponent} c1 first component you're comparing
- * @param {ReactComponent} c2 second component you're comparing
- * @return {number} Return value usable by Array.prototype.sort().
- */
-function mountOrderComparator(c1, c2) {
-  return c1._mountOrder - c2._mountOrder;
-}
-
-function runBatchedUpdates(transaction) {
-  var len = transaction.dirtyComponentsLength;
-  !(len === dirtyComponents.length) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected flush transaction\'s stored dirty-components length (%s) to match dirty-components array length (%s).', len, dirtyComponents.length) : _prodInvariant('124', len, dirtyComponents.length) : void 0;
-
-  // Since reconciling a component higher in the owner hierarchy usually (not
-  // always -- see shouldComponentUpdate()) will reconcile children, reconcile
-  // them before their children by sorting the array.
-  dirtyComponents.sort(mountOrderComparator);
-
-  // Any updates enqueued while reconciling must be performed after this entire
-  // batch. Otherwise, if dirtyComponents is [A, B] where A has children B and
-  // C, B could update twice in a single batch if C's render enqueues an update
-  // to B (since B would have already updated, we should skip it, and the only
-  // way we can know to do so is by checking the batch counter).
-  updateBatchNumber++;
-
-  for (var i = 0; i < len; i++) {
-    // If a component is unmounted before pending changes apply, it will still
-    // be here, but we assume that it has cleared its _pendingCallbacks and
-    // that performUpdateIfNecessary is a noop.
-    var component = dirtyComponents[i];
-
-    // If performUpdateIfNecessary happens to enqueue any new updates, we
-    // shouldn't execute the callbacks until the next render happens, so
-    // stash the callbacks first
-    var callbacks = component._pendingCallbacks;
-    component._pendingCallbacks = null;
-
-    var markerName;
-    if (ReactFeatureFlags.logTopLevelRenders) {
-      var namedComponent = component;
-      // Duck type TopLevelWrapper. This is probably always true.
-      if (component._currentElement.type.isReactTopLevelWrapper) {
-        namedComponent = component._renderedComponent;
-      }
-      markerName = 'React update: ' + namedComponent.getName();
-      console.time(markerName);
-    }
-
-    ReactReconciler.performUpdateIfNecessary(component, transaction.reconcileTransaction, updateBatchNumber);
-
-    if (markerName) {
-      console.timeEnd(markerName);
-    }
-
-    if (callbacks) {
-      for (var j = 0; j < callbacks.length; j++) {
-        transaction.callbackQueue.enqueue(callbacks[j], component.getPublicInstance());
-      }
-    }
-  }
-}
-
-var flushBatchedUpdates = function () {
-  // ReactUpdatesFlushTransaction's wrappers will clear the dirtyComponents
-  // array and perform any updates enqueued by mount-ready handlers (i.e.,
-  // componentDidUpdate) but we need to check here too in order to catch
-  // updates enqueued by setState callbacks and asap calls.
-  while (dirtyComponents.length || asapEnqueued) {
-    if (dirtyComponents.length) {
-      var transaction = ReactUpdatesFlushTransaction.getPooled();
-      transaction.perform(runBatchedUpdates, null, transaction);
-      ReactUpdatesFlushTransaction.release(transaction);
-    }
-
-    if (asapEnqueued) {
-      asapEnqueued = false;
-      var queue = asapCallbackQueue;
-      asapCallbackQueue = CallbackQueue.getPooled();
-      queue.notifyAll();
-      CallbackQueue.release(queue);
-    }
-  }
-};
-
-/**
- * Mark a component as needing a rerender, adding an optional callback to a
- * list of functions which will be executed once the rerender occurs.
- */
-function enqueueUpdate(component) {
-  ensureInjected();
-
-  // Various parts of our code (such as ReactCompositeComponent's
-  // _renderValidatedComponent) assume that calls to render aren't nested;
-  // verify that that's the case. (This is called by each top-level update
-  // function, like setState, forceUpdate, etc.; creation and
-  // destruction of top-level components is guarded in ReactMount.)
-
-  if (!batchingStrategy.isBatchingUpdates) {
-    batchingStrategy.batchedUpdates(enqueueUpdate, component);
-    return;
-  }
-
-  dirtyComponents.push(component);
-  if (component._updateBatchNumber == null) {
-    component._updateBatchNumber = updateBatchNumber + 1;
-  }
-}
-
-/**
- * Enqueue a callback to be run at the end of the current batching cycle. Throws
- * if no updates are currently being performed.
- */
-function asap(callback, context) {
-  !batchingStrategy.isBatchingUpdates ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates.asap: Can\'t enqueue an asap callback in a context whereupdates are not being batched.') : _prodInvariant('125') : void 0;
-  asapCallbackQueue.enqueue(callback, context);
-  asapEnqueued = true;
-}
-
-var ReactUpdatesInjection = {
-  injectReconcileTransaction: function (ReconcileTransaction) {
-    !ReconcileTransaction ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a reconcile transaction class') : _prodInvariant('126') : void 0;
-    ReactUpdates.ReactReconcileTransaction = ReconcileTransaction;
-  },
-
-  injectBatchingStrategy: function (_batchingStrategy) {
-    !_batchingStrategy ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batching strategy') : _prodInvariant('127') : void 0;
-    !(typeof _batchingStrategy.batchedUpdates === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batchedUpdates() function') : _prodInvariant('128') : void 0;
-    !(typeof _batchingStrategy.isBatchingUpdates === 'boolean') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide an isBatchingUpdates boolean attribute') : _prodInvariant('129') : void 0;
-    batchingStrategy = _batchingStrategy;
-  }
-};
-
-var ReactUpdates = {
-  /**
-   * React references `ReactReconcileTransaction` using this property in order
-   * to allow dependency injection.
-   *
-   * @internal
-   */
-  ReactReconcileTransaction: null,
-
-  batchedUpdates: batchedUpdates,
-  enqueueUpdate: enqueueUpdate,
-  flushBatchedUpdates: flushBatchedUpdates,
-  injection: ReactUpdatesInjection,
-  asap: asap
-};
-
-module.exports = ReactUpdates;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-
-
-/**
- * Keeps track of the current owner.
- *
- * The current owner is the component who should own any components that are
- * currently being constructed.
- */
-var ReactCurrentOwner = {
-
-  /**
-   * @internal
-   * @type {ReactComponent}
-   */
-  current: null
-
-};
-
-module.exports = ReactCurrentOwner;
-
-/***/ }),
-/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4977,7 +4655,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /***/ }),
-/* 52 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5103,6 +4781,338 @@ function setWSId(id) {
     }
   };
 }
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isFunction = __webpack_require__(69),
+    isLength = __webpack_require__(230);
+
+/**
+ * Checks if `value` is array-like. A value is considered array-like if it's
+ * not a function and has a `value.length` that's an integer greater than or
+ * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+ * @example
+ *
+ * _.isArrayLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isArrayLike(document.body.children);
+ * // => true
+ *
+ * _.isArrayLike('abc');
+ * // => true
+ *
+ * _.isArrayLike(_.noop);
+ * // => false
+ */
+function isArrayLike(value) {
+  return value != null && isLength(value.length) && !isFunction(value);
+}
+
+module.exports = isArrayLike;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+
+
+var _prodInvariant = __webpack_require__(14),
+    _assign = __webpack_require__(19);
+
+var CallbackQueue = __webpack_require__(396);
+var PooledClass = __webpack_require__(81);
+var ReactFeatureFlags = __webpack_require__(401);
+var ReactReconciler = __webpack_require__(97);
+var Transaction = __webpack_require__(168);
+
+var invariant = __webpack_require__(6);
+
+var dirtyComponents = [];
+var updateBatchNumber = 0;
+var asapCallbackQueue = CallbackQueue.getPooled();
+var asapEnqueued = false;
+
+var batchingStrategy = null;
+
+function ensureInjected() {
+  !(ReactUpdates.ReactReconcileTransaction && batchingStrategy) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must inject a reconcile transaction class and batching strategy') : _prodInvariant('123') : void 0;
+}
+
+var NESTED_UPDATES = {
+  initialize: function () {
+    this.dirtyComponentsLength = dirtyComponents.length;
+  },
+  close: function () {
+    if (this.dirtyComponentsLength !== dirtyComponents.length) {
+      // Additional updates were enqueued by componentDidUpdate handlers or
+      // similar; before our own UPDATE_QUEUEING wrapper closes, we want to run
+      // these new updates so that if A's componentDidUpdate calls setState on
+      // B, B will update before the callback A's updater provided when calling
+      // setState.
+      dirtyComponents.splice(0, this.dirtyComponentsLength);
+      flushBatchedUpdates();
+    } else {
+      dirtyComponents.length = 0;
+    }
+  }
+};
+
+var UPDATE_QUEUEING = {
+  initialize: function () {
+    this.callbackQueue.reset();
+  },
+  close: function () {
+    this.callbackQueue.notifyAll();
+  }
+};
+
+var TRANSACTION_WRAPPERS = [NESTED_UPDATES, UPDATE_QUEUEING];
+
+function ReactUpdatesFlushTransaction() {
+  this.reinitializeTransaction();
+  this.dirtyComponentsLength = null;
+  this.callbackQueue = CallbackQueue.getPooled();
+  this.reconcileTransaction = ReactUpdates.ReactReconcileTransaction.getPooled(
+  /* useCreateElement */true);
+}
+
+_assign(ReactUpdatesFlushTransaction.prototype, Transaction, {
+  getTransactionWrappers: function () {
+    return TRANSACTION_WRAPPERS;
+  },
+
+  destructor: function () {
+    this.dirtyComponentsLength = null;
+    CallbackQueue.release(this.callbackQueue);
+    this.callbackQueue = null;
+    ReactUpdates.ReactReconcileTransaction.release(this.reconcileTransaction);
+    this.reconcileTransaction = null;
+  },
+
+  perform: function (method, scope, a) {
+    // Essentially calls `this.reconcileTransaction.perform(method, scope, a)`
+    // with this transaction's wrappers around it.
+    return Transaction.perform.call(this, this.reconcileTransaction.perform, this.reconcileTransaction, method, scope, a);
+  }
+});
+
+PooledClass.addPoolingTo(ReactUpdatesFlushTransaction);
+
+function batchedUpdates(callback, a, b, c, d, e) {
+  ensureInjected();
+  return batchingStrategy.batchedUpdates(callback, a, b, c, d, e);
+}
+
+/**
+ * Array comparator for ReactComponents by mount ordering.
+ *
+ * @param {ReactComponent} c1 first component you're comparing
+ * @param {ReactComponent} c2 second component you're comparing
+ * @return {number} Return value usable by Array.prototype.sort().
+ */
+function mountOrderComparator(c1, c2) {
+  return c1._mountOrder - c2._mountOrder;
+}
+
+function runBatchedUpdates(transaction) {
+  var len = transaction.dirtyComponentsLength;
+  !(len === dirtyComponents.length) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected flush transaction\'s stored dirty-components length (%s) to match dirty-components array length (%s).', len, dirtyComponents.length) : _prodInvariant('124', len, dirtyComponents.length) : void 0;
+
+  // Since reconciling a component higher in the owner hierarchy usually (not
+  // always -- see shouldComponentUpdate()) will reconcile children, reconcile
+  // them before their children by sorting the array.
+  dirtyComponents.sort(mountOrderComparator);
+
+  // Any updates enqueued while reconciling must be performed after this entire
+  // batch. Otherwise, if dirtyComponents is [A, B] where A has children B and
+  // C, B could update twice in a single batch if C's render enqueues an update
+  // to B (since B would have already updated, we should skip it, and the only
+  // way we can know to do so is by checking the batch counter).
+  updateBatchNumber++;
+
+  for (var i = 0; i < len; i++) {
+    // If a component is unmounted before pending changes apply, it will still
+    // be here, but we assume that it has cleared its _pendingCallbacks and
+    // that performUpdateIfNecessary is a noop.
+    var component = dirtyComponents[i];
+
+    // If performUpdateIfNecessary happens to enqueue any new updates, we
+    // shouldn't execute the callbacks until the next render happens, so
+    // stash the callbacks first
+    var callbacks = component._pendingCallbacks;
+    component._pendingCallbacks = null;
+
+    var markerName;
+    if (ReactFeatureFlags.logTopLevelRenders) {
+      var namedComponent = component;
+      // Duck type TopLevelWrapper. This is probably always true.
+      if (component._currentElement.type.isReactTopLevelWrapper) {
+        namedComponent = component._renderedComponent;
+      }
+      markerName = 'React update: ' + namedComponent.getName();
+      console.time(markerName);
+    }
+
+    ReactReconciler.performUpdateIfNecessary(component, transaction.reconcileTransaction, updateBatchNumber);
+
+    if (markerName) {
+      console.timeEnd(markerName);
+    }
+
+    if (callbacks) {
+      for (var j = 0; j < callbacks.length; j++) {
+        transaction.callbackQueue.enqueue(callbacks[j], component.getPublicInstance());
+      }
+    }
+  }
+}
+
+var flushBatchedUpdates = function () {
+  // ReactUpdatesFlushTransaction's wrappers will clear the dirtyComponents
+  // array and perform any updates enqueued by mount-ready handlers (i.e.,
+  // componentDidUpdate) but we need to check here too in order to catch
+  // updates enqueued by setState callbacks and asap calls.
+  while (dirtyComponents.length || asapEnqueued) {
+    if (dirtyComponents.length) {
+      var transaction = ReactUpdatesFlushTransaction.getPooled();
+      transaction.perform(runBatchedUpdates, null, transaction);
+      ReactUpdatesFlushTransaction.release(transaction);
+    }
+
+    if (asapEnqueued) {
+      asapEnqueued = false;
+      var queue = asapCallbackQueue;
+      asapCallbackQueue = CallbackQueue.getPooled();
+      queue.notifyAll();
+      CallbackQueue.release(queue);
+    }
+  }
+};
+
+/**
+ * Mark a component as needing a rerender, adding an optional callback to a
+ * list of functions which will be executed once the rerender occurs.
+ */
+function enqueueUpdate(component) {
+  ensureInjected();
+
+  // Various parts of our code (such as ReactCompositeComponent's
+  // _renderValidatedComponent) assume that calls to render aren't nested;
+  // verify that that's the case. (This is called by each top-level update
+  // function, like setState, forceUpdate, etc.; creation and
+  // destruction of top-level components is guarded in ReactMount.)
+
+  if (!batchingStrategy.isBatchingUpdates) {
+    batchingStrategy.batchedUpdates(enqueueUpdate, component);
+    return;
+  }
+
+  dirtyComponents.push(component);
+  if (component._updateBatchNumber == null) {
+    component._updateBatchNumber = updateBatchNumber + 1;
+  }
+}
+
+/**
+ * Enqueue a callback to be run at the end of the current batching cycle. Throws
+ * if no updates are currently being performed.
+ */
+function asap(callback, context) {
+  !batchingStrategy.isBatchingUpdates ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates.asap: Can\'t enqueue an asap callback in a context whereupdates are not being batched.') : _prodInvariant('125') : void 0;
+  asapCallbackQueue.enqueue(callback, context);
+  asapEnqueued = true;
+}
+
+var ReactUpdatesInjection = {
+  injectReconcileTransaction: function (ReconcileTransaction) {
+    !ReconcileTransaction ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a reconcile transaction class') : _prodInvariant('126') : void 0;
+    ReactUpdates.ReactReconcileTransaction = ReconcileTransaction;
+  },
+
+  injectBatchingStrategy: function (_batchingStrategy) {
+    !_batchingStrategy ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batching strategy') : _prodInvariant('127') : void 0;
+    !(typeof _batchingStrategy.batchedUpdates === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide a batchedUpdates() function') : _prodInvariant('128') : void 0;
+    !(typeof _batchingStrategy.isBatchingUpdates === 'boolean') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'ReactUpdates: must provide an isBatchingUpdates boolean attribute') : _prodInvariant('129') : void 0;
+    batchingStrategy = _batchingStrategy;
+  }
+};
+
+var ReactUpdates = {
+  /**
+   * React references `ReactReconcileTransaction` using this property in order
+   * to allow dependency injection.
+   *
+   * @internal
+   */
+  ReactReconcileTransaction: null,
+
+  batchedUpdates: batchedUpdates,
+  enqueueUpdate: enqueueUpdate,
+  flushBatchedUpdates: flushBatchedUpdates,
+  injection: ReactUpdatesInjection,
+  asap: asap
+};
+
+module.exports = ReactUpdates;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+
+
+/**
+ * Keeps track of the current owner.
+ *
+ * The current owner is the component who should own any components that are
+ * currently being constructed.
+ */
+var ReactCurrentOwner = {
+
+  /**
+   * @internal
+   * @type {ReactComponent}
+   */
+  current: null
+
+};
+
+module.exports = ReactCurrentOwner;
 
 /***/ }),
 /* 53 */
@@ -5935,7 +5945,7 @@ module.exports = identity;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIndexOf = __webpack_require__(144),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isString = __webpack_require__(380),
     toInteger = __webpack_require__(56),
     values = __webpack_require__(164);
@@ -6619,7 +6629,7 @@ module.exports = PooledClass;
 
 var _assign = __webpack_require__(19);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 
 var warning = __webpack_require__(9);
 var canDefineProperty = __webpack_require__(171);
@@ -11793,7 +11803,7 @@ module.exports = getPrototype;
 /***/ (function(module, exports, __webpack_require__) {
 
 var eq = __webpack_require__(113),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isIndex = __webpack_require__(111),
     isObject = __webpack_require__(33);
 
@@ -11941,7 +11951,7 @@ module.exports = isArguments;
 /* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isArrayLike = __webpack_require__(48),
+var isArrayLike = __webpack_require__(50),
     isObjectLike = __webpack_require__(47);
 
 /**
@@ -15463,7 +15473,7 @@ var baseKeys = __webpack_require__(216),
     getTag = __webpack_require__(223),
     isArguments = __webpack_require__(158),
     isArray = __webpack_require__(17),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isBuffer = __webpack_require__(115),
     isPrototype = __webpack_require__(112),
     isTypedArray = __webpack_require__(161);
@@ -16584,10 +16594,10 @@ module.exports = ReactErrorUtils;
 
 var _prodInvariant = __webpack_require__(14);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -20366,11 +20376,11 @@ var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
 
 var _reactRouterDom = __webpack_require__(32);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32276,7 +32286,7 @@ module.exports = baseGetAllKeys;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseEach = __webpack_require__(77),
-    isArrayLike = __webpack_require__(48);
+    isArrayLike = __webpack_require__(50);
 
 /**
  * The base implementation of `_.map` without support for iteratee shorthands.
@@ -33813,7 +33823,7 @@ module.exports = isString;
 
 var arrayLikeKeys = __webpack_require__(331),
     baseKeysIn = __webpack_require__(734),
-    isArrayLike = __webpack_require__(48);
+    isArrayLike = __webpack_require__(50);
 
 /**
  * Creates an array of the own and inherited enumerable property names of `object`.
@@ -35591,7 +35601,7 @@ var _assign = __webpack_require__(19);
 
 var LinkedValueUtils = __webpack_require__(238);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var warning = __webpack_require__(9);
 
@@ -36064,7 +36074,7 @@ var DOMLazyTree = __webpack_require__(96);
 var DOMProperty = __webpack_require__(70);
 var React = __webpack_require__(98);
 var ReactBrowserEventEmitter = __webpack_require__(166);
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactDOMComponentTree = __webpack_require__(23);
 var ReactDOMContainerInfo = __webpack_require__(910);
 var ReactDOMFeatureFlags = __webpack_require__(912);
@@ -36074,7 +36084,7 @@ var ReactInstrumentation = __webpack_require__(40);
 var ReactMarkupChecksum = __webpack_require__(932);
 var ReactReconciler = __webpack_require__(97);
 var ReactUpdateQueue = __webpack_require__(241);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var emptyObject = __webpack_require__(106);
 var instantiateReactComponent = __webpack_require__(412);
@@ -37125,7 +37135,7 @@ module.exports = setTextContent;
 
 var _prodInvariant = __webpack_require__(14);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var REACT_ELEMENT_TYPE = __webpack_require__(926);
 
 var getIteratorFn = __webpack_require__(960);
@@ -38196,7 +38206,7 @@ module.exports = REACT_ELEMENT_TYPE;
 
 
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactComponentTreeHook = __webpack_require__(35);
 var ReactElement = __webpack_require__(82);
 
@@ -47712,6 +47722,7 @@ var TeamJoinMultiAppModal = __webpack_require__(580);
 var TeamSettingsModal = __webpack_require__(584);
 var TeamTransferOwnershipModal = __webpack_require__(585);
 var TeamPhoneNumberModal = __webpack_require__(583);
+var RequestWebsiteModal = __webpack_require__(1141);
 
 var EaseHeader = __webpack_require__(289);
 
@@ -47740,7 +47751,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
     teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
     verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
     teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
-    teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal
+    teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
+    requestWebsiteModal: store.teamModals.requestWebsiteModal
   };
 }), _dec(_class = function (_React$Component) {
   _inherits(TeamView, _React$Component);
@@ -47810,10 +47822,10 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'isValidTeamItemId',
     value: function isValidTeamItemId(itemId) {
-      if (itemId == undefined) return false;
+      if (itemId === undefined) return false;
       var me = (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.team.myTeamUserId);
-      if (itemId[0] != '@' && me.channel_ids.indexOf(Number(itemId)) !== -1) return true;
-      if ((0, _helperFunctions.selectUserFromListById)(this.props.users, Number(itemId.slice(1, itemId.length))) != null) return true;
+      if (itemId[0] !== '@' && me.channel_ids.indexOf(Number(itemId)) !== -1) return true;
+      if ((0, _helperFunctions.selectUserFromListById)(this.props.users, Number(itemId.slice(1, itemId.length))) !== null) return true;
       return false;
     }
   }, {
@@ -47839,7 +47851,6 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
 
       var selectedItem = this.getSelectedItem();
       var me = (0, _helperFunctions.selectUserFromListById)(this.props.users, this.props.team.myTeamUserId);
-      var flexPanel = _queryString2.default.parse(this.props.location.search).flexPanel !== undefined;
 
       return React.createElement(
         'div',
@@ -47857,6 +47868,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
             'div',
             { className: 'client_main_container' },
             React.createElement(TeamHeader, {
+              dispatch: this.props.dispatch,
               item: selectedItem,
               match: this.props.match,
               appsLength: this.props.selectedItem.apps.length }),
@@ -47903,7 +47915,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
           this.props.teamSettingsModalActive && React.createElement(TeamSettingsModal, null),
           this.props.verifyTeamUserModal.active && React.createElement(_VerifyTeamUserModal2.default, null),
           this.props.teamTransferOwnershipModal.active && React.createElement(TeamTransferOwnershipModal, null),
-          this.props.teamPhoneNumberModal.active && React.createElement(TeamPhoneNumberModal, null)
+          this.props.teamPhoneNumberModal.active && React.createElement(TeamPhoneNumberModal, null),
+          this.props.requestWebsiteModal.active && React.createElement(RequestWebsiteModal, null)
         )
       );
     }
@@ -47932,7 +47945,7 @@ var _reactRouterDom = __webpack_require__(32);
 
 var _notificationsActions = __webpack_require__(122);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactTooltip = __webpack_require__(120);
 
@@ -48087,7 +48100,7 @@ var _post_api2 = _interopRequireDefault(_post_api);
 
 var _reactRedux = __webpack_require__(12);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48678,7 +48691,7 @@ var _FormComponents = __webpack_require__(291);
 
 var _reactStripeElements = __webpack_require__(424);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
@@ -48690,7 +48703,7 @@ var _SingleEaseLogo2 = _interopRequireDefault(_SingleEaseLogo);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -48828,7 +48841,7 @@ var Step2 = function (_React$Component2) {
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
-      post_api.teams.checkTeamCreationDigits(this.props.email, this.props.digits).then(function (response) {
+      post_api.common.checkRegistrationDigits(this.props.email, this.props.digits).then(function (response) {
         _this4.setState({ loading: false });
         _this4.props.onStepValidated();
       }).catch(function (err) {
@@ -49854,11 +49867,11 @@ var _queryString = __webpack_require__(394);
 
 var _queryString2 = _interopRequireDefault(_queryString);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51821,7 +51834,7 @@ var _teamAppsAddUIActions = __webpack_require__(124);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -51945,7 +51958,7 @@ var channelActions = _interopRequireWildcard(_channelActions);
 
 var _renderHelpers = __webpack_require__(298);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -52173,7 +52186,7 @@ var _helperFunctions = __webpack_require__(13);
 
 var _renderHelpers = __webpack_require__(298);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -55055,7 +55068,7 @@ var _helperFunctions = __webpack_require__(13);
 
 var _utils = __webpack_require__(85);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 var _reactRouterDom = __webpack_require__(32);
 
@@ -55883,7 +55896,9 @@ module.exports = (0, _reactRouterDom.withRouter)(FlexPanels);
 
 var _reactRouterDom = __webpack_require__(32);
 
-var _semanticUiReact = __webpack_require__(51);
+var _teamModalActions = __webpack_require__(16);
+
+var _semanticUiReact = __webpack_require__(48);
 
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(2);
@@ -55902,6 +55917,13 @@ function TeamHeader(props) {
         'div',
         { className: 'tab_header' },
         React.createElement(TeamAddAppsButton, { target: props.item }),
+        React.createElement(
+          'button',
+          { onClick: function onClick(e) {
+              props.dispatch((0, _teamModalActions.showRequestWebsiteModal)(true));
+            } },
+          'open'
+        ),
         React.createElement(
           'div',
           { className: 'channel_title' },
@@ -55973,7 +55995,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _teamActions = __webpack_require__(123);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _teamModalActions = __webpack_require__(16);
 
@@ -56372,11 +56394,11 @@ var _helperFunctions = __webpack_require__(13);
 
 var _reactRouterDom = __webpack_require__(32);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactRedux = __webpack_require__(12);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -56654,7 +56676,7 @@ var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _notificationsActions = __webpack_require__(122);
 
@@ -57954,7 +57976,7 @@ var modalActions = _interopRequireWildcard(_teamModalActions);
 
 var _helperFunctions = __webpack_require__(13);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -59444,8 +59466,7 @@ var TeamJoinMultiAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
                   value: credentials[item],
                   onChange: this.handleInput,
                   id: item,
-                  className: 'modal_input input_unstyle'
-                })
+                  className: 'modal_input input_unstyle' })
               );
             }, this)
           ),
@@ -60554,7 +60575,7 @@ var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
-var _semanticUiReact = __webpack_require__(51);
+var _semanticUiReact = __webpack_require__(48);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -61993,7 +62014,7 @@ var _reactRedux = __webpack_require__(12);
 
 var _reactDom = __webpack_require__(42);
 
-var _commonActions = __webpack_require__(52);
+var _commonActions = __webpack_require__(49);
 
 var _reactTooltip = __webpack_require__(120);
 
@@ -63071,6 +63092,9 @@ var initialState = {
   },
   teamPhoneNumberModal: {
     active: false
+  },
+  requestWebsiteModal: {
+    active: false
   }
 };
 function reducer() {
@@ -63178,6 +63202,12 @@ function reducer() {
       {
         return _extends({}, state, {
           teamPhoneNumberModal: action.payload
+        });
+      }
+    case 'SHOW_REQUEST_WEBSITE_MODAL':
+      {
+        return _extends({}, state, {
+          requestWebsiteModal: action.payload
         });
       }
   }
@@ -71790,7 +71820,7 @@ module.exports = createAssigner;
 /* 770 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isArrayLike = __webpack_require__(48);
+var isArrayLike = __webpack_require__(50);
 
 /**
  * Creates a `baseEach` or `baseEachRight` function.
@@ -72015,7 +72045,7 @@ module.exports = createCurry;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseIteratee = __webpack_require__(38),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     keys = __webpack_require__(34);
 
 /**
@@ -74050,7 +74080,7 @@ module.exports = ary;
 var assignValue = __webpack_require__(139),
     copyObject = __webpack_require__(94),
     createAssigner = __webpack_require__(769),
-    isArrayLike = __webpack_require__(48),
+    isArrayLike = __webpack_require__(50),
     isPrototype = __webpack_require__(112),
     keys = __webpack_require__(34);
 
@@ -77974,7 +78004,7 @@ var EventPluginHub = __webpack_require__(116);
 var EventPropagators = __webpack_require__(117);
 var ExecutionEnvironment = __webpack_require__(24);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 var SyntheticEvent = __webpack_require__(58);
 
 var getEventTarget = __webpack_require__(245);
@@ -79052,7 +79082,7 @@ var _prodInvariant = __webpack_require__(14),
 
 var React = __webpack_require__(98);
 var ReactComponentEnvironment = __webpack_require__(239);
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactErrorUtils = __webpack_require__(240);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
@@ -79961,7 +79991,7 @@ var ReactDOMComponentTree = __webpack_require__(23);
 var ReactDefaultInjection = __webpack_require__(925);
 var ReactMount = __webpack_require__(404);
 var ReactReconciler = __webpack_require__(97);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 var ReactVersion = __webpack_require__(940);
 
 var findDOMNode = __webpack_require__(957);
@@ -81252,7 +81282,7 @@ var _prodInvariant = __webpack_require__(14),
 var DOMPropertyOperations = __webpack_require__(397);
 var LinkedValueUtils = __webpack_require__(238);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -82206,7 +82236,7 @@ var _prodInvariant = __webpack_require__(14),
 
 var LinkedValueUtils = __webpack_require__(238);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var invariant = __webpack_require__(6);
 var warning = __webpack_require__(9);
@@ -82994,7 +83024,7 @@ module.exports = ReactDebugTool;
 
 var _assign = __webpack_require__(19);
 
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 var Transaction = __webpack_require__(168);
 
 var emptyFunction = __webpack_require__(30);
@@ -83225,7 +83255,7 @@ var EventListener = __webpack_require__(314);
 var ExecutionEnvironment = __webpack_require__(24);
 var PooledClass = __webpack_require__(81);
 var ReactDOMComponentTree = __webpack_require__(23);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var getEventTarget = __webpack_require__(245);
 var getUnboundedScrollPosition = __webpack_require__(680);
@@ -83425,7 +83455,7 @@ var ReactComponentEnvironment = __webpack_require__(239);
 var ReactEmptyComponent = __webpack_require__(400);
 var ReactBrowserEventEmitter = __webpack_require__(166);
 var ReactHostComponent = __webpack_require__(402);
-var ReactUpdates = __webpack_require__(49);
+var ReactUpdates = __webpack_require__(51);
 
 var ReactInjection = {
   Component: ReactComponentEnvironment.injection,
@@ -83561,7 +83591,7 @@ var ReactComponentEnvironment = __webpack_require__(239);
 var ReactInstanceMap = __webpack_require__(118);
 var ReactInstrumentation = __webpack_require__(40);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactReconciler = __webpack_require__(97);
 var ReactChildReconciler = __webpack_require__(905);
 
@@ -86140,7 +86170,7 @@ module.exports = dangerousStyleValue;
 
 var _prodInvariant = __webpack_require__(14);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var ReactDOMComponentTree = __webpack_require__(23);
 var ReactInstanceMap = __webpack_require__(118);
 
@@ -97706,7 +97736,7 @@ module.exports = onlyChild;
 
 var _prodInvariant = __webpack_require__(83);
 
-var ReactCurrentOwner = __webpack_require__(50);
+var ReactCurrentOwner = __webpack_require__(52);
 var REACT_ELEMENT_TYPE = __webpack_require__(427);
 
 var getIteratorFn = __webpack_require__(430);
@@ -110446,6 +110476,137 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _teamModalActions = __webpack_require__(16);
+
+var _reactRedux = __webpack_require__(12);
+
+var _semanticUiReact = __webpack_require__(48);
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(1);
+var classnames = __webpack_require__(2);
+
+
+function Step1(props) {
+  return React.createElement(
+    'div',
+    null,
+    React.createElement(
+      _semanticUiReact.Form,
+      { className: 'container' },
+      React.createElement(_semanticUiReact.Form.Input, {
+        label: 'Website URL',
+        placeholder: 'Paste website URL' }),
+      React.createElement(_semanticUiReact.Form.Checkbox, {
+        toggle: true,
+        label: 'I wish this website to be private and do not appear in the public catalog of Apps' }),
+      React.createElement(
+        _semanticUiReact.Form.Field,
+        { className: 'infoColor' },
+        'In order to add this website to my apps I authorize Ease.space to use my credentials for a temporarily period of time (72 hours). \xA0',
+        React.createElement(
+          'span',
+          { className: 'inline-text-button' },
+          'More info'
+        )
+      ),
+      React.createElement(_semanticUiReact.Form.Checkbox, {
+        label: 'Yes, I give my authorization' }),
+      React.createElement(_semanticUiReact.Button, { attached: 'bottom', className: 'modal-button', type: 'submit', content: 'lalalal' })
+    )
+  );
+}
+
+var RequestWebsiteModal = (_dec = (0, _reactRedux.connect)(), _dec(_class = function (_React$Component) {
+  _inherits(RequestWebsiteModal, _React$Component);
+
+  function RequestWebsiteModal(props) {
+    _classCallCheck(this, RequestWebsiteModal);
+
+    var _this = _possibleConstructorReturn(this, (RequestWebsiteModal.__proto__ || Object.getPrototypeOf(RequestWebsiteModal)).call(this, props));
+
+    _this.state = {
+      url: '',
+      private: false,
+      authorization: false,
+      login: '',
+      password: '',
+      view: 0
+    };
+    _this.handleInput = _this.handleInput.bind(_this);
+    _this.setStep = _this.setStep.bind(_this);
+    return _this;
+  }
+
+  _createClass(RequestWebsiteModal, [{
+    key: 'handleInput',
+    value: function handleInput(e, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'setStep',
+    value: function setStep(step) {
+      this.setState({ view: step });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return React.createElement(
+        'div',
+        { className: 'popupHandler myshow' },
+        React.createElement('div', { className: 'popover_mask', onClick: function onClick(e) {
+            _this2.props.dispatch((0, _teamModalActions.showRequestWebsiteModal)(false));
+          } }),
+        React.createElement(
+          'div',
+          { className: 'ease_popup ease_team_popup', id: 'modal_team_leave_app' },
+          React.createElement(
+            'button',
+            { className: 'button-unstyle action_button close_button', onClick: function onClick(e) {
+                _this2.props.dispatch((0, _teamModalActions.showRequestWebsiteModal)(false));
+              } },
+            React.createElement('i', { className: 'fa fa-times' })
+          ),
+          React.createElement(
+            _semanticUiReact.Header,
+            { as: 'h3', attached: 'top' },
+            'Request a website'
+          ),
+          React.createElement(Step1, null)
+        )
+      );
+    }
+  }]);
+
+  return RequestWebsiteModal;
+}(React.Component)) || _class);
+
+
+module.exports = RequestWebsiteModal;
 
 /***/ })
 /******/ ]);

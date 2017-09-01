@@ -120,6 +120,16 @@ input[type=number]::-webkit-inner-spin-button {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
 }
 
+[type="submit"]{
+  -webkit-appearance: inherit;
+}
+
+.inline-text-button {
+  cursor: pointer;
+  text-decoration: underline;
+  color: inherit;
+}
+
 a:hover {
   cursor: pointer;
 }

@@ -55,6 +55,37 @@ button.action_text_button {
   }
 }
 
+.ease_popup.ease_team_popup {
+  .header {
+    padding: 30px 30px 10px 30px;
+    margin: 0 0 0 0;
+    border:none;
+  };
+  .infoColor {
+    color: $themeBlue2Color;
+  }
+  .container {
+    .button.modal-button {
+      margin-left: -30px;
+      margin-right: -30px;
+      font-size: 1.3em;
+    }
+    .checkbox {
+      font-size: 1em;
+    }
+  }
+  .container {
+    font-size: .9rem;
+    padding-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-bottom: 0;
+    & > * {
+      font-size: 1em;
+    }
+  }
+}
+
 #team_settings_modal {
   font-size: 22px;
   .sub {
