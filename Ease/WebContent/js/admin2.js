@@ -1,6 +1,7 @@
 var websites = [];
 
 $(document).ready(function () {
+    $(".ui.checkbox").checkbox();
     ajaxHandler.get("/api/v1/admin/GetWebsites", null, function () {
     }, function (data) {
         websites = data;
@@ -18,7 +19,7 @@ function addRow(website) {
         + '<td>' + website.login_url + '</td>'
         + '<td>' + website.landing_url + '</td>'
         + '<td> <div class="ui checkbox public"><input type="checkbox"/><label></label></div></td>'
-        + '<td><i class="fa fa-pencil"/></td>'
+        + '<td><i class="fa fa-pencil edit-website"/></td>'
         + '<td> <div class="ui checkbox delete"><input type="checkbox"/><label></label></div></td>'
         + '</tr>');
     if (!website.integrated)
@@ -34,5 +35,47 @@ function addRow(website) {
             "private": checked
         });
     });
+    $(".edit-website", elem).click(function () {
+        openWebsiteIntegration(website);
+    });
     return elem;
+}
+
+function openWebsiteIntegration(website) {
+    var modal = $("#website-integration");
+    var edit_website = $("#website-edition", modal);
+    var name = $("input[name='name']", edit_website);
+    var login_url = $("input[name='login_url']", edit_website);
+    var landing_url = $("input[name='landing_url']", edit_website);
+    var folder = $("input[name='folder']", edit_website);
+    var integrated = $("#integration input[name='integrate']", edit_website);
+    name.val(website.name);
+    login_url.val(website.login_url);
+    landing_url.val(website.landing_url);
+    folder.val(website.folder);
+    if (website.integrated) {
+        $("#integration", edit_website).addClass("checked");
+        integrated.prop("checked", true);
+    }
+    edit_website.submit(function (e) {
+        e.preventDefault();
+        var action = $(this).attr("action");
+        ajaxHandler.post(action, {
+            id: website.id,
+            name: name.val(),
+            landing_url: landing_url.val(),
+            login_url: login_url.val(),
+            folder: folder.val(),
+            integrated: integrated.is(":checked")
+        }, function () {
+
+        }, function () {
+            website.name = name.val();
+            website.landing_url = landing_url.val();
+            website.login_url = login_url.val();
+            website.folder = folder.val();
+            website.integrated = integrated.is(":checked");
+        });
+    });
+    modal.modal("show");
 }

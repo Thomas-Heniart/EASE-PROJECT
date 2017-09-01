@@ -27,6 +27,7 @@ public class ServletGetWebsites extends HttpServlet {
                 tmp.put("id", website.getDb_id());
                 tmp.put("name", website.getName());
                 tmp.put("logo", website.getLogo());
+                tmp.put("folder", website.getDbFolder());
                 tmp.put("login_url", website.getUrl());
                 tmp.put("landing_url", website.getHomePageUrl());
                 tmp.put("public", website.isPublic());
