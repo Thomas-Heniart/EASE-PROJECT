@@ -45,12 +45,12 @@ public class ServletEditWebsite extends HttpServlet {
             website.setFolder(folder, db);
             website.setLoginUrl(login_url, db);
             website.setLandingUrl(landing_url, db);
-            Boolean old_integration_state = website.isIntegrated();
             website.setIntegrated(integrated, db);
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
             if (website.isIntegrated()) {
                 TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
                 for (Team team : teamManager.getTeams()) {
+                    int transaction2 = db.startTransaction();
                     for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                         App app = (App) shareableApp;
                         if (!app.isClassicApp() && !app.isEmpty())
@@ -62,9 +62,10 @@ public class ServletEditWebsite extends HttpServlet {
                         target.put("team_id", team.getDb_id());
                         webSocketMessageList.add(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
                     }
+                    db.commitTransaction(transaction2);
                     System.out.println(webSocketMessageList.size() + " messages send");
-
                     team.getWebSocketManager().sendObjects(webSocketMessageList);
+                    webSocketMessageList.clear();
                 }
             }
             db.commitTransaction(transaction);
