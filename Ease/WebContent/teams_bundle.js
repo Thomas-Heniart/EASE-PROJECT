@@ -20401,7 +20401,17 @@ var TeamsList = function (_React$Component) {
         React.createElement(
           _semanticUiReact.Dropdown.Menu,
           null,
-          this.props.user != null && this.props.user.teams.map(function (item) {
+          this.props.user !== null && this.props.user.teams.map(function (item) {
+            if (item.disabled) return React.createElement(_semanticUiReact.Popup, { key: item.id,
+              size: 'mini',
+              position: 'left center',
+              trigger: React.createElement(
+                _semanticUiReact.Dropdown.Item,
+                { style: { opacity: '0.45' } },
+                React.createElement(_semanticUiReact.Icon, { name: 'users' }),
+                item.name
+              ),
+              content: 'You need to wait until an admin accept you.' });
             return React.createElement(
               _semanticUiReact.Dropdown.Item,
               { key: item.id, as: _reactRouterDom.NavLink, to: '/teams/' + item.id, activeClassName: 'active' },
@@ -47969,9 +47979,12 @@ var Base = (_dec = (0, _reactRedux.connect)(function (store) {
       if (!this.props.common.authenticated) {
         this.props.dispatch((0, _commonActions.fetchMyInformation)()).then(function (response) {
           _this2.setState({ fetching: false });
+          if (_this2.props.common.authenticated) _this2.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
         });
-      } else this.setState({ fetching: false });
-      this.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
+      } else {
+        this.setState({ fetching: false });
+        this.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
+      }
     }
   }, {
     key: 'render',
@@ -48519,7 +48532,8 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
       lastActive: '',
       knownFname: _this6.props.cookies.get('fname'),
       knownEmail: _this6.props.cookies.get('email'),
-      knownUser: false
+      knownUser: false,
+      redirect: ''
     };
     if (_this6.props.authenticated) window.location.href = "/home";
     _this6.state.knownUser = _this6.state.knownFname !== undefined && _this6.state.knownEmail !== undefined;
@@ -48534,15 +48548,21 @@ var Login = (_dec = (0, _reactRedux.connect)(function (store) {
   }
 
   _createClass(Login, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.redirect.length > 0) {
+        this.state.redirect = this.props.redirect;
+        this.props.dispatch((0, _commonActions.setLoginRedirectUrl)(''));
+      }
+    }
+  }, {
     key: 'finishLoggingIn',
     value: function finishLoggingIn() {
       var _this7 = this;
 
-      if (this.props.redirect.length > 0) {
-        var redirectUrl = this.props.redirect;
+      if (this.state.redirect.length > 0) {
         this.props.dispatch((0, _commonActions.fetchMyInformation)()).then(function (response) {
-          _this7.props.dispatch((0, _commonActions.setLoginRedirectUrl)(''));
-          _this7.props.history.push(redirectUrl);
+          _this7.props.history.push(_this7.state.redirect);
         });
       } else {
         window.location.href = "/home";
@@ -48658,6 +48678,8 @@ var _FormComponents = __webpack_require__(291);
 
 var _reactStripeElements = __webpack_require__(424);
 
+var _commonActions = __webpack_require__(52);
+
 var _reactAddonsCssTransitionGroup = __webpack_require__(95);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
@@ -48701,10 +48723,17 @@ var Step1 = function (_React$Component) {
       processing: false
     };
     _this.onSubmit = _this.onSubmit.bind(_this);
+    _this.login = _this.login.bind(_this);
     return _this;
   }
 
   _createClass(Step1, [{
+    key: 'login',
+    value: function login() {
+      this.props.dispatch((0, _commonActions.setLoginRedirectUrl)('/main/simpleTeamCreation'));
+      this.props.history.replace('/login');
+    }
+  }, {
     key: 'onSubmit',
     value: function onSubmit(e) {
       var _this2 = this;
@@ -48750,8 +48779,8 @@ var Step1 = function (_React$Component) {
                 placeholder: 'name@company.com',
                 required: true }),
               React.createElement(
-                _reactRouterDom.NavLink,
-                { to: '/login', style: { float: 'right' } },
+                'a',
+                { onClick: this.login, style: { float: 'right' } },
                 'I already have an account'
               )
             ),
@@ -48783,9 +48812,12 @@ var Step2 = function (_React$Component2) {
 
     _this3.state = {
       errorMessage: '',
-      loading: false
+      loading: false,
+      sendingEmail: false,
+      sendEmailButtonText: 'Resend email'
     };
     _this3.onSubmit = _this3.onSubmit.bind(_this3);
+    _this3.resendDigits = _this3.resendDigits.bind(_this3);
     return _this3;
   }
 
@@ -48800,7 +48832,23 @@ var Step2 = function (_React$Component2) {
         _this4.setState({ loading: false });
         _this4.props.onStepValidated();
       }).catch(function (err) {
-        _this4.setState({ loading: false, errorMesage: err });
+        _this4.setState({ loading: false, errorMessage: err });
+      });
+    }
+  }, {
+    key: 'resendDigits',
+    value: function resendDigits() {
+      var _this5 = this;
+
+      this.setState({ sendingEmail: true });
+      post_api.common.askRegistration(this.props.email).then(function (response) {
+        _this5.setState({ sendingEmail: false });
+        _this5.setState({ sendEmailButtonText: 'Sent!' });
+        window.setTimeout(function () {
+          _this5.setState({ sendEmailButtonText: 'Resend email' });
+        }, 2000);
+      }).catch(function (err) {
+        _this5.setState({ sendingEmail: false });
       });
     }
   }, {
@@ -48840,10 +48888,12 @@ var Step2 = function (_React$Component2) {
               required: true }),
             React.createElement(
               _semanticUiReact.Message,
-              { color: 'yellow' },
+              { color: 'yellow', size: 'mini' },
               'Keep this window open while checking for your code.',
               React.createElement('br', null),
-              ' Haven\'t received our email ? Try your spam folder!'
+              ' Haven\'t received our email ? Try your spam folder! Or ',
+              React.createElement(_semanticUiReact.Button, { basic: true, type: 'button', className: 'textlike', size: 'mini', loading: this.state.sendingEmail, onClick: this.resendDigits, content: this.state.sendEmailButtonText }),
+              '.'
             ),
             React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
             React.createElement(
@@ -48866,15 +48916,15 @@ var Step3 = function (_React$Component3) {
   function Step3(props) {
     _classCallCheck(this, Step3);
 
-    var _this5 = _possibleConstructorReturn(this, (Step3.__proto__ || Object.getPrototypeOf(Step3)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (Step3.__proto__ || Object.getPrototypeOf(Step3)).call(this, props));
 
-    _this5.state = {
+    _this6.state = {
       errorMessage: '',
       passwordError: false,
       confirmPasswordMessage: "Passwords doesn't match"
     };
-    _this5.onSubmit = _this5.onSubmit.bind(_this5);
-    return _this5;
+    _this6.onSubmit = _this6.onSubmit.bind(_this6);
+    return _this6;
   }
 
   _createClass(Step3, [{
@@ -48965,28 +49015,28 @@ var Step4 = function (_React$Component4) {
   function Step4(props) {
     _classCallCheck(this, Step4);
 
-    var _this6 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
 
-    _this6.state = {
+    _this7.state = {
       errorMessage: '',
       loading: false
     };
-    _this6.onSubmit = _this6.onSubmit.bind(_this6);
-    return _this6;
+    _this7.onSubmit = _this7.onSubmit.bind(_this7);
+    return _this7;
   }
 
   _createClass(Step4, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this7 = this;
+      var _this8 = this;
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
       post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(function (response) {
-        _this7.setState({ loading: false });
-        _this7.props.onStepValidated();
+        _this8.setState({ loading: false });
+        _this8.props.onStepValidated();
       }).catch(function (err) {
-        _this7.setState({ errorMessage: error, loading: false });
+        _this8.setState({ errorMessage: error, loading: false });
       });
     }
   }, {
@@ -49118,30 +49168,30 @@ var Step6 = function (_React$Component5) {
   function Step6(props) {
     _classCallCheck(this, Step6);
 
-    var _this8 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
 
-    _this8.state = {
+    _this9.state = {
       errorMessage: '',
       loading: false
     };
-    _this8.onSubmit = _this8.onSubmit.bind(_this8);
-    return _this8;
+    _this9.onSubmit = _this9.onSubmit.bind(_this9);
+    return _this9;
   }
 
   _createClass(Step6, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this9 = this;
+      var _this10 = this;
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
       post_api.teams.createTeam(this.props.teamName, this.props.email, this.props.first_name, this.props.last_name, this.props.username, this.props.jobRole, this.props.jobDetails, this.props.digits).then(function (response) {
         var teamId = response.id;
-        _this9.props.handleInput(null, { name: "teamId", value: teamId });
-        _this9.setState({ loading: false });
-        _this9.props.onStepValidated();
+        _this10.props.handleInput(null, { name: "teamId", value: teamId });
+        _this10.setState({ loading: false });
+        _this10.props.onStepValidated();
       }).catch(function (err) {
-        _this9.setState({ errorMessage: err, loading: false });
+        _this10.setState({ errorMessage: err, loading: false });
       });
     }
   }, {
@@ -49206,19 +49256,19 @@ var Step7 = function (_React$Component6) {
   function Step7(props) {
     _classCallCheck(this, Step7);
 
-    var _this10 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
+    var _this11 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
 
-    _this10.state = {
+    _this11.state = {
       loading: false
     };
-    _this10.onSubmit = _this10.onSubmit.bind(_this10);
-    return _this10;
+    _this11.onSubmit = _this11.onSubmit.bind(_this11);
+    return _this11;
   }
 
   _createClass(Step7, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this11 = this;
+      var _this12 = this;
 
       e.preventDefault();
       var calls = [];
@@ -49229,15 +49279,15 @@ var Step7 = function (_React$Component6) {
       }, this);
       this.setState({ loading: true });
       axios.all(calls).then(function () {
-        _this11.props.handleInput(null, { name: "invitedPeople", value: calls.length });
-        _this11.setState({ loading: false });
-        _this11.props.onStepValidated();
+        _this12.props.handleInput(null, { name: "invitedPeople", value: calls.length });
+        _this12.setState({ loading: false });
+        _this12.props.onStepValidated();
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this12 = this;
+      var _this13 = this;
 
       var fields = this.props.invitations.map(function (item, idx) {
         return React.createElement(
@@ -49247,7 +49297,7 @@ var Step7 = function (_React$Component6) {
             _semanticUiReact.Form.Field,
             { width: 9 },
             React.createElement(_semanticUiReact.Input, {
-              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this12.props.removeInvitationField.bind(null, idx) }),
+              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this13.props.removeInvitationField.bind(null, idx) }),
               actionPosition: 'left',
               type: 'email',
               value: item.email,
@@ -49255,7 +49305,7 @@ var Step7 = function (_React$Component6) {
               onChange: function onChange(e, _ref) {
                 var value = _ref.value;
 
-                _this12.props.editInvitationEmail(value, idx);
+                _this13.props.editInvitationEmail(value, idx);
               } })
           ),
           React.createElement(_semanticUiReact.Form.Input, { width: 7, type: 'text',
@@ -49264,7 +49314,7 @@ var Step7 = function (_React$Component6) {
             onChange: function onChange(e, _ref2) {
               var value = _ref2.value;
 
-              _this12.props.editInvitationUsername(value, idx);
+              _this13.props.editInvitationUsername(value, idx);
             } })
         );
       }, this);
@@ -49346,34 +49396,34 @@ var Step8 = function (_React$Component7) {
   function Step8(props) {
     _classCallCheck(this, Step8);
 
-    var _this13 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
+    var _this14 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
 
-    _this13.state = {
+    _this14.state = {
       companyInfoConfirmed: false,
       friendsInvited: false,
       errorMessage: '',
       loading: false
     };
-    _this13.confirmCompanyInfo = _this13.confirmCompanyInfo.bind(_this13);
-    _this13.tokenCallback = _this13.tokenCallback.bind(_this13);
-    _this13.inviteFriends = _this13.inviteFriends.bind(_this13);
-    return _this13;
+    _this14.confirmCompanyInfo = _this14.confirmCompanyInfo.bind(_this14);
+    _this14.tokenCallback = _this14.tokenCallback.bind(_this14);
+    _this14.inviteFriends = _this14.inviteFriends.bind(_this14);
+    return _this14;
   }
 
   _createClass(Step8, [{
     key: 'inviteFriends',
     value: function inviteFriends(e) {
-      var _this14 = this;
+      var _this15 = this;
 
       e.preventDefault();
       var f = this.props.friends;
 
       this.setState({ erorrMessage: '', loading: true });
       post_api.teams.inviteFriends(this.props.teamId, f[0].email, f[1].email, f[2].email).then(function (response) {
-        _this14.props.handleInput({ target: { value: 15, name: 'credits' } });
-        _this14.setState({ friendsInvited: true, errorMessage: '', loading: false });
+        _this15.props.handleInput({ target: { value: 15, name: 'credits' } });
+        _this15.setState({ friendsInvited: true, errorMessage: '', loading: false });
       }).catch(function (err) {
-        _this14.setState({ errorMessage: '', loading: false });
+        _this15.setState({ errorMessage: '', loading: false });
       });
     }
   }, {
@@ -49384,17 +49434,17 @@ var Step8 = function (_React$Component7) {
   }, {
     key: 'tokenCallback',
     value: function tokenCallback(token) {
-      var _this15 = this;
+      var _this16 = this;
 
       var i = this.props.companyInfo;
       post_api.teams.subscribeToPlan(this.props.teamId, token, i.vat_id, i.company_name, i.street_address, i.unit, i.zip, i.state, i.country, i.city).then(function (response) {
-        _this15.props.onStepValidated();
+        _this16.props.onStepValidated();
       }).catch(function (err) {});
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this16 = this;
+      var _this17 = this;
 
       return React.createElement(
         'div',
@@ -49433,7 +49483,7 @@ var Step8 = function (_React$Component7) {
                 onChange: function onChange(e, _ref3) {
                   var value = _ref3.value;
 
-                  _this16.props.editFriendsEmail(value, idx);
+                  _this17.props.editFriendsEmail(value, idx);
                 },
                 placeholder: 'friend@company.com',
                 key: idx,
@@ -49466,7 +49516,7 @@ var Step8 = function (_React$Component7) {
 }(React.Component);
 
 function test(props) {
-  var _this17 = this;
+  var _this18 = this;
 
   return React.createElement(
     'div',
@@ -49484,7 +49534,7 @@ function test(props) {
         companyInfo: this.props.companyInfo,
         handleCompanyInfoInput: this.props.handleCompanyInfoInput,
         onSubmit: function onSubmit(e) {
-          e.preventDefault();_this17.confirmCompanyInfo(true);
+          e.preventDefault();_this18.confirmCompanyInfo(true);
         } }) : React.createElement(
         'div',
         { className: 'display_flex' },
@@ -49549,9 +49599,9 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   function TeamCreationView(props) {
     _classCallCheck(this, TeamCreationView);
 
-    var _this18 = _possibleConstructorReturn(this, (TeamCreationView.__proto__ || Object.getPrototypeOf(TeamCreationView)).call(this, props));
+    var _this19 = _possibleConstructorReturn(this, (TeamCreationView.__proto__ || Object.getPrototypeOf(TeamCreationView)).call(this, props));
 
-    _this18.state = {
+    _this19.state = {
       currentStep: 0,
       steps: [],
       email: '',
@@ -49582,17 +49632,17 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       },
       stripeToken: null
     };
-    _this18.incrementStep = _this18.incrementStep.bind(_this18);
-    _this18.handleInput = _this18.handleInput.bind(_this18);
-    _this18.switchNewsletter = _this18.switchNewsletter.bind(_this18);
-    _this18.addInvitationField = _this18.addInvitationField.bind(_this18);
-    _this18.removeInvitationField = _this18.removeInvitationField.bind(_this18);
-    _this18.editInvitationEmail = _this18.editInvitationEmail.bind(_this18);
-    _this18.editInvitationUsername = _this18.editInvitationUsername.bind(_this18);
-    _this18.editFriendsEmail = _this18.editFriendsEmail.bind(_this18);
-    _this18.handleCompanyInfoInput = _this18.handleCompanyInfoInput.bind(_this18);
-    _this18.submitStep8 = _this18.submitStep8.bind(_this18);
-    return _this18;
+    _this19.incrementStep = _this19.incrementStep.bind(_this19);
+    _this19.handleInput = _this19.handleInput.bind(_this19);
+    _this19.switchNewsletter = _this19.switchNewsletter.bind(_this19);
+    _this19.addInvitationField = _this19.addInvitationField.bind(_this19);
+    _this19.removeInvitationField = _this19.removeInvitationField.bind(_this19);
+    _this19.editInvitationEmail = _this19.editInvitationEmail.bind(_this19);
+    _this19.editInvitationUsername = _this19.editInvitationUsername.bind(_this19);
+    _this19.editFriendsEmail = _this19.editFriendsEmail.bind(_this19);
+    _this19.handleCompanyInfoInput = _this19.handleCompanyInfoInput.bind(_this19);
+    _this19.submitStep8 = _this19.submitStep8.bind(_this19);
+    return _this19;
   }
 
   _createClass(TeamCreationView, [{
@@ -49684,6 +49734,8 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         email: this.state.email,
         switchNewsletter: this.switchNewsletter,
         newsletter: this.state.newsletter,
+        dispatch: this.props.dispatch,
+        history: this.props.history,
         key: '1' }));
       steps.push(React.createElement(Step2, { onStepValidated: this.incrementStep,
         digits: this.state.digits,
@@ -49846,7 +49898,7 @@ var Step1 = function (_React$Component) {
     key: "login",
     value: function login() {
       this.props.dispatch((0, _commonActions.setLoginRedirectUrl)(this.props.match.url + '?skip'));
-      this.props.history.push('/login');
+      this.props.history.replace('/login');
     }
   }, {
     key: "render",
@@ -51361,18 +51413,6 @@ var MultiTeamAppAdd = function (_React$Component2) {
       users: [],
       dropdown: false
     };
-    _this2.state.users = [];
-    if (_this2.props.selectedItem.type === 'channel') {
-      _this2.props.item.userIds.map(function (item) {
-        var user = this.props.userSelectFunc(item);
-        user.selected = false;
-        this.state.users.push(user);
-      }, _this2);
-    } else {
-      var item = _this2.props.item;
-      item.selected = false;
-      _this2.state.users.push(item);
-    }
     _this2.handleAppNameChange = _this2.handleAppNameChange.bind(_this2);
     _this2.chooseApp = _this2.chooseApp.bind(_this2);
     _this2.resetApp = _this2.resetApp.bind(_this2);
@@ -51388,6 +51428,23 @@ var MultiTeamAppAdd = function (_React$Component2) {
   }
 
   _createClass(MultiTeamAppAdd, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.selectedItem.type === 'channel') {
+        this.props.item.userIds.map(function (item) {
+          var user = this.props.userSelectFunc(item);
+          user.selected = false;
+          user.removable = true;
+          this.state.users.push(user);
+        }, this);
+      } else {
+        var item = this.props.item;
+        item.selected = false;
+        item.removable = false;
+        this.state.users.push(item);
+      }
+    }
+  }, {
     key: 'shareApp',
     value: function shareApp() {
       var _this3 = this;
@@ -51428,7 +51485,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(props) {
-      if (props != this.props) {
+      if (props !== this.props) {
         var users = [];
         if (props.selectedItem.type === 'channel') {
           props.item.userIds.map(function (item) {
@@ -51511,6 +51568,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
           credentials[item] = '';
         });
         this.setState({ choosenApp: { info: app, inputs: data.information }, appName: app.website_name, credentials: credentials });
+        if (this.props.selectedItem.type === 'user') this.handleUserSelect(this.state.users[0].id);
       }.bind(this));
     }
   }, {
@@ -51612,7 +51670,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
                             { className: 'value overflow-ellipsis' },
                             user.username
                           ),
-                          React.createElement(
+                          user.removable === true && React.createElement(
                             'button',
                             { className: 'button-unstyle button_delete', onClick: this.handleUserDeselect.bind(null, user.id) },
                             React.createElement('i', { className: 'fa fa-times' })
@@ -51763,6 +51821,8 @@ var _teamAppsAddUIActions = __webpack_require__(124);
 
 var _reactRedux = __webpack_require__(12);
 
+var _semanticUiReact = __webpack_require__(51);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -51770,7 +51830,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = __webpack_require__(1);
-var classnames = __webpack_require__(2);
 var TeamAddAppsButton = (_dec = (0, _reactRedux.connect)(), _dec(_class = function (_React$Component) {
   _inherits(TeamAddAppsButton, _React$Component);
 
@@ -51779,111 +51838,80 @@ var TeamAddAppsButton = (_dec = (0, _reactRedux.connect)(), _dec(_class = functi
 
     var _this = _possibleConstructorReturn(this, (TeamAddAppsButton.__proto__ || Object.getPrototypeOf(TeamAddAppsButton)).call(this, props));
 
-    _this.state = {
-      dropdown: false
-    };
-    _this.showDropdown = _this.showDropdown.bind(_this);
-    _this.onMouseDown = _this.onMouseDown.bind(_this);
-    _this.onMouseUp = _this.onMouseUp.bind(_this);
-    _this.pageClick = _this.pageClick.bind(_this);
     _this.selectItem = _this.selectItem.bind(_this);
     return _this;
   }
 
   _createClass(TeamAddAppsButton, [{
-    key: 'selectItem',
+    key: "selectItem",
     value: function selectItem(type) {
       this.props.dispatch((0, _teamAppsAddUIActions.showAppAddUIElement)(type, true));
-      this.showDropdown(false);
     }
   }, {
-    key: 'showDropdown',
-    value: function showDropdown(state) {
-      if (state === this.state.dropdown) return;
-      this.setState({ dropdown: state });
-    }
-  }, {
-    key: 'onMouseDown',
-    value: function onMouseDown() {
-      this.mouseInDropDown = true;
-    }
-  }, {
-    key: 'onMouseUp',
-    value: function onMouseUp() {
-      this.mouseInDropDown = false;
-    }
-  }, {
-    key: 'pageClick',
-    value: function pageClick(e) {
-      if (this.mouseInDropDown) return;
-      this.setState({ dropdown: false });
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      window.addEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      window.removeEventListener('mousedown', this.pageClick, false);
-    }
-  }, {
-    key: 'render',
+    key: "render",
     value: function render() {
+      var targetType = this.props.target.purpose !== undefined ? 1 : 2;
       return React.createElement(
-        'button',
-        { className: 'button-unstyle', id: 'add_team_apps_button',
-          onMouseDown: this.onMouseDown,
-          onMouseUp: this.onMouseUp,
-          onClick: this.showDropdown.bind(null, true) },
-        React.createElement(
-          'div',
-          { className: 'button-unstyle display-flex justify_content_center align_items_center', style: { width: '100%', height: '100%', borderRadius: '5px' },
-            'data-tip': 'Share apps here', ref: function ref(_ref) {
+        _semanticUiReact.Dropdown,
+        {
+          id: "share_app_dropdown",
+          size: "mini",
+          floating: true,
+          button: true,
+          icon: React.createElement("i", { className: "icon plus single", "data-tip": "Share apps here", ref: function ref(_ref) {
               window.refs.shareAppsButton = _ref;
-            } },
-          React.createElement('i', { className: 'fa fa-plus' })
-        ),
+            } }) },
         React.createElement(
-          'div',
-          { className: classnames('floating_dropdown', this.state.dropdown ? 'show' : null) },
-          React.createElement(
-            'div',
-            { className: 'dropdown_content' },
+          _semanticUiReact.Dropdown.Menu,
+          null,
+          targetType === 2 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { style: { whiteSpace: 'inherit', lineHeight: '1.3' } },
+            "Send apps directly to User desk will be available soon. To help us build this feature ",
             React.createElement(
-              'div',
-              { className: 'dropdown_row selectable', onClick: this.selectItem.bind(null, 'Simple') },
-              React.createElement('i', { className: 'fa fa-square' }),
-              React.createElement(
-                'span',
-                null,
-                'Single app'
-              ),
-              React.createElement('i', { className: 'fa fa-info info_icon', 'data-place': 'right', 'data-tip': 'Let multiple people have access to one<br>account. Like your Twitter, Wordpress etc.' })
-            ),
-            React.createElement(
-              'div',
-              { className: 'dropdown_row selectable', onClick: this.selectItem.bind(null, 'Multi') },
-              React.createElement('i', { className: 'fa fa-sitemap' }),
-              React.createElement(
-                'span',
-                null,
-                'Entreprise app'
-              ),
-              React.createElement('i', { className: 'fa fa-info info_icon', 'data-place': 'right', 'data-tip': 'Share an account where each member uses<br>his/her own ID and password to login to one<br>website. Like Gmail, Trello, Slack... You can fill<br>the credentials for your team members or let<br>them do it.' })
-            ),
-            React.createElement(
-              'div',
-              { className: 'dropdown_row selectable', onClick: this.selectItem.bind(null, 'Link') },
-              React.createElement('i', { className: 'fa fa-link' }),
-              React.createElement(
-                'span',
-                null,
-                'Link app'
-              ),
-              React.createElement('i', { className: 'fa fa-info info_icon', 'data-place': 'right', 'data-tip': 'Are you using tools without accounts?<br>Need to share a blog or a source your team<br>frequently uses? Here it is!' })
+              "a",
+              { href: "mailto:victor@ease.space" },
+              "give us your insights!"
             )
+          ),
+          targetType === 1 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { onClick: this.selectItem.bind(null, 'Simple') },
+            React.createElement(_semanticUiReact.Icon, { name: "square" }),
+            "Single app",
+            React.createElement(_semanticUiReact.Popup, {
+              size: "mini",
+              style: { fontWeight: 'bold', textAlign: 'center' },
+              inverted: true,
+              position: "right center",
+              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
+              content: "Let multiple people have access to one account. Like your Twitter, Wordpress etc." })
+          ),
+          targetType === 1 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { onClick: this.selectItem.bind(null, 'Multi') },
+            React.createElement(_semanticUiReact.Icon, { name: "sitemap" }),
+            "Enterprise app",
+            React.createElement(_semanticUiReact.Popup, {
+              size: "mini",
+              style: { fontWeight: 'bold', textAlign: 'center' },
+              inverted: true,
+              position: "right center",
+              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
+              content: "Share an account where each member uses his/her own ID and password to login to one website. Like Gmail, Trello, Slack... You can fill the credentials for your team members or let them do it." })
+          ),
+          targetType === 1 && React.createElement(
+            _semanticUiReact.Dropdown.Item,
+            { onClick: this.selectItem.bind(null, 'Link') },
+            React.createElement(_semanticUiReact.Icon, { name: "linkify" }),
+            "Link app",
+            React.createElement(_semanticUiReact.Popup, {
+              size: "mini",
+              style: { fontWeight: 'bold', textAlign: 'center' },
+              inverted: true,
+              position: "right center",
+              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
+              content: "Are you using tools without accounts? Need to share a blog or a source your team frequently uses? Here it is!" })
           )
         )
       );
@@ -52953,12 +52981,12 @@ var SimpleUserSelect = function (_React$Component2) {
                 { className: 'name_hodler overflow-ellipsis' },
                 item.username
               ),
-              item.can_see_information != undefined && React.createElement(
+              item.can_see_information !== undefined && React.createElement(
                 'button',
                 { className: 'action_button button-unstyle mrgnLeft5', onClick: this.props.switchCanSeeInformationFunc.bind(null, item.id) },
                 React.createElement('i', { className: classnames('fa', item.can_see_information ? 'fa-eye' : 'fa-eye-slash') })
               ),
-              React.createElement(
+              item.removable === true && React.createElement(
                 'button',
                 { className: 'button_delete action_button button-unstyle', onClick: this.props.deselectFunc.bind(null, item.id) },
                 React.createElement('i', { className: 'fa fa-times' })
@@ -53016,18 +53044,6 @@ var LinkTeamAppAdd = function (_React$Component3) {
       selectedUsers: [],
       users: []
     };
-    _this3.state.users = [];
-    if (_this3.props.selectedItem.type === 'channel') {
-      _this3.props.item.userIds.map(function (item) {
-        var user = this.props.userSelectFunc(item);
-        user.selected = false;
-        this.state.users.push(user);
-      }, _this3);
-    } else {
-      var item = _this3.props.item;
-      item.selected = false;
-      _this3.state.users.push(item);
-    }
     _this3.handleAppNameChange = _this3.handleAppNameChange.bind(_this3);
     _this3.handleUrlInput = _this3.handleUrlInput.bind(_this3);
     _this3.handleUserSelect = _this3.handleUserSelect.bind(_this3);
@@ -53038,6 +53054,24 @@ var LinkTeamAppAdd = function (_React$Component3) {
   }
 
   _createClass(LinkTeamAppAdd, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.selectedItem.type === 'channel') {
+        this.props.item.userIds.map(function (item) {
+          var user = this.props.userSelectFunc(item);
+          user.selected = false;
+          user.removable = true;
+          this.state.users.push(user);
+        }, this);
+      } else {
+        var item = this.props.item;
+        item.selected = false;
+        item.removable = false;
+        this.state.users.push(item);
+        this.handleUserSelect(item.id);
+      }
+    }
+  }, {
     key: 'shareApp',
     value: function shareApp() {
       var _this4 = this;
@@ -53197,8 +53231,7 @@ var LinkTeamAppAdd = function (_React$Component3) {
                       type: 'text',
                       name: 'url',
                       value: this.state.url,
-                      onChange: this.handleUrlInput
-                    })
+                      onChange: this.handleUrlInput })
                   )
                 )
               )
@@ -53253,21 +53286,6 @@ var SimpleTeamAppAdd = function (_React$Component4) {
       selectedUsers: [],
       users: []
     };
-    _this6.state.users = [];
-    if (_this6.props.selectedItem.type === 'channel') {
-      _this6.props.item.userIds.map(function (item) {
-        var user = _extends({}, this.props.userSelectFunc(item));
-        user.selected = false;
-        user.can_see_information = false;
-        this.state.users.push(user);
-      }, _this6);
-    } else {
-      var item = _extends({}, _this6.props.item);
-      item.selected = false;
-      item.can_see_information = true;
-      _this6.state.users.push(item);
-    }
-
     _this6.handleAppNameChange = _this6.handleAppNameChange.bind(_this6);
     _this6.chooseApp = _this6.chooseApp.bind(_this6);
     _this6.resetApp = _this6.resetApp.bind(_this6);
@@ -53283,6 +53301,26 @@ var SimpleTeamAppAdd = function (_React$Component4) {
   }
 
   _createClass(SimpleTeamAppAdd, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.selectedItem.type === 'channel') {
+        this.props.item.userIds.map(function (item) {
+          var user = _extends({}, this.props.userSelectFunc(item));
+          user.selected = false;
+          user.removable = true;
+          user.can_see_information = false;
+          this.state.users.push(user);
+        }, this);
+      } else {
+        var item = _extends({}, this.props.item);
+        item.removable = false;
+        item.selected = false;
+        item.can_see_information = true;
+        this.state.users.push(item);
+        this.handleUserSelect(item.id);
+      }
+    }
+  }, {
     key: 'shareApp',
     value: function shareApp() {
       var _this7 = this;
@@ -53324,7 +53362,7 @@ var SimpleTeamAppAdd = function (_React$Component4) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(props) {
-      if (props != this.props) {
+      if (props !== this.props) {
         var users = [];
         if (props.selectedItem.type === 'channel') {
           props.item.userIds.map(function (item) {
@@ -55863,7 +55901,7 @@ function TeamHeader(props) {
       React.createElement(
         'div',
         { className: 'tab_header' },
-        React.createElement(TeamAddAppsButton, null),
+        React.createElement(TeamAddAppsButton, { target: props.item }),
         React.createElement(
           'div',
           { className: 'channel_title' },
@@ -55873,7 +55911,7 @@ function TeamHeader(props) {
             React.createElement(
               'span',
               { id: 'channel_name', className: 'channel_name' },
-              React.createElement('i', { className: classnames("fa icon_wrapper", props.item.username != undefined ? 'fa-user' : 'fa-users') }),
+              React.createElement('i', { className: classnames("fa icon_wrapper", props.item.username !== undefined ? 'fa-user' : 'fa-users') }),
               props.item.name ? props.item.name : props.item.username
             ),
             React.createElement(
@@ -56369,7 +56407,18 @@ var TeamsList = function (_React$Component) {
         React.createElement(
           _semanticUiReact.Dropdown.Menu,
           null,
-          this.props.user != null && this.props.user.teams.map(function (item) {
+          this.props.user !== null && this.props.user.teams.map(function (item) {
+            if (item.disabled) return React.createElement(_semanticUiReact.Popup, {
+              key: item.id,
+              size: 'mini',
+              position: 'left center',
+              trigger: React.createElement(
+                _semanticUiReact.Dropdown.Item,
+                { style: { opacity: '0.45' } },
+                React.createElement(_semanticUiReact.Icon, { name: 'users' }),
+                item.name
+              ),
+              content: 'You need to wait until an admin accept you.' });
             return React.createElement(
               _semanticUiReact.Dropdown.Item,
               { key: item.id, as: 'a', href: '/teams#/teams/' + item.id },
@@ -56645,6 +56694,12 @@ function teamChannelDispatcher(action, channel, target) {
   };
 }
 
+function teamDispatcher(action, team) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_' + action, payload: { team: team } });
+  };
+}
+
 var WebsocketClient = (_dec = (0, _reactRedux.connect)(), _dec(_class = function (_React$Component) {
   _inherits(WebsocketClient, _React$Component);
 
@@ -56656,7 +56711,8 @@ var WebsocketClient = (_dec = (0, _reactRedux.connect)(), _dec(_class = function
     _this.listeners = {
       'TEAM_APP': teamAppDispatcher,
       'TEAM_USER': teamUserDispatcher,
-      'TEAM_ROOM': teamChannelDispatcher
+      'TEAM_ROOM': teamChannelDispatcher,
+      'TEAM': teamDispatcher
     };
     _this.onMessage = _this.onMessage.bind(_this);
     return _this;
@@ -57934,7 +57990,7 @@ function TeamSimpleAppButtonSet(props) {
         } },
       React.createElement('i', { className: 'fa fa-user' })
     ),
-    meReceiver != null && meReceiver.accepted && React.createElement(
+    meReceiver !== null && meReceiver.accepted && React.createElement(
       'button',
       { className: 'button-unstyle team_app_pin',
         'data-tip': 'Pin App in your Personal space',
@@ -58272,7 +58328,7 @@ var TeamSimpleApp = function (_React$Component) {
             senderUser.username,
             me.id === senderUser.id && "(you)"
           ),
-          meReceiver != null && !meReceiver.accepted ? React.createElement(
+          meReceiver !== null && !meReceiver.accepted ? React.createElement(
             'span',
             null,
             '\xA0tagged you in a Single App,\xA0',
@@ -58297,7 +58353,7 @@ var TeamSimpleApp = function (_React$Component) {
         React.createElement(
           'div',
           { className: 'team_app' },
-          meReceiver != null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
+          meReceiver !== null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
           React.createElement(
             'div',
             { className: 'name_holder' },
@@ -60600,9 +60656,12 @@ var Step2 = function (_React$Component2) {
 
     _this3.state = {
       errorMessage: '',
-      loading: false
+      loading: false,
+      sendingEmail: false,
+      sendEmailButtonText: 'Resend email'
     };
     _this3.onSubmit = _this3.onSubmit.bind(_this3);
+    _this3.resendDigits = _this3.resendDigits.bind(_this3);
     return _this3;
   }
 
@@ -60618,6 +60677,22 @@ var Step2 = function (_React$Component2) {
         _this4.props.onStepValidated();
       }).catch(function (err) {
         _this4.setState({ loading: false, errorMesage: err });
+      });
+    }
+  }, {
+    key: 'resendDigits',
+    value: function resendDigits() {
+      var _this5 = this;
+
+      this.setState({ sendingEmail: true });
+      post_api.teams.askTeamCreation(this.props.email).then(function (response) {
+        _this5.setState({ sendingEmail: false });
+        _this5.setState({ sendEmailButtonText: 'Sent!' });
+        window.setTimeout(function () {
+          _this5.setState({ sendEmailButtonText: 'Resend email' });
+        }, 2000);
+      }).catch(function (err) {
+        _this5.setState({ sendingEmail: false });
       });
     }
   }, {
@@ -60657,10 +60732,12 @@ var Step2 = function (_React$Component2) {
               required: true }),
             React.createElement(
               _semanticUiReact.Message,
-              { color: 'yellow' },
+              { color: 'yellow', size: 'mini' },
               'Keep this window open while checking for your code.',
               React.createElement('br', null),
-              ' Haven\'t received our email ? Try your spam folder!'
+              ' Haven\'t received our email ? Try your spam folder! Or ',
+              React.createElement(_semanticUiReact.Button, { basic: true, type: 'button', className: 'textlike', size: 'mini', loading: this.state.sendingEmail, onClick: this.resendDigits, content: this.state.sendEmailButtonText }),
+              '.'
             ),
             React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
             React.createElement(
@@ -60683,13 +60760,13 @@ var Step4 = function (_React$Component3) {
   function Step4(props) {
     _classCallCheck(this, Step4);
 
-    var _this5 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
+    var _this6 = _possibleConstructorReturn(this, (Step4.__proto__ || Object.getPrototypeOf(Step4)).call(this, props));
 
-    _this5.state = {
+    _this6.state = {
       errorMessage: ''
     };
-    _this5.onSubmit = _this5.onSubmit.bind(_this5);
-    return _this5;
+    _this6.onSubmit = _this6.onSubmit.bind(_this6);
+    return _this6;
   }
 
   _createClass(Step4, [{
@@ -60832,30 +60909,30 @@ var Step6 = function (_React$Component4) {
   function Step6(props) {
     _classCallCheck(this, Step6);
 
-    var _this6 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
+    var _this7 = _possibleConstructorReturn(this, (Step6.__proto__ || Object.getPrototypeOf(Step6)).call(this, props));
 
-    _this6.state = {
+    _this7.state = {
       errorMessage: '',
       loading: false
     };
-    _this6.onSubmit = _this6.onSubmit.bind(_this6);
-    return _this6;
+    _this7.onSubmit = _this7.onSubmit.bind(_this7);
+    return _this7;
   }
 
   _createClass(Step6, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this7 = this;
+      var _this8 = this;
 
       e.preventDefault();
       this.setState({ errorMessage: '', loading: true });
       post_api.teams.createTeam(this.props.teamName, this.props.email, this.props.first_name, this.props.last_name, this.props.username, this.props.jobRole, this.props.jobDetails, this.props.digits).then(function (response) {
         var teamId = response.id;
-        _this7.props.handleInput(null, { name: "teamId", value: teamId });
-        _this7.setState({ loading: false });
-        _this7.props.onStepValidated();
+        _this8.props.handleInput(null, { name: "teamId", value: teamId });
+        _this8.setState({ loading: false });
+        _this8.props.onStepValidated();
       }).catch(function (err) {
-        _this7.setState({ errorMessage: err, loading: false });
+        _this8.setState({ errorMessage: err, loading: false });
       });
     }
   }, {
@@ -60920,19 +60997,19 @@ var Step7 = function (_React$Component5) {
   function Step7(props) {
     _classCallCheck(this, Step7);
 
-    var _this8 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
 
-    _this8.state = {
+    _this9.state = {
       loading: false
     };
-    _this8.onSubmit = _this8.onSubmit.bind(_this8);
-    return _this8;
+    _this9.onSubmit = _this9.onSubmit.bind(_this9);
+    return _this9;
   }
 
   _createClass(Step7, [{
     key: 'onSubmit',
     value: function onSubmit(e) {
-      var _this9 = this;
+      var _this10 = this;
 
       e.preventDefault();
       var calls = [];
@@ -60943,15 +61020,15 @@ var Step7 = function (_React$Component5) {
       }, this);
       this.setState({ loading: true });
       axios.all(calls).then(function () {
-        _this9.props.handleInput(null, { name: "invitedPeople", value: calls.length });
-        _this9.setState({ loading: false });
-        _this9.props.onStepValidated();
+        _this10.props.handleInput(null, { name: "invitedPeople", value: calls.length });
+        _this10.setState({ loading: false });
+        _this10.props.onStepValidated();
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this10 = this;
+      var _this11 = this;
 
       var fields = this.props.invitations.map(function (item, idx) {
         return React.createElement(
@@ -60961,7 +61038,7 @@ var Step7 = function (_React$Component5) {
             _semanticUiReact.Form.Field,
             { width: 9 },
             React.createElement(_semanticUiReact.Input, {
-              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this10.props.removeInvitationField.bind(null, idx) }),
+              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this11.props.removeInvitationField.bind(null, idx) }),
               actionPosition: 'left',
               type: 'email',
               value: item.email,
@@ -60969,7 +61046,7 @@ var Step7 = function (_React$Component5) {
               onChange: function onChange(e, _ref) {
                 var value = _ref.value;
 
-                _this10.props.editInvitationEmail(value, idx);
+                _this11.props.editInvitationEmail(value, idx);
               } })
           ),
           React.createElement(_semanticUiReact.Form.Input, { width: 7, type: 'text',
@@ -60978,7 +61055,7 @@ var Step7 = function (_React$Component5) {
             onChange: function onChange(e, _ref2) {
               var value = _ref2.value;
 
-              _this10.props.editInvitationUsername(value, idx);
+              _this11.props.editInvitationUsername(value, idx);
             } })
         );
       }, this);
@@ -61060,34 +61137,34 @@ var Step8 = function (_React$Component6) {
   function Step8(props) {
     _classCallCheck(this, Step8);
 
-    var _this11 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
+    var _this12 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
 
-    _this11.state = {
+    _this12.state = {
       companyInfoConfirmed: false,
       friendsInvited: false,
       errorMessage: '',
       loading: false
     };
-    _this11.confirmCompanyInfo = _this11.confirmCompanyInfo.bind(_this11);
-    _this11.tokenCallback = _this11.tokenCallback.bind(_this11);
-    _this11.inviteFriends = _this11.inviteFriends.bind(_this11);
-    return _this11;
+    _this12.confirmCompanyInfo = _this12.confirmCompanyInfo.bind(_this12);
+    _this12.tokenCallback = _this12.tokenCallback.bind(_this12);
+    _this12.inviteFriends = _this12.inviteFriends.bind(_this12);
+    return _this12;
   }
 
   _createClass(Step8, [{
     key: 'inviteFriends',
     value: function inviteFriends(e) {
-      var _this12 = this;
+      var _this13 = this;
 
       e.preventDefault();
       var f = this.props.friends;
 
       this.setState({ erorrMessage: '', loading: true });
       post_api.teams.inviteFriends(this.props.teamId, f[0].email, f[1].email, f[2].email).then(function (response) {
-        _this12.props.handleInput({ target: { value: 15, name: 'credits' } });
-        _this12.setState({ friendsInvited: true, errorMessage: '', loading: false });
+        _this13.props.handleInput({ target: { value: 15, name: 'credits' } });
+        _this13.setState({ friendsInvited: true, errorMessage: '', loading: false });
       }).catch(function (err) {
-        _this12.setState({ errorMessage: '', loading: false });
+        _this13.setState({ errorMessage: '', loading: false });
       });
     }
   }, {
@@ -61098,17 +61175,17 @@ var Step8 = function (_React$Component6) {
   }, {
     key: 'tokenCallback',
     value: function tokenCallback(token) {
-      var _this13 = this;
+      var _this14 = this;
 
       var i = this.props.companyInfo;
       post_api.teams.subscribeToPlan(this.props.teamId, token, i.vat_id, i.company_name, i.street_address, i.unit, i.zip, i.state, i.country, i.city).then(function (response) {
-        _this13.props.onStepValidated();
+        _this14.props.onStepValidated();
       }).catch(function (err) {});
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this14 = this;
+      var _this15 = this;
 
       return React.createElement(
         'div',
@@ -61147,7 +61224,7 @@ var Step8 = function (_React$Component6) {
                 onChange: function onChange(e, _ref3) {
                   var value = _ref3.value;
 
-                  _this14.props.editFriendsEmail(value, idx);
+                  _this15.props.editFriendsEmail(value, idx);
                 },
                 placeholder: 'friend@company.com',
                 key: idx,
@@ -61180,7 +61257,7 @@ var Step8 = function (_React$Component6) {
 }(React.Component);
 
 function test(props) {
-  var _this15 = this;
+  var _this16 = this;
 
   return React.createElement(
     'div',
@@ -61198,7 +61275,7 @@ function test(props) {
         companyInfo: this.props.companyInfo,
         handleCompanyInfoInput: this.props.handleCompanyInfoInput,
         onSubmit: function onSubmit(e) {
-          e.preventDefault();_this15.confirmCompanyInfo(true);
+          e.preventDefault();_this16.confirmCompanyInfo(true);
         } }) : React.createElement(
         'div',
         { className: 'display_flex' },
@@ -61262,9 +61339,9 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   function SimpleTeamCreationView(props) {
     _classCallCheck(this, SimpleTeamCreationView);
 
-    var _this16 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
+    var _this17 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
 
-    _this16.state = {
+    _this17.state = {
       currentStep: 0,
       steps: [],
       email: '',
@@ -61296,18 +61373,18 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       },
       stripeToken: null
     };
-    _this16.incrementStep = _this16.incrementStep.bind(_this16);
-    _this16.handleInput = _this16.handleInput.bind(_this16);
-    _this16.switchNewsletter = _this16.switchNewsletter.bind(_this16);
-    _this16.addInvitationField = _this16.addInvitationField.bind(_this16);
-    _this16.removeInvitationField = _this16.removeInvitationField.bind(_this16);
-    _this16.editInvitationEmail = _this16.editInvitationEmail.bind(_this16);
-    _this16.editInvitationUsername = _this16.editInvitationUsername.bind(_this16);
-    _this16.editFriendsEmail = _this16.editFriendsEmail.bind(_this16);
-    _this16.handleCompanyInfoInput = _this16.handleCompanyInfoInput.bind(_this16);
-    _this16.submitStep8 = _this16.submitStep8.bind(_this16);
-    _this16.incrementStepByValue = _this16.incrementStepByValue.bind(_this16);
-    return _this16;
+    _this17.incrementStep = _this17.incrementStep.bind(_this17);
+    _this17.handleInput = _this17.handleInput.bind(_this17);
+    _this17.switchNewsletter = _this17.switchNewsletter.bind(_this17);
+    _this17.addInvitationField = _this17.addInvitationField.bind(_this17);
+    _this17.removeInvitationField = _this17.removeInvitationField.bind(_this17);
+    _this17.editInvitationEmail = _this17.editInvitationEmail.bind(_this17);
+    _this17.editInvitationUsername = _this17.editInvitationUsername.bind(_this17);
+    _this17.editFriendsEmail = _this17.editFriendsEmail.bind(_this17);
+    _this17.handleCompanyInfoInput = _this17.handleCompanyInfoInput.bind(_this17);
+    _this17.submitStep8 = _this17.submitStep8.bind(_this17);
+    _this17.incrementStepByValue = _this17.incrementStepByValue.bind(_this17);
+    return _this17;
   }
 
   _createClass(SimpleTeamCreationView, [{
@@ -61950,7 +62027,7 @@ function TeamsTutorialTip(props) {
       null,
       props.title
     ),
-    props.body != undefined && _react2.default.createElement(
+    props.body !== undefined && _react2.default.createElement(
       'span',
       { className: 'body' },
       props.body
@@ -61958,7 +62035,7 @@ function TeamsTutorialTip(props) {
     _react2.default.createElement(
       'div',
       { className: 'display-flex' },
-      props.skip != undefined && _react2.default.createElement(
+      props.skip !== undefined && _react2.default.createElement(
         'span',
         { style: { fontSize: '14px' } },
         'Already know how Ease.space works?',
@@ -62023,17 +62100,17 @@ var TeamsTutorial = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'skipTutorial',
     value: function skipTutorial() {
-      if (this.state.enabledTooltip != null) _reactTooltip2.default.hide(this.getRef(this.state.step));
+      if (this.state.enabledTooltip !== null) _reactTooltip2.default.hide(this.getRef(this.state.step));
       this.props.dispatch((0, _commonActions.setTeamsTutorial)(true));
     }
   }, {
     key: 'incrementStep',
     value: function incrementStep() {
       var state = _extends({}, this.state);
-      if (state.enabledTooltip != null) _reactTooltip2.default.hide(this.getRef(state.step));
+      if (state.enabledTooltip !== null) _reactTooltip2.default.hide(this.getRef(state.step));
       state.enabledTooltip = null;
       state.step++;
-      if (this.getRef(state.step) != null) {
+      if (this.getRef(state.step) !== null) {
         state.enabledTooltip = state.step;
         setTimeout(function () {
           _reactTooltip2.default.show(this.getRef(state.step));
@@ -62338,7 +62415,7 @@ function reducer() {
     case 'TEAM_ROOM_ADDED':
       {
         var channels = state.channels;
-        if (selectUserFromListById(state.channels, action.payload.channel.id) != null) break;
+        if (selectUserFromListById(state.channels, action.payload.channel.id) !== null) break;
         users.push(action.payload.channel);
         return _extends({}, state, {
           channels: channels
@@ -62356,6 +62433,7 @@ function reducer() {
             });
           }
         }
+        break;
       }
   }
   return state;
@@ -62424,6 +62502,41 @@ function reducer() {
       {
         return _extends({}, state, {
           ws_id: action.payload.ws_id
+        });
+      }
+    case 'TEAM_ADDED':
+      {
+        if (!state.user) break;
+        var _user = state.user;
+        _user.teams.push(action.payload.team);
+        return _extends({}, state, {
+          user: _user
+        });
+      }
+    case 'TEAM_REMOVED':
+      {
+        if (!state.user) break;
+        var _user2 = state.user;
+        for (var i = 0; i < _user2.teams.length; i++) {
+          if (_user2.teams[i].id === action.payload.team.id) {
+            _user2.teams.splice(i, 1);
+            return _extends({}, state, {
+              user: _user2
+            });
+          }
+        }
+        break;
+      }
+    case 'TEAM_CHANGED':
+      {
+        if (!state.user) break;
+        var _user3 = state.user;
+        _user3.teams = _user3.teams.map(function (item) {
+          if (item.id === action.payload.team.id) return action.payload.team;
+          return item;
+        });
+        return _extends({}, state, {
+          user: _user3
         });
       }
   }

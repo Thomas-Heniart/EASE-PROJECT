@@ -12,6 +12,40 @@ button.only-text-button {
   line-height: 1.3;
 }
 
+.ui.dropdown .icon.single {
+  margin:0 !important;
+}
+
+.ui.dropdown .menu>.item {
+  padding: .78571429em 1.14285714em!important;
+}
+
+#share_app_dropdown {
+  color: white;
+  background-color: $themeColor;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin-right: 14px;
+  .icon.single {
+    width: 100%;
+    height: 100%;
+    @include display-flex();
+    @include align-items(center);
+    @include justify-content(center);
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .menu {
+    width: 200px;
+    .item {
+      font-weight: bold;
+      font-size: .7rem;
+    }
+  }
+}
+
 button.action_text_button {
   border-radius: 5px;
   padding: 0 5px;
@@ -123,6 +157,7 @@ button.action_text_button {
   .body {
     padding-right: 10%;
     font-size: 24px;
+    line-height: 1.3;
     margin-bottom: 41px;
   }
   .stepCounter {
