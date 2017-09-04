@@ -3,7 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Catalog.WebsiteAttributes;
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -47,6 +46,7 @@ public class ServletAskWebsite extends HttpServlet {
             catalog.addWebsite(website);
             db.commitTransaction(transaction);
             /* Decipher login and password */
+            /*
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("INSERT INTO customerCredentialsReception VALUES (null, ?, ?, ?, ?, ?, default);");
             hibernateQuery.setParameter(1, sm.getUser().getEmail());
@@ -55,6 +55,7 @@ public class ServletAskWebsite extends HttpServlet {
             hibernateQuery.setParameter(4, sm.getStringParam("password", false));
             hibernateQuery.setParameter(5, sm.getIntParam("serverPublicKey_id", false));
             hibernateQuery.executeUpdate();
+            */
             JSONObject res = website.getInformationJson();
             res.put("id", website.getDb_id());
             sm.setSuccess(res);

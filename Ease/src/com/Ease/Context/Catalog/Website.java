@@ -21,6 +21,66 @@ import java.util.Map;
 
 public class Website {
 
+    public void setName(String name, DataBaseConnection db) throws HttpServletException {
+        if (this.name.equals(name))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET website_name = ? WHERE id = ?;");
+            request.setString(name);
+            request.setInt(this.db_id);
+            request.set();
+            this.name = name;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setLandingUrl(String landing_url, DataBaseConnection db) throws HttpServletException {
+        if (this.website_homepage.equals(landing_url))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET website_homepage = ? WHERE id = ?;");
+            request.setString(landing_url);
+            request.setInt(this.db_id);
+            request.set();
+            this.website_homepage = landing_url;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setLoginUrl(String login_url, DataBaseConnection db) throws HttpServletException {
+        if (this.loginUrl.equals(login_url))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET login_url = ? WHERE id = ?;");
+            request.setString(login_url);
+            request.setInt(this.db_id);
+            request.set();
+            this.loginUrl = login_url;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setFolder(String folder, DataBaseConnection db) throws HttpServletException {
+        if (this.folder.equals(folder))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET folder = ? WHERE id = ?;");
+            request.setString(folder);
+            request.setInt(this.db_id);
+            request.set();
+            this.folder = folder;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setIntegrated(Boolean integrated, DataBaseConnection db) throws HttpServletException {
+        this.websiteAttributes.setIntegrated(integrated, db);
+    }
+
     public enum WebsiteData {
         NOTHING,
         ID,
@@ -368,6 +428,10 @@ public class Website {
 
     public String getFolder() {
         return Variables.WEBSITES_PATH + this.folder + "/";
+    }
+
+    public String getDbFolder() {
+        return this.folder;
     }
 
     public String getAbsolutePath() {

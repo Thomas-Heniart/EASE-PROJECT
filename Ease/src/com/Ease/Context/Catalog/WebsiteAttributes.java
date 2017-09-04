@@ -2,6 +2,8 @@ package com.Ease.Context.Catalog;
 
 import com.Ease.Utils.*;
 
+import java.util.Date;
+
 public class WebsiteAttributes {
 
     public static WebsiteAttributes createWebsiteAttributes(boolean is_public, DataBaseConnection db) throws GeneralException {
@@ -183,6 +185,28 @@ public class WebsiteAttributes {
             request.setInt(this.getDbId());
             request.set();
             this.integrated = true;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setIntegrated(Boolean integrated, DataBaseConnection db) throws HttpServletException {
+        if (this.integrated == integrated)
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websiteAttributes SET integrated = ? WHERE id = ?;");
+            request.setBoolean(integrated);
+            request.setInt(this.db_id);
+            request.set();
+            if (integrated) {
+                request = db.prepareRequest("UPDATE websiteAttributes SET addedDate = ?, new = 1 WHERE id = ?;");
+                request.setDate(new Date());
+                request.setInt(this.db_id);
+                request.set();
+                this.isNew = true;
+            }
+            this.integrated = integrated;
+
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

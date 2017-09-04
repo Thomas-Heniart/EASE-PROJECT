@@ -386,6 +386,20 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         }
     }
 
+    public void setWebsite(Website website, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET website_id = ? WHERE id = ?;");
+            request.setInt(website.getDb_id());
+            request.setInt(this.getDBid());
+            request.set();
+            this.website = website;
+            for (SharedApp sharedApp : this.getSharedApps())
+                ((WebsiteApp) sharedApp).setWebsite(website, db);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public JSONObject getJsonWithoutId() {
         JSONObject jsonObject = super.getJsonWithoutId();
         jsonObject.put("website_id", this.website.getDb_id());

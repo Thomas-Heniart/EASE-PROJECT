@@ -18,6 +18,7 @@ public class Regex {
             Pattern.compile("^(\\+|[0-9])(?:[0-9] ?){5,13}[0-9]$", Pattern.CASE_INSENSITIVE);
     public static final Pattern VALID_USERNAME = Pattern.compile("^[a-z0-9]{4,21}$", Pattern.CASE_INSENSITIVE);
     public static final Pattern VALID_SIMPLE_STRING = Pattern.compile("^[a-zA-Z0-9]{4,20}$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern VALID_ROOM_NAME = Pattern.compile("^[a-z]{1,21}$", Pattern.CASE_INSENSITIVE);
 
     public static boolean isEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
@@ -56,6 +57,11 @@ public class Regex {
 
     public static boolean isValidSimpleString(String s) {
         Matcher matcher = VALID_SIMPLE_STRING.matcher(s);
+        return matcher.find();
+    }
+
+    public static boolean isValidRoomName(String s) {
+        Matcher matcher = VALID_ROOM_NAME.matcher(s);
         return matcher.find();
     }
 }

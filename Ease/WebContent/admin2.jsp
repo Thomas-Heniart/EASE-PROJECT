@@ -44,5 +44,45 @@
 
     </tbody>
 </table>
+<div class="ui modal" id="website-integration">
+    <i class="close icon"></i>
+    <div class="header">Edit websites</div>
+    <div class="content">
+        <form action="/api/v1/admin/EditWebsite" class="ui form" id="website-edition">
+            <h4 class="ui dividing header">Basics</h4>
+            <div class="four fields">
+                <div class="field">
+                    <label>Name</label>
+                    <input name="name" placeholder="Name...">
+                </div>
+                <div class="field">
+                    <label>Login url</label>
+                    <input name="login_url" placeholder="Login url...">
+                </div>
+                <div class="field">
+                    <label>Landing url</label>
+                    <input name="landing_url" placeholder="Landing url...">
+                </div>
+                <div class="field">
+                    <label>Folder</label>
+                    <input name="folder" placeholder="Folder...">
+                </div>
+            </div>
+            <h4 class="ui dividing header">Integration</h4>
+            <div class="field">
+                <div id="integration" class="ui checkbox">
+                    <input name="integrate" type="checkbox" tabindex="0" class="hidden">
+                    <label>Integrate</label>
+                </div>
+            </div>
+            <button class="ui button">Edit</button>
+        </form>
+        <form class="ui form" method="POST" action="uploadWebsite" enctype="multipart/form-data">
+            <h4 class="ui dividing header"></h4>
+            <input type="file"/>
+        </form>
+    </div>
+
+</div>
 </body>
 </html>
