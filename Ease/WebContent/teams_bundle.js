@@ -6366,12 +6366,11 @@ exports.isUrl = isUrl;
 exports.checkTeamUsernameErrors = checkTeamUsernameErrors;
 var passwordRegexp = exports.passwordRegexp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/;
 var emailRegexp = exports.emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-var urlRegexp = exports.urlRegexp = /^(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})$/;
+var urlRegexp = exports.urlRegexp = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 var usernameRegexp = exports.usernameRegexp = /^[a-z0-9]{4,21}$/;
 
 function isUrl(url) {
-    var match = url.match(urlRegexp);
-    return match !== null;
+    return url.match(urlRegexp) !== null;
 }
 
 function checkTeamUsernameErrors(username) {
@@ -47752,6 +47751,7 @@ var TeamManageAppRequestModal = __webpack_require__(583);
 var TeamAcceptMultiAppModal = __webpack_require__(578);
 var TeamJoinMultiAppModal = __webpack_require__(581);
 var TeamSettingsModal = __webpack_require__(585);
+var TeamSettings = __webpack_require__(1142);
 var TeamTransferOwnershipModal = __webpack_require__(586);
 var TeamPhoneNumberModal = __webpack_require__(584);
 var RequestWebsiteModal = __webpack_require__(577);
@@ -47900,7 +47900,6 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
             'div',
             { className: 'client_main_container' },
             React.createElement(TeamHeader, {
-              dispatch: this.props.dispatch,
               item: selectedItem,
               match: this.props.match,
               appsLength: this.props.selectedItem.apps.length }),
@@ -47931,6 +47930,9 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
               )
             )
           ),
+          React.createElement(_reactRouterDom.Route, { path: this.props.match.url + '/settings', render: function render(props) {
+              return React.createElement(TeamSettings, _extends({ backLink: _this4.props.match.url }, props));
+            } }),
           this.props.addUserModalActive && React.createElement(TeamAddUserModal, { key: '1' }),
           this.props.addChannelModalActive && React.createElement(TeamAddChannelModal, null),
           this.props.teamChannelAddUserModal.active && React.createElement(TeamChannelAddUserModal, null),
@@ -51619,7 +51621,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
       var _this4 = this;
 
       (0, _teamModalActions.requestWebsite)(this.props.dispatch).then(function (website) {
-        _this4.chooseApp(website.id);
+        _this4.chooseApp(website);
       }).catch(function (err) {
         //do nothing :/
       });
@@ -53401,7 +53403,7 @@ var SimpleTeamAppAdd = function (_React$Component4) {
       var _this7 = this;
 
       (0, _teamModalActions.requestWebsite)(this.props.dispatch).then(function (website) {
-        _this7.chooseApp(website.id);
+        _this7.chooseApp(website);
       }).catch(function (err) {
         //do nothing :/
       });
@@ -55970,10 +55972,6 @@ module.exports = (0, _reactRouterDom.withRouter)(FlexPanels);
 
 var _reactRouterDom = __webpack_require__(32);
 
-var _teamModalActions = __webpack_require__(16);
-
-var _semanticUiReact = __webpack_require__(42);
-
 var React = __webpack_require__(1);
 var classnames = __webpack_require__(2);
 var TeamAddAppsButton = __webpack_require__(556);
@@ -56174,10 +56172,8 @@ var TeamMenu = function (_React$Component) {
                 'Invite new members'
               ),
               (0, _helperFunctions.isOwner)(me.role) && React.createElement(
-                'span',
-                { className: 'selectable', onClick: function onClick(e) {
-                    _this2.props.dispatch((0, _teamModalActions.showTeamSettingsModal)(true));_this2.hideIt();
-                  } },
+                _reactRouterDom.NavLink,
+                { to: this.props.match.url + '/settings', className: 'selectable' },
                 'Team settings'
               )
             )
@@ -59054,9 +59050,8 @@ var RequestWebsiteModal = (_dec = (0, _reactRedux.connect)(function (store) {
         _this2.props.modal.resolve(r);
         _this2.props.dispatch((0, _teamModalActions.showRequestWebsiteModal)(false));
       }).catch(function (err) {
-        _this2.setState({ errorMessage: err });
-      }).then(function () {
         _this2.setState({ loading: false });
+        _this2.setState({ errorMessage: err });
       });
     }
   }, {
@@ -110798,6 +110793,270 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1142 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = __webpack_require__(2);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _teamModalActions = __webpack_require__(16);
+
+var _teamActions = __webpack_require__(123);
+
+var _reactRedux = __webpack_require__(12);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TeamSettings = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    team: store.team
+  };
+}), _dec(_class = function (_React$Component) {
+  _inherits(TeamSettings, _React$Component);
+
+  function TeamSettings(props) {
+    _classCallCheck(this, TeamSettings);
+
+    var _this = _possibleConstructorReturn(this, (TeamSettings.__proto__ || Object.getPrototypeOf(TeamSettings)).call(this, props));
+
+    _this.state = {
+      teamName: '',
+      teamNameModifying: false
+    };
+    _this.setTeamNameModifying = _this.setTeamNameModifying.bind(_this);
+    _this.modifyTeamName = _this.modifyTeamName.bind(_this);
+    _this.handleInput = _this.handleInput.bind(_this);
+    _this.close = _this.close.bind(_this);
+    return _this;
+  }
+
+  _createClass(TeamSettings, [{
+    key: 'close',
+    value: function close() {
+      this.props.history.replace(this.props.backLink);
+    }
+  }, {
+    key: 'handleInput',
+    value: function handleInput(e) {
+      this.setState(_defineProperty({}, e.target.name, e.target.value));
+    }
+  }, {
+    key: 'setTeamNameModifying',
+    value: function setTeamNameModifying(state) {
+      if (state) {
+        this.setState({ teamName: this.props.team.name, teamNameModifying: state });
+      } else {
+        this.setState({ teamNameModifying: state });
+      }
+    }
+  }, {
+    key: 'modifyTeamName',
+    value: function modifyTeamName() {
+      var _this2 = this;
+
+      this.props.dispatch((0, _teamActions.editTeamName)(this.state.teamName)).then(function () {
+        _this2.setTeamNameModifying(false);
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'ease_modal', id: 'team_settings_modal' },
+        _react2.default.createElement('div', { className: 'modal-background' }),
+        _react2.default.createElement(
+          'a',
+          { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: this.close },
+          _react2.default.createElement('i', { className: 'ease_icon fa fa-times' }),
+          _react2.default.createElement(
+            'span',
+            { className: 'key_label' },
+            'close'
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'modal_contents_container' },
+          _react2.default.createElement(
+            'div',
+            { className: 'contents' },
+            _react2.default.createElement(
+              'div',
+              { className: 'content_row justify_content_center' },
+              _react2.default.createElement(
+                'h1',
+                null,
+                'Team settings'
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'content_row flex_direction_column' },
+              _react2.default.createElement(
+                'h3',
+                null,
+                'Team name'
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'display-flex sub' },
+                _react2.default.createElement(
+                  'span',
+                  { className: 'min_flex_shrink' },
+                  'Team name displayed for your team:\xA0'
+                ),
+                !this.state.teamNameModifying ? _react2.default.createElement(
+                  'div',
+                  { className: 'display-flex full_flex' },
+                  _react2.default.createElement(
+                    'strong',
+                    { className: 'full_flex' },
+                    this.props.team.name
+                  ),
+                  _react2.default.createElement(
+                    'button',
+                    { className: 'button-unstyle underlineOnHover edit-btn', onClick: this.setTeamNameModifying.bind(null, true) },
+                    _react2.default.createElement(
+                      'strong',
+                      null,
+                      'Edit'
+                    )
+                  )
+                ) : _react2.default.createElement(
+                  'div',
+                  { className: 'display-flex flex_direction_column full_flex' },
+                  _react2.default.createElement('input', { type: 'text',
+                    id: 'teamName',
+                    className: 'input_unstyle modal_input',
+                    name: 'teamName',
+                    value: this.state.teamName,
+                    placeholder: 'Team name...',
+                    onChange: this.handleInput }),
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'display-flex button-set' },
+                    _react2.default.createElement(
+                      'button',
+                      { className: 'button-unstyle neutral_background action_text_button',
+                        onClick: this.setTeamNameModifying.bind(null, false) },
+                      'Cancel'
+                    ),
+                    _react2.default.createElement(
+                      'button',
+                      { className: 'button-unstyle positive_background action_text_button',
+                        onClick: this.modifyTeamName },
+                      'Validate'
+                    )
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'content_row flex_direction_column' },
+                _react2.default.createElement(
+                  'h3',
+                  null,
+                  'Team plan'
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'display-flex sub' },
+                  _react2.default.createElement(
+                    'span',
+                    null,
+                    'You currently use the\xA0'
+                  ),
+                  _react2.default.createElement(
+                    'strong',
+                    { className: 'full_flex' },
+                    'Free version'
+                  ),
+                  _react2.default.createElement(
+                    'button',
+                    { className: 'button-unstyle underlineOnHover', style: { color: "#45C997" } },
+                    _react2.default.createElement(
+                      'strong',
+                      null,
+                      'Upgrade!'
+                    )
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'content_row flex_direction_column' },
+                _react2.default.createElement(
+                  'h3',
+                  null,
+                  'Billing address'
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'content_row flex_direction_column' },
+                _react2.default.createElement(
+                  'h3',
+                  null,
+                  'Credit card information'
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'content_row flex_direction_column' },
+                _react2.default.createElement(
+                  'h3',
+                  null,
+                  'Manage subscription'
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'sub' },
+                  _react2.default.createElement(
+                    'button',
+                    { className: 'button-unstyle underlineOnHover edit-btn', style: { color: "#E84855" } },
+                    _react2.default.createElement(
+                      'strong',
+                      null,
+                      'Unsubscribe'
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return TeamSettings;
+}(_react2.default.Component)) || _class);
+
+
+module.exports = TeamSettings;
 
 /***/ })
 /******/ ]);
