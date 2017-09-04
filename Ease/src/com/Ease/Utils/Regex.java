@@ -13,7 +13,7 @@ public class Regex {
     public static final Pattern VALID_URL_REGEX =
             Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", Pattern.CASE_INSENSITIVE);
     public static final Pattern URL_REGEX =
-            Pattern.compile("[-a-zA-Z0-9@:%_\\+.~#?&//=]{2,10}\\.[a-z]{2,}\\b(\\/[-a-zA-Z0-9@:%_\\+.~#?&//=]*)?");
+            Pattern.compile("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$");
     public static final Pattern VALID_PHONE_NUMBER =
             Pattern.compile("^(\\+|[0-9])(?:[0-9] ?){5,13}[0-9]$", Pattern.CASE_INSENSITIVE);
     public static final Pattern VALID_USERNAME = Pattern.compile("^[a-z0-9]{4,21}$", Pattern.CASE_INSENSITIVE);

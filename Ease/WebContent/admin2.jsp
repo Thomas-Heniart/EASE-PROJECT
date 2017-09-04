@@ -38,6 +38,7 @@
         <th><i class="fa fa-eye-slash"/></th>
         <th>Edit</th>
         <th><i class="fa fa-trash-o"/></th>
+        <th>Merge</th>
     </tr>
     </thead>
     <tbody id="website-manager-body">
@@ -82,7 +83,16 @@
             <input type="file"/>
         </form>
     </div>
+</div>
 
+<div class="ui modal" id="website-merging">
+    <div class="ui left icon input">
+        <input name="search" placeholder="Search users...">
+        <i class="users icon"></i>
+    </div>
+    <div class="ui list selection" id="website-search-result">
+
+    </div>
 </div>
 </body>
 </html>

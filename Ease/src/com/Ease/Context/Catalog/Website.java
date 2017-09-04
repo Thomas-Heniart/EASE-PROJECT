@@ -81,6 +81,29 @@ public class Website {
         this.websiteAttributes.setIntegrated(integrated, db);
     }
 
+    public void removeFromDb(DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            DatabaseRequest request = db.prepareRequest("DELETE FROM websitesAndGroupsMap WHERE website_id = ?;");
+            request.setInt(this.db_id);
+            request.set();
+            request = db.prepareRequest("DELETE FROM websitesLogWithMap WHERE website_id = ? OR website_logwith_id = ?;");
+            request.setInt(this.db_id);
+            request.setInt(this.db_id);
+            request.set();
+            request = db.prepareRequest("DELETE FROM websitesInformations WHERE website_id = ?;");
+            request.setInt(this.db_id);
+            request.set();
+            request = db.prepareRequest("DELETE FROM websites WHERE id = ?;");
+            request.setInt(this.db_id);
+            request.set();
+            this.websiteAttributes.removeFromDb(db);
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public enum WebsiteData {
         NOTHING,
         ID,

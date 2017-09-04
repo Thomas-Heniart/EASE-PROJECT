@@ -19,8 +19,9 @@ function addRow(website) {
         + '<td class="login_url">' + website.login_url + '</td>'
         + '<td class="landing_url">' + website.landing_url + '</td>'
         + '<td> <div class="ui checkbox public"><input type="checkbox"/><label></label></div></td>'
-        + '<td><i class="fa fa-pencil edit-website"/></td>'
+        + '<td><a href="#"><i class="fa fa-pencil edit-website"/></a></td>'
         + '<td> <div class="ui checkbox delete"><input type="checkbox"/><label></label></div></td>'
+        + '<td><a href="#" class="merge-website">Merge</a></td>'
         + '</tr>');
     if (!website.integrated)
         elem.addClass("negative");
@@ -87,4 +88,13 @@ function openWebsiteIntegration(website, websiteElem) {
         modal.modal("hide");
     });
     modal.modal("show");
+}
+
+function openWebsiteMerging(website, websiteElem) {
+
+}
+
+function addResult(website) {
+    var elem = $("<div class='item'>" +
+        "<img class='ui avatar image' src='" + website.logo + "'>")
 }

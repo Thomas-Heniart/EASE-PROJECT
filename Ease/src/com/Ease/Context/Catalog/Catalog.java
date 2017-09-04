@@ -2,9 +2,7 @@ package com.Ease.Context.Catalog;
 
 import com.Ease.Context.Group.Group;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 
 import javax.servlet.ServletContext;
@@ -318,7 +316,7 @@ public class Catalog {
             throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
         if (tag == null)
             throw new GeneralException(ServletManager.Code.ClientError, "This tag does not exist");
-        tag.removeWebsite(website, sm);
+        tag.removeWebsite(website, sm.getDB());
 
     }
 
@@ -431,5 +429,22 @@ public class Catalog {
         });
         newWebsites.addAll(oldWebsites);
         this.websites = newWebsites;
+    }
+
+    public void removeWebsite(Integer db_id, DataBaseConnection db) throws HttpServletException {
+        try {
+            Website website = this.getWebsiteWithId(db_id);
+            for (Tag tag : this.tags)
+                tag.removeWebsite(website, db);
+            for (Sso sso : this.ssos)
+                sso.removeWebsite(website, db);
+            for (Website website1 : websites)
+                website1.loginWithWebsites.remove(website);
+            website.removeFromDb(db);
+            this.websiteIdMap.remove(db_id);
+            this.websites.remove(website);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "This website doesn't exist.");
+        }
     }
 }

@@ -211,4 +211,14 @@ public class WebsiteAttributes {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
+
+    public void removeFromDb(DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("DELETE FROM websiteAttributes WHERE id = ?");
+            request.setInt(this.db_id);
+            request.set();
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
 }

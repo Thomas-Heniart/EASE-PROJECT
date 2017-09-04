@@ -164,11 +164,10 @@ public class Tag {
 		this.sites.add(website);
 		
 	}
-	
-	public void removeWebsite(Website website, ServletManager sm) throws GeneralException {
-		if (!this.sites.contains(website))
+
+    public void removeWebsite(Website website, DataBaseConnection db) throws GeneralException {
+        if (!this.sites.contains(website))
 			throw new GeneralException(ServletManager.Code.ClientWarning, "No such tag for this site");
-		DataBaseConnection db = sm.getDB();
 		DatabaseRequest request = db.prepareRequest("DELETE FROM tagsAndSitesMap WHERE tag_id = ? AND website_id = ?;");
 		request.setInt(db_id);
 		request.setInt(website.getDb_id());

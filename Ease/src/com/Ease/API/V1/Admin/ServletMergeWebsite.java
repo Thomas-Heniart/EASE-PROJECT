@@ -8,6 +8,7 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessage;
 import com.Ease.websocketV1.WebSocketMessageAction;
@@ -39,6 +40,7 @@ public class ServletMergeWebsite extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
             DataBaseConnection db = sm.getDB();
+            int transaction2 = db.startTransaction();
             for (Team team : teamManager.getTeams()) {
                 int transaction = db.startTransaction();
                 for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
@@ -58,7 +60,12 @@ public class ServletMergeWebsite extends HttpServlet {
                 team.getWebSocketManager().sendObjects(webSocketMessageList);
                 webSocketMessageList.clear();
             }
-
+            DatabaseRequest databaseRequest = db.prepareRequest("UPDATE websiteApps SET website_id = ? WHERE website_id = ?;");
+            databaseRequest.setInt(website.getDb_id());
+            databaseRequest.setInt(website_to_merge.getDb_id());
+            databaseRequest.set();
+            catalog.removeWebsite(website_to_merge.getDb_id(), db);
+            db.commitTransaction(transaction2);
             sm.setSuccess("Websites merged");
         } catch (Exception e) {
             sm.setError(e);
