@@ -27,7 +27,7 @@
     <script src="js/admin2.js"></script>
 </head>
 <body role="document" class="mainBody">
-<table class="ui celled table">
+<table class="ui compact small celled table">
     <thead>
     <tr>
         <th>id</th>
@@ -41,9 +41,7 @@
         <th>Merge</th>
     </tr>
     </thead>
-    <tbody id="website-manager-body">
-
-    </tbody>
+    <tbody id="website-manager-body"></tbody>
 </table>
 <div class="ui modal" id="website-integration">
     <i class="close icon"></i>

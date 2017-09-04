@@ -32,7 +32,7 @@ public class ServletMergeWebsite extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Integer id = sm.getIntParam("id", true);
+            Integer id = Integer.parseInt(sm.getStringParam("id", true));
             Integer id_to_merge = sm.getIntParam("id_to_merge", true);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id);

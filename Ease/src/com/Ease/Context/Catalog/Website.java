@@ -187,8 +187,7 @@ public class Website {
         return newWebsite;
     }
 
-    public static Website createWebsite(String url, WebsiteAttributes websiteAttributes, ServletContext context, DataBaseConnection db) throws HttpServletException {
-        String website_name = url.split("\\.")[1];
+    public static Website createWebsite(String url, String website_name, WebsiteAttributes websiteAttributes, ServletContext context, DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
             DatabaseRequest request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?);");
@@ -638,7 +637,17 @@ public class Website {
     }
 
     public String getHostname() {
-        return this.website_homepage.split("\\.")[1];
+        String[] urlParsed = this.website_homepage.split("\\.");
+        String host;
+        if (urlParsed.length == 3)
+            host = urlParsed[1];
+        else {
+            host = urlParsed[0];
+            if (host.startsWith("http")) {
+                host = host.split("//")[1];
+            }
+        }
+        return host;
     }
 
     public void turnOff(ServletManager sm) throws GeneralException {

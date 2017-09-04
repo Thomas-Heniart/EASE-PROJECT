@@ -40,9 +40,19 @@ public class ServletAskWebsite extends HttpServlet {
             int transaction = db.startTransaction();
             WebsiteAttributes websiteAttributes = WebsiteAttributes.createWebsiteAttributes(is_public, false, db);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            if (catalog.getWebsiteWithHost(url.split("\\.")[1]) != null)
+            String[] urlParsed = url.split("\\.");
+            String host;
+            if (urlParsed.length != 2)
+                host = urlParsed[1];
+            else {
+                host = urlParsed[0];
+                if (host.startsWith("http")) {
+                    host = host.split("//")[1];
+                }
+            }
+            if (catalog.getWebsiteWithHost(host) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This website already exists");
-            Website website = Website.createWebsite(url, websiteAttributes, sm.getServletContext(), db);
+            Website website = Website.createWebsite(url, host, websiteAttributes, sm.getServletContext(), db);
             catalog.addWebsite(website);
             db.commitTransaction(transaction);
             /* Decipher login and password */
