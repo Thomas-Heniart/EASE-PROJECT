@@ -2,12 +2,13 @@ var websites = [];
 
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
+    $(".ui.dropdown").dropdown();
     ajaxHandler.get("/api/v1/admin/GetWebsites", null, function () {
     }, function (data) {
         websites = data;
         websites.forEach(function (website) {
             addRow(website).appendTo($("#website-manager-body"));
-            addResult(website).appendTo($("#website-search-result"));
+            addResult(website).appendTo($("#website-merging .menu"));
         });
     });
 });
@@ -102,29 +103,28 @@ function openWebsiteIntegration(website, websiteElem) {
 
 function openWebsiteMerging(website, websiteElem) {
     var modal = $("#website-merging");
-    $(".item", modal).click(function () {
+    $(".form button", modal).click(function () {
         ajaxHandler.post("/api/v1/admin/MergeWebsite", {
-            id: $(this).attr("data-id"),
+            id: $("input[name='website_id']", modal).val(),
             id_to_merge: website.id
         }, function () {
         }, function () {
-            $(".item[data-id='" + website.id + "']").remove();
+            $(".item[data-value='" + website.id + "']").remove();
             websiteElem.remove();
             modal.modal("hide");
-            $(".item", modal).off("click");
         });
     });
     modal
         .modal({
             onHide: function () {
-                $(".item", modal).off("click");
+                $(".form button", modal).off("click");
             }
         })
         .modal("show");
 }
 
 function addResult(website) {
-    var elem = $("<div class='item' data-id='" + website.id + "'>" +
+    var elem = $("<div class='item' data-value='" + website.id + "'>" +
         "<img class='ui avatar image' src='" + website.logo + "' />" + website.name + "</div>");
     return elem;
 }

@@ -67,6 +67,15 @@
                     <input name="folder" placeholder="Folder...">
                 </div>
             </div>
+            <h4 class="ui dividing header">Complementary</h4>
+            <div class="two fields">
+                <div class="field">
+                    <label>sso</label>
+                    <select class="ui dropdown" id="website-sso">
+                        <option value="">Select sso...</option>
+                    </select>
+                </div>
+            </div>
             <h4 class="ui dividing header">Integration</h4>
             <div class="field">
                 <div id="integration" class="ui checkbox">
@@ -84,12 +93,20 @@
 </div>
 
 <div class="ui modal" id="website-merging">
-    <div class="ui left icon input">
-        <input name="search" placeholder="Search users...">
-        <i class="users icon"></i>
-    </div>
-    <div class="ui list selection" id="website-search-result">
-
+    <div class="header">Website merge</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="field">
+                <div class="ui fluid search selection dropdown">
+                    <input type="hidden" name="website_id"/>
+                    <i class="dropdown icon"></i>
+                    <input class="search" autocomplete="off" tabindex="0">
+                    <div class="default text">Select website to merge with...</div>
+                    <div class="menu"></div>
+                </div>
+            </div>
+            <button class="ui button">Merge</button>
+        </div>
     </div>
 </div>
 </body>
