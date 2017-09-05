@@ -56640,7 +56640,7 @@ var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
     key: 'processLogout',
     value: function processLogout() {
       this.props.dispatch((0, _commonActions.processLogout)()).then(function (response) {
-        window.location.href = "/#/login";
+        window.location.href = "/login";
         //      this.props.history.push('/login');
       });
     }
