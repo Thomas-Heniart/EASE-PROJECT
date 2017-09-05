@@ -1,8 +1,0 @@
-CREATE TABLE tagsAndGroupsMap (
-	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	tag_id INT(10) UNSIGNED NOT NULL,
-	group_id INT(10) UNSIGNED NOT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY (tag_id) REFERENCES tags(id),
-	FOREIGN KEY (group_id) REFERENCES groups(id)
-);
