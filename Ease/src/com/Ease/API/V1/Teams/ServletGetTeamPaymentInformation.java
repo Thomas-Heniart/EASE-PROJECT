@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 
-@WebServlet("/api/v1/teams/GetTeamPayment")
-public class ServletGetTeamPayment extends HttpServlet {
+@WebServlet("/api/v1/teams/GetTeamPaymentInformation")
+public class ServletGetTeamPaymentInformation extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -35,12 +35,15 @@ public class ServletGetTeamPayment extends HttpServlet {
             HashMap<String, Object> cardParams = new HashMap<>();
             cardParams.put("object", "card");
             JSONObject res = new JSONObject();
-
             Customer customer = Customer.retrieve(team.getCustomer_id());
             res.put("credit", (float) customer.getAccountBalance() / 100);
-            ExternalAccount externalAccount = customer.getSources().retrieve(customer.getDefaultSource());
-            JSONParser jsonParser = new JSONParser();
-            JSONObject card = (JSONObject) jsonParser.parse(externalAccount.toJson());
+            JSONObject card = null;
+            String default_source = customer.getDefaultSource();
+            if (default_source != null && !default_source.equals("")) {
+                ExternalAccount externalAccount = customer.getSources().retrieve(customer.getDefaultSource());
+                JSONParser jsonParser = new JSONParser();
+                card = (JSONObject) jsonParser.parse(externalAccount.toJson());
+            }
             res.put("invite_people", team.invite_people());
             res.put("valid_subscription", !team.isBlocked());
             res.put("card", card);
