@@ -554,6 +554,8 @@ public class Website {
             if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
                 return true;
         }
+        if (user.getEmail().endsWith("@iscparis.com") && (this.folder.contains("ISC") || this.folder.contains("isc") || this.name.contains("ISC") || this.name.contains("isc")))
+            return true;
         return (this.groupIds.isEmpty() && this.teamIds.isEmpty() && this.isPublic());
     }
 

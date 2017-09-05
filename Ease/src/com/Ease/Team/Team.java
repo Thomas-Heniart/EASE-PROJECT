@@ -79,6 +79,12 @@ public class Team {
     @Column(name = "subscription_id")
     protected String subscription_id;
 
+    @Column(name = "subscription_date")
+    protected Date subscription_date;
+
+    @Column(name = "card_entered")
+    protected boolean card_entered;
+
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
@@ -143,6 +149,22 @@ public class Team {
 
     public void setSubscription_id(String subscription_id) {
         this.subscription_id = subscription_id;
+    }
+
+    public boolean isCard_entered() {
+        return card_entered;
+    }
+
+    public void setCard_entered(boolean card_entered) {
+        this.card_entered = card_entered;
+    }
+
+    public Date getSubscription_date() {
+        return subscription_date;
+    }
+
+    public void setSubscription_date(Date subscription_date) {
+        this.subscription_date = subscription_date;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -416,7 +438,7 @@ public class Team {
     }
 
     public boolean isBlocked() {
-        return this.subscription_id == null;
+        return !card_entered && DateComparator.isOutdated(this.subscription_date, 30);
     }
 
     public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
