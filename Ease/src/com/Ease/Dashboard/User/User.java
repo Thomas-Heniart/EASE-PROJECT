@@ -639,7 +639,6 @@ public class User {
             teamObject.put("disabled", teamUser.isDisabled() || !teamUser.isVerified());
             teams.add(teamObject);
         }
-
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
         return res;

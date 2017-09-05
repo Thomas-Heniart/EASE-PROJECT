@@ -46,7 +46,6 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
             }
             res.put("business_vat_id", customer.getBusinessVatId());
             res.put("invite_people", team.invite_people());
-            res.put("valid_subscription", !team.isBlocked());
             res.put("card", card);
             sm.setSuccess(res);
         } catch (StripeException e) {

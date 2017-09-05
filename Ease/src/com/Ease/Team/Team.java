@@ -306,6 +306,7 @@ public class Team {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
+        res.put("valid_subscription", !this.isBlocked());
         return res;
     }
 
