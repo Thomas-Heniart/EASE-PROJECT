@@ -438,8 +438,10 @@ public class Catalog {
                 tag.removeWebsite(website, db);
             for (Sso sso : this.ssos)
                 sso.removeWebsite(website, db);
-            for (Website website1 : websites)
-                website1.loginWithWebsites.remove(website);
+            for (Website website1 : websites) {
+                if (website1.loginWithWebsites != null)
+                    website1.loginWithWebsites.remove(website);
+            }
             website.removeFromDb(db);
             this.websiteIdMap.remove(db_id);
             this.websites.remove(website);

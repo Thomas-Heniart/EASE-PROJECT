@@ -24,10 +24,12 @@ public class ServletAskWebsite extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String url = sm.getStringParam("url", false);
-            Boolean is_public = sm.getBooleanParam("is_public", false);
+            String url = sm.getStringParam("url", true);
+            Boolean is_public = sm.getBooleanParam("is_public", true);
             String login = sm.getStringParam("login", false);
             String password = sm.getStringParam("password", false);
+            Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeAdminOfTeam(team_id);
             if (url == null || url.equals("") || !Regex.isValidLink(url))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
             if (is_public == null)
@@ -40,9 +42,19 @@ public class ServletAskWebsite extends HttpServlet {
             int transaction = db.startTransaction();
             WebsiteAttributes websiteAttributes = WebsiteAttributes.createWebsiteAttributes(is_public, false, db);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            if (catalog.getWebsiteWithHost(url.split("\\.")[1]) != null)
+            String[] urlParsed = url.split("\\.");
+            String host;
+            if (urlParsed.length != 2)
+                host = urlParsed[1];
+            else {
+                host = urlParsed[0];
+                if (host.startsWith("http")) {
+                    host = host.split("//")[1];
+                }
+            }
+            if (catalog.getWebsiteWithHost(host) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This website already exists");
-            Website website = Website.createWebsite(url, websiteAttributes, sm.getServletContext(), db);
+            Website website = Website.createWebsite(team_id, url, host, websiteAttributes, sm.getServletContext(), db);
             catalog.addWebsite(website);
             db.commitTransaction(transaction);
             /* Decipher login and password */

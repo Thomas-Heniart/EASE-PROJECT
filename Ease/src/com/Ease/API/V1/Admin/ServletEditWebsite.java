@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Sso;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
@@ -13,6 +14,7 @@ import com.Ease.websocketV1.WebSocketMessage;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -36,6 +38,8 @@ public class ServletEditWebsite extends HttpServlet {
             String folder = sm.getStringParam("folder", true);
             String login_url = sm.getStringParam("login_url", true);
             String landing_url = sm.getStringParam("landing_url", true);
+            JSONArray teams = (JSONArray) sm.getParam("teams", false);
+            Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true));
             Boolean integrated = sm.getBooleanParam("integrated", true);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id);
@@ -46,6 +50,11 @@ public class ServletEditWebsite extends HttpServlet {
             website.setLoginUrl(login_url, db);
             website.setLandingUrl(landing_url, db);
             website.setIntegrated(integrated, db);
+            website.setTeams(teams, db);
+            Sso sso = null;
+            if (sso_id != -1)
+                sso = catalog.getSsoWithDbId(sso_id);
+            website.setSso(sso, db);
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
             if (website.isIntegrated()) {
                 TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
@@ -70,7 +79,6 @@ public class ServletEditWebsite extends HttpServlet {
             }
             db.commitTransaction(transaction);
             sm.setSuccess("Website edited");
-            /* @TODO websocket */
         } catch (Exception e) {
             sm.setError(e);
         }

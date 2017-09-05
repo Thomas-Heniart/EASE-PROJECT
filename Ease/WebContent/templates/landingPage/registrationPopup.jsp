@@ -22,8 +22,8 @@
                     <div class="infoText">
                         <p class="row-heading">
                             <fmt:message key="landing.signup-popup.page-3.digits-subtitle2"></fmt:message> <span
-                                id="digits-email"><fmt:message
-                                key="landing.signup-popup.page-3.digits-subtitle3"/> <a
+                                id="digits-email"><span style="font-weight: 100"><fmt:message
+                                key="landing.signup-popup.page-3.digits-subtitle3"/></span> <a
                                 href="#"><fmt:message
                                 key="landing.signup-popup.page-3.digits-subtitle4"/></a></span><span
                                 id="digits-email-sent" style="display: none"><fmt:message

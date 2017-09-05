@@ -2,11 +2,30 @@ var websites = [];
 
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
+    $(".ui.dropdown").dropdown();
+    ajaxHandler.get("/api/v1/admin/GetTeams", null, function () {
+
+    }, function (data) {
+        data.forEach(function (team) {
+            $("<div class='item' data-value='" + team.id + "'>" +
+                team.name + "</div>").appendTo($("#website-edition .teams .menu"));
+
+        });
+    });
+    ajaxHandler.get("/api/v1/admin/GetSso", null, function () {
+
+    }, function (data) {
+        data.forEach(function (sso) {
+            $("<div class='item' data-value='" + sso.id + "'>" +
+                sso.name + "</div>").appendTo($("#website-edition .sso .menu"));
+        });
+    });
     ajaxHandler.get("/api/v1/admin/GetWebsites", null, function () {
     }, function (data) {
         websites = data;
         websites.forEach(function (website) {
             addRow(website).appendTo($("#website-manager-body"));
+            addResult(website).appendTo($("#website-merging .menu"));
         });
     });
 });
@@ -39,6 +58,9 @@ function addRow(website) {
     $(".edit-website", elem).click(function () {
         openWebsiteIntegration(website, elem);
     });
+    $(".merge-website", elem).click(function () {
+        openWebsiteMerging(website, elem);
+    });
     return elem;
 }
 
@@ -58,17 +80,27 @@ function openWebsiteIntegration(website, websiteElem) {
         $("#integration", edit_website).addClass("checked");
         integrated.prop("checked", true);
     }
+    website.teams.forEach(function (team) {
+        $(".teams .item[data-value='" + team.id + "']", modal).click();
+    });
+    $(".sso .item[data-value='" + website.sso + "']", modal).click();
     edit_website.submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
         var action = $(this).attr("action");
+        var teams = [];
+        if ($("input[name='team_id']", modal).val() !== "")
+            teams = $("input[name='team_id']", modal).val().split(",").map(parseInt);
+        var sso_id = $("input[name='sso_id']", modal).val();
         ajaxHandler.post(action, {
             id: website.id,
             name: name.val(),
             landing_url: landing_url.val(),
             login_url: login_url.val(),
             folder: folder.val(),
-            integrated: integrated.is(":checked")
+            integrated: integrated.is(":checked"),
+            teams: teams,
+            sso_id: sso_id
         }, function () {
 
         }, function () {
@@ -77,8 +109,20 @@ function openWebsiteIntegration(website, websiteElem) {
             website.login_url = login_url.val();
             website.folder = folder.val();
             website.integrated = integrated.is(":checked");
+            teams = teams.map(function (id) {
+                var name = $(".teams .item[data-value='" + id + "']", modal).text();
+                return {
+                    id: id,
+                    name: name
+                };
+            });
+            if (sso_id !== "")
+                website.sso = parseInt(sso_id);
+            else
+                website.sso = -1;
+            website.teams = teams;
             if (!website.integrated)
-                websiteElem.addClass(negative);
+                websiteElem.addClass("negative");
             $(".name", websiteElem).text(website.name);
             $(".landing_url", websiteElem).text(website.landing_url);
             $(".login_url", websiteElem).text(website.login_url);
@@ -87,14 +131,45 @@ function openWebsiteIntegration(website, websiteElem) {
         edit_website.off("submit");
         modal.modal("hide");
     });
-    modal.modal("show");
+    modal
+        .modal({
+            onHide: function () {
+                edit_website.off("submit");
+                $("input[name='team_id']", modal).val("");
+                $("a.ui.label.transition", modal).remove();
+                $(".item.active")
+                    .removeClass("active")
+                    .removeClass("filtered");
+                $("input.search").val("");
+            }
+        })
+        .modal("show");
 }
 
 function openWebsiteMerging(website, websiteElem) {
-
+    var modal = $("#website-merging");
+    $(".form button", modal).click(function () {
+        ajaxHandler.post("/api/v1/admin/MergeWebsite", {
+            id: $("input[name='website_id']", modal).val(),
+            id_to_merge: website.id
+        }, function () {
+        }, function () {
+            $(".item[data-value='" + website.id + "']").remove();
+            websiteElem.remove();
+            modal.modal("hide");
+        });
+    });
+    modal
+        .modal({
+            onHide: function () {
+                $(".form button", modal).off("click");
+            }
+        })
+        .modal("show");
 }
 
 function addResult(website) {
-    var elem = $("<div class='item'>" +
-        "<img class='ui avatar image' src='" + website.logo + "'>")
+    var elem = $("<div class='item' data-value='" + website.id + "'>" +
+        "<img class='ui avatar image' src='" + website.logo + "' />" + website.name + "</div>");
+    return elem;
 }

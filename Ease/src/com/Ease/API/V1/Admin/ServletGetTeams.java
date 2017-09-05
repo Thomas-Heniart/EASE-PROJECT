@@ -1,8 +1,5 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Sso;
-import com.Ease.Context.Catalog.Website;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -17,36 +14,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/admin/GetWebsites")
-public class ServletGetWebsites extends HttpServlet {
+@WebServlet("/api/v1/admin/GetTeams")
+public class ServletGetTeams extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             JSONArray res = new JSONArray();
-            for (Website website : catalog.getWebsites()) {
+            for (Team team : teamManager.getTeams()) {
                 JSONObject tmp = new JSONObject();
-                tmp.put("id", website.getDb_id());
-                tmp.put("name", website.getName());
-                tmp.put("logo", website.getLogo());
-                tmp.put("folder", website.getDbFolder());
-                tmp.put("login_url", website.getUrl());
-                tmp.put("landing_url", website.getHomePageUrl());
-                tmp.put("public", website.isPublic());
-                tmp.put("integrated", website.isIntegrated());
-                JSONArray teams = new JSONArray();
-                for (String team_id : website.getTeam_ids()) {
-                    Team team = teamManager.getTeamWithId(Integer.valueOf(team_id));
-                    JSONObject teamObj = new JSONObject();
-                    teamObj.put("id", team.getDb_id());
-                    teamObj.put("name", team.getName());
-                    teams.add(teamObj);
-                }
-                tmp.put("teams", teams);
-                Sso sso = website.getSso();
-                tmp.put("sso", (sso == null) ? -1 : sso.getDbid());
+                tmp.put("id", team.getDb_id());
+                tmp.put("name", team.getName());
                 res.add(tmp);
             }
             sm.setSuccess(res);
