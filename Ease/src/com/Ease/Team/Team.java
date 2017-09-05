@@ -83,7 +83,10 @@ public class Team {
     protected Date subscription_date;
 
     @Column(name = "card_entered")
-    protected boolean card_entered;
+    protected boolean card_entered = false;
+
+    @Column(name = "invite_people")
+    protected boolean invite_people = false;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
@@ -165,6 +168,14 @@ public class Team {
 
     public void setSubscription_date(Date subscription_date) {
         this.subscription_date = subscription_date;
+    }
+
+    public boolean invite_people() {
+        return invite_people;
+    }
+
+    public void setInvite_people(boolean invite_people) {
+        this.invite_people = invite_people;
     }
 
     public List<TeamUser> getTeamUsers() {

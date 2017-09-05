@@ -105,6 +105,8 @@ public class ServletInvitePeople extends HttpServlet {
                 mailJetBuilder.sendEmail();
             }
             JSONObject res = new JSONObject();
+            teamUser.getTeam().setInvite_people(true);
+            hibernateQuery.saveOrUpdateObject(teamUser.getTeam());
             res.put("money", (float) money / 100);
             sm.setSuccess(res);
         } catch (Exception e) {
