@@ -9,13 +9,14 @@
 		#members {
 			text-align: center;
 			.memberDescription {
+				width: 180px !important;
 				position: relative;
-				width: 32%;
+				//width: 32%;
 				display: inline-block;
-				margin-bottom: 3vw;
+				//margin-bottom: 3vw;
 				.memberPhoto {
-					width: 45%;
-					margin:auto;
+					width: 100%;
+					//margin:auto;
 					img {
 						width: 100%;
 						border-radius: 3px;
@@ -24,19 +25,23 @@
 					}
 				}
 				.name {
-					font-size: 1.1vw;
-					margin-top: 0.5vw;
+					text-align: left;
+					font-family: Raleway, sans-serif;
+					font-size: 16px;
+					font-weight: bold;
+					margin-top: -10px;
 					margin-bottom: 0px;
-					a {
-						color: #373B60;
+					line-height: 1.19;
+					p {
+						color: #1b1c1d;
 					}
 				}
 				.post {
-					color: gray;
+					text-align: left;
+					color: #999999;
+					font-family: Lato, sans-serif;
 					letter-spacing: 1px;
-					font-weight: bolder;
-					font-size: 1vw;
-					text-transform: uppercase;
+					font-size: 13px;
 				}
 			}
 		}

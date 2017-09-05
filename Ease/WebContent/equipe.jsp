@@ -25,6 +25,7 @@ pageEncoding="UTF-8"%>
 
 	<link rel="manifest" href="manifest.json">
 
+
     <script src="/jsMinified.v00015/jquery1.12.4.js"></script>
     <script src="/jsMinified.v00015/bootstrap.js"></script>
     <script src="/jsMinified.v00015/basic-utils.js"></script>
@@ -32,6 +33,7 @@ pageEncoding="UTF-8"%>
     <script src="/jsMinified.v00015/postHandler.js"></script>
     <script src="/jsMinified.v00015/languageChooser.js"></script>
 
+	<link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/default_style.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/landingPage.css" />
@@ -81,129 +83,152 @@ pageEncoding="UTF-8"%>
 					<h2 class="section-heading">
 						<fmt:message key="team.title" />
 					</h2>
+					<p class="join-us"><a href="easespace.welcomekit.co"><u>Vous souhaitez nous rejoindre ?</u></a></p>
 				</div>
 			</div>
 			<div class="row">
-				<div id="members">
-					<div class="memberDescription">
+				<div id="members" class="ui cards">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/team/ben.png"/>
+							<img src="resources/team/ben.jpg"/>
 						</div>
-						<div class="name">
-							<a>Benjamin Prigent</a>
+						<div class="content">
+						<div class="header name">
+							<p>Benjamin Prigent</p>
 						</div>
 						<div class="post">
 							<p>CEO</p>
 						</div>
+						</div>
 					</div>
-					<div class="memberDescription">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
 							<img src="resources/team/lanive.png"/>
 						</div>
+						<div class="content">
 						<div class="name">
-							<a>Victor Nivet</a>
+							<p>Victor Nivet</p>
 						</div>
 						<div class="post">
-							<p>COO</p>
+							<p>CPO</p>
+						</div>
 						</div>
 					</div>
-					<div class="memberDescription">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
 							<img src="resources/team/Fefe.png"/>
 						</div>
+						<div class="content">
 						<div class="name">
-							<a>Félix Richard</a>
+							<p>Félix Richard</p>
 						</div>
 						<div class="post">
-							<p>Data security</p>
+							<p>Security Engineer</p>
+						</div>
 						</div>
 					</div>
-					<div class="memberDescription">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/team/Fifi.png"/>
+							<img src="resources/team/fifi.jpg"/>
 						</div>
+						<div class="content">
 						<div class="name">
-							<a>Sergii Fisun</a>
+							<p>Sergii Fisun</p>
 						</div>
 						<div class="post">
-							<p>Design</p>
+							<p>Front-end Developer</p>
+						</div>
 						</div>
 					</div>
-					<div class="memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/Pedro.png"/>
-						</div>
-						<div class="name">
-							<a>Pierre De Bruyne</a>
-						</div>
-						<div class="post">
-							<p>Infrastructure</p>
-						</div>
-					</div>
-					<div class="memberDescription">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
 							<img src="resources/team/Toto.png"/>
 						</div>
+						<div class="content">
 						<div class="name">
-							<a>Thomas Heniart</a>
+							<p>Thomas Heniart</p>
 						</div>
 						<div class="post">
-							<p>Back-end</p>
+							<p>Back-end Developer</p>
+						</div>
 						</div>
 					</div>
-					<div class="memberDescription">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/team/ines.png"/>
+							<img src="resources/team/victorien.jpg"/>
 						</div>
+						<div class="content">
 						<div class="name">
-							<a>Inès Yous</a>
+							<p>Victorien Caquant</p>
 						</div>
 						<div class="post">
-							<p>Care</p>
+							<p>Extension Developer</p>
+						</div>
 						</div>
 					</div>
-					<div class="memberDescription">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/team/alex.png"/>
+							<img src="resources/team/ethan.jpg"/>
 						</div>
+						<div class="content">
 						<div class="name">
-							<a>Alexandre Nicolau</a>
+							<p>Ethan Adjedj</p>
 						</div>
 						<div class="post">
-							<p>Marketing</p>
+							<p>Growth Hacker</p>
+						</div>
 						</div>
 					</div>
-					<div class="memberDescription">
+					<div class="card memberDescription">
 						<div class="memberPhoto">
-							<img src="resources/team/agathe.png"/>
+							<img src="resources/team/alice.jpg"/>
 						</div>
+						<div class="content">
 						<div class="name">
-							<a>Agathe Meslier</a>
-						</div>
-						<div class="post">
-							<p>Law</p>
-						</div>
-					</div>
-					<div class="memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/barthos.png"/>
-						</div>
-						<div class="name">
-							<a>Barthelemy Leveque</a>
-						</div>
-						<div class="post">
-							<p>Analyst</p>
-						</div>
-					</div>
-					<div class="memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/Adrien.png"/>
-						</div>
-						<div class="name">
-							<a>Adrien Guillen</a>
+							<p>Alice Zagury</p>
 						</div>
 						<div class="post">
 							<p>Advisor</p>
+						</div>
+						</div>
+					</div>
+					<div class="card memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/team/abraham.jpg"/>
+						</div>
+						<div class="content">
+						<div class="name">
+							<p>Abraham Thomas</p>
+						</div>
+						<div class="post">
+							<p>Advisor</p>
+						</div>
+						</div>
+					</div>
+					<div class="card memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/team/alex.png"/>
+						</div>
+						<div class="content">
+						<div class="name">
+							<p>Alexandre Nicolau</p>
+						</div>
+						<div class="post">
+							<p>Advisor</p>
+						</div>
+						</div>
+					</div>
+					<div class="card memberDescription">
+						<div class="memberPhoto">
+							<img src="resources/team/yves.jpg"/>
+						</div>
+						<div class="content">
+						<div class="name">
+							<p>Yves Delnatte</p>
+						</div>
+						<div class="post">
+							<p>Advisor</p>
+						</div>
 						</div>
 					</div>
 				</div>

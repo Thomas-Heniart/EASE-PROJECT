@@ -235,7 +235,9 @@ header .intro-text .intro-heading {
     }
     section h2.section-heading {
         color: #373B60;
-        font-size: 2vw;
+        font-size: 54px;
+        font-family: Raleway, sans-serif;
+        font-weight: bold;
         margin-top: 0;
         margin-bottom: 15px;
     }
@@ -768,6 +770,17 @@ header .intro-text .intro-heading {
                }
                .text-center {
                     text-align: center;
+               }
+               .join-us {
+                   font-family: MuseoSans, sans-serif;
+                   font-size: 18px;
+                   font-weight: 300;
+                   line-height: 3.3;
+                   margin-top: -40px;
+                   margin-bottom: 70px;
+                   a {
+                       color: #373b60;
+                   }
                }
                span {
                    font-weight: 700;
