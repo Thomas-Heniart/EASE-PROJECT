@@ -2,6 +2,9 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -24,9 +27,11 @@ public class ServletGetTeamPayment extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
-            sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
+            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
+            if (!teamUser.isTeamOwner())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
             HashMap<String, Object> cardParams = new HashMap<>();
             cardParams.put("object", "card");
             JSONObject res = new JSONObject();

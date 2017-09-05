@@ -33,7 +33,6 @@ public class ServletAddCreditCard extends HttpServlet {
             TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
             if (!teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
-            sm.needToBeOwnerOfTeam(team_id);
             String token = sm.getStringParam("token", false);
             Customer customer = Customer.retrieve(team.getCustomer_id());
             String default_source = customer.getDefaultSource();
