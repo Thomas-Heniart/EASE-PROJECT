@@ -275,10 +275,8 @@ public class Team {
     }
 
     public JSONObject getJson() throws HttpServletException {
-        JSONObject res = new JSONObject();
-        res.put("name", this.name);
-        res.put("id", this.db_id);
-        JSONArray channels = new JSONArray();
+        JSONObject res = this.getSimpleJson();
+        /* JSONArray channels = new JSONArray();
         for (Channel channel : this.getChannels())
             channels.add(channel.getJson());
         res.put("channels", channels);
@@ -289,7 +287,7 @@ public class Team {
         JSONArray shareableApps = new JSONArray();
         for (ShareableApp shareableApp : this.getAppManager().getShareableApps())
             shareableApps.add(shareableApp.getShareableJson());
-        res.put("shareableApps", shareableApps);
+        res.put("shareableApps", shareableApps); */
         return res;
     }
 
