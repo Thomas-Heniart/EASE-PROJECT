@@ -43,3 +43,22 @@ $(document).ready(function(){
 			);
 	});
 });
+
+function logoutFromAllApps(){
+  var event = new CustomEvent("Logout");
+  document.dispatchEvent(event);
+  postHandler.post(
+      'Logout',
+      {},
+      function(){},
+      function(retMsg){
+        easeTracker.trackEvent('AllAppsLogout');
+        easeTracker.logout();
+        window.location = "/";
+      },
+      function(retMsg){
+        console.log(retMsg);
+      },
+      'text'
+  );
+}

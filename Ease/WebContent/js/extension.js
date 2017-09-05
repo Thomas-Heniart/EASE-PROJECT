@@ -75,7 +75,6 @@ function sendEvent(obj) {
                     event = new CustomEvent("Test", json);
                     document.dispatchEvent(event);
                 }, function (retMsg) {
-                    showAlertPopup(retMsg, true);
                 }, 'text');
             }
         }
