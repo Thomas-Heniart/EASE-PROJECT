@@ -38,7 +38,8 @@ public class ServletGetTeamPayment extends HttpServlet {
                 JSONObject tmp = (JSONObject) jsonParser.parse(externalAccount.toJson());
                 cards.add(tmp);
             }
-            res.put("valid_susbcription", !team.isBlocked());
+            res.put("invite_people", team.invite_people());
+            res.put("valid_subscription", !team.isBlocked());
             res.put("cards", cards);
             //team.get
             sm.setSuccess(res);
