@@ -3,9 +3,9 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.ExternalAccount;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -30,19 +30,18 @@ public class ServletGetTeamPayment extends HttpServlet {
             HashMap<String, Object> cardParams = new HashMap<>();
             cardParams.put("object", "card");
             JSONObject res = new JSONObject();
-            JSONParser jsonParser = new JSONParser();
-            JSONArray cards = new JSONArray();
+
             Customer customer = Customer.retrieve(team.getCustomer_id());
             res.put("credit", (float) customer.getAccountBalance() / 100);
-            for (ExternalAccount externalAccount : customer.getSources().list(cardParams).getData()) {
-                JSONObject tmp = (JSONObject) jsonParser.parse(externalAccount.toJson());
-                cards.add(tmp);
-            }
+            ExternalAccount externalAccount = customer.getSources().retrieve(customer.getDefaultSource());
+            JSONParser jsonParser = new JSONParser();
+            JSONObject card = (JSONObject) jsonParser.parse(externalAccount.toJson());
             res.put("invite_people", team.invite_people());
             res.put("valid_subscription", !team.isBlocked());
-            res.put("cards", cards);
-            //team.get
+            res.put("card", card);
             sm.setSuccess(res);
+        } catch (StripeException e) {
+            sm.setError(e);
         } catch (Exception e) {
             sm.setError(e);
         }

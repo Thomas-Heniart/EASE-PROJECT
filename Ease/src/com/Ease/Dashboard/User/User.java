@@ -621,12 +621,12 @@ public class User {
         }
     }
 
-    public TeamUser getTeamUserForTeam(Team team) throws GeneralException {
+    public TeamUser getTeamUserForTeam(Team team) throws HttpServletException {
         for (TeamUser teamUser : this.getTeamUsers()) {
             if (teamUser.getTeam() == team)
                 return teamUser;
         }
-        throw new GeneralException(ServletManager.Code.ClientError, "Internal problem");
+        throw new HttpServletException(HttpStatus.BadRequest, "You are not in this team");
     }
 
     public JSONObject getJson() {
