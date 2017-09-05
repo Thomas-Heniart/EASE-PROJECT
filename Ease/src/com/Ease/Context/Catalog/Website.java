@@ -21,89 +21,6 @@ import java.util.Map;
 
 public class Website {
 
-    public void setName(String name, DataBaseConnection db) throws HttpServletException {
-        if (this.name.equals(name))
-            return;
-        try {
-            DatabaseRequest request = db.prepareRequest("UPDATE websites SET website_name = ? WHERE id = ?;");
-            request.setString(name);
-            request.setInt(this.db_id);
-            request.set();
-            this.name = name;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public void setLandingUrl(String landing_url, DataBaseConnection db) throws HttpServletException {
-        if (this.website_homepage.equals(landing_url))
-            return;
-        try {
-            DatabaseRequest request = db.prepareRequest("UPDATE websites SET website_homepage = ? WHERE id = ?;");
-            request.setString(landing_url);
-            request.setInt(this.db_id);
-            request.set();
-            this.website_homepage = landing_url;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public void setLoginUrl(String login_url, DataBaseConnection db) throws HttpServletException {
-        if (this.loginUrl.equals(login_url))
-            return;
-        try {
-            DatabaseRequest request = db.prepareRequest("UPDATE websites SET login_url = ? WHERE id = ?;");
-            request.setString(login_url);
-            request.setInt(this.db_id);
-            request.set();
-            this.loginUrl = login_url;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public void setFolder(String folder, DataBaseConnection db) throws HttpServletException {
-        if (this.folder.equals(folder))
-            return;
-        try {
-            DatabaseRequest request = db.prepareRequest("UPDATE websites SET folder = ? WHERE id = ?;");
-            request.setString(folder);
-            request.setInt(this.db_id);
-            request.set();
-            this.folder = folder;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public void setIntegrated(Boolean integrated, DataBaseConnection db) throws HttpServletException {
-        this.websiteAttributes.setIntegrated(integrated, db);
-    }
-
-    public void removeFromDb(DataBaseConnection db) throws HttpServletException {
-        try {
-            int transaction = db.startTransaction();
-            DatabaseRequest request = db.prepareRequest("DELETE FROM websitesAndGroupsMap WHERE website_id = ?;");
-            request.setInt(this.db_id);
-            request.set();
-            request = db.prepareRequest("DELETE FROM websitesLogWithMap WHERE website_id = ? OR website_logwith_id = ?;");
-            request.setInt(this.db_id);
-            request.setInt(this.db_id);
-            request.set();
-            request = db.prepareRequest("DELETE FROM websitesInformations WHERE website_id = ?;");
-            request.setInt(this.db_id);
-            request.set();
-            request = db.prepareRequest("DELETE FROM websites WHERE id = ?;");
-            request.setInt(this.db_id);
-            request.set();
-            this.websiteAttributes.removeFromDb(db);
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
     public enum WebsiteData {
         NOTHING,
         ID,
@@ -182,12 +99,13 @@ public class Website {
             request = db.prepareRequest("INSERT INTO teamAndWebsiteMap values (null, ?, ?);");
             request.setInt(team_id);
             request.setInt(newWebsite.getDb_id());
+            request.set();
             newWebsite.addTeamId(team_id);
         }
         return newWebsite;
     }
 
-    public static Website createWebsite(String url, String website_name, WebsiteAttributes websiteAttributes, ServletContext context, DataBaseConnection db) throws HttpServletException {
+    public static Website createWebsite(Integer team_id, String url, String website_name, WebsiteAttributes websiteAttributes, ServletContext context, DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
             DatabaseRequest request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?);");
@@ -208,6 +126,13 @@ public class Website {
             WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) context.getAttribute("websitesVisitedManager");
             int visits = websitesVisitedManager.websiteDone(newWebsite.getHostname(), db);
             websiteAttributes.setVisits(visits, db);
+            if (team_id != null) {
+                request = db.prepareRequest("INSERT INTO teamAndWebsiteMap values (null, ?, ?);");
+                request.setInt(team_id);
+                request.setInt(newWebsite.getDb_id());
+                request.set();
+                newWebsite.addTeamId(String.valueOf(team_id));
+            }
             return newWebsite;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
@@ -712,5 +637,127 @@ public class Website {
             information.put(websiteInformation.getInformationName(), websiteInformation.getInformationJson());
         res.put("information", information);
         return res;
+    }
+
+    public void setName(String name, DataBaseConnection db) throws HttpServletException {
+        if (this.name.equals(name))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET website_name = ? WHERE id = ?;");
+            request.setString(name);
+            request.setInt(this.db_id);
+            request.set();
+            this.name = name;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setLandingUrl(String landing_url, DataBaseConnection db) throws HttpServletException {
+        if (this.website_homepage.equals(landing_url))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET website_homepage = ? WHERE id = ?;");
+            request.setString(landing_url);
+            request.setInt(this.db_id);
+            request.set();
+            this.website_homepage = landing_url;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setLoginUrl(String login_url, DataBaseConnection db) throws HttpServletException {
+        if (this.loginUrl.equals(login_url))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET login_url = ? WHERE id = ?;");
+            request.setString(login_url);
+            request.setInt(this.db_id);
+            request.set();
+            this.loginUrl = login_url;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setFolder(String folder, DataBaseConnection db) throws HttpServletException {
+        if (this.folder.equals(folder))
+            return;
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET folder = ? WHERE id = ?;");
+            request.setString(folder);
+            request.setInt(this.db_id);
+            request.set();
+            this.folder = folder;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setIntegrated(Boolean integrated, DataBaseConnection db) throws HttpServletException {
+        this.websiteAttributes.setIntegrated(integrated, db);
+    }
+
+    public void setTeams(JSONArray teams, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("DELETE FROM teamAndWebsiteMap WHERE website_id = ?;");
+            request.setInt(this.getDb_id());
+            request.set();
+            this.teamIds.clear();
+            for (Object team_id : teams) {
+                String team_id_s = String.valueOf(team_id);
+                request = db.prepareRequest("INSERT INTO teamAndWebsiteMap values (null, ?, ?);");
+                request.setInt(team_id_s);
+                request.setInt(this.getDb_id());
+                request.set();
+                this.addTeamId(team_id_s);
+            }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public void setSso(Sso sso, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET sso = ? WHERE id = ?");
+            if (sso == null)
+                request.setNull();
+            else
+                request.setInt(sso.getDbid());
+            request.setInt(this.db_id);
+            request.set();
+            this.sso = sso;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+
+    }
+
+    public void removeFromDb(DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            DatabaseRequest request = db.prepareRequest("DELETE FROM websitesAndGroupsMap WHERE website_id = ?;");
+            request.setInt(this.db_id);
+            request.set();
+            request = db.prepareRequest("DELETE FROM websitesLogWithMap WHERE website_id = ? OR website_logwith_id = ?;");
+            request.setInt(this.db_id);
+            request.setInt(this.db_id);
+            request.set();
+            request = db.prepareRequest("DELETE FROM websitesInformations WHERE website_id = ?;");
+            request.setInt(this.db_id);
+            request.set();
+            request = db.prepareRequest("DELETE FROM websites WHERE id = ?;");
+            request.setInt(this.db_id);
+            request.set();
+            this.websiteAttributes.removeFromDb(db);
+            db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public List<String> getTeam_ids() {
+        return this.teamIds;
     }
 }

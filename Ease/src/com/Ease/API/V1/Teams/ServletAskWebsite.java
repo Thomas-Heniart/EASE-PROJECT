@@ -24,10 +24,12 @@ public class ServletAskWebsite extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String url = sm.getStringParam("url", false);
-            Boolean is_public = sm.getBooleanParam("is_public", false);
+            String url = sm.getStringParam("url", true);
+            Boolean is_public = sm.getBooleanParam("is_public", true);
             String login = sm.getStringParam("login", false);
             String password = sm.getStringParam("password", false);
+            Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeAdminOfTeam(team_id);
             if (url == null || url.equals("") || !Regex.isValidLink(url))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
             if (is_public == null)
@@ -52,7 +54,7 @@ public class ServletAskWebsite extends HttpServlet {
             }
             if (catalog.getWebsiteWithHost(host) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This website already exists");
-            Website website = Website.createWebsite(url, host, websiteAttributes, sm.getServletContext(), db);
+            Website website = Website.createWebsite(team_id, url, host, websiteAttributes, sm.getServletContext(), db);
             catalog.addWebsite(website);
             db.commitTransaction(transaction);
             /* Decipher login and password */

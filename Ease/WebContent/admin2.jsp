@@ -70,10 +70,24 @@
             <h4 class="ui dividing header">Complementary</h4>
             <div class="two fields">
                 <div class="field">
-                    <label>sso</label>
-                    <select class="ui dropdown" id="website-sso">
-                        <option value="">Select sso...</option>
-                    </select>
+                    <div class="ui fluid search selection dropdown sso">
+                        <input type="hidden" name="sso_id"/>
+                        <i class="dropdown icon"></i>
+                        <input class="search" autocomplete="off" tabindex="0">
+                        <div class="default text">Select sso...</div>
+                        <div class="menu">
+                            <div class="item" data-value="-1">No sso</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui fluid multiple search selection dropdown teams">
+                        <input type="hidden" name="team_id"/>
+                        <i class="dropdown icon"></i>
+                        <input class="search" autocomplete="off" tabindex="0">
+                        <div class="default text">Select team...</div>
+                        <div class="menu"></div>
+                    </div>
                 </div>
             </div>
             <h4 class="ui dividing header">Integration</h4>
@@ -87,7 +101,14 @@
         </form>
         <form class="ui form" method="POST" action="uploadWebsite" enctype="multipart/form-data">
             <h4 class="ui dividing header"></h4>
-            <input type="file"/>
+            <div class="filed">
+                <label>Connection file</label>
+                <input type="file"/>
+            </div>
+            <div class="field">
+                <label>Logo</label>
+                <input type="file"/>
+            </div>
         </form>
     </div>
 </div>
