@@ -33,10 +33,15 @@ public class GetServletManager extends ServletManager {
         return param;
     }
 
-    public Integer getIntParam(String paramName, boolean saveInLogs) {
+    public Integer getIntParam(String paramName, boolean saveInLogs) throws HttpServletException {
         String param = this.getParam(paramName, saveInLogs);
         if (param == null)
             return null;
-        return Integer.valueOf(param);
+        try {
+            return Integer.valueOf(param);
+        } catch (NumberFormatException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "Expected number for param " + paramName + ".");
+        }
+
     }
 }

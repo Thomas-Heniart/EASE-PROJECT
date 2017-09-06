@@ -506,6 +506,10 @@ public class User {
     }
 
     public boolean canSeeTag(Tag tag) {
+        if (this.isAdmin())
+            return true;
+        if (tag.getName().equals("ISC Paris") && this.email.endsWith("@iscparis.com"))
+            return true;
         for (Group group : this.groups) {
             if (tag.containsGroupId(group.getDBid()))
                 return true;
@@ -598,7 +602,7 @@ public class User {
 
     public void loadTeamUsers(ServletContext context) throws HttpServletException, GeneralException {
         HibernateQuery query = new HibernateQuery();
-        query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
+        query.querySQLString("SELECT teamUsers.id, team_id FROM teamUsers JOIN teams ON teamUsers.team_id = teams.id WHERE user_id = ? AND teams.active = 1");
         query.setParameter(1, Integer.parseInt(this.db_id));
         List<Object[]> teamUsers = query.list();
         query.commit();

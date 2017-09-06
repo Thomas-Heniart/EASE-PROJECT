@@ -32,7 +32,7 @@ public class Team {
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         //query.querySQLString("SELECT id FROM teams");
-        query.queryString("SELECT t FROM Team t");
+        query.queryString("SELECT t FROM Team t WHERE t.active = true");
         List<Team> teams = new LinkedList<>();
         teams = query.list();
         /* for (Object team_id : query.list()) {
@@ -87,6 +87,9 @@ public class Team {
 
     @Column(name = "invite_people")
     protected boolean invite_people = false;
+
+    @Column(name = "active")
+    protected boolean active = true;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
@@ -176,6 +179,14 @@ public class Team {
 
     public void setInvite_people(boolean invite_people) {
         this.invite_people = invite_people;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -275,20 +286,7 @@ public class Team {
     }
 
     public JSONObject getJson() throws HttpServletException {
-        JSONObject res = this.getSimpleJson();
-        /* JSONArray channels = new JSONArray();
-        for (Channel channel : this.getChannels())
-            channels.add(channel.getJson());
-        res.put("channels", channels);
-        JSONArray teamUsers = new JSONArray();
-        for (TeamUser teamUser : this.getTeamUsers())
-            teamUsers.add(teamUser.getJson());
-        res.put("teamUsers", teamUsers);
-        JSONArray shareableApps = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps())
-            shareableApps.add(shareableApp.getShareableJson());
-        res.put("shareableApps", shareableApps); */
-        return res;
+        return this.getSimpleJson();
     }
 
     public Map<String, String> getAdministratorsUsernameAndEmail() {
@@ -448,7 +446,7 @@ public class Team {
     }
 
     public boolean isBlocked() {
-        return !card_entered && DateComparator.isOutdated(this.subscription_date, 30);
+        return (this.subscription_date == null) || (!card_entered && DateComparator.isOutdated(this.subscription_date, 30));
     }
 
     public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {

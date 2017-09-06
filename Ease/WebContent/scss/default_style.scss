@@ -120,6 +120,16 @@ input[type=number]::-webkit-inner-spin-button {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
 }
 
+.ui.menu {
+  min-width: inherit;
+  overflow: inherit;
+  position: inherit;
+}
+
+.ui.checkbox.mini {
+  font-size: inherit;
+}
+
 [type="submit"]{
   -webkit-appearance: inherit;
 }
@@ -202,6 +212,14 @@ button, input, optgroup, select, textarea {
   &:first-child {
     border-top: none;
   }
+}
+
+.ui.dropdown .menu {
+  z-index: 100;
+}
+
+.ui.form:last-child {
+  margin-bottom: 0;
 }
 
 #app-root {

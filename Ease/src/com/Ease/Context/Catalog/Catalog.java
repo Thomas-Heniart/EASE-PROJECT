@@ -168,7 +168,17 @@ public class Catalog {
     }
 
     public List<Tag> getTags() {
-        return this.tags;
+        List<Tag> res = new LinkedList<>();
+        Tag iscTag = null;
+        for (Tag tag : this.tags) {
+            if (tag.getName().equals("ISC Paris"))
+                iscTag = tag;
+            else
+                res.add(tag);
+        }
+        if (iscTag != null)
+            res.add(0, iscTag);
+        return res;
     }
 
 	/*public List<Tag> getTagsAlphabetically() {

@@ -49,7 +49,7 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
             if (business_vat_id == null)
                 business_vat_id = "";
             res.put("business_vat_id", business_vat_id);
-            res.put("invite_people", team.invite_people());
+            res.put("people_invited", team.invite_people());
             res.put("card", card);
             sm.setSuccess(res);
         } catch (StripeException e) {

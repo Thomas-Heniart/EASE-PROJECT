@@ -43,7 +43,7 @@ function refreshCatalogContent(data) {
 function updateCatalogWith(searchVal, tags) {
 	
 	var ids = [];
-	var tagNames = ""
+	var tagNames = "";
 	tags.each(function(index, tag) {
 		ids.push($(tag).attr("tagid"));
 		tagNames += $(tag).text();
@@ -339,7 +339,7 @@ var Catalog = function(rootEl){
 				retVal.push(self.apps[i]);
 		}
 		return retVal;
-	}
+	};
 	this.addApp = function(app){
 		self.apps.push(app);
 		self.appsArea.append(app.qRoot);
@@ -398,7 +398,7 @@ var Catalog = function(rootEl){
 		return apps;
 	};
 	//this.oUpdate.test();
-}
+};
 
 $(document).ready(function(){
 	catalog = new Catalog($('.CatalogViewTab'));

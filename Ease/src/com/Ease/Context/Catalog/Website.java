@@ -556,6 +556,8 @@ public class Website {
         }
         if (user.getEmail().endsWith("@iscparis.com") && (this.folder.contains("ISC") || this.folder.contains("isc") || this.name.contains("ISC") || this.name.contains("isc")))
             return true;
+        if (this.folder.contains("ISC") || this.folder.contains("isc") || this.name.contains("ISC") || this.name.contains("isc"))
+            return false;
         return (this.groupIds.isEmpty() && this.teamIds.isEmpty() && this.isPublic());
     }
 

@@ -56,86 +56,86 @@
         <div class="navbar-header page-scroll">
             <a class="navbar-brand page-scroll" href="/"><img src="resources/landing/ease-white-logo.svg"/></a>
         </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="hidden">
-                    <a href="#page-top"></a>
-                </li>
-                <li>
-                    <a href="/security">
-                        <fmt:message key="landing.header.security-link"/>
-                    </a>
-                </li>
-                <li>
-                    <a href="/pricing">
-                        <fmt:message key="landing.header.price-link"/>
-                    </a>
-                </li>
-                <li>
-                    <a href="/contact">
-                        <fmt:message key="landing.header.contact-link"/>
-                    </a>
-                </li>
-                <li>
-                    <a href="/?skipLanding=true" id="connexionButton">
-                        <fmt:message key="landing.header.connexion-link"/>
-                    </a>
-                </li>
-                <li>
-                    <%@ include file="templates/LanguageChooser.jsp" %>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<header>
-    <div class="container">
-        <div class="intro-text">
-            <div class="intro-heading">
-                <fmt:message key="landing.title"/>
-            </div>
-            <div class="intro-lead-in">
-                <fmt:message key="landing.sub-title"/>
-            </div>
-            <a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
-                <fmt:message key="landing.signup-button.text"/>
-            </a>
-        </div>
-    </div>
-</header>
-<section id="productPresentation">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    <fmt:message key="landing.section-presentation.title"/>
-                </h2>
-                <h3 class="section-subheading text-muted">
-                    <fmt:message key="landing.section-presentation.sub-title"/>
-                </h3>
-            </div>
-        </div>
-        <div class="mockupPresentation">
-            <video width="100%" height="auto" controls="noshow">
-                <source src="resources/videos/discover.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-    </div>
-</section>
-<section id="avantages">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    <fmt:message key="landing.section-avantages.title"/>
-                </h2>
-                <h3 class="section-subheading text-muted">
-                    <fmt:message key="landing.section-avantages.sub-title"/>
-                </h3>
-            </div>
-        </div>
-        <div class="row w70 showcase">
+	        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="hidden">
+						<a href="#page-top"></a>
+					</li>
+					<li>
+						<a href="/security">
+							<fmt:message key="landing.header.security-link" />
+						</a>
+					</li>
+					<li>
+						<a href="/pricing">
+							<fmt:message key="landing.header.price-link" />
+						</a>
+					</li>
+					<li>
+						<a href="/contact">
+							<fmt:message key="landing.header.contact-link" />
+						</a>
+					</li>
+					<li>
+						<a href="/?skipLanding=true" id="connexionButton">
+							<fmt:message key="landing.header.connexion-link" />
+						</a>
+					</li>
+					<li>
+						<%@ include file="templates/LanguageChooser.jsp" %>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<header>
+		<div class="container">
+			<div class="intro-text">
+				<div class="intro-heading">
+					<fmt:message key="landing.title" />
+				</div>
+				<div class="intro-lead-in">
+					<fmt:message key="landing.sub-title" />
+				</div>
+				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
+					<fmt:message key="landing.signup-button.text" />
+				</a>
+			</div>
+		</div>
+	</header>
+	<section id="productPresentation">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<h2 class="section-heading">
+						<fmt:message key="landing.section-presentation.title" />
+					</h2>
+					<h3 class="section-subheading text-muted">
+						<fmt:message key="landing.section-presentation.sub-title" />
+					</h3>
+				</div>
+			</div>
+			<div class="mockupPresentation">
+				<video width="100%" height="auto" controls="noshow">
+					<source src="resources/videos/discover.mp4" type="video/mp4">
+						Your browser does not support the video tag.
+					</video>
+				</div>
+			</div>
+		</section>
+		<section id="avantages">
+			<div class=	"container">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<h2 class="section-heading">
+							<fmt:message key="landing.section-avantages.title" />
+						</h2>
+						<h3 class="section-subheading text-muted">
+							<fmt:message key="landing.section-avantages.sub-title" />
+						</h3>
+					</div>
+				</div>
+				<div class="row w70 showcase">
 					<span class="fa-stack fa-lg">
 						<i class="fa fa-circle-thin fa-stack-2x"></i>
 						<i class="fa fa-magic fa-stack-1x"></i>
@@ -388,15 +388,15 @@
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
 <%@ include file="templates/landingPage/registrationPopup.jsp" %>
-<script src="/jsMinified.v00015/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00015/jquery.complexify.js"></script>
-<script src="/jsMinified.v00015/bootstrap.js" async></script>
-<script src="/jsMinified.v00015/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00015/registrationPopup.js" async></script>
-<script src="/jsMinified.v00015/landingPage.js" async></script>
-<script src="/jsMinified.v00015/basic-utils.js" async></script>
-<script src="/jsMinified.v00015/languageChooser.js" async></script>
-<script src="/jsMinified.v00015/tracker.js" async></script>
+<script src="/jsMinified.v00016/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00016/jquery.complexify.js"></script>
+<script src="/jsMinified.v00016/bootstrap.js" async></script>
+<script src="/jsMinified.v00016/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00016/registrationPopup.js" async></script>
+<script src="/jsMinified.v00016/landingPage.js" async></script>
+<script src="/jsMinified.v00016/basic-utils.js" async></script>
+<script src="/jsMinified.v00016/languageChooser.js" async></script>
+<script src="/jsMinified.v00016/tracker.js" async></script>
 <script type="text/javascript">
     window.addEventListener('load', function () {
         /* if ($('#2').find("input[name='email']").val().length) {
@@ -415,7 +415,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00015/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00016/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();
@@ -428,7 +428,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00015/amplitude-analytics.js";
+            r.src = "/jsMinified.v00016/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };

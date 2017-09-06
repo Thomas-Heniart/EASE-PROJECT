@@ -245,5 +245,7 @@ ALTER TABLE websiteAttributes ADD COLUMN `integrated` TINYINT(1) NOT NULL DEFAUL
 
 UPDATE websites SET website_name =  "JobTeaser Ieseg" WHERE folder = "IesegJobTeaser";
 
-ALTER TABLE teams ADD COLUMN subscription_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE teams ADD COLUMN subscription_date DATETIME;
 ALTER TABLE teams ADD COLUMN card_entered TINYINT(1) NOT NULL DEFAULT 0;
+ALTER TABLE teams ADD COLUMN invite_people TINYINT(1) NOT NULL DEFAULT 0;
+ALTER TABLE teams ADD COLUMN active TINYINT(1) NOT NULL DEFAULT 1;

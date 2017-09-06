@@ -53,17 +53,17 @@ public class AskInfo extends HttpServlet {
             sm.needToBeConnected();
             String appId = sm.getServletParam("appId", true);
             if (appId == null || appId.isEmpty())
-                throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong appId.");
             App app = user.getDashboardManager().getAppWithId(Integer.parseInt(appId));
             if (app.isDisabled())
-                throw new GeneralException(ServletManager.Code.ClientError, "App is disabled");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "App is disabled");
             String result = app.getJSON(sm).toString();
             sm.setLogResponse("Info sended for app " + app.getDBid());
             sm.setResponse(ServletManager.Code.Success, result);
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (NumberFormatException e) {
-            sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
+            sm.setResponse(ServletManager.Code.ClientWarning, "Wrong numbers.");
         } catch (Exception e) {
             sm.setResponse(e);
         }

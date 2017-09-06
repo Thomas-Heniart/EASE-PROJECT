@@ -22,12 +22,12 @@ pageEncoding="UTF-8"%>
 
 	<link rel="manifest" href="manifest.json">
 
-    <script src="/jsMinified.v00015/jquery1.12.4.js"></script>
-    <script src="/jsMinified.v00015/bootstrap.js"></script>
-    <script src="/jsMinified.v00015/basic-utils.js"></script>
-    <script src="/jsMinified.v00015/postHandler.js"></script>
-    <script src="/jsMinified.v00015/languageChooser.js"></script>
-    <script src="/jsMinified.v00015/tracker.js"></script>
+    <script src="/jsMinified.v00016/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00016/bootstrap.js"></script>
+    <script src="/jsMinified.v00016/basic-utils.js"></script>
+    <script src="/jsMinified.v00016/postHandler.js"></script>
+    <script src="/jsMinified.v00016/languageChooser.js"></script>
+    <script src="/jsMinified.v00016/tracker.js"></script>
 
     <link rel="stylesheet" href="/cssMinified.v00011/default_style.css"/>
     <link rel="stylesheet" href="/cssMinified.v00011/bootstrap.css"/>
@@ -39,14 +39,14 @@ pageEncoding="UTF-8"%>
     (function () {
         d = document;
         s = d.createElement("script");
-        s.src = "/jsMinified.v00015/crisp.js";
+        s.src = "/jsMinified.v00016/crisp.js";
         s.async = 1;
         d.getElementsByTagName("head")[0].appendChild(s);
     })();</script>
 	<script type="text/javascript">
 		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00015/amplitude-analytics.js";
+            r.src = "/jsMinified.v00016/amplitude-analytics.js";
 			r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
 			i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
 				return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
