@@ -92,6 +92,7 @@ response.addCookie(email);
 	<link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
 	<link rel="stylesheet" href="/cssMinified.v00009/default_style.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+	<script src="https://js.stripe.com/v3/"></script>
 	<link rel="manifest" href="manifest.json">
 
 </head>
@@ -110,12 +111,12 @@ response.addCookie(email);
 		<div id="loggedBody">
 			<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 				<%@ include file="/templates/ProfileView.jsp"%>
-				<div class="MenuButtonSet waiting-load">
+				<%--<div class="MenuButtonSet waiting-load">
 					<button id="enterEditMode" state="off" class="button<c:if test="${param.catalogOpen}"> editMode</c:if>">
 						<img src="resources/icons/menu_icon.png"/>
 						<div class="openCatalogHelper"></div>
 					</button>
-				</div>
+				</div>--%>
 				<div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
 				</div>
 				<c:if test='${user.appsImported() && (user.getStatus().tutoIsDone() eq false)}'>
@@ -159,7 +160,8 @@ response.addCookie(email);
     <script src="/jsMinified.v00015/shortcut.js" async></script>
     <script src="/jsMinified.v00015/logout.js" async></script>
     <script src="/jsMinified.v00015/checkConnection.js" async></script>
-<script>
+
+	<script>
 		var images = document.getElementsByClassName('logo');
 	Array.prototype.forEach.call(images, function(element){
 		if (element.hasAttribute('lazy-src')){

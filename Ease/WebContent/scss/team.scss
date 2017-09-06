@@ -88,37 +88,14 @@ button.action_text_button {
 }
 
 #team_settings_modal {
-  font-size: 22px;
-  .sub {
-    margin-left: 10px;
+  .contents {
+    width: 900px;
+    max-width: 100%;
   }
-  .modal_input {
-    padding: 5px 10px;
-  }
-  #teamName {
-    font-weight: bold;
-  }
-  .button-set {
-    margin-top: 5px;
-    @include justify-content(flex-end);
-    button {
-      font-weight: bold;
-      min-width: 120px;
+  .team_settings_section {
+    .segment {
+      background-color: $themeGreyLightColor;
     }
-    button:last-child {
-      margin-left: 15px;
-    }
-  }
-  .edit-btn {
-    color: $themeBlueColor;
-  }
-  h1, h3 {
-    font-weight: bold;
-  }
-  h3 {
-    font-size: 26px;
-    margin-top: 40px;
-    margin-bottom: 20px;
   }
 }
 
@@ -284,6 +261,7 @@ button.action_text_button {
   #team_menu_options {
     .floating_dropdown {
       top: 55px;
+      z-index: 100;
       margin-top: 0;
       left: 10px;
       color: $themeDarkGrayTextColor;
@@ -327,6 +305,7 @@ button.action_text_button {
       .selectable {
         padding: 5px 10px;
         width: 100%;
+        color: inherit;
         cursor: pointer;
         border-radius: 5px;
         transition: all .2s;
