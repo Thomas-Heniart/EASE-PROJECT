@@ -13,6 +13,11 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 			</p>
 			<div class="displayedByPlugin settingsRaw">
 				<span>Homepage</span>
+				<span class="onoffswitch"> <input
+						type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+						id="homePageSwitch"/> <label class="onoffswitch-label"
+													 for="homePageSwitch"></label>
+				</span>
 				<div class="infoCircle">
 					<i class="fa fa-info-circle"></i>
 					<div class="infoBubble">
@@ -20,11 +25,6 @@ String UserName = ((User) (session.getAttribute("user"))).getFirstName();
 						<div class="caretHelper"></div>
 					</div>
 				</div>
-				<span class="onoffswitch"> <input
-					type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-					id="homePageSwitch" /> <label class="onoffswitch-label"
-					for="homePageSwitch"></label>
-				</span>
 			</div>
 			<div class="settingsRaw">
 				<span>Ease Photo</span>
