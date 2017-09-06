@@ -26,6 +26,7 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
@@ -44,7 +45,10 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
                 JSONParser jsonParser = new JSONParser();
                 card = (JSONObject) jsonParser.parse(externalAccount.toJson());
             }
-            res.put("business_vat_id", customer.getBusinessVatId());
+            String business_vat_id = customer.getBusinessVatId();
+            if (business_vat_id == null)
+                business_vat_id = "";
+            res.put("business_vat_id", business_vat_id);
             res.put("invite_people", team.invite_people());
             res.put("card", card);
             sm.setSuccess(res);
