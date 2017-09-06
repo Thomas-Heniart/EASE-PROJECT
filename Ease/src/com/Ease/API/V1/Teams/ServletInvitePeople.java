@@ -107,7 +107,7 @@ public class ServletInvitePeople extends HttpServlet {
             JSONObject res = new JSONObject();
             teamUser.getTeam().setInvite_people(true);
             sm.saveOrUpdate(teamUser.getTeam());
-            res.put("money", (float) money / 100);
+            res.put("credit", (float) money / 100);
             sm.setSuccess(res);
         } catch (Exception e) {
             e.printStackTrace();
