@@ -56,8 +56,6 @@
         <div class="navbar-header page-scroll">
             <a class="navbar-brand page-scroll" href="/"><img src="resources/landing/ease-white-logo.svg"/></a>
         </div>
-
-        <<<<<<< HEAD
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
