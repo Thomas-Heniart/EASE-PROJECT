@@ -34,13 +34,13 @@
             </div>
         </div>
         <div class="sectionHeader" id="nameSection">
-            <i class="fa fa-caret-right" aria-hidden="true"></i>
+            <i class="fa fa-caret-right down" aria-hidden="true"></i>
             <p class="sectionDescription">How would you like us to call you ? <span class="smallDescription">(no judgements)</span>
             </p>
             <%@ include file="EditUserName.jsp" %>
         </div>
         <div class="sectionHeader" id="emailSection">
-            <i class="fa fa-caret-right" aria-hidden="true"></i>
+            <i class="fa fa-caret-right down" aria-hidden="true"></i>
             <p class="sectionDescription">Emails</p>
             <%@ include file="EditVerifiedEmails.jsp" %>
         </div>
