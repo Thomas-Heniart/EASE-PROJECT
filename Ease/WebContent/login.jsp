@@ -244,13 +244,13 @@ pageEncoding="UTF-8"%>
 	<div id="onMobile" style="display:none;">
 		<%@ include file="templates/Mobile.html" %>
 	</div>
-	<script src="/jsMinified.v00016/jquery1.12.4.js"></script>
-	<script src="/jsMinified.v00016/postHandler.js" async></script>
-	<script src="/jsMinified.v00016/basic-utils.js" async></script>
-	<script src="/jsMinified.v00016/isMobile.js" async></script>
-	<script src="/jsMinified.v00016/connection.js" async></script>
-	<script src="/jsMinified.v00016/generalLogout.js" async></script>
-	<script src="/jsMinified.v00016/tracker.js" async></script>
+    <script src="/jsMinified.v00016/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00016/postHandler.js" async></script>
+    <script src="/jsMinified.v00016/basic-utils.js" async></script>
+    <script src="/jsMinified.v00016/isMobile.js" async></script>
+    <script src="/jsMinified.v00016/connection.js" async></script>
+    <script src="/jsMinified.v00016/generalLogout.js" async></script>
+    <script src="/jsMinified.v00016/tracker.js" async></script>
 	<script>
 		window.addEventListener('load',function(){
 			$.ajaxSetup({cache: true});

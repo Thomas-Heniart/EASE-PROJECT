@@ -185,13 +185,13 @@ pageEncoding="UTF-8"%>
 	</section>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
-	<script src="/jsMinified.v00016/jquery1.12.4.js"></script>
-	<script src="/jsMinified.v00016/languageChooser.js" async></script>
-	<script src="/jsMinified.v00016/basic-utils.js" async></script>
-	<script src="/jsMinified.v00016/ajaxHandler.js" async></script>
-	<script src="/jsMinified.v00016/jquery.complexify.js" async></script>
-	<script src="/jsMinified.v00016/registrationPopup.js" async></script>
-	<script src="/jsMinified.v00016/tracker.js" async></script>
+    <script src="/jsMinified.v00016/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00016/languageChooser.js" async></script>
+    <script src="/jsMinified.v00016/basic-utils.js" async></script>
+    <script src="/jsMinified.v00016/ajaxHandler.js" async></script>
+    <script src="/jsMinified.v00016/jquery.complexify.js" async></script>
+    <script src="/jsMinified.v00016/registrationPopup.js" async></script>
+    <script src="/jsMinified.v00016/tracker.js" async></script>
 	<script type="text/javascript">
 		window.addEventListener('load',function(){
 			$('#free button[type=submit]').click(function(){
