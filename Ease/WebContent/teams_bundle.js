@@ -938,6 +938,7 @@ exports.showTeamJoinMultiAppModal = showTeamJoinMultiAppModal;
 exports.showTeamBrowseChannelsModal = showTeamBrowseChannelsModal;
 exports.showTeamSettingsModal = showTeamSettingsModal;
 exports.showVerifyTeamUserModal = showVerifyTeamUserModal;
+exports.showReactiveTeamUserModal = showReactiveTeamUserModal;
 exports.showTeamTransferOwnershipModal = showTeamTransferOwnershipModal;
 exports.showTeamPhoneNumberModal = showTeamPhoneNumberModal;
 exports.requestWebsite = requestWebsite;
@@ -1081,6 +1082,16 @@ function showTeamSettingsModal(state) {
 function showVerifyTeamUserModal(state, user) {
   return {
     type: 'SHOW_VERIFY_TEAM_USER_MODAL',
+    payload: {
+      active: state,
+      user: user
+    }
+  };
+}
+
+function showReactiveTeamUserModal(state, user) {
+  return {
+    type: 'SHOW_REACTIVATE_TEAM_USER_MODAL',
     payload: {
       active: state,
       user: user
@@ -2798,6 +2809,19 @@ module.exports = {
       }).catch(function (err) {
         throw err.response.data;
       });
+    },
+    unsubscribe: function unsubscribe(_ref3) {
+      var team_id = _ref3.team_id,
+          password = _ref3.password;
+
+      return axios.post('/api/v1/teams/Unsubscribe', {
+        team_id: team_id,
+        password: password
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
     }
   },
   common: {
@@ -2852,17 +2876,18 @@ module.exports = {
         throw err;
       });
     },
-    requestWebsite: function requestWebsite(_ref3) {
-      var url = _ref3.url,
-          is_public = _ref3.is_public,
-          login = _ref3.login,
-          password = _ref3.password;
+    requestWebsite: function requestWebsite(_ref4) {
+      var url = _ref4.url,
+          is_public = _ref4.is_public,
+          login = _ref4.login,
+          password = _ref4.password;
 
       return axios.post('/api/v1/teams/AskWebsite', {
         url: url,
         is_public: is_public,
         login: login,
-        password: password
+        password: password,
+        timestamp: new Date().getTime()
       }).then(function (r) {
         return r.data;
       }).catch(function (err) {
@@ -4463,7 +4488,6 @@ function selectTeamUser(id) {
     dispatch({ type: 'SELECT_USER_PENDING' });
     var teamUser = (0, _helperFunctions.selectUserFromListById)(getState().users.users, id);
     return api.fetchTeamUserApps(getState().team.id, id).then(function (response) {
-      //        teamUser.apps = response;
       dispatch({ type: 'SELECT_USER_FULFILLED', payload: { user: teamUser, apps: response } });
       if (teamUser.state === _utils.teamUserState.registered) dispatch((0, _teamModalActions.showVerifyTeamUserModal)(true, teamUser));
     }).catch(function (err) {
@@ -8628,6 +8652,7 @@ exports.teamInviteFriends = teamInviteFriends;
 exports.teamAddCreditCard = teamAddCreditCard;
 exports.teamUpdateBillingInformation = teamUpdateBillingInformation;
 exports.fetchTeamPaymentInformation = fetchTeamPaymentInformation;
+exports.unsubscribe = unsubscribe;
 exports.fetchTeamItemApps = fetchTeamItemApps;
 exports.showTeamMenu = showTeamMenu;
 exports.editTeamName = editTeamName;
@@ -8738,6 +8763,19 @@ function fetchTeamPaymentInformation() {
       return r;
     }).catch(function (err) {
       dispatch({ type: 'FETCH_TEAM_PAYMENT_INFORMATION_REJECTED', payload: err });
+    });
+  };
+}
+
+function unsubscribe(password) {
+  return function (dispatch, getState) {
+    dispatch({ type: 'TEAM_UNSUBSCRIBE_PENDING' });
+    return post_api.teams.unsubscribe({ team_id: getState().team.id, password: password }).then(function (response) {
+      dispatch({ type: 'TEAM_UNSUBSCRIBE_FULFILLED', payload: { team_id: getState().team_id } });
+      return response;
+    }).catch(function (err) {
+      dispatch({ type: 'TEAM_UNSUBSCRIBE_REJECTED', payload: err });
+      throw err;
     });
   };
 }
@@ -48053,10 +48091,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
               )
             )
           ),
-          !this.state.loadingInfo && React.createElement(_reactRouterDom.Route, { path: this.props.match.url + '/settings',
-            render: function render(props) {
-              return React.createElement(TeamSettings, _extends({ backLink: _this4.props.match.url }, props));
-            } }),
+          !this.state.loadingInfo && React.createElement(_reactRouterDom.Route, { path: this.props.match.path + '/settings',
+            component: TeamSettings }),
           this.props.addUserModalActive && React.createElement(TeamAddUserModal, { key: '1' }),
           this.props.addChannelModalActive && React.createElement(TeamAddChannelModal, null),
           this.props.teamChannelAddUserModal.active && React.createElement(TeamChannelAddUserModal, null),
@@ -56297,7 +56333,7 @@ var TeamMenu = function (_React$Component) {
               ),
               (0, _helperFunctions.isOwner)(me.role) && React.createElement(
                 _reactRouterDom.NavLink,
-                { to: this.props.match.url + '/settings', onClick: function onClick(e) {
+                { to: '/teams/' + this.props.match.params.teamId + '/' + this.props.match.params.itemId + '/settings', onClick: function onClick(e) {
                     _this2.hideIt();
                   }, className: 'selectable' },
                 'Team settings'
@@ -60583,7 +60619,7 @@ module.exports = TeamPhoneNumberModal;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5;
+var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5, _dec6, _class6;
 
 var _react = __webpack_require__(1);
 
@@ -61037,6 +61073,22 @@ var BillingInformation = (_dec4 = (0, _reactRedux.connect)(function (store) {
       }
     }
   }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (!this.props.payment.loading && this.props.payment.data.card !== null) {
+        var card = this.props.payment.data.card;
+        this.setState({
+          address_country: card.address_country !== null ? card.address_country : '',
+          address_city: card.address_city !== null ? card.address_city : '',
+          address_line1: card.address_line1 !== null ? card.address_line1 : '',
+          address_line2: card.address_line2 !== null ? card.address_line2 : '',
+          address_state: card.address_state !== null ? card.address_state : '',
+          address_zip: card.address_zip !== null ? card.address_zip : '',
+          business_vat_id: this.props.payment.data.business_vat_id
+        });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var payment = this.props.payment;
@@ -61145,7 +61197,7 @@ var BillingInformation = (_dec4 = (0, _reactRedux.connect)(function (store) {
 
 var BillingInformationWithRouter = (0, _reactRouterDom.withRouter)(BillingInformation);
 
-var TeamAccount = function (_React$Component5) {
+var TeamAccount = (_dec5 = (0, _reactRedux.connect)(), _dec5(_class5 = function (_React$Component5) {
   _inherits(TeamAccount, _React$Component5);
 
   function TeamAccount(props) {
@@ -61188,7 +61240,15 @@ var TeamAccount = function (_React$Component5) {
   }, {
     key: 'submit',
     value: function submit(e) {
+      var _this7 = this;
+
       e.preventDefault();
+      this.setState({ errorMessage: '', loading: true });
+      this.props.dispatch((0, _teamActions.unsubscribe)(this.state.password)).then(function (response) {
+        window.location.href = "/";
+      }).catch(function (err) {
+        _this7.setState({ errorMessage: err, loading: false });
+      });
     }
   }, {
     key: 'render',
@@ -61275,7 +61335,8 @@ var TeamAccount = function (_React$Component5) {
   }]);
 
   return TeamAccount;
-}(_react2.default.Component);
+}(_react2.default.Component)) || _class5);
+
 
 function SettingsMenu(props) {
   return _react2.default.createElement(
@@ -61340,26 +61401,26 @@ function SettingsMenu(props) {
   );
 }
 
-var TeamSettings = (_dec5 = (0, _reactRedux.connect)(function (store) {
+var TeamSettings = (_dec6 = (0, _reactRedux.connect)(function (store) {
   return {
     team: store.team
   };
-}), _dec5(_class5 = function (_React$Component6) {
+}), _dec6(_class6 = function (_React$Component6) {
   _inherits(TeamSettings, _React$Component6);
 
   function TeamSettings(props) {
     _classCallCheck(this, TeamSettings);
 
-    var _this7 = _possibleConstructorReturn(this, (TeamSettings.__proto__ || Object.getPrototypeOf(TeamSettings)).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (TeamSettings.__proto__ || Object.getPrototypeOf(TeamSettings)).call(this, props));
 
-    _this7.close = _this7.close.bind(_this7);
-    return _this7;
+    _this8.close = _this8.close.bind(_this8);
+    return _this8;
   }
 
   _createClass(TeamSettings, [{
     key: 'close',
     value: function close() {
-      this.props.history.replace(this.props.backLink);
+      this.props.history.replace('/teams/' + this.props.match.params.teamId + '/' + this.props.match.params.itemId + '/');
     }
   }, {
     key: 'componentDidMount',
@@ -61418,7 +61479,7 @@ var TeamSettings = (_dec5 = (0, _reactRedux.connect)(function (store) {
                     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: this.props.match.url + '/', component: TeamInformations }),
                     _react2.default.createElement(_reactRouterDom.Route, { path: this.props.match.url + '/information', component: TeamInformations }),
                     _react2.default.createElement(_reactRouterDom.Route, { path: this.props.match.url + '/payment', component: PaymentMethod }),
-                    _react2.default.createElement(_reactRouterDom.Route, { path: '/teams/:teamId/:itemId/settings/billing', component: BillingInformationWithRouter }),
+                    _react2.default.createElement(_reactRouterDom.Route, { path: this.props.match.path + '/billing', component: BillingInformationWithRouter }),
                     _react2.default.createElement(_reactRouterDom.Route, { path: this.props.match.url + '/activation', component: TeamAccount })
                   )
                 )
@@ -61431,7 +61492,7 @@ var TeamSettings = (_dec5 = (0, _reactRedux.connect)(function (store) {
   }]);
 
   return TeamSettings;
-}(_react2.default.Component)) || _class5);
+}(_react2.default.Component)) || _class6);
 
 
 module.exports = TeamSettings;
@@ -64548,6 +64609,10 @@ var initialState = {
     app: null
   },
   verifyTeamUserModal: {
+    active: false,
+    user: null
+  },
+  reactivateTeamUserModal: {
     active: false,
     user: null
   },
