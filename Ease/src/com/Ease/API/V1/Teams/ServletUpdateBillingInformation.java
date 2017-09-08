@@ -9,6 +9,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Card;
 import com.stripe.model.Customer;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -38,9 +39,6 @@ public class ServletUpdateBillingInformation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You must enter a credit card first.");
             Card card = (Card) customer.getSources().retrieve(default_source);
             Map<String, Object> updateParams = new HashMap<>();
-            String name = sm.getStringParam("name", true);
-            if (name != null && !name.equals(""))
-                updateParams.put("name", name);
             String address_city = sm.getStringParam("address_city", true);
             if (address_city != null && !address_city.equals(""))
                 updateParams.put("address_city", address_city);
@@ -66,6 +64,14 @@ public class ServletUpdateBillingInformation extends HttpServlet {
                 updateParams.put("business_vat_id", business_vat_id);
             if (!updateParams.isEmpty())
                 customer.update(updateParams);
+            JSONObject res = new JSONObject();
+            res.put("credit", (float) customer.getAccountBalance() / 100);
+            String vat_id = customer.getBusinessVatId();
+            if (vat_id == null)
+                vat_id = "";
+            res.put("business_vat_id", vat_id);
+            res.put("people_invited", team.invite_people());
+            res.put("card", card);
             sm.setSuccess("Billing information updated.");
         } catch (StripeException e) {
             sm.setError(e);
