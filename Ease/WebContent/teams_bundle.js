@@ -2877,12 +2877,14 @@ module.exports = {
       });
     },
     requestWebsite: function requestWebsite(_ref4) {
-      var url = _ref4.url,
+      var team_id = _ref4.team_id,
+          url = _ref4.url,
           is_public = _ref4.is_public,
           login = _ref4.login,
           password = _ref4.password;
 
       return axios.post('/api/v1/teams/AskWebsite', {
+        team_id: team_id,
         url: url,
         is_public: is_public,
         login: login,
@@ -59299,7 +59301,8 @@ function Step2(props) {
 
 var RequestWebsiteModal = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
-    modal: store.teamModals.requestWebsiteModal
+    modal: store.teamModals.requestWebsiteModal,
+    team_id: store.team.id
   };
 }), _dec(_class = function (_React$Component) {
   _inherits(RequestWebsiteModal, _React$Component);
@@ -59360,6 +59363,7 @@ var RequestWebsiteModal = (_dec = (0, _reactRedux.connect)(function (store) {
 
       this.setState({ loading: true, errorMessage: '' });
       _post_api.common.requestWebsite({
+        team_id: this.props.team_id,
         url: this.state.url,
         is_public: !this.state.private,
         login: this.state.login,
@@ -64722,6 +64726,12 @@ function reducer() {
       {
         return _extends({}, state, {
           verifyTeamUserModal: action.payload
+        });
+      }
+    case 'SHOW_REACTIVATE_TEAM_USER_MODAL':
+      {
+        return _extends({}, state, {
+          reactivateTeamUserModal: action.payload
         });
       }
     case 'SHOW_TEAM_TRANSFER_OWNERSHIP_MODAL':
