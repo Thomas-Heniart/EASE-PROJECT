@@ -41,13 +41,18 @@ var aesUtils;
 
 /* Initialize RSA */
 var RSAEncryption = new JSEncrypt({default_key_size: 1024});
+var serverRSAEncryption = new JSEncrypt({default_key_size: 1024});
 
 $(document).ready(function () {
     $.get('/api/v1/common/GetServerKey', {
         public_key: RSAEncryption.getPublicKeyB64()
     }, function (data) {
-        aesUtils = new AesUtil(RSAEncryption.decrypt(data.salt), RSAEncryption.decrypt(data.passphrase));
-        alert("Done");
+        //aesUtils = new AesUtil(RSAEncryption.decrypt(data.salt), RSAEncryption.decrypt(data.passphrase));
+        var serverPublicKey;
+        serverPublicKey = data.publicKey;
+        serverPublicKey = "-----BEGIN PUBLIC KEY-----\n" + serverPublicKey;
+        serverPublicKey = serverPublicKey.substring(0, 91) + "\n" + serverPublicKey.substring(91, 91 + 64) + "\n" + serverPublicKey.substring(91 + 64, 91 + 64 + 64) + "\n" + serverPublicKey.substring(91 + 64 + 64, serverPublicKey.length) + "\n-----END PUBLIC KEY-----";
+        serverRSAEncryption.setKey(serverPublicKey);
         /* var iv = aesUtils.generateIv();
         var cipheredText = aesUtils.encrypt("bite", iv);
         $.ajax({

@@ -51,7 +51,7 @@ public class ServletReactivateTeamUser extends HttpServlet {
             }
             sm.saveOrUpdate(teamUser);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
-            sm.setSuccess("User reactivated");
+            sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
