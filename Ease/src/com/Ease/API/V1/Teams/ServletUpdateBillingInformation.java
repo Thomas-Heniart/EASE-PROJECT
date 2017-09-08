@@ -65,7 +65,7 @@ public class ServletUpdateBillingInformation extends HttpServlet {
             if (!updateParams.isEmpty())
                 customer.update(updateParams);
             JSONObject res = new JSONObject();
-            res.put("credit", (float) customer.getAccountBalance() / 100);
+            res.put("credit", (float) -customer.getAccountBalance() / 100);
             String vat_id = customer.getBusinessVatId();
             if (vat_id == null)
                 vat_id = "";
