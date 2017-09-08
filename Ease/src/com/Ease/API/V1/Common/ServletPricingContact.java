@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/common/ContactUs")
-public class ServletContactUs extends HttpServlet {
+@WebServlet("/api/v1/common/PricingContact")
+public class ServletPricingContact extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -28,7 +28,7 @@ public class ServletContactUs extends HttpServlet {
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             mailJetBuilder.addTo("benjamin@ease.space");
-            mailJetBuilder.setTemplateId(208655);
+            mailJetBuilder.setTemplateId(208656);
             mailJetBuilder.addVariable("message", message);
             mailJetBuilder.addVariable("email", email);
             mailJetBuilder.sendEmail();
