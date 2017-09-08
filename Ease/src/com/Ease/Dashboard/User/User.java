@@ -508,8 +508,8 @@ public class User {
     public boolean canSeeTag(Tag tag) {
         if (this.isAdmin())
             return true;
-        if (tag.getName().equals("ISC Paris") && this.email.endsWith("@iscparis.com"))
-            return true;
+        if (tag.getName().equals("ISC Paris"))
+            return this.email.endsWith("@iscparis.com");
         for (Group group : this.groups) {
             if (tag.containsGroupId(group.getDBid()))
                 return true;

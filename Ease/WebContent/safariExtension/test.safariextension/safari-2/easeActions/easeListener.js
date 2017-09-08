@@ -20,7 +20,7 @@ if (window.location.href.indexOf("https://ease.space") == 0 || window.location.h
             $("#homePageSwitch").prop("checked", false);
         }
 
-        $('#homePageSwitch').change(function () {
+        $("body").on("change", "#homePageSwitch", function () {
             if ($(this).is(":checked")) {
                 extension.runtime.sendMessage("setSettings", {"homepage": true}, function (response) {
                 });
@@ -28,6 +28,12 @@ if (window.location.href.indexOf("https://ease.space") == 0 || window.location.h
                 extension.runtime.sendMessage("setSettings", {"homepage": false}, function (response) {
                 });
             }
+        });
+    });
+
+    document.addEventListener("GetSettings", function (event) {
+        extension.runtime.sendMessage("getSettings", {}, function (response) {
+            document.dispatchEvent(new CustomEvent("GetSettingsDone", {"detail": response.homepage}));
         });
     });
 

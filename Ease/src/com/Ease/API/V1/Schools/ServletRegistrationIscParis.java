@@ -77,6 +77,8 @@ public class ServletRegistrationIscParis extends HttpServlet {
 
             /* Isc Paris apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            Website mail = catalog.getWebsiteWithName("Gmail");
+            iscProfile.addEmptyApp("Mail ISC", mail, db);
             Website myIsc = catalog.getWebsiteWithName("My ISC");
             iscProfile.addEmptyApp(myIsc.getName(), myIsc, db);
             Website moodle = catalog.getWebsiteWithName("Moodle");

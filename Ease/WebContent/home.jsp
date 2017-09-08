@@ -108,7 +108,7 @@ response.addCookie(email);
 		<div class="ease-header" id="app">
 			<%--@ include file="/templates/Header.jsp"--%>
 		</div>
-		<script src="/teams_bundle.js"></script>
+        <script src="/teams_bundle.js?000"></script>
 		<div id="loggedBody">
 			<div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
 				<%@ include file="/templates/ProfileView.jsp"%>
