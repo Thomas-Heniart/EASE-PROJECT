@@ -72,8 +72,7 @@ public class ServletUpdateBillingInformation extends HttpServlet {
             res.put("business_vat_id", vat_id);
             res.put("people_invited", team.invite_people());
             res.put("card", card);
-            sm.setSuccess("Billing information updated.");
-            
+            sm.setSuccess(res);
         } catch (StripeException e) {
             sm.setError(e);
         } catch (Exception e) {
