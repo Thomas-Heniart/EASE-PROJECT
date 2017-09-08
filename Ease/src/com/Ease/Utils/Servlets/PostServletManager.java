@@ -144,4 +144,8 @@ public class PostServletManager extends ServletManager {
     public void setParam(String key, Object value) {
         this.params.put(key, value);
     }
+
+    public String getBody() {
+        return params.toString();
+    }
 }
