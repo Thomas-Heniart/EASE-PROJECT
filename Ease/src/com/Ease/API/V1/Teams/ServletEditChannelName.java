@@ -36,20 +36,18 @@ public class ServletEditChannelName extends HttpServlet {
             if (channel.isDefault())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             String name = sm.getStringParam("name", true);
-            if (name == null || name.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
+            if (name == null || name.equals("") || !Regex.isValidRoomName(name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation and must be shorter than 22 characters.");
             for (Channel channel1 : team.getChannels()) {
                 if (channel1 == channel)
                     continue;
                 if (channel1.getName().equals(name))
-                    throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another group");
+                    throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another room");
             }
-            if (!Regex.isValidSimpleString(name))
-                throw new HttpServletException(HttpStatus.BadRequest, "Group names can't contain spaces, periods or most punctuation. Try again?");
             channel.editName(name);
             sm.saveOrUpdate(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
-            sm.setSuccess("Channel name edited");
+            sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
