@@ -57,8 +57,8 @@ public class ServletEditTeamUserUsername extends HttpServlet {
     private String checkUsernameIntegrity(String username) throws HttpServletException {
         if (username == null || username.equals(""))
             throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
-        if (username.length() >= 22)
-            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, that's a bit too long! Usernames must be fewer than 22 characters.");
+        if (username.length() < 3 || username.length() >= 22)
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be greater than 2 characters and fewer than 22 characters.");
         if (!username.equals(username.toLowerCase()))
             throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be lowercase!");
         if (!Regex.isValidUsername(username))
