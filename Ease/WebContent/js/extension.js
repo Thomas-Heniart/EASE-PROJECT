@@ -108,6 +108,10 @@ function sendEvent(obj) {
                         easeTracker.trackEvent("ClickOnApp", {"type": "LinkApp", "appName": json.detail.app_name});
                     } else {
                         var jsonDetail = json.detail[json.detail.length - 1];
+                        for (var key in jsonDetail.user) {
+                            if (jsonDetail.user.hasOwnProperty(key))
+                                jsonDetail.user[key] = RSAEncryption.decrypt(jsonDetail.user[key]);
+                        }
                         easeTracker.trackEvent("ClickOnApp", {
                             "type": jsonDetail.type,
                             "appName": jsonDetail.app_name,

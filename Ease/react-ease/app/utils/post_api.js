@@ -502,7 +502,7 @@ module.exports = {
     connect : function(email, password){
       return axios.post('/api/v1/common/Connection', {
         email: email,
-        password: password
+          password: cipher(password)
       }).then(response => {
         return response.data;
       }).catch(err => {
