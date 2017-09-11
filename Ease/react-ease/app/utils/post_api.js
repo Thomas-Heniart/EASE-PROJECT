@@ -605,8 +605,8 @@ module.exports = {
         team_id: team_id,
         url:url,
         is_public: is_public,
-        login: login,
-        password: password,
+          login: cipher(login),
+          password: cipher(password),
         timestamp: new Date().getTime()
       }).then(r => {
         return r.data;
