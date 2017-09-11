@@ -112977,8 +112977,7 @@ var Registration = function (_React$Component5) {
     key: "render",
     value: function render() {
       var steps = [];
-      steps.push(_react2.default.createElement(Step1, {
-        key: "1",
+      steps.push(_react2.default.createElement(Step1, { key: "1",
         onStepValidated: this.incrementStep,
         handleInput: this.handleInput,
         username: this.state.username,
