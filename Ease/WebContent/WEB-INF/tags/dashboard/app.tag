@@ -71,10 +71,10 @@
         </c:if>
         <div class="linkImage">
             <c:if test="${app.isPinned() eq false}">
-            <div class="showAppActionsButton">
-                <i class="fa fa-cog"></i>
-                </c:if>
-            </div>
+                <div class="showAppActionsButton">
+                    <i class="fa fa-cog"></i>
+                </div>
+            </c:if>
             <img class="logo" src="/resources/helpers/1x1_grey_square.jpg"
                  lazy-src="<c:out value='${app.getSite().getFolder()}logo.png'/>"/>
         </div>
