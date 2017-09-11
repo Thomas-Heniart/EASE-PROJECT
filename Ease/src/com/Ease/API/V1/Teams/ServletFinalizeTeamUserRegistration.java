@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
@@ -120,6 +121,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("user_pseudo", teamUser.getUsername());
             mailJetBuilder.addVariable("user_email", teamUser.getEmail());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/@" + teamUser.getDb_id());
             mailJetBuilder.sendEmail();
             sm.getUser().addTeamUser(teamUser);
             sm.setParam("team_id", team_id.longValue());

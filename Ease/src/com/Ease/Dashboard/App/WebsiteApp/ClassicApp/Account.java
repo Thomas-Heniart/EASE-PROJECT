@@ -384,8 +384,9 @@ public class Account {
         this.update_ciphering_if_needed(sm);
         this.decipher(sm.getUser());
         JSONObject obj = new JSONObject();
+        String key = (String) sm.getSession().getAttribute("public_key");
         for (AccountInformation info : this.infos)
-            obj.put(info.getInformationName(), StringEscapeUtils.unescapeHtml4(info.getInformationValue()));
+            obj.put(info.getInformationName(), RSA.Encrypt(StringEscapeUtils.unescapeHtml4(info.getInformationValue()), key));
         return obj;
     }
 

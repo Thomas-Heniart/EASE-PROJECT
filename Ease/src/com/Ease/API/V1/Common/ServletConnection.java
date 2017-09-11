@@ -44,7 +44,8 @@ public class ServletConnection extends HttpServlet {
                 if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
                 else {
-                    /* password = RSA.Decrypt(password, (String) sm.getContextAttr("privateKey")); */
+                    String key = (String) sm.getContextAttr("privateKey");
+                    password = RSA.Decrypt(password, key);
                     user = User.loadUser(email, password, sm.getServletContext(), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();

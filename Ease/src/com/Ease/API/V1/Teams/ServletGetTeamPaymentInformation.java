@@ -37,7 +37,7 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
             cardParams.put("object", "card");
             JSONObject res = new JSONObject();
             Customer customer = Customer.retrieve(team.getCustomer_id());
-            res.put("credit", (float) customer.getAccountBalance() / 100);
+            res.put("credit", (float) -customer.getAccountBalance() / 100);
             JSONObject card = null;
             String default_source = customer.getDefaultSource();
             if (default_source != null && !default_source.equals("")) {

@@ -34,6 +34,9 @@ public class ServletUnsubscribe extends HttpServlet {
             TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
             if (!teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
+            String password = sm.getStringParam("password", false);
+            if (!sm.getUser().getKeys().isGoodPassword(password))
+                throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
 
             /* ==== Stripe start ==== */
 

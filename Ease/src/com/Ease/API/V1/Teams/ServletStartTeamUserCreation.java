@@ -112,8 +112,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
     private void checkUsernameIntegrity(String username) throws HttpServletException {
         if (username == null || username.equals(""))
             throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
-        if (username.length() >= 22 || username.length() < 4)
-            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be between 4 and 21 characters.");
+        if (username.length() >= 22 || username.length() < 3)
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be between 3 and 21 characters.");
         if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))
             throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must contain only lowercase characters.");
     }

@@ -500,7 +500,15 @@ public class Team {
     }
 
     public Channel createDefaultChannel(Integer owner_id) {
-        this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide app and tools sharing", owner_id);
+        this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide apps and tools sharing", owner_id);
         return this.default_channel;
+    }
+
+    public TeamUser getTeamUserOwner() {
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            if (teamUser.isTeamOwner())
+                return teamUser;
+        }
+        return null;
     }
 }
