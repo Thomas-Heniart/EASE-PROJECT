@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
@@ -21,38 +20,13 @@ public class ServletSendLoveMoney extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            String email = sm.getStringParam("email", true);
-            if (email == null || email.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty email.");
-            email = email.toLowerCase();
-            Integer credit = Integer.parseInt(sm.getStringParam("credit", true));
+            Integer team_id = sm.getIntParam("team_id", true);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(team_id);
+            Integer credit = sm.getIntParam("credit", true);
             if (credit < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Don't be an asshole ^^ ");
-            HibernateQuery hiberateQuery = sm.getHibernateQuery();
-            hiberateQuery.querySQLString("SELECT team_id FROM teamUsers WHERE email = ?");
-            hiberateQuery.setParameter(1, email);
-            Integer team_id = (Integer) hiberateQuery.getSingleResult();
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = null;
-            if (team_id != null)
-                team = teamManager.getTeamWithId(team_id);
-            if (team != null && team.getCustomer_id() != null)
-                team.increaseAccountBalance(credit, sm.getHibernateQuery());
-            else {
-                hiberateQuery.querySQLString("SELECT id FROM waitingCredits WHERE email = ?;");
-                hiberateQuery.setParameter(1, email);
-                Integer id = (Integer) hiberateQuery.getSingleResult();
-                if (id == null) {
-                    hiberateQuery.querySQLString("INSERT INTO waitingCredits values (null, ?, ?);");
-                    hiberateQuery.setParameter(1, email);
-                    hiberateQuery.setParameter(2, credit);
-                } else {
-                    hiberateQuery.querySQLString("UPDATE waitingCredits SET credit = ? WHERE id = ?;");
-                    hiberateQuery.setParameter(1, credit);
-                    hiberateQuery.setParameter(2, id);
-                }
-                hiberateQuery.executeUpdate();
-            }
+            team.increaseAccountBalance(credit, sm.getHibernateQuery());
             sm.setSuccess("Account credited");
         } catch (Exception e) {
             sm.setError(e);
