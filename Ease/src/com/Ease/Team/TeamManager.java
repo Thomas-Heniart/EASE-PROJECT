@@ -85,6 +85,11 @@ public class TeamManager {
         }
     }
 
+    public void checkFreeTrialEnd() {
+        for (Team team : this.getTeams())
+            team.checkFreeTrialEnd();
+    }
+
     public void reminderThreeDays() throws HttpServletException {
         System.out.println("Three days reminder start...");
         List<TeamUser> unregistered_teamUsers = new LinkedList<>();

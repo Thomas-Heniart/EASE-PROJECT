@@ -39,7 +39,10 @@ public class ServletPricingContact extends HttpServlet {
                 enterprise = "";
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
-            mailJetBuilder.addTo("thomas@ease.space");
+            mailJetBuilder.addTo("benjamin@ease.space");
+            mailJetBuilder.addCc("victor@ease.space");
+            mailJetBuilder.addCc("sergii@ease.space");
+            mailJetBuilder.addCc("thomas@ease.space");
             mailJetBuilder.setTemplateId(209268);
             mailJetBuilder.addVariable("message", message);
             mailJetBuilder.addVariable("role", role);

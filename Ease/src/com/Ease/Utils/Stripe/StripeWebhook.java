@@ -1,7 +1,5 @@
 package com.Ease.Utils.Stripe;
 
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.stripe.model.Event;
 import com.stripe.net.APIResource;
@@ -23,9 +21,10 @@ public class StripeWebhook extends HttpServlet {
         System.out.println("Request reach");
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String header_key = request.getHeader("Stripe-signature");
-            if (header_key == null || !header_key.equals(webhook_key))
-                throw new HttpServletException(HttpStatus.Forbidden, "Missing signature in header.");
+            String header_key = request.getHeader("Stripe-Signature");
+            System.out.println(header_key);
+            System.out.println(sm.getBody());
+            //Event event = Webhook.constructEvent(sm.getBody(), header_key, webhook_key);
             Event event = APIResource.GSON.fromJson(sm.getBody(), Event.class);
             System.out.println(event.toJson());
             sm.setSuccess("Ok");

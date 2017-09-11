@@ -1,10 +1,12 @@
 package com.Ease.Team;
 
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
@@ -510,5 +512,35 @@ public class Team {
                 return teamUser;
         }
         return null;
+    }
+
+    public void checkFreeTrialEnd() {
+        MailJetBuilder mailJetBuilder;
+        if (this.card_entered)
+            return;
+        try {
+            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
+            if (DateComparator.isEqualsAfter(this.subscription_date, 25) && !this.card_entered) {
+                System.out.println(this.getName() + " trial will end in 5 days.");
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(208643);
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.addTo(this.getTeamUserOwner().getEmail());
+                mailJetBuilder.addVariable("teamName", this.getName());
+                mailJetBuilder.addVariable("link", link);
+                mailJetBuilder.sendEmail();
+            } else if (DateComparator.isEqualsAfter(this.subscription_date, 29) && !this.card_entered) {
+                System.out.println(this.getName() + " trial will end in 1 day.");
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(208644);
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.addVariable("teamName", this.getName());
+                mailJetBuilder.addTo(this.getTeamUserOwner().getEmail());
+                mailJetBuilder.addVariable("link", link);
+                mailJetBuilder.sendEmail();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
