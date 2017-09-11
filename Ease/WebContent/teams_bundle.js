@@ -6469,34 +6469,50 @@ module.exports = warning;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.isUrl = isUrl;
+exports.handleSemanticInput = handleSemanticInput;
 exports.checkTeamUsernameErrors = checkTeamUsernameErrors;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var passwordRegexp = exports.passwordRegexp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/;
 var emailRegexp = exports.emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 var urlRegexp = exports.urlRegexp = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-var usernameRegexp = exports.usernameRegexp = /^[a-z0-9]{3,21}$/;
+var usernameRegexp = exports.usernameRegexp = /^[a-z0-9_\-]{3,21}$/;
 
 function isUrl(url) {
-    return url.match(urlRegexp) !== null;
+  return url.match(urlRegexp) !== null;
+}
+
+function handleSemanticInput(e, _ref) {
+  var name = _ref.name,
+      value = _ref.value,
+      checked = _ref.checked;
+
+  if (checked !== undefined) {
+    this.setState(_defineProperty({}, name, !checked));
+    return;
+  }
+  this.setState(_defineProperty({}, name, value));
 }
 
 function checkTeamUsernameErrors(username) {
-    var value = {
-        error: false,
-        message: ''
-    };
-    if (username.length < 3 || username.length > 21) value.message = "Sorry, usernames must be greater than 2 characters and fewer than 22 characters.";else if (username.match(usernameRegexp) === null) value.message = "Sorry, usernames must contain only lowercase characters.";
-    if (value.message.length > 0) value.error = true;
-    return value;
+  var value = {
+    error: false,
+    message: ''
+  };
+  if (username.length < 3 || username.length > 21) value.message = "Sorry, usernames must be greater than 2 characters and fewer than 22 characters.";else if (username.match(usernameRegexp) === null) value.message = "Sorry, usernames must contain only lowercase characters.";
+  if (value.message.length > 0) value.error = true;
+  return value;
 }
 
 var jobRoles = exports.jobRoles = ['Administrative/Facilities', 'Accounting/Finance', 'Business Development', 'Business Owner', 'Customer Support', 'Data/Analytics/Business Intelligence', 'Design', 'Engineering (Software)', 'Marketing', 'Media/Communications', 'Operations', 'Product Management', 'Program/Project Management', 'Research', 'Sales', 'Other'];
 var teamUserState = exports.teamUserState = {
-    invited: 0,
-    registered: 1,
-    accepted: 2
+  invited: 0,
+  registered: 1,
+  accepted: 2
 };
 
 var teamUserRoleValues = exports.teamUserRoleValues = [{ key: '1', text: 'member', value: 1 }, { key: '2', text: 'admin', value: 2 }, { key: '3', text: 'owner', value: 3 }];
@@ -63891,6 +63907,10 @@ var _store = __webpack_require__(534);
 
 var _store2 = _interopRequireDefault(_store);
 
+var _Registration = __webpack_require__(1147);
+
+var _Registration2 = _interopRequireDefault(_Registration);
+
 var _HomeTemporaryHeader = __webpack_require__(529);
 
 var _HomeTemporaryHeader2 = _interopRequireDefault(_HomeTemporaryHeader);
@@ -63940,7 +63960,8 @@ var App = function (_React$Component) {
             React.createElement(_reactRouterDom.Route, { path: '/teamJoin/:code', component: TeamJoinView }),
             React.createElement(_reactRouterDom.Route, { exact: true, path: '/teams/:teamId', component: TeamView }),
             React.createElement(_reactRouterDom.Route, { path: '/teams/:teamId/:itemId', component: TeamView }),
-            React.createElement(_reactRouterDom.Route, { path: '/login', component: Login })
+            React.createElement(_reactRouterDom.Route, { path: '/login', component: Login }),
+            React.createElement(_reactRouterDom.Route, { path: '/registration', component: _Registration2.default })
           )
         )
       );
@@ -112477,6 +112498,536 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1147 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactAddonsCssTransitionGroup = __webpack_require__(97);
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
+var _utils = __webpack_require__(72);
+
+var _queryString = __webpack_require__(393);
+
+var _queryString2 = _interopRequireDefault(_queryString);
+
+var _commonActions = __webpack_require__(49);
+
+var _reactRedux = __webpack_require__(12);
+
+var _SingleEaseLogo = __webpack_require__(292);
+
+var _SingleEaseLogo2 = _interopRequireDefault(_SingleEaseLogo);
+
+var _semanticUiReact = __webpack_require__(37);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var api = __webpack_require__(26);
+var post_api = __webpack_require__(33);
+
+var Step1 = function (_React$Component) {
+  _inherits(Step1, _React$Component);
+
+  function Step1(props) {
+    _classCallCheck(this, Step1);
+
+    var _this = _possibleConstructorReturn(this, (Step1.__proto__ || Object.getPrototypeOf(Step1)).call(this, props));
+
+    _this.onSubmit = function (e) {
+      e.preventDefault();
+      var usernameErrors = (0, _utils.checkTeamUsernameErrors)(_this.props.username);
+      if (usernameErrors.error) {
+        _this.setState({ errorMessage: usernameErrors.message });
+        return;
+      }
+      _this.setState({ errorMessage: '', loading: true });
+      post_api.common.askRegistration(_this.props.email).then(function (response) {
+        _this.setState({ loading: false });
+        _this.props.onStepValidated();
+      }).catch(function (err) {
+        _this.setState({ errorMessage: err, loading: false });
+      });
+    };
+
+    _this.state = {
+      errorMessage: '',
+      loading: false
+    };
+    return _this;
+  }
+
+  _createClass(Step1, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "contents" },
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Header,
+            { as: "h1" },
+            "What's your name",
+            _react2.default.createElement(
+              _semanticUiReact.Header.Subheader,
+              null,
+              "Your name will be displayed for your team members in Ease.space"
+            )
+          ),
+          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
+          _react2.default.createElement(
+            _semanticUiReact.Form,
+            { onSubmit: this.onSubmit, error: this.state.errorMessage.length > 0 },
+            _react2.default.createElement(
+              _semanticUiReact.Form.Field,
+              { required: true },
+              _react2.default.createElement(
+                "label",
+                null,
+                "Username"
+              ),
+              _react2.default.createElement(_semanticUiReact.Input, {
+                required: true,
+                type: "text",
+                placeholder: "Username",
+                name: "username",
+                value: this.props.username,
+                onChange: this.props.handleInput }),
+              _react2.default.createElement(
+                _semanticUiReact.Label,
+                { pointing: true },
+                "Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. Maximum 22 characters."
+              )
+            ),
+            _react2.default.createElement(_semanticUiReact.Form.Input, {
+              required: true,
+              label: "Email",
+              placeholder: "Email",
+              type: "email",
+              name: "email",
+              value: this.props.email,
+              onChange: this.props.handleInput }),
+            _react2.default.createElement(_semanticUiReact.Form.Checkbox, { label: "It\u2019s ok to send me very occasional emails about security and Ease.space",
+              name: "newsletter",
+              checked: this.props.newsletter,
+              onClick: this.props.handleInput }),
+            _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+            _react2.default.createElement(
+              _semanticUiReact.Form.Field,
+              null,
+              _react2.default.createElement(
+                _semanticUiReact.Button,
+                { positive: true, fluid: true, loading: this.state.loading, type: "submit" },
+                "Next"
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Step1;
+}(_react2.default.Component);
+
+var Step2 = function (_React$Component2) {
+  _inherits(Step2, _React$Component2);
+
+  function Step2(props) {
+    _classCallCheck(this, Step2);
+
+    var _this2 = _possibleConstructorReturn(this, (Step2.__proto__ || Object.getPrototypeOf(Step2)).call(this, props));
+
+    _this2.state = {
+      errorMessage: '',
+      loading: false,
+      sendingEmail: false,
+      sendEmailButtonText: 'Resend email'
+    };
+    _this2.onSubmit = _this2.onSubmit.bind(_this2);
+    _this2.resendDigits = _this2.resendDigits.bind(_this2);
+    return _this2;
+  }
+
+  _createClass(Step2, [{
+    key: "onSubmit",
+    value: function onSubmit(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+      this.setState({ errorMessage: '', loading: true });
+      post_api.common.checkRegistrationDigits(this.props.email, this.props.digits).then(function (response) {
+        _this3.setState({ loading: false });
+        _this3.props.onStepValidated();
+      }).catch(function (err) {
+        _this3.setState({ loading: false, errorMessage: err });
+      });
+    }
+  }, {
+    key: "resendDigits",
+    value: function resendDigits() {
+      var _this4 = this;
+
+      this.setState({ sendingEmail: true });
+      post_api.common.askRegistration(this.props.email).then(function (response) {
+        _this4.setState({ sendingEmail: false });
+        _this4.setState({ sendEmailButtonText: 'Sent!' });
+        window.setTimeout(function () {
+          _this4.setState({ sendEmailButtonText: 'Resend email' });
+        }, 2000);
+      }).catch(function (err) {
+        _this4.setState({ sendingEmail: false });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "contents", id: "step2" },
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Header,
+            { as: "h1" },
+            "Check your email",
+            _react2.default.createElement(
+              _semanticUiReact.Header.Subheader,
+              null,
+              "We've sent a six-digit confirmation code to ",
+              _react2.default.createElement(
+                "strong",
+                null,
+                this.props.email
+              ),
+              ". It will expire shortly, so enter your code soon."
+            )
+          ),
+          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
+          _react2.default.createElement(
+            _semanticUiReact.Form,
+            { onSubmit: this.onSubmit, error: this.state.errorMessage.length > 0 },
+            _react2.default.createElement(_semanticUiReact.Form.Input, { label: "Your confirmation code",
+              onChange: this.props.handleInput,
+              type: "number",
+              name: "digits",
+              placeholder: "Confirmation code",
+              required: true }),
+            _react2.default.createElement(
+              _semanticUiReact.Message,
+              { color: "yellow", size: "mini" },
+              "Keep this window open while checking for your code.",
+              _react2.default.createElement("br", null),
+              " Haven't received our email ? Try your spam folder! Or ",
+              _react2.default.createElement(_semanticUiReact.Button, { basic: true, type: "button", className: "textlike", size: "mini", loading: this.state.sendingEmail, onClick: this.resendDigits, content: this.state.sendEmailButtonText }),
+              "."
+            ),
+            _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+            _react2.default.createElement(
+              _semanticUiReact.Form.Button,
+              { fluid: true, positive: true, type: "submit", loading: this.state.loading },
+              "Next"
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Step2;
+}(_react2.default.Component);
+
+var Step3 = function (_React$Component3) {
+  _inherits(Step3, _React$Component3);
+
+  function Step3(props) {
+    _classCallCheck(this, Step3);
+
+    var _this5 = _possibleConstructorReturn(this, (Step3.__proto__ || Object.getPrototypeOf(Step3)).call(this, props));
+
+    _this5.onSubmit = function (e) {
+      e.preventDefault();
+
+      _this5.setState({ errorMessage: '', passwordError: false });
+      if (_this5.props.password.match(_utils.passwordRegexp) === null) {
+        _this5.setState({ passwordError: true });
+        return;
+      }
+      if (_this5.props.password !== _this5.props.confirmPassword) {
+        _this5.setState({ errorMessage: _this5.state.confirmPasswordMessage });
+        return;
+      }
+      _this5.setState({ errorMessage: '', passwordError: false });
+      _this5.props.onStepValidated();
+    };
+
+    _this5.state = {
+      errorMessage: '',
+      passwordError: false,
+      confirmPasswordMessage: "Passwords doesn't match"
+    };
+    return _this5;
+  }
+
+  _createClass(Step3, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "contents", id: "step3" },
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Header,
+            { as: "h1" },
+            "Set your password",
+            _react2.default.createElement(
+              _semanticUiReact.Header.Subheader,
+              null,
+              "Choose a strong password for sign in to Ease.space"
+            )
+          ),
+          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
+          _react2.default.createElement(
+            _semanticUiReact.Form,
+            { onSubmit: this.onSubmit, error: this.state.errorMessage.length > 0 },
+            _react2.default.createElement(
+              _semanticUiReact.Form.Field,
+              { required: true, error: this.state.passwordError },
+              _react2.default.createElement(
+                "label",
+                null,
+                "Password"
+              ),
+              _react2.default.createElement(_semanticUiReact.Input, {
+                onChange: this.props.handleInput,
+                type: "password",
+                name: "password",
+                placeholder: "Password",
+                required: true }),
+              _react2.default.createElement(
+                _semanticUiReact.Label,
+                { pointing: true, color: this.state.passwordError ? 'red' : null, basic: this.state.passwordError },
+                "Your password must contain at least 8 characters, 1 uppercase, 1 lowercase and 1 number"
+              )
+            ),
+            _react2.default.createElement(_semanticUiReact.Form.Input, {
+              label: "Confirm password",
+              onChange: this.props.handleInput,
+              type: "password",
+              name: "confirmPassword",
+              placeholder: "Confirmation",
+              required: true }),
+            _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+            _react2.default.createElement(
+              _semanticUiReact.Form.Button,
+              { positive: true, fluid: true, type: "submit" },
+              "Next"
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Step3;
+}(_react2.default.Component);
+
+var StepCGU = function (_React$Component4) {
+  _inherits(StepCGU, _React$Component4);
+
+  function StepCGU(props) {
+    _classCallCheck(this, StepCGU);
+
+    var _this6 = _possibleConstructorReturn(this, (StepCGU.__proto__ || Object.getPrototypeOf(StepCGU)).call(this, props));
+
+    _this6.submit = function () {
+      _this6.setState({ loading: true });
+      post_api.common.registration(_this6.props.email, _this6.props.username, _this6.props.password, _this6.props.digits, null, _this6.props.newsletter).then(function (response) {
+        _this6.setState({ loading: false });
+        _this6.props.onStepValidated();
+      }).catch(function (err) {
+        _this6.setState({ loading: false });
+      });
+    };
+
+    _this6.state = {
+      loading: false
+    };
+    return _this6;
+  }
+
+  _createClass(StepCGU, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "contents" },
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Header,
+            { as: "h1" },
+            "Review the General Terms"
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Container,
+            { style: { maxHeight: '300px', overflow: 'auto', marginBottom: '1rem', paddingLeft: '0' } },
+            _react2.default.createElement(
+              "p",
+              null,
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla ipsum. Ut tincidunt nisi nec risus scelerisque, in hendrerit ligula blandit. Etiam iaculis dui quis iaculis lobortis. Morbi bibendum fermentum diam, at blandit urna vulputate at. Donec commodo, sapien quis sollicitudin vestibulum, justo augue sagittis lacus, et varius diam nunc a massa. Vivamus et auctor mauris. Nunc ut aliquet massa. In euismod pellentesque urna, vel dictum nibh vulputate et. Phasellus posuere rutrum mauris, vel porta erat vestibulum id. Etiam aliquet fermentum porttitor. Nam fermentum in dolor vitae porta. Vivamus condimentum at urna sodales egestas. Phasellus tristique justo at scelerisque condimentum."
+            ),
+            _react2.default.createElement(
+              "p",
+              null,
+              "Sed varius interdum tincidunt. Cras ac rhoncus nisl. Vestibulum id fringilla risus, in euismod ante. Etiam tristique nunc elit, sed venenatis risus mollis eu. Nulla risus nulla, fermentum eget orci in, bibendum sollicitudin felis. Vivamus eros sem, aliquet a tempus non, blandit eu justo. Suspendisse ut turpis at leo lacinia volutpat. Sed at ante at lacus facilisis porttitor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam risus dui, volutpat nec ipsum eu, viverra scelerisque nulla. Etiam imperdiet tortor finibus tellus faucibus tincidunt. Integer elit purus, dictum ac facilisis vel, sodales et orci. Maecenas egestas gravida"
+            ),
+            _react2.default.createElement(
+              "p",
+              null,
+              "Nunc viverra velit in ullamcorper lobortis. In pharetra hendrerit ultricies. Integer et ipsum vel tortor tempus ornare vitae nec libero. Praesent faucibus in dolor sed efficitur. Proin consequat ligula sed neque luctus faucibus. Aenean justo risus, convallis sed lacus ac, rutrum vestibulum quam. Nulla in dapibus lectus. Integer sit amet felis turpis. Pellentesque scelerisque sodales justo at varius. Nulla pulvinar cursus enim vitae lobortis. Mauris eu arcu euismod, dignissim mauris in, vestibulum ante. Aenean congue, tellus sit amet gravida ultricies, dolor lacus vehicula tortor, ut vestibulum elit turpis eu urna. Ut quis urna porttitor, viverra eros tristique, suscipit risus."
+            )
+          ),
+          _react2.default.createElement(
+            "p",
+            null,
+            "By clicking \xAB I Agree \xBB, you understand and agree to our General Terms and ",
+            _react2.default.createElement(
+              "a",
+              null,
+              "Privacy Policy"
+            ),
+            "."
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Button,
+            { positive: true, fluid: true, loading: this.state.loading, onClick: this.submit },
+            "I Agree"
+          )
+        )
+      );
+    }
+  }]);
+
+  return StepCGU;
+}(_react2.default.Component);
+
+var Registration = function (_React$Component5) {
+  _inherits(Registration, _React$Component5);
+
+  function Registration(props) {
+    _classCallCheck(this, Registration);
+
+    var _this7 = _possibleConstructorReturn(this, (Registration.__proto__ || Object.getPrototypeOf(Registration)).call(this, props));
+
+    _this7.handleInput = _utils.handleSemanticInput.bind(_this7);
+
+    _this7.incrementStep = function () {
+      _this7.setState({ currentStep: _this7.state.currentStep + 1 });
+    };
+
+    _this7.finalizeRegistration = function () {
+      window.location.href = "/";
+    };
+
+    _this7.state = {
+      username: '',
+      email: '',
+      newsletter: false,
+      digits: '',
+      password: '',
+      confirmPassword: '',
+      currentStep: 0
+    };
+    return _this7;
+  }
+
+  _createClass(Registration, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var query = _queryString2.default.parse(this.props.location.search);
+      if (query.email !== undefined) {
+        this.setState({ email: query.email });
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var steps = [];
+      steps.push(_react2.default.createElement(Step1, {
+        key: "1",
+        onStepValidated: this.incrementStep,
+        handleInput: this.handleInput,
+        username: this.state.username,
+        email: this.state.email,
+        newsletter: this.state.newsletter }));
+      steps.push(_react2.default.createElement(Step2, { onStepValidated: this.incrementStep,
+        digits: this.state.digits,
+        email: this.state.email,
+        handleInput: this.handleInput,
+        key: "2" }));
+      steps.push(_react2.default.createElement(Step3, { onStepValidated: this.incrementStep,
+        password: this.state.password,
+        confirmPassword: this.state.confirmPassword,
+        handleInput: this.handleInput,
+        key: "3" }));
+      steps.push(_react2.default.createElement(StepCGU, { key: "cgu",
+        email: this.state.email,
+        password: this.state.password,
+        newsletter: this.state.newsletter,
+        digits: this.state.digits,
+        username: this.state.username,
+        onStepValidated: this.finalizeRegistration }));
+      return _react2.default.createElement(
+        "div",
+        { id: "team_join_view", className: "full_screen_centered_view" },
+        _react2.default.createElement(_SingleEaseLogo2.default, null),
+        _react2.default.createElement(
+          _reactAddonsCssTransitionGroup2.default,
+          {
+            component: "div",
+            className: "carousel",
+            transitionName: "slideLeft",
+            transitionAppear: true,
+            transitionAppearTimeout: 200,
+            transitionEnterTimeout: 200,
+            transitionLeaveTimeout: 200 },
+          steps.map(function (item, idx) {
+            if (idx === this.state.currentStep) return item;
+            return null;
+          }, this)
+        )
+      );
+    }
+  }]);
+
+  return Registration;
+}(_react2.default.Component);
+
+module.exports = Registration;
 
 /***/ })
 /******/ ]);
