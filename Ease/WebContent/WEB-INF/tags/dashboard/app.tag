@@ -25,7 +25,7 @@
 	</div>
 </c:when>
 <c:when test="${app.getType() eq 'LinkApp'}">
-	<div class="siteLinkBox"
+    <div class="siteLinkBox ${app.isPinned()?'pinned':''}"
 	 name="${app.getName()}"
 	 id="${app.getDBid()}"
 	 url="${app.getLinkAppInformations().getLink()}"
@@ -43,7 +43,7 @@
 </c:when>
 <c:otherwise>
 <c:if test="${app.getType() eq 'ClassicApp'}">
-<div class="siteLinkBox"
+    <div class="siteLinkBox ${app.isPinned()?'pinned':''}"
 	<c:forEach items="${app.getAccount().getAccountInformationsWithoutPassword()}" var="entry">
 		${entry.getInformationName()}="${entry.getInformationValue()}"
 	</c:forEach>
