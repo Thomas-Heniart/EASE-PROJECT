@@ -107,12 +107,14 @@ class TeamChannelFlexTab extends React.Component{
   }
   render() {
     const me = this.props.me;
+    const channel = this.props.item;
+
     return (
         <div className="flex_contents_panel active" id="team_tab">
           <div className="tab_heading">
             <div className="heading_row">
             <span className="heading_text">
-              Team's information
+              Room information
             </span>
               <button className="button-unstyle button_close_flexpanel" onClick={this.props.toggleFlexFunc}>
                 <i className="fa fa-times"/>
@@ -124,11 +126,11 @@ class TeamChannelFlexTab extends React.Component{
               <Grid.Row>
                 <Grid.Column>
                   {!this.state.nameModifying ?
-                      <h4>{this.props.item.name}
-                        {isAdmin(me.role) &&
+                      <h4>{channel.name}
+                        {isAdmin(me.role) && !channel.default &&
                         <button class="button-unstyle mrgnLeft5 action_button"
                                 onClick={this.setNameModifying.bind(null, true)}>
-                          <i class="fa fa-pencil"/>
+                          <i class="fa fa-pencil mrgnLeft5"/>
                         </button>}
                       </h4>
                       :
@@ -157,7 +159,7 @@ class TeamChannelFlexTab extends React.Component{
                         {isAdmin(me.role) &&
                         <button class="button-unstyle mrgnLeft5 action_button"
                                 onClick={this.setPurposeModifying.bind(null, true)}>
-                          <i class="fa fa-pencil"/>
+                          <i class="fa fa-pencil mrgnLeft5"/>
                         </button>}
                   </span>
                       :
@@ -192,7 +194,7 @@ class TeamChannelFlexTab extends React.Component{
                             <Label size="mini">
                               <Icon name="user"/>
                               {user.username}
-                              {(isSuperior(user, me) || user.id === me.id) &&
+                              {(isSuperior(user, me) || user.id === me.id) && !channel.default &&
                               <Icon name="delete" link
                                     onClick={e => {
                                       this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))
@@ -206,20 +208,20 @@ class TeamChannelFlexTab extends React.Component{
                       users={this.props.users}
                       requests={this.props.item.join_requests}
                       dispatch={this.props.dispatch}/>}
-                  {isAdmin(me.role) &&
+                  {isAdmin(me.role) && !channel.default &&
                   <Button primary size="mini"
                           onClick={e => {this.props.dispatch(teamModalActions.showTeamChannelAddUserModal(true, this.props.item.id))}}>
                     <Icon name="add user"/>
-                    Add member
+                    Add a member
                   </Button>}
                 </Grid.Column>
               </Grid.Row>
-              {isAdmin(me.role) &&
+              {isAdmin(me.role) && !channel.default &&
               <Grid.Row>
                 <Grid.Column>
                   <Button basic color="red" size="mini"
                           onClick={e => {this.props.dispatch(showTeamDeleteChannelModal(true, this.props.item.id))}}>
-                    Delete this group
+                    Delete this room
                   </Button>
                 </Grid.Column>
               </Grid.Row>}
@@ -323,7 +325,7 @@ class TeamUserFlexTab extends React.Component{
     });
   }
   confirmUserRoleChange(){
-    if (this.state.role == 3){
+    if (this.state.role === 3){
       this.props.dispatch(showTeamTransferOwnershipModal(true, this.props.item));
       this.setState({roleModifying: false});
       return;
@@ -336,7 +338,7 @@ class TeamUserFlexTab extends React.Component{
       this.setState({roleModifying: false});
   }
   confirmUserDepartureDateChange(){
-    if (this.state.departureDate != this.props.item.departureDate){
+    if (this.state.departureDate !== this.props.item.departureDate){
       this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate)).then(response => {
         this.setState({departureDateModifying: false});
       });
@@ -368,7 +370,7 @@ class TeamUserFlexTab extends React.Component{
                       <h4>
                         {user.first_name} {user.last_name}
                         {isAdminOrMe(user, me) &&
-                        <Icon link name="pencil" onClick={this.setFirstLastNameModifying.bind(null, true)}/>}
+                        <Icon link name="pencil" class="mrgnLeft5" onClick={this.setFirstLastNameModifying.bind(null, true)}/>}
                       </h4> :
                       <Form as="div">
                         <Form.Input
@@ -396,7 +398,7 @@ class TeamUserFlexTab extends React.Component{
                       <div>
                         @{user.username}
                         {isAdminOrMe(user, me) &&
-                        <Icon link name="pencil" onClick={this.setUsernameModifying.bind(null, true)}/>}
+                        <Icon link name="pencil" class="mrgnLeft5" onClick={this.setUsernameModifying.bind(null, true)}/>}
                       </div> :
                       <Form as="div">
                         <Form.Input
@@ -424,7 +426,7 @@ class TeamUserFlexTab extends React.Component{
                   {!this.state.roleModifying ?
                       <span>
                         {teamUserRoles[user.role]}
-                        {isSuperior(user, me) && user.id != me.id &&
+                        {isSuperior(user, me) && user.id !== me.id &&
                         <Icon link name="pencil" onClick={this.setRoleModifying.bind(null, true)}/>}
                    </span> :
                       <span>
@@ -468,9 +470,9 @@ class TeamUserFlexTab extends React.Component{
                       return (
                           <List.Item key={item}>
                             <Label size="mini">
-                              <Icon name="users"/>
+                              <Icon name="hashtag"/>
                               {channel.name}
-                              {isAdmin(me.role) &&
+                              {isAdmin(me.role) && !channel.default &&
                               <Icon name="delete" link
                                     onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}/>}
                             </Label>
@@ -518,7 +520,7 @@ class FlexPanels extends React.Component {
 
     return (
         <div id="flex_contents">
-          {item.purpose != undefined &&
+          {item.purpose !== undefined &&
           <TeamChannelFlexTab
               me={me}
               item={item}
@@ -527,7 +529,7 @@ class FlexPanels extends React.Component {
               toggleFlexFunc={this.closePanel}
               users={this.props.users}
               dispatch={this.props.dispatch}/>}
-          {item.username != undefined &&
+          {item.username !== undefined &&
           <TeamUserFlexTab
               me={me}
               item={item}

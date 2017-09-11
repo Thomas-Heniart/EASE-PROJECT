@@ -3,6 +3,7 @@ var classnames = require('classnames');
 var api = require('../utils/api');
 var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var MultiTeamAppAdd = require('./MultiTeamAppAdd');
+import {requestWebsite} from "../actions/teamModalActions";
 import {connect} from "react-redux";
 import {selectUserFromListById} from "../utils/helperFunctions";
 import * as appActions from "../actions/appsActions";
@@ -22,7 +23,7 @@ class DashboardAndTeamAppSearch extends React.Component{
     }.bind(this));
   }
   componentWillReceiveProps(props){
-    props != this.props && this.updateList(props.team_id, props.query);
+    props !== this.props && this.updateList(props.team_id, props.query);
   }
   componentDidMount(){
     this.updateList(this.props.team_id, this.props.query);
@@ -56,6 +57,10 @@ class DashboardAndTeamAppSearch extends React.Component{
                   <div>No results</div>
             }
           </div>
+          <div class="attached" onClick={this.props.requestWebsite}>
+            <i class="fa fa-plus"/>
+            Request a website
+          </div>
         </div>
     )
   }
@@ -79,7 +84,7 @@ class SimpleUserSelect extends React.Component {
   render(){
     return (
         <div className="user_adding_container">
-          {this.state.dropdown && <div className="popover_mask" onClick={this.closeDropdown}></div>}
+          {this.state.dropdown && <div className="popover_mask" onClick={this.closeDropdown}/>}
           <div className="icon_wrapper">
             <i className="fa fa-plus"/>
           </div>
@@ -89,13 +94,14 @@ class SimpleUserSelect extends React.Component {
                 return (
                     <div className="user_token" key={item.id}>
                       <span className="name_hodler overflow-ellipsis">{item.username}</span>
-                      {item.can_see_information != undefined &&
+                      {item.can_see_information !== undefined &&
                         <button class="action_button button-unstyle mrgnLeft5" onClick={this.props.switchCanSeeInformationFunc.bind(null, item.id)}>
                         <i class={classnames('fa', item.can_see_information ? 'fa-eye' : 'fa-eye-slash')}/>
                       </button>}
+                      {item.removable === true &&
                       <button className="button_delete action_button button-unstyle" onClick={this.props.deselectFunc.bind(null, item.id)}>
                         <i className="fa fa-times"/>
-                      </button>
+                      </button>}
                     </div>
                 )
               }, this)
@@ -129,29 +135,33 @@ class LinkTeamAppAdd extends React.Component {
     this.state = {
       appName: '',
       url: '',
-      logoSrc: '/resources/icons/app_icon.svg',
+      logoSrc: '/resources/icons/link_app.png',
       comment: '',
       selectedUsers: [],
       users: []
     };
-    this.state.users = [];
-    if (this.props.selectedItem.type === 'channel'){
-      this.props.item.userIds.map(function(item){
-        var user = this.props.userSelectFunc(item);
-        user.selected = false;
-        this.state.users.push(user);
-      }, this);
-    } else {
-      var item = this.props.item;
-      item.selected = false;
-      this.state.users.push(item);
-    }
     this.handleAppNameChange = this.handleAppNameChange.bind(this);
     this.handleUrlInput= this.handleUrlInput.bind(this);
     this.handleUserSelect = this.handleUserSelect.bind(this);
     this.handleUserDeselect = this.handleUserDeselect.bind(this);
     this.shareApp = this.shareApp.bind(this);
     this.handleComment = this.handleComment.bind(this);
+  }
+  componentDidMount(){
+    if (this.props.selectedItem.type === 'channel'){
+      this.props.item.userIds.map(function(item){
+        var user = this.props.userSelectFunc(item);
+        user.selected = false;
+        user.removable = true;
+        this.state.users.push(user);
+      }, this);
+    } else {
+      var item = this.props.item;
+      item.selected = false;
+      item.removable = false;
+      this.state.users.push(item);
+      this.handleUserSelect(item.id);
+    }
   }
   shareApp(){
     var app = {
@@ -269,8 +279,7 @@ class LinkTeamAppAdd extends React.Component {
                         type="text"
                         name="url"
                         value={this.state.url}
-                        onChange={this.handleUrlInput}
-                      />
+                        onChange={this.handleUrlInput}/>
                       </div>
                   </div>
                 </div>
@@ -310,23 +319,9 @@ class SimpleTeamAppAdd extends React.Component {
       selectedUsers: [],
       users: []
     };
-    this.state.users = [];
-    if (this.props.selectedItem.type === 'channel'){
-      this.props.item.userIds.map(function(item){
-        var user = {...this.props.userSelectFunc(item)};
-        user.selected = false;
-        user.can_see_information = false;
-        this.state.users.push(user);
-      }, this);
-    } else {
-      var item = {...this.props.item};
-      item.selected = false;
-      item.can_see_information = true;
-      this.state.users.push(item);
-    }
-
     this.handleAppNameChange = this.handleAppNameChange.bind(this);
     this.chooseApp = this.chooseApp.bind(this);
+    this.requestWebsite = this.requestWebsite.bind(this);
     this.resetApp = this.resetApp.bind(this);
     this.handleCredentialInput = this.handleCredentialInput.bind(this);
     this.handlePasswordRemind = this.handlePasswordRemind.bind(this);
@@ -336,6 +331,31 @@ class SimpleTeamAppAdd extends React.Component {
     this.chooseDashboardApp = this.chooseDashboardApp.bind(this);
     this.switchUserCanSeeInformation = this.switchUserCanSeeInformation.bind(this);
     this.shareApp = this.shareApp.bind(this);
+  }
+  componentDidMount(){
+    if (this.props.selectedItem.type === 'channel'){
+      this.props.item.userIds.map(function(item){
+        var user = {...this.props.userSelectFunc(item)};
+        user.selected = false;
+        user.removable = true;
+        user.can_see_information = false;
+        this.state.users.push(user);
+      }, this);
+    } else {
+      var item = {...this.props.item};
+      item.removable = false;
+      item.selected = false;
+      item.can_see_information = true;
+      this.state.users.push(item);
+      this.handleUserSelect(item.id);
+    }
+  }
+  requestWebsite(){
+    requestWebsite(this.props.dispatch).then(website => {
+      this.chooseApp(website);
+    }).catch(err => {
+      //do nothing :/
+    });
   }
   shareApp(){
     var app = {
@@ -374,7 +394,7 @@ class SimpleTeamAppAdd extends React.Component {
     }
   }
   componentWillReceiveProps(props){
-    if (props != this.props){
+    if (props !== this.props){
       var users = [];
       if (props.selectedItem.type === 'channel'){
         props.item.userIds.map(function(item){
@@ -490,6 +510,7 @@ class SimpleTeamAppAdd extends React.Component {
                   team_id={this.props.team_id}
                   query={this.state.appName}
                   selectFunc={this.chooseApp}
+                  requestWebsite={this.requestWebsite}
                   dashboardSelectFunc={this.chooseDashboardApp}/>}
             </div>
             {this.state.choosenApp &&

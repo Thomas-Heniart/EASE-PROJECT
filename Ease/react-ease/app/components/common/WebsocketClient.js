@@ -6,8 +6,6 @@ import {connect} from "react-redux";
 
 function teamAppDispatcher(action, app, target){
   return function (dispatch, getState){
-    const state = getState();
-    if (state.selection.type === target.type && state.selection.id === target.id)
       dispatch({type: 'TEAM_APP_' + action, payload: {app: app, target: target}});
   }
 }
@@ -29,6 +27,12 @@ function teamChannelDispatcher(action, channel, target){
   }
 }
 
+function teamDispatcher(action, team) {
+  return function (dispatch, getState){
+    dispatch({type: 'TEAM_' + action, payload: {team: team}});
+  }
+}
+
 @connect()
 class WebsocketClient extends React.Component {
   constructor(props){
@@ -36,7 +40,8 @@ class WebsocketClient extends React.Component {
     this.listeners = {
       'TEAM_APP': teamAppDispatcher,
       'TEAM_USER': teamUserDispatcher,
-      'TEAM_ROOM': teamChannelDispatcher
+      'TEAM_ROOM': teamChannelDispatcher,
+      'TEAM': teamDispatcher
     };
     this.onMessage = this.onMessage.bind(this);
   }
@@ -58,7 +63,9 @@ class WebsocketClient extends React.Component {
     }
   }
   render() {
-    return <Websocket url={"wss://localhost:8443/webSocketServer"} onMessage={this.onMessage}/>
+    const webServerUrl = `wss://${window.location.host}/webSocketServer`;
+
+    return <Websocket url={webServerUrl} onMessage={this.onMessage}/>
   }
 }
 

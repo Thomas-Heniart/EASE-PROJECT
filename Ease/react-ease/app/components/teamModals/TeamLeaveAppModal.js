@@ -1,14 +1,14 @@
 var React = require('react');
 var classnames = require('classnames');
-import {showTeamLeaveAppModal} from "../../actions/teamModalActions"
-import {teamAppDeleteReceiver} from "../../actions/appsActions"
+import {showTeamLeaveAppModal} from "../../actions/teamModalActions";
+import {teamAppDeleteReceiver} from "../../actions/appsActions";
 import {
     selectChannelFromListById,
     selectUserFromListById,
     findMeInReceivers
-} from "../../utils/helperFunctions"
+} from "../../utils/helperFunctions";
 
-import {connect} from "react-redux"
+import {connect} from "react-redux";
 
 @connect((store)=>{
   return {
@@ -23,12 +23,12 @@ class TeamLeaveAppModal extends React.Component {
     this.state = {
       confirmed: false
     };
-    this.receiver = findMeInReceivers(this.props.modal.app.receivers, this.props.modal.team_user_id);
     this.confirm = this.confirm.bind(this);
     this.confirmModal = this.confirmModal.bind(this);
   }
   confirmModal(){
-    this.props.dispatch(teamAppDeleteReceiver(this.props.modal.app.id, this.receiver.shared_app_id, this.props.modal.team_user_id)).then(response => {
+    const receiver = findMeInReceivers(this.props.modal.app.receivers, this.props.modal.team_user_id);
+    this.props.dispatch(teamAppDeleteReceiver(this.props.modal.app.id, receiver.shared_app_id, this.props.modal.team_user_id)).then(response => {
       this.props.dispatch(showTeamLeaveAppModal(false));
     });
   }
@@ -37,9 +37,11 @@ class TeamLeaveAppModal extends React.Component {
   }
   render(){
     const app = this.props.modal.app;
+    const channel = selectChannelFromListById(this.props.channels, app.origin.id);
+
     return (
         <div class="popupHandler myshow">
-          <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamLeaveAppModal(false))}}></div>
+          <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamLeaveAppModal(false))}}/>
           <div class="ease_popup ease_team_popup" id="modal_team_leave_app">
             <button class="button-unstyle action_button close_button" onClick={e => {this.props.dispatch(showTeamLeaveAppModal(false))}}>
               <i class="fa fa-times"/>
@@ -48,12 +50,12 @@ class TeamLeaveAppModal extends React.Component {
               Leave {app.name}
             </div>
             <div class="row display-flex flex_direction_column" style={{padding: '20px',fontSize:".9rem"}}>
-              <span style={{marginBottom: "20px"}}>Are you sure you want to leave <strong>{app.name}</strong> ?</span>
+              <span style={{marginBottom: "20px"}}>Are you sure you want to leave <strong>{app.name}</strong>, in #{channel.name} ?</span>
               <span>If yes:</span>
               <ul style={{marginBottom: 0}}>
-                <li>All people using this App will loose the access</li>
-                <li>All information related to it will be removed from Ease.space</li>
-                <li>You won't be able to restore the App once deleted.</li>
+                <li>You will not be able to access this App anymore.</li>
+                <li>This app will be removed from your Dashboard in case it is pinned to it.</li>
+                <li>The App Admin will be notified that you do not have access to it anymore.</li>
               </ul>
             </div>
             <div class="row display-flex align_items_center" style={{fontSize: ".9rem", marginBottom:"20px"}}>

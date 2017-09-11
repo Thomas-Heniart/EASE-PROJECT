@@ -1,6 +1,7 @@
 var React = require('react');
 var api = require('../utils/api');
 var classnames = require('classnames');
+import {requestWebsite} from "../actions/teamModalActions";
 import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 import {teamCreateMultiApp, teamShareApp} from "../actions/appsActions"
 
@@ -18,7 +19,7 @@ class TeamAppSearch extends React.Component{
     }.bind(this));
   }
   componentWillReceiveProps(props){
-    props != this.props && this.updateList(props.team_id, props.query);
+    props !== this.props && this.updateList(props.team_id, props.query);
   }
   componentDidMount(){
     this.updateList(this.props.team_id, this.props.query);
@@ -42,6 +43,10 @@ class TeamAppSearch extends React.Component{
                   <div>No results</div>
             }
           </div>
+          <div class="attached" onClick={this.props.requestWebsite}>
+            <i class="fa fa-plus"/>
+            Request a website
+          </div>
         </div>
     )
   }
@@ -59,21 +64,10 @@ class MultiTeamAppAdd extends React.Component {
       users: [],
       dropdown: false
     };
-    this.state.users = [];
-    if (this.props.selectedItem.type === 'channel'){
-      this.props.item.userIds.map(function(item){
-        var user = this.props.userSelectFunc(item);
-        user.selected = false;
-        this.state.users.push(user);
-      }, this);
-    } else {
-      var item = this.props.item;
-      item.selected = false;
-      this.state.users.push(item);
-    }
     this.handleAppNameChange = this.handleAppNameChange.bind(this);
     this.chooseApp = this.chooseApp.bind(this);
     this.resetApp = this.resetApp.bind(this);
+    this.requestWebsite = this.requestWebsite.bind(this);
     this.handlePasswordRemind = this.handlePasswordRemind.bind(this);
     this.handleComment = this.handleComment.bind(this);
     this.handleUserSelect = this.handleUserSelect.bind(this);
@@ -82,6 +76,21 @@ class MultiTeamAppAdd extends React.Component {
     this.showDropdown = this.showDropdown.bind(this);
     this.hideDropdown = this.hideDropdown.bind(this);
     this.shareApp = this.shareApp.bind(this);
+  }
+  componentDidMount(){
+    if (this.props.selectedItem.type === 'channel'){
+      this.props.item.userIds.map(function(item){
+        var user = this.props.userSelectFunc(item);
+        user.selected = false;
+        user.removable = true;
+        this.state.users.push(user);
+      }, this);
+    } else {
+      var item = this.props.item;
+      item.selected = false;
+      item.removable = false;
+      this.state.users.push(item);
+    }
   }
   shareApp(){
     var app = {
@@ -119,7 +128,7 @@ class MultiTeamAppAdd extends React.Component {
       this.setState({dropdown: true});
   }
   componentWillReceiveProps(props){
-    if (props != this.props){
+    if (props !== this.props){
       var users = [];
       if (props.selectedItem.type === 'channel'){
         props.item.userIds.map(function(item){
@@ -185,6 +194,13 @@ class MultiTeamAppAdd extends React.Component {
     }
     this.setState({users: users, selectedUsers: selectedUsers});
   }
+  requestWebsite(){
+    requestWebsite(this.props.dispatch).then(website => {
+      this.chooseApp(website);
+    }).catch(err => {
+      //do nothing :/
+    });
+  }
   chooseApp(app){
     api.fetchWebsiteInfo(app.id).then(function(data){
       var credentials = {};
@@ -192,6 +208,8 @@ class MultiTeamAppAdd extends React.Component {
         credentials[item] = '';
       });
       this.setState({choosenApp: {info : app, inputs: data.information}, appName : app.website_name, credentials: credentials});
+      if (this.props.selectedItem.type === 'user')
+        this.handleUserSelect(this.state.users[0].id);
     }.bind(this));
   }
   handleComment(event){
@@ -227,6 +245,7 @@ class MultiTeamAppAdd extends React.Component {
               <TeamAppSearch
                   team_id={this.props.team_id}
                   query={this.state.appName}
+                  requestWebsite={this.requestWebsite}
                   selectFunc={this.chooseApp}/>}
             </div>
             {this.state.choosenApp &&
@@ -253,16 +272,17 @@ class MultiTeamAppAdd extends React.Component {
                                     <span className="value overflow-ellipsis">
                                       {user.username}
                                     </span>
+                                  {user.removable === true &&
                                   <button className="button-unstyle button_delete" onClick={this.handleUserDeselect.bind(null, user.id)}>
                                     <i className="fa fa-times"/>
-                                  </button>
+                                  </button>}
                                 </div>
                                 {
                                   Object.keys(this.state.credentials).reverse().map(function(item){
                                     return (
                                           <input
                                                  key={item}
-                                                 placeholder={this.state.choosenApp.inputs[item].placeholder}
+                                                 placeholder={`${this.state.choosenApp.inputs[item].placeholder}(Optional)`}
                                                  autoComplete="off"
                                                  className="credentials_value_input value_input"
                                                  type={this.state.choosenApp.inputs[item].type}
@@ -279,7 +299,7 @@ class MultiTeamAppAdd extends React.Component {
                     }
                   </div>
                   <div className={classnames("user_choose", this.state.dropdown ? "list_visible": null)}>
-                    {this.state.dropdown && <div className="popover_mask" onClick={this.hideDropdown}></div>}
+                    {this.state.dropdown && <div className="popover_mask" onClick={this.hideDropdown}/>}
                     <input type="text" className="input_unstyle" placeholder="Search for people..."
                            onFocus={this.showDropdown}/>
                     <div className="floating_dropdown user_selectors">

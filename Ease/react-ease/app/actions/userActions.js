@@ -1,6 +1,6 @@
 var api =require('../utils/api');
 var post_api = require('../utils/post_api');
-import {showVerifyTeamUserModal} from "./teamModalActions";
+import {showVerifyTeamUserModal, showReactivateTeamUserModal} from "./teamModalActions";
 import {teamUserState} from "../utils/utils";
 import {selectUserFromListById,  isAdmin} from "../utils/helperFunctions";
 
@@ -9,7 +9,6 @@ export function selectTeamUser(id){
     dispatch({type: 'SELECT_USER_PENDING'});
     var teamUser = selectUserFromListById(getState().users.users, id);
     return api.fetchTeamUserApps(getState().team.id, id).then(response => {
-//        teamUser.apps = response;
       dispatch({type: 'SELECT_USER_FULFILLED', payload: {user:teamUser, apps: response}});
       if (teamUser.state === teamUserState.registered)
         dispatch(showVerifyTeamUserModal(true, teamUser));
@@ -30,6 +29,8 @@ export function fetchTeamUserApps(id){
       dispatch({type: 'FETCH_TEAM_USER_APPS_FULFILLED', payload: {apps: response, type: 'user', id: id}});
       if (teamUser.state === teamUserState.registered && isAdmin(me.role) && teamUser.id !== me.id)
         dispatch(showVerifyTeamUserModal(true, teamUser));
+      else if (teamUser.disabled && isAdmin(me.role) && teamUser.id !== me.id)
+        dispatch(showReactivateTeamUserModal(true, teamUser));
       return response;
     }).catch(err => {
       dispatch({type:'FETCH_TEAM_USER_APPS_REJECTED', payload:err});
@@ -160,6 +161,19 @@ export function verifyTeamUserArrive(team_user_id){
       dispatch({type: 'VERIFY_TEAM_USER_ARRIVE_FULFILLED', payload: {team_user_id: team_user_id}});
     }).catch(err => {
       dispatch({type: 'VERIFY_TEAM_USER_ARRIVE_REJECTED', payload: {err}});
+      throw err;
+    });
+  }
+}
+
+export function reactivateTeamUser({team_user_id}){
+  return (dispatch, getState) => {
+    dispatch({type: 'REACTIVATE_TEAM_USER_PENDING'});
+    return post_api.teamUser.reactivateTeamUser({team_id: getState().team.id, team_user_id: team_user_id, ws_id: getState().common.ws_id}).then(r => {
+      dispatch({type: 'REACTIVATE_TEAM_USER_FULFILLED', payload: {team_user_id: team_user_id}});
+      return r;
+    }).catch(err => {
+      dispatch({type: 'REACTIVATE_TEAM_USER_FULFILLED', payload: err});
       throw err;
     });
   }

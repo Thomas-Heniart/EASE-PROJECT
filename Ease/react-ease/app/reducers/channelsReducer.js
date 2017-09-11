@@ -43,6 +43,18 @@ export default function reducer(state={
         channels: nChannels
       }
     }
+    case 'CREATE_TEAM_USER_FULFILLED' : {
+      const user = action.payload;
+      let channels = state.channels.map(item => {
+        if (item.default)
+          item.userIds.push(user.id);
+        return item;
+      });
+      return {
+          ...state,
+        channels: channels
+      }
+    }
     case 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED': {
       var nChannels = state.channels.map(function(item){
         if (item.id === action.payload.channel_id) {
@@ -135,7 +147,7 @@ export default function reducer(state={
     }
     case 'TEAM_ROOM_ADDED': {
       var channels = state.channels;
-      if (selectUserFromListById(state.channels, action.payload.channel.id) != null)
+      if (selectUserFromListById(state.channels, action.payload.channel.id) !== null)
         break;
       users.push(action.payload.channel);
       return {
@@ -155,6 +167,7 @@ export default function reducer(state={
           }
         }
       }
+      break;
     }
   }
   return state;

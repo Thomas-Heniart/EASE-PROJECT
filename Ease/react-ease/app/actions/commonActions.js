@@ -3,6 +3,7 @@ var post_api = require('../utils/post_api');
 import {selectTeamChannel} from "./channelActions";
 import {selectTeamUser} from "./userActions";
 import {push} from "react-router-redux";
+
 function getMyChannel(channels, myId){
   for (var i = 0; i < channels.length; i++){
     if (channels[i].userIds.indexOf(myId) !== -1)

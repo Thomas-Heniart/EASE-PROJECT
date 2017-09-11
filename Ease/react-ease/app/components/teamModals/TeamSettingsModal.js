@@ -54,7 +54,7 @@ class TeamSettingsModal extends React.Component {
   render() {
     return (
         <div className="ease_modal" id="team_settings_modal">
-          <div className="modal-background"></div>
+          <div className="modal-background"/>
           <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={e => {
             this.props.dispatch(showTeamSettingsModal(false))
           }}>

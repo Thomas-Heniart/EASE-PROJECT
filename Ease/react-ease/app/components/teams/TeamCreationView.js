@@ -3,13 +3,10 @@ var classnames = require('classnames');
 var post_api = require('../../utils/post_api');
 var api = require('../../utils/api');
 var axios = require('axios');
-var StripeCardForm = require('../stripe/StripeCardForm');
-var CompanyInformationForm = require('../common/CompanyInformationForm');
 import { NavLink } from 'react-router-dom';
 import {passwordRegexp, emailRegexp, checkTeamUsernameErrors, jobRoles} from "../../utils/utils";
-import {FormInput} from '../common/FormComponents';
-import {Elements} from 'react-stripe-elements';
 import {withRouter} from "react-router-dom";
+import {setLoginRedirectUrl} from "../../actions/commonActions";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import SingleEaseLogo from "../common/SingleEaseLogo";
 import {connect} from "react-redux";
@@ -24,6 +21,11 @@ class Step1 extends React.Component{
       processing: false
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.login = this.login.bind(this);
+  }
+  login(){
+    this.props.dispatch(setLoginRedirectUrl('/main/simpleTeamCreation'));
+    this.props.history.replace('/login');
   }
   onSubmit(e){
     e.preventDefault();
@@ -51,9 +53,9 @@ class Step1 extends React.Component{
                        name="email"
                        placeholder="name@company.com"
                         required/>
-                <NavLink to="/login" style={{float:'right'}}>I already have an account</NavLink>
+                <a onClick={this.login} style={{float:'right', marginTop:'5px'}}>I already have an account</a>
               </Form.Field>
-              <Form.Checkbox label="It's ok to send me (very occasional) email about Ease.space service"
+              <Form.Checkbox label="It’s ok to send me very occasional emails about security and Ease.space"
                              onClick={this.props.switchNewsletter}
                              checked={this.props.newsletter}/>
               <Message error content={this.state.errorMessage}/>
@@ -70,19 +72,32 @@ class Step2 extends React.Component{
     super(props);
     this.state = {
       errorMessage: '',
-      loading: false
+      loading: false,
+      sendingEmail: false,
+      sendEmailButtonText: 'Resend email'
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.resendDigits = this.resendDigits.bind(this);
   }
   onSubmit(e){
     e.preventDefault();
     this.setState({errorMessage: '', loading: true});
-    post_api.teams.checkTeamCreationDigits(this.props.email, this.props.digits).then(response => {
+    post_api.common.checkRegistrationDigits(this.props.email, this.props.digits).then(response => {
       this.setState({loading: false});
       this.props.onStepValidated();
     }).catch(err => {
-      this.setState({loading: false, errorMesage: err});
+      this.setState({loading: false, errorMessage: err});
     })
+  }
+  resendDigits(){
+    this.setState({sendingEmail: true});
+    post_api.common.askRegistration(this.props.email).then(response => {
+      this.setState({sendingEmail: false});
+      this.setState({sendEmailButtonText: 'Sent!'});
+      window.setTimeout(() => {this.setState({sendEmailButtonText: 'Resend email'})}, 2000);
+    }).catch(err => {
+      this.setState({sendingEmail: false});
+    });
   }
   render() {
     return (
@@ -91,7 +106,7 @@ class Step2 extends React.Component{
             <Header as="h1">
               Check your email
               <Header.Subheader>
-                We've send a six-digit confirmation code to <strong>{this.props.email}</strong>. It will expire shortly, so enter your code soon.
+                We've sent a six-digit confirmation code to <strong>{this.props.email}</strong>. It will expire shortly, so enter your code soon.
               </Header.Subheader>
             </Header>
             <Divider hidden clearing/>
@@ -102,8 +117,9 @@ class Step2 extends React.Component{
                           name="digits"
                           placeholder="Confirmation code"
                           required/>
-              <Message color="yellow">
+              <Message color="yellow" size="mini">
                 Keep this window open while checking for your code.<br/> Haven't received our email ? Try your spam folder!
+                Or <Button basic type="button" className="textlike" size="mini" loading={this.state.sendingEmail} onClick={this.resendDigits} content={this.state.sendEmailButtonText}/>.
               </Message>
               <Message error content={this.state.errorMessage}/>
               <Form.Button fluid positive type="submit" loading={this.state.loading}>Next</Form.Button>
@@ -132,7 +148,7 @@ class Step3 extends React.Component{
       this.setState({passwordError: true});
       return;
     }
-    if (this.props.password != this.props.confirmPassword){
+    if (this.props.password !== this.props.confirmPassword){
       this.setState({errorMessage: this.state.confirmPasswordMessage});
       return;
     }
@@ -150,7 +166,7 @@ class Step3 extends React.Component{
               </Header.Subheader>
             </Header>
           <Divider hidden clearing/>
-          <Form onSubmit={this.onSubmit} error={this.state.errorMessage > 0}>
+          <Form onSubmit={this.onSubmit} error={this.state.errorMessage.length > 0}>
                 <Form.Field required error={this.state.passwordError}>
                   <label>Password</label>
                   <Input
@@ -169,7 +185,7 @@ class Step3 extends React.Component{
                     placeholder="Confirmation"
                     required/>
                 <Message error content={this.state.errorMessage}/>
-                <Form.Button positive fluid type="submit">Continue to Team info</Form.Button>
+                <Form.Button positive fluid type="submit">Next</Form.Button>
               </Form>
             </Segment>
         </div>
@@ -181,20 +197,18 @@ class Step4 extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      errorMessage: '',
-      loading: false
+      errorMessage: ''
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
   onSubmit(e){
     e.preventDefault();
-    this.setState({errorMessage: '', loading: true});
-    post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(response => {
-      this.setState({loading: false});
-      this.props.onStepValidated();
-    }).catch(err => {
-      this.setState({errorMessage: error, loading: false})
-    });
+    const usernameErrors = checkTeamUsernameErrors(this.props.username);
+    if (usernameErrors.error){
+      this.setState({errorMessage: usernameErrors.message});
+      return;
+    }
+    this.props.onStepValidated();
   }
   render() {
     return (
@@ -226,6 +240,63 @@ class Step4 extends React.Component{
                 <Button positive fluid type="submit">Next</Button>
               </Form.Field>
             </Form>
+          </Segment>
+        </div>
+    )
+  }
+}
+
+class StepCGU extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false
+    }
+  }
+  submit = () => {
+    this.setState({loading: true});
+    post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(response => {
+      this.setState({loading: false});
+      this.props.onStepValidated();
+    }).catch(err => {
+      this.setState({loading: false});
+    });
+  };
+  render() {
+    return (
+        <div class="contents">
+          <Segment>
+            <Header as="h1">
+              Review the General Terms
+            </Header>
+            <Container style={{maxHeight: '300px', overflow:'auto', marginBottom: '1rem', paddingLeft: '0'}}>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla ipsum. Ut tincidunt nisi
+                nec risus scelerisque, in hendrerit ligula blandit. Etiam iaculis dui quis iaculis lobortis. Morbi
+                bibendum fermentum diam, at blandit urna vulputate at. Donec commodo, sapien quis sollicitudin
+                vestibulum, justo augue sagittis lacus, et varius diam nunc a massa. Vivamus et auctor mauris. Nunc ut
+                aliquet massa. In euismod pellentesque urna, vel dictum nibh vulputate et. Phasellus posuere rutrum
+                mauris, vel porta erat vestibulum id. Etiam aliquet fermentum porttitor. Nam fermentum in dolor vitae
+                porta. Vivamus condimentum at urna sodales egestas. Phasellus tristique justo at scelerisque
+                condimentum.</p>
+              <p>Sed varius interdum tincidunt. Cras ac rhoncus nisl. Vestibulum id fringilla risus, in euismod ante.
+                Etiam tristique nunc elit, sed venenatis risus mollis eu. Nulla risus nulla, fermentum eget orci in,
+                bibendum sollicitudin felis. Vivamus eros sem, aliquet a tempus non, blandit eu justo. Suspendisse ut
+                turpis at leo lacinia volutpat. Sed at ante at lacus facilisis porttitor. Vestibulum ante ipsum primis
+                in faucibus orci luctus et ultrices posuere cubilia Curae; Nam risus dui, volutpat nec ipsum eu, viverra
+                scelerisque nulla. Etiam imperdiet tortor finibus tellus faucibus tincidunt. Integer elit purus, dictum
+                ac facilisis vel, sodales et orci. Maecenas egestas gravida</p>
+              <p>Nunc viverra velit in ullamcorper lobortis. In pharetra hendrerit ultricies. Integer et ipsum vel
+                tortor tempus ornare vitae nec libero. Praesent faucibus in dolor sed efficitur. Proin consequat ligula
+                sed neque luctus faucibus. Aenean justo risus, convallis sed lacus ac, rutrum vestibulum quam. Nulla in
+                dapibus lectus. Integer sit amet felis turpis. Pellentesque scelerisque sodales justo at varius. Nulla
+                pulvinar cursus enim vitae lobortis. Mauris eu arcu euismod, dignissim mauris in, vestibulum ante.
+                Aenean congue, tellus sit amet gravida ultricies, dolor lacus vehicula tortor, ut vestibulum elit turpis
+                eu urna. Ut quis urna porttitor, viverra eros tristique, suscipit risus.</p>
+            </Container>
+            <p>
+              By clicking « I Agree », you understand and agree to our General Terms and <a>Privacy Policy</a>.
+            </p>
+            <Button positive fluid loading={this.state.loading} onClick={this.submit}>I Agree</Button>
           </Segment>
         </div>
     )
@@ -325,7 +396,8 @@ class Step7 extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      loading: false
+      errorMessage: '',
+      loading: false,
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -334,14 +406,16 @@ class Step7 extends React.Component{
     var calls = [];
     this.props.invitations.map(function (item) {
       if (item.email.match(emailRegexp) !== null && item.username.length > 0){
-        calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, '1'));
+        calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, 1));
       }
     }, this);
-    this.setState({loading: true});
+    this.setState({errorMessage: '', loading: true});
     axios.all(calls).then(() => {
       this.props.handleInput(null, {name: "invitedPeople", value: calls.length});
       this.setState({loading: false});
       this.props.onStepValidated();
+    }).catch(err => {
+      this.setState({errorMessage: err, loading: false});
     });
   }
   render() {
@@ -353,13 +427,14 @@ class Step7 extends React.Component{
                   action={<Button icon="delete" onClick={this.props.removeInvitationField.bind(null, idx)}/>}
                   actionPosition="left"
                   type="email"
+                  required
                   value={item.email}
                   placeholder="Email"
                   onChange={(e, {value}) => {
                     this.props.editInvitationEmail(value, idx)
                   }}/>
             </Form.Field>
-            <Form.Input width={7} type="text"
+            <Form.Input required width={7} type="text"
                         placeholder="Username"
                         value={item.username}
                         onChange={(e, {value}) => {
@@ -378,7 +453,7 @@ class Step7 extends React.Component{
               </Header.Subheader>
             </Header>
             <Divider hidden clearing/>
-            <Form>
+            <Form onSubmit={this.onSubmit} error={this.state.errorMessage.length > 0}>
               <Form.Group>
                 <Form.Field width={9}><label>Email address</label></Form.Field>
                 <Form.Field width={7}><label>Username (editable later)</label></Form.Field>
@@ -388,130 +463,16 @@ class Step7 extends React.Component{
                 <Icon name="add user"/>
                 Add another field
               </Form.Button>
+              <Message error content={this.state.errorMessage}/>
               <Form.Group>
-                <Form.Button width={8} fluid onClick={this.props.incStep}>Skip for now</Form.Button>
-                <Form.Button width={8} fluid positive onClick={this.onSubmit} loading={this.state.loading}>Send invitations</Form.Button>
+                <Form.Button width={8} fluid type="button" onClick={this.props.onStepValidated}>Skip for now</Form.Button>
+                <Form.Button width={8} fluid positive type="submit" loading={this.state.loading}>Send invitations</Form.Button>
               </Form.Group>
             </Form>
           </Segment>
         </div>
     )
   }
-}
-
-class Step8 extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      companyInfoConfirmed: false,
-      friendsInvited: false,
-      errorMessage: '',
-      loading: false
-    };
-    this.confirmCompanyInfo = this.confirmCompanyInfo.bind(this);
-    this.tokenCallback = this.tokenCallback.bind(this);
-    this.inviteFriends = this.inviteFriends.bind(this);
-  }
-  inviteFriends(e){
-    e.preventDefault();
-    const f = this.props.friends;
-
-    this.setState({erorrMessage: '', loading: true});
-    post_api.teams.inviteFriends(this.props.teamId, f[0].email,f[1].email,f[2].email).then(response => {
-      this.props.handleInput({target: {value: 15, name: 'credits'}});
-      this.setState({friendsInvited: true, errorMessage: '', loading: false});
-    }).catch(err => {
-      this.setState({errorMessage: '', loading: false});
-    });
-  }
-  confirmCompanyInfo(state){
-    this.setState({companyInfoConfirmed: state});
-  }
-  tokenCallback(token){
-    const i = this.props.companyInfo;
-    post_api.teams.subscribeToPlan(this.props.teamId, token, i.vat_id, i.company_name,i.street_address, i.unit,
-        i.zip, i.state, i.country, i.city).then(response => {
-      this.props.onStepValidated();
-    }).catch(err => {
-
-    });
-  }
-  render() {
-    return (
-        <div class="contents" id="step6">
-          <Segment>
-            <Header as="h1" color={this.state.friendsInvited ? 'green': 'black'}>
-              Checkout
-              <Header.Subheader>
-                You have {this.props.credits} euros in credits !
-              </Header.Subheader>
-            </Header>
-            <Divider hidden clearing/>
-            {!this.state.friendsInvited &&
-            <Form onSubmit={this.inviteFriends} error={this.state.errorMessage.length > 0}>
-              <Form.Field>
-                <strong>Invite 3 friends and get up to 15 euros in credits</strong>
-              </Form.Field>
-              {this.props.friends.map((item, idx) => {
-                return (
-                    <Form.Input type="email"
-                                value={item.email}
-                                onChange={(e, {value}) => {
-                                  this.props.editFriendsEmail(value, idx)
-                                }}
-                                placeholder="friend@company.com"
-                                key={idx}
-                                required/>
-                )
-              }, this)}
-              <Message color="yellow">
-                Make sure these are the right email addresses, otherwise it won't work, and you'll get charged back:(
-              </Message>
-              <Message error content={this.state.errorMessage}/>
-              <Form.Button fluid type="submit" primary>Update the bill</Form.Button>
-            </Form>
-            }
-            {!this.state.friendsInvited &&
-            <Divider />}
-            <Button positive fluid onClick={this.props.onStepValidated}>Ok ! I wanna see my team now !</Button>
-          </Segment>
-        </div>
-    )
-  }
-}
-
-function test(props){
-  return (
-      <div>
-        /*          <div class="content_row flex_direction_column">
-         <h1>Add Company information</h1>
-         {!this.state.companyInfoConfirmed ?
-         <CompanyInformationForm
-         companyInfo={this.props.companyInfo}
-         handleCompanyInfoInput={this.props.handleCompanyInfoInput}
-         onSubmit={e => {e.preventDefault();this.confirmCompanyInfo(true);}}/>
-         :
-         <div class="display_flex">
-         <button class="button-unstyle mrgnRight5"
-         onClick={this.confirmCompanyInfo.bind(null, false)}>
-         <u>Edit</u>
-         </button>
-         <div class="display-flex flex_direction_column">
-         <strong>{this.props.companyInfo.company_name}</strong>
-         <span>{this.props.companyInfo.street_address}</span>
-         <span>{this.props.companyInfo.city}</span>
-         <span>{this.props.companyInfo.country}</span>
-         </div>
-         </div>
-         }
-         </div>
-         {this.state.companyInfoConfirmed &&
-         <div class="content_row flex_direction_column">
-         <h1>Add payment method</h1>
-         <StripeCardForm tokenCallback={this.tokenCallback}/>
-         </div>}*/
-      </div>
-  )
 }
 
 @connect((store)=>{
@@ -538,21 +499,7 @@ class TeamCreationView extends React.Component {
       jobDetails: '',
       teamName: '',
       teamId: -1,
-      credits: 0,
-      invitations: [{email: '', username: ''},{email: '', username: ''},{email: '', username: ''}],
-      invitedPeople: 0,
-      friends: [{email:''},{email:''},{email:''}],
-      companyInformation: {
-        country: 'France',
-        company_name: '',
-        street_address:'',
-        unit: '',
-        city: '',
-        state: '',
-        zip: '',
-        vat_id: ''
-      },
-      stripeToken: null
+      invitations: [{email: '', username: ''},{email: '', username: ''},{email: '', username: ''}]
     };
     this.incrementStep = this.incrementStep.bind(this);
     this.handleInput = this.handleInput.bind(this);
@@ -630,6 +577,8 @@ class TeamCreationView extends React.Component {
                       email={this.state.email}
                       switchNewsletter={this.switchNewsletter}
                       newsletter={this.state.newsletter}
+                      dispatch={this.props.dispatch}
+                      history={this.props.history}
                       key="1"/>);
     steps.push(<Step2 onStepValidated={this.incrementStep}
                       digits={this.state.digits}
@@ -642,15 +591,20 @@ class TeamCreationView extends React.Component {
                       handleInput={this.handleInput}
                       key="3"/>);
     steps.push(<Step4 onStepValidated={this.incrementStep}
-                      email={this.state.email}
-                      password={this.state.password}
-                      newsletter={this.state.newsletter}
-                      digits={this.state.digits}
                       lname={this.state.lname}
                       fname={this.state.fname}
                       username={this.state.username}
                       handleInput={this.handleInput}
                       key="4"/>);
+    steps.push(<StepCGU key="cgu"
+                        email={this.state.email}
+                        password={this.state.password}
+                        newsletter={this.state.newsletter}
+                        digits={this.state.digits}
+                        lname={this.state.lname}
+                        fname={this.state.fname}
+                        username={this.state.username}
+                        onStepValidated={this.incrementStep}/>);
     steps.push(<Step5 incStep={this.incrementStep}
                       handleInput={this.handleInput}
                       jobRole={this.state.jobRole}
@@ -666,8 +620,7 @@ class TeamCreationView extends React.Component {
                       jobDetails={this.state.jobDetails}
                       handleInput={this.handleInput}
                       key="6"/>);
-    steps.push(<Step7 onStepValidated={this.incrementStep}
-                      incStep={this.incrementStep}
+    steps.push(<Step7 onStepValidated={this.submitStep8}
                       teamId={this.state.teamId}
                       handleInput={this.handleInput}
                       invitations={this.state.invitations}
@@ -677,17 +630,6 @@ class TeamCreationView extends React.Component {
                       addInvitationField={this.addInvitationField}
                       ws_id={this.props.ws_id}
                       key="7"/>);
-    steps.push(<Step8 key="8"
-                      onStepValidated={this.submitStep8}
-                      friends={this.state.friends}
-                      editFriendsEmail={this.editFriendsEmail}
-                      invitedPeople={this.state.invitedPeople}
-                      credits={this.state.credits}
-                      teamId={this.state.teamId}
-                      companyInfo={this.state.companyInformation}
-                      handleInput={this.handleInput}
-                      handleCompanyInfoInput={this.handleCompanyInfoInput}
-    />);
     return (
         <div id="team_creation_view" class="full_screen_centered_view">
           <SingleEaseLogo/>

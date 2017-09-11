@@ -107,6 +107,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     deleteTeamUser: function(ws_id, team_id, team_user_id){
@@ -130,6 +132,18 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       })
+    },
+    reactivateTeamUser: function ({team_id, team_user_id, ws_id}) {
+      return axios.post('/api/v1/teams/ReactivateTeamUser', {
+        team_id: team_id,
+        ws_id: ws_id,
+        team_user_id: team_user_id,
+        timestamp: new Date().getTime()
+      }).then(r => {
+        return r.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
     },
     editRole : function(ws_id, team_id, user_id, role){
       return axios.post('/api/v1/teams/EditTeamUserRole', {
@@ -496,6 +510,42 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       })
+    },
+    addCreditCard: function({team_id, cardToken}) {
+      return axios.post('/api/v1/teams/AddCreditCard', {
+        team_id: team_id,
+        token: cardToken
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    updateBillingInformation: function({team_id, address_city, address_country, address_line1, address_line2, address_state, address_zip, business_vat_id}){
+      return axios.post('/api/v1/teams/UpdateBillingInformation', {
+        team_id: team_id,
+        address_city: address_city,
+        address_country: address_country,
+        address_line1: address_line1,
+        address_line2: address_line2,
+        address_state: address_state,
+        address_zip: address_zip,
+        business_vat_id: business_vat_id
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    unsubscribe : function({team_id, password}){
+      return axios.post('/api/v1/teams/Unsubscribe', {
+        team_id: team_id,
+        password: password
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
     }
   },
   common : {
@@ -549,6 +599,20 @@ module.exports = {
       }).catch(err => {
         throw err;
       })
+    },
+    requestWebsite: function({team_id, url, is_public, login, password}){
+      return axios.post('/api/v1/teams/AskWebsite', {
+        team_id: team_id,
+        url:url,
+        is_public: is_public,
+        login: login,
+        password: password,
+        timestamp: new Date().getTime()
+      }).then(r => {
+        return r.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
     }
   }
 };
