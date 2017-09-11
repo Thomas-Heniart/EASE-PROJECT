@@ -75,9 +75,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_owner, reminderInterval, sm);
             classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
-            JSONObject target = classicApp.getOrigin();
-            target.put("team_id", team_id);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, classicApp.getShareableJson(), target));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, classicApp.getShareableJson(), classicApp.getOrigin()));
             sm.setSuccess(classicApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

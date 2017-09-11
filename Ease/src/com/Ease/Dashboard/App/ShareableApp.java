@@ -49,7 +49,7 @@ public interface ShareableApp {
 
     public String getDescription();
 
-    public void setOrigin(String origin_type, Integer origin_id);
+    public void setOrigin(String origin_type, Integer origin_id, Integer team_id);
 
     public JSONObject getOrigin();
 
