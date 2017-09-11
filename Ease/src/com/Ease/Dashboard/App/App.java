@@ -59,7 +59,6 @@ public class App implements ShareableApp, SharedApp {
             }
             Integer shared_app_id = rs.getInt("shared_app_id");
             if (shared_app_id > 0) {
-                System.out.println("App pinned");
                 Integer team_id = rs.getInt("team_id");
                 TeamManager teamManager = (TeamManager) context.getAttribute("teamManager");
                 Team team = teamManager.getTeamWithId(team_id);

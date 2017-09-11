@@ -409,24 +409,22 @@ public class Team {
     public Integer getActiveTeamUserNumber() {
         int res = 0;
         for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.isActive())
+            if (teamUser.isActive_subscription())
                 res++;
         }
         return res;
     }
 
-    public void updateSubscription(Date now) {
+    public void updateSubscription() {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
         this.activeSubscriptions = 0;
         this.getTeamUsers().forEach(teamUser -> {
-            if (!(this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty() && this.getAppManager().getSharedAppsForTeamUser(teamUser).isEmpty()))
-                teamUser.setActive(true);
-            else
-                teamUser.setActive(false);
-            if (teamUser.isActive())
+            teamUser.setActive_subscription(!(this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty() && this.getAppManager().getSharedAppsForTeamUser(teamUser).isEmpty()));
+            if (teamUser.isActive_subscription())
                 activeSubscriptions++;
         });
+        System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
             Subscription subscription = Subscription.retrieve(this.subscription_id);
             if (subscription.getQuantity() != activeSubscriptions) {

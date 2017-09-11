@@ -72,17 +72,8 @@ public class TeamManager {
     }
 
     public void updateTeamsSubscriptions() {
-        Date now = new Date();
-        HibernateQuery hibernateQuery = new HibernateQuery();
-        for (Team team : this.getTeams()) {
-            team.updateSubscription(now);
-            hibernateQuery.saveOrUpdateObject(team);
-        }
-        try {
-            hibernateQuery.commit();
-        } catch (HttpServletException e) {
-            e.printStackTrace();
-        }
+        for (Team team : this.getTeams())
+            team.updateSubscription();
     }
 
     public void checkFreeTrialEnd() {

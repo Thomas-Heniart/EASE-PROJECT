@@ -21,12 +21,17 @@
     <script src="jsMinified.v00016/jquery-3.1.0.js"></script>
     <script src="jsMinified.v00016/ajaxHandler.js"></script>
     <script src="js/backOffice/admin.js"></script>
-    <script type="application/javascript" src="js/admin2.js"></script>
-    <script type="application/javascript" src="js/admin3.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <link rel="stylesheet" type="text/css"
           href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <style>
+        .ui.segment {
+            overflow: auto;
+            max-height: 600px;
+            max-width: 99%;
+        }
+    </style>
 </head>
 <body role="document" class="mainBody">
 <div class="ui grid">
@@ -38,10 +43,10 @@
     </div>
     <div class="twelve wide stretched column tabs">
         <div id="team-segment" class="ui segment loading" style="display: none">
-            <%@ include file="admin3.jsp" %>
+            <%@ include file="templates/backofficeAdmin/TeamManager.jsp" %>
         </div>
-        <div id="website-segment" class="ui segment" style="display: none;">
-            <%@include file="admin2.jsp" %>
+        <div id="website-segment" class="ui segment loading" style="display: none;">
+            <%@include file="templates/backofficeAdmin/WebsiteManager.jsp" %>
         </div>
     </div>
 </div>

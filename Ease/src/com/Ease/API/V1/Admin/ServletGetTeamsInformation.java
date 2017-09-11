@@ -2,6 +2,7 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 @WebServlet("/api/v1/admin/GetTeamsInformation")
@@ -23,10 +25,13 @@ public class ServletGetTeamsInformation extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT t FROM Team t");
-            List<Team> teams = hibernateQuery.list();
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            List<Team> teamList = new LinkedList<>();
+            teamList.addAll(teamManager.getTeams());
+            hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active = false");
+            teamList.addAll(hibernateQuery.list());
             JSONArray res = new JSONArray();
-            for (Team team : teams) {
+            for (Team team : teamList) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("id", team.getDb_id());
                 tmp.put("name", team.getName());

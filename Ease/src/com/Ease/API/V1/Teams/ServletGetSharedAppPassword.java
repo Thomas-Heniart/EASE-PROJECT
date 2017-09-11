@@ -4,9 +4,11 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,7 +37,10 @@ public class ServletGetSharedAppPassword extends HttpServlet {
             String password = classicApp.getAccount().getInformationNamed("password");
             if (password == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "No password for this app.");
-            sm.setSuccess(password);
+            JSONObject res = new JSONObject();
+            String key = (String) sm.getSession().getAttribute("public_key");
+            res.put("password", RSA.Encrypt(password, key));
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
