@@ -7,7 +7,7 @@ function setServerPublicKey(serverPublicKey) {
     serverRSAEncryption.setKey(serverPublicKey);
 }
 
-function decippher(msg) {
+function decipher(msg) {
     return RSAEncryption.decrypt(msg);
 }
 
