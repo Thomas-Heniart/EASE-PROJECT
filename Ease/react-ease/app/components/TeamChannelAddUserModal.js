@@ -35,7 +35,7 @@ class FirstStep extends React.Component {
                           <div class="user display-flex flex_direction_column" key={item.id}
                                 onClick={this.props.selectUser.bind(null, item.id)}>
                             {
-                              item.first_name != null && item.first_name.length > 0 ?
+                              item.first_name !== null && item.first_name.length > 0 ?
                                   <strong class="name">{item.first_name} {item.last_name}</strong>
                                   :
                                   <strong class="name"><em>User name not setup yet</em></strong>

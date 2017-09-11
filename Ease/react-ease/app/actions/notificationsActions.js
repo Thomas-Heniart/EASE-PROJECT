@@ -1,7 +1,7 @@
 var post_api = require("../utils/post_api");
 var api = require("../utils/api");
 
-const sound = new Audio('/resources/credulous.mp3');
+const sound = new Audio('/resources/notification_sound.mp3');
 
 export function fetchNotifications(offset){
   return function (dispatch, getState){
@@ -11,7 +11,8 @@ export function fetchNotifications(offset){
       return r;
     }).catch(err => {
       dispatch({type: 'FETCH_NOTIFICATIONS_REJECTED'});
-    })
+      throw err;
+    });
   }
 }
 

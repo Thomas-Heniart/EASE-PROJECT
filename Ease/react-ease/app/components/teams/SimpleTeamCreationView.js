@@ -45,9 +45,6 @@ class Step1 extends React.Component{
             <Divider hidden clearing/>
             <Form onSubmit={this.onSubmit} error={this.state.error}>
               <Form.Input label="Your email address" required onChange={this.props.handleInput} type="email" name="email" placeholder="name@company.com"/>
-              <Form.Checkbox label="It's ok to send me (very occasional) email about Ease.space service"
-                             onClick={this.props.switchNewsletter}
-                             checked={this.props.newsletter}/>
               <Message error content={this.state.errorMessage}/>
               <Form.Field>
                 <Button positive fluid loading={this.state.processing} type="submit">Next</Button>
@@ -64,9 +61,12 @@ class Step2 extends React.Component{
     super(props);
     this.state = {
       errorMessage: '',
-      loading: false
+      loading: false,
+      sendingEmail: false,
+      sendEmailButtonText: 'Resend email'
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.resendDigits = this.resendDigits.bind(this);
   }
   onSubmit(e){
     e.preventDefault();
@@ -78,6 +78,16 @@ class Step2 extends React.Component{
       this.setState({loading: false, errorMesage: err});
     })
   }
+  resendDigits(){
+    this.setState({sendingEmail: true});
+    post_api.teams.askTeamCreation(this.props.email).then(response => {
+      this.setState({sendingEmail: false});
+      this.setState({sendEmailButtonText: 'Sent!'});
+      window.setTimeout(() => {this.setState({sendEmailButtonText: 'Resend email'})}, 2000);
+    }).catch(err => {
+      this.setState({sendingEmail: false});
+    });
+  }
   render() {
     return (
         <div class="contents" id="step2">
@@ -85,7 +95,7 @@ class Step2 extends React.Component{
             <Header as="h1">
               Check your email
               <Header.Subheader>
-                We've send a six-digit confirmation code to <strong>{this.props.email}</strong>. It will expire shortly, so enter your code soon.
+                We've sent a six-digit confirmation code to <strong>{this.props.email}</strong>. It will expire shortly, so enter your code soon.
               </Header.Subheader>
             </Header>
             <Divider hidden clearing/>
@@ -96,8 +106,9 @@ class Step2 extends React.Component{
                           name="digits"
                           placeholder="Confirmation code"
                           required/>
-              <Message color="yellow">
+              <Message color="yellow" size="mini">
                 Keep this window open while checking for your code.<br/> Haven't received our email ? Try your spam folder!
+                Or <Button basic type="button" className="textlike" size="mini" loading={this.state.sendingEmail} onClick={this.resendDigits} content={this.state.sendEmailButtonText}/>.
               </Message>
               <Message error content={this.state.errorMessage}/>
               <Form.Button fluid positive type="submit" loading={this.state.loading}>Next</Form.Button>
@@ -263,7 +274,7 @@ class Step7 extends React.Component{
     var calls = [];
     this.props.invitations.map(function (item) {
       if (item.email.match(emailRegexp) !== null && item.username.length > 0){
-        calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, '1'));
+        calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, 1));
       }
     }, this);
     this.setState({loading: true});

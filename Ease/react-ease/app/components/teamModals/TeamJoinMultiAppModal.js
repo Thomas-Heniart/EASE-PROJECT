@@ -86,8 +86,7 @@ class TeamJoinMultiAppModal extends React.Component {
                                value={credentials[item]}
                                onChange={this.handleInput}
                                id={item}
-                               class="modal_input input_unstyle"
-                        />
+                               class="modal_input input_unstyle"/>
                       </div>
                   )
                 }, this)

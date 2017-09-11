@@ -24,10 +24,13 @@ class Base extends React.Component {
     if (!this.props.common.authenticated){
       this.props.dispatch(fetchMyInformation()).then(response => {
         this.setState({fetching: false});
+        if (this.props.common.authenticated)
+          this.props.dispatch(fetchNotifications(0));
       });
-    }else
+    }else {
       this.setState({fetching: false});
-    this.props.dispatch(fetchNotifications(0));
+      this.props.dispatch(fetchNotifications(0));
+    }
   }
   render(){
     if (this.state.fetching)

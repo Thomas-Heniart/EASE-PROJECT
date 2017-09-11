@@ -999,6 +999,9 @@
 		padding-bottom: 20px;
 	}
 	.title-row {
+		@include display-flex();
+		@include align-items(center);
+		@include justify-content(center);
 		padding: 15px 30px;
 		background-color: #e8e8e8;
 		height: 65px;

@@ -51,12 +51,21 @@ const initialState = {
     active: false,
     user: null
   },
+  reactivateTeamUserModal: {
+    active: false,
+    user: null
+  },
   teamTransferOwnershipModal: {
     active: false,
     user: null
   },
   teamPhoneNumberModal: {
     active: false
+  },
+  requestWebsiteModal: {
+    active: false,
+    resolve: null,
+    reject: null
   }
 };
 export default function reducer(state=initialState, action){
@@ -151,6 +160,12 @@ export default function reducer(state=initialState, action){
         verifyTeamUserModal: action.payload
       }
     }
+    case 'SHOW_REACTIVATE_TEAM_USER_MODAL': {
+      return {
+          ...state,
+        reactivateTeamUserModal: action.payload
+      }
+    }
     case 'SHOW_TEAM_TRANSFER_OWNERSHIP_MODAL': {
       return {
           ...state,
@@ -161,6 +176,12 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         teamPhoneNumberModal: action.payload
+      }
+    }
+    case 'SHOW_REQUEST_WEBSITE_MODAL': {
+      return {
+          ...state,
+        requestWebsiteModal: action.payload
       }
     }
   }

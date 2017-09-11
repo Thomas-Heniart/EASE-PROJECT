@@ -144,6 +144,16 @@ export function showVerifyTeamUserModal(state, user){
   }
 }
 
+export function showReactivateTeamUserModal(state, user){
+  return {
+    type: 'SHOW_REACTIVATE_TEAM_USER_MODAL',
+    payload: {
+      active: state,
+      user: user
+    }
+  }
+}
+
 export function showTeamTransferOwnershipModal(state, user){
   return {
     type: 'SHOW_TEAM_TRANSFER_OWNERSHIP_MODAL',
@@ -159,6 +169,23 @@ export function showTeamPhoneNumberModal(state) {
     type: 'SHOW_TEAM_PHONE_NUMBER_MODAL',
     payload: {
       active: state
+    }
+  }
+}
+
+export function requestWebsite(dispatch){
+  return new Promise((resolve, reject) => {
+    dispatch(showRequestWebsiteModal(true, resolve, reject));
+  });
+}
+
+export function showRequestWebsiteModal(state, resolve, reject){
+  return {
+    type: 'SHOW_REQUEST_WEBSITE_MODAL',
+    payload: {
+      active: state,
+      resolve: resolve,
+      reject: reject
     }
   }
 }

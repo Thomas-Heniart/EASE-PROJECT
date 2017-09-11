@@ -17,135 +17,6 @@ import { Header, Container, Segment, Checkbox, Form, Input, Select, Dropdown, Bu
 class FirstStepAddUser extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
-      dropdown: false
-    };
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.pageClick = this.pageClick.bind(this);
-  }
-  onMouseDown(){
-    this.mouseInDropDown = true;
-  }
-  onMouseUp(){
-    this.mouseInDropDown = false;
-  }
-  pageClick(e){
-    if (this.mouseInDropDown)
-      return;
-    this.setState({dropdown: false});
-  }
-  componentDidMount(){
-    window.addEventListener('mousedown', this.pageClick, false);
-  }
-  componentWillUnmount(){
-    window.removeEventListener('mousedown', this.pageClick, false);
-  }
-  render() {
-    return (
-        <div class="contents" id="first_step">
-          <div class="content_row">
-            <h1 class="full_width">Invite a team member</h1>
-          </div>
-          <div class="content_row">
-            <div class="signed_input">
-              <label htmlFor="email_input">Email address</label>
-              <input value={this.props.email}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="email_input" name="email" type="email" placeholder="name@company.com" class="full_width modal_input"/>
-            </div>
-            <div class="signed_input">
-              <label htmlFor="fname_input">First name</label>
-              <input value={this.props.fname}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="fname_input" name="fname" type="text" placeholder="Optional" class="full_width modal_input"/>
-            </div>
-            <div class="signed_input">
-              <label htmlFor="lname_input">Last name</label>
-              <input value={this.props.lname}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="lname_input" name="lname" type="text" placeholder="Optional" class="full_width modal_input"/>
-            </div>
-          </div>
-          <div class="content_row">
-            <div class="signed_input">
-              <label htmlFor="username_input">Username</label>
-              <input value={this.props.username}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="username_input" name="username" type="text" class="full_width modal_input" placeholder="Username"/>
-            </div>
-            <div class="signed_input">
-              <label htmlFor="user_role_select">User role</label>
-              <select value={this.props.role}
-                      onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                      id="user_role_select" name='role' class="full_width select_unstyle modal_input">
-                <option value="1">Member</option>
-                <option value="2">Admin</option>
-              </select>
-            </div>
-            <div class="signed_input">
-              <label htmlFor="departure_date_input">Departure date (optional)</label>
-              <input value={this.props.departure_date}
-                     onChange={(e) => {this.props.handleInputs(e.target.name, e.target.value)}}
-                     id="departure_date_input" name="departure_date" type="date" class="full_width modal_input" placeholder="Optional"/>
-            </div>
-          </div>
-          <div class="content_row">
-            <div class="tagged_input_container full_width">
-              <label htmlFor="teams_input">Team(s)</label>
-              <div class="modal_input_wrapper full_width item_list"
-                   onMouseDown={this.onMouseDown}
-                   onMouseUp={this.onMouseUp}>
-                {
-                  this.props.selectedChannels.map(function(item){
-                    return (
-                        <div class="input_tag" key={item.id}>
-                          <span>{item.name}</span>
-                          <button class="button-unstyle" onClick={this.props.deselectChannelFunc.bind(null, item.id)}>
-                            <i class="fa fa-times"/>
-                          </button>
-                        </div>
-                    )
-                  }, this)
-                }
-                <input id="teams_input" class="full_width input_unstyle" name="teams" type="text" placeholder="Search by name"
-                       onFocus={(e) => {this.setState({dropdown: true})}}/>
-                <div class={classnames("floating_dropdown", this.state.dropdown ? "show" : null)}>
-                  <div class="dropdown_content">
-                    {
-                      this.props.channels.map(function (item) {
-                        return (
-                            <div onClick={this.props.selectChannelFunc.bind(null, item.id)} class={classnames("dropdown_row selectable", item.selected ? "selected": null)} key={item.id}>
-                              <span class="main_value">{item.name}</span>{item.purpose.length && <span class="text-muted">&nbsp;- {item.purpose}</span>}
-                            </div>
-                        )
-                      }, this)
-                    }
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="content_row buttons_row">
-            <div class="buttons_wrapper">
-              <button class="button-unstyle neutral_background action_text_button cancel_button"
-                      onClick={e => {this.props.dispatch(showAddTeamUserModal(false))}}>
-                Cancel
-              </button>
-              <button class="button-unstyle positive_background action_text_button next_button"
-                      onClick={this.props.validateStep}>
-                Next
-              </button>
-            </div>
-          </div>
-        </div>
-    )
-  }
-}
-
-class FirstStepAddUser2 extends React.Component{
-  constructor(props){
-    super(props);
   }
   render() {
     return (
@@ -181,8 +52,7 @@ class FirstStepAddUser2 extends React.Component{
                     onChange={this.props.handleReactInput}
                     label="User role"
                     width={4}
-                    options={[{key:1, value:1, text:'Member'}, {key:2, value:2, text:'Admin'}]}
-                />
+                    options={[{key:1, value:1, text:'Member'}, {key:2, value:2, text:'Admin'}]}/>
                 <Form.Input label="Departure date (optional)" type="date"
                             onChange={this.props.handleReactInput}
                             name="departure_date"
@@ -204,6 +74,7 @@ class FirstStepAddUser2 extends React.Component{
                 <Button
                     positive
                     floated='right'
+                    loading={this.props.loading}
                     type="submit">
                   Next
                 </Button>
@@ -294,10 +165,11 @@ class SecondStep extends React.Component {
           </div>
           <div class="content_row buttons_row">
             <div class="buttons_wrapper">
+              {!channel.default &&
               <button class="button-unstyle action-text-button only-text-button"
                       onClick={this.props.incrementAndReject.bind(null, channel.id)}>
                 <u>Do not add to #{channel.name}</u>
-              </button>
+              </button>}
               <button class="button-unstyle positive_background action_text_button next_button"
                       onClick={this.props.incrementAndValidate.bind(null, channel.id)}>
                 Next
@@ -331,8 +203,10 @@ class TeamAddUserModal extends React.Component {
       selectedChannels: [],
       channels: [],
       options: [],
+      defaultRooms: [],
       value: [],
       step: 0,
+      firstStepLoading: false,
       firstStepErrorMessage: '',
       channelStep: 0,
       maxChannelStep:0
@@ -349,7 +223,15 @@ class TeamAddUserModal extends React.Component {
         name: item.name
       }
     });
-    this.handleInputs = this.handleInputs.bind(this);
+    this.state.value = this.props.channels.map(item => {
+      if (item.default)
+        return item.id;
+      return null;
+    }).filter(item => {
+      return item !== null;
+    });
+    this.state.defaultRooms = this.state.value.map(item => (item));
+
     this.handleReactInput = this.handleReactInput.bind(this);
     this.selectChannel = this.selectChannel.bind(this);
     this.deselectChannel = this.deselectChannel.bind(this);
@@ -367,28 +249,26 @@ class TeamAddUserModal extends React.Component {
     this.setState({[name]: value});
   }
   dropdownChange(e, {value}){
+    let defaultRooms = this.state.defaultRooms;
+    for (let i = 0; i < defaultRooms.length; i ++){
+      if (value.indexOf(defaultRooms[i]) === -1)
+        return;
+    }
     this.setState({value: value});
   }
   validateFirstStep(e){
     e.preventDefault();
     this.setState({firstStepErrorMessage: ''});
-    var channels = this.state.value.map(item => {
+    this.setState({firstStepLoading: true});
+    let channels = this.state.value.map(item => {
       return selectChannelFromListById(this.state.channels, item);
     });
-    if (!channels.length){
-      this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username,this.state.departure_date, this.state.role)).then(response => {
-        this.props.dispatch(showAddTeamUserModal(false));
-      }).catch(err => {
-        this.setState({firstStepErrorMessage: err});
-      });
-      return;
-    }
-    var calls = channels.map(function(item){
+    let calls = channels.map(function(item){
       return api.fetchTeamChannelApps(this.props.team_id, item.id);
     }, this);
-    var selectedChannels = [];
+    let selectedChannels = [];
     this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username,this.state.departure_date, this.state.role)).then(response => {
-      var user_id = response.id;
+      let user_id = response.id;
       Promise.all(calls).then(values => {
         selectedChannels = channels.map(function(item, idx){
           item.apps = values[idx].map(function(item){
@@ -402,11 +282,19 @@ class TeamAddUserModal extends React.Component {
             return item;
           });
           item.confirmed = false;
+          if (item.apps.length === 0)
+            return null;
           return item;
-        });
+        }).filter((item) => (item !== null));
+        if (selectedChannels.length === 0){
+          this.props.dispatch(showAddTeamUserModal(false));
+          return;
+        }
+        this.setState({firstStepLoading: false});
         this.setState({step: 1, selectedChannels: selectedChannels, maxChannelStep: selectedChannels.length, user_id:user_id});
       });
     }).catch(err => {
+      this.setState({firstStepLoading: false});
       this.setState({firstStepErrorMessage: err});
     });
   }
@@ -491,8 +379,10 @@ class TeamAddUserModal extends React.Component {
       return item.confirmed;
     });
     joinChannels = channels.map(function(item){
-      return this.props.dispatch(channelActions.addTeamUserToChannel(item.id, this.state.user_id));
-    }, this);
+      if (!item.default)
+        return this.props.dispatch(channelActions.addTeamUserToChannel(item.id, this.state.user_id));
+      return null;
+    }, this).filter(item => (item !== null));
     Promise.all(joinChannels).then(() => {
       for (var i = 0; i < channels.length; i++){
         for (var j = 0; j < channels[i].apps.length; j++){
@@ -506,9 +396,6 @@ class TeamAddUserModal extends React.Component {
         this.props.dispatch(showAddTeamUserModal(false));
       });
     });
-  }
-  handleInputs(name, value){
-    this.setState({[name]: value});
   }
   deselectChannel(id){
     var selectedChannels = this.state.selectedChannels;
@@ -556,26 +443,26 @@ class TeamAddUserModal extends React.Component {
                 transitionEnterTimeout={200}
                 transitionLeaveTimeout={200}>
               {this.state.step === 0 &&
-              <FirstStepAddUser2 key="1"
-                                 me={this.props.me}
-                                 email={this.state.email}
-                                 fname={this.state.fname}
-                                 lname={this.state.lname}
-                                 role={this.state.role}
-                                 username={this.state.username}
-                                 handleReactInput={this.handleReactInput}
-                                 departure_date={this.state.departure_date}
-                                 handleInputs={this.handleInputs}
-                                 channels={this.state.channels}
-                                 selectedChannels={this.state.selectedChannels}
-                                 selectChannelFunc={this.selectChannel}
-                                 deselectChannelFunc={this.deselectChannel}
-                                 validateStep={this.validateFirstStep}
-                                 options={this.state.options}
-                                 value={this.state.value}
-                                 errorMessage={this.state.firstStepErrorMessage}
-                                 dropdownChange={this.dropdownChange}
-                                 dispatch={this.props.dispatch}/>
+              <FirstStepAddUser key="1"
+                                me={this.props.me}
+                                email={this.state.email}
+                                fname={this.state.fname}
+                                lname={this.state.lname}
+                                role={this.state.role}
+                                username={this.state.username}
+                                handleReactInput={this.handleReactInput}
+                                departure_date={this.state.departure_date}
+                                channels={this.state.channels}
+                                selectedChannels={this.state.selectedChannels}
+                                selectChannelFunc={this.selectChannel}
+                                deselectChannelFunc={this.deselectChannel}
+                                validateStep={this.validateFirstStep}
+                                options={this.state.options}
+                                value={this.state.value}
+                                errorMessage={this.state.firstStepErrorMessage}
+                                loading={this.state.firstStepLoading}
+                                dropdownChange={this.dropdownChange}
+                                dispatch={this.props.dispatch}/>
               }
               {this.state.step === 1 &&
               <SecondStep key="2"

@@ -5,6 +5,7 @@ var RequestAppButton = require('./RequestAppButton');
 import AppReceiverTooltip from "../teams/AppReceiverTooltip";
 import * as appActions from "../../actions/appsActions";
 import * as modalActions from "../../actions/teamModalActions";
+import {isAdmin} from "../../utils/helperFunctions";
 import {
     selectUserFromListById,
     getChannelUsers,
@@ -22,7 +23,7 @@ function TeamMultiAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
-        {app.sharing_requests.length > 0 &&
+        {app.sharing_requests.length > 0 && isAdmin(me) &&
         <button class="button-unstyle team_app_requests"
                 data-tip="User(s) would like to access this app"
                 onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>

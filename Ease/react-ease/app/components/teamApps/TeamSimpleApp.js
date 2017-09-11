@@ -5,6 +5,7 @@ var RequestAppButton = require('./RequestAppButton');
 import AppReceiverTooltip from "../teams/AppReceiverTooltip";
 import * as appActions from "../../actions/appsActions";
 import * as modalActions from "../../actions/teamModalActions"
+import {isAdmin} from "../../utils/helperFunctions";
 import {
     selectUserFromListById,
     getChannelUsers,
@@ -13,31 +14,27 @@ import {
     isUserInList,
     passwordChangeValues
 } from "../../utils/helperFunctions"
-import { Button, Icon } from 'semantic-ui-react';
 
 function TeamSimpleAppButtonSet(props) {
   const app = props.app;
   const me = props.me;
   const meReceiver = findMeInReceivers(app.receivers, me.id);
   const meSender = app.sender_id === me.id;
-
   return (
       <div class="team_app_actions_holder">
-        {app.sharing_requests.length > 0 &&
+        {app.sharing_requests.length > 0 && isAdmin(me) &&
         <button class="button-unstyle team_app_requests"
                 data-tip="User(s) would like to access this app"
-                onClick={e => {
-                  props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))
-                }}>
+                onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
         </button>}
-        {meReceiver != null && meReceiver.accepted &&
+        {meReceiver !== null && meReceiver.accepted &&
         <button class="button-unstyle team_app_pin"
                 data-tip="Pin App in your Personal space"
                 onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
           <i class="fa fa-thumb-tack"/>
         </button>}
-        {meReceiver != null && meReceiver.accepted &&
+        {meReceiver !== null && meReceiver.accepted &&
         <button class="button-unstyle team_app_leave"
                 data-tip="Leave App"
                 onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
@@ -105,7 +102,6 @@ class TeamSimpleApp extends React.Component {
       selectedReceivers: [],
       receivers: []
     };
-
     this.setupModifying = this.setupModifying.bind(this);
     this.validateModifying = this.validateModifying.bind(this);
     this.handleCommentInput = this.handleCommentInput.bind(this);
@@ -220,7 +216,7 @@ class TeamSimpleApp extends React.Component {
       var receiver = getReceiverInList(this.props.app.receivers, this.state.selectedReceivers[i].id);
       if (!receiver)
         addReceiverList.push(this.state.selectedReceivers[i]);
-      else if (receiver.can_see_information != this.state.selectedReceivers[i].can_see_information)
+      else if (receiver.can_see_information !== this.state.selectedReceivers[i].can_see_information)
         modifyReceiverList.push({...this.state.selectedReceivers[i], shared_app_id: receiver.shared_app_id});
     }
     for (var i = 0; i < this.props.app.receivers.length; i++){
@@ -310,7 +306,7 @@ class TeamSimpleApp extends React.Component {
               {senderUser.username}
               {me.id === senderUser.id && "(you)"}
             </span>
-            {meReceiver != null && !meReceiver.accepted ?
+            {meReceiver !== null && !meReceiver.accepted ?
                 <span>
               &nbsp;tagged you in a Single App,&nbsp;
                   <button class="button-unstyle accept_app_btn" onClick={this.acceptRequest.bind(null, true)}>
@@ -326,7 +322,7 @@ class TeamSimpleApp extends React.Component {
                 <span>&nbsp;sent a Single App</span>}
           </div>
           <div class="team_app">
-            {meReceiver != null && !meReceiver.accepted &&
+            {meReceiver !== null && !meReceiver.accepted &&
             <div class="custom-overlay"></div>}
             <div class="name_holder">
               {!this.state.modifying ?

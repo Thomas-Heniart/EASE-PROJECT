@@ -17,8 +17,22 @@ class TeamsList extends React.Component {
     return (
         <Dropdown icon={<Icon name="users" data-tip="Team Space"/>} item floating id="teams_list">
           <Dropdown.Menu>
-            {this.props.user != null &&
+            {this.props.user !== null &&
             this.props.user.teams.map(function (item) {
+              if (item.disabled)
+                return (
+                    <Popup
+                        key={item.id}
+                        size="mini"
+                        position="left center"
+                        trigger={
+                          <Dropdown.Item style={{opacity: '0.45'}}>
+                            <Icon name="users"/>
+                            {item.name}
+                          </Dropdown.Item>
+                        }
+                        content='You need to wait until an admin accept you.'/>
+                );
               return (
                   <Dropdown.Item key={item.id} as='a' href={`/teams#/teams/${item.id}`}>
                     <Icon name="users"/>
@@ -95,13 +109,21 @@ class HomeTemporaryNavbar extends React.Component {
   constructor(props){
     super(props);
     this.processLogout = this.processLogout.bind(this);
+    this.logoutFromAllApps = this.logoutFromAllApps.bind(this);
     this.goHome = this.goHome.bind(this);
   }
   processLogout(){
     this.props.dispatch(processLogout()).then(response => {
-      window.location.href = "/#/login";
+      window.location.href = "/login";
 //      this.props.history.push('/login');
-    })
+    });
+  }
+  logoutFromAllApps(){
+    this.props.dispatch(processLogout()).then(response => {
+      var event = new CustomEvent("Logout");
+      document.dispatchEvent(event);
+      window.location.href = "/login";
+    });
   }
   goHome(){
     window.location.href = "/home";
@@ -113,17 +135,15 @@ class HomeTemporaryNavbar extends React.Component {
     const user = this.props.user;
     return (
     <Menu id="main_navbar">
-      <Menu.Item onClick={this.goHome} data-tip="Apps Dashboard" >
+      <Menu.Item>
         {user !== null ? user.first_name : '...'}
       </Menu.Item>
       <Dropdown icon={<Icon name="log out" data-tip="Logout Menu"/>} item floating id="logout_button">
         <Dropdown.Menu>
           <Dropdown.Item text="Logout from Ease" onClick={this.processLogout}/>
-          <Dropdown.Item text="Logout from all apps"/>
+          <Dropdown.Item text="Logout from all apps" onClick={this.logoutFromAllApps}/>
         </Dropdown.Menu>
       </Dropdown>
-      <NotificationList notifications={this.props.notifications} history={this.props.history} dispatch={this.props.dispatch}/>
-      <TeamsList user={this.props.user}/>
       <Menu.Item data-tip="Settings" onClick={e => {goToSettings()}}>
         <Icon name="setting"/>
         </Menu.Item>

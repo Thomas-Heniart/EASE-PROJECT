@@ -3,6 +3,7 @@ var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import * as UserActions from "./userActions"
 import * as ChannelActions from "./channelActions"
+import {closeAppAddUI} from "./teamAppsAddUIActions";
 
 export function fetchTeam(id) {
   return function(dispatch){
@@ -26,8 +27,80 @@ export function fetchTeamAndUsersAndChannels(team_id){
   }
 }
 
+export function teamInviteFriends(email1, email2, email3){
+  return (dispatch, getState) => {
+    dispatch({type:'TEAM_INVITE_FRIENDS_PENDING'});
+    return post_api.teams.inviteFriends(getState().team.id, email1, email2, email3).then(response => {
+      dispatch({type: 'TEAM_INVITE_FRIENDS_FULFILLED', payload: response});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'TEAM_INVITE_FRIENDS_REJECTED', payload:err});
+      throw err;
+    });
+  }
+}
+
+export function teamAddCreditCard({cardToken}){
+  return (dispatch, getState) => {
+    dispatch({type: 'TEAM_ADD_CREDIT_CARD_PENDING'});
+    return post_api.teams.addCreditCard({team_id: getState().team.id, cardToken: cardToken}).then(response => {
+      dispatch({type: 'TEAM_ADD_CREDIT_CARD_FULFILLED', payload: {card: response}});
+    }).catch(err => {
+      dispatch({type: 'TEAM_ADD_CREDIT_CARD_REJECTED', payload: err});
+      throw err;
+    });
+  }
+}
+
+export function teamUpdateBillingInformation({address_city, address_country, address_line1, address_line2, address_state, address_zip, business_vat_id}){
+  return (dispatch, getState) => {
+    dispatch({type: 'TEAM_UPDATE_BILLING_INFORMATION_PENDING'});
+    return post_api.teams.updateBillingInformation({
+      team_id: getState().team.id,
+      address_city: address_city,
+      address_country: address_country,
+      address_line1: address_line1,
+      address_line2:address_line2,
+      address_state: address_state,
+      address_zip: address_zip,
+      business_vat_id: business_vat_id
+    }).then(response => {
+      dispatch({type: 'TEAM_UPDATE_BILLING_INFORMATION_FULFILLED', payload:{data: response}});
+    }).catch(err => {
+      dispatch({type: 'TEAM_UPDATE_BILLING_INFORMATION_REJECTED', payload:err});
+      throw err;
+    });
+  }
+}
+
+export function fetchTeamPaymentInformation(){
+  return (dispatch, getState) => {
+    dispatch({type: 'FETCH_TEAM_PAYMENT_INFORMATION_PENDING'});
+    return api.teams.getTeamPaymentInformation({team_id: getState().team.id}).then(r => {
+      dispatch({type: 'FETCH_TEAM_PAYMENT_INFORMATION_FULFILLED', payload: {data: r}});
+      return r;
+    }).catch(err => {
+      dispatch({type: 'FETCH_TEAM_PAYMENT_INFORMATION_REJECTED', payload: err});
+    });
+  }
+}
+
+export function unsubscribe(password){
+  return (dispatch, getState) => {
+    dispatch({type: 'TEAM_UNSUBSCRIBE_PENDING'});
+    return post_api.teams.unsubscribe({team_id: getState().team.id, password: password}).then(response => {
+      dispatch({type:'TEAM_UNSUBSCRIBE_FULFILLED', payload: {team_id: getState().team_id}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'TEAM_UNSUBSCRIBE_REJECTED', payload: err});
+      throw err;
+    });
+  }
+}
+
 export function fetchTeamItemApps(itemId){
   return function (dispatch, getState){
+    dispatch(closeAppAddUI());
     if (itemId[0] !== '@')
       return dispatch(ChannelActions.fetchTeamChannelApps(Number(itemId)));
     else
@@ -49,7 +122,7 @@ export function editTeamName(name){
       dispatch({type: 'EDIT_TEAM_NAME_FULFILLED', payload: {name:name}});
       return name;
     }).catch(err => {
-      dispath({type: 'EDIT_TEAM_NAME_REJECTED', payload: err});
+      dispatch({type: 'EDIT_TEAM_NAME_REJECTED', payload: err});
       throw err;
     });
   }

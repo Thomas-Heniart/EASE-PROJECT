@@ -2,7 +2,6 @@ var React = require('react');
 var classnames = require('classnames');
 import {fetchNotifications, validateNotification} from "../../actions/notificationsActions";
 import {checkForNewNotifications} from "../../utils/helperFunctions";
-import ReactTooltip from 'react-tooltip';
 import {withRouter} from "react-router-dom";
 import {processLogout} from "../../actions/commonActions";
 import { NavLink } from 'react-router-dom';
@@ -17,8 +16,21 @@ class TeamsList extends React.Component {
     return (
         <Dropdown icon={<Icon name="users" data-tip="Team Space"/>} item floating id="teams_list">
           <Dropdown.Menu>
-            {this.props.user != null &&
+            {this.props.user !== null &&
             this.props.user.teams.map(function (item) {
+              if (item.disabled)
+                return (
+                    <Popup key={item.id}
+                        size="mini"
+                        position="left center"
+                        trigger={
+                          <Dropdown.Item  style={{opacity: '0.45'}}>
+                            <Icon name="users"/>
+                            {item.name}
+                          </Dropdown.Item>
+                        }
+                        content='You need to wait until an admin accept you.'/>
+                );
               return (
                   <Dropdown.Item key={item.id} as={NavLink} to={`/teams/${item.id}`} activeClassName="active">
                     <Icon name="users"/>
@@ -106,9 +118,6 @@ class EaseMainNavbar extends React.Component {
   goHome(){
     window.location.href = "/home";
   }
-  componentDidMount(){
-    ReactTooltip.rebuild();
-  }
   render(){
     const user = this.props.user;
     return (
@@ -124,7 +133,7 @@ class EaseMainNavbar extends React.Component {
           </Dropdown>
           <NotificationList notifications={this.props.notifications} history={this.props.history} dispatch={this.props.dispatch}/>
           <TeamsList user={this.props.user}/>
-          <Menu.Item id="catalog_button" data-tip="Apps Catalogue">
+          <Menu.Item id="catalog_button" style={{backgroundColor: "#979797", cursor:'not-allowed'}} data-tip="Apps Catalogue">
             <Icon name="plus"/>
           </Menu.Item>
         </Menu>

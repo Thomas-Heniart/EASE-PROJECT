@@ -20,6 +20,10 @@ button.only-text-button {
   padding: .78571429em 1.14285714em!important;
 }
 
+#team_menu_options .popover_mask {
+  z-index: 99;
+}
+
 #share_app_dropdown {
   color: white;
   background-color: $themeColor;
@@ -38,7 +42,7 @@ button.only-text-button {
     }
   }
   .menu {
-    width: 200px;
+    width: 240px;
     .item {
       font-weight: bold;
       font-size: .7rem;
@@ -70,6 +74,10 @@ button.action_text_button {
       margin-right: -30px;
       margin-top: 1.5em;
       font-size: 1.3em;
+      font-weight: inherit;
+      &.disabled {
+        background-color: #979797 !important;
+      }
     }
     .checkbox {
       font-size: 1em;
@@ -255,6 +263,10 @@ button.action_text_button {
       text-align: center;
     }
   }
+}
+
+#team_settings_modal .credit-card-preview {
+  margin-bottom: 1rem;
 }
 
 #teamsHandler {

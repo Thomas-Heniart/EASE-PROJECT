@@ -138,6 +138,28 @@ export default function reducer(state={
         users: users
       }
     }
+    case 'REACTIVATE_TEAM_USER_FULFILLED' : {
+      const users = state.users.map(item => {
+        if (item.id === action.payload.team_user_id)
+          item.disabled = false;
+        return item;
+      });
+      return {
+          ...state,
+          users: users
+      }
+    }
+    case 'EDIT_TEAM_USER_ROLE_FULFILLED' : {
+      let users = state.users.map(item => {
+        if (item.id === action.payload.id)
+          item.role = action.payload.role;
+        return item;
+      });
+      return {
+          ...state,
+        users: users
+      }
+    }
     case 'TEAM_TRANSFER_OWNERSHIP_FULFILLED' : {
       var users = state.users.map(item => {
         if (item.id === action.payload.ownerId)
@@ -175,7 +197,7 @@ export default function reducer(state={
     }
     case 'TEAM_USER_ADDED': {
       var users = state.users;
-      if (selectUserFromListById(state.users, action.payload.user.id) != null)
+      if (selectUserFromListById(state.users, action.payload.user.id) !== null)
         break;
       users.push(action.payload.user);
       return {

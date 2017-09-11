@@ -236,7 +236,8 @@ class Login extends React.Component {
       lastActive: '',
       knownFname: this.props.cookies.get('fname'),
       knownEmail: this.props.cookies.get('email'),
-      knownUser: false
+      knownUser: false,
+      redirect : ''
     };
     if (this.props.authenticated)
       window.location.href = "/home";
@@ -249,12 +250,16 @@ class Login extends React.Component {
     this.goBack = this.goBack.bind(this);
     this.finishLoggingIn = this.finishLoggingIn.bind(this);
   }
-  finishLoggingIn(){
+  componentDidMount(){
     if (this.props.redirect.length > 0){
-      const redirectUrl = this.props.redirect;
+      this.state.redirect = this.props.redirect;
+      this.props.dispatch(setLoginRedirectUrl(''));
+    }
+  }
+  finishLoggingIn(){
+    if (this.state.redirect.length > 0){
       this.props.dispatch(fetchMyInformation()).then(response => {
-        this.props.dispatch(setLoginRedirectUrl(''));
-        this.props.history.push(redirectUrl);
+        this.props.history.push(this.state.redirect);
       });
     }else {
       window.location.href = "/home";
