@@ -1,13 +1,22 @@
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
-    ajaxHandler.get("/api/v1/admin/GetTeamsInformation", null, function () {
-
-    }, function (data) {
-        data.forEach(function (team) {
-            addRow(team).appendTo($("#team-manager-body"));
-
-        });
+    $(".ui.menu a.item").on("click", function () {
+        $(this)
+            .addClass("active")
+            .siblings().removeClass("active");
+        var target = $($(this).attr("data-target"));
+        $(".segment").hide();
+        target.show();
+        if (target.hasClass("loading")) {
+            ajaxHandler.get("/api/v1/admin/GetTeamsInformation", null, function () {
+            }, function (data) {
+                data.forEach(function (team) {
+                    addTeamRow(team).appendTo($("#team-manager-body"));
+                });
+                target.removeClass("loading");
+            });
+        }
     });
 });
 

@@ -40,6 +40,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("phone_number", phoneNumber);
                 tmp.put("team_users_size", team.getTeamUsers().size());
                 tmp.put("active_team_users", team.getActiveTeamUserNumber());
+                tmp.put("is_active", team.isActive());
                 res.add(tmp);
             }
             sm.setSuccess(res);

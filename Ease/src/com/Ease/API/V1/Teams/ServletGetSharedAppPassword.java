@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/teams/GetPassword")
-public class ServletGetPassword extends HttpServlet {
+@WebServlet("/api/v1/teams/GetSharedAppPassword")
+public class ServletGetSharedAppPassword extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, false);
         try {
