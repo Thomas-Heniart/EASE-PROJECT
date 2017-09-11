@@ -16,7 +16,7 @@ function showExtensionPopup() {
     if (ease_extension.length) {
         if (!waitForExtension) {
             if (getUserNavigator() == "Safari") {
-                if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.5") {
+                if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.6") {
                     $('#extension .title p').text("Update your extension");
                     $('#extension #download #line1').text("A new version of the extension is now available.");
                     $('#extension #download #line2').text("We added new features and made it faster !");
@@ -168,7 +168,7 @@ $(document).ready(function () {
             win.focus();
         } else if (NavigatorName == "Safari") {
             $("#extension #step1 #safari").addClass('show');
-            window.location.replace(location.protocol + '//' + location.hostname + "/safariExtension/EaseExtension.safariextz");
+            window.location.replace(window.location.protocol + "//" + window.location.host + "/safariExtension/EaseExtension.safariextz");
         } else {
             $("#extension #step1 #other").addClass('show');
         }

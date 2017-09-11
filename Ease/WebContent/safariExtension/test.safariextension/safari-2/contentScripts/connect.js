@@ -100,6 +100,15 @@ function alreadyVisited(msg){
 if (window.top === window) {
 
 extension.runtime.onMessage("goooo", function(msg, sendResponse) {
+    $("form, input").attr('autocomplete', 'off');
+    $("input[type='password']").attr("data-password-autocomplete", "off");
+    $("input[type='password']").each(function () {
+        $(this).prop('type', 'text');
+        $('<input type="password"/>').hide().insertBefore(this);
+        $(this).focus(function () {
+            $(this).prop('type', 'password');
+        });
+    });
 	if (msg.todo == "checkAlreadyLogged"){
         checkConnectionOverlay(msg);
 		checkIsConnected(msg, function() {
