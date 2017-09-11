@@ -28,4 +28,9 @@ public class DateComparator {
         long now = new Date().getTime();
         return (now - date.getTime()) > (numberOfMonth * millisecondsInMonth + numberOfDays * millisecondsInDay);
     }
+
+    public static boolean isEqualsAfter(Date date, int numberOfDays) {
+        long time = new Date().getTime() - date.getTime();
+        return time >= (numberOfDays * millisecondsInDay) && time <= ((numberOfDays + 1) * millisecondsInDay);
+    }
 }
