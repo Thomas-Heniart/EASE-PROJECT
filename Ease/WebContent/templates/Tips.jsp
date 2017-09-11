@@ -8,7 +8,7 @@
                 <span>Already know how Ease.space works?</span>
                 <span class="action">Skip tutorial</span>
             </div>
-            <button class="btn" type="submit">Got it</button>
+            <button class="btn">Got it</button>
         </div>
     </div>
     <c:choose>
@@ -17,7 +17,7 @@
                 <div class="arrow" style="right: 15px;"></div>
                 <h3>Find more apps in our catalog</h3>
                 <div class="buttonHandler">
-                    <div class="skip">
+                    <div class="skip" style="margin-right: 10px;">
                         <span>Already know how Ease.space works?</span>
                         <span class="action">Skip tutorial</span>
                     </div>
@@ -26,26 +26,26 @@
             </div>
         </c:when>
         <c:otherwise>
-            <!-- <div class="tip" id="1" step="2">
+             <div class="tip" id="2" step="2">
                 <div class="arrow" style="right: 101px"></div>
                 <h3>If you need create your team here</h3>
                 <div class="buttonHandler">
-                    <div class="skip">
+                    <div class="skip" style="margin-right: 10px;">
                         <span>Already know how Ease.space works?</span>
                         <span class="action">Skip tutorial</span>
                     </div>
-                    <button class="btn" type="submit">Got it</button>
+                    <button class="btn">Got it</button>
                 </div>
-            </div> -->
+            </div>
             <div class="tip" id="1" step="2">
                 <div class="arrow" style="right: 15px;"></div>
                 <h3>Find more apps in our catalog</h3>
                 <div class="buttonHandler">
-                    <div class="skip">
+                    <div class="skip" style="margin-right: 10px;">
                         <span>Already know how Ease.space works?</span>
                         <span class="action">Skip tutorial</span>
                     </div>
-                    <button class="btn" type="submit">Got it</button>
+                    <button class="btn">Got it</button>
                 </div>
             </div>
         </c:otherwise>
