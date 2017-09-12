@@ -16,6 +16,15 @@ import java.io.IOException;
 
 @WebServlet("/api/v1/common/ContactUs")
 public class ServletContactUs extends HttpServlet {
+
+    private static final String[] demand_types = {
+            "À propos du produit",
+            "À propos de la sécurité",
+            "Jobs",
+            "Presse",
+            "Autre demande"
+    };
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -40,6 +49,11 @@ public class ServletContactUs extends HttpServlet {
                 phoneNumber = "";
             if (enterprise == null)
                 enterprise = "";
+            try {
+                demandType = demand_types[Integer.parseInt(demandType)];
+            } catch (Exception e) {
+                throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid demand type.");
+            }
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             mailJetBuilder.addTo("benjamin@ease.space");

@@ -49,6 +49,21 @@
     <link rel="stylesheet" href="/cssMinified.v00011/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
           href="/cssMinified.v00011/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <style>
+        .digit {
+            border-radius: 4px;
+            background-color: #ffffff;
+            font-family: MuseoSans;
+            font-size: 40px;
+            font-weight: 300;
+            line-height: 1.65;
+            text-align: center;
+            color: #373b60;
+            padding: 7px 20px;
+            box-shadow: -6px 5px 10px rgba(0, 0, 0, 0.1);
+            margin: 5px;
+        }
+    </style>
 </head>
 
 <body id="landingBody">
@@ -114,7 +129,7 @@
                     </button></a>
                 </div>
             </div>
-            <div class="sixteen wide column" style="text-align:center;">
+            <div id="counter" class="sixteen wide column" style="text-align:center;">
 
             </div>
             <div class="sixteen wide column" style="text-align:center;">
@@ -137,7 +152,6 @@
 <script src="/jsMinified.v00016/languageChooser.js" async></script>
 <script src="/jsMinified.v00016/tracker.js" async></script>
 <script type="text/javascript">
-
     $('button.sendContactButton').on('click', function() {
         if ($('#divInput').find("input[name='email']").val()) {
             document.location.href = "/teams#/registration?email="+$('#divInput').find("input[name='email']").val();
@@ -145,16 +159,60 @@
         else {
             document.location.href = "/teams#/registration";
         }
-    })
-
+    });
     window.addEventListener('load', function () {
-
         $('.signUpButton').click(function () {
             easeTracker.trackEvent($(this).attr("trackEvent"));
             easeSignUpPopup.open();
         });
+    });
+    $(document).ready(function () {
+        var count;
+        $.get("/api/v1/common/ConnectionNumber", function (data) {
+            count = data.connections;
+            setCounter(count);
+        }, false);
 
+        setInterval(function () {
+            $.get("/api/v1/common/ConnectionNumber", function (data) {
+                if (data.connections > count)
+                    updateCounter(data.connections);
+            });
+        }, 60000);
 
+        function updateCounter(new_count) {
+            var step = 60000 / (new_count - count);
+            var timer = setInterval(function () {
+                var i;
+                var l = $("#counter .digit").length;
+                var countString = count.toString();
+                if (countString.length > l) {
+                    for (i = 0; i < countString.length - l; i++)
+                        $("<span class='digit'>0</span>").prependTo($("#counter"));
+                }
+                for (i = 0; i < countString.length; i++) {
+                    var c = $($("#counter .digit")[i]);
+                    if (c.text() !== countString[i])
+                        c.text(countString[i]);
+                }
+                if (count >= new_count) {
+                    clearInterval(timer);
+                    return;
+                }
+                count++;
+            }, step);
+        }
+
+        function setCounter(count) {
+            var l = $("#counter .digit").length;
+            var countString = count.toString();
+            if (countString.length > l) {
+                for (var i = 0; i < countString.length - l; i++)
+                    $("<span class='digit'>0</span>").prependTo($("#counter"));
+            }
+            for (var i = 0; i < countString.length; i++)
+                $($("#counter .digit")[i]).text(countString[i]);
+        }
     });
 </script>
 <script>

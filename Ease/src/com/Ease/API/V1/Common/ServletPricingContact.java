@@ -25,6 +25,8 @@ public class ServletPricingContact extends HttpServlet {
             String enterprise = sm.getStringParam("enterprise", true);
             String message = sm.getStringParam("message", false);
             String email = sm.getStringParam("email", true);
+            String collaboratorsString = sm.getStringParam("collaborators", true);
+            Integer collaborators;
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Please provide us a valid email.");
             if (name == null || name.equals(""))
@@ -37,6 +39,15 @@ public class ServletPricingContact extends HttpServlet {
                 phoneNumber = "";
             if (enterprise == null)
                 enterprise = "";
+            if (collaboratorsString == null || collaboratorsString.equals(""))
+                collaborators = 0;
+            else {
+                try {
+                    collaborators = Integer.parseInt(collaboratorsString);
+                } catch (NumberFormatException e) {
+                    throw new HttpServletException(HttpStatus.BadRequest, "Collaborators must be a number.");
+                }
+            }
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             mailJetBuilder.addTo("benjamin@ease.space");
@@ -47,6 +58,7 @@ public class ServletPricingContact extends HttpServlet {
             mailJetBuilder.addVariable("message", message);
             mailJetBuilder.addVariable("role", role);
             mailJetBuilder.addVariable("enterprise", enterprise);
+            mailJetBuilder.addVariable("collaborators", collaborators);
             mailJetBuilder.addVariable("phoneNumber", phoneNumber);
             mailJetBuilder.addVariable("name", name);
             mailJetBuilder.addVariable("email", email);
