@@ -19,9 +19,17 @@ body {
 }
 
 #starter_plan {
+	background-image:url("/resources/other/Spaceship.svg");
+	position:relative;
+	background-size: 350px 535px;
+	background-repeat: no-repeat;
+	background-position-x: left;
+	background-position-y: top;
 	padding-bottom: 40px;
 	.price {
-		font-size: 26px;
+		font-size: 26px !important;
+		font-family: MuseoSans, sans-serif;
+		color: #414141;
 		font-weight: bold !important;
 	}
 	.tip {
@@ -33,7 +41,9 @@ body {
 		color: white;
 		color: #414141;
 		border: solid 1px #414141;
-
+	}
+	.button:hover {
+		font-weight: bold;
 	}
 }
 
@@ -59,17 +69,30 @@ body {
 		.team_plan {
 			padding-left: 22px;
 			padding-right: 22px;
+			height: 1100px;
 			h1 {
 				font-size: 34px;
 				margin: calc(2rem - .14285714em) 0 1rem;
 			}
 		}
 		h1 {
+			color: #4f5267;
+			font-family: MuseoSans, sans-serif;
 			font-size: 54px;
-			font-weight: normal;
+			font-weight: 300;
+		}
+		.greenText {
+			color: #3fa056 !important;
 		}
 		span {
-			font-weight: normal;
+			font-size: 18px;
+			font-weight: 300;
+			line-height: 1.27;
+			margin-bottom: 15px;
+		}
+		.price {
+			font-size: 36px;
+			font-weight: bold;
 		}
 		#enterprise_team_plan {
 			h1 {

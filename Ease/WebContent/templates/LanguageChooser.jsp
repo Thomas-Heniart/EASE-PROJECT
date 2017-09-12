@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
 <div class="custom-select-language">
 	<form id="languageSelectFrom" style="display:none;">
 		<select id="language" name="language" onchange="submit()">
@@ -7,15 +8,14 @@
 	</form>
 	<div class="custom-sel">
 		<a class="selected" data="${language}">
-			<div class="img">
-			</div>
+			${language == 'en' ? 'english' : 'français'}
 			<i class="fa fa-caret-down lightblue" aria-hidden="true"></i>
 		</a>
 		<a class="selection hidden ${language == 'en' ? 'hide' : ''}" data="en">
-			<img src="resources/flags/english.jpg"/>
+			<p>english</p>
 		</a>
 		<a class="selection hidden ${language == 'fr_FR' ? 'hide' : ''}" data="fr_FR">
-			<img src="resources/flags/french.png"/>
+			<p>français</p>
 		</a>
 	</div>
 </div>
