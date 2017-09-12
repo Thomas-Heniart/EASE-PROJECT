@@ -133,7 +133,7 @@
 <script type="text/javascript">
 
     $('button.sendContactButton').on('click', function() {
-        if ($('#divInput').find("input[name='email']").val().length) {
+        if ($('#divInput').find("input[name='email']").val()) {
             document.location.href = "/teams#/registration?email="+$('#divInput').find("input[name='email']").val();
         }
         else {
