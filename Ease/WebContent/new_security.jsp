@@ -183,7 +183,7 @@
                 <p>Pour obtenir toutes les informations relatives à la sécurité, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf" target="_blank">téléchargez notre Security Whitepaper.</p>
             </div>
             <div style="text-align: center">
-            <a href="#services" class="btn btn-xl signUpButton">
+            <a href="/teams#/registration" class="btn btn-xl signUpButton">
                 Essayez Ease.space gratuitement
             </a>
             </div>
