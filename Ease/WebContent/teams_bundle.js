@@ -943,6 +943,7 @@ exports.showTeamTransferOwnershipModal = showTeamTransferOwnershipModal;
 exports.showTeamPhoneNumberModal = showTeamPhoneNumberModal;
 exports.requestWebsite = requestWebsite;
 exports.showRequestWebsiteModal = showRequestWebsiteModal;
+exports.showTeamAddMultipleUsersModal = showTeamAddMultipleUsersModal;
 function showAddTeamUserModal(state) {
   return {
     type: 'SHOW_ADD_TEAM_USER_MODAL',
@@ -1131,6 +1132,15 @@ function showRequestWebsiteModal(state, resolve, reject) {
       active: state,
       resolve: resolve,
       reject: reject
+    }
+  };
+}
+
+function showTeamAddMultipleUsersModal(state) {
+  return {
+    type: 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL',
+    payload: {
+      active: state
     }
   };
 }
@@ -47686,6 +47696,10 @@ var _ReactivateTeamUserModal = __webpack_require__(579);
 
 var _ReactivateTeamUserModal2 = _interopRequireDefault(_ReactivateTeamUserModal);
 
+var _TeamAddMultipleUsersModal = __webpack_require__(1149);
+
+var _TeamAddMultipleUsersModal2 = _interopRequireDefault(_TeamAddMultipleUsersModal);
+
 var _teamActions = __webpack_require__(87);
 
 var teamActions = _interopRequireWildcard(_teamActions);
@@ -47782,6 +47796,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
     teamBrowseChannelsModalActive: store.teamModals.teamBrowseChannelsModalActive,
     teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
     verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
+    teamAddMultipleUsersModal: store.teamModals.teamAddMultipleUsersModal,
     reactivateTeamUserModal: store.teamModals.reactivateTeamUserModal,
     teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
@@ -47953,6 +47968,7 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
           this.props.reactivateTeamUserModal.active && React.createElement(_ReactivateTeamUserModal2.default, null),
           this.props.teamTransferOwnershipModal.active && React.createElement(TeamTransferOwnershipModal, null),
           this.props.teamPhoneNumberModal.active && React.createElement(TeamPhoneNumberModal, null),
+          this.props.teamAddMultipleUsersModal.active && React.createElement(_TeamAddMultipleUsersModal2.default, null),
           this.props.requestWebsiteModal.active && React.createElement(RequestWebsiteModal, null)
         )
       );
@@ -49104,30 +49120,22 @@ var StepCGU = function (_React$Component4) {
           ),
           _react2.default.createElement(
             _semanticUiReact.Container,
-            { style: { maxHeight: '300px', overflow: 'auto', marginBottom: '1rem', paddingLeft: '0' } },
-            _react2.default.createElement(
-              "p",
-              null,
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla ipsum. Ut tincidunt nisi nec risus scelerisque, in hendrerit ligula blandit. Etiam iaculis dui quis iaculis lobortis. Morbi bibendum fermentum diam, at blandit urna vulputate at. Donec commodo, sapien quis sollicitudin vestibulum, justo augue sagittis lacus, et varius diam nunc a massa. Vivamus et auctor mauris. Nunc ut aliquet massa. In euismod pellentesque urna, vel dictum nibh vulputate et. Phasellus posuere rutrum mauris, vel porta erat vestibulum id. Etiam aliquet fermentum porttitor. Nam fermentum in dolor vitae porta. Vivamus condimentum at urna sodales egestas. Phasellus tristique justo at scelerisque condimentum."
-            ),
-            _react2.default.createElement(
-              "p",
-              null,
-              "Sed varius interdum tincidunt. Cras ac rhoncus nisl. Vestibulum id fringilla risus, in euismod ante. Etiam tristique nunc elit, sed venenatis risus mollis eu. Nulla risus nulla, fermentum eget orci in, bibendum sollicitudin felis. Vivamus eros sem, aliquet a tempus non, blandit eu justo. Suspendisse ut turpis at leo lacinia volutpat. Sed at ante at lacus facilisis porttitor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam risus dui, volutpat nec ipsum eu, viverra scelerisque nulla. Etiam imperdiet tortor finibus tellus faucibus tincidunt. Integer elit purus, dictum ac facilisis vel, sodales et orci. Maecenas egestas gravida"
-            ),
-            _react2.default.createElement(
-              "p",
-              null,
-              "Nunc viverra velit in ullamcorper lobortis. In pharetra hendrerit ultricies. Integer et ipsum vel tortor tempus ornare vitae nec libero. Praesent faucibus in dolor sed efficitur. Proin consequat ligula sed neque luctus faucibus. Aenean justo risus, convallis sed lacus ac, rutrum vestibulum quam. Nulla in dapibus lectus. Integer sit amet felis turpis. Pellentesque scelerisque sodales justo at varius. Nulla pulvinar cursus enim vitae lobortis. Mauris eu arcu euismod, dignissim mauris in, vestibulum ante. Aenean congue, tellus sit amet gravida ultricies, dolor lacus vehicula tortor, ut vestibulum elit turpis eu urna. Ut quis urna porttitor, viverra eros tristique, suscipit risus."
-            )
+            { style: { maxHeight: '300px', overflow: 'hidden', marginBottom: '1rem', paddingLeft: '0' } },
+            "Before continuing your registration, please read our General Terms and Privacy Policy."
           ),
           _react2.default.createElement(
             "p",
             null,
-            "By clicking \xAB I Agree \xBB, you understand and agree to our General Terms and ",
+            "By clicking \xAB I Agree \xBB, you understand and agree to our ",
             _react2.default.createElement(
               "a",
-              null,
+              { href: "/resources/CGU_Ease.pdf", target: "_blank" },
+              "General Terms"
+            ),
+            " and ",
+            _react2.default.createElement(
+              "a",
+              { href: "/resources/Privacy_Policy.pdf", target: "_blank" },
               "Privacy Policy"
             ),
             "."
@@ -49716,30 +49724,22 @@ var StepCGU = function (_React$Component5) {
           ),
           React.createElement(
             _semanticUiReact.Container,
-            { style: { maxHeight: '300px', overflow: 'auto', marginBottom: '1rem', paddingLeft: '0' } },
-            React.createElement(
-              'p',
-              null,
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla ipsum. Ut tincidunt nisi nec risus scelerisque, in hendrerit ligula blandit. Etiam iaculis dui quis iaculis lobortis. Morbi bibendum fermentum diam, at blandit urna vulputate at. Donec commodo, sapien quis sollicitudin vestibulum, justo augue sagittis lacus, et varius diam nunc a massa. Vivamus et auctor mauris. Nunc ut aliquet massa. In euismod pellentesque urna, vel dictum nibh vulputate et. Phasellus posuere rutrum mauris, vel porta erat vestibulum id. Etiam aliquet fermentum porttitor. Nam fermentum in dolor vitae porta. Vivamus condimentum at urna sodales egestas. Phasellus tristique justo at scelerisque condimentum.'
-            ),
-            React.createElement(
-              'p',
-              null,
-              'Sed varius interdum tincidunt. Cras ac rhoncus nisl. Vestibulum id fringilla risus, in euismod ante. Etiam tristique nunc elit, sed venenatis risus mollis eu. Nulla risus nulla, fermentum eget orci in, bibendum sollicitudin felis. Vivamus eros sem, aliquet a tempus non, blandit eu justo. Suspendisse ut turpis at leo lacinia volutpat. Sed at ante at lacus facilisis porttitor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam risus dui, volutpat nec ipsum eu, viverra scelerisque nulla. Etiam imperdiet tortor finibus tellus faucibus tincidunt. Integer elit purus, dictum ac facilisis vel, sodales et orci. Maecenas egestas gravida'
-            ),
-            React.createElement(
-              'p',
-              null,
-              'Nunc viverra velit in ullamcorper lobortis. In pharetra hendrerit ultricies. Integer et ipsum vel tortor tempus ornare vitae nec libero. Praesent faucibus in dolor sed efficitur. Proin consequat ligula sed neque luctus faucibus. Aenean justo risus, convallis sed lacus ac, rutrum vestibulum quam. Nulla in dapibus lectus. Integer sit amet felis turpis. Pellentesque scelerisque sodales justo at varius. Nulla pulvinar cursus enim vitae lobortis. Mauris eu arcu euismod, dignissim mauris in, vestibulum ante. Aenean congue, tellus sit amet gravida ultricies, dolor lacus vehicula tortor, ut vestibulum elit turpis eu urna. Ut quis urna porttitor, viverra eros tristique, suscipit risus.'
-            )
+            { style: { maxHeight: '300px', overflow: 'hidden', marginBottom: '1rem', paddingLeft: '0' } },
+            'Before continuing your registration, please read our General Terms and Privacy Policy.'
           ),
           React.createElement(
             'p',
             null,
-            'By clicking \xAB I Agree \xBB, you understand and agree to our General Terms and ',
+            'By clicking \xAB I Agree \xBB, you understand and agree to our ',
             React.createElement(
               'a',
-              null,
+              { href: '/resources/CGU_Ease.pdf', target: '_blank' },
+              'General Terms'
+            ),
+            ' and ',
+            React.createElement(
+              'a',
+              { href: '/resources/Privacy_Policy.pdf', target: '_blank' },
               'Privacy Policy'
             ),
             '.'
@@ -49931,7 +49931,6 @@ var Step7 = function (_React$Component7) {
       }, this);
       this.setState({ errorMessage: '', loading: true });
       axios.all(calls).then(function () {
-        _this12.props.handleInput(null, { name: "invitedPeople", value: calls.length });
         _this12.setState({ loading: false });
         _this12.props.onStepValidated();
       }).catch(function (err) {
@@ -52790,7 +52789,14 @@ var FirstStepAddUser = function (_React$Component) {
   function FirstStepAddUser(props) {
     _classCallCheck(this, FirstStepAddUser);
 
-    return _possibleConstructorReturn(this, (FirstStepAddUser.__proto__ || Object.getPrototypeOf(FirstStepAddUser)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (FirstStepAddUser.__proto__ || Object.getPrototypeOf(FirstStepAddUser)).call(this, props));
+
+    _this.switchToMultipleUsers = function () {
+      _this.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
+      _this.props.dispatch((0, _teamModalActions.showTeamAddMultipleUsersModal)(true));
+    };
+
+    return _this;
   }
 
   _createClass(FirstStepAddUser, [{
@@ -52862,7 +52868,7 @@ var FirstStepAddUser = function (_React$Component) {
             React.createElement(_semanticUiReact.Message, { error: true, content: this.props.errorMessage }),
             React.createElement(
               _semanticUiReact.Form.Field,
-              null,
+              { className: 'overflow-hidden' },
               React.createElement(
                 _semanticUiReact.Button,
                 {
@@ -52878,6 +52884,21 @@ var FirstStepAddUser = function (_React$Component) {
                     _this2.props.dispatch((0, _teamModalActions.showAddTeamUserModal)(false));
                   } },
                 'Cancel'
+              )
+            ),
+            React.createElement(
+              _semanticUiReact.Divider,
+              { horizontal: true },
+              'Or'
+            ),
+            React.createElement(
+              _semanticUiReact.Form.Group,
+              { className: 'justify_content_center' },
+              React.createElement(
+                _semanticUiReact.Form.Button,
+                { primary: true, type: 'button', onClick: this.switchToMultipleUsers },
+                React.createElement(_semanticUiReact.Icon, { name: 'add user' }),
+                'Add a list of users'
               )
             )
           )
@@ -63499,9 +63520,10 @@ var Step7 = function (_React$Component5) {
       }, this);
       this.setState({ loading: true });
       axios.all(calls).then(function () {
-        _this10.props.handleInput(null, { name: "invitedPeople", value: calls.length });
         _this10.setState({ loading: false });
         _this10.props.onStepValidated();
+      }).catch(function (err) {
+        _this10.setState({ errorMessage: err, loading: false });
       });
     }
   }, {
@@ -63554,10 +63576,10 @@ var Step7 = function (_React$Component5) {
               'Your Ease.space team is ready to go. Know few coworkers who\'d like to stop using passwords with you?'
             )
           ),
+          React.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
           React.createElement(
             _semanticUiReact.Form,
-            null,
-            React.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
+            { onSubmit: this.onSubmit, error: this.state.errorMessage.length > 0 },
             React.createElement(
               _semanticUiReact.Form.Group,
               null,
@@ -63587,17 +63609,18 @@ var Step7 = function (_React$Component5) {
               React.createElement(_semanticUiReact.Icon, { name: 'add user' }),
               'Add another field'
             ),
+            React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
             React.createElement(
               _semanticUiReact.Form.Group,
               null,
               React.createElement(
                 _semanticUiReact.Form.Button,
-                { width: 8, fluid: true, onClick: this.props.incStep },
+                { width: 8, fluid: true, type: 'button', onClick: this.props.onStepValidated },
                 'Skip for now'
               ),
               React.createElement(
                 _semanticUiReact.Form.Button,
-                { width: 8, fluid: true, positive: true, onClick: this.onSubmit, loading: this.state.loading },
+                { width: 8, fluid: true, positive: true, type: 'submit', loading: this.state.loading },
                 'Send invitations'
               )
             )
@@ -63610,218 +63633,20 @@ var Step7 = function (_React$Component5) {
   return Step7;
 }(React.Component);
 
-var Step8 = function (_React$Component6) {
-  _inherits(Step8, _React$Component6);
-
-  function Step8(props) {
-    _classCallCheck(this, Step8);
-
-    var _this12 = _possibleConstructorReturn(this, (Step8.__proto__ || Object.getPrototypeOf(Step8)).call(this, props));
-
-    _this12.state = {
-      companyInfoConfirmed: false,
-      friendsInvited: false,
-      errorMessage: '',
-      loading: false
-    };
-    _this12.confirmCompanyInfo = _this12.confirmCompanyInfo.bind(_this12);
-    _this12.tokenCallback = _this12.tokenCallback.bind(_this12);
-    _this12.inviteFriends = _this12.inviteFriends.bind(_this12);
-    return _this12;
-  }
-
-  _createClass(Step8, [{
-    key: 'inviteFriends',
-    value: function inviteFriends(e) {
-      var _this13 = this;
-
-      e.preventDefault();
-      var f = this.props.friends;
-
-      this.setState({ erorrMessage: '', loading: true });
-      post_api.teams.inviteFriends(this.props.teamId, f[0].email, f[1].email, f[2].email).then(function (response) {
-        _this13.props.handleInput({ target: { value: 15, name: 'credits' } });
-        _this13.setState({ friendsInvited: true, errorMessage: '', loading: false });
-      }).catch(function (err) {
-        _this13.setState({ errorMessage: '', loading: false });
-      });
-    }
-  }, {
-    key: 'confirmCompanyInfo',
-    value: function confirmCompanyInfo(state) {
-      this.setState({ companyInfoConfirmed: state });
-    }
-  }, {
-    key: 'tokenCallback',
-    value: function tokenCallback(token) {
-      var _this14 = this;
-
-      var i = this.props.companyInfo;
-      post_api.teams.subscribeToPlan(this.props.teamId, token, i.vat_id, i.company_name, i.street_address, i.unit, i.zip, i.state, i.country, i.city).then(function (response) {
-        _this14.props.onStepValidated();
-      }).catch(function (err) {});
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this15 = this;
-
-      return React.createElement(
-        'div',
-        { className: 'contents', id: 'step6' },
-        React.createElement(
-          _semanticUiReact.Segment,
-          null,
-          React.createElement(
-            _semanticUiReact.Header,
-            { as: 'h1', color: this.state.friendsInvited ? 'green' : 'black' },
-            'Checkout',
-            React.createElement(
-              _semanticUiReact.Header.Subheader,
-              null,
-              'You have ',
-              this.props.credits,
-              ' euros in credits !'
-            )
-          ),
-          React.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
-          !this.state.friendsInvited && React.createElement(
-            _semanticUiReact.Form,
-            { onSubmit: this.inviteFriends, error: this.state.errorMessage.length > 0 },
-            React.createElement(
-              _semanticUiReact.Form.Field,
-              null,
-              React.createElement(
-                'strong',
-                null,
-                'Invite 3 friends and get up to 15 euros in credits'
-              )
-            ),
-            this.props.friends.map(function (item, idx) {
-              return React.createElement(_semanticUiReact.Form.Input, { type: 'email',
-                value: item.email,
-                onChange: function onChange(e, _ref3) {
-                  var value = _ref3.value;
-
-                  _this15.props.editFriendsEmail(value, idx);
-                },
-                placeholder: 'friend@company.com',
-                key: idx,
-                required: true });
-            }, this),
-            React.createElement(
-              _semanticUiReact.Message,
-              { color: 'yellow' },
-              'Make sure these are the right email addresses, otherwise it won\'t work, and you\'ll get charged back:('
-            ),
-            React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
-            React.createElement(
-              _semanticUiReact.Form.Button,
-              { fluid: true, type: 'submit', primary: true },
-              'Update the bill'
-            )
-          ),
-          !this.state.friendsInvited && React.createElement(_semanticUiReact.Divider, null),
-          React.createElement(
-            _semanticUiReact.Button,
-            { positive: true, fluid: true, onClick: this.props.onStepValidated },
-            'Ok ! I wanna see my team now !'
-          )
-        )
-      );
-    }
-  }]);
-
-  return Step8;
-}(React.Component);
-
-function test(props) {
-  var _this16 = this;
-
-  return React.createElement(
-    'div',
-    null,
-    '/*          ',
-    React.createElement(
-      'div',
-      { className: 'content_row flex_direction_column' },
-      React.createElement(
-        'h1',
-        null,
-        'Add Company information'
-      ),
-      !this.state.companyInfoConfirmed ? React.createElement(CompanyInformationForm, {
-        companyInfo: this.props.companyInfo,
-        handleCompanyInfoInput: this.props.handleCompanyInfoInput,
-        onSubmit: function onSubmit(e) {
-          e.preventDefault();_this16.confirmCompanyInfo(true);
-        } }) : React.createElement(
-        'div',
-        { className: 'display_flex' },
-        React.createElement(
-          'button',
-          { className: 'button-unstyle mrgnRight5',
-            onClick: this.confirmCompanyInfo.bind(null, false) },
-          React.createElement(
-            'u',
-            null,
-            'Edit'
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'display-flex flex_direction_column' },
-          React.createElement(
-            'strong',
-            null,
-            this.props.companyInfo.company_name
-          ),
-          React.createElement(
-            'span',
-            null,
-            this.props.companyInfo.street_address
-          ),
-          React.createElement(
-            'span',
-            null,
-            this.props.companyInfo.city
-          ),
-          React.createElement(
-            'span',
-            null,
-            this.props.companyInfo.country
-          )
-        )
-      )
-    ),
-    this.state.companyInfoConfirmed && React.createElement(
-      'div',
-      { className: 'content_row flex_direction_column' },
-      React.createElement(
-        'h1',
-        null,
-        'Add payment method'
-      ),
-      React.createElement(StripeCardForm, { tokenCallback: this.tokenCallback })
-    ),
-    '*/'
-  );
-}
-
 var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     ws_id: store.common.ws_id,
     user: store.common.user
   };
-}), _dec(_class = function (_React$Component7) {
-  _inherits(SimpleTeamCreationView, _React$Component7);
+}), _dec(_class = function (_React$Component6) {
+  _inherits(SimpleTeamCreationView, _React$Component6);
 
   function SimpleTeamCreationView(props) {
     _classCallCheck(this, SimpleTeamCreationView);
 
-    var _this17 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
+    var _this12 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
 
-    _this17.state = {
+    _this12.state = {
       currentStep: 0,
       steps: [],
       email: '',
@@ -63837,34 +63662,20 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       jobDetails: '',
       teamName: '',
       teamId: -1,
-      credits: 0,
-      invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }],
-      invitedPeople: 0,
-      friends: [{ email: '' }, { email: '' }, { email: '' }],
-      companyInformation: {
-        country: 'France',
-        company_name: '',
-        street_address: '',
-        unit: '',
-        city: '',
-        state: '',
-        zip: '',
-        vat_id: ''
-      },
-      stripeToken: null
+      invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }]
     };
-    _this17.incrementStep = _this17.incrementStep.bind(_this17);
-    _this17.handleInput = _this17.handleInput.bind(_this17);
-    _this17.switchNewsletter = _this17.switchNewsletter.bind(_this17);
-    _this17.addInvitationField = _this17.addInvitationField.bind(_this17);
-    _this17.removeInvitationField = _this17.removeInvitationField.bind(_this17);
-    _this17.editInvitationEmail = _this17.editInvitationEmail.bind(_this17);
-    _this17.editInvitationUsername = _this17.editInvitationUsername.bind(_this17);
-    _this17.editFriendsEmail = _this17.editFriendsEmail.bind(_this17);
-    _this17.handleCompanyInfoInput = _this17.handleCompanyInfoInput.bind(_this17);
-    _this17.submitStep8 = _this17.submitStep8.bind(_this17);
-    _this17.incrementStepByValue = _this17.incrementStepByValue.bind(_this17);
-    return _this17;
+    _this12.incrementStep = _this12.incrementStep.bind(_this12);
+    _this12.handleInput = _this12.handleInput.bind(_this12);
+    _this12.switchNewsletter = _this12.switchNewsletter.bind(_this12);
+    _this12.addInvitationField = _this12.addInvitationField.bind(_this12);
+    _this12.removeInvitationField = _this12.removeInvitationField.bind(_this12);
+    _this12.editInvitationEmail = _this12.editInvitationEmail.bind(_this12);
+    _this12.editInvitationUsername = _this12.editInvitationUsername.bind(_this12);
+    _this12.editFriendsEmail = _this12.editFriendsEmail.bind(_this12);
+    _this12.handleCompanyInfoInput = _this12.handleCompanyInfoInput.bind(_this12);
+    _this12.submitStep8 = _this12.submitStep8.bind(_this12);
+    _this12.incrementStepByValue = _this12.incrementStepByValue.bind(_this12);
+    return _this12;
   }
 
   _createClass(SimpleTeamCreationView, [{
@@ -63875,7 +63686,6 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('lala');
       if (this.props.user !== null) {
         this.setState({ email: this.props.user.email, username: this.props.user.first_name });
       }
@@ -63942,9 +63752,9 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
     }
   }, {
     key: 'handleInput',
-    value: function handleInput(e, _ref4) {
-      var value = _ref4.value,
-          name = _ref4.name;
+    value: function handleInput(e, _ref3) {
+      var value = _ref3.value,
+          name = _ref3.name;
 
       this.setState(_defineProperty({}, name, value));
     }
@@ -63994,8 +63804,7 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         jobDetails: this.state.jobDetails,
         handleInput: this.handleInput,
         key: '6' }));
-      steps.push(React.createElement(Step7, { onStepValidated: this.incrementStep,
-        incStep: this.incrementStep,
+      steps.push(React.createElement(Step7, { onStepValidated: this.submitStep8,
         teamId: this.state.teamId,
         handleInput: this.handleInput,
         invitations: this.state.invitations,
@@ -64005,17 +63814,6 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         removeInvitationField: this.removeInvitationField,
         ws_id: this.props.ws_id,
         key: '7' }));
-      steps.push(React.createElement(Step8, { key: '8',
-        onStepValidated: this.submitStep8,
-        friends: this.state.friends,
-        editFriendsEmail: this.editFriendsEmail,
-        invitedPeople: this.state.invitedPeople,
-        credits: this.state.credits,
-        teamId: this.state.teamId,
-        companyInfo: this.state.companyInformation,
-        handleInput: this.handleInput,
-        handleCompanyInfoInput: this.handleCompanyInfoInput
-      }));
       return React.createElement(
         'div',
         { id: 'team_creation_view', className: 'display-flex justify_content_center full_flex' },
@@ -64708,6 +64506,9 @@ var TeamJoinView = __webpack_require__(534);
 var Login = __webpack_require__(530);
 var Base = __webpack_require__(528);
 
+
+var stripe_api_key = window.location.host.indexOf('ease.space') !== -1 ? 'pk_live_lPfbuzvll7siv1CM3ncJ22Bu' : 'pk_test_95DsYIUHWlEgZa5YWglIJHXd';
+
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
@@ -64722,7 +64523,7 @@ var App = function (_React$Component) {
     value: function render() {
       return React.createElement(
         _reactStripeElements.StripeProvider,
-        { apiKey: 'pk_test_95DsYIUHWlEgZa5YWglIJHXd' },
+        { apiKey: stripe_api_key },
         React.createElement(
           _reactRouterDom.HashRouter,
           null,
@@ -65521,6 +65322,9 @@ var initialState = {
   addChannelModalActive: false,
   teamBrowseChannelsModalActive: false,
   teamSettingsModalActive: false,
+  teamAddMultipleUsersModal: {
+    active: false
+  },
   teamChannelAddUserModal: {
     active: false,
     channel_id: -1
@@ -65703,6 +65507,12 @@ function reducer() {
       {
         return _extends({}, state, {
           requestWebsiteModal: action.payload
+        });
+      }
+    case 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL':
+      {
+        return _extends({}, state, {
+          teamAddMultipleUsersModal: action.payload
         });
       }
   }
@@ -113356,6 +113166,230 @@ var CGUStep = function (_React$Component) {
 }(_react2.default.Component);
 
 module.exports = CGUStep;
+
+/***/ }),
+/* 1149 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _dec, _class;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _reactRedux = __webpack_require__(12);
+
+var _teamModalActions = __webpack_require__(15);
+
+var _helperFunctions = __webpack_require__(13);
+
+var _semanticUiReact = __webpack_require__(28);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = __webpack_require__(0);
+var classnames = __webpack_require__(2);
+
+var PreviewStep = function (_React$Component) {
+  _inherits(PreviewStep, _React$Component);
+
+  function PreviewStep(props) {
+    _classCallCheck(this, PreviewStep);
+
+    return _possibleConstructorReturn(this, (PreviewStep.__proto__ || Object.getPrototypeOf(PreviewStep)).call(this, props));
+  }
+
+  _createClass(PreviewStep, [{
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var fields = this.props.invitations.map(function (item, idx) {
+        return React.createElement(
+          _semanticUiReact.Form.Group,
+          { key: idx },
+          React.createElement(
+            _semanticUiReact.Form.Field,
+            { width: 9 },
+            React.createElement(_semanticUiReact.Input, {
+              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this2.props.removeField.bind(null, idx) }),
+              actionPosition: 'left',
+              name: 'email',
+              type: 'email',
+              value: item.email,
+              placeholder: 'Email',
+              onChange: function onChange(e, values) {
+                _this2.props.editField(idx, values);
+              } })
+          ),
+          React.createElement(_semanticUiReact.Form.Input, { width: 7, type: 'text',
+            name: 'username',
+            placeholder: 'Username',
+            value: item.username,
+            onChange: function onChange(e, values) {
+              _this2.props.editField(idx, values);
+            } })
+        );
+      });
+      return React.createElement(
+        'div',
+        { className: 'contents' },
+        React.createElement(
+          _semanticUiReact.Container,
+          null,
+          React.createElement(
+            _semanticUiReact.Header,
+            { as: 'h1' },
+            'Invite several users at once'
+          ),
+          React.createElement(
+            _semanticUiReact.Form,
+            null,
+            React.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
+            React.createElement(
+              _semanticUiReact.Form.Group,
+              null,
+              React.createElement(
+                _semanticUiReact.Form.Field,
+                { width: 9 },
+                React.createElement(
+                  'label',
+                  null,
+                  'Email address'
+                )
+              ),
+              React.createElement(
+                _semanticUiReact.Form.Field,
+                { width: 7 },
+                React.createElement(
+                  'label',
+                  null,
+                  'Username (editable later)'
+                )
+              )
+            ),
+            fields,
+            React.createElement(
+              _semanticUiReact.Form.Field,
+              null,
+              React.createElement(_semanticUiReact.Icon, { name: 'add circle', color: 'blue', size: 'large' }),
+              React.createElement(
+                'button',
+                { className: 'button-unstyle inline-text-button primary', onClick: this.props.addField },
+                'Add another'
+              ),
+              '\xA0or\xA0',
+              React.createElement(
+                'button',
+                { className: 'button-unstyle inline-text-button primary' },
+                'add a list of users'
+              )
+            ),
+            React.createElement(
+              _semanticUiReact.Form.Field,
+              { className: 'overflow-hidden' },
+              React.createElement(
+                _semanticUiReact.Button,
+                { floated: 'right', positive: true, onClick: this.onSubmit },
+                'Send invitations'
+              ),
+              React.createElement(
+                _semanticUiReact.Button,
+                { floated: 'right', onClick: function onClick(e) {
+                    _this2.props.dispatch((0, _teamModalActions.showTeamAddMultipleUsersModal)(false));
+                  } },
+                'Cancel'
+              )
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return PreviewStep;
+}(React.Component);
+
+var TeamAddMultipleUsersModal = (_dec = (0, _reactRedux.connect)(), _dec(_class = function (_React$Component2) {
+  _inherits(TeamAddMultipleUsersModal, _React$Component2);
+
+  function TeamAddMultipleUsersModal(props) {
+    _classCallCheck(this, TeamAddMultipleUsersModal);
+
+    var _this3 = _possibleConstructorReturn(this, (TeamAddMultipleUsersModal.__proto__ || Object.getPrototypeOf(TeamAddMultipleUsersModal)).call(this, props));
+
+    _this3.editField = function (idx, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      var invitations = _this3.state.invitations.slice();
+      invitations[idx][name] = value;
+      _this3.setState({ invitations: invitations });
+    };
+
+    _this3.addField = function (email, username) {
+      var invitations = _this3.state.invitations.slice();
+      invitations.push({ email: email, username: username });
+      _this3.setState({ invitations: invitations });
+    };
+
+    _this3.removeField = function (idx) {
+      var invitations = _this3.state.invitations.slice();
+      invitations.splice(idx, 1);
+      _this3.setState({ invitations: invitations });
+    };
+
+    _this3.state = {
+      view: 0,
+      invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }]
+    };
+    return _this3;
+  }
+
+  _createClass(TeamAddMultipleUsersModal, [{
+    key: 'render',
+    value: function render() {
+      var _this4 = this;
+
+      return React.createElement(
+        'div',
+        { className: 'ease_modal' },
+        React.createElement('div', { className: 'modal-background' }),
+        React.createElement(
+          'a',
+          { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: function onClick(e) {
+              _this4.props.dispatch((0, _teamModalActions.showTeamAddMultipleUsersModal)(false));
+            } },
+          React.createElement('i', { className: 'ease_icon fa fa-times' }),
+          React.createElement(
+            'span',
+            { className: 'key_label' },
+            'close'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'modal_contents_container' },
+          this.state.view === 0 && React.createElement(PreviewStep, {
+            invitations: this.state.invitations,
+            removeField: this.removeField,
+            editField: this.editField,
+            addField: this.addField.bind(null, '', '') })
+        )
+      );
+    }
+  }]);
+
+  return TeamAddMultipleUsersModal;
+}(React.Component)) || _class);
+
+
+module.exports = TeamAddMultipleUsersModal;
 
 /***/ })
 /******/ ]);
