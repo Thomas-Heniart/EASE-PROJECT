@@ -49266,9 +49266,13 @@ var _dec, _class;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _reactRouterDom = __webpack_require__(31);
+var _InvitePeopleStep = __webpack_require__(1150);
+
+var _InvitePeopleStep2 = _interopRequireDefault(_InvitePeopleStep);
 
 var _utils = __webpack_require__(47);
+
+var _reactRouterDom = __webpack_require__(31);
 
 var _commonActions = __webpack_require__(46);
 
@@ -49731,6 +49735,7 @@ var StepCGU = function (_React$Component5) {
             { as: 'h1' },
             'Review the General Terms'
           ),
+          React.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
           React.createElement(
             _semanticUiReact.Container,
             { style: { maxHeight: '300px', overflow: 'hidden', marginBottom: '1rem', paddingLeft: '0' } },
@@ -49862,7 +49867,7 @@ var Step6 = function (_React$Component6) {
         { className: 'contents', id: 'step6' },
         React.createElement(
           _semanticUiReact.Segment,
-          { error: this.state.errorMessage.length > 0 },
+          null,
           React.createElement(
             _semanticUiReact.Header,
             { as: 'h1' },
@@ -49910,164 +49915,20 @@ var Step6 = function (_React$Component6) {
   return Step6;
 }(React.Component);
 
-var Step7 = function (_React$Component7) {
-  _inherits(Step7, _React$Component7);
-
-  function Step7(props) {
-    _classCallCheck(this, Step7);
-
-    var _this11 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
-
-    _this11.state = {
-      errorMessage: '',
-      loading: false
-    };
-    _this11.onSubmit = _this11.onSubmit.bind(_this11);
-    return _this11;
-  }
-
-  _createClass(Step7, [{
-    key: 'onSubmit',
-    value: function onSubmit(e) {
-      var _this12 = this;
-
-      e.preventDefault();
-      var calls = [];
-      this.props.invitations.map(function (item) {
-        if (item.email.match(_utils.emailRegexp) !== null && item.username.length > 0) {
-          calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, 1));
-        }
-      }, this);
-      this.setState({ errorMessage: '', loading: true });
-      axios.all(calls).then(function () {
-        _this12.setState({ loading: false });
-        _this12.props.onStepValidated();
-      }).catch(function (err) {
-        _this12.setState({ errorMessage: err, loading: false });
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this13 = this;
-
-      var fields = this.props.invitations.map(function (item, idx) {
-        return React.createElement(
-          _semanticUiReact.Form.Group,
-          { key: idx },
-          React.createElement(
-            _semanticUiReact.Form.Field,
-            { width: 9 },
-            React.createElement(_semanticUiReact.Input, {
-              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this13.props.removeInvitationField.bind(null, idx) }),
-              actionPosition: 'left',
-              type: 'email',
-              required: true,
-              value: item.email,
-              placeholder: 'Email',
-              onChange: function onChange(e, _ref) {
-                var value = _ref.value;
-
-                _this13.props.editInvitationEmail(value, idx);
-              } })
-          ),
-          React.createElement(_semanticUiReact.Form.Input, { required: true, width: 7, type: 'text',
-            placeholder: 'Username',
-            value: item.username,
-            onChange: function onChange(e, _ref2) {
-              var value = _ref2.value;
-
-              _this13.props.editInvitationUsername(value, idx);
-            } })
-        );
-      }, this);
-      return React.createElement(
-        'div',
-        { className: 'contents', id: 'step7' },
-        React.createElement(
-          _semanticUiReact.Segment,
-          null,
-          React.createElement(
-            _semanticUiReact.Header,
-            { as: 'h1' },
-            'Send invitations',
-            React.createElement(
-              _semanticUiReact.Header.Subheader,
-              null,
-              'Your Ease.space team is ready to go. Know few coworkers who\'d like to stop using passwords with you?'
-            )
-          ),
-          React.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
-          React.createElement(
-            _semanticUiReact.Form,
-            { onSubmit: this.onSubmit, error: this.state.errorMessage.length > 0 },
-            React.createElement(
-              _semanticUiReact.Form.Group,
-              null,
-              React.createElement(
-                _semanticUiReact.Form.Field,
-                { width: 9 },
-                React.createElement(
-                  'label',
-                  null,
-                  'Email address'
-                )
-              ),
-              React.createElement(
-                _semanticUiReact.Form.Field,
-                { width: 7 },
-                React.createElement(
-                  'label',
-                  null,
-                  'Username (editable later)'
-                )
-              )
-            ),
-            fields,
-            React.createElement(
-              _semanticUiReact.Form.Button,
-              { primary: true, onClick: this.props.addInvitationField },
-              React.createElement(_semanticUiReact.Icon, { name: 'add user' }),
-              'Add another field'
-            ),
-            React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
-            React.createElement(
-              _semanticUiReact.Form.Group,
-              null,
-              React.createElement(
-                _semanticUiReact.Form.Button,
-                { width: 8, fluid: true, type: 'button', onClick: this.props.onStepValidated },
-                'Skip for now'
-              ),
-              React.createElement(
-                _semanticUiReact.Form.Button,
-                { width: 8, fluid: true, positive: true, type: 'submit', loading: this.state.loading },
-                'Send invitations'
-              )
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return Step7;
-}(React.Component);
-
 var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     ws_id: store.common.ws_id,
     authenticated: store.common.authenticated
   };
-}), _dec(_class = function (_React$Component8) {
-  _inherits(TeamCreationView, _React$Component8);
+}), _dec(_class = function (_React$Component7) {
+  _inherits(TeamCreationView, _React$Component7);
 
   function TeamCreationView(props) {
     _classCallCheck(this, TeamCreationView);
 
-    var _this14 = _possibleConstructorReturn(this, (TeamCreationView.__proto__ || Object.getPrototypeOf(TeamCreationView)).call(this, props));
+    var _this11 = _possibleConstructorReturn(this, (TeamCreationView.__proto__ || Object.getPrototypeOf(TeamCreationView)).call(this, props));
 
-    _this14.state = {
+    _this11.state = {
       currentStep: 0,
       steps: [],
       email: '',
@@ -50084,17 +49945,17 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       teamId: -1,
       invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }]
     };
-    _this14.incrementStep = _this14.incrementStep.bind(_this14);
-    _this14.handleInput = _this14.handleInput.bind(_this14);
-    _this14.switchNewsletter = _this14.switchNewsletter.bind(_this14);
-    _this14.addInvitationField = _this14.addInvitationField.bind(_this14);
-    _this14.removeInvitationField = _this14.removeInvitationField.bind(_this14);
-    _this14.editInvitationEmail = _this14.editInvitationEmail.bind(_this14);
-    _this14.editInvitationUsername = _this14.editInvitationUsername.bind(_this14);
-    _this14.editFriendsEmail = _this14.editFriendsEmail.bind(_this14);
-    _this14.handleCompanyInfoInput = _this14.handleCompanyInfoInput.bind(_this14);
-    _this14.submitStep8 = _this14.submitStep8.bind(_this14);
-    return _this14;
+    _this11.incrementStep = _this11.incrementStep.bind(_this11);
+    _this11.handleInput = _this11.handleInput.bind(_this11);
+    _this11.switchNewsletter = _this11.switchNewsletter.bind(_this11);
+    _this11.addInvitationField = _this11.addInvitationField.bind(_this11);
+    _this11.removeInvitationField = _this11.removeInvitationField.bind(_this11);
+    _this11.editInvitationEmail = _this11.editInvitationEmail.bind(_this11);
+    _this11.editInvitationUsername = _this11.editInvitationUsername.bind(_this11);
+    _this11.editFriendsEmail = _this11.editFriendsEmail.bind(_this11);
+    _this11.handleCompanyInfoInput = _this11.handleCompanyInfoInput.bind(_this11);
+    _this11.submitStep8 = _this11.submitStep8.bind(_this11);
+    return _this11;
   }
 
   _createClass(TeamCreationView, [{
@@ -50159,9 +50020,9 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
     }
   }, {
     key: 'handleInput',
-    value: function handleInput(e, _ref3) {
-      var value = _ref3.value,
-          name = _ref3.name;
+    value: function handleInput(e, _ref) {
+      var value = _ref.value,
+          name = _ref.name;
 
       this.setState(_defineProperty({}, name, value));
     }
@@ -50229,16 +50090,11 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         jobDetails: this.state.jobDetails,
         handleInput: this.handleInput,
         key: '6' }));
-      steps.push(React.createElement(Step7, { onStepValidated: this.submitStep8,
-        teamId: this.state.teamId,
-        handleInput: this.handleInput,
-        invitations: this.state.invitations,
-        editInvitationEmail: this.editInvitationEmail,
-        editInvitationUsername: this.editInvitationUsername,
-        removeInvitationField: this.removeInvitationField,
-        addInvitationField: this.addInvitationField,
+      steps.push(React.createElement(_InvitePeopleStep2.default, {
+        key: '7',
         ws_id: this.props.ws_id,
-        key: '7' }));
+        team_id: this.state.teamId,
+        onStepValidated: this.submitStep8 }));
       return React.createElement(
         'div',
         { id: 'team_creation_view', className: 'full_screen_centered_view' },
@@ -60573,8 +60429,6 @@ var _utils = __webpack_require__(47);
 
 var _teamModalActions = __webpack_require__(14);
 
-var _helperFunctions = __webpack_require__(13);
-
 var _semanticUiReact = __webpack_require__(25);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -60584,7 +60438,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = __webpack_require__(0);
-var classnames = __webpack_require__(2);
 
 var PreviewStep = function (_React$Component) {
   _inherits(PreviewStep, _React$Component);
@@ -60603,7 +60456,7 @@ var PreviewStep = function (_React$Component) {
   }
 
   _createClass(PreviewStep, [{
-    key: 'render',
+    key: "render",
     value: function render() {
       var _this2 = this;
 
@@ -60616,25 +60469,25 @@ var PreviewStep = function (_React$Component) {
             { style: { marginBottom: 0 } },
             React.createElement(_semanticUiReact.Form.Input, {
               width: 9,
-              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this2.props.removeField.bind(null, idx) }),
-              actionPosition: 'left',
-              name: 'email',
-              type: 'email',
+              action: React.createElement(_semanticUiReact.Button, { icon: "delete", onClick: _this2.props.removeField.bind(null, idx) }),
+              actionPosition: "left",
+              name: "email",
+              type: "email",
               value: item.email,
-              placeholder: 'Email',
+              placeholder: "Email",
               onChange: function onChange(e, values) {
                 _this2.props.editField(idx, values);
               } }),
             React.createElement(_semanticUiReact.Form.Input, { width: 7,
-              type: 'text',
-              name: 'username',
-              placeholder: 'Username',
+              type: "text",
+              name: "username",
+              placeholder: "Username",
               value: item.username,
               onChange: function onChange(e, values) {
                 _this2.props.editField(idx, values);
               } })
           ),
-          item.error.length > 0 && React.createElement(_semanticUiReact.Label, { pointing: true, fluid: true, className: 'fluid', style: { textAlign: 'center' }, content: item.error, color: 'red', basic: true })
+          item.error.length > 0 && React.createElement(_semanticUiReact.Label, { pointing: true, fluid: true, className: "fluid", style: { textAlign: 'center' }, content: item.error, color: "red", basic: true })
         );
       });
       return React.createElement(
@@ -60648,18 +60501,18 @@ var PreviewStep = function (_React$Component) {
             _semanticUiReact.Form.Field,
             { width: 9 },
             React.createElement(
-              'label',
+              "label",
               null,
-              'Email address'
+              "Email address"
             )
           ),
           React.createElement(
             _semanticUiReact.Form.Field,
             { width: 7 },
             React.createElement(
-              'label',
+              "label",
               null,
-              'Username (editable later)'
+              "Username (editable later)"
             )
           )
         ),
@@ -60667,30 +60520,30 @@ var PreviewStep = function (_React$Component) {
         React.createElement(
           _semanticUiReact.Form.Field,
           null,
-          React.createElement(_semanticUiReact.Icon, { name: 'add circle', color: 'blue', size: 'large' }),
+          React.createElement(_semanticUiReact.Icon, { name: "add circle", color: "blue", size: "large" }),
           React.createElement(
-            'button',
-            { className: 'button-unstyle inline-text-button primary', type: 'button', onClick: this.props.addField },
-            'Add another'
+            "button",
+            { className: "button-unstyle inline-text-button primary", type: "button", onClick: this.props.addField },
+            "Add another"
           ),
-          '\xA0or\xA0',
+          "\xA0or\xA0",
           React.createElement(
-            'button',
-            { className: 'button-unstyle inline-text-button primary', type: 'button', onClick: this.props.changeStep },
-            'add a list of users'
+            "button",
+            { className: "button-unstyle inline-text-button primary", type: "button", onClick: this.props.changeStep },
+            "add a list of users"
           )
         ),
         React.createElement(
           _semanticUiReact.Form.Field,
-          { className: 'overflow-hidden' },
+          { className: "overflow-hidden" },
           React.createElement(
             _semanticUiReact.Button,
-            { floated: 'right', positive: true, loading: this.props.loading },
+            { floated: "right", positive: true, loading: this.props.loading },
             this.props.validateButtonText
           ),
           React.createElement(
             _semanticUiReact.Button,
-            { floated: 'right', onClick: function onClick(e) {
+            { floated: "right", onClick: function onClick(e) {
                 _this2.props.dispatch((0, _teamModalActions.showTeamAddMultipleUsersModal)(false));
               } },
             this.props.cancelButtonText
@@ -60725,7 +60578,7 @@ var EmailListStep = function (_React$Component2) {
   }
 
   _createClass(EmailListStep, [{
-    key: 'render',
+    key: "render",
     value: function render() {
       return React.createElement(
         _semanticUiReact.Form,
@@ -60733,25 +60586,25 @@ var EmailListStep = function (_React$Component2) {
         React.createElement(
           _semanticUiReact.Form.Field,
           null,
-          'Enter multiple email addresses, separated with commas'
+          "Enter multiple email addresses, separated with commas"
         ),
         React.createElement(
           _semanticUiReact.Form.Field,
           null,
-          React.createElement(_semanticUiReact.TextArea, { rows: 7, name: 'value', onChange: this.handleInput, placeholder: 'Write emails here...' })
+          React.createElement(_semanticUiReact.TextArea, { rows: 7, name: "value", onChange: this.handleInput, placeholder: "Write emails here..." })
         ),
         React.createElement(
           _semanticUiReact.Form.Field,
           null,
           React.createElement(
             _semanticUiReact.Button,
-            { floated: 'right', primary: true },
-            'Next'
+            { floated: "right", primary: true },
+            "Next"
           ),
           React.createElement(
             _semanticUiReact.Button,
-            { floated: 'right', type: 'button', onClick: this.props.changeStep },
-            'Cancel'
+            { floated: "right", type: "button", onClick: this.props.changeStep },
+            "Cancel"
           )
         )
       );
@@ -60815,7 +60668,7 @@ var TeamAddMultipleUsersModal = (_dec = (0, _reactRedux.connect)(), _dec(_class 
       var emails = value.split(',');
       emails.map(function (item) {
         var username = item.split('@')[0];
-        invitations.push({ email: item, username: username });
+        invitations.push({ email: item, username: username, error: '' });
       });
       _this4.setState({ invitations: invitations });
     };
@@ -60845,39 +60698,39 @@ var TeamAddMultipleUsersModal = (_dec = (0, _reactRedux.connect)(), _dec(_class 
   }
 
   _createClass(TeamAddMultipleUsersModal, [{
-    key: 'render',
+    key: "render",
     value: function render() {
       var _this5 = this;
 
       return React.createElement(
-        'div',
-        { className: 'ease_modal' },
-        React.createElement('div', { className: 'modal-background' }),
+        "div",
+        { className: "ease_modal" },
+        React.createElement("div", { className: "modal-background" }),
         React.createElement(
-          'a',
-          { id: 'ease_modal_close_btn', className: 'ease_modal_btn', onClick: function onClick(e) {
+          "a",
+          { id: "ease_modal_close_btn", className: "ease_modal_btn", onClick: function onClick(e) {
               _this5.props.dispatch((0, _teamModalActions.showTeamAddMultipleUsersModal)(false));
             } },
-          React.createElement('i', { className: 'ease_icon fa fa-times' }),
+          React.createElement("i", { className: "ease_icon fa fa-times" }),
           React.createElement(
-            'span',
-            { className: 'key_label' },
-            'close'
+            "span",
+            { className: "key_label" },
+            "close"
           )
         ),
         React.createElement(
-          'div',
-          { className: 'modal_contents_container' },
+          "div",
+          { className: "modal_contents_container" },
           React.createElement(
-            'div',
-            { className: 'contents' },
+            "div",
+            { className: "contents" },
             React.createElement(
               _semanticUiReact.Container,
               null,
               React.createElement(
                 _semanticUiReact.Header,
-                { as: 'h1' },
-                'Invite several users at once'
+                { as: "h1" },
+                "Invite several users at once"
               ),
               this.state.view === 'main' && React.createElement(PreviewStep, {
                 dispatch: this.props.dispatch,
@@ -63436,6 +63289,7 @@ var CGUStep = function (_React$Component) {
             { as: "h1" },
             "Review the General Terms"
           ),
+          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
           _react2.default.createElement(
             _semanticUiReact.Container,
             { style: { maxHeight: '300px', overflow: 'hidden', marginBottom: '1rem', paddingLeft: '0' } },
@@ -63483,6 +63337,10 @@ module.exports = CGUStep;
 var _dec, _class;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _InvitePeopleStep = __webpack_require__(1150);
+
+var _InvitePeopleStep2 = _interopRequireDefault(_InvitePeopleStep);
 
 var _utils = __webpack_require__(47);
 
@@ -63887,7 +63745,7 @@ var Step6 = function (_React$Component4) {
         { className: 'contents', id: 'step6' },
         React.createElement(
           _semanticUiReact.Segment,
-          { error: this.state.errorMessage.length > 0 },
+          null,
           React.createElement(
             _semanticUiReact.Header,
             { as: 'h1' },
@@ -63935,162 +63793,20 @@ var Step6 = function (_React$Component4) {
   return Step6;
 }(React.Component);
 
-var Step7 = function (_React$Component5) {
-  _inherits(Step7, _React$Component5);
-
-  function Step7(props) {
-    _classCallCheck(this, Step7);
-
-    var _this9 = _possibleConstructorReturn(this, (Step7.__proto__ || Object.getPrototypeOf(Step7)).call(this, props));
-
-    _this9.state = {
-      loading: false
-    };
-    _this9.onSubmit = _this9.onSubmit.bind(_this9);
-    return _this9;
-  }
-
-  _createClass(Step7, [{
-    key: 'onSubmit',
-    value: function onSubmit(e) {
-      var _this10 = this;
-
-      e.preventDefault();
-      var calls = [];
-      this.props.invitations.map(function (item) {
-        if (item.email.match(_utils.emailRegexp) !== null && item.username.length > 0) {
-          calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, 1));
-        }
-      }, this);
-      this.setState({ loading: true });
-      axios.all(calls).then(function () {
-        _this10.setState({ loading: false });
-        _this10.props.onStepValidated();
-      }).catch(function (err) {
-        _this10.setState({ errorMessage: err, loading: false });
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this11 = this;
-
-      var fields = this.props.invitations.map(function (item, idx) {
-        return React.createElement(
-          _semanticUiReact.Form.Group,
-          { key: idx },
-          React.createElement(
-            _semanticUiReact.Form.Field,
-            { width: 9 },
-            React.createElement(_semanticUiReact.Input, {
-              action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this11.props.removeInvitationField.bind(null, idx) }),
-              actionPosition: 'left',
-              type: 'email',
-              value: item.email,
-              placeholder: 'Email',
-              onChange: function onChange(e, _ref) {
-                var value = _ref.value;
-
-                _this11.props.editInvitationEmail(value, idx);
-              } })
-          ),
-          React.createElement(_semanticUiReact.Form.Input, { width: 7, type: 'text',
-            placeholder: 'Username',
-            value: item.username,
-            onChange: function onChange(e, _ref2) {
-              var value = _ref2.value;
-
-              _this11.props.editInvitationUsername(value, idx);
-            } })
-        );
-      }, this);
-      return React.createElement(
-        'div',
-        { className: 'contents', id: 'step7' },
-        React.createElement(
-          _semanticUiReact.Segment,
-          null,
-          React.createElement(
-            _semanticUiReact.Header,
-            { as: 'h1' },
-            'Send invitations',
-            React.createElement(
-              _semanticUiReact.Header.Subheader,
-              null,
-              'Your Ease.space team is ready to go. Know few coworkers who\'d like to stop using passwords with you?'
-            )
-          ),
-          React.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
-          React.createElement(
-            _semanticUiReact.Form,
-            { onSubmit: this.onSubmit, error: this.state.errorMessage.length > 0 },
-            React.createElement(
-              _semanticUiReact.Form.Group,
-              null,
-              React.createElement(
-                _semanticUiReact.Form.Field,
-                { width: 9 },
-                React.createElement(
-                  'label',
-                  null,
-                  'Email address'
-                )
-              ),
-              React.createElement(
-                _semanticUiReact.Form.Field,
-                { width: 7 },
-                React.createElement(
-                  'label',
-                  null,
-                  'Username (editable later)'
-                )
-              )
-            ),
-            fields,
-            React.createElement(
-              _semanticUiReact.Form.Button,
-              { primary: true, onClick: this.props.addInvitationField },
-              React.createElement(_semanticUiReact.Icon, { name: 'add user' }),
-              'Add another field'
-            ),
-            React.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
-            React.createElement(
-              _semanticUiReact.Form.Group,
-              null,
-              React.createElement(
-                _semanticUiReact.Form.Button,
-                { width: 8, fluid: true, type: 'button', onClick: this.props.onStepValidated },
-                'Skip for now'
-              ),
-              React.createElement(
-                _semanticUiReact.Form.Button,
-                { width: 8, fluid: true, positive: true, type: 'submit', loading: this.state.loading },
-                'Send invitations'
-              )
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return Step7;
-}(React.Component);
-
 var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     ws_id: store.common.ws_id,
     user: store.common.user
   };
-}), _dec(_class = function (_React$Component6) {
-  _inherits(SimpleTeamCreationView, _React$Component6);
+}), _dec(_class = function (_React$Component5) {
+  _inherits(SimpleTeamCreationView, _React$Component5);
 
   function SimpleTeamCreationView(props) {
     _classCallCheck(this, SimpleTeamCreationView);
 
-    var _this12 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (SimpleTeamCreationView.__proto__ || Object.getPrototypeOf(SimpleTeamCreationView)).call(this, props));
 
-    _this12.state = {
+    _this9.state = {
       currentStep: 0,
       steps: [],
       email: '',
@@ -64108,18 +63824,18 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       teamId: -1,
       invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }]
     };
-    _this12.incrementStep = _this12.incrementStep.bind(_this12);
-    _this12.handleInput = _this12.handleInput.bind(_this12);
-    _this12.switchNewsletter = _this12.switchNewsletter.bind(_this12);
-    _this12.addInvitationField = _this12.addInvitationField.bind(_this12);
-    _this12.removeInvitationField = _this12.removeInvitationField.bind(_this12);
-    _this12.editInvitationEmail = _this12.editInvitationEmail.bind(_this12);
-    _this12.editInvitationUsername = _this12.editInvitationUsername.bind(_this12);
-    _this12.editFriendsEmail = _this12.editFriendsEmail.bind(_this12);
-    _this12.handleCompanyInfoInput = _this12.handleCompanyInfoInput.bind(_this12);
-    _this12.submitStep8 = _this12.submitStep8.bind(_this12);
-    _this12.incrementStepByValue = _this12.incrementStepByValue.bind(_this12);
-    return _this12;
+    _this9.incrementStep = _this9.incrementStep.bind(_this9);
+    _this9.handleInput = _this9.handleInput.bind(_this9);
+    _this9.switchNewsletter = _this9.switchNewsletter.bind(_this9);
+    _this9.addInvitationField = _this9.addInvitationField.bind(_this9);
+    _this9.removeInvitationField = _this9.removeInvitationField.bind(_this9);
+    _this9.editInvitationEmail = _this9.editInvitationEmail.bind(_this9);
+    _this9.editInvitationUsername = _this9.editInvitationUsername.bind(_this9);
+    _this9.editFriendsEmail = _this9.editFriendsEmail.bind(_this9);
+    _this9.handleCompanyInfoInput = _this9.handleCompanyInfoInput.bind(_this9);
+    _this9.submitStep8 = _this9.submitStep8.bind(_this9);
+    _this9.incrementStepByValue = _this9.incrementStepByValue.bind(_this9);
+    return _this9;
   }
 
   _createClass(SimpleTeamCreationView, [{
@@ -64192,13 +63908,13 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'submitStep8',
     value: function submitStep8() {
-      this.props.history.push('/teams/' + this.state.teamId);
+      window.location.href = '/teams#/teams/' + this.state.teamId;
     }
   }, {
     key: 'handleInput',
-    value: function handleInput(e, _ref3) {
-      var value = _ref3.value,
-          name = _ref3.name;
+    value: function handleInput(e, _ref) {
+      var value = _ref.value,
+          name = _ref.name;
 
       this.setState(_defineProperty({}, name, value));
     }
@@ -64248,16 +63964,11 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         jobDetails: this.state.jobDetails,
         handleInput: this.handleInput,
         key: '6' }));
-      steps.push(React.createElement(Step7, { onStepValidated: this.submitStep8,
-        teamId: this.state.teamId,
-        handleInput: this.handleInput,
-        invitations: this.state.invitations,
-        editInvitationEmail: this.editInvitationEmail,
-        editInvitationUsername: this.editInvitationUsername,
-        addInvitationField: this.addInvitationField,
-        removeInvitationField: this.removeInvitationField,
+      steps.push(React.createElement(_InvitePeopleStep2.default, {
+        key: '7',
         ws_id: this.props.ws_id,
-        key: '7' }));
+        team_id: this.state.teamId,
+        onStepValidated: this.submitStep8 }));
       return React.createElement(
         'div',
         { id: 'team_creation_view', className: 'display-flex justify_content_center full_flex' },
@@ -113527,6 +113238,333 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1150 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _utils = __webpack_require__(47);
+
+var _semanticUiReact = __webpack_require__(25);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var post_api = __webpack_require__(32);
+
+var PreviewStep = function (_React$Component) {
+  _inherits(PreviewStep, _React$Component);
+
+  function PreviewStep(props) {
+    _classCallCheck(this, PreviewStep);
+
+    var _this = _possibleConstructorReturn(this, (PreviewStep.__proto__ || Object.getPrototypeOf(PreviewStep)).call(this, props));
+
+    _this.submit = function (e) {
+      e.preventDefault();
+      _this.props.validate();
+    };
+
+    return _this;
+  }
+
+  _createClass(PreviewStep, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var fields = this.props.invitations.map(function (item, idx) {
+        return _react2.default.createElement(
+          _semanticUiReact.Form.Field,
+          { key: idx, error: item.error.length > 0 },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Group,
+            { style: { marginBottom: 0 } },
+            _react2.default.createElement(_semanticUiReact.Form.Input, {
+              width: 9,
+              action: _react2.default.createElement(_semanticUiReact.Button, { icon: "delete", onClick: _this2.props.removeField.bind(null, idx) }),
+              actionPosition: "left",
+              name: "email",
+              type: "email",
+              value: item.email,
+              placeholder: "Email",
+              onChange: function onChange(e, values) {
+                _this2.props.editField(idx, values);
+              } }),
+            _react2.default.createElement(_semanticUiReact.Form.Input, { width: 7,
+              type: "text",
+              name: "username",
+              placeholder: "Username",
+              value: item.username,
+              onChange: function onChange(e, values) {
+                _this2.props.editField(idx, values);
+              } })
+          ),
+          item.error.length > 0 && _react2.default.createElement(_semanticUiReact.Label, { pointing: true, fluid: true, className: "fluid", style: { textAlign: 'center' }, content: item.error, color: "red", basic: true })
+        );
+      });
+      return _react2.default.createElement(
+        _semanticUiReact.Form,
+        { onSubmit: this.submit },
+        _react2.default.createElement(_semanticUiReact.Divider, { hidden: true, clearing: true }),
+        _react2.default.createElement(
+          _semanticUiReact.Form.Group,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { width: 9 },
+            _react2.default.createElement(
+              "label",
+              null,
+              "Email address"
+            )
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { width: 7 },
+            _react2.default.createElement(
+              "label",
+              null,
+              "Username (editable later)"
+            )
+          )
+        ),
+        fields,
+        _react2.default.createElement(
+          _semanticUiReact.Form.Field,
+          null,
+          _react2.default.createElement(_semanticUiReact.Icon, { name: "add circle", color: "blue", size: "large" }),
+          _react2.default.createElement(
+            "button",
+            { className: "button-unstyle inline-text-button primary", type: "button", onClick: this.props.addField },
+            "Add another"
+          ),
+          "\xA0or\xA0",
+          _react2.default.createElement(
+            "button",
+            { className: "button-unstyle inline-text-button primary", type: "button", onClick: this.props.changeStep },
+            "add a list of users"
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Form.Group,
+          { style: { marginBottom: 0 } },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Button,
+            { width: 8, fluid: true, onClick: this.props.onStepValidated },
+            this.props.cancelButtonText
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Form.Button,
+            { width: 8, fluid: true, positive: true, loading: this.props.loading },
+            this.props.validateButtonText
+          )
+        )
+      );
+    }
+  }]);
+
+  return PreviewStep;
+}(_react2.default.Component);
+
+var EmailListStep = function (_React$Component2) {
+  _inherits(EmailListStep, _React$Component2);
+
+  function EmailListStep(props) {
+    _classCallCheck(this, EmailListStep);
+
+    var _this3 = _possibleConstructorReturn(this, (EmailListStep.__proto__ || Object.getPrototypeOf(EmailListStep)).call(this, props));
+
+    _this3.handleInput = _utils.handleSemanticInput.bind(_this3);
+
+    _this3.process = function (e) {
+      _this3.props.addFields(_this3.state.value);
+      _this3.props.changeStep();
+    };
+
+    _this3.state = {
+      value: ''
+    };
+    return _this3;
+  }
+
+  _createClass(EmailListStep, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        _semanticUiReact.Form,
+        { onSubmit: this.process },
+        _react2.default.createElement(
+          _semanticUiReact.Form.Field,
+          null,
+          "Enter multiple email addresses, separated with commas"
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Form.Field,
+          null,
+          _react2.default.createElement(_semanticUiReact.TextArea, { rows: 7, name: "value", onChange: this.handleInput, placeholder: "Write emails here..." })
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Form.Group,
+          { style: { marginBottom: 0 } },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Button,
+            { width: 8, fluid: true, type: "button", onClick: this.props.changeStep },
+            "Cancel"
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Form.Button,
+            { width: 8, fluid: true, primary: true },
+            "Next"
+          )
+        )
+      );
+    }
+  }]);
+
+  return EmailListStep;
+}(_react2.default.Component);
+
+var InvitePeopleStep = function (_React$Component3) {
+  _inherits(InvitePeopleStep, _React$Component3);
+
+  function InvitePeopleStep(props) {
+    _classCallCheck(this, InvitePeopleStep);
+
+    var _this4 = _possibleConstructorReturn(this, (InvitePeopleStep.__proto__ || Object.getPrototypeOf(InvitePeopleStep)).call(this, props));
+
+    _this4.sendInvitations = function () {
+      var invitations = _this4.state.invitations.slice();
+
+      invitations = invitations.filter(function (item) {
+        return item.email.length > 0 || item.username.length > 0;
+      });
+      var calls = invitations.map(function (item) {
+        return post_api.teamUser.createTeamUser(_this4.props.ws_id, _this4.props.team_id, '', '', item.email, item.username, null, 1);
+      });
+      _this4.setState({ loading: true });
+      Promise.all(calls.map(_utils.reflect)).then(function (results) {
+        results.map(function (item, idx) {
+          if (item.error) invitations[idx].error = item.data;else invitations[idx].error = '';
+        });
+        invitations = invitations.filter(function (item) {
+          return item.error.length > 0;
+        });
+        if (invitations.length === 0) {
+          _this4.props.onStepValidated();
+          return;
+        }
+        _this4.setState({ loading: false, invitations: invitations, validateButtonText: 'Resend invitations', cancelButtonText: "Ok, I'm done" });
+      });
+    };
+
+    _this4.changeView = function (view) {
+      _this4.setState({ view: view });
+    };
+
+    _this4.editField = function (idx, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      var invitations = _this4.state.invitations.slice();
+      invitations[idx][name] = value;
+      if (name === 'email') invitations[idx]['username'] = value.split('@')[0];
+      _this4.setState(function () {
+        return { invitations: invitations };
+      });
+    };
+
+    _this4.addMultipleFields = function (value) {
+      var invitations = [];
+      var emails = value.split(',');
+      emails.map(function (item) {
+        var username = item.split('@')[0];
+        invitations.push({ email: item, username: username, error: '' });
+      });
+      _this4.setState({ invitations: invitations });
+    };
+
+    _this4.addField = function () {
+      var invitations = _this4.state.invitations.slice();
+      invitations.push({ email: '', username: '', error: '' });
+      _this4.setState(function () {
+        return { invitations: invitations };
+      });
+    };
+
+    _this4.removeField = function (idx) {
+      var invitations = _this4.state.invitations.slice();
+      invitations.splice(idx, 1);
+      _this4.setState({ invitations: invitations });
+    };
+
+    _this4.state = {
+      view: 'main',
+      invitations: [{ email: '', username: '', error: '' }, { email: '', username: '', error: '' }, { email: '', username: '', error: '' }],
+      loading: false,
+      validateButtonText: 'Send invitations',
+      cancelButtonText: 'Skip for now'
+    };
+    return _this4;
+  }
+
+  _createClass(InvitePeopleStep, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "contents" },
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Header,
+            { as: "h1" },
+            "Send invitations",
+            _react2.default.createElement(
+              _semanticUiReact.Header.Subheader,
+              null,
+              "Your Ease.space team is ready to go. Know few coworkers who'd like to stop using passwords with you?"
+            )
+          ),
+          this.state.view === 'main' && _react2.default.createElement(PreviewStep, {
+            dispatch: this.props.dispatch,
+            changeStep: this.changeView.bind(null, 'emailList'),
+            invitations: this.state.invitations,
+            removeField: this.removeField,
+            editField: this.editField,
+            loading: this.state.loading,
+            validate: this.sendInvitations,
+            onStepValidated: this.props.onStepValidated,
+            cancelButtonText: this.state.cancelButtonText,
+            validateButtonText: this.state.validateButtonText,
+            addField: this.addField }),
+          this.state.view === 'emailList' && _react2.default.createElement(EmailListStep, {
+            addFields: this.addMultipleFields,
+            changeStep: this.changeView.bind(null, 'main') })
+        )
+      );
+    }
+  }]);
+
+  return InvitePeopleStep;
+}(_react2.default.Component);
+
+module.exports = InvitePeopleStep;
 
 /***/ })
 /******/ ]);
