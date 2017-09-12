@@ -63662,21 +63662,7 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       jobDetails: '',
       teamName: '',
       teamId: -1,
-      credits: 0,
-      invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }],
-      invitedPeople: 0,
-      friends: [{ email: '' }, { email: '' }, { email: '' }],
-      companyInformation: {
-        country: 'France',
-        company_name: '',
-        street_address: '',
-        unit: '',
-        city: '',
-        state: '',
-        zip: '',
-        vat_id: ''
-      },
-      stripeToken: null
+      invitations: [{ email: '', username: '' }, { email: '', username: '' }, { email: '', username: '' }]
     };
     _this12.incrementStep = _this12.incrementStep.bind(_this12);
     _this12.handleInput = _this12.handleInput.bind(_this12);
