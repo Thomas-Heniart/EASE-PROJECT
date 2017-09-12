@@ -57381,6 +57381,8 @@ var HomeTemporaryNavbar = (_dec = (0, _reactRedux.connect)(function (store) {
             } },
           React.createElement(_semanticUiReact.Icon, { name: 'setting' })
         ),
+        React.createElement(NotificationList, { notifications: this.props.notifications, history: this.props.history, dispatch: this.props.dispatch }),
+        React.createElement(TeamsList, { user: this.props.user }),
         React.createElement(
           _semanticUiReact.Menu.Item,
           { id: 'catalog_button', 'data-tip': 'Apps Catalogue', onClick: function onClick(e) {
