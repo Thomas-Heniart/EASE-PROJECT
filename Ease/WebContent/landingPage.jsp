@@ -41,18 +41,12 @@
     <link rel="manifest" href="manifest.json">
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-<<<<<<< HEAD
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00009/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00009/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00009/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
-=======
+
+    <link rel="stylesheet" href="semantic/dist/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="/cssMinified.v00011/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/cssMinified.v00011/default_style.css"/>
     <link rel="stylesheet" href="/cssMinified.v00011/bootstrap.css"/>
     <link rel="stylesheet" href="/cssMinified.v00011/landingPage.css"/>
->>>>>>> 48ccf07aa8b7051479887276e1ea30e38b0a7ca4
     <link rel="stylesheet" type="text/css"
           href="/cssMinified.v00011/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
 </head>
@@ -95,7 +89,6 @@
 </nav>
 <section style="margin-top: 20px;">
     <div class="container">
-<<<<<<< HEAD
         <div class="ui stackable grid">
             <div class="one wide column"></div>
 
