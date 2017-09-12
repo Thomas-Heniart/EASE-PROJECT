@@ -98,8 +98,8 @@
                     Une app est un compte web,</br>
                     ajouté par vous ou partagé au sein de votre équipe.</br>
                     Un clic suffit pour y accéder, directement connecté.</p>
-                <div class="ui action fluid input" style="height: 50px;">
-                    <input id="input" type="text" name="email" placeholder="Entrez votre adresse email">
+                <div id="divInput" class="ui action fluid input" style="height: 50px;">
+                    <input type="text" name="email" placeholder="Entrez votre adresse email">
                     <button type="submit" class="sendContactButton ui button" style="font-size: 15px!important;font-weight:300;">
                         ESSAYER
                     </button>
@@ -133,14 +133,11 @@
 <script type="text/javascript">
 
     $('button.sendContactButton').on('click', function() {
-        if ($('#input').find("input[name='email']").val().length) {
-            console.log('truc');
-            document.location.href = "/teams#/registration?$('input[name=\'email\']')";
+        if ($('#divInput').find("input[name='email']").val().length) {
+            document.location.href = "/teams#/registration?email="+$('#divInput').find("input[name='email']").val();
         }
         else {
             document.location.href = "/teams#/registration";
-            console.log('truc');
-
         }
     })
 
