@@ -1,6 +1,6 @@
 $('body').prepend('<div id="new_ease_extension" safariversion="2.2.4" style="display:none;">');
 if (!window.location.hostname.includes("ease.space")) {
-    $("form, input").attr('autocomplete', 'off');
+     /* $("form, input").attr('autocomplete', 'off');
     $("input[type='password']").attr("data-password-autocomplete", "off");
     $("input[type='password']").each(function () {
         $(this).prop('type', 'text');
@@ -8,7 +8,7 @@ if (!window.location.hostname.includes("ease.space")) {
         $(this).focus(function () {
             $(this).prop('type', 'password');
         });
-    });
+    }); */
 }
 $(".displayedByPlugin").show();
 extension.runtime.sendMessage("getSettings", {}, function (response) {

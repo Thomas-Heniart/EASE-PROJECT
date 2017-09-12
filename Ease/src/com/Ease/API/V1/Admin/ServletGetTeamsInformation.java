@@ -5,6 +5,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
+import com.stripe.model.Customer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -46,6 +47,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("team_users_size", team.getTeamUsers().size());
                 tmp.put("active_team_users", team.getActiveTeamUserNumber());
                 tmp.put("is_active", team.isActive());
+                tmp.put("credit", (float) -Customer.retrieve(team.getCustomer_id()).getAccountBalance() / 100);
                 res.add(tmp);
             }
             sm.setSuccess(res);

@@ -5,6 +5,8 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.stripe.model.Customer;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,7 +29,9 @@ public class ServletSendLoveMoney extends HttpServlet {
             if (credit < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Don't be an asshole ^^ ");
             team.increaseAccountBalance(credit, sm.getHibernateQuery());
-            sm.setSuccess("Account credited");
+            JSONObject res = new JSONObject();
+            res.put("credit", (float) -Customer.retrieve(team.getCustomer_id()).getAccountBalance() / 100);
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }

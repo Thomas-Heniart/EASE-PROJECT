@@ -122,7 +122,7 @@ public class App implements ShareableApp, SharedApp {
                         throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
                 }
                 shareableApp.setDescription(description);
-                shareableApp.setOrigin(rs.getString("origin_type"), rs.getInt("origin_id"));
+                shareableApp.setOrigin(rs.getString("origin_type"), rs.getInt("origin_id"), team.getDb_id());
                 TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
                 Integer channel_id = rs.getInt("channel_id");
                 Channel channel = null;
@@ -824,7 +824,8 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public void setOrigin(String origin_type, Integer origin_id) {
+    public void setOrigin(String origin_type, Integer origin_id, Integer team_id) {
+        this.origin.put("team_id", team_id);
         this.origin.put("type", origin_type);
         this.origin.put("id", origin_id);
     }
@@ -954,7 +955,7 @@ public class App implements ShareableApp, SharedApp {
         this.teamUser_owner = teamUser_owner;
         this.channel = channel;
         this.description = description;
-        this.setOrigin(origin_type, origin_id);
+        this.setOrigin(origin_type, origin_id, team.getDb_id());
         team.getAppManager().addShareableApp(this);
     }
 }

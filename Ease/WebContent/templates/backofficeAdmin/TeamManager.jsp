@@ -18,12 +18,10 @@
     <i class="close icon"></i>
     <div class="header">Team settings</div>
     <div class="content">
-        <div id="send-money" class="ui action input">
-            <input name="love_money">
-            <button class="ui teal right labeled icon button">
-                <i class="stripe icon"></i>
-                Send money
-            </button>
+        Current credit (TTC): <span id="current-credit"></span>
+        <div id="send-money" class="ui icon input">
+            <input name="love_money" placeholder="Add credit...">
+            <i class="inverted circular stripe link icon"></i>
         </div>
     </div>
 </div>

@@ -221,22 +221,40 @@ function addResult(website) {
 }
 
 function openTeamSettings(team, teamRow) {
-    var modal = $("#team-sttings");
+    var modal = $("#team-settings");
     var input = $("#send-money", modal);
-    $("button", input).click(function () {
+    $("#current-credit", modal).text(team.credit);
+    $("i", input).click(function (e) {
+        if (input.hasClass("loading"))
+            return;
+        var credit = $("input", input).val();
+        if (credit.indexOf(".") === -1) {
+            credit = parseInt(credit) * 100;
+        } else {
+            var entirePart = credit.split(".")[0];
+            var decimalPart = credit.split(".")[1];
+            if (decimalPart.length === 1)
+                decimalPart += "0";
+            credit = parseInt(entirePart) * 100 + parseInt(decimalPart);
+        }
+        input.addClass("loading");
+        input.addClass("disabled");
         ajaxHandler.post("/api/v1/admin/SendLoveMoney", {
             team_id: team.id,
-            credit: parseInt($("input", input).val())
+            credit: credit
         }, function () {
-            $("button", input).off("click");
         }, function (data) {
-
+            $("#current-credit", modal).text(data.credit);
+            $("input", input).val("");
+            input.removeClass("loading");
+            input.removeClass("disabled");
         });
     });
     modal
         .modal({
             onHide: function () {
-                $("button", input).off("click");
+                $("i", input).off("click");
+                $("input", input).val("");
             }
         })
         .modal("show");

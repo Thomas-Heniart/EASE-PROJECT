@@ -40,6 +40,9 @@ public class ServletAskWebsite extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty login.");
             if (password == null || password.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty password.");
+            String private_key = (String) sm.getContextAttr("privateKey");
+            login = RSA.Decrypt(login, private_key);
+            password = RSA.Decrypt(password, private_key);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             WebsiteAttributes websiteAttributes = WebsiteAttributes.createWebsiteAttributes(is_public, false, db);

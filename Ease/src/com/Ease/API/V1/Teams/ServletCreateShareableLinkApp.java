@@ -13,7 +13,6 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -60,9 +59,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, sm);
             linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
-            JSONObject target = linkApp.getOrigin();
-            target.put("team_id", team_id);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, linkApp.getShareableJson(), target));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, linkApp.getShareableJson(), linkApp.getOrigin()));
             sm.setSuccess(linkApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

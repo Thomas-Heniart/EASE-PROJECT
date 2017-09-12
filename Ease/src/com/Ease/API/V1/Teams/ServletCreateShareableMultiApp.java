@@ -14,7 +14,6 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -64,9 +63,7 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, reminderValue, sm);
             websiteApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
             db.commitTransaction(transaction);
-            JSONObject target = websiteApp.getOrigin();
-            target.put("team_id", team_id);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, websiteApp.getShareableJson(), target));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, websiteApp.getShareableJson(), websiteApp.getOrigin()));
             sm.setSuccess(websiteApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);
