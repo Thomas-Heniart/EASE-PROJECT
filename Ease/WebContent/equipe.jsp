@@ -83,155 +83,167 @@ pageEncoding="UTF-8"%>
 					<h2 class="section-heading">
 						<fmt:message key="team.title" />
 					</h2>
-					<p class="join-us"><a href="easespace.welcomekit.co"><u>Vous souhaitez nous rejoindre ?</u></a></p>
+					<p class="join-us"><a href="https://easespace.welcomekit.co"><u>Vous souhaitez nous rejoindre ?</u></a></p>
 				</div>
 			</div>
 			<div class="row">
-				<div id="members" class="ui cards">
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/ben.jpg"/>
+				<div id="members" class="ui grid" style="justify-content: center;">
+					<div class="ui row cards">
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/ben.jpg"/>
+							</div>
+							<div class="content">
+								<div class="header name">
+									<p>Benjamin Prigent</p>
+								</div>
+								<div class="post">
+									<p>CEO</p>
+								</div>
+							</div>
 						</div>
-						<div class="content">
-						<div class="header name">
-							<p>Benjamin Prigent</p>
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/lanive.png"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Victor Nivet</p>
+								</div>
+								<div class="post">
+									<p>CPO</p>
+								</div>
+							</div>
 						</div>
-						<div class="post">
-							<p>CEO</p>
-						</div>
-						</div>
-					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/lanive.png"/>
-						</div>
-						<div class="content">
-						<div class="name">
-							<p>Victor Nivet</p>
-						</div>
-						<div class="post">
-							<p>CPO</p>
-						</div>
-						</div>
-					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/Fefe.png"/>
-						</div>
-						<div class="content">
-						<div class="name">
-							<p>Félix Richard</p>
-						</div>
-						<div class="post">
-							<p>Security Engineer</p>
-						</div>
-						</div>
-					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/fifi.jpg"/>
-						</div>
-						<div class="content">
-						<div class="name">
-							<p>Sergii Fisun</p>
-						</div>
-						<div class="post">
-							<p>Front-end Developer</p>
-						</div>
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/fifi.jpg"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Sergii Fisun</p>
+								</div>
+								<div class="post">
+									<p>Front-end Developer</p>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/Toto.png"/>
+					<div class="ui row cards">
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/Toto.png"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Thomas Heniart</p>
+								</div>
+								<div class="post">
+									<p>Security & Back-end</p>
+								</div>
+							</div>
 						</div>
-						<div class="content">
-						<div class="name">
-							<p>Thomas Heniart</p>
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/victorien.jpg"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Victorien Caquant</p>
+								</div>
+								<div class="post">
+									<p>Extension Developer</p>
+								</div>
+							</div>
 						</div>
-						<div class="post">
-							<p>Back-end Developer</p>
-						</div>
-						</div>
-					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/victorien.jpg"/>
-						</div>
-						<div class="content">
-						<div class="name">
-							<p>Victorien Caquant</p>
-						</div>
-						<div class="post">
-							<p>Extension Developer</p>
-						</div>
-						</div>
-					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/ethan.jpg"/>
-						</div>
-						<div class="content">
-						<div class="name">
-							<p>Ethan Adjedj</p>
-						</div>
-						<div class="post">
-							<p>Growth Hacker</p>
-						</div>
-						</div>
-					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/alice.jpg"/>
-						</div>
-						<div class="content">
-						<div class="name">
-							<p>Alice Zagury</p>
-						</div>
-						<div class="post">
-							<p>Advisor</p>
-						</div>
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/Fefe.png"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Félix Richard</p>
+								</div>
+								<div class="post">
+									<p>Security Engineer</p>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/abraham.jpg"/>
+					<div class="ui row cards">
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/ethan.jpg"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Ethan Adjedj</p>
+								</div>
+								<div class="post">
+									<p>Growth Hacker</p>
+								</div>
+							</div>
 						</div>
-						<div class="content">
-						<div class="name">
-							<p>Abraham Thomas</p>
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/alice.jpg"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Alice Zagury</p>
+								</div>
+								<div class="post">
+									<p>Advisor</p>
+								</div>
+							</div>
 						</div>
-						<div class="post">
-							<p>Advisor</p>
-						</div>
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/abraham.jpg"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Abraham Thomas</p>
+								</div>
+								<div class="post">
+									<p>Advisor</p>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/alex.png"/>
+					<div class="ui row cards">
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/alex.png"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Alexandre Nicolau</p>
+								</div>
+								<div class="post">
+									<p>Advisor</p>
+								</div>
+							</div>
 						</div>
-						<div class="content">
-						<div class="name">
-							<p>Alexandre Nicolau</p>
-						</div>
-						<div class="post">
-							<p>Advisor</p>
-						</div>
-						</div>
-					</div>
-					<div class="card memberDescription">
-						<div class="memberPhoto">
-							<img src="resources/team/yves.jpg"/>
-						</div>
-						<div class="content">
-						<div class="name">
-							<p>Yves Delnatte</p>
-						</div>
-						<div class="post">
-							<p>Advisor</p>
-						</div>
+						<div class="card memberDescription">
+							<div class="memberPhoto">
+								<img src="resources/team/yves.jpg"/>
+							</div>
+							<div class="content">
+								<div class="name">
+									<p>Yves Delnatte</p>
+								</div>
+								<div class="post">
+									<p>Advisor</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div style="margin: auto; border-bottom: 1px solid #979797; width:200px; margin-top: 120px;"></div>
+			<div>
+				<p class="join-us" style="margin-top: 30px;"><a href="https://easespace.welcomekit.co"><u>Join us!</u></a></p>
 			</div>
 		</section>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>

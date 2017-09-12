@@ -45,431 +45,78 @@
     <link rel="stylesheet" href="/cssMinified.v00009/default_style.css"/>
     <link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css"/>
     <link rel="stylesheet" href="/cssMinified.v00009/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
     <link rel="stylesheet" type="text/css"
           href="/cssMinified.v00009/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
 </head>
 
 <body id="landingBody">
 <!-- Navigation -->
-<nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
+<nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top affix" style="box-shadow:none;position:absolute;background-color:transparent;">
     <div class="container">
         <div class="navbar-header page-scroll">
-            <a class="navbar-brand page-scroll" href="/"><img src="resources/landing/ease-white-logo.svg"/></a>
+            <a class="navbar-brand page-scroll" href="discover"><img src="resources/landing/ease-logo.svg" /></a>
         </div>
-
-<<<<<<< HEAD
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="hidden">
-						<a href="#page-top"></a>
-					</li>
-					<li>
-						<a href="/security">
-							<fmt:message key="landing.header.security-link" />
-						</a>
-					</li>
-					<li>
-						<a href="/pricing">
-							<fmt:message key="landing.header.price-link" />
-						</a>
-					</li>
-					<li>
-						<a href="/contact">
-							<fmt:message key="landing.header.contact-link" />
-						</a>
-					</li>
-					<li>
-						<a href="/?skipLanding=true" id="connexionButton">
-							<fmt:message key="landing.header.connexion-link" />
-						</a>
-					</li>
-					<li>
-						<%@ include file="templates/LanguageChooser.jsp" %>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-	<header>
-		<div class="container">
-			<div class="intro-text">
-				<div class="intro-heading">
-					<fmt:message key="landing.title" />
-				</div>
-				<div class="intro-lead-in">
-					<fmt:message key="landing.sub-title" />
-				</div>
-				<a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
-					<fmt:message key="landing.signup-button.text" />
-				</a>
-			</div>
-		</div>
-	</header>
-	<section id="productPresentation">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 text-center">
-					<h2 class="section-heading">
-						<fmt:message key="landing.section-presentation.title" />
-					</h2>
-					<h3 class="section-subheading text-muted">
-						<fmt:message key="landing.section-presentation.sub-title" />
-					</h3>
-				</div>
-			</div>
-			<div class="mockupPresentation">
-				<video width="100%" height="auto" controls="noshow">
-					<source src="resources/videos/discover.mp4" type="video/mp4">
-						Your browser does not support the video tag.
-					</video>
-				</div>
-			</div>
-		</section>
-		<section id="avantages">
-			<div class=	"container">
-				<div class="row">
-					<div class="col-lg-12 text-center">
-						<h2 class="section-heading">
-							<fmt:message key="landing.section-avantages.title" />
-						</h2>
-						<h3 class="section-subheading text-muted">
-							<fmt:message key="landing.section-avantages.sub-title" />
-						</h3>
-					</div>
-				</div>
-				<div class="row w70 showcase">
-=======
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
                 <li>
+                    <a href="/product">
+                        <fmt:message key="landing.footer.section-product.title" />
+                    </a>
+                </li>
+                <li>
                     <a href="/security">
-                        <fmt:message key="landing.header.security-link"/>
+                        <fmt:message key="landing.header.security-link" />
                     </a>
                 </li>
                 <li>
                     <a href="/pricing">
-                        <fmt:message key="landing.header.price-link"/>
-                    </a>
-                </li>
-                <li>
-                    <a href="/contact">
-                        <fmt:message key="landing.header.contact-link"/>
+                        <fmt:message key="landing.header.price-link" />
                     </a>
                 </li>
                 <li>
                     <a href="/?skipLanding=true" id="connexionButton">
-                        <fmt:message key="landing.header.connexion-link"/>
+                        <fmt:message key="landing.header.connexion-link" />
                     </a>
-                </li>
-                <li>
-                    <%@ include file="templates/LanguageChooser.jsp" %>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
-<header>
+<section style="margin-top: 20px;">
     <div class="container">
-        <div class="intro-text">
-            <div class="intro-heading">
-                <fmt:message key="landing.title"/>
+        <div class="ui stackable grid">
+            <div class="one wide column"></div>
+
+            <div class="six wide column">
+                <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;">mots de passe</span>,</br>hello apps</p>
+                <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;">
+                    Une app est un compte web,</br>
+                    ajouté par vous ou partagé au sein de votre équipe.</br>
+                    Un clic suffit pour y accéder, directement connecté.</p>
+                <div class="ui action fluid input" style="height: 50px;">
+                    <input id="input" type="text" name="email" placeholder="Entrez votre adresse email">
+                    <button type="submit" class="sendContactButton ui button" style="font-size: 15px!important;font-weight:300;">
+                        ESSAYER
+                    </button>
+                </div>
+                <p style="margin-top: 10px;font-size: 14px;font-weight: 300;color: #949eb7;">C’est gratuit, pas de CB requise</p>
             </div>
-            <div class="intro-lead-in">
-                <fmt:message key="landing.sub-title"/>
-            </div>
-            <a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton1">
-                <fmt:message key="landing.signup-button.text"/>
-            </a>
-        </div>
-    </div>
-</header>
-<section id="productPresentation">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    <fmt:message key="landing.section-presentation.title"/>
-                </h2>
-                <h3 class="section-subheading text-muted">
-                    <fmt:message key="landing.section-presentation.sub-title"/>
-                </h3>
-            </div>
-        </div>
-        <div class="mockupPresentation">
-            <video width="100%" height="auto" controls="noshow">
-                <source src="resources/videos/discover.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-    </div>
-</section>
-<section id="avantages">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    <fmt:message key="landing.section-avantages.title"/>
-                </h2>
-                <h3 class="section-subheading text-muted">
-                    <fmt:message key="landing.section-avantages.sub-title"/>
-                </h3>
-            </div>
-        </div>
-        <div class="row w70 showcase">
->>>>>>> 860d5a99dbaa9af7667d91630ea01b5f590b1458
-					<span class="fa-stack fa-lg">
-						<i class="fa fa-circle-thin fa-stack-2x"></i>
-						<i class="fa fa-magic fa-stack-1x"></i>
-					</span>
-            <p><span><fmt:message key="landing.section-avantages.1st-line.title"/>:</span> <fmt:message
-                    key="landing.section-avantages.1st-line.sub-title"/></p>
-        </div>
-        <div class="row w70 showcase">
-					<span class="fa-stack fa-lg">
-						<i class="fa fa-circle-thin fa-stack-2x"></i>
-						<i class="fa fa-rocket fa-stack-1x"></i>
-					</span>
-            <p><span><fmt:message key="landing.section-avantages.2nd-line.title"/>:</span> <fmt:message
-                    key="landing.section-avantages.2nd-line.sub-title"/></p>
-        </div>
-        <div class="row w70 showcase">
-					<span class="fa-stack fa-lg">
-						<i class="fa fa-circle-thin fa-stack-2x"></i>
-						<i class="fa fa-globe fa-stack-1x"></i>
-					</span>
-            <p><span><fmt:message key="landing.section-avantages.3rd-line.title"/>:</span> <fmt:message
-                    key="landing.section-avantages.3rd-line.sub-title"/></p>
-        </div>
-        <div class="row w70 showcase">
-					<span class="fa-stack fa-lg">
-						<i class="fa fa-circle-thin fa-stack-2x"></i>
-						<i class="fa fa-refresh fa-stack-1x"></i>
-					</span>
-            <p><span><fmt:message key="landing.section-avantages.4th-line.title"/>:</span> <fmt:message
-                    key="landing.section-avantages.4th-line.sub-title"/></p>
-        </div>
-    </div>
-</section>
-<section class="vp" style="background-color:#eee;">
-    <div clas="container">
-        <div class="row">
-            <a href="#services" class="btn btn-xl signUpButton" trackEvent="HomepageSignUpButton2">
-                <fmt:message key="landing.signup-button.2nd-text"/>
-            </a>
-        </div>
-    </div>
-</section>
-<section id="features">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    <fmt:message key="landing.section-features.title"/>
-                </h2>
-                <h3 class="section-subheading text-muted">
-                    <fmt:message key="landing.section-features.sub-title"/>
-                </h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="fList left">
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-1"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-2"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-3"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-4"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-5"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-            </div>
-            <div class="fList right">
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-6"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-7"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-8"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
-                </div>
-                <div class="feature">
-							<span>
-								<fmt:message key="landing.section-features.sentence-9"/>
-							</span>
-                    <i class="fa fa-check" aria-hidden="true"></i>
+            <div class="rightLanding nine wide column">
+                <div class="inTheMac">
+                    <img class="ui fluid large image" src="/resources/images/screen.png"/>
+                    <button id="discoverButton" class="ui small button">
+                        Découvrir
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<section id="markSection">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    <fmt:message key="landing.section-marks.title"/>
-                </h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="markColumn">
-                <div class="markHandler">
-                    <a href="http://bunkrapp.com/">
-                        <img src="resources/landing/compressed/bunkr-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="http://jeflabel.com/">
-                        <img src="resources/landing/compressed/jef-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="https://www.sosav.fr/">
-                        <img src="resources/landing/compressed/sosav-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="http://www.ineat-conseil.com/">
-                        <img src="resources/landing/compressed/ineat-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="https://tribe.pm/">
-                        <img src="resources/landing/compressed/tribe-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="http://ecota.co/">
-                        <img src="resources/landing/compressed/ecotaco-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="http://www.side-law.com/">
-                        <img src="resources/landing/compressed/side-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="https://www.nestorparis.com/">
-                        <img src="resources/landing/compressed/nestor-logo.png"/>
-                    </a>
-                </div>
-                <div class="markHandler">
-                    <a href="https://www.mobeye-app.com">
-                        <img src="resources/landing/compressed/mobeye-logo.png"/>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section id="userFeedbacks">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    <fmt:message key="landing.section-feedbacks.title"/>
-                </h2>
-                <h3 class="section-subheading text-muted">
-                    <fmt:message key="landing.section-feedbacks.sub-title"/>
-                </h3>
-            </div>
-        </div>
-        <div class="row">
-            <div class="comment">
-                <div class="photo">
-                    <img src="resources/landing/compressed/jpa.jpg"/>
-                </div>
-                <div class="message">
-                    <p class="mess">
-                        <fmt:message key="landing.section-feedbacks.text-1"/>
-                    </p>
-                    <a href="">Jean Philippe Ammeux</a>
-                    <p class="position">Directeur de IESEG School of Management</p>
-                </div>
-            </div>
-            <div class="comment">
-                <div class="photo">
-                    <img src="resources/landing/compressed/alice-zagury.jpg"/>
-                </div>
-                <div class="message">
-                    <p class="mess">
-                        <fmt:message key="landing.section-feedbacks.text-2"/>
-                    </p>
-                    <a href="https://fr.linkedin.com/in/alicezagu" target="_blank">Alice Zagury</a>
-                    <p class="position">CEO de TheFamily</p>
-                </div>
-            </div>
-            <div class="comment">
-                <div class="photo">
-                    <img src="resources/landing/compressed/clem.jpg"/>
-                </div>
-                <div class="message">
-                    <p class="mess">
-                        <fmt:message key="landing.section-feedbacks.text-3"/>
-                    </p>
-                    <a target="_blank" href="https://fr.linkedin.com/in/clémentine-prud-homme-691945103">Clémentine
-                        Prud’homme</a>
-                    <p class="position">Etudiante à l’EDHEC</p>
-                </div>
-            </div>
-            <div class="comment">
-                <div class="photo">
-                    <img src="resources/landing/compressed/jbroux.jpg"/>
-                </div>
-                <div class="message">
-                    <p class="mess">
-                        <fmt:message key="landing.section-feedbacks.text-4"/>
-                    </p>
-                    <a target="_blank" href="https://uk.linkedin.com/in/rouxjeanbaptiste">Jean-Batiste Roux</a>
-                    <p class="position">Account Manager à Barnebys</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="vp" style="background-color:white;">
-    <div clas="container">
-        <div class="row">
-            <a href="#services" class="btn btn-xl signUpButton" trackEvent="HomeSignUpButton3">
-                <fmt:message key="landing.signup-button.3rd-text"/>
-            </a>
-        </div>
-    </div>
-</section>
+	
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
 <%@ include file="templates/landingPage/registrationPopup.jsp" %>
 <script src="/jsMinified.v00015/jquery1.12.4.js"></script>
@@ -477,19 +124,76 @@
 <script src="/jsMinified.v00015/bootstrap.js" async></script>
 <script src="/jsMinified.v00015/ajaxHandler.js" async></script>
 <script src="/jsMinified.v00015/registrationPopup.js" async></script>
-<script src="/jsMinified.v00015/landingPage.js" async></script>
+<%--<script src="/jsMinified.v00015/landingPage.js" async></script>--%>
 <script src="/jsMinified.v00015/basic-utils.js" async></script>
 <script src="/jsMinified.v00015/languageChooser.js" async></script>
 <script src="/jsMinified.v00015/tracker.js" async></script>
 <script type="text/javascript">
+
+    $('button.sendContactButton').on('click', function() {
+        if ($('#input').find("input[name='email']").val().length) {
+            console.log('truc');
+            document.location.href = "/teams#/registration?$('input[name=\'email\']')";
+        }
+        else {
+            document.location.href = "/teams#/registration";
+            console.log('truc');
+
+        }
+    })
+
     window.addEventListener('load', function () {
-        /* if ($('#2').find("input[name='email']").val().length) {
-            easeSignUpPopup.openRegistration();
-        } */
+
         $('.signUpButton').click(function () {
             easeTracker.trackEvent($(this).attr("trackEvent"));
             easeSignUpPopup.open();
         });
+
+
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded',function(event){
+        // array with texts to type in typewriter
+        var dataText = ['mots de passe', 'comptes', 'identifiants', 'liens', 'post-its', 'fichiers excel'];
+
+        // type one text in the typwriter
+        // keeps calling itself until the text is finished
+        function typeWriter(text, i, fnCallback) {
+            // chekc if text isn't finished yet
+            if (i < (text.length)) {
+                // add next character to h1
+                document.querySelector("#changing").innerHTML = text.substring(0, i+1) +'<span aria-hidden="true"></span>';
+
+                // wait for a while and call this function again for next character
+                setTimeout(function() {
+                    typeWriter(text, i + 1, fnCallback)
+                }, 100);
+            }
+            // text finished, call callback if there is a callback function
+            else if (typeof fnCallback == 'function') {
+                // call callback after timeout
+                setTimeout(fnCallback, 1200);
+            }
+        }
+        // start a typewriter animation for a text in the dataText array
+        function StartTextAnimation(i) {
+            if (typeof dataText[i] == 'undefined'){
+                setTimeout(function() {
+                    StartTextAnimation(0);
+                }, 2000);
+            }
+            // check if dataText[i] exists
+            if (i < dataText[i].length) {
+                // text exists! start typewriter animation
+                typeWriter(dataText[i], 0, function(){
+                    // after callback (and whole text has been animated), start next text
+                    StartTextAnimation(i + 1);
+                });
+            }
+        }
+        // start the text animation
+        StartTextAnimation(0);
     });
 </script>
 <script type="text/javascript">

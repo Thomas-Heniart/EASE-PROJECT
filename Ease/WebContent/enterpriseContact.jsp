@@ -42,100 +42,163 @@ pageEncoding="UTF-8"%>
 	<link rel="stylesheet" href="/cssMinified.v00009/landingPage.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/enterpriseContact.css" />
+	<link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
+
+
 
 	<link rel="manifest" href="manifest.json">
 
 </head>
 
-<body id="landingBody">
+<body>
 	<%@ include file="templates/landingPage/landingHeader.jsp"%>
-	<section id="first">
+	<section>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
-					<h1>
-						<fmt:message key="companyContact.title" />
-					</h1>
+					<h2 class="section-heading">
+						Contactez notre équipe commerciale
+					</h2>
+					<h3 class="section-subheading text-muted" style="font-size:24px;font-weight:300;line-height: 1.25;color: #373b60!important;">
+						Nous nous tenons à votre disposition pour discuter de notre collaboration
+					</h3>
 				</div>
+			</div>
+			<div class="contactSegment row ui segment" style="background-color:#f8f8f8;">
+				<form class="ui form">
+					<div class="field">
+						<div class="two fields">
+							<div class="field">
+								<label class="contactLabel">Prénom et Nom*</label>
+								<input type="text" name="name" placeholder="Richard Hendricks">
+							</div>
+							<div class="field">
+								<label class="contactLabel">Email*</label>
+								<input type="text" name="email" placeholder="richard@piedpiper.com">
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="two fields">
+							<div class="field">
+								<label class="contactLabel">Intitulé du poste</label>
+								<input type="text" name="post" placeholder="CEO">
+							</div>
+							<div class="field">
+								<label class="contactLabel">Société</label>
+								<input type="text" name="entreprise" placeholder="Piedpiper">
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field">
+							<label class="contactLabel">Téléphone</label>
+							<input type="text" name="phone" placeholder="06">
+						</div>
+						<div class="ui field">
+							<label class="contactLabel">Nombre de collaborateurs</label>
+							<input type="text" name="numberOfCollab" placeholder="">
+						</div>
+					</div>
+					<div class="field">
+						<label class="contactLabel">Message*</label>
+						<textarea placeholder="Votre message."></textarea>
+					</div>
+					<div class="sendContactButton fluid ui button">Envoyer</div>
+				</form>
 			</div>
 		</div>
-		<div class="container" id="formContainer">
-			<div class="row">
-				<div class="col-lg-12">
-					<h4 class="text-center">
-						<fmt:message key="companyContact.sub-title" />
-					</h4>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-8 col-lg-offset-2">
-					<form action="PricingContactUs" method="POST" id="enterpriseContactForm">
-						<div class="row">
-							<div class="col-lg-6">
-								<input type="text" name="name" placeholder='<fmt:message key="companyContact.form.name" />' required />
-							</div>
-							<div class="col-lg-6">
-								<input type="email" name="email" placeholder='<fmt:message key="companyContact.form.email" />' required/>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-6">
-								<input type="text" name="jobPosition" placeholder="<fmt:message key='companyContact.form.jobPosition' />" />
-							</div>
-							<div class="col-lg-6">
-								<input type="tel" name="phone" placeholder='<fmt:message key="companyContact.form.phone" />' />
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-6">
-								<input type="text" name="company" placeholder='<fmt:message key="companyContact.form.company" />' required />
-							</div>
-							<div class="col-lg-6">
-								<input type="number" name="teamSize" placeholder='<fmt:message key="companyContact.form.teamSize" />' />
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-12">
-								<textarea name="message" name="needs" placeholder='<fmt:message key="companyContact.form.message" />'></textarea>
-							</div>
-						</div>
-						<div class="row responseHandler hidden text-center">
-							<div class="col-lg-12">
-								<p></p>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-4 col-lg-offset-8">
-								<button type="submit" class="btn btn-block btn-lg btn-success">
-									<fmt:message key="companyContact.form.button-text" />
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
+		<div style="text-align: center;margin-bottom: 65px;">
+			<strong>
+				<fmt:message key="companyContact.help1.title" />
+			</strong>
+			<p>
+				<fmt:message key="companyContact.help1.text" /> <a href="mailto:victor@ease.space"><fmt:message key="companyContact.help1.link-text" /></a>
+			</p>
 		</div>
 	</section>
-	<section id="second">
-		<div class="container text-center" id="helps">
-			<div class="col-lg-6">
-				<strong>
-					<fmt:message key="companyContact.help1.title" />
-				</strong>
-				<p>
-					<fmt:message key="companyContact.help1.text" /> <a href="mailto:victor@ease.space"><fmt:message key="companyContact.help1.link-text" /></a>
-				</p>
-			</div>
-			<div class="col-lg-6">
-				<strong>
-					<fmt:message key="companyContact.help2.title" />
-				</strong>
-				<p>
-					<fmt:message key="companyContact.help2.text" /> <a href="mailto:contact@ease.space">contact@ease.space</a>
-				</p>
-			</div>
-		</div>
-	</section>
+	<%--<section id="first">--%>
+		<%--<div class="container">--%>
+			<%--<div class="row">--%>
+				<%--<div class="col-lg-12 text-center">--%>
+					<%--<h1>--%>
+						<%--<fmt:message key="companyContact.title" />--%>
+					<%--</h1>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+		<%--</div>--%>
+		<%--<div class="container" id="formContainer">--%>
+			<%--<div class="row">--%>
+				<%--<div class="col-lg-12">--%>
+					<%--<h4 class="text-center">--%>
+						<%--<fmt:message key="companyContact.sub-title" />--%>
+					<%--</h4>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+			<%--<div class="row">--%>
+				<%--<div class="col-lg-8 col-lg-offset-2">--%>
+					<%--<form action="PricingContactUs" method="POST" id="enterpriseContactForm">--%>
+						<%--<div class="row">--%>
+							<%--<div class="col-lg-6">--%>
+								<%--<input type="text" name="name" placeholder='<fmt:message key="companyContact.form.name" />' required />--%>
+							<%--</div>--%>
+							<%--<div class="col-lg-6">--%>
+								<%--<input type="email" name="email" placeholder='<fmt:message key="companyContact.form.email" />' required/>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+						<%--<div class="row">--%>
+							<%--<div class="col-lg-6">--%>
+								<%--<input type="text" name="jobPosition" placeholder="<fmt:message key='companyContact.form.jobPosition' />" />--%>
+							<%--</div>--%>
+							<%--<div class="col-lg-6">--%>
+								<%--<input type="tel" name="phone" placeholder='<fmt:message key="companyContact.form.phone" />' />--%>
+							<%--</div>--%>
+						<%--</div>--%>
+						<%--<div class="row">--%>
+							<%--<div class="col-lg-6">--%>
+								<%--<input type="text" name="company" placeholder='<fmt:message key="companyContact.form.company" />' required />--%>
+							<%--</div>--%>
+							<%--<div class="col-lg-6">--%>
+								<%--<input type="number" name="teamSize" placeholder='<fmt:message key="companyContact.form.teamSize" />' />--%>
+							<%--</div>--%>
+						<%--</div>--%>
+						<%--<div class="row">--%>
+							<%--<div class="col-lg-12">--%>
+								<%--<textarea name="message" name="needs" placeholder='<fmt:message key="companyContact.form.message" />'></textarea>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+						<%--<div class="row responseHandler hidden text-center">--%>
+							<%--<div class="col-lg-12">--%>
+								<%--<p></p>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+						<%--<div class="row">--%>
+							<%--<div class="col-lg-4 col-lg-offset-8">--%>
+								<%--<button type="submit" class="btn btn-block btn-lg btn-success">--%>
+									<%--<fmt:message key="companyContact.form.button-text" />--%>
+								<%--</button>--%>
+							<%--</div>--%>
+						<%--</div>--%>
+					<%--</form>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+		<%--</div>--%>
+	<%--</section>--%>
+	<%--<section id="second">--%>
+		<%--<div class="container text-center" id="helps">--%>
+			<%--<div class="col-lg-6">--%>
+
+			<%--</div>--%>
+			<%--<div class="col-lg-6">--%>
+				<%--<strong>--%>
+					<%--<fmt:message key="companyContact.help2.title" />--%>
+				<%--</strong>--%>
+				<%--<p>--%>
+					<%--<fmt:message key="companyContact.help2.text" /> <a href="mailto:contact@ease.space">contact@ease.space</a>--%>
+				<%--</p>--%>
+			<%--</div>--%>
+		<%--</div>--%>
+	<%--</section>--%>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
     <script src="/jsMinified.v00015/jquery1.12.4.js"></script>
     <script src="/jsMinified.v00015/enterpriseContact.js" defer></script>

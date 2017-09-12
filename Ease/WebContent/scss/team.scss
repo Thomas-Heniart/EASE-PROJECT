@@ -2135,7 +2135,7 @@ button.big-button {
   color: white;
   background-color: $themeGreenColor;
   &:hover {
-    background-color: darken($themeGreenColor, 10%);
+    background-color: #3fa056;
   }
   &:disabled {
     transition: background-color .3s;

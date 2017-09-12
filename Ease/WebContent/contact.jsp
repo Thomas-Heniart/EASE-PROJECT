@@ -29,6 +29,8 @@ pageEncoding="UTF-8"%>
     <script src="/jsMinified.v00015/languageChooser.js"></script>
     <script src="/jsMinified.v00015/tracker.js"></script>
 
+	<link rel="stylesheet" type="text/css" href="/cssMinified.v00009/lib/fonts/museo-font.css" />
+	<link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/default_style.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css" />
 	<link rel="stylesheet" href="/cssMinified.v00009/landingPage.css" />
@@ -67,46 +69,89 @@ pageEncoding="UTF-8"%>
 </script>
 </head>
 
-<body id="contactBody">
+<body>
 	<!-- Navigation -->
 	<%@ include file="templates/landingPage/landingHeader.jsp"%>
 
-	<section id="contact_us">
+	<section>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 text-center">
 					<h2 class="section-heading">
-						<fmt:message key="contactus.title" />
+						Contact
 					</h2>
-					<h3 class="section-subheading text-muted">
-						<fmt:message key="contactus.sub-title"/>
+					<h3 class="section-subheading text-muted" style="font-size:24px;font-weight:300;line-height: 1.25;color: #373b60!important;">
+						Nous nous tenons à votre disposition pour discuter de notre collaboration
 					</h3>
 				</div>
 			</div>
-			<div class="row">
-				<div id="contactUsForm">
-					<form method="POST" action="ContactUs" class="contactForm">
-						<div class="formRaw">
-							<input type="email" name="email" placeholder="Email" />
+			<div class="contactSegment row ui segment" style="background-color:#f8f8f8;">
+			<form class="ui form">
+				<div class="field">
+					<div class="two fields">
+						<div class="field">
+							<label class="contactLabel">Prénom et Nom*</label>
+							<input type="text" name="name" placeholder="Richard Hendricks">
 						</div>
-						<div class="formRaw">
-							<textarea name="message" placeholder=<fmt:message key="contactus.textarea.placeholder"/> ></textarea>
+						<div class="field">
+							<label class="contactLabel">Email*</label>
+							<input type="text" name="email" placeholder="richard@piedpiper.com">
 						</div>
-						<div class="formRaw errorMessage">
-							<p></p>
-						</div>
-						<div class="formRaw">
-							<button class="btn submitButton" type="submit">Send !</button>
-						</div>
-					</form>
+					</div>
 				</div>
+				<div class="field">
+					<div class="two fields">
+						<div class="field">
+							<label class="contactLabel">Intitulé du poste</label>
+							<input type="text" name="post" placeholder="CEO">
+						</div>
+						<div class="field">
+							<label class="contactLabel">Société</label>
+							<input type="text" name="entreprise" placeholder="Piedpiper">
+						</div>
+					</div>
+				</div>
+				<div class="two fields">
+					<div class="field">
+						<label class="contactLabel">Téléphone</label>
+						<input type="text" name="phone" placeholder="06">
+					</div>
+					<div class="ui field">
+						<label class="contactLabel">Type de demande*</label>
+						<select class="ui fluid dropdown" placeholder="Pouvons-nous vous aider ?" style="height:59%;">
+								<option class="item" value="1">À propos du produit</option>
+								<option class="item" value="2">À propos de la sécurité</option>
+								<option class="item" value="3">Jobs</option>
+								<option class="item" value="4">Presse</option>
+								<option class="item" value="5">Autre demande</option>
+						</select>
+					</div>
+				</div>
+				<div class="field">
+					<label class="contactLabel">Message*</label>
+					<textarea placeholder="Votre message."></textarea>
+				</div>
+				<div class="sendContactButton fluid ui button">Envoyer</div>
+			</form>
+		</div>
+			</div>
+			<div style="text-align: center">
+			<strong>
+				<fmt:message key="companyContact.help1.title" />
+			</strong>
+			<p>
+				<fmt:message key="companyContact.help1.text" /> <a href="mailto:victor@ease.space"><fmt:message key="companyContact.help1.link-text" /></a>
+			</p>
 			</div>
 		</section>
 		<script type="text/javascript">
-			$('form.contactForm').submit(function(e){
+			$('.ui.dropdown').dropdown();
+		</script>
+		<script type="text/javascript">
+            $('form.contactForm').submit(function(e){
 				var self = $(this);
 				e.preventDefault();
-				self.find('.formRaw.errorMessage').removeClass('show');
+                self.find('.formRaw.errorMessage').removeClass('show');
 				self.find(".formRaw button[type='submit']").addClass('waiting');
 				postHandler.post(
 					self.attr('action'),

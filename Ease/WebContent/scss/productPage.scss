@@ -13,18 +13,19 @@ body {
 }
 
 header {
-  height: 400px;
-  background: #373B60;
+  height: 500px;
+  background: #4990e2;
 }
 .intro-text {
   padding-top: 175px !important;
   .intro-heading {
-    max-width: 878px;
+    max-width: 722px;
     font-family: Raleway, sans-serif !important;
     font-size: 54px !important;
     margin: auto;
-    line-height: 1.22 !important;
-    font-weight: bold;
+    line-height: 1.22;
+    font-weight: bold !important;
+    text-align: left;
   }
   .intro-lead-in {
     max-width: 880px;
@@ -36,6 +37,177 @@ header {
     font-size: 24px !important;
   }
 }
+.intro-product {
+  padding-left: 98px;
+  justify-content: space-between;
+  width: 100%;
+}
+.goodbye {
+  display: inline-block;
+  width: 436px;
+  height: 60px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: right;
+  color: #949eb7;
+}
+.hello {
+  position: absolute;
+  width: 436px;
+  height: 60px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: left;
+  display: inline-block;
+  color: #949eb7;
+  h2 {
+    font-size: 40px;
+    color: #373b60;
+    margin-bottom: 20px;
+  }
+}
+.product-tab {
+  margin-top: 100px;
+  width: 100.36%;
+  height: 700px;
+  display: flex;
+  justify-content: space-between;
+}
+  .table {
+    width: 600px;
+    height: 660px;
+    background-image: url(../resources/images/tableau.png);
+    background-position: left 200px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    text-align: right;
+  }
+  .tab-nav {
+    width: 600px;
+    height: 700px;
+    background-image: url(../resources/images/personalSpace.png);
+    background-position: right 200px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+  }
+  .introDiscover {
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.35;
+    text-align: center;
+    color: #949eb7;
+    margin-bottom: 100px;
+    margin-top: 50px;
+  }
+.introDiscover h2 {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.83;
+  color: #4f5267;
+}
+.discoverSpace {
+  font-size: 20px;
+  text-align: center;
+  color: #949eb7;
+  line-height: 1.4;
+}
+.discoverSpace h2 {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.83;
+  color: #4f5267;
+}
+.discoverSpace h3 {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1;
+}
+.titleDistrib {
+  margin-top: 80px;
+  margin-bottom: 80px;
+  text-align: center;
+}
+.titleDistrib h2 {
+  font-size: 36px;
+  font-weight: 300;
+  color: #414141;
+}
+.textDistrib {
+  height:550px;
+}
+.textDistrib h2 {
+  font-size: 36px;
+  font-weight: 300;
+  color: #4f5267;
+}
+.textDistrib p {
+  margin-top: 15px;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.43;
+  text-align: left;
+  color: #949eb7;
+}
+.textOrg h2 {
+  margin-left: 100px;
+  font-size: 40px;
+  font-weight: 300;
+  color: #4f5267;
+}
+.textOrg p {
+  margin-left: 100px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.4;
+  text-align: left;
+  color: #949eb7;
+}
+.textControl h2 {
+  margin-right: 470px;
+  font-size: 40px;
+  font-weight: 300;
+  color: #4f5267;
+}
+.textControl p {
+  margin-right: 470px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.4;
+  text-align: left;
+  color: #949eb7;
+}
+.textShare h2 {
+  margin-left: 400px;
+  font-size: 40px;
+  font-weight: 300;
+  color: #4f5267;
+}
+.textShare p {
+  margin-left: 400px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.4;
+  text-align: left;
+  color: #949eb7;
+}
+.textPlace h2 {
+  margin-right: 470px;
+  font-size: 40px;
+  font-weight: 300;
+  color: #4f5267;
+}
+.textPlace p {
+  margin-right: 470px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.4;
+  text-align: left;
+  color: #949eb7;
+}
+
+
 
 .docs-content {
   margin-left: 520px;

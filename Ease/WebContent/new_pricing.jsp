@@ -9,7 +9,7 @@
 <fmt:setBundle basename="com.Ease.Languages.text" />
 <html>
 <head>
-    <title> Ease.space | Security</title>
+    <title> Ease.space | Pricing</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
     <!-- Description shown in Google -->
     <meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="/cssMinified.v00009/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/cssMinified.v00009/team.css" />
     <link rel="stylesheet" href="/cssMinified.v00009/pricingPage.css" />
+    <link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
@@ -49,17 +50,13 @@
         <div class="content display-flex flex_direction_column step2">
             <h1 class="text-center" style="margin:0 0 10px 0">Un prix juste et transparent</h1>
             <span class="sub-title">Offre <u>sans engagement</u>, facturée <u>mensuellement</u> par utilisateur <u>actif</u>*</span>
-            <div class="display-flex" style="margin:55px 0 37px 0">
-                <div class="team_plan" id="starter_plan" style="margin-right: 30px">
-                    <img src="/resources/other/illu.svg" alt="icon" class="styleImage"/>
+            <div class="ui grid display-flex" style="margin:55px 0 37px 0">
+                <div class="team_plan" id="starter_plan" style="margin: 15px 10px;">
+                    <%--<img src="/resources/other/Spaceship.svg" alt="icon" class="styleImage" style="background-size:400px 400px;width:400px;height:400px;" />--%>
                     <h1 class="text-center title">Starter</h1>
                     <span class="text-center price" style="margin-bottom: 33px">Gratuit</span>
-                    <span class="tip" style="margin: 10px 0 50px 0">Pour les utilisateurs solo souhaitant essayer Ease.space pour une periode de temps illimitée</span>
+                    <span class="tip" style="margin: 15px 0 35px 0">Pour les utilisateurs solo souhaitant essayer Ease.space pour une periode de temps illimitée</span>
                     <div class="display-flex flex_direction_column full_flex">
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span>Rooms illimitées</span>
-                        </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
                             <span>Accès au Personal Space</span>
@@ -70,7 +67,7 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Catégories illimitées</span>
+                            <span>Groupes illimitées</span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -82,11 +79,12 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Intégration d’Apps, connectées avec Facebook, Linkedin, Google et Twitter</span>
+                            <span>Intégration d’Apps, connectées avec Facebook et Linkedin</span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
                             <span>Intégration automatique de nouveaux mots de passe</span>
+                            <img src="/resources/icons/Soon.png" style="width:50px;height:17px;margin-top:15px;"/>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -94,23 +92,23 @@
                         </div>
                     </div>
                     <div class="text-center" style="margin: 60px 0 0 0">
-                        <button class="button-unstyle big-button button signUpButton">
-                                Essayez un mois gratuitement
+                        <button class="button-unstyle big-button button signUpButton" style="font-size: 18px;">
+                                Utiliser gratuitement
                         </button>
                     </div>
                 </div>
-                <div class="team_plan" id="pro_team_plan" style="margin-right: 30px">
+                <div class="team_plan" id="pro_team_plan" style="margin: 15px 10px;">
                     <img src="/resources/other/illu.svg" alt="icon" class="styleImage"/>
-                    <h1 class="text-center title">Pro</h1>
+                    <h1 class="text-center title greenText">Team</h1>
                     <span class="text-center price" style="margin-bottom: 33px">3,99 <span class="symbol">€HT</span></span>
                     <div class="text-center">
                         <button class="button-unstyle big-button button">
-                            <a href="/teams#/teamCreation" class="link-unstyle">
-                                Essayez un mois gratuitement
+                            <a href="/teams#/teamCreation" class="link-unstyle" style="font-size: 18px;">
+                                Essayez 1 mois gratuit
                             </a>
                         </button>
                     </div>
-                    <span class="tip" style="margin: 10px 0 0 0">Pas de carte de crédit requise</span>
+                    <span class="tip" style="margin: 10px 0 0 0;font-size:14px;">Pas de CB requise</span>
                     <span class="info">L'integralité de Starter, et</span>
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
@@ -119,7 +117,7 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Partage d'accès web avec visualisation ou obstruction des mots de passe</span>
+                            <span>Partage d'accès web avec affichage ou obstruction des mots de passe</span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -127,11 +125,13 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Partage d'identifiants pour softwares en local (coming soon)</span>
+                            <span>Partage d'identifiants pour softwares locaux</span>
+                            <img src="/resources/icons/Soon.png" style="width:50px;height:17px;margin-top:15px;"/>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Partage temporaire d'identifiants (coming soon)</span>
+                            <span>Partage temporaire d'identifiants</span>
+                            <img src="/resources/icons/Soon.png" style="width:50px;height:17px;margin-left:50px;margin-top:15px;"/>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -143,30 +143,30 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Intégration Slack (coming soon)</span>
+                            <span>Demandes d’intégrations de sites prioritaires</span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Priority support</span>
+                            <span>Service client prioritaire</span>
                         </div>
                     </div>
                     <div class="text-center" style="margin: 60px 0 10px 0">
                         <button class="button-unstyle big-button button">
-                            <a href="/teams#/teamCreation" class="link-unstyle">
-                                Essayez un mois gratuitement
+                            <a href="/teams#/teamCreation" class="link-unstyle" style="font-size: 18px;">
+                                Essayez 1 mois gratuit
                             </a>
                         </button>
                     </div>
-                    <span class="tip">Pas de CB requise</span>
+                    <span class="tip" style="font-size:14px;margin-bottom:1px;">Pas de CB requise</span>
                 </div>
-                <div class="team_plan" id="enterprise_team_plan">
+                <div class="team_plan" id="enterprise_team_plan" style="margin: 15px 10px;">>
                     <img src="/resources/other/Saturn.svg" alt="icon" class="styleImage"/>
-                    <div class="plan_header display-flex flex_direction_column text-center">
+                    <div class="plan_header display-flex flex_direction_column text-center" style="height: 240px;margin-top:-30px;">
                         <h1 class="text-center title">Entreprise</h1>
                         <span style="font-size: 0.9rem">à partir de</span>
                         <span class="text-center price" style="margin-bottom: 33px">7,89 <span class="symbol">€HT</span></span>
                     </div>
-                    <span class="info">L'integralité de pro<br/>et des fonctionnalités à la demande</span>
+                    <span class="info" style="margin-top:40px;">L'integralité de team<br/>et des fonctionnalités à la demande</span>
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -195,7 +195,7 @@
                     </div>
                     <div class="text-center">
                         <button class="button-unstyle big-button button">
-                            <a href="/companyContact" class="link-unstyle">
+                            <a href="/companyContact" class="link-unstyle" style="font-size: 18px;">
                                 Contactez-nous
                             </a>
                         </button>
@@ -213,7 +213,7 @@
 <script src="/jsMinified.v00015/bootstrap.js" async></script>
 <script src="/jsMinified.v00015/ajaxHandler.js" async></script>
 <script src="/jsMinified.v00015/registrationPopup.js" async></script>
-<script src="/jsMinified.v00015/landingPage.js" async></script>
+<%--<script src="/jsMinified.v00015/landingPage.js" async></script>--%>
 <script src="/jsMinified.v00015/basic-utils.js" async></script>
 <script src="/jsMinified.v00015/languageChooser.js" async></script>
 <script src="/jsMinified.v00015/tracker.js" async></script>
