@@ -3,6 +3,8 @@ package com.Ease.Notification;
 import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  */
 
 public class Notification {
+
+    private final static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static Notification createNotification(String content, String url, String icon, String user_id, Date date, DataBaseConnection db) throws HttpServletException {
         try {
@@ -39,11 +43,11 @@ public class Notification {
             DatabaseResult rs = request.get();
             int i = 0;
             while (rs.next()) {
-                Notification notification = new Notification(rs.getInt("id"), rs.getString("content"), rs.getDate("creation_date"), rs.getString("url"), rs.getString("icon"), rs.getBoolean("is_new"));
+                Notification notification = new Notification(rs.getInt("id"), rs.getString("content"), dateFormat.parse(rs.getString("creation_date")), rs.getString("url"), rs.getString("icon"), rs.getBoolean("is_new"));
                 nextNotifications.add(notification);
             }
             return nextNotifications;
-        } catch (GeneralException e) {
+        } catch (Exception e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }

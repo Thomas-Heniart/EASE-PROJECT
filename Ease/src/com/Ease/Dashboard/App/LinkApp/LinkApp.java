@@ -1,7 +1,5 @@
 package com.Ease.Dashboard.App.LinkApp;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Team.Channel;
@@ -91,15 +89,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
     public static LinkApp createShareableLinkApp(String name, String link, PostServletManager sm) throws GeneralException, HttpServletException {
-        Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-        String linkHost = link.split("\\.")[1];
-        String imgUrl = "";
-        Website websiteForLogo = catalog.getWebsiteWithHost(linkHost);
-        if (websiteForLogo == null)
-            imgUrl = linkHost.substring(0, 2);
-        else
-            imgUrl = websiteForLogo.getLogo();
-        return createLinkApp(null, null, name, link, imgUrl, sm);
+        return createLinkApp(null, null, name, link, "/resources/icons/link_app.png", sm);
     }
 
 	/*

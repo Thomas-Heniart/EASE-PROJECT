@@ -420,7 +420,14 @@ public class Team {
             return;
         this.activeSubscriptions = 0;
         this.getTeamUsers().forEach(teamUser -> {
-            teamUser.setActive_subscription(!(this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty() && this.getAppManager().getSharedAppsForTeamUser(teamUser).isEmpty()));
+            if (!this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty())
+                teamUser.setActive_subscription(true);
+            for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
+                if (!((App) sharedApp).isReceived())
+                    continue;
+                teamUser.setActive_subscription(true);
+                break;
+            }
             if (teamUser.isActive_subscription())
                 activeSubscriptions++;
         });
