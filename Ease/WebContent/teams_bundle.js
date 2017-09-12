@@ -48047,14 +48047,23 @@ var Base = (_dec = (0, _reactRedux.connect)(function (store) {
   }
 
   _createClass(Base, [{
+    key: 'checkConnection',
+    value: function checkConnection() {
+      var _this2 = this;
+
+      window.setInterval(function () {
+        if (_this2.props.common.authenticated) {}
+      }, 10000);
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!this.props.common.authenticated) {
         this.props.dispatch((0, _commonActions.fetchMyInformation)()).then(function (response) {
-          _this2.setState({ fetching: false });
-          if (_this2.props.common.authenticated) _this2.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
+          _this3.setState({ fetching: false });
+          if (_this3.props.common.authenticated) _this3.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
         });
       } else {
         this.setState({ fetching: false });
@@ -56839,138 +56848,7 @@ var TeamSideBar = (_dec = (0, _reactRedux.connect)(function (store) {
 module.exports = TeamSideBar;
 
 /***/ }),
-/* 568 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var React = __webpack_require__(0);
-
-function CompanyInformationForm(props) {
-       return React.createElement(
-              "form",
-              { className: "display-flex flex_direction_column", onSubmit: props.onSubmit },
-              React.createElement(
-                     "label",
-                     { htmlFor: "contry" },
-                     "Country*"
-              ),
-              React.createElement(
-                     "select",
-                     { placeholder: "Country",
-                            value: props.companyInfo.country,
-                            onChange: props.handleCompanyInfoInput,
-                            id: "country",
-                            name: "country",
-                            className: "select_unstyle modal_input",
-                            required: true },
-                     React.createElement(
-                            "option",
-                            { value: "France" },
-                            "France"
-                     )
-              ),
-              React.createElement(
-                     "label",
-                     { htmlFor: "company_name" },
-                     "Company name*"
-              ),
-              React.createElement("input", { placeholder: "Company name",
-                     value: props.companyInfo.company_name,
-                     onChange: props.handleCompanyInfoInput,
-                     id: "company_name",
-                     name: "company_name",
-                     type: "text",
-                     className: "input_unstyle modal_input",
-                     required: true }),
-              React.createElement(
-                     "label",
-                     { htmlFor: "street_address" },
-                     "Street Address*"
-              ),
-              React.createElement("input", { placeholder: "Street address",
-                     value: props.companyInfo.street_address,
-                     onChange: props.handleCompanyInfoInput,
-                     id: "street_address",
-                     name: "street_address",
-                     type: "text",
-                     className: "input_unstyle modal_input",
-                     required: true }),
-              React.createElement(
-                     "label",
-                     { htmlFor: "unit" },
-                     "Suite/Unit"
-              ),
-              React.createElement("input", { placeholder: "Suite/Unit",
-                     value: props.companyInfo.unit,
-                     onChange: props.handleCompanyInfoInput,
-                     id: "unit",
-                     name: "unit",
-                     type: "text",
-                     className: "input_unstyle modal_input" }),
-              React.createElement(
-                     "label",
-                     { htmlFor: "city" },
-                     "City*"
-              ),
-              React.createElement("input", { placeholder: "City",
-                     value: props.companyInfo.city,
-                     onChange: props.handleCompanyInfoInput,
-                     id: "city",
-                     name: "city",
-                     type: "text",
-                     className: "input_unstyle modal_input",
-                     required: true }),
-              React.createElement(
-                     "label",
-                     { htmlFor: "state" },
-                     "State/Province/Region"
-              ),
-              React.createElement("input", { placeholder: "State/Province/Region",
-                     value: props.companyInfo.state,
-                     onChange: props.handleCompanyInfoInput,
-                     id: "state",
-                     name: "state",
-                     type: "text",
-                     className: "input_unstyle modal_input" }),
-              React.createElement(
-                     "label",
-                     { htmlFor: "postal_code" },
-                     "Postal Code*"
-              ),
-              React.createElement("input", { placeholder: "Postal Code",
-                     value: props.companyInfo.zip,
-                     onChange: props.handleCompanyInfoInput,
-                     id: "zip",
-                     name: "zip",
-                     type: "text",
-                     className: "input_unstyle modal_input",
-                     required: true }),
-              React.createElement(
-                     "label",
-                     { htmlFor: "vat_id" },
-                     "VAT ID"
-              ),
-              React.createElement("input", { placeholder: "VAT ID",
-                     value: props.companyInfo.vat_id,
-                     onChange: props.handleCompanyInfoInput,
-                     id: "vat_id",
-                     name: "vat_id",
-                     type: "text",
-                     className: "input_unstyle modal_input" }),
-              React.createElement(
-                     "button",
-                     { className: "button-unstyle big-button",
-                            type: "submit" },
-                     "Add a Payment Method"
-              )
-       );
-}
-
-module.exports = CompanyInformationForm;
-
-/***/ }),
+/* 568 */,
 /* 569 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -57548,121 +57426,7 @@ var MyStoreCheckout = function (_React$Component2) {
 module.exports = MyStoreCheckout;
 
 /***/ }),
-/* 573 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var React = __webpack_require__(0);
-
-var StripeCardForm = function (_React$Component) {
-  _inherits(StripeCardForm, _React$Component);
-
-  function StripeCardForm(props) {
-    _classCallCheck(this, StripeCardForm);
-
-    var _this = _possibleConstructorReturn(this, (StripeCardForm.__proto__ || Object.getPrototypeOf(StripeCardForm)).call(this, props));
-
-    _this.onSubmit = _this.onSubmit.bind(_this);
-    _this.setOutcome = _this.setOutcome.bind(_this);
-    _this.stripe = Stripe('pk_test_95DsYIUHWlEgZa5YWglIJHXd');
-    _this.elements = _this.stripe.elements();
-    _this.card = _this.elements.create('card', {
-      style: {
-        base: {
-          iconColor: '#666EE8',
-          color: '#31325F',
-          lineHeight: '40px',
-          fontWeight: 300,
-          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-          fontSize: '15px',
-
-          '::placeholder': {
-            color: '#CFD7E0'
-          }
-        }
-      }
-    });
-    return _this;
-  }
-
-  _createClass(StripeCardForm, [{
-    key: 'setOutcome',
-    value: function setOutcome(result) {
-      if (result.token) {
-        console.log('stripe token :', result.token.id);
-        this.props.tokenCallback(result.token.id);
-      } else if (result.error) {
-        console.log('stripe error :', result.error.message);
-      }
-    }
-  }, {
-    key: 'onSubmit',
-    value: function onSubmit(e) {
-      e.preventDefault();
-      var extraDetails = {
-        name: document.querySelector('input[name=cardholder-name]').value
-      };
-      this.stripe.createToken(this.card, extraDetails).then(this.setOutcome);
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.card.mount('#card-element');
-      this.card.on('change', function (event) {
-        this.setOutcome(event);
-      }.bind(this));
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return React.createElement(
-        'form',
-        { onSubmit: this.onSubmit },
-        React.createElement(
-          'div',
-          { className: 'group display-flex flex_direction_column' },
-          React.createElement(
-            'label',
-            { htmlFor: 'cardholder-name' },
-            'Card holder'
-          ),
-          React.createElement('input', { name: 'cardholder-name', id: 'cardholder-name', className: 'input_unstyle modal_input', placeholder: 'Jane Doe' })
-        ),
-        React.createElement(
-          'div',
-          { className: 'group' },
-          React.createElement(
-            'label',
-            null,
-            'Card'
-          ),
-          React.createElement('div', { id: 'card-element', className: 'field' })
-        ),
-        React.createElement(
-          'button',
-          { className: 'button-unstyle big-button', type: 'submit' },
-          'Update the bill !'
-        )
-      );
-    }
-  }]);
-
-  return StripeCardForm;
-}(React.Component);
-
-module.exports = StripeCardForm;
-
-/***/ }),
+/* 573 */,
 /* 574 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -63346,8 +63110,6 @@ var _utils = __webpack_require__(47);
 
 var _reactRedux = __webpack_require__(12);
 
-var _reactStripeElements = __webpack_require__(181);
-
 var _reactAddonsCssTransitionGroup = __webpack_require__(82);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
@@ -63367,10 +63129,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(0);
 var classnames = __webpack_require__(2);
 var post_api = __webpack_require__(32);
-var api = __webpack_require__(23);
-var axios = __webpack_require__(102);
-var StripeCardForm = __webpack_require__(573);
-var CompanyInformationForm = __webpack_require__(568);
 
 var Step1 = function (_React$Component) {
   _inherits(Step1, _React$Component);
@@ -113538,7 +113296,7 @@ var InvitePeopleStep = function (_React$Component3) {
             _react2.default.createElement(
               _semanticUiReact.Header.Subheader,
               null,
-              "Your Ease.space team is ready to go. Know few coworkers who'd like to stop using passwords with you?"
+              "Your team is now ready, we just need to invite your coworkers."
             )
           ),
           this.state.view === 'main' && _react2.default.createElement(PreviewStep, {
