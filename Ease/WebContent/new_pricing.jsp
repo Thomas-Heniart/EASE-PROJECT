@@ -95,7 +95,9 @@
                     </div>
                     <div class="text-center" style="margin: 60px 0 0 0">
                         <button class="button-unstyle big-button button signUpButton" style="font-size: 18px;">
+                            <a href="/teams#/registration" class="link-unstyle" style="font-size: 18px;">
                                 Utiliser gratuitement
+                            </a>
                         </button>
                     </div>
                 </div>
