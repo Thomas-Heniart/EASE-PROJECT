@@ -165,56 +165,54 @@
             easeTracker.trackEvent($(this).attr("trackEvent"));
             easeSignUpPopup.open();
         });
-        $(document).ready(function () {
-            var count;
+    });
+    $(document).ready(function () {
+        var count;
+        $.get("/api/v1/common/ConnectionNumber", function (data) {
+            count = data.connections;
+            setCounter(count);
+        }, false);
+
+        setInterval(function () {
             $.get("/api/v1/common/ConnectionNumber", function (data) {
-                count = data.connections.toString();
-                setCounter(count);
-            }, false);
+                if (data.connections > count)
+                    updateCounter(data.connections);
+            });
+        }, 60000);
 
-            setInterval(function () {
-                $.get("/api/v1/common/ConnectionNumber", function (data) {
-                    if (data.connections > parseInt(count))
-                        updateCounter(data.connections.toString());
-                });
-            }, 60000);
-
-            function updateCounter(new_count) {
-                var step = 60000 / (parseInt(new_count) - parseInt(count));
-                var timer = setInterval(function () {
-                    count = parseInt(count);
-                    count++;
-                    count = count.toString();
-                    var i;
-                    var l = $("#counter .digit").length;
-                    if (count.length > l) {
-                        for (i = 0; i < count.length - l; i++)
-                            $("<span class='digit'>0</span>").prependTo($("#counter"));
-                    }
-                    for (i = 0; i < count.length; i++) {
-                        var c = $($("#counter .digit")[i]);
-                        console.log(c);
-                        console.log(count[i]);
-                        if (c.text() !== count[i])
-                            c.text(count[i]);
-                    }
-                    if (count === new_count) {
-                        clearInterval(timer);
-                        return;
-                    }
-                }, step);
-            }
-
-            function setCounter(count) {
+        function updateCounter(new_count) {
+            var step = 60000 / (new_count - count);
+            var timer = setInterval(function () {
+                var i;
                 var l = $("#counter .digit").length;
-                if (count.length > l) {
-                    for (var i = 0; i < count.length - l; i++)
+                var countString = count.toString();
+                if (countString.length > l) {
+                    for (i = 0; i < countString.length - l; i++)
                         $("<span class='digit'>0</span>").prependTo($("#counter"));
                 }
-                for (var i = 0; i < count.length; i++)
-                    $($("#counter .digit")[i]).text(count[i]);
+                for (i = 0; i < countString.length; i++) {
+                    var c = $($("#counter .digit")[i]);
+                    if (c.text() !== countString[i])
+                        c.text(countString[i]);
+                }
+                if (count >= new_count) {
+                    clearInterval(timer);
+                    return;
+                }
+                count++;
+            }, step);
+        }
+
+        function setCounter(count) {
+            var l = $("#counter .digit").length;
+            var countString = count.toString();
+            if (countString.length > l) {
+                for (var i = 0; i < countString.length - l; i++)
+                    $("<span class='digit'>0</span>").prependTo($("#counter"));
             }
-        });
+            for (var i = 0; i < countString.length; i++)
+                $($("#counter .digit")[i]).text(countString[i]);
+        }
     });
 </script>
 <script>
