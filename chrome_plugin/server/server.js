@@ -91,5 +91,4 @@ var server = {
         }, null, false);
     }
 
-};
-server.initialize();
+}

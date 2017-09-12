@@ -193,6 +193,15 @@ var actions = {
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "https://localhost:8443/api/v1/plugin/ConnectionFail",
+                    data: JSON.stringify({
+                        website: window.location.href
+                    }),
+                    contentType: "application/JSON; charset=utf-8",
+                    dataType: "json"
+                });
                 msg.type = "error: " + actionStep.what + " input not found";
                 sendResponse(msg);
                 errorOverlay(msg);
@@ -248,6 +257,9 @@ var actions = {
         if (button.length == 0) {
             if (actionStep.grave == true) {
                 msg.type = "error: button not found";
+                server.post("/api/v1/plugin/ConnectionFail", {
+                    website: window.location
+                });
                 sendResponse(msg);
                 errorOverlay(msg);
             }
