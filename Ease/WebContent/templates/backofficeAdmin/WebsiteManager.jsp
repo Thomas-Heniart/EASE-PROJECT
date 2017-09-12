@@ -70,16 +70,19 @@
             </div>
             <button class="ui button">Edit</button>
         </form>
-        <form class="ui form" method="POST" action="uploadWebsite" enctype="multipart/form-data">
+        <form id="website-upload" class="ui form" method="POST" action="/api/v1/admin/UploadWebsite"
+              enctype="multipart/form-data">
             <h4 class="ui dividing header"></h4>
+            <input type="hidden" name="website_id">
             <div class="filed">
-                <label>Connection file</label>
-                <input type="file"/>
+                <label>Upload JSON</label>
+                <input type="file" name="uploadFile" accept=".json"/>
             </div>
             <div class="field">
-                <label>Logo</label>
-                <input type="file"/>
+                <label>Upload Logo</label>
+                <input type="file" name="uploadFile" accept=".png"/>
             </div>
+            <button class="ui button">Submit</button>
         </form>
     </div>
 </div>

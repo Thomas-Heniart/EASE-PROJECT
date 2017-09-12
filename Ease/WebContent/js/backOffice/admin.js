@@ -118,6 +118,7 @@ function openWebsiteIntegration(website, websiteElem) {
     var landing_url = $("input[name='landing_url']", edit_website);
     var folder = $("input[name='folder']", edit_website);
     var integrated = $("#integration input[name='integrate']", edit_website);
+    $("#website-upload input[name='website_id']", modal).val(website.id);
     name.val(website.name);
     login_url.val(website.login_url);
     landing_url.val(website.landing_url);
@@ -224,6 +225,11 @@ function openTeamSettings(team, teamRow) {
     var modal = $("#team-settings");
     var input = $("#send-money", modal);
     $("#current-credit", modal).text(team.credit);
+    $("#card-number span", modal).text(team.card_number);
+    $("#link-number span", modal).text(team.link_number);
+    $("#single-number span", modal).text(team.single_number);
+    $("#enterprise-number span", modal).text(team.enterprise_number);
+    $("#card-with-password-reminder span", modal).text(team.card_with_password_reminder);
     $("i", input).click(function (e) {
         if (input.hasClass("loading"))
             return;

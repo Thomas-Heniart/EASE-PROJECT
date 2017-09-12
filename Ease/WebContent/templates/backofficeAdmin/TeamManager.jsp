@@ -18,10 +18,29 @@
     <i class="close icon"></i>
     <div class="header">Team settings</div>
     <div class="content">
-        Current credit (TTC): <span id="current-credit"></span>
-        <div id="send-money" class="ui icon input">
-            <input name="love_money" placeholder="Add credit...">
-            <i class="inverted circular stripe link icon"></i>
+        <div class="ui one column centered grid">
+            <div class="column">
+                Current credit (TTC): <span id="current-credit"></span>
+                <div id="send-money" class="ui icon input">
+                    <input name="love_money" placeholder="Add credit...">
+                    <i class="inverted circular stripe link icon"></i>
+                </div>
+            </div>
+            <div class="column" id="card-number">
+                Number of cards: <span></span>
+            </div>
+            <div class="column" id="link-number">
+                Number of link apps: <span></span>
+            </div>
+            <div class="column" id="single-number">
+                Number of single apps: <span></span>
+            </div>
+            <div class="column" id="enterprise-number">
+                Number of enterprise apps: <span></span>
+            </div>
+            <div class="column" id="card-with-password-reminder">
+                Number of cards with password modification: <span></span>
+            </div>
         </div>
     </div>
 </div>

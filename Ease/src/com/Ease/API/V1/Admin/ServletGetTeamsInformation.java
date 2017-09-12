@@ -1,5 +1,9 @@
 package com.Ease.API.V1.Admin;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -48,6 +52,32 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("active_team_users", team.getActiveTeamUserNumber());
                 tmp.put("is_active", team.isActive());
                 tmp.put("credit", (float) -Customer.retrieve(team.getCustomer_id()).getAccountBalance() / 100);
+                int card_number = 0;
+                int link_number = 0;
+                int single_number = 0;
+                int enterprise_number = 0;
+                int card_with_password_reminder = 0;
+                for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                    App app = (App) shareableApp;
+                    card_number++;
+                    if (app.isClassicApp()) {
+                        single_number++;
+                        ClassicApp classicApp = (ClassicApp) app;
+                        if (classicApp.getAccount().getPasswordChangeInterval() != null && classicApp.getAccount().getPasswordChangeInterval() > 0)
+                            card_with_password_reminder++;
+                    } else if (app.isEmpty()) {
+                        enterprise_number++;
+                        WebsiteApp websiteApp = (WebsiteApp) app;
+                        if (websiteApp.getReminderIntervalValue() != null && websiteApp.getReminderIntervalValue() > 0)
+                            card_with_password_reminder++;
+                    } else
+                        link_number++;
+                }
+                tmp.put("card_number", card_number);
+                tmp.put("link_number", link_number);
+                tmp.put("single_number", single_number);
+                tmp.put("enterprise_number", enterprise_number);
+                tmp.put("card_with_password_reminder", card_with_password_reminder);
                 res.add(tmp);
             }
             sm.setSuccess(res);
