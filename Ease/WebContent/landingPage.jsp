@@ -94,7 +94,7 @@
 
             <div class="six wide column">
                 <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;">mots de passe</span>,</br>hello apps</p>
-                <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;">
+                <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;margin-bottom: 20px;">
                     Une app est un compte web,</br>
                     ajouté par vous ou partagé au sein de votre équipe.</br>
                     Un clic suffit pour y accéder, directement connecté.</p>
@@ -109,10 +109,16 @@
             <div class="rightLanding nine wide column">
                 <div class="inTheMac">
                     <img class="ui fluid large image" src="/resources/images/screen.png"/>
-                    <button id="discoverButton" class="ui small button">
+                    <a href="/product"><button id="discoverButton" class="ui small button">
                         Découvrir
-                    </button>
+                    </button></a>
                 </div>
+            </div>
+            <div class="sixteen wide column" style="text-align:center;">
+
+            </div>
+            <div class="sixteen wide column" style="text-align:center;">
+                <p style="font-size:30px;color: #949eb7;">Comptes web connectés via Ease.space en 2017</p>
             </div>
         </div>
     </div>
