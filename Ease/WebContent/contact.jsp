@@ -143,11 +143,11 @@
                     <div class="two fields">
                         <div class="field">
                             <label class="contactLabel">Prénom et Nom*</label>
-                            <input type="text" name="name" placeholder="Richard Hendricks">
+                            <input required type="text" name="name" placeholder="Richard Hendricks">
                         </div>
                         <div class="field">
                             <label class="contactLabel">Email*</label>
-                            <input type="text" name="email" placeholder="richard@piedpiper.com">
+                            <input required type="text" name="email" placeholder="richard@piedpiper.com">
                         </div>
                     </div>
                 </div>
@@ -170,7 +170,8 @@
                     </div>
                     <div class="ui field">
                         <label class="contactLabel">Type de demande*</label>
-                        <select class="ui fluid dropdown" name="demand_type" placeholder="Pouvons-nous vous aider ?"
+                        <select required class="ui fluid dropdown" name="demand_type"
+                                placeholder="Pouvons-nous vous aider ?"
                                 style="height:59%;">
                             <option class="item" value="1">À propos du produit</option>
                             <option class="item" value="2">À propos de la sécurité</option>
@@ -182,9 +183,12 @@
                 </div>
                 <div class="field">
                     <label class="contactLabel">Message*</label>
-                    <textarea name="message" placeholder="Votre message."></textarea>
+                    <textarea required name="message" placeholder="Votre message."></textarea>
                 </div>
                 <button class="sendContactButton fluid ui button">Envoyer</button>
+                <div class="ui positive message" style="display: none">
+                    <p>Message envoyé</p>
+                </div>
             </form>
         </div>
     </div>
@@ -205,8 +209,7 @@
     $('.contactSegment form').submit(function (e) {
         var self = $(this);
         e.preventDefault();
-        self.find('.formRaw.errorMessage').removeClass('show');
-        self.find(".formRaw button[type='submit']").addClass('waiting');
+        $("button", self).addClass("loading");
         ajaxHandler.post(
             "/api/v1/common/ContactUs",
             {
@@ -219,17 +222,12 @@
                 phoneNumber: self.find("input[name='phoneNumber']").val()
             },
             function () {
-                self.find(".formRaw button[type='submit']").removeClass('waiting');
+                $("button", self).addClass("loading");
             },
-            function (data) {
-                self.find("textarea[name='message']").val('');
-                self.find('.formRaw.errorMessage p').text(data.msg);
-                self.find('.formRaw.errorMessage').addClass('show');
+            function () {
+                $("button", self).hide();
+                $(".message.positive").show();
                 easeTracker.trackEvent("HomepageContactSubmit");
-            },
-            function (msg) {
-                self.find('.formRaw.errorMessage p').text(msg);
-                self.find('.formRaw.errorMessage').addClass('show');
             });
     });
 </script>
