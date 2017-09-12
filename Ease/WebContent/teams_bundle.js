@@ -60619,7 +60619,7 @@ var PreviewStep = function (_React$Component) {
               action: React.createElement(_semanticUiReact.Button, { icon: 'delete', onClick: _this2.props.removeField.bind(null, idx) }),
               actionPosition: 'left',
               name: 'email',
-              type: 'text',
+              type: 'email',
               value: item.email,
               placeholder: 'Email',
               onChange: function onChange(e, values) {
