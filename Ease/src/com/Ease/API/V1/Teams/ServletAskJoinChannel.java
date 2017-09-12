@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Mail.SendGridMail;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -35,8 +35,14 @@ public class ServletAskJoinChannel extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             channel.addPendingTeamUser(teamUser, sm.getDB());
             team.getTeamUserWithId(channel.getCreator_id()).addNotification(teamUser.getUsername() + " would like to join #" + channel.getName(), channel.getDb_id() + "/flexPanel", "/resources/notifications/sign_in.png", sm.getTimestamp(), sm.getDB());
-            SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-            mail.sendJoinChannelEmail(team.getName(), channel.getName(), team.getAdministratorsUsernameAndEmail(), teamUser.getUsername(), teamUser.getEmail());
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
+            TeamUser channel_admin = team.getTeamUserWithId(channel.getCreator_id());
+            mailJetBuilder.addTo(channel_admin.getEmail(), channel_admin.getUsername());
+            mailJetBuilder.setTemplateId(210939);
+            mailJetBuilder.addVariable("channel", channel.getName());
+            mailJetBuilder.addVariable("team", team.getName());
+            mailJetBuilder.addVariable("teamUser", teamUser.getUsername());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
