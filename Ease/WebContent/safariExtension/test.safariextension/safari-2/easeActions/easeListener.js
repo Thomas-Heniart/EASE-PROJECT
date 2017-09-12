@@ -1,14 +1,6 @@
 if (window.location.href.indexOf("https://ease.space") == 0 || window.location.href.indexOf("https://51.254.207.91:8443") == 0 || window.location.href.indexOf("https://localhost:8443") == 0 || window.location.href.indexOf("https://192.168.0.19:8443") == 0 || window.location.href.indexOf("https://turfu.ease.space:8443") == 0) {
 
-    $('body').prepend('<div id="ease_extension" safariVersion="2.2.5" style="display:none;">');
-    $("input[type='password']").attr("data-password-autocomplete", "off");
-    $("input[type='password']").each(function () {
-        $(this).prop('type', 'text');
-        $('<input type="password"/>').hide().insertBefore(this);
-        $(this).focus(function () {
-            $(this).prop('type', 'password');
-        });
-    });
+    $('body').prepend('<div id="ease_extension" safariVersion="2.2.6" style="display:none;">');
     $(".displayedByPlugin").show();
     extension.runtime.sendMessage("getSettings", {}, function (response) {
         if (response.homepage) {
@@ -17,7 +9,7 @@ if (window.location.href.indexOf("https://ease.space") == 0 || window.location.h
             $("#homePageSwitch").prop("checked", false);
         }
 
-        $('#homePageSwitch').change(function () {
+        $("body").on("change", "#homePageSwitch", function () {
             if ($(this).is(":checked")) {
                 extension.runtime.sendMessage("setSettings", {"homepage": true}, function (response) {
                 });
@@ -25,6 +17,12 @@ if (window.location.href.indexOf("https://ease.space") == 0 || window.location.h
                 extension.runtime.sendMessage("setSettings", {"homepage": false}, function (response) {
                 });
             }
+        });
+    });
+
+    document.addEventListener("GetSettings", function (event) {
+        extension.runtime.sendMessage("getSettings", {}, function (response) {
+            document.dispatchEvent(new CustomEvent("GetSettingsDone", {"detail": response.homepage}));
         });
     });
 

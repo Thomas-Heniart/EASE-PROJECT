@@ -23,10 +23,13 @@ var TeamManageAppRequestModal = require('./teamModals/TeamManageAppRequestModal'
 var TeamAcceptMultiAppModal = require('./teamModals/TeamAcceptMultiAppModal');
 var TeamJoinMultiAppModal = require('./teamModals/TeamJoinMultiAppModal');
 var TeamSettingsModal = require('./teamModals/TeamSettingsModal');
+var TeamSettings = require('./teamModals/TeamSettings');
 var TeamTransferOwnershipModal = require('./teamModals/TeamTransferOwnershipModal');
 var TeamPhoneNumberModal = require('./teamModals/TeamPhoneNumberModal');
+var RequestWebsiteModal = require('./teamModals/RequestWebsiteModal');
 import queryString from "query-string";
 import VerifyTeamUserModal from './teamModals/VerifyTeamUserModal';
+import ReactivateTeamUserModal from './teamModals/ReactivateTeamUserModal';
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
@@ -63,8 +66,10 @@ import {connect} from "react-redux"
     teamBrowseChannelsModalActive: store.teamModals.teamBrowseChannelsModalActive,
     teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
     verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
+    reactivateTeamUserModal: store.teamModals.reactivateTeamUserModal,
     teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
-    teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal
+    teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
+    requestWebsiteModal: store.teamModals.requestWebsiteModal
   };
 })
 class TeamView extends React.Component {
@@ -79,7 +84,7 @@ class TeamView extends React.Component {
   }
   componentWillReceiveProps(nextProps){
     const itemId = nextProps.match.params.itemId;
-    if (this.props.match.params.teamId != nextProps.match.params.teamId){
+    if (this.props.match.params.teamId !== nextProps.match.params.teamId){
       this.setState({loadingInfo: true});
       this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(nextProps.match.params.teamId)).then(()=>{
         this.setState({loadingInfo: false});
@@ -89,7 +94,7 @@ class TeamView extends React.Component {
           this.autoSelectItem();
       });
     }
-    else if (this.props.match.params.itemId != itemId) {
+    else if (this.props.match.params.itemId !== itemId) {
       if (this.isValidTeamItemId(itemId)) {
         this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
       }else
@@ -120,12 +125,12 @@ class TeamView extends React.Component {
     });
   };
   isValidTeamItemId(itemId){
-    if (itemId == undefined)
+    if (itemId === undefined)
       return false;
     const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
-    if (itemId[0] != '@' && me.channel_ids.indexOf(Number(itemId)) !== -1)
+    if (itemId[0] !== '@' && me.channel_ids.indexOf(Number(itemId)) !== -1)
       return true;
-    if (selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length))) != null)
+    if (selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length))) !== null)
       return true;
     return false;
   }
@@ -142,16 +147,15 @@ class TeamView extends React.Component {
     const itemId = this.props.match.params.itemId;
     if (itemId === undefined)
       return null;
-    var item = (itemId[0] === '@') ?
-       selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length)))
-    :
-     selectChannelFromListById(this.props.channels, Number(itemId));
+    let item = (itemId[0] === '@') ?
+        selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length)))
+        :
+        selectChannelFromListById(this.props.channels, Number(itemId));
     return item;
   }
   render(){
     const selectedItem = this.getSelectedItem();
     const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
-    const flexPanel = queryString.parse(this.props.location.search).flexPanel !== undefined;
 
     return (
         <div id="teamsHandler">
@@ -163,7 +167,7 @@ class TeamView extends React.Component {
                 me={me}
                 team={this.props.team}
                 dispatch={this.props.dispatch}/>}
-            {!this.state.loadingInfo && selectedItem != null &&
+            {!this.state.loadingInfo && selectedItem !== null &&
             <div className="client_main_container">
               <TeamHeader
                   item={selectedItem}
@@ -171,7 +175,7 @@ class TeamView extends React.Component {
                   appsLength={this.props.selectedItem.apps.length}/>
               <div className="team_client_body">
                 <OpacityTransition appear={true}>
-                  {this.props.common.user != null && !this.props.common.user.status.team_tuto_done &&
+                  {this.props.common.user !== null && !this.props.common.user.status.team_tuto_done &&
                   <TeamsTutorial/>}
                 </OpacityTransition>
                 <div id="col_main">
@@ -181,12 +185,15 @@ class TeamView extends React.Component {
                 </div>
                 <div id="col_flex">
                   <Route path={`${this.props.match.url}/flexPanel`} render={(props) => <FlexPanels item={selectedItem}
-                                                                                                     me={me}
-                                                                                                      backLink={this.props.match.url}
-                                                                                                      {...props}/>} />
+                                                                                                   me={me}
+                                                                                                   backLink={this.props.match.url}
+                                                                                                   {...props}/>} />
                 </div>
               </div>
             </div>}
+            {!this.state.loadingInfo &&
+              <Route path={`${this.props.match.path}/settings`}
+                     component={TeamSettings}/>}
             {this.props.addUserModalActive &&
             <TeamAddUserModal key="1"/>}
             {this.props.addChannelModalActive &&
@@ -217,10 +224,14 @@ class TeamView extends React.Component {
             <TeamSettingsModal/>}
             {this.props.verifyTeamUserModal.active &&
             <VerifyTeamUserModal/>}
+            {this.props.reactivateTeamUserModal.active &&
+            <ReactivateTeamUserModal/>}
             {this.props.teamTransferOwnershipModal.active &&
             <TeamTransferOwnershipModal/>}
             {this.props.teamPhoneNumberModal.active &&
             <TeamPhoneNumberModal/>}
+            {this.props.requestWebsiteModal.active &&
+            <RequestWebsiteModal/>}
           </div>
         </div>
     )

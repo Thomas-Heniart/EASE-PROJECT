@@ -1,13 +1,15 @@
 $('body').prepend('<div id="new_ease_extension" safariversion="2.2.4" style="display:none;">');
-$("input[type='password']").attr("data-password-autocomplete", "off");
-$("input[type='password']").each(function () {
-    $(this).prop('type', 'text');
-    $('<input type="password"/>').hide().insertBefore(this);
-    $(this).focus(function () {
-        $(this).prop('type', 'password');
-    });
-});
-//$("form, input").attr('autocomplete', 'off');
+if (!window.location.hostname.includes("ease.space")) {
+     /* $("form, input").attr('autocomplete', 'off');
+    $("input[type='password']").attr("data-password-autocomplete", "off");
+    $("input[type='password']").each(function () {
+        $(this).prop('type', 'text');
+        $('<input type="password"/>').hide().insertBefore(this);
+        $(this).focus(function () {
+            $(this).prop('type', 'password');
+        });
+    }); */
+}
 $(".displayedByPlugin").show();
 extension.runtime.sendMessage("getSettings", {}, function (response) {
     if (response.homepage) {
@@ -16,7 +18,7 @@ extension.runtime.sendMessage("getSettings", {}, function (response) {
         $("#homePageSwitch").prop("checked", false);
     }
 
-    $('#homePageSwitch').change(function () {
+    $("body").on("change", "#homePageSwitch", function () {
         if ($(this).is(":checked")) {
             extension.runtime.sendMessage("setSettings", {"homepage": true}, function (response) {
             });
@@ -24,6 +26,17 @@ extension.runtime.sendMessage("getSettings", {}, function (response) {
             extension.runtime.sendMessage("setSettings", {"homepage": false}, function (response) {
             });
         }
+    });
+});
+
+document.addEventListener("GetSettings", function (event) {
+    extension.runtime.sendMessage("getSettings", {}, function (response) {
+        document.dispatchEvent(new CustomEvent("GetSettingsDone", {"detail": response.homepage}));
+    });
+});
+
+document.addEventListener("SetHompage", function (event) {
+    extension.runtime.sendMessage("setSettings", {"homepage": event.detail}, function () {
     });
 });
 

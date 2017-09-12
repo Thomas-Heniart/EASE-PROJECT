@@ -1,10 +1,12 @@
 package com.Ease.Team;
 
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
@@ -32,7 +34,7 @@ public class Team {
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         //query.querySQLString("SELECT id FROM teams");
-        query.queryString("SELECT t FROM Team t");
+        query.queryString("SELECT t FROM Team t WHERE t.active = true");
         List<Team> teams = new LinkedList<>();
         teams = query.list();
         /* for (Object team_id : query.list()) {
@@ -78,6 +80,18 @@ public class Team {
 
     @Column(name = "subscription_id")
     protected String subscription_id;
+
+    @Column(name = "subscription_date")
+    protected Date subscription_date;
+
+    @Column(name = "card_entered")
+    protected boolean card_entered = false;
+
+    @Column(name = "invite_people")
+    protected boolean invite_people = false;
+
+    @Column(name = "active")
+    protected boolean active = true;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<TeamUser> teamUsers = new LinkedList<>();
@@ -143,6 +157,38 @@ public class Team {
 
     public void setSubscription_id(String subscription_id) {
         this.subscription_id = subscription_id;
+    }
+
+    public boolean isCard_entered() {
+        return card_entered;
+    }
+
+    public void setCard_entered(boolean card_entered) {
+        this.card_entered = card_entered;
+    }
+
+    public Date getSubscription_date() {
+        return subscription_date;
+    }
+
+    public void setSubscription_date(Date subscription_date) {
+        this.subscription_date = subscription_date;
+    }
+
+    public boolean invite_people() {
+        return invite_people;
+    }
+
+    public void setInvite_people(boolean invite_people) {
+        this.invite_people = invite_people;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public List<TeamUser> getTeamUsers() {
@@ -242,22 +288,7 @@ public class Team {
     }
 
     public JSONObject getJson() throws HttpServletException {
-        JSONObject res = new JSONObject();
-        res.put("name", this.name);
-        res.put("id", this.db_id);
-        JSONArray channels = new JSONArray();
-        for (Channel channel : this.getChannels())
-            channels.add(channel.getJson());
-        res.put("channels", channels);
-        JSONArray teamUsers = new JSONArray();
-        for (TeamUser teamUser : this.getTeamUsers())
-            teamUsers.add(teamUser.getJson());
-        res.put("teamUsers", teamUsers);
-        JSONArray shareableApps = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps())
-            shareableApps.add(shareableApp.getShareableJson());
-        res.put("shareableApps", shareableApps);
-        return res;
+        return this.getSimpleJson();
     }
 
     public Map<String, String> getAdministratorsUsernameAndEmail() {
@@ -273,6 +304,7 @@ public class Team {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
+        res.put("valid_subscription", !this.isBlocked());
         return res;
     }
 
@@ -377,24 +409,29 @@ public class Team {
     public Integer getActiveTeamUserNumber() {
         int res = 0;
         for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.isActive())
+            if (teamUser.isActive_subscription())
                 res++;
         }
         return res;
     }
 
-    public void updateSubscription(Date now) {
+    public void updateSubscription() {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
         this.activeSubscriptions = 0;
         this.getTeamUsers().forEach(teamUser -> {
-            if (!(this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty() && this.getAppManager().getSharedAppsForTeamUser(teamUser).isEmpty()))
-                teamUser.setActive(true);
-            else
-                teamUser.setActive(false);
-            if (teamUser.isActive())
+            if (!this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty())
+                teamUser.setActive_subscription(true);
+            for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
+                if (!((App) sharedApp).isReceived())
+                    continue;
+                teamUser.setActive_subscription(true);
+                break;
+            }
+            if (teamUser.isActive_subscription())
                 activeSubscriptions++;
         });
+        System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
             Subscription subscription = Subscription.retrieve(this.subscription_id);
             if (subscription.getQuantity() != activeSubscriptions) {
@@ -416,7 +453,7 @@ public class Team {
     }
 
     public boolean isBlocked() {
-        return this.subscription_id == null;
+        return (this.subscription_date == null) || (!card_entered && DateComparator.isOutdated(this.subscription_date, 30));
     }
 
     public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
@@ -470,7 +507,45 @@ public class Team {
     }
 
     public Channel createDefaultChannel(Integer owner_id) {
-        this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide app and tools sharing", owner_id);
+        this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide apps and tools sharing", owner_id);
         return this.default_channel;
+    }
+
+    public TeamUser getTeamUserOwner() {
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            if (teamUser.isTeamOwner())
+                return teamUser;
+        }
+        return null;
+    }
+
+    public void checkFreeTrialEnd() {
+        MailJetBuilder mailJetBuilder;
+        if (this.card_entered)
+            return;
+        try {
+            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
+            if (DateComparator.isEqualsAfter(this.subscription_date, 25) && !this.card_entered) {
+                System.out.println(this.getName() + " trial will end in 5 days.");
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(208643);
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.addTo(this.getTeamUserOwner().getEmail());
+                mailJetBuilder.addVariable("teamName", this.getName());
+                mailJetBuilder.addVariable("link", link);
+                mailJetBuilder.sendEmail();
+            } else if (DateComparator.isEqualsAfter(this.subscription_date, 29) && !this.card_entered) {
+                System.out.println(this.getName() + " trial will end in 1 day.");
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(208644);
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.addVariable("teamName", this.getName());
+                mailJetBuilder.addTo(this.getTeamUserOwner().getEmail());
+                mailJetBuilder.addVariable("link", link);
+                mailJetBuilder.sendEmail();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

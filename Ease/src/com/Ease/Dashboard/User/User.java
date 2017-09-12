@@ -506,6 +506,10 @@ public class User {
     }
 
     public boolean canSeeTag(Tag tag) {
+        if (this.isAdmin())
+            return true;
+        if (tag.getName().equals("ISC Paris"))
+            return this.email.endsWith("@iscparis.com");
         for (Group group : this.groups) {
             if (tag.containsGroupId(group.getDBid()))
                 return true;
@@ -598,7 +602,7 @@ public class User {
 
     public void loadTeamUsers(ServletContext context) throws HttpServletException, GeneralException {
         HibernateQuery query = new HibernateQuery();
-        query.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
+        query.querySQLString("SELECT teamUsers.id, team_id FROM teamUsers JOIN teams ON teamUsers.team_id = teams.id WHERE user_id = ? AND teams.active = 1");
         query.setParameter(1, Integer.parseInt(this.db_id));
         List<Object[]> teamUsers = query.list();
         query.commit();
@@ -621,12 +625,12 @@ public class User {
         }
     }
 
-    public TeamUser getTeamUserForTeam(Team team) throws GeneralException {
+    public TeamUser getTeamUserForTeam(Team team) throws HttpServletException {
         for (TeamUser teamUser : this.getTeamUsers()) {
             if (teamUser.getTeam() == team)
                 return teamUser;
         }
-        throw new GeneralException(ServletManager.Code.ClientError, "Internal problem");
+        throw new HttpServletException(HttpStatus.BadRequest, "You are not in this team");
     }
 
     public JSONObject getJson() {
@@ -636,10 +640,10 @@ public class User {
         JSONArray teams = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers()) {
             JSONObject teamObject = teamUser.getTeam().getSimpleJson();
-            teamObject.put("disabled", teamUser.isDisabled() || !teamUser.isVerified());
+            teamObject.put("disabled", teamUser.isDisabled() || teamUser.getState() == 1);
+            teamObject.put("state", teamUser.getState());
             teams.add(teamObject);
         }
-
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
         return res;

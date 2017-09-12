@@ -15,7 +15,7 @@ function ChannelList(props){
         {isAdmin(props.me.role) &&
         <button className="heading-button button-unstyle"
                 ref={(ref) => {window.refs.roomAdd = ref}}
-                data-tip="Create Room"
+                data-tip="Create Rooms"
                 data-place="top"
                 id="new_channel_button"
                 onClick={e => {props.dispatch(teamModalsActions.showAddTeamChannelModal(true))}}>
@@ -34,7 +34,7 @@ function ChannelList(props){
                 return (
                   <NavLink to={`/teams/${props.team_id}/${channel.id}`} className="section-list-item channel" key={channel.id}>
                     <div className="primary_action channel_name">
-                      <i className="fa fa-users prefix"/>
+                      <i className="fa fa-hashtag prefix"/>
                       <span className="overflow-ellipsis full_flex">{channel.name}</span>
                       <span class="inline-notification" style={{display:'none'}}>3</span>
                     </div>

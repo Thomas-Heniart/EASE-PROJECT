@@ -35,7 +35,7 @@ class LinkAppSharingPreview extends React.Component {
             <div class="info_holder">
               <div class="info">
                 <div class="logo_holder">
-                  <img src="/resources/icons/app_icon.svg" alt="logo"/>
+                  <img src="/resources/icons/link_app.png" alt="logo"/>
                 </div>
                 <div class="credentials_holder">
                   <div class="credentials">

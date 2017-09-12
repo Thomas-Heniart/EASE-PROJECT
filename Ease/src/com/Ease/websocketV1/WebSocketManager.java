@@ -67,9 +67,12 @@ public class WebSocketManager {
     }
 
     private void removeClosedSesions() {
+        List<WebSocketSession> webSocketSessions_to_remove = new LinkedList<>();
         for (WebSocketSession ws : this.webSocketSessions) {
             if (!ws.getSession().isOpen())
-                this.webSocketSessions.remove(ws);
+                webSocketSessions_to_remove.add(ws);
         }
+        for (WebSocketSession ws : webSocketSessions_to_remove)
+            this.removeWebSocketSession(ws);
     }
 }

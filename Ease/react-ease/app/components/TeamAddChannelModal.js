@@ -8,10 +8,11 @@ import { Header, Container, Segment, Checkbox, Form, Input, Select, Dropdown, Bu
 
 @connect((store)=>{
   return {
-    users: store.users.users
+    users: store.users.users,
+    myId: store.team.myTeamUserId
   };
 })
-class TmpModal extends React.Component {
+class TeamAddChannelModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -20,7 +21,6 @@ class TmpModal extends React.Component {
       purpose: '',
       options: [],
       value: [],
-      error: false,
       errorMessage: ''
     };
     this.state.options = this.props.users.map(item => {
@@ -31,6 +31,7 @@ class TmpModal extends React.Component {
         value: item.id
       }
     });
+    this.state.value.push(this.props.myId);
     this.validateChannelCreation = this.validateChannelCreation.bind(this);
     this.dropdownChange = this.dropdownChange.bind(this);
     this.inputChange = this.inputChange.bind(this);
@@ -48,12 +49,13 @@ class TmpModal extends React.Component {
       this.setState({options: options});
     }
   }
-  validateChannelCreation(){
+  validateChannelCreation(e){
+    e.preventDefault();
     const name = this.state.name;
     const purpose = this.state.purpose;
     const selectedUsers = this.state.value;
 
-    this.setState({loading: true, error: false});
+    this.setState({loading: true, errorMessage: ''});
     this.props.dispatch(channelActions.createTeamChannel(name, purpose)).then(response => {
       const channel_id = response.id;
       var addUserActions = selectedUsers.map(function(item){
@@ -63,13 +65,15 @@ class TmpModal extends React.Component {
         this.props.dispatch(showAddTeamChannelModal(false));
       });
     }).catch(err => {
-      this.setState({loading: false, error: true, errorMessage: err})
+      this.setState({loading: false, errorMessage: err})
     })
   }
   inputChange(e, {value}){
     this.setState({[e.target.name] : value});
   }
   dropdownChange(e, {value}){
+    if (value.indexOf(this.props.myId) === -1)
+      return;
     this.setState({value: value});
   }
   render(){
@@ -83,12 +87,12 @@ class TmpModal extends React.Component {
             <div className="contents">
               <Container>
                 <Header as="h1">
-                  Create a group
+                  Create a room
                   <Header.Subheader>
-                    Groups are where your team members securely exchange tools and credentials. They can be organized by topic, working group, or specific project.
+                    Rooms are where your team members securely exchange tools and credentials. They can be organized by topic, working group, or specific project.
                   </Header.Subheader>
                 </Header>
-                <Form error={this.state.error}>
+                <Form error={this.state.errorMessage.length > 0} onSubmit={this.validateChannelCreation}>
                   <Form.Input label="Name" onChange={this.inputChange} icon="hashtag" iconPosition="left" placeholder="Name" type="text" name="name"/>
                   <Form.Input label="Purpose" onChange={this.inputChange} placeholder="Purpose" type="text" name="purpose"/>
                   <Form.Dropdown
@@ -110,8 +114,8 @@ class TmpModal extends React.Component {
                         positive
                         floated='right'
                         loading={this.state.loading}
-                        disabled={this.state.name.length === 0}
-                        onClick={this.validateChannelCreation}>
+                        type="submit"
+                        disabled={this.state.name.length === 0}>
                       Next
                     </Button>
                     <Button floated='right' onClick={e => {this.props.dispatch(showAddTeamChannelModal(false))}}>Cancel</Button>
@@ -125,4 +129,4 @@ class TmpModal extends React.Component {
   }
 }
 
-module.exports = TmpModal;
+module.exports = TeamAddChannelModal;

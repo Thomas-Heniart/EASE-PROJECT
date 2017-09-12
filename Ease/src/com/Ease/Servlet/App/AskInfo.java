@@ -1,6 +1,10 @@
 package com.Ease.Servlet.App;
 
-import java.io.IOException;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Metrics;
+import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,11 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
 
 /**
  * Servlet implementation class AddClassicApp
@@ -53,17 +53,19 @@ public class AskInfo extends HttpServlet {
             sm.needToBeConnected();
             String appId = sm.getServletParam("appId", true);
             if (appId == null || appId.isEmpty())
-                throw new GeneralException(ServletManager.Code.ClientError, "Wrong appId.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong appId.");
             App app = user.getDashboardManager().getAppWithId(Integer.parseInt(appId));
             if (app.isDisabled())
-                throw new GeneralException(ServletManager.Code.ClientError, "App is disabled");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "App is disabled");
             String result = app.getJSON(sm).toString();
             sm.setLogResponse("Info sended for app " + app.getDBid());
+            Metrics metrics = (Metrics) sm.getContextAttr("metrics");
+            metrics.increaseConnection(sm.getDB());
             sm.setResponse(ServletManager.Code.Success, result);
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (NumberFormatException e) {
-            sm.setResponse(ServletManager.Code.ClientError, "Wrong numbers.");
+            sm.setResponse(ServletManager.Code.ClientWarning, "Wrong numbers.");
         } catch (Exception e) {
             sm.setResponse(e);
         }

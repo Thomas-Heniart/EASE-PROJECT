@@ -1,20 +1,13 @@
 package com.Ease.Context.Catalog;
 
+import com.Ease.Utils.*;
+import org.json.simple.JSONObject;
+
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.json.simple.JSONObject;
-
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
 
 public class Sso {
 
@@ -52,6 +45,18 @@ public class Sso {
     public void addWebsite(Website site) {
         this.websites.add(site);
         this.websitesIdMap.put(site.getDb_id(), site);
+    }
+
+    public void removeWebsite(Website website, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE websites SET sso = NULL where id = ?;");
+            request.setInt(website.getDb_id());
+            request.set();
+            this.websites.remove(website);
+            this.websitesIdMap.remove(website.getDb_id());
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public Integer getDbid() {

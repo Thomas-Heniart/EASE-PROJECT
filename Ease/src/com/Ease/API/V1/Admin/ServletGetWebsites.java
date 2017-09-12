@@ -1,7 +1,10 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Catalog.Sso;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,6 +24,7 @@ public class ServletGetWebsites extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             JSONArray res = new JSONArray();
             for (Website website : catalog.getWebsites()) {
                 JSONObject tmp = new JSONObject();
@@ -32,6 +36,17 @@ public class ServletGetWebsites extends HttpServlet {
                 tmp.put("landing_url", website.getHomePageUrl());
                 tmp.put("public", website.isPublic());
                 tmp.put("integrated", website.isIntegrated());
+                JSONArray teams = new JSONArray();
+                for (String team_id : website.getTeam_ids()) {
+                    Team team = teamManager.getTeamWithId(Integer.valueOf(team_id));
+                    JSONObject teamObj = new JSONObject();
+                    teamObj.put("id", team.getDb_id());
+                    teamObj.put("name", team.getName());
+                    teams.add(teamObj);
+                }
+                tmp.put("teams", teams);
+                Sso sso = website.getSso();
+                tmp.put("sso", (sso == null) ? -1 : sso.getDbid());
                 res.add(tmp);
             }
             sm.setSuccess(res);

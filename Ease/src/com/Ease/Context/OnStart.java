@@ -8,7 +8,6 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.Crypto.ServerAES;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
 
@@ -52,23 +51,24 @@ public class OnStart implements ServletContextListener {
                 TeamManager teamManager = new TeamManager(context, db);
                 context.setAttribute("teamManager", teamManager);
                 Stripe.apiKey = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
+                Stripe.apiVersion = "2017-08-15";
 
                 Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
                 context.setAttribute("publicKey", publicAndPrivateKey.getKey());
                 context.setAttribute("privateKey", publicAndPrivateKey.getValue());
-                ServerAES serverAES = new ServerAES();
-                context.setAttribute("serverAES", serverAES);
 
                 context.setAttribute("userManager", new UserManager());
 
+                context.setAttribute("metrics", new Metrics(db));
+
                 /* Timers */
                 Timer time = new Timer(); // Instantiate Timer Object
-                //StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
+                StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
+                time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
-                /* RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
-                time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
-                //time.schedule(reminders, 0, 24 * 60 * 60 * 1000);
+                RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
+                time.schedule(reminders, 0, 24 * 60 * 60 * 1000);
                 List<String> colors = new ArrayList<String>();
                 colors.add("#373B60");
                 colors.add("#9B59B6");

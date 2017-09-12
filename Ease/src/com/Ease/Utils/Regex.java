@@ -13,12 +13,12 @@ public class Regex {
     public static final Pattern VALID_URL_REGEX =
             Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", Pattern.CASE_INSENSITIVE);
     public static final Pattern URL_REGEX =
-            Pattern.compile("[-a-zA-Z0-9@:%_\\+.~#?&//=]{2,10}\\.[a-z]{2,}\\b(\\/[-a-zA-Z0-9@:%_\\+.~#?&//=]*)?");
+            Pattern.compile("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$");
     public static final Pattern VALID_PHONE_NUMBER =
             Pattern.compile("^(\\+|[0-9])(?:[0-9] ?){5,13}[0-9]$", Pattern.CASE_INSENSITIVE);
-    public static final Pattern VALID_USERNAME = Pattern.compile("^[a-z0-9]{4,21}$", Pattern.CASE_INSENSITIVE);
-    public static final Pattern VALID_SIMPLE_STRING = Pattern.compile("^[a-zA-Z0-9]{4,20}$", Pattern.CASE_INSENSITIVE);
-    public static final Pattern VALID_ROOM_NAME = Pattern.compile("^[a-z]{1,21}$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern VALID_USERNAME = Pattern.compile("^[a-z0-9_\\-]{3,21}$");
+    public static final Pattern VALID_SIMPLE_STRING = Pattern.compile("^[a-zA-Z0-9]{4,20}$");
+    public static final Pattern VALID_ROOM_NAME = Pattern.compile("^[a-z0-9_\\-]{1,21}$");
 
     public static boolean isEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);

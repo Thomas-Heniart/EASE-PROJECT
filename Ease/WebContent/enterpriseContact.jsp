@@ -36,15 +36,14 @@ pageEncoding="UTF-8"%>
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-	<link rel="stylesheet" type="text/css" href="/cssMinified.v00009/lib/fonts/museo-font.css" />
-	<link rel="stylesheet" href="/cssMinified.v00009/default_style.css" />
-	<link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css" />
-	<link rel="stylesheet" href="/cssMinified.v00009/landingPage.css" />
-	<link rel="stylesheet" href="/cssMinified.v00009/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="/cssMinified.v00009/enterpriseContact.css" />
-	<link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
 
-
+	<link rel="stylesheet" href="semantic/dist/semantic.min.css">
+	<link rel="stylesheet" type="text/css" href="/cssMinified.v00011/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00011/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00011/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00011/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00011/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00011/enterpriseContact.css"/>
 
 	<link rel="manifest" href="manifest.json">
 
@@ -200,12 +199,12 @@ pageEncoding="UTF-8"%>
 		<%--</div>--%>
 	<%--</section>--%>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
-    <script src="/jsMinified.v00015/jquery1.12.4.js"></script>
-    <script src="/jsMinified.v00015/enterpriseContact.js" defer></script>
-    <script src="/jsMinified.v00015/basic-utils.js" async></script>
-    <script src="/jsMinified.v00015/postHandler.js" async></script>
-    <script src="/jsMinified.v00015/languageChooser.js" async></script>
-    <script src="/jsMinified.v00015/tracker.js" async></script>
+    <script src="/jsMinified.v00016/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00016/enterpriseContact.js" defer></script>
+    <script src="/jsMinified.v00016/basic-utils.js" async></script>
+    <script src="/jsMinified.v00016/postHandler.js" async></script>
+    <script src="/jsMinified.v00016/languageChooser.js" async></script>
+    <script src="/jsMinified.v00016/tracker.js" async></script>
 
 	<script type="text/javascript">
 		window.addEventListener('load',function(){
@@ -214,7 +213,7 @@ pageEncoding="UTF-8"%>
             (function () {
                 d = document;
                 s = d.createElement("script");
-                s.src = "/jsMinified.v00015/thirdParty/crisp.js";
+                s.src = "/jsMinified.v00016/thirdParty/crisp.js";
                 s.async = 1;
                 d.getElementsByTagName("head")[0].appendChild(s);
             })();
@@ -224,7 +223,7 @@ pageEncoding="UTF-8"%>
 		window.addEventListener('load',function(){
 			(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
                 r.async = true;
-                r.src = "/jsMinified.v00015/amplitude-analytics.js";
+                r.src = "/jsMinified.v00016/amplitude-analytics.js";
 				r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
 				i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
 					return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];

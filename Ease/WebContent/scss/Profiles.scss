@@ -15,14 +15,12 @@
 		border-radius: 5px 5px 5px 5px;
 		position: relative;
 		p {
-			transition: font-size .3s, line-height .3s;
 			text-transform: uppercase;
 			font-weight: 600;
 			letter-spacing: 1px;
 			display: inline-block;
 			font-family: $defaultFont;
 			color: $profilesNameFontColor;
-			font-family: $themeColor;
 			font-size: 1vw;
 			margin-bottom: 0px;
 			line-height: 2.1vw;
@@ -223,7 +221,6 @@
 						.showAppActionsButton{
 							visibility: hidden;
 						}
-						transition: width .3s;
 						position: relative;
 						width: 65%;
 						cursor: pointer;
@@ -262,7 +259,6 @@
 
 	}
 	.ProfilesHandler.editMode {
-		transition: margin .3s, width .3s;
 		width: 50%;
 		margin-left:0px;
 		#profileAdder {
@@ -298,7 +294,6 @@
 		}
 	}
 	.ProfilesHandler {
-		transition: margin .3s, width .3s;
 		width: 80%;
 		margin-bottom: 2vh;
 		padding-top: 25px;

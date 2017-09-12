@@ -1,10 +1,11 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,13 +14,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.*;
-import com.Ease.Utils.Crypto.RSA;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Servlet implementation class ConnectionServlet
@@ -68,6 +67,8 @@ public class ConnectionServlet extends HttpServlet {
                 else if (password == null || password.isEmpty())
                     sm.setResponse(ServletManager.Code.ClientWarning, "Wrong email or password.");
                 else {
+                    String key = (String) sm.getContextAttr("privateKey");
+                    password = RSA.Decrypt(password, key);
                     user = User.loadUser(email, password, sm.getServletContext(), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();

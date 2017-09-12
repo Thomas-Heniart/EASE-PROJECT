@@ -1,9 +1,7 @@
-// CheckoutForm.js
 import React from 'react';
+import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 import {CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement} from 'react-stripe-elements';
 import {injectStripe} from 'react-stripe-elements';
-
-import CardSection from './CardSection';
 
 class CheckoutForm extends React.Component {
   handleSubmit = (ev) => {

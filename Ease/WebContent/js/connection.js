@@ -87,7 +87,7 @@ $(document).ready(function(){
 			$(this).attr('action'),
 			{
 				email: email,
-				password: password
+                password: cipher(password)
 			},
 			function(){
 			},

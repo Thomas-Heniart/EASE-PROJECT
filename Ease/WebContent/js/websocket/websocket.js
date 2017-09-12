@@ -6,7 +6,7 @@ var webSocketClient = new function(){
     this.keepAlive = function () {
         if (self.socket.readyState === undefined || self.socket.readyState > 1) {
             console.log("webSocket connection lost, trying to reconnect...");
-            self.socket = new WebSocket("wss://" + self.webSocketServerConnectionUrl + "/webSocketServer");
+            self.socket = new WebSocket("wss://" + window.location.host + "/webSocketServer");
             self.socket.onopen = self.onOpen;
             self.socket.onmessage = self.onMessage;
             self.socket.onerror = self.onError;
@@ -15,7 +15,7 @@ var webSocketClient = new function(){
     };
     this.initialize = function () {
         console.log('connection to webSocket server.');
-        self.socket = new WebSocket("wss://" + self.webSocketServerConnectionUrl + "/webSocketServer");
+        self.socket = new WebSocket("wss://" + window.location.host + "/webSocketServer");
         self.socket.onopen = self.onOpen;
         self.socket.onmessage = self.onMessage;
         self.socket.onerror = self.onError;

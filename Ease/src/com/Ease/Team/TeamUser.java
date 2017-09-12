@@ -63,6 +63,9 @@ public class TeamUser {
     protected boolean active;
 
     @Transient
+    protected boolean active_subscription = false;
+
+    @Transient
     protected String deciphered_teamKey;
 
     @ManyToOne
@@ -249,6 +252,14 @@ public class TeamUser {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public boolean isActive_subscription() {
+        return active_subscription;
+    }
+
+    public void setActive_subscription(boolean active_subscription) {
+        this.active_subscription = active_subscription;
     }
 
     public boolean isDisabled() {

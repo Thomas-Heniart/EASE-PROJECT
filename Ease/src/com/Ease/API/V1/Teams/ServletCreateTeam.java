@@ -12,6 +12,8 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.stripe.model.Customer;
+import com.stripe.model.Subscription;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by thomas on 12/04/2017.
@@ -80,6 +84,26 @@ public class ServletCreateTeam extends HttpServlet {
             user.addTeamUser(owner);
             team.addChannel(channel);
             team.addTeamUser(owner);
+
+            /* ===== Stripe START ===== */
+
+            Map<String, Object> customerParams = new HashMap<>();
+            customerParams.put("email", email);
+            team.setCustomer_id(Customer.create(customerParams).getId());
+            Map<String, Object> item = new HashMap<>();
+            item.put("plan", "EaseFreemium");
+            Map<String, Object> items = new HashMap<>();
+            items.put("0", item);
+            Map<String, Object> params = new HashMap<>();
+            params.put("customer", team.getCustomer_id());
+            params.put("items", items);
+            params.put("trial_period_days", 30);
+            params.put("tax_percent", 20.0);
+            team.setSubscription_id(Subscription.create(params).getId());
+            team.setSubscription_date(new Date());
+
+            /* ====== Stripe END ====== */
+
             sm.saveOrUpdate(team);
             sm.getHibernateQuery().commit();
             user.addTeamUser(owner);
@@ -88,7 +112,9 @@ public class ServletCreateTeam extends HttpServlet {
             teamManager.addTeam(team);
             team.lazyInitialize();
             UserEmail userEmail = user.getUserEmails().get(email);
-            if (userEmail != null && !userEmail.isVerified())
+            if (userEmail == null)
+                user.getEmails().put(email, UserEmail.createUserEmail(email, user, true, sm.getDB()));
+            else if (!userEmail.isVerified())
                 userEmail.beVerified(sm.getDB());
             sm.setSuccess(team.getJson());
         } catch (Exception e) {
@@ -100,8 +126,8 @@ public class ServletCreateTeam extends HttpServlet {
     private void checkUsernameIntegrity(String username) throws HttpServletException {
         if (username == null || username.equals(""))
             throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
-        if (username.length() < 4 || username.length() >= 22)
-            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be greater than 3 characters and fewer than 22 characters.");
+        if (username.length() < 3 || username.length() >= 22)
+            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be greater than 2 characters and fewer than 22 characters.");
         /* if (username.length() >= 22)
             throw new HttpServletException(HttpStatus.BadRequest, "Sorry, that's a bit too long! Usernames must be fewer than 22 characters."); */
         if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))

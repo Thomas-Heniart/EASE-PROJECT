@@ -73,7 +73,7 @@ export function isUserInList(users, id){
 }
 
 export function checkForNewNotifications(n){
-  for (var i = 0; i < n.length; i++){
+  for (let i = 0; i < n.length; i++){
     if (n[i].is_new)
       return true;
   }

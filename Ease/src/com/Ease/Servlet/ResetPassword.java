@@ -8,6 +8,11 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
+import com.Ease.websocketV1.WebSocketMessage;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -99,6 +104,10 @@ public class ResetPassword extends HttpServlet {
                 else {
                     /* @TODO */
                 }
+                JSONObject target = new JSONObject();
+                target.put("team_id", team.getDb_id());
+                WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), target);
+                team.getWebSocketManager().sendObject(webSocketMessage);
             }
             hibernateQuery.commit();
             DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");

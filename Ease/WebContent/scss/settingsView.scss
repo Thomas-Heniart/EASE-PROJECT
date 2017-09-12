@@ -562,7 +562,8 @@
 .checkBox {
 	display: none;
 }
-.slider {
+
+/* .slider {
 	display: inline-block;
 	width:30px;
 	height: 17px;
@@ -595,7 +596,7 @@
 	-webkit-transform: translateX(13px);
 	-ms-transform: translateX(13px);
 	transform: translateX(13px);
-}
+} */
 
 @media screen and (max-width: 771px) {
 	.SettingsView {

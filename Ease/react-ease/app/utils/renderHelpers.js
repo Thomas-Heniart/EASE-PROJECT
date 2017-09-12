@@ -7,5 +7,5 @@ export const renderUserLabel = (label, index, props) => ({
 export const renderRoomLabel = (label, index, props) => ({
   color: 'blue',
   content: label.name,
-  icon: 'users'
+  icon: 'hashtag'
 });

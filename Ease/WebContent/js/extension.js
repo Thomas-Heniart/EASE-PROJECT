@@ -16,7 +16,7 @@ function showExtensionPopup() {
     if (ease_extension.length) {
         if (!waitForExtension) {
             if (getUserNavigator() == "Safari") {
-                if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.5") {
+                if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.6") {
                     $('#extension .title p').text("Update your extension");
                     $('#extension #download #line1').text("A new version of the extension is now available.");
                     $('#extension #download #line2').text("We added new features and made it faster !");
@@ -75,7 +75,6 @@ function sendEvent(obj) {
                     event = new CustomEvent("Test", json);
                     document.dispatchEvent(event);
                 }, function (retMsg) {
-                    showAlertPopup(retMsg, true);
                 }, 'text');
             }
         }
@@ -109,6 +108,10 @@ function sendEvent(obj) {
                         easeTracker.trackEvent("ClickOnApp", {"type": "LinkApp", "appName": json.detail.app_name});
                     } else {
                         var jsonDetail = json.detail[json.detail.length - 1];
+                        for (var key in jsonDetail.user) {
+                            if (jsonDetail.user.hasOwnProperty(key))
+                                jsonDetail.user[key] = RSAEncryption.decrypt(jsonDetail.user[key]);
+                        }
                         easeTracker.trackEvent("ClickOnApp", {
                             "type": jsonDetail.type,
                             "appName": jsonDetail.app_name,
@@ -165,7 +168,7 @@ $(document).ready(function () {
             win.focus();
         } else if (NavigatorName == "Safari") {
             $("#extension #step1 #safari").addClass('show');
-            window.location.replace(location.protocol + '//' + location.hostname + "/safariExtension/EaseExtension.safariextz");
+            window.location.replace(window.location.protocol + "//" + window.location.host + "/safariExtension/EaseExtension.safariextz");
         } else {
             $("#extension #step1 #other").addClass('show');
         }

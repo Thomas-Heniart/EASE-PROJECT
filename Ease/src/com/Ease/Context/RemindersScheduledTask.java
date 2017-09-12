@@ -2,7 +2,6 @@ package com.Ease.Context;
 
 import com.Ease.Mail.ReminderEmailManager;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.HttpServletException;
 
 import java.util.TimerTask;
 
@@ -22,11 +21,11 @@ public class RemindersScheduledTask extends TimerTask {
     @Override
     public void run() {
         try {
-            teamManager.reminderThreeDays();
+            /* teamManager.reminderThreeDays();
             teamManager.passwordReminder();
-            reminderEmailManager.lunchReminders();
-            /*  */
-        } catch (HttpServletException e) {
+            reminderEmailManager.lunchReminders(); */
+            teamManager.checkFreeTrialEnd();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

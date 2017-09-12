@@ -1,6 +1,9 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Regex;
+import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,11 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
 
 /**
  * Servlet implementation class EditPassword
@@ -52,8 +51,8 @@ public class EditPassword extends HttpServlet {
 		
 		try {
 			sm.needToBeConnected();
-			if (oldPassword == null || !Regex.isPassword(oldPassword)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong current password.");
+            if (oldPassword == null) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong current password.");
 			} else if (password == null || !Regex.isPassword(password)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong new password.");
 			} else if (confirmPassword == null || !confirmPassword.equals(password)) {

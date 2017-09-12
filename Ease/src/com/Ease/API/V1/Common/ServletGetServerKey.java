@@ -1,7 +1,5 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.Crypto.ServerAES;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONObject;
 
@@ -19,10 +17,10 @@ public class ServletGetServerKey extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             String public_key = sm.getParam("public_key", false);
-            ServerAES serverAES = (ServerAES) sm.getContextAttr("serverAES");
+            sm.getSession().setAttribute("public_key", public_key);
+            String server_public_key = (String) sm.getContextAttr("publicKey");
             JSONObject res = new JSONObject();
-            res.put("passphrase", RSA.Encrypt(serverAES.getPassphrase(), public_key));
-            res.put("salt", RSA.Encrypt(serverAES.getSalt(), public_key));
+            res.put("server_public_key", server_public_key);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

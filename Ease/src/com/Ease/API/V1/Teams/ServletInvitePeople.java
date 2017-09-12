@@ -48,22 +48,23 @@ public class ServletInvitePeople extends HttpServlet {
             if (email2.equals(email3))
                 throw new HttpServletException(HttpStatus.BadRequest, "Sorry, some emails seem to be identical");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE user_id = ?");
-            hibernateQuery.setParameter(1, sm.getUser().getDBid());
+            hibernateQuery.querySQLString("SELECT COUNT(*) FROM teamAndEmailInvitationsMap WHERE team_id = ?");
+            hibernateQuery.setParameter(1, team_id);
             BigInteger count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "You already invited people.");
-            hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
+            hibernateQuery.querySQLString("SELECT COUNT(*) FROM teamAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
             hibernateQuery.setParameter("email", email1);
+
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
                 throw new HttpServletException(HttpStatus.BadRequest, email1 + " already received an invitation");
-            hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
+            hibernateQuery.querySQLString("SELECT COUNT(*) FROM teamAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
             hibernateQuery.setParameter("email", email2);
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
                 throw new HttpServletException(HttpStatus.BadRequest, email2 + " already received an invitation");
-            hibernateQuery.querySQLString("SELECT COUNT(*) FROM userAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
+            hibernateQuery.querySQLString("SELECT COUNT(*) FROM teamAndEmailInvitationsMap WHERE email_1 = :email OR email_2 = :email OR email_3 = :email");
             hibernateQuery.setParameter("email", email3);
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
@@ -83,8 +84,8 @@ public class ServletInvitePeople extends HttpServlet {
             count = (BigInteger) hibernateQuery.getSingleResult();
             if (count != null && count.intValue() > 0)
                 throw new HttpServletException(HttpStatus.BadRequest, email3 + " already has an account");
-            hibernateQuery.querySQLString("INSERT INTO userAndEmailInvitationsMap values (null, ?, ?, ?, ?);");
-            hibernateQuery.setParameter(1, sm.getUser().getDBid());
+            hibernateQuery.querySQLString("INSERT INTO teamAndEmailInvitationsMap values (null, ?, ?, ?, ?);");
+            hibernateQuery.setParameter(1, team_id);
             hibernateQuery.setParameter(2, email1);
             hibernateQuery.setParameter(3, email2);
             hibernateQuery.setParameter(4, email3);
@@ -105,7 +106,9 @@ public class ServletInvitePeople extends HttpServlet {
                 mailJetBuilder.sendEmail();
             }
             JSONObject res = new JSONObject();
-            res.put("money", (float) money / 100);
+            teamUser.getTeam().setInvite_people(true);
+            sm.saveOrUpdate(teamUser.getTeam());
+            res.put("credit", (float) -money / 100);
             sm.setSuccess(res);
         } catch (Exception e) {
             e.printStackTrace();

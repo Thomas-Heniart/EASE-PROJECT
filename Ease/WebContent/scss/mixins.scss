@@ -1,10 +1,10 @@
 //flex mixins
 @mixin display-flex(){
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: flex;
+  display: -webkit-box ;
+  display: -webkit-flex ;
+  display: -moz-flex ;
+  display: -ms-flexbox ;
+  display: flex ;
 }
 
 @mixin display-inline-flex(){

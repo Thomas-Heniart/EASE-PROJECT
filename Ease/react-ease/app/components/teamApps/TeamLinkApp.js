@@ -27,13 +27,13 @@ function TeamLinkAppButtonSet(props) {
                 onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
         </button>}
-        {meReceiver != null &&
+        {meReceiver !== null &&
         <button class="button-unstyle team_app_pin"
                 data-tip="Pin App in your Personal space"
                 onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
           <i class="fa fa-thumb-tack"/>
         </button>}
-        {meReceiver != null &&
+        {meReceiver !== null &&
         <button class="button-unstyle team_app_leave"
                 data-tip="Leave App"
                 onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
@@ -233,7 +233,7 @@ class TeamLinkApp extends React.Component {
             <div class="info_holder">
               <div class="info">
                 <div class="logo_holder">
-                  <img src="/resources/icons/app_icon.svg" alt="logo"/>
+                  <img src="/resources/icons/link_app.png" alt="logo"/>
                 </div>
                 <div class="credentials_holder">
                   <div class="credentials">
@@ -244,7 +244,7 @@ class TeamLinkApp extends React.Component {
                             onClick={this.selfJoinApp}>
                       Join app
                     </button>}
-                    {!this.state.modifying && meReceiver != null && meReceiver.accepted &&
+                    {!this.state.modifying && meReceiver !== null && meReceiver.accepted &&
                     <div class="credentials_line">
                       <i class="fa fa-home mrgnRight5"/>
                       <div class="credentials_value_holder">

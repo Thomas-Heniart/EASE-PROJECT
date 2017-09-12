@@ -4,15 +4,31 @@
   "home":"https://play.spotify.com",
   "connect":{
     "todo":[
-      {"action":"waitfor", "search":"#has-account"},
-      {"action":"clickona", "search":"#has-account"},
-      {"action":"fill", "what":"login", "search":"#login-usr", "grave":true},
-      {"action":"fill", "what":"password", "search":"#login-pass"},
-      {"action":"enterFrame", "search":"#sp-login-form iframe[src*='recaptcha']"},
-      {"action":"click", "search":"#recaptcha-anchor"},
-      {"action":"waitfor", "search":"#recaptcha-anchor.recaptcha-checkbox-checked[aria-checked='true']"},
-      {"action":"exitFrame"},
-      {"action":"click", "search":"#sp-login-form button[type='submit']"}
+      {
+        "action": "click",
+        "search": "#has-account"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-username"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-username"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login-password"
+      },
+      {
+        "action": "click",
+        "search": ".row-submit button"
+      }
     ]
   },
   "logout":{
@@ -25,7 +41,13 @@
   "Facebook":{
     "todo":[
       {"action":"waitfor", "search":"#has-account"},
-      {"action":"clickona", "search":"#has-account"},
+      {
+        "action": "click",
+        "search": "#has-account"
+      },
+      {
+        "action": "waitload"
+      },
       {"action":"click", "search":"#fb-login-btn"}
     ]
   }

@@ -181,6 +181,17 @@ module.exports = {
       }).catch(err => {
         return err.response.data;
       });
+    },
+    getTeamPaymentInformation: function({team_id}){
+      return axios.get('/api/v1/teams/GetTeamPaymentInformation', {
+        params: {
+          team_id: team_id
+        }
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        return err.response.data;
+      })
     }
   },
   common: {

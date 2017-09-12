@@ -1,6 +1,7 @@
+
 const initialState = {
   user : null,
-  ws_id: -1,
+  ws_id: '-1',
   authenticated : false,
   loginRedirectUrl: '',
   teamsTutorial: false
@@ -45,6 +46,45 @@ export default function reducer(state=initialState, action) {
       return {
           ...state,
         ws_id: action.payload.ws_id
+      }
+    }
+    case 'TEAM_ADDED': {
+      if (!state.user)
+        break;
+      let user = state.user;
+      user.teams.push(action.payload.team);
+      return {
+        ...state,
+        user: user
+      }
+    }
+    case 'TEAM_REMOVED': {
+      if (!state.user)
+        break;
+      let user = state.user;
+      for (let i = 0; i < user.teams.length; i++){
+        if (user.teams[i].id === action.payload.team.id){
+          user.teams.splice(i, 1);
+          return {
+            ...state,
+            user: user
+          }
+        }
+      }
+      break;
+    }
+    case 'TEAM_CHANGED': {
+      if (!state.user)
+        break;
+      let user = state.user;
+      user.teams = user.teams.map(item => {
+        if (item.id === action.payload.team.id)
+          return action.payload.team;
+        return item;
+      });
+      return {
+          ...state,
+        user: user
       }
     }
   }

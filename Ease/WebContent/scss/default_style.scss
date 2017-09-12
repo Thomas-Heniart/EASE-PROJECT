@@ -120,6 +120,16 @@ input[type=number]::-webkit-inner-spin-button {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
 }
 
+.ui.menu {
+  min-width: inherit;
+  overflow: inherit;
+  position: inherit;
+}
+
+.ui.checkbox.mini {
+  font-size: inherit;
+}
+
 [type="submit"]{
   -webkit-appearance: inherit;
 }
@@ -202,6 +212,14 @@ button, input, optgroup, select, textarea {
   &:first-child {
     border-top: none;
   }
+}
+
+.ui.dropdown .menu {
+  z-index: 100;
+}
+
+.ui.form:last-child {
+  margin-bottom: 0;
 }
 
 #app-root {
@@ -360,6 +378,40 @@ input.modal_input, select.modal_input {
   }
 }
 
+.credit-card-preview {
+  width: 350px;
+  font-size: 1rem;
+  height: 75px;
+  background-color: white;
+  border-radius: 4px;
+  border: solid 1px #dededf;
+  .icon {
+    margin:0;
+    @include flex-shrink(0);
+    @include display-flex();
+    @include align-items(center);
+    @include justify-content(center);
+    @include flex-basis(75px);
+    flex-basis: 75px;
+    font-size: 40px;
+  }
+  .info {
+    @include flex-grow(1);
+    padding: 10px;
+    overflow: hidden;
+  }
+  .name {
+    margin-bottom: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .number {
+    font-size: .9rem;
+    color: $themeBlue2Color;
+  }
+}
+
 .underlineOnHover{
   &:hover {
     text-decoration: underline;
@@ -377,6 +429,11 @@ input.modal_input, select.modal_input {
 .mrgnLeft5 {
   margin-left: 5px;
 }
+
+i.icon.mrgnLeft5 {
+  margin-left: 5px;
+}
+
 .mrgnRight5 {
   margin-right: 5px;
 }
@@ -451,6 +508,11 @@ input.checkbox_unstyle[type=checkbox] {
 .justify_content_center {
   @include justify-content(center);
 }
+
+.justify_content_space {
+  @include justify-content(space-between);
+}
+
 .flex_column {
   @include flex-direction(column);
 }
