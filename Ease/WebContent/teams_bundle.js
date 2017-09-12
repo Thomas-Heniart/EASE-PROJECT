@@ -113320,7 +113320,11 @@ var CGUStep = function (_React$Component) {
             { as: "h1" },
             "Review the General Terms"
           ),
-          _react2.default.createElement(_semanticUiReact.Container, { style: { maxHeight: '300px', overflow: 'auto', marginBottom: '1rem', paddingLeft: '0' } }),
+          _react2.default.createElement(
+            _semanticUiReact.Container,
+            { style: { maxHeight: '300px', overflow: 'hidden', marginBottom: '1rem', paddingLeft: '0' } },
+            "Before continuing your registration, please read our General Terms and Privacy Policy."
+          ),
           _react2.default.createElement(
             "p",
             null,

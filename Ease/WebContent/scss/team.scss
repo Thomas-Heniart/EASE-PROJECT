@@ -825,8 +825,9 @@ button.action_text_button {
 
 .receivers_wrapper {
   .modal_input_wrapper {
-    padding-left: 10px;
+    padding: 9px 10px;
     input {
+      padding: 3px;
       padding-left: 0;
     }
   }
@@ -1505,11 +1506,19 @@ button.action_text_button {
         padding-left: .6rem;
         border-left: 1px solid #717274;
         .receivers_wrapper {
+          & > div {
+            &:hover {
+              z-index: 1 !important;
+            }
+          }
           .receiver_wrapper {
             position: relative;
             &:hover {
               z-index: 1;
             }
+          }
+          .modal_input_wrapper {
+            @include flex-wrap(wrap);
           }
           .receiver {
             @include display-inline-flex();
