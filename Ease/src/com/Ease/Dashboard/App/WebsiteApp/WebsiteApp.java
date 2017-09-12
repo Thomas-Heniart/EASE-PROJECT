@@ -2,6 +2,7 @@ package com.Ease.Dashboard.App.WebsiteApp;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Context.Catalog.WebsiteInformation;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
@@ -307,10 +308,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         JSONObject account_information = (JSONObject) params.get("account_information");
         App sharedApp = null;
         DatabaseRequest request = null;
-        Integer single_id = ((IdGenerator) sm.getContextAttr("idGenerator")).getNextId();
         Integer websiteAppId = null;
-        if (account_information == null)
-            throw new HttpServletException(HttpStatus.BadRequest);
+        if (account_information == null) {
+            account_information = new JSONObject();
+            for (WebsiteInformation websiteInformation : this.getSite().getInformations())
+                account_information.put(websiteInformation.getInformationName(), "");
+        }
         websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");

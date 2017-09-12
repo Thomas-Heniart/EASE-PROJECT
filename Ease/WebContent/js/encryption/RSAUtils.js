@@ -20,7 +20,7 @@ window.addEventListener("load", function () {
         public_key: RSAEncryption.getPublicKeyB64()
     }, function (data) {
         setServerPublicKey(data.server_public_key);
-    });
+    }, false);
     /*ajaxHandler.get("/api/v1/common/GetServerKey", {
         public_key: RSAEncryption.getPublicKeyB64()
     }, function () {

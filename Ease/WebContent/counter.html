@@ -11,8 +11,6 @@
 <div id="counter"></div>
 <style>
     .digit {
-        width: 60px;
-        height: 60px;
         border-radius: 4px;
         background-color: #ffffff;
         font-family: MuseoSans;
@@ -21,7 +19,7 @@
         line-height: 1.65;
         text-align: center;
         color: #373b60;
-        padding: 0px 12px;
+        padding: 7px 20px;
         box-shadow: -6px 5px 10px rgba(0, 0, 0, 0.1);
         margin: 5px;
     }
@@ -36,12 +34,13 @@
 
         setInterval(function () {
             $.get("/api/v1/common/ConnectionNumber", function (data) {
-                if (data.connections.toString() !== count)
+                if (data.connections > parseInt(count))
                     updateCounter(data.connections.toString());
             });
-        }, 10000);
+        }, 60000);
 
         function updateCounter(new_count) {
+            var step = 60000 / (parseInt(new_count) - parseInt(count));
             var timer = setInterval(function () {
                 count = parseInt(count);
                 count++;
@@ -63,7 +62,7 @@
                     clearInterval(timer);
                     return;
                 }
-            }, 500);
+            }, step);
         }
 
         function setCounter(count) {
