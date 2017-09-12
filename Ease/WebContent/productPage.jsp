@@ -33,14 +33,15 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00009/lib/fonts/museo-font.css" />
-    <link rel="stylesheet" href="/cssMinified.v00009/default_style.css" />
-    <link rel="stylesheet" href="/cssMinified.v00009/bootstrap.css" />
-    <link rel="stylesheet" href="/cssMinified.v00009/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/cssMinified.v00009/landingPage.css" />
-    <link rel="stylesheet" href="/cssMinified.v00009/securityPage.css" />
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00011/lib/fonts/museo-font.css" />
+    <link rel="stylesheet" href="/cssMinified.v00011/default_style.css" />
+    <link rel="stylesheet" href="/cssMinified.v00011/bootstrap.css" />
+    <link rel="stylesheet" href="/cssMinified.v00011/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/cssMinified.v00011/landingPage.css" />
+    <link rel="stylesheet" href="/cssMinified.v00011/securityPage.css" />
     <link rel="stylesheet" href="/scss/productPage.scss" />
-    <link rel="stylesheet" href="/cssMinified.v00009/lib/semantic.min.css" />
+    <link rel="stylesheet" href="semantic/dist/semantic.min.css">
+
 
     <link rel="manifest" href="manifest.json">
 </head>
@@ -208,21 +209,19 @@
             <h2>Mise en place</h2>
             <p>Invitez vos membres et ajoutez les comptes web dont vous avez besoin, ou laissez vos collaborateurs le faire eux même.</p>
              <p>La distribution des comptes se fait automatiquement.</p>
-            <a class="ui right floated button" href="/" style="margin-top:-80px;margin-right:30px;font-size: 20px;font-weight: bold;">Contactez l'équipe commerciale</a>
+            <a class="ui right floated button" href="/companyContact" style="margin-top:-80px;margin-right:30px;font-size: 20px;font-weight: bold;">Contactez l'équipe commerciale</a>
         </div>
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<%@ include file="templates/landingPage/registrationPopup.jsp" %>
-<script src="/jsMinified.v00015/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00015/jquery.complexify.js"></script>
-<script src="/jsMinified.v00015/bootstrap.js" async></script>
-<script src="/jsMinified.v00015/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00015/registrationPopup.js" async></script>
-<script src="/jsMinified.v00015/landingPage.js" async></script>
-<script src="/jsMinified.v00015/basic-utils.js" async></script>
-<script src="/jsMinified.v00015/languageChooser.js" async></script>
-<script src="/jsMinified.v00015/tracker.js" async></script>
+<script src="/jsMinified.v00016/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00016/jquery.complexify.js"></script>
+<script src="/jsMinified.v00016/bootstrap.js" async></script>
+<script src="/jsMinified.v00016/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00016/landingPage.js" async></script>
+<script src="/jsMinified.v00016/basic-utils.js" async></script>
+<script src="/jsMinified.v00016/languageChooser.js" async></script>
+<script src="/jsMinified.v00016/tracker.js" async></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $('.ui.menu').on('click', function() {

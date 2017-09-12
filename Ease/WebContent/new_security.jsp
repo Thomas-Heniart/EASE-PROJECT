@@ -183,7 +183,7 @@
                 <p>Pour obtenir toutes les informations relatives à la sécurité, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf" target="_blank">téléchargez notre Security Whitepaper.</p>
             </div>
             <div style="text-align: center">
-            <a href="#services" class="btn btn-xl signUpButton">
+            <a href="/teams#/registration" class="btn btn-xl signUpButton">
                 Essayez Ease.space gratuitement
             </a>
             </div>
@@ -191,12 +191,10 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<%@ include file="templates/landingPage/registrationPopup.jsp" %>
 <script src="/jsMinified.v00016/jquery1.12.4.js"></script>
 <script src="/jsMinified.v00016/jquery.complexify.js"></script>
 <script src="/jsMinified.v00016/bootstrap.js" async></script>
 <script src="/jsMinified.v00016/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00016/registrationPopup.js" async></script>
 <script src="/jsMinified.v00016/landingPage.js" async></script>
 <script src="/jsMinified.v00016/basic-utils.js" async></script>
 <script src="/jsMinified.v00016/languageChooser.js" async></script>
@@ -281,14 +279,6 @@
                     current = $current;
                 }
             });
-        });
-    });
-</script>
-<script type="text/javascript">
-    window.addEventListener('load',function(){
-        $('.signUpButton').click(function(){
-            easeTracker.trackEvent($(this).attr("trackEvent"));
-            easeSignUpPopup.open();
         });
     });
 </script>
