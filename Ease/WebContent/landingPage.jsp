@@ -94,7 +94,7 @@
 
             <div class="six wide column">
                 <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;">mots de passe</span>,</br>hello apps</p>
-                <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;">
+                <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;margin-bottom: 20px;">
                     Une app est un compte web,</br>
                     ajouté par vous ou partagé au sein de votre équipe.</br>
                     Un clic suffit pour y accéder, directement connecté.</p>
