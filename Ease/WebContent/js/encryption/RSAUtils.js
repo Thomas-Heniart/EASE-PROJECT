@@ -16,12 +16,7 @@ function cipher(msg) {
 }
 
 window.addEventListener("load", function () {
-    $.get("/api/v1/common/GetServerKey", {
-        public_key: RSAEncryption.getPublicKeyB64()
-    }, function (data) {
-        setServerPublicKey(data.server_public_key);
-    }, false);
-    /*ajaxHandler.get("/api/v1/common/GetServerKey", {
+    ajaxHandler.get("/api/v1/common/GetServerKey", {
         public_key: RSAEncryption.getPublicKeyB64()
     }, function () {
 
@@ -29,5 +24,5 @@ window.addEventListener("load", function () {
         setServerPublicKey(data.server_public_key);
     }, function () {
 
-    }, false);*/
+    }, false)
 });

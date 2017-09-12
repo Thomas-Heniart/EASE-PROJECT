@@ -1,9 +1,13 @@
 var ajaxHandler = {
-    get: function (url, parameters, completeCallback, successCallback, errorCallback) {
+    get: function (url, parameters, completeCallback, successCallback, errorCallback, async) {
+        if (parameters === null || typeof parameters === "undefined")
+            parameters = {};
+        if (async === null || typeof async === "undefined")
+            async = true;
         $.ajax({
             type: "GET",
             url: url,
-            data: JSON.stringify(parameters),
+            data: $.param(parameters),
             dataType: "json",
             complete: completeCallback,
             success: successCallback,
@@ -11,10 +15,15 @@ var ajaxHandler = {
                 400: function (error) {
                     errorCallback(error.responseText);
                 }
-            }
+            },
+            async: async
         });
     },
-    post: function (name, parameters, completeCallback, successCallback, errorCallback) {
+    post: function (name, parameters, completeCallback, successCallback, errorCallback, async) {
+        if (parameters === null || typeof parameters === "undefined")
+            parameters = {};
+        if (async === null || typeof async === "undefined")
+            async = true;
         $.ajax({
             type: "POST",
             url: name,
@@ -27,7 +36,8 @@ var ajaxHandler = {
                 400: function (error) {
                     errorCallback(error.responseText);
                 }
-            }
+            },
+            async: async
         });
     }
 };

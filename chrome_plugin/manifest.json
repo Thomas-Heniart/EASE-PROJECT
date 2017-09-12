@@ -28,7 +28,7 @@
    },
    "content_scripts": [ {
       "js": [ "jquery-3.1.0.js", "tools/extension.js", "easeActions/scrapping.js", "easeActions/easeListener.js", "easeActions/updatesSender.js" ],
-      "matches": [ "https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*", "http://localhost:8080/*", "https://localhost:8443/*", "https://51.254.207.91:8443/*", "https://192.168.0.19:8443/*", "https://turfu.ease.space:8443/*" ],
+      "matches": [ "https://ease.space/*", "https://www.ease.space/*", "http://ease.space/*", "http://www.ease.space/*", "http://localhost:8080/*", "https://localhost:8443/*"],
       "run_at": "document_end"
    }, {
       "all_frames": true,
