@@ -3361,8 +3361,8 @@ module.exports = {
         team_id: team_id,
         url: url,
         is_public: is_public,
-          login: cipher(login),
-          password: cipher(password),
+        login: cipher(login),
+        password: cipher(password),
         timestamp: new Date().getTime()
       }).then(function (r) {
         return r.data;
@@ -50293,6 +50293,10 @@ var _SingleEaseLogo = __webpack_require__(183);
 
 var _SingleEaseLogo2 = _interopRequireDefault(_SingleEaseLogo);
 
+var _CGUStep = __webpack_require__(1148);
+
+var _CGUStep2 = _interopRequireDefault(_CGUStep);
+
 var _semanticUiReact = __webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -50540,7 +50544,7 @@ var StepCGU = function (_React$Component3) {
           ),
           _react2.default.createElement(
             _semanticUiReact.Button,
-            { positive: true, fluid: true, onClick: this.submit },
+            { positive: true, fluid: true, loading: this.props.loading, onClick: this.submit },
             "I Agree"
           )
         )
@@ -50822,7 +50826,7 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
         fname: this.state.fname,
         username: this.state.username,
         key: "2" }));
-      if (!this.canSkip()) steps.push(_react2.default.createElement(StepCGU, { key: "cgu", onStepValidated: this.incrementStep }));
+      if (!this.canSkip()) steps.push(_react2.default.createElement(_CGUStep2.default, { key: "cgu", onStepValidated: this.incrementStep }));
       if (!this.canSkip()) steps.push(_react2.default.createElement(Step3, { onStepValidated: this.incrementStep,
         password: this.state.password,
         confirmPassword: this.state.confirmPassword,
@@ -56836,8 +56840,8 @@ function UserList(props) {
       { className: "section-header" },
       React.createElement(
         "span",
-        { className: "inline-tooltipped", "data-tip": "Open a Personal Space", "data-place": "right" },
-        "People"
+        { className: "inline-tooltipped", "data-tip": "Open a Desk", "data-place": "right" },
+        "Desks"
       ),
       React.createElement(
         "span",
@@ -58020,10 +58024,13 @@ var TeamLinkApp = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this4 = this;
+
       var app = this.props.app;
       var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
       var me = this.props.me;
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(app.receivers, me.id);
+      var asked = app.sharing_requests.indexOf(me.id) !== -1;
 
       return React.createElement(
         'div',
@@ -58090,7 +58097,23 @@ var TeamLinkApp = function (_React$Component) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && React.createElement(RequestAppButton, null),
+                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && asked && React.createElement(
+                    'button',
+                    { className: 'button-unstyle requestAppButton' },
+                    React.createElement(
+                      'span',
+                      { className: 'onHover' },
+                      'Request sent'
+                    ),
+                    React.createElement(
+                      'span',
+                      { className: 'default' },
+                      'Request sent'
+                    )
+                  ),
+                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked && React.createElement(RequestAppButton, { action: function action(e) {
+                      _this4.props.dispatch(appActions.askJoinTeamApp(app.id));
+                    } }),
                   !this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) && React.createElement(
                     'button',
                     { className: 'button-unstyle joinAppBtn',
@@ -58601,11 +58624,14 @@ var TeamMultiApp = function (_React$Component2) {
   }, {
     key: 'render',
     value: function render() {
+      var _this4 = this;
+
       var app = this.props.app;
       var senderUser = (0, _helperFunctions.selectUserFromListById)(this.props.users, app.sender_id);
       var me = this.props.me;
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(app.receivers, me.id);
       var webInfo = app.website.information;
+      var asked = app.sharing_requests.indexOf(me.id) !== -1;
 
       return React.createElement(
         'div',
@@ -58709,7 +58735,23 @@ var TeamMultiApp = function (_React$Component2) {
                       )
                     );
                   }, this),
-                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && React.createElement(RequestAppButton, null),
+                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && asked && React.createElement(
+                    'button',
+                    { className: 'button-unstyle requestAppButton' },
+                    React.createElement(
+                      'span',
+                      { className: 'onHover' },
+                      'Request sent'
+                    ),
+                    React.createElement(
+                      'span',
+                      { className: 'default' },
+                      'Request sent'
+                    )
+                  ),
+                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked && React.createElement(RequestAppButton, { action: function action(e) {
+                      _this4.props.dispatch(appActions.askJoinTeamApp(app.id));
+                    } }),
                   !this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) && React.createElement(
                     'button',
                     { className: 'button-unstyle joinAppBtn',
@@ -58939,7 +58981,7 @@ var TeamMultiAppUserSelect = function (_React$Component) {
                 { className: 'credential_container', key: item },
                 React.createElement('i', { className: classnames("fa", "mrgnRight5", webInfo[item].placeholderIcon) }),
                 React.createElement('input', { className: 'value_input input_unstyle',
-                  placeholder: webInfo[item].placeholder,
+                  placeholder: webInfo[item].placeholder === 'Password' ? '********' : webInfo[item].placeholder,
                   type: webInfo[item].type,
                   name: item,
                   value: receiver.credentials[item],
@@ -58978,7 +59020,7 @@ var TeamMultiAppUserSelect = function (_React$Component) {
                     item.username,
                     item.id === myId ? '(you)' : null
                   ),
-                  item.first_name != null && React.createElement(
+                  item.first_name !== null && React.createElement(
                     'span',
                     { className: 'text-muted' },
                     '\xA0- ',
@@ -59542,23 +59584,9 @@ var TeamSimpleApp = function (_React$Component2) {
                       'Request sent'
                     )
                   ),
-                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked && React.createElement(
-                    'button',
-                    { className: 'button-unstyle requestAppButton',
-                      onClick: function onClick(e) {
-                        _this6.props.dispatch(appActions.askJoinTeamApp(app.id));
-                      } },
-                    React.createElement(
-                      'span',
-                      { className: 'onHover' },
-                      'Ask to access'
-                    ),
-                    React.createElement(
-                      'span',
-                      { className: 'default' },
-                      'This app does not concern you'
-                    )
-                  ),
+                  !this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked && React.createElement(RequestAppButton, { action: function action(e) {
+                      _this6.props.dispatch(appActions.askJoinTeamApp(app.id));
+                    } }),
                   !this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) && React.createElement(
                     'button',
                     { className: 'button-unstyle joinAppBtn',
@@ -59566,7 +59594,7 @@ var TeamSimpleApp = function (_React$Component2) {
                     'Join app'
                   )
                 ),
-                meReceiver != null && meReceiver.accepted && React.createElement(
+                meReceiver !== null && meReceiver.accepted && React.createElement(
                   'div',
                   { className: 'password_change_remind' },
                   React.createElement(
@@ -60984,7 +61012,7 @@ var TeamJoinMultiAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
           React.createElement(
             'div',
             { className: 'row display-flex flex_direction_column', style: { padding: "20px 30px 30px 30px" } },
-            Object.keys(credentials).map(function (item) {
+            Object.keys(credentials).reverse().map(function (item) {
               return React.createElement(
                 'div',
                 { key: item, className: 'display-flex flex_direction_column input_handler' },
@@ -113243,6 +113271,85 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1148 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _semanticUiReact = __webpack_require__(28);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CGUStep = function (_React$Component) {
+  _inherits(CGUStep, _React$Component);
+
+  function CGUStep(props) {
+    _classCallCheck(this, CGUStep);
+
+    return _possibleConstructorReturn(this, (CGUStep.__proto__ || Object.getPrototypeOf(CGUStep)).call(this, props));
+  }
+
+  _createClass(CGUStep, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        { className: "contents" },
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Header,
+            { as: "h1" },
+            "Review the General Terms"
+          ),
+          _react2.default.createElement(_semanticUiReact.Container, { style: { maxHeight: '300px', overflow: 'auto', marginBottom: '1rem', paddingLeft: '0' } }),
+          _react2.default.createElement(
+            "p",
+            null,
+            "By clicking \xAB I Agree \xBB, you understand and agree to our ",
+            _react2.default.createElement(
+              "a",
+              { href: "/resources/CGU_Ease.pdf", target: "_blank" },
+              "General Terms"
+            ),
+            " and ",
+            _react2.default.createElement(
+              "a",
+              { href: "/resources/Privacy_Policy.pdf", target: "_blank" },
+              "Privacy Policy"
+            ),
+            "."
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Button,
+            { positive: true, fluid: true, loading: this.props.loading, onClick: this.props.onStepValidated },
+            "I Agree"
+          )
+        )
+      );
+    }
+  }]);
+
+  return CGUStep;
+}(_react2.default.Component);
+
+module.exports = CGUStep;
 
 /***/ })
 /******/ ]);
