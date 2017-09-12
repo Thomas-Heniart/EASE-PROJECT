@@ -59,9 +59,11 @@ public class OnStart implements ServletContextListener {
 
                 context.setAttribute("userManager", new UserManager());
 
+                context.setAttribute("metrics", new Metrics(db));
+
                 /* Timers */
                 Timer time = new Timer(); // Instantiate Timer Object
-                /* StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
+                StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
                 time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);

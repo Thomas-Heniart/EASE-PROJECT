@@ -1,6 +1,10 @@
 package com.Ease.Servlet.App;
 
-import java.io.IOException;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Metrics;
+import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,11 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
 
 /**
  * Servlet implementation class AddClassicApp
@@ -59,6 +59,8 @@ public class AskInfo extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "App is disabled");
             String result = app.getJSON(sm).toString();
             sm.setLogResponse("Info sended for app " + app.getDBid());
+            Metrics metrics = (Metrics) sm.getContextAttr("metrics");
+            metrics.increaseConnection(sm.getDB());
             sm.setResponse(ServletManager.Code.Success, result);
         } catch (GeneralException e) {
             sm.setResponse(e);
