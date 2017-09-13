@@ -19,9 +19,8 @@ window.addEventListener("load", function () {
     var request = new XMLHttpRequest();
     request.open("GET", "/api/v1/common/GetServerKey?public_key=" + RSAEncryption.getPublicKeyB64(), false);
     request.send();
-    if (request.status === 200) {
+    if (request.status === 200)
         setServerPublicKey(JSON.parse(request.responseText).server_public_key);
-    }
     /* ajaxHandler.get("/api/v1/common/GetServerKey", {
         public_key: RSAEncryption.getPublicKeyB64()
     }, function () {

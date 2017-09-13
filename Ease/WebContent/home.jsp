@@ -166,8 +166,7 @@
 <script src="/jsMinified.v00016/logout.js" async></script>
 <script src="/jsMinified.v00016/checkConnection.js" async></script>
 <script src="/jsMinified.v00016/ajaxHandler.js" async></script>
-<script src="js/encryption/jsencrypt.min.js" async></script>
-<script src="/jsMinified.v00016/RSAUtils.js" async></script>
+<script src="js/encryption/jsencrypt.js" async></script>
 <script>
     var images = document.getElementsByClassName('logo');
     Array.prototype.forEach.call(images, function (element) {
