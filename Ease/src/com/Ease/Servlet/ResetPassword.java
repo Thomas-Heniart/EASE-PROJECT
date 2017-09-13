@@ -114,7 +114,10 @@ public class ResetPassword extends HttpServlet {
                     mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
                     mailJetBuilder.addVariable("last_name", teamUser.getLastName());
                     mailJetBuilder.addVariable("team_name", team.getName());
-                    mailJetBuilder.addVariable("email", rs.getString(5));
+                    mailJetBuilder.addVariable("team_email", teamUser.getEmail());
+                    mailJetBuilder.addVariable("email", email);
+                    mailJetBuilder.addVariable("phone_number", teamUser.getPhone_number());
+                    mailJetBuilder.sendEmail();
                 } else {
                     TeamUser admin = team.getTeamUserWithId(admin_id);
                     mailJetBuilder.addTo(admin.getEmail());
@@ -122,7 +125,7 @@ public class ResetPassword extends HttpServlet {
                     mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
                     mailJetBuilder.addVariable("last_name", teamUser.getLastName());
                     mailJetBuilder.addVariable("team_name", team.getName());
-                    mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/" + team.getDb_id() + "/@" + teamUser.getDb_id());
+                    mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
                 }
                 mailJetBuilder.sendEmail();
                 JSONObject target = new JSONObject();

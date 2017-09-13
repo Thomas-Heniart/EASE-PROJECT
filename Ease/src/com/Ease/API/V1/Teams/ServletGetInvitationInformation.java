@@ -41,6 +41,8 @@ public class ServletGetInvitationInformation extends HttpServlet {
             res.put("account_exists", rs.next());
             res.put("email", teamUser.getEmail());
             res.put("team_name", team.getName());
+            res.put("teamUser", teamUser.getJson());
+            res.put("team_id", team_id);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
