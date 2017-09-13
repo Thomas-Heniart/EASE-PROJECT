@@ -444,7 +444,10 @@ public class TeamUser {
             request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
-            request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE team_user_id = ?;");
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                if (shareableApp.getPendingTeamUsers().contains(this))
+                    shareableApp.removePendingTeamUser(this, db);
+            }
             request.setInt(this.getDb_id());
             request.set();
             db.commitTransaction(transaction);

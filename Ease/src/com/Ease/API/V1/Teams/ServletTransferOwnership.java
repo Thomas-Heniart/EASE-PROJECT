@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
@@ -52,6 +53,7 @@ public class ServletTransferOwnership extends HttpServlet {
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams/" + team.getDb_id());
             mailJetBuilder.sendEmail();
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, new_teamUser_owner.getJson(), new_teamUser_owner.getOrigin()));
