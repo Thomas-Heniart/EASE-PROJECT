@@ -176,7 +176,7 @@ public class App implements ShareableApp, SharedApp {
                 Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
                 sharedApp.setTeamUser_tenant(shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id));
                 sharedApp.setHolder(shareableApp);
-                sharedApp.setCanSeeInformation(false/* rs.getBoolean("can_see_information") */);
+                sharedApp.setCanSeeInformation(rs.getBoolean("canSeeInformation"));
                 sharedApps.add(sharedApp);
             }
             return sharedApps;
