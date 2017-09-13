@@ -148,6 +148,12 @@
 <script src="/jsMinified.v00016/languageChooser.js" async></script>
 <script src="/jsMinified.v00016/tracker.js" async></script>
 <script type="text/javascript">
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        $('.inTheMac img').addClass('big');
+        $('.inTheMac img').removeClass('large');
+    }
+</script>
+<script type="text/javascript">
     $('button.sendContactButton').on('click', function() {
         if ($('#divInput').find("input[name='email']").val()) {
             document.location.href = "/teams#/registration?email="+$('#divInput').find("input[name='email']").val();
