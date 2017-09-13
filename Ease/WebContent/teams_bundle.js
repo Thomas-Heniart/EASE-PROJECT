@@ -21936,7 +21936,9 @@ var EmailListStep = function (_React$Component2) {
     _this3.handleInput = _utils.handleSemanticInput.bind(_this3);
 
     _this3.process = function (e) {
-      _this3.props.addFields(_this3.state.value);
+      e.preventDefault();
+      var filteredValue = _this3.state.value.replace(/\s+/g, '');
+      _this3.props.addFields(filteredValue);
       _this3.props.changeStep();
     };
 
@@ -52319,6 +52321,8 @@ var MultiTeamAppAdd = function (_React$Component2) {
     value: function shareApp() {
       var _this3 = this;
 
+      var meSelected = false;
+
       if (this.state.selectedUsers.length === 0) return;
       var app = {
         website_id: this.state.choosenApp.info.id,
@@ -52331,6 +52335,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
       this.props.dispatch((0, _appsActions.teamCreateMultiApp)(app)).then(function (response) {
         var id = response.id;
         var sharing = selectedUsers.map(function (user) {
+          if (this.props.my_id === user.id) meSelected = true;
           var user_info = {
             team_user_id: user.id,
             account_information: user.credentials,
@@ -52339,6 +52344,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
           return this.props.dispatch((0, _appsActions.teamShareApp)(id, user_info));
         }, _this3);
         Promise.all(sharing).then(function () {
+          if (meSelected) _this3.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, response));
           _this3.props.dispatch((0, _teamAppsAddUIActions.closeAppAddUI)());
         });
       });
@@ -52828,6 +52834,8 @@ var channelActions = _interopRequireWildcard(_channelActions);
 
 var _renderHelpers = __webpack_require__(299);
 
+var _reactRouterDom = __webpack_require__(32);
+
 var _semanticUiReact = __webpack_require__(25);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -52879,21 +52887,6 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
   }
 
   _createClass(TeamAddChannelModal, [{
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      if (this.props.users !== nextProps.users) {
-        var options = nextProps.users.map(function (item) {
-          return {
-            key: item.id,
-            text: item.username + ' - ' + item.first_name + ' ' + item.last_name,
-            username: item.username,
-            value: item.id
-          };
-        });
-        this.setState({ options: options });
-      }
-    }
-  }, {
     key: 'validateChannelCreation',
     value: function validateChannelCreation(e) {
       var _this2 = this;
@@ -52911,6 +52904,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
         }, _this2);
         Promise.all(addUserActions).then(function () {
           _this2.props.dispatch((0, _teamModalActions.showAddTeamChannelModal)(false));
+          _this2.props.history.push('/teams/' + _this2.props.match.params.teamId + '/' + channel_id);
         });
       }).catch(function (err) {
         _this2.setState({ loading: false, errorMessage: err });
@@ -53022,7 +53016,7 @@ var TeamAddChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
 }(React.Component)) || _class);
 
 
-module.exports = TeamAddChannelModal;
+module.exports = (0, _reactRouterDom.withRouter)(TeamAddChannelModal);
 
 /***/ }),
 /* 558 */
@@ -53988,6 +53982,7 @@ var LinkTeamAppAdd = function (_React$Component3) {
     value: function shareApp() {
       var _this4 = this;
 
+      var meSelected = false;
       var app = {
         name: this.state.appName,
         url: this.state.url,
@@ -53998,9 +53993,11 @@ var LinkTeamAppAdd = function (_React$Component3) {
       this.props.dispatch(appActions.teamCreateLinkApp(app)).then(function (response) {
         var id = response.id;
         var sharing = selectedUsers.map(function (item) {
+          if (this.props.my_id === item.id) meSelected = true;
           return this.props.dispatch(appActions.teamShareApp(id, { team_user_id: item.id }));
         }, _this4);
         Promise.all(sharing).then(function () {
+          if (meSelected) _this4.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, response));
           _this4.props.dispatch((0, _teamAppsAddUIActions.closeAppAddUI)());
         });
       });
@@ -54228,6 +54225,7 @@ var SimpleTeamAppAdd = function (_React$Component4) {
       var _this8 = this;
 
       var credentials = Object.keys(this.state.credentials);
+      var meSelected = false;
 
       for (var i = 0; i < credentials.length; i++) {
         if (this.state.credentials[credentials[i]].length === 0) return;
@@ -54247,9 +54245,11 @@ var SimpleTeamAppAdd = function (_React$Component4) {
       this.props.dispatch(appActions.teamCreateSingleApp(app)).then(function (response) {
         var id = response.id;
         var sharing = selectedUsers.map(function (item) {
+          if (this.props.my_id === item.id) meSelected = true;
           return this.props.dispatch(appActions.teamShareApp(id, { team_user_id: item.id, can_see_information: item.can_see_information }));
         }, _this8);
         Promise.all(sharing).then(function () {
+          if (meSelected) _this8.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, response));
           _this8.props.dispatch((0, _teamAppsAddUIActions.closeAppAddUI)());
         });
       });
@@ -54531,7 +54531,8 @@ var TeamAppAddingUi = (_dec = (0, _reactRedux.connect)(function (store) {
     selectedItem: store.selection,
     team_id: store.team.id,
     addAppUI: store.teamAppsAddUI,
-    users: store.users.users
+    users: store.users.users,
+    my_id: store.team.myTeamUserId
   };
 }), _dec(_class = function (_React$Component5) {
   _inherits(TeamAppAddingUi, _React$Component5);
@@ -54553,18 +54554,21 @@ var TeamAppAddingUi = (_dec = (0, _reactRedux.connect)(function (store) {
           team_id: this.props.team_id,
           selectedItem: this.props.selectedItem,
           item: item,
+          my_id: this.props.my_id,
           userSelectFunc: _helperFunctions.selectUserFromListById.bind(null, this.props.users),
           dispatch: this.props.dispatch }),
         this.props.addAppUI.TeamLinkAppAddActive && React.createElement(LinkTeamAppAdd, {
           team_id: this.props.team_id,
           selectedItem: this.props.selectedItem,
           item: item,
+          my_id: this.props.my_id,
           userSelectFunc: _helperFunctions.selectUserFromListById.bind(null, this.props.users),
           dispatch: this.props.dispatch }),
         this.props.addAppUI.TeamMultiAppAddActive && React.createElement(MultiTeamAppAdd, {
           team_id: this.props.team_id,
           selectedItem: this.props.selectedItem,
           item: item,
+          my_id: this.props.my_id,
           userSelectFunc: _helperFunctions.selectUserFromListById.bind(null, this.props.users),
           dispatch: this.props.dispatch })
       );
@@ -60807,7 +60811,9 @@ var EmailListStep = function (_React$Component2) {
     _this3.handleInput = _utils.handleSemanticInput.bind(_this3);
 
     _this3.process = function (e) {
-      _this3.props.addFields(_this3.state.value);
+      e.preventDefault();
+      var filterSpacesValue = _this3.state.value.replace(/\s+/g, '');
+      _this3.props.addFields(filterSpacesValue);
       _this3.props.changeStep();
     };
 
@@ -65520,12 +65526,11 @@ function reducer() {
       }
     case 'DELETE_TEAM_USER_FULFILLED':
       {
-        var user_id = action.payload.user_id;
+        var user_id = action.payload.team_user_id;
         var _apps = state.apps.map(function (item) {
-          var receivers = item.receivers.filter(function (item) {
+          item.receivers = item.receivers.filter(function (item) {
             return item.team_user_id !== user_id;
           });
-          item.receivers = receivers;
           return item;
         });
 
