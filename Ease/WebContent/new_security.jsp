@@ -101,7 +101,7 @@
                 <li><a href="#6" class="cc-active">6. F.A.Q.</a></li>
                 <li><a href="#7" class="cc-active">7. Notre Security White paper</a></li>
             </ul>
-        <div class="docs-content">
+        <div id="docs-content" class="docs-content">
             <div class="doc_section">
                 <h1 class="doc_header" id="1">1. Anonymat</h1>
                 <p>Nous vous facilitons la vie sans la connaître.</p>
@@ -199,6 +199,13 @@
 <script src="/jsMinified.v00016/basic-utils.js" async></script>
 <script src="/jsMinified.v00016/languageChooser.js" async></script>
 <script src="/jsMinified.v00016/tracker.js" async></script>
+<script type="text/javascript">
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        $('#docs-content').removeClass('docs-content');
+        $('ul.docs-nav').addClass('docs-without-nav');
+        $('ul.docs-nav').removeClass('docs-nav');
+    }
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         var AFFIX_TOP_LIMIT = 560;
