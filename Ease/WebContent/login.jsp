@@ -264,7 +264,7 @@
 <script src="/jsMinified.v00016/generalLogout.js" async></script>
 <script src="/jsMinified.v00016/tracker.js" async></script>
 <script src="/jsMinified.v00016/ajaxHandler.js" async></script>
-<script src="js/encryption/jsencrypt.js" async></script>
+<script src="/jsMinified.v00016/jsencrypt.js" async></script>
 <script>
     window.addEventListener('load', function () {
         $.ajaxSetup({cache: true});

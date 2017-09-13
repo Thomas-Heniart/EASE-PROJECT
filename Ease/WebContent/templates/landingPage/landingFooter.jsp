@@ -33,7 +33,7 @@
 						<a href="privacy" target="_blank">
 							<fmt:message key="landing.footer.link.terms"/>
 						</a>
-						<%@ include file="../../templates/LanguageChooser.jsp" %>
+						<div style="display: none;"><%@ include file="../../templates/LanguageChooser.jsp" %></div>
 					</div>
 				</div>
 			</div>
