@@ -62790,6 +62790,7 @@ var TeamSettings = (_dec6 = (0, _reactRedux.connect)(function (store) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.props.dispatch((0, _teamActions.fetchTeamPaymentInformation)());
+      if (this.props.match.isExact) this.props.history.replace(this.props.match.url + '/information');
     }
   }, {
     key: 'render',
