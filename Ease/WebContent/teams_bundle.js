@@ -48191,6 +48191,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
             if (_this2.isValidTeamItemId(itemId)) {
               _this2.props.dispatch(teamActions.fetchTeamItemApps(itemId));
             } else _this2.autoSelectItem();
+          }).catch(function (err) {
+            window.location.href = '/';
           });
         } else if (this.props.match.params.itemId !== itemId) {
           if (this.isValidTeamItemId(itemId)) {
@@ -48225,6 +48227,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
         if (_this3.isValidTeamItemId(itemId)) {
           _this3.props.dispatch(teamActions.fetchTeamItemApps(itemId));
         } else _this3.autoSelectItem();
+      }).catch(function (err) {
+        window.location.href = '/';
       });
     }
   }, {
