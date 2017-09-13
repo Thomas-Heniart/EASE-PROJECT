@@ -1,10 +1,6 @@
 package com.Ease.Dashboard.User;
 
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
 
 public class Option {
 	public enum OptionData {
@@ -38,10 +34,9 @@ public class Option {
 		this.background_picked = background_picked;
 		this.infinite_session = infinite_session;
 	}
-	
-	public void removeFromDB(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
-		DatabaseRequest request = db.prepareRequest("DELETE FROM options where id = ?;");
+
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("DELETE FROM options where id = ?;");
 		request.setInt(db_id);
 		request.set();
 	}

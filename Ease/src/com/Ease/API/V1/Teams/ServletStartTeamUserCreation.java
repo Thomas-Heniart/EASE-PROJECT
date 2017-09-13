@@ -115,7 +115,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
         if (username.length() >= 22 || username.length() < 3)
             throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be between 3 and 21 characters.");
         if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))
-            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must contain only lowercase characters.");
+            throw new HttpServletException(HttpStatus.BadRequest, "Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

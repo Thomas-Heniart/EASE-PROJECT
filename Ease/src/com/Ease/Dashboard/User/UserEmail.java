@@ -59,8 +59,7 @@ public class UserEmail {
         this.user = user;
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM usersEmailsPending WHERE userEmail_id = ?;");
         request.setInt(db_id);

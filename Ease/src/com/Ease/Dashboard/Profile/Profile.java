@@ -173,11 +173,10 @@ public class Profile {
         this.apps = new LinkedList<App>();
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException, HttpServletException {
+    public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         if (this.groupProfile != null && (this.groupProfile.isCommon() || !this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.DELETE.ordinal()))) {
             throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this profile.");
         }
-        DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         for (App app : apps) {
             app.removeFromDB(db);
@@ -186,7 +185,7 @@ public class Profile {
         request.setInt(db_id);
         request.set();
         if (this.groupProfile == null || this.groupProfile.isCommon() == false)
-            this.infos.removeFromDB(sm);
+            this.infos.removeFromDB(db);
         db.commitTransaction(transaction);
     }
 
@@ -391,7 +390,7 @@ public class Profile {
             if (!this.user.getKeys().isGoodPassword(password))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
         }
-        this.removeFromDB(sm);
+        this.removeFromDB(db);
         db.commitTransaction(transaction);
     }
 

@@ -1,23 +1,21 @@
 package com.Ease.Dashboard;
 
+import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.Profile.ProfilePermissions;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.*;
+import org.json.simple.JSONArray;
+
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import com.Ease.Utils.*;
-import org.json.simple.JSONArray;
-
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.Profile.ProfilePermissions;
-import com.Ease.Dashboard.User.User;
-
-import javax.servlet.ServletContext;
 
 public class DashboardManager {
     protected User user;
@@ -222,8 +220,7 @@ public class DashboardManager {
         throw new GeneralException(ServletManager.Code.ClientError, "This profile does not exist");
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
         List<App> apps = new LinkedList<App>();
         for (App app : this.getApps()) {
@@ -238,7 +235,7 @@ public class DashboardManager {
         }
         for (List<Profile> column : this.profiles) {
             for (Profile profile : column) {
-                profile.removeFromDB(sm);
+                profile.removeFromDB(db);
             }
         }
         db.commitTransaction(transaction);

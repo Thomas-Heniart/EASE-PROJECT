@@ -448,6 +448,8 @@ public class TeamUser {
             request.setInt(this.getDb_id());
             request.set();
             db.commitTransaction(transaction);
+            if (this.getDashboard_user() != null)
+                this.getDashboard_user().getTeamUsers().remove(this);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

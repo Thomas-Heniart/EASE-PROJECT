@@ -50,7 +50,7 @@ public class DeleteAccount extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
             if (!user.getKeys().isGoodPassword(password))
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Password does not match");
-            user.deleteFromDb(sm);
+            user.deleteFromDb(sm.getDB());
             user.deconnect(sm);
             sm.setResponse(ServletManager.Code.Success, "Account deleted");
         } catch (GeneralException e) {

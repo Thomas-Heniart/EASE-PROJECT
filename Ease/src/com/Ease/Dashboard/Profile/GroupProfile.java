@@ -1,18 +1,16 @@
 package com.Ease.Dashboard.Profile;
 
+import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.*;
+import org.json.simple.JSONObject;
+
+import javax.servlet.ServletContext;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import com.Ease.Utils.*;
-import org.json.simple.JSONObject;
-
-import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupManager;
-import com.Ease.Dashboard.User.User;
 
 public class GroupProfile {
 	public static enum Data {
@@ -202,7 +200,7 @@ public class GroupProfile {
 				Profile tmpProfile = it2.next();
 				GroupProfile tmpGroupProfile = tmpProfile.getGroupProfile();
 				if (tmpGroupProfile.getDBid() == this.db_id) {
-					tmpProfile.removeFromDB(sm);
+					tmpProfile.removeFromDB(sm.getDB());
 					return;
 				}
 			}
