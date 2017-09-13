@@ -1603,7 +1603,7 @@ module.exports = {
       }).then(function (response) {
         return decipher(response.data.password);
       }).catch(function (err) {
-        return err.response.data;
+        throw err.response.data;
       });
     }
   },
@@ -1630,11 +1630,18 @@ module.exports = {
       }).then(function (response) {
         return response.data;
       }).catch(function (err) {
-        return err.response.data;
+        throw err.response.data;
       });
     }
   },
   common: {
+    bz: function bz() {
+      return axios.post('/bz').then(function (response) {
+        return response.data.connected;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
     checkAuthentication: function checkAuthentication() {
       return axios.get('/api/v1/common/checkAuthentication').then(function (response) {
         return response.data;
@@ -48009,6 +48016,10 @@ var _notificationsActions = __webpack_require__(122);
 
 var _commonActions = __webpack_require__(46);
 
+var _api = __webpack_require__(23);
+
+var _api2 = _interopRequireDefault(_api);
+
 var _reactTooltip = __webpack_require__(170);
 
 var _reactTooltip2 = _interopRequireDefault(_reactTooltip);
@@ -48039,6 +48050,18 @@ var Base = (_dec = (0, _reactRedux.connect)(function (store) {
 
     var _this = _possibleConstructorReturn(this, (Base.__proto__ || Object.getPrototypeOf(Base)).call(this, props));
 
+    _this.checkConnection = function () {
+      window.setInterval(function () {
+        if (_this.props.common.authenticated) {
+          _api2.default.common.bz().then(function (connected) {
+            if (!connected) window.location.href = '/';
+          }).catch(function (err) {
+            window.location.href = '/';
+          });
+        }
+      }, 10000);
+    };
+
     _this.state = {
       fetching: true
     };
@@ -48047,23 +48070,15 @@ var Base = (_dec = (0, _reactRedux.connect)(function (store) {
   }
 
   _createClass(Base, [{
-    key: 'checkConnection',
-    value: function checkConnection() {
-      var _this2 = this;
-
-      window.setInterval(function () {
-        if (_this2.props.common.authenticated) {}
-      }, 10000);
-    }
-  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this3 = this;
+      var _this2 = this;
 
+      this.checkConnection();
       if (!this.props.common.authenticated) {
         this.props.dispatch((0, _commonActions.fetchMyInformation)()).then(function (response) {
-          _this3.setState({ fetching: false });
-          if (_this3.props.common.authenticated) _this3.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
+          _this2.setState({ fetching: false });
+          if (_this2.props.common.authenticated) _this2.props.dispatch((0, _notificationsActions.fetchNotifications)(0));
         });
       } else {
         this.setState({ fetching: false });
