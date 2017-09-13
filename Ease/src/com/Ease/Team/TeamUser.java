@@ -444,7 +444,10 @@ public class TeamUser {
             request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
-            request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE team_user_id = ?;");
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                if (shareableApp.getPendingTeamUsers().contains(this))
+                    shareableApp.removePendingTeamUser(this, db);
+            }
             request.setInt(this.getDb_id());
             request.set();
             db.commitTransaction(transaction);
@@ -492,7 +495,7 @@ public class TeamUser {
     public void addNotification(String content, String url, String icon, Date timestamp, DataBaseConnection db) throws HttpServletException {
         if (this.dashboard_user == null && this.getUser_id() == null)
             return;
-        String team_url = "/teams#/teams/" + this.getTeam().getDb_id() + "/" + url;
+        String team_url = "/teams/" + this.getTeam().getDb_id() + "/" + url;
         if (this.dashboard_user == null)
             Notification.createNotification(content, team_url, icon, this.getUser_id(), timestamp, db);
         else {

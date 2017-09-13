@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
 <c:if test="${language ne 'en' and language ne 'fr_FR'}">
-    <c:set var="language" value="en" scope="session"/>
+    <c:set var="language" value="fr" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="com.Ease.Languages.text" />
@@ -105,7 +105,7 @@
             <div class="tab-nav">
                 <div class="hello">
                     <h2 style="font-size:40px;color:#373b60;margin-bottom:20px;">Hello!</h2>
-                    Les Apps, un clic et nous vous amènons directement connecté sur votre compte, instantannément.
+                    Les Apps, un clic et nous vous amènons directement connecté sur votre compte, instantanément.
                 </div>
             </div>
         </div>
@@ -167,7 +167,8 @@
             <div class="ui row">
                 <div class="four wide column">
                     <h2>Team Space</h2>
-                    <p>Les entreprise ont des dizaines de mots de passe à gérer. Chaque employé n’a pas besoin d’avoir accès à tous les comptes de la société. En plus, les besoins d’accès changent dans le temps.</p>
+                    <p>Les entreprises ont des dizaines de mots de passe à gérer. Chaque employé n’a pas besoin d’avoir
+                        accès à tous les comptes de la société. En plus, les besoins d’accès changent dans le temps.</p>
                 </div>
                 <div class="twelve wide column">
                     <img class="ui huge image" src="/resources/images/teamSpace.png">
@@ -182,8 +183,8 @@
                 <div class="eleven wide column">
                     <h2>Organisation</h2>
                     <p>Créer des Rooms regroupant les membres de votre équipe, par projet, thème, client, ou autre, à l’image de votre entreprise.</p>
-                    <p>En envoyant des apps dans des groupes, taggez les membres ayant besoin de l’outil.</p>
-                     <p>Vous pouvez aussi envoyer un app à une seule personne.</p>
+                    <p>En envoyant des apps dans des Rooms, taggez les membres ayant besoin de l’outil.</p>
+                     <p>Vous pouvez aussi envoyer une app à une seule personne.</p>
                 </div>
             </div>
         </div>
