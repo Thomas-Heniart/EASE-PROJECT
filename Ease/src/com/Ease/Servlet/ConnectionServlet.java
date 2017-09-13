@@ -59,7 +59,7 @@ public class ConnectionServlet extends HttpServlet {
         // Put current ip in db
         try {
             if (sm.getUser() != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You are already logged");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "You are already logged");
             addIpInDataBase(client_ip, db);
             if (canConnect(client_ip, db)) {
                 if (email == null || Regex.isEmail(email) == false)
