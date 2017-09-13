@@ -4430,7 +4430,7 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.teamUserRoleValues = exports.teamUserState = exports.jobRoles = exports.roomNameRegexp = exports.usernameRegexp = exports.urlRegexp = exports.emailRegexp = exports.passwordRegexp = undefined;
+exports.teamUserRoleValues = exports.teamUserState = exports.jobRoles = exports.userNameRuleString = exports.roomNameRegexp = exports.usernameRegexp = exports.urlRegexp = exports.emailRegexp = exports.passwordRegexp = undefined;
 exports.isUrl = isUrl;
 exports.reflect = reflect;
 exports.handleSemanticInput = handleSemanticInput;
@@ -4451,6 +4451,8 @@ var emailRegexp = exports.emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\
 var urlRegexp = exports.urlRegexp = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 var usernameRegexp = exports.usernameRegexp = /^[a-z0-9_\-]{3,21}$/;
 var roomNameRegexp = exports.roomNameRegexp = /^[a-z0-9_\-]{1,21}$/;
+
+var userNameRuleString = exports.userNameRuleString = 'Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.';
 
 function isUrl(url) {
   return url.match(urlRegexp) !== null;
@@ -56291,18 +56293,28 @@ var UsernameModifier = function (_React$Component2) {
 
     var _this6 = _possibleConstructorReturn(this, (UsernameModifier.__proto__ || Object.getPrototypeOf(UsernameModifier)).call(this, props));
 
+    _this6.handleInput = _utils.handleSemanticInput.bind(_this6);
+
     _this6.setModifying = function (state) {
-      _this6.setState({ modifying: state });
+      _this6.setState({ username: _this6.props.user.username, modifying: state, error: false, loading: false });
     };
 
     _this6.validate = function (e) {
       e.preventDefault();
+      var user = _this6.props.user;
+      _this6.setState({ loading: true, error: false });
+      _this6.props.dispatch(userActions.editTeamUserUsername(user.id, _this6.state.username)).then(function (response) {
+        _this6.setModifying(false);
+      }).catch(function (err) {
+        _this6.setState({ error: true, loading: false });
+      });
     };
 
     _this6.state = {
+      username: '',
       modifying: false,
       loading: false,
-      errorMessage: false
+      error: false
     };
     return _this6;
   }
@@ -56320,27 +56332,36 @@ var UsernameModifier = function (_React$Component2) {
           null,
           '@',
           user.username,
-          (0, _helperFunctions.isAdminOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setUsernameModifying.bind(null, true) })
+          (0, _helperFunctions.isAdminOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setModifying.bind(null, true) })
         ) : React.createElement(
           _semanticUiReact.Form,
-          { as: 'div' },
-          React.createElement(_semanticUiReact.Form.Input, {
-            size: 'mini',
-            placeholder: 'Username',
-            type: 'text', name: 'username', fluid: true,
-            value: this.state.username,
-            onChange: this.handleInput }),
+          { onSubmit: this.validate },
+          React.createElement(
+            _semanticUiReact.Form.Field,
+            null,
+            React.createElement(_semanticUiReact.Input, {
+              size: 'mini',
+              placeholder: 'Username',
+              type: 'text', name: 'username', fluid: true,
+              value: this.state.username,
+              onChange: this.handleInput }),
+            React.createElement(
+              _semanticUiReact.Label,
+              { pointing: true, basic: this.state.error, color: this.state.error ? 'red' : null },
+              _utils.userNameRuleString
+            )
+          ),
           React.createElement(
             _semanticUiReact.Form.Field,
             null,
             React.createElement(
               _semanticUiReact.Button,
-              { basic: true, size: 'mini', onClick: this.setUsernameModifying.bind(null, false) },
+              { basic: true, size: 'mini', type: 'button', onClick: this.setModifying.bind(null, false) },
               'Cancel'
             ),
             React.createElement(
               _semanticUiReact.Button,
-              { primary: true, size: 'mini', onClick: this.confirmUsernameChange },
+              { primary: true, size: 'mini' },
               'Save'
             )
           )
@@ -56583,40 +56604,7 @@ var TeamUserFlexTab = function (_React$Component3) {
             React.createElement(
               _semanticUiReact.Grid.Row,
               null,
-              React.createElement(
-                _semanticUiReact.Grid.Column,
-                null,
-                !this.state.usernameModifying ? React.createElement(
-                  'div',
-                  null,
-                  '@',
-                  user.username,
-                  (0, _helperFunctions.isAdminOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setUsernameModifying.bind(null, true) })
-                ) : React.createElement(
-                  _semanticUiReact.Form,
-                  { as: 'div' },
-                  React.createElement(_semanticUiReact.Form.Input, {
-                    size: 'mini',
-                    placeholder: 'Username',
-                    type: 'text', name: 'username', fluid: true,
-                    value: this.state.username,
-                    onChange: this.handleInput }),
-                  React.createElement(
-                    _semanticUiReact.Form.Field,
-                    null,
-                    React.createElement(
-                      _semanticUiReact.Button,
-                      { basic: true, size: 'mini', onClick: this.setUsernameModifying.bind(null, false) },
-                      'Cancel'
-                    ),
-                    React.createElement(
-                      _semanticUiReact.Button,
-                      { primary: true, size: 'mini', onClick: this.confirmUsernameChange },
-                      'Save'
-                    )
-                  )
-                )
-              )
+              React.createElement(UsernameModifier, { dispatch: this.props.dispatch, user: user, me: me })
             ),
             React.createElement(
               _semanticUiReact.Grid.Row,
