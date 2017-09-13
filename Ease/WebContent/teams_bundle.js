@@ -50972,7 +50972,11 @@ function Step4(props) {
           null,
           _react2.default.createElement(
             _semanticUiReact.Button,
-            { positive: true, fluid: true, type: "submit", disabled: jobRole === null || jobRole === 15 && jobDetails.length === 0 },
+            { positive: true,
+              fluid: true,
+              type: "submit",
+              loading: this.props.loading,
+              disabled: jobRole === null || jobRole === 15 && jobDetails.length === 0 },
             "Next"
           )
         )
@@ -51013,7 +51017,8 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
       currentStep: 0,
       code: '',
       skipRegistration: false,
-      loading: true
+      loading: true,
+      lastStepLoading: false
     };
     _this6.handleInput = _this6.handleInput.bind(_this6);
     _this6.incrementStep = _this6.incrementStep.bind(_this6);
@@ -51032,8 +51037,10 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function finalizeModal() {
       var _this7 = this;
 
+      this.setState({ lastStepLoading: true });
       if (this.canSkip()) {
         post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(function (response) {
+          _this7.setState({ lastStepLoading: false });
           window.location.href = '/';
         }).catch(function (err) {
           console.log(err);
@@ -51041,6 +51048,7 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
       } else {
         post_api.common.registration(this.state.email, this.state.username, this.state.password, null, this.state.code, false).then(function (r) {
           post_api.teams.finalizeRegistration(_this7.props.common.ws_id, _this7.state.fname, _this7.state.lname, _this7.state.username, _this7.state.jobRole, _this7.state.jobDetails, _this7.state.code).then(function (response) {
+            _this7.setState({ lastStepLoading: false });
             window.location.href = '/';
           }).catch(function (err) {
             console.log(err);
@@ -51135,6 +51143,7 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
         handleInput: this.handleInput,
         jobRole: this.state.jobRole,
         jobDetails: this.state.jobDetails,
+        loading: this.state.lastStepLoading,
         key: "4" }));
 
       return _react2.default.createElement(
