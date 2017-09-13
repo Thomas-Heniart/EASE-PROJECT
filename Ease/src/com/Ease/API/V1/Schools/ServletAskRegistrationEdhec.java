@@ -51,8 +51,7 @@ public class ServletAskRegistrationEdhec extends HttpServlet {
             mailJetBuilder.addTo(email);
             mailJetBuilder.sendEmail();
             JSONObject res = new JSONObject();
-            res.put("email", email);
-            res.put("digits", digits);
+            res.put("success", true);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
