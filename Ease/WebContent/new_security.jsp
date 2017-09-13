@@ -46,7 +46,7 @@
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
     <div class="container">
         <div class="navbar-header page-scroll">
-            <a id="ease-logo" class="navbar-brand page-scroll" href="/"></a>
+            <a id="ease-logo" class="navbar-brand page-scroll" href="/discover"></a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
