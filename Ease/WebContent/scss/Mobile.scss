@@ -64,7 +64,7 @@
 }
 
 @media screen and (orientation: landscape) {
-	.logo img {
+	#mobileLogo .logo img {
 		width: 33%;
 	}
 	.mobile-overlay h3{
@@ -81,7 +81,7 @@
 }
 
 @media screen and (orientation: portrait) {
-	.logo img {
+	#mobileLogo .logo img {
 		width: 40%;
 		margin-top: 7%;
 		margin-left: 7%;

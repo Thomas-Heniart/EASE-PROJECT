@@ -95,7 +95,7 @@
 </header>
 <section style="background-color: white">
     <div class="container" style="margin:0;padding-left:0;padding-right:0;width:100%;">
-        <div class="product-tab">
+        <div id="tableHello" class="product-tab">
             <div class="table">
                 <div class="goodbye">
                     <h2 style="font-size:40px;margin-bottom:20px;">Goodbye</h2>
@@ -222,6 +222,11 @@
 <script src="/jsMinified.v00016/basic-utils.js" async></script>
 <script src="/jsMinified.v00016/languageChooser.js" async></script>
 <script src="/jsMinified.v00016/tracker.js" async></script>
+<script>
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        $('#tableHello').removeClass('product-tab');
+    }
+</script>
 <script type="text/javascript">
     $(document).ready(function(){
         $('.ui.menu').on('click', function() {
