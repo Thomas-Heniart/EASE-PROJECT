@@ -1,9 +1,11 @@
 package com.Ease.Servlet;
 
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.Keys;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -86,13 +88,16 @@ public class ResetPassword extends HttpServlet {
             int transaction = db.startTransaction();
             String userId = User.findDBid(email, sm);
             Keys.resetPassword(userId, password, sm);
-            hibernateQuery.querySQLString("SELECT id, team_id FROM teamUsers WHERE user_id = ?");
-            hibernateQuery.setParameter(1, userId);
+            DatabaseRequest databaseRequest = db.prepareRequest("SELECT id, team_id, admin_id FROM teamUsers WHERE user_id = ?;");
+            databaseRequest.setInt(userId);
+            DatabaseResult rs = databaseRequest.get();
+            MailJetBuilder mailJetBuilder;
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            for (Object teamUserIdAndTeamIdObj : hibernateQuery.list()) {
-                Object[] teamUserIdAndTeamId = (Object[]) teamUserIdAndTeamIdObj;
-                Team team = teamManager.getTeamWithId((Integer) teamUserIdAndTeamId[1]);
-                TeamUser teamUser = team.getTeamUserWithId((Integer) teamUserIdAndTeamId[0]);
+            while (rs.next()) {
+                Integer team_user_id = rs.getInt(1);
+                Integer admin_id = rs.getInt(3);
+                Team team = teamManager.getTeamWithId(rs.getInt(2));
+                TeamUser teamUser = team.getTeamUserWithId(team_user_id);
                 teamUser.setDisabled(true);
                 teamUser.setDisabledDate(new Date());
                 teamUser.setTeamKey(null);
@@ -101,16 +106,31 @@ public class ResetPassword extends HttpServlet {
                     sharedApp.setDisableShared(true, sm.getDB());
                 if (teamUser.getAdmin_id() != null)
                     team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id().toString(), "/resources/notifications/flag.png", new Date(), sm.getDB());
-                else {
-                    /* @TODO */
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                if (admin_id == null || admin_id == 0) {
+                    mailJetBuilder.setTemplateId(211068);
+                    mailJetBuilder.addTo("benjamin@ease.space");
+                    mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+                    mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+                    mailJetBuilder.addVariable("team_name", team.getName());
+                    mailJetBuilder.addVariable("email", rs.getString(5));
+                } else {
+                    TeamUser admin = team.getTeamUserWithId(admin_id);
+                    mailJetBuilder.addTo(admin.getEmail());
+                    mailJetBuilder.setTemplateId(211034);
+                    mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+                    mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+                    mailJetBuilder.addVariable("team_name", team.getName());
+                    mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/" + team.getDb_id() + "/@" + teamUser.getDb_id());
                 }
+                mailJetBuilder.sendEmail();
                 JSONObject target = new JSONObject();
                 target.put("team_id", team.getDb_id());
                 WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), target);
                 team.getWebSocketManager().sendObject(webSocketMessage);
             }
-            hibernateQuery.commit();
-            DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
+            databaseRequest = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
             databaseRequest.setInt(userId);
             databaseRequest.set();
             db.commitTransaction(transaction);

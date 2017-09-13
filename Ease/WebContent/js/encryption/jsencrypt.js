@@ -4659,7 +4659,8 @@ function cipher(msg) {
 
 window.addEventListener("load", function () {
     var request = new XMLHttpRequest();
-    request.open("GET", "/api/v1/common/GetServerKey?public_key=" + RSAEncryption.getPublicKeyB64(), false);
+    console.log(RSAEncryption.getPublicKeyB64());
+    request.open("GET", "/api/v1/common/GetServerKey?public_key=" + encodeURIComponent(RSAEncryption.getPublicKeyB64()), false);
     request.send();
     if (request.status === 200)
         setServerPublicKey(JSON.parse(request.responseText).server_public_key);

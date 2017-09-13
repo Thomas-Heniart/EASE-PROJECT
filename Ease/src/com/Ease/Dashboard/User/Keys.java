@@ -281,6 +281,7 @@ public class Keys {
                 request2.setInt(rs.getString(Profile.Data.ID.ordinal()));
                 rs2 = request2.get();
                 while (rs2.next()) {
+                    System.out.println(rs.getInt(1));
                     if (rs2.getString(App.Data.TYPE.ordinal()).equals("websiteApp"))
                         WebsiteApp.Empty(rs2.getString(App.Data.ID.ordinal()), sm);
                 }

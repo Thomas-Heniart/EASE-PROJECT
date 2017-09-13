@@ -385,8 +385,12 @@ public class Account {
         this.decipher(sm.getUser());
         JSONObject obj = new JSONObject();
         String key = (String) sm.getSession().getAttribute("public_key");
-        for (AccountInformation info : this.infos)
+        System.out.println(key);
+        for (AccountInformation info : this.infos) {
+            System.out.println(StringEscapeUtils.unescapeHtml4(info.getInformationValue()));
             obj.put(info.getInformationName(), RSA.Encrypt(StringEscapeUtils.unescapeHtml4(info.getInformationValue()), key));
+        }
+
         return obj;
     }
 
