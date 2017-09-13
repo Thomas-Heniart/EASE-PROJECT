@@ -55,8 +55,6 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
                 description = "";
             if (account_information == null || account_information.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Account information are null.");
-            if (reminderInterval == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Reminder cannot be null");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
             Channel channel = null;

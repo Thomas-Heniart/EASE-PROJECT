@@ -40,19 +40,20 @@ public class ResetPassword extends HttpServlet {
         String email = sm.getServletParam("email", true);
         String code = sm.getServletParam("code", true);
         try {
-            if (user != null) {
-                Logout.logoutUser(user, sm);
+            if (user != null)
+                sm.setRedirectUrl("/");
+            else {
+                if (email == null || email.equals("")) {
+                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+                } else if (code == null || code.equals("")) {
+                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
+                }
+                String userId = User.findDBid(email, sm);
+                if (Keys.checkCodeValidity(userId, code, sm))
+                    sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
+                else
+                    sm.setRedirectUrl("passwordLost?codeExpiration=true");
             }
-            if (email == null || email.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
-            } else if (code == null || code.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
-            }
-            String userId = User.findDBid(email, sm);
-            if (Keys.checkCodeValidity(userId, code, sm))
-                sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
-            else
-                sm.setRedirectUrl("passwordLost?codeExpiration=true");
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (Exception e) {
@@ -76,11 +77,11 @@ public class ResetPassword extends HttpServlet {
                 Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
             }
             if (email == null || email.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty email.");
             } else if (code == null || code.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Invalid code.");
             } else if (password == null || !Regex.isPassword(password)) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
             } else if (confirmPassword == null || !confirmPassword.equals(password)) {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
             }
