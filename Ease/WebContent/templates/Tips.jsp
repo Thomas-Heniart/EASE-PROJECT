@@ -28,7 +28,7 @@
         <c:otherwise>
              <div class="tip" id="2" step="2">
                 <div class="arrow" style="right: 57px"></div>
-                <h3>If you need create your team here</h3>
+                <h3>Teams are here!</h3>
                 <div class="buttonHandler">
                     <div class="skip" style="margin-right: 10px;">
                         <span>Already know how Ease.space works?</span>
