@@ -46,6 +46,10 @@ public class ServletConnection extends HttpServlet {
                 else {
                     String key = (String) sm.getContextAttr("privateKey");
                     password = RSA.Decrypt(password, key);
+                    DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?");
+                    databaseRequest.setString(email);
+                    if (!databaseRequest.get().next())
+                        throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
                     user = User.loadUser(email, password, sm.getServletContext(), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();
