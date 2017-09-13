@@ -77,11 +77,11 @@ public class ResetPassword extends HttpServlet {
                 Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
             }
             if (email == null || email.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Empty email.");
             } else if (code == null || code.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Invalid code.");
             } else if (password == null || !Regex.isPassword(password)) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
             } else if (confirmPassword == null || !confirmPassword.equals(password)) {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
             }

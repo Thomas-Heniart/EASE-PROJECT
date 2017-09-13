@@ -1,7 +1,11 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
-import java.util.Date;
+import com.Ease.Context.Group.Group;
+import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Regex;
+import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,13 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupManager;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Servlet implementation class NewUser
@@ -70,7 +69,7 @@ public class RegistrationEdhec extends HttpServlet {
             else if (email == null || Regex.isEmail(email) == false)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Incorrect email format.");
             else if (password == null || Regex.isPassword(password) == false)
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Password is too short (at least 8 characters).");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
             else if (confirmPassword == null || password.equals(confirmPassword) == false)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
             else {

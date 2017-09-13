@@ -54,8 +54,8 @@ public class EditPassword extends HttpServlet {
             if (oldPassword == null) {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong current password.");
 			} else if (password == null || !Regex.isPassword(password)) {
-				throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong new password.");
-			} else if (confirmPassword == null || !confirmPassword.equals(password)) {
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
+            } else if (confirmPassword == null || !confirmPassword.equals(password)) {
 				throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords doesn't match.");
 			}
 			user.getKeys().changePassword(password, sm);

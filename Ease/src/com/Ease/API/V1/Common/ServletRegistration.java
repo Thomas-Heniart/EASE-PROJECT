@@ -38,7 +38,7 @@ public class ServletRegistration extends HttpServlet {
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             if (password == null || !Regex.isPassword(password))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
+                throw new HttpServletException(HttpStatus.BadRequest, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
             if (registration_date == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
             if ((digits == null || digits.length() != 6) && (code == null || code.equals("")))

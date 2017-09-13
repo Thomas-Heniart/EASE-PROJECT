@@ -1,19 +1,12 @@
 package com.Ease.Servlet.Hibernate;
 
-import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.NewDashboard.Profile.Profile;
 import com.Ease.NewDashboard.User.Keys;
 import com.Ease.NewDashboard.User.Options;
 import com.Ease.NewDashboard.User.Status;
 import com.Ease.NewDashboard.User.User;
-import com.Ease.Servlet.Logout;
 import com.Ease.Utils.*;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
-import javax.persistence.NoResultException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -76,7 +69,7 @@ public class ServletRegistration extends HttpServlet {
             else if (email == null || Regex.isEmail(email) == false)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Incorrect email format.");
             else if (password == null || Regex.isPassword(password) == false)
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Password is too short (at least 8 characters).");
+                throw new GeneralException(ServletManager.Code.ClientWarning, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
             else if (confirmPassword == null || password.equals(confirmPassword) == false)
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
             else {
