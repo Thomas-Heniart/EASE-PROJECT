@@ -763,6 +763,7 @@ exports.isUserInList = isUserInList;
 exports.checkForNewNotifications = checkForNewNotifications;
 exports.isAdminOrMe = isAdminOrMe;
 exports.isSuperior = isSuperior;
+exports.isSuperiorOrMe = isSuperiorOrMe;
 exports.isAdmin = isAdmin;
 exports.isOwner = isOwner;
 function getInfoValueByName(infoList, infoName) {
@@ -851,6 +852,9 @@ function isAdminOrMe(user, me) {
 
 function isSuperior(user, me) {
   return me.role > user.role;
+}
+function isSuperiorOrMe(user, me) {
+  return isSuperior(user, me) || user.id === me.id;
 }
 
 function isAdmin(userRole) {
@@ -52310,6 +52314,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
     value: function shareApp() {
       var _this3 = this;
 
+      if (this.state.selectedUsers.length === 0) return;
       var app = {
         website_id: this.state.choosenApp.info.id,
         name: this.state.appName,
@@ -52342,28 +52347,6 @@ var MultiTeamAppAdd = function (_React$Component2) {
     key: 'showDropdown',
     value: function showDropdown() {
       if (!this.state.dropdown) this.setState({ dropdown: true });
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(props) {
-      if (props !== this.props) {
-        var users = [];
-        if (props.selectedItem.type === 'channel') {
-          props.item.userIds.map(function (item) {
-            var user = props.userSelectFunc(item);
-            user.selected = false;
-            users.push(user);
-          }, this);
-        } else {
-          var item = props.item;
-          item.selected = false;
-          users.push(item);
-        }
-        this.setState({
-          selectedUsers: [],
-          users: users
-        });
-      }
     }
   }, {
     key: 'handleAppNameChange',
@@ -54065,28 +54048,6 @@ var LinkTeamAppAdd = function (_React$Component3) {
       this.setState({ users: users, selectedUsers: selectedUsers });
     }
   }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(props) {
-      if (props != this.props) {
-        var users = [];
-        if (props.selectedItem.type === 'channel') {
-          props.item.userIds.map(function (item) {
-            var user = props.userSelectFunc(item);
-            user.selected = false;
-            users.push(user);
-          }, this);
-        } else {
-          var item = props.item;
-          item.selected = false;
-          users.push(item);
-        }
-        this.setState({
-          selectedUsers: [],
-          users: users
-        });
-      }
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this5 = this;
@@ -54261,6 +54222,11 @@ var SimpleTeamAppAdd = function (_React$Component4) {
     value: function shareApp() {
       var _this8 = this;
 
+      var credentials = Object.keys(this.state.credentials);
+
+      for (var i = 0; i < credentials.length; i++) {
+        if (this.state.credentials[credentials[i]].length === 0) return;
+      }
       var app = {
         website_id: this.state.choosenApp.info.id,
         name: this.state.appName,
@@ -54293,29 +54259,6 @@ var SimpleTeamAppAdd = function (_React$Component4) {
           this.setState({ users: users });
           return;
         }
-      }
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(props) {
-      if (props !== this.props) {
-        var users = [];
-        if (props.selectedItem.type === 'channel') {
-          props.item.userIds.map(function (item) {
-            var user = _extends({}, props.userSelectFunc(item));
-            user.selected = false;
-            users.push(user);
-          }, this);
-        } else {
-          var item = _extends({}, props.item);
-          item.selected = false;
-          item.can_see_information = true;
-          users.push(item);
-        }
-        this.setState({
-          selectedUsers: [],
-          users: users
-        });
       }
     }
   }, {
@@ -56390,7 +56333,7 @@ var UsernameModifier = function (_React$Component2) {
           null,
           '@',
           user.username,
-          (0, _helperFunctions.isAdminOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setModifying.bind(null, true) })
+          (0, _helperFunctions.isSuperiorOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setModifying.bind(null, true) })
         ) : React.createElement(
           _semanticUiReact.Form,
           { onSubmit: this.validate },
@@ -56626,7 +56569,7 @@ var TeamUserFlexTab = function (_React$Component3) {
                   user.first_name,
                   ' ',
                   user.last_name,
-                  (0, _helperFunctions.isAdminOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setFirstLastNameModifying.bind(null, true) })
+                  (0, _helperFunctions.isSuperiorOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setFirstLastNameModifying.bind(null, true) })
                 ) : React.createElement(
                   _semanticUiReact.Form,
                   { as: 'div' },
@@ -57689,7 +57632,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function teamAppDispatcher(action, app, target) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
+    var state = getState();
+    if (state.selection.id === target.id && state.selection.type === target.type && state.team.id === target.team_id) dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
   };
 }
 
@@ -58533,7 +58477,7 @@ var TeamAppPasswordLine = function (_React$Component) {
     _this.getPassword = function () {
       (0, _utils.getTeamAppPasswordAndCopyToClipboard)({ team_id: _this.props.team_id, shared_app_id: _this.props.receiver.shared_app_id }).then(function (response) {
         _this.setState({ popupOpen: true, popupText: 'Copied!' });
-        window.setInterval(function () {
+        window.setTimeout(function () {
           this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
         }.bind(_this), 2000);
       });
@@ -58831,7 +58775,7 @@ var TeamMultiApp = function (_React$Component2) {
         React.createElement(
           'div',
           { className: 'team_app multiple_accounts_app' },
-          meReceiver != null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
+          meReceiver !== null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
           React.createElement(
             'div',
             { className: 'name_holder' },
@@ -58900,7 +58844,7 @@ var TeamMultiApp = function (_React$Component2) {
                     'Join app'
                   )
                 ),
-                meReceiver !== null && meReceiver.accepted && React.createElement(
+                React.createElement(
                   'div',
                   { className: 'password_change_remind' },
                   React.createElement(
@@ -59346,7 +59290,7 @@ var TeamAppPasswordLine = function (_React$Component) {
     _this.getPassword = function () {
       (0, _utils.getTeamAppPasswordAndCopyToClipboard)({ team_id: _this.props.team_id, shared_app_id: _this.props.receiver.shared_app_id }).then(function (response) {
         _this.setState({ popupOpen: true, popupText: 'Copied!' });
-        window.setInterval(function () {
+        window.setTimeout(function () {
           this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
         }.bind(_this), 2000);
       });
@@ -59685,7 +59629,7 @@ var TeamSimpleApp = function (_React$Component2) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  (meReceiver != null || this.state.modifying) && Object.keys(app.account_information).reverse().map(function (item) {
+                  (meReceiver !== null || this.state.modifying) && Object.keys(app.account_information).reverse().map(function (item) {
                     return React.createElement(
                       'div',
                       { className: 'credentials_line', key: item },
@@ -59735,7 +59679,7 @@ var TeamSimpleApp = function (_React$Component2) {
                     'Join app'
                   )
                 ),
-                meReceiver !== null && meReceiver.accepted && React.createElement(
+                React.createElement(
                   'div',
                   { className: 'password_change_remind' },
                   React.createElement(
@@ -59878,7 +59822,7 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
       _post_api.dashboard.createProfile({ name: _this.state.profileName }).then(function (response) {
         var profiles = _this.state.profiles.slice();
         profiles.push(response);
-        _this.setState({ profiles: profiles, profileName: '' });
+        _this.setState({ profiles: profiles, profileName: '', selectedProfile: response.id });
       }).catch(function (err) {
         //do something
       });
@@ -65417,7 +65361,7 @@ function reducer() {
         return _extends({}, state, {
           type: 'user',
           id: action.payload.user.id,
-          apps: action.payload.apps
+          apps: action.payload.apps.reverse()
         });
       }
     case "FETCH_TEAM_FULFILLED":
@@ -65431,7 +65375,7 @@ function reducer() {
     case 'FETCH_TEAM_USER_APPS_FULFILLED':
       {
         return _extends({}, state, {
-          apps: action.payload.apps,
+          apps: action.payload.apps.reverse(),
           type: action.payload.type,
           id: action.payload.id
         });
@@ -65439,7 +65383,7 @@ function reducer() {
     case 'FETCH_TEAM_CHANNELS_APPS_FULFILLED':
       {
         return _extends({}, state, {
-          apps: action.payload.apps,
+          apps: action.payload.apps.reverse(),
           type: action.payload.type,
           id: action.payload.id
         });
@@ -65449,7 +65393,7 @@ function reducer() {
         return _extends({}, state, {
           type: 'channel',
           id: action.payload.channel.id,
-          apps: action.payload.apps
+          apps: action.payload.apps.reverse()
         });
       }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED":
