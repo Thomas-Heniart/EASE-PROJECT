@@ -172,8 +172,7 @@ public class Keys {
         this.publicKey = publicKey;
     }
 
-    public void removeFromDB(ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public void removeFromDB(DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("DELETE FROM userKeys WHERE id = ?;");
         request.setInt(this.db_id);
         request.set();

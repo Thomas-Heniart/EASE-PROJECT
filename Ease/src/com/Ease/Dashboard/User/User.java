@@ -525,13 +525,12 @@ public class User {
         return !this.groups.isEmpty();
     }
 
-    public void deleteFromDb(ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
+    public void deleteFromDb(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
-        this.dashboardManager.removeFromDB(sm);
+        this.dashboardManager.removeFromDB(db);
         for (UserEmail email : this.emails.values())
-            email.removeFromDB(sm);
-        this.sessionSave.eraseFromDB(sm.getDB());
+            email.removeFromDB(db);
+        this.sessionSave.eraseFromDB(db);
         DatabaseRequest request = db.prepareRequest("DELETE FROM admins WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
@@ -556,11 +555,17 @@ public class User {
         request = db.prepareRequest("DELETE FROM usersPrivateExtensions WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
+        request = db.prepareRequest("DELETE FROM notifications WHERE user_id = ?");
+        request.setInt(db_id);
+        request.set();
+        request = db.prepareRequest("DELETE FROM pendingJoinTeamRequests WHERE user_id = ?");
+        request.setInt(db_id);
+        request.set();
         request = db.prepareRequest("DELETE FROM users WHERE id= ?;");
         request.setInt(db_id);
         request.set();
-        this.keys.removeFromDB(sm);
-        this.opt.removeFromDB(sm);
+        this.keys.removeFromDB(db);
+        this.opt.removeFromDB(db);
         db.commitTransaction(transaction);
     }
 

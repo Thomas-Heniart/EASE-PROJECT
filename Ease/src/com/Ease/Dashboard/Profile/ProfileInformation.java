@@ -1,12 +1,7 @@
 package com.Ease.Dashboard.Profile;
 
+import com.Ease.Utils.*;
 import org.json.simple.JSONObject;
-
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 
 public class ProfileInformation {
 	public enum InfoData {
@@ -63,9 +58,8 @@ public class ProfileInformation {
 		this.name = name;
 		this.color = color;
 	}
-	
-	public void removeFromDB(ServletManager sm) throws GeneralException {
-		DataBaseConnection db = sm.getDB();
+
+	public void removeFromDB(DataBaseConnection db) throws GeneralException {
 		DatabaseRequest request = db.prepareRequest("DELETE FROM profileInfo WHERE id = ?;");
 		request.setInt(db_id);
 		request.set();

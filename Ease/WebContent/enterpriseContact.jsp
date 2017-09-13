@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00011/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/enterpriseContact.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00012/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/enterpriseContact.css"/>
 
     <link rel="manifest" href="manifest.json">
 

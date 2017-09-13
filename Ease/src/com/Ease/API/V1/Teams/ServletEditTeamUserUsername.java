@@ -59,10 +59,8 @@ public class ServletEditTeamUserUsername extends HttpServlet {
             throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
         if (username.length() < 3 || username.length() >= 22)
             throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be greater than 2 characters and fewer than 22 characters.");
-        if (!username.equals(username.toLowerCase()))
-            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be lowercase!");
-        if (!Regex.isValidUsername(username))
-            throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't contain special characters. Sorry about that!");
+        if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))
+            throw new HttpServletException(HttpStatus.BadRequest, "Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores");
         return null;
     }
 
