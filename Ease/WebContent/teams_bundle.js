@@ -57649,6 +57649,7 @@ function teamAppDispatcher(action, app, target) {
 function teamUserDispatcher(action, user, target) {
   return function (dispatch, getState) {
     var state = getState();
+    if (action === 'REMOVED' && state.team.myTeamUserId === user.id) window.location.href = '/';
     if (state.team.id === target.team_id) dispatch({ type: 'TEAM_USER_' + action, payload: { user: user, target: target } });
   };
 }
@@ -65530,6 +65531,9 @@ function reducer() {
         var _apps = state.apps.map(function (item) {
           item.receivers = item.receivers.filter(function (item) {
             return item.team_user_id !== user_id;
+          });
+          item.sharing_requests = item.sharing_requests.filter(function (item) {
+            return item !== user_id;
           });
           return item;
         });

@@ -24,6 +24,17 @@ button.only-text-button {
   z-index: 99;
 }
 
+button.team_app_requests {
+  color: $themeRedColor;
+  &:hover {
+    color: darken($themeRedColor, 10%) !important;
+  }
+}
+
+.team_app_indicators .fa-user {
+  color: $themeRedColor;
+}
+
 #share_app_dropdown {
   color: white;
   background-color: $themeColor;
