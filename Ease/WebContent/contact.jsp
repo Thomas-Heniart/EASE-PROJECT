@@ -33,11 +33,11 @@
     <script src="/jsMinified.v00016/tracker.js"></script>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00011/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00011/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00012/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {

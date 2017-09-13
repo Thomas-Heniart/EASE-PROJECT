@@ -3249,6 +3249,19 @@ module.exports = {
       });
     }
   },
+  dashboard: {
+    createProfile: function createProfile(_ref5) {
+      var name = _ref5.name;
+
+      return axios.post('/api/v1/dashboard/CreateProfile', {
+        name: name
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    }
+  },
   common: {
     connect: function connect(email, password) {
       return axios.post('/api/v1/common/Connection', {
@@ -3301,12 +3314,12 @@ module.exports = {
         throw err;
       });
     },
-    requestWebsite: function requestWebsite(_ref5) {
-      var team_id = _ref5.team_id,
-          url = _ref5.url,
-          is_public = _ref5.is_public,
-          login = _ref5.login,
-          password = _ref5.password;
+    requestWebsite: function requestWebsite(_ref6) {
+      var team_id = _ref6.team_id,
+          url = _ref6.url,
+          is_public = _ref6.is_public,
+          login = _ref6.login,
+          password = _ref6.password;
 
       return axios.post('/api/v1/teams/AskWebsite', {
         team_id: team_id,
@@ -59782,6 +59795,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _class;
 
+var _post_api = __webpack_require__(30);
+
 var _teamModalActions = __webpack_require__(14);
 
 var _appsActions = __webpack_require__(29);
@@ -59813,6 +59828,16 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
     _classCallCheck(this, PinTeamAppToDashboardModal);
 
     var _this = _possibleConstructorReturn(this, (PinTeamAppToDashboardModal.__proto__ || Object.getPrototypeOf(PinTeamAppToDashboardModal)).call(this, props));
+
+    _this.createProfile = function () {
+      _post_api.dashboard.createProfile({ name: _this.state.profileName }).then(function (response) {
+        var profiles = _this.state.profiles.slice();
+        profiles.push(response);
+        _this.setState({ profiles: profiles, profileName: '' });
+      }).catch(function (err) {
+        //do something
+      });
+    };
 
     _this.state = {
       name: _this.props.modal.app.name,
@@ -59975,7 +60000,7 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
                   onChange: this.handleInput }),
                 this.state.profileName.length > 0 && React.createElement(
                   'button',
-                  { className: 'button-unstyle' },
+                  { className: 'button-unstyle', onClick: this.createProfile },
                   'Create'
                 )
               )
@@ -62638,7 +62663,7 @@ var TeamAccount = (_dec5 = (0, _reactRedux.connect)(), _dec5(_class5 = function 
             { style: { marginBottom: '1rem' } },
             'While you are in free trial or have a credit card set up, your account is activated.',
             _react2.default.createElement('br', null),
-            'Our subscription system is made so that you do not have to worry about unsubscription, you can unsuscribe at anytime. At the beginning of each 30 day period you are billed for the period, so if you unsuscribe you won\u2019t own us anything and the monthly billing will stop instantly.'
+            'Our subscription system is made so that you do not have to worry about unsubscription, you can unsuscribe at anytime. At the beginning of each 30 day period you are billed for the period, so if you unsuscribe you won\u2019t owe us anything and the monthly billing will stop instantly.'
           ),
           !this.state.modifying && _react2.default.createElement(
             'div',
