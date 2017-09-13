@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Context.Variables;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -40,9 +41,13 @@ public class ServletAskJoinChannel extends HttpServlet {
             TeamUser channel_admin = team.getTeamUserWithId(channel.getCreator_id());
             mailJetBuilder.addTo(channel_admin.getEmail(), channel_admin.getUsername());
             mailJetBuilder.setTemplateId(210939);
-            mailJetBuilder.addVariable("channel", channel.getName());
-            mailJetBuilder.addVariable("team", team.getName());
+            mailJetBuilder.addVariable("room_name", channel.getName());
+            mailJetBuilder.addVariable("team_name", team.getName());
+            mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+            mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.addVariable("teamUser", teamUser.getUsername());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
+            mailJetBuilder.sendEmail();
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
