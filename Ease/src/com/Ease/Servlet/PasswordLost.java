@@ -57,11 +57,6 @@ public class PasswordLost extends HttpServlet {
             try {
                 String userId = User.findDBid(email, sm);
                 Keys.passwordLost(email, userId, sm);
-                /* MailJetBuilder mailJetBuilder = new MailJetBuilder();
-                mailJetBuilder.setTemplateId(178530);
-                mailJetBuilder.addTo(email);
-                mailJetBuilder.addVariable("link", Variables.URL_PATH + "newPassword.jsp?");
-                mailJetBuilder.sendEmail(); */
                 sm.setResponse(ServletManager.Code.Success, "Email sent.");
             } catch (GeneralException e) {
                 if (e.getCode() == ServletManager.Code.ClientError) {
