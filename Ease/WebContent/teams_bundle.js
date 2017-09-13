@@ -4525,21 +4525,26 @@ function getTeamAppPasswordAndCopyToClipboard(_ref2) {
     });
     interval = window.setInterval(function () {
       if (!loading) {
+        var worked = copyTextToClipboard(password);
+        worked ? resolve(password) : reject();
         window.clearInterval(interval);
-        copyTextToClipboard(password);
-        resolve(password);
       }
-    }, 100);
+    }, 10);
   });
 }
 
 function copyTextToClipboard(str) {
   var dummy = document.createElement("input");
+  dummy.style.position = 'absolute';
+  dummy.style.left = '-150000px';
   document.body.appendChild(dummy);
   dummy.value = str;
+  console.log(str);
   dummy.select();
-  document.execCommand('copy');
+  var worked = document.execCommand('copy');
+  console.log(worked);
   document.body.removeChild(dummy);
+  return worked;
 }
 
 function checkTeamUsernameErrors(username) {
@@ -58474,12 +58479,23 @@ var TeamAppPasswordLine = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (TeamAppPasswordLine.__proto__ || Object.getPrototypeOf(TeamAppPasswordLine)).call(this, props));
 
+    _this.setupPopup = function (text) {
+      if (_this.timeoutId !== -1) {
+        window.clearTimeout(_this.timeoutId);
+        _this.timeoutId = -1;
+      }
+      _this.setState({ popupOpen: true, popupText: text });
+      _this.timeoutId = window.setTimeout(function () {
+        _this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
+        _this.timeoutId = -1;
+      }, 2000);
+    };
+
     _this.getPassword = function () {
       (0, _utils.getTeamAppPasswordAndCopyToClipboard)({ team_id: _this.props.team_id, shared_app_id: _this.props.receiver.shared_app_id }).then(function (response) {
-        _this.setState({ popupOpen: true, popupText: 'Copied!' });
-        window.setTimeout(function () {
-          this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
-        }.bind(_this), 2000);
+        _this.setupPopup('Copied!');
+      }).catch(function (err) {
+        _this.setupPopup('Copy failed :( Click again');
       });
     };
 
@@ -58487,6 +58503,7 @@ var TeamAppPasswordLine = function (_React$Component) {
       popupOpen: undefined,
       popupText: 'Click to copy'
     };
+    _this.timeoutId = -1;
     return _this;
   }
 
@@ -58504,6 +58521,7 @@ var TeamAppPasswordLine = function (_React$Component) {
         React.createElement(_semanticUiReact.Popup, {
           content: this.state.popupText,
           open: this.state.popupOpen,
+          hideOnScroll: true,
           size: 'mini',
           inverted: true,
           position: 'top center',
@@ -59287,12 +59305,23 @@ var TeamAppPasswordLine = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (TeamAppPasswordLine.__proto__ || Object.getPrototypeOf(TeamAppPasswordLine)).call(this, props));
 
+    _this.setupPopup = function (text) {
+      if (_this.timeoutId !== -1) {
+        window.clearTimeout(_this.timeoutId);
+        _this.timeoutId = -1;
+      }
+      _this.setState({ popupOpen: true, popupText: text });
+      _this.timeoutId = window.setTimeout(function () {
+        _this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
+        _this.timeoutId = -1;
+      }, 2000);
+    };
+
     _this.getPassword = function () {
       (0, _utils.getTeamAppPasswordAndCopyToClipboard)({ team_id: _this.props.team_id, shared_app_id: _this.props.receiver.shared_app_id }).then(function (response) {
-        _this.setState({ popupOpen: true, popupText: 'Copied!' });
-        window.setTimeout(function () {
-          this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
-        }.bind(_this), 2000);
+        _this.setupPopup('Copied!');
+      }).catch(function (err) {
+        _this.setupPopup('Copy failed :( Click again');
       });
     };
 
@@ -59300,6 +59329,7 @@ var TeamAppPasswordLine = function (_React$Component) {
       popupOpen: undefined,
       popupText: 'Click to copy'
     };
+    _this.timeoutId = -1;
     return _this;
   }
 
@@ -59314,9 +59344,10 @@ var TeamAppPasswordLine = function (_React$Component) {
           { className: 'full_flex' },
           '********'
         ),
-        this.props.receiver.can_see_information && React.createElement(_semanticUiReact.Popup, {
+        React.createElement(_semanticUiReact.Popup, {
           content: this.state.popupText,
           open: this.state.popupOpen,
+          hideOnScroll: true,
           size: 'mini',
           inverted: true,
           position: 'top center',
