@@ -48,21 +48,22 @@ public class PasswordLost extends HttpServlet {
         String email = sm.getServletParam("email", true);
 
         try {
-            if (user != null) {
-                Logout.logoutUser(user, sm); //throw new GeneralException(ServletManager.Code.ClientWarning, "You are logged on Ease.");
-            }
-            if (email == null || !Regex.isEmail(email)) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email format.");
-            }
-            try {
-                String userId = User.findDBid(email, sm);
-                Keys.passwordLost(email, userId, sm);
-                sm.setResponse(ServletManager.Code.Success, "Email sent.");
-            } catch (GeneralException e) {
-                if (e.getCode() == ServletManager.Code.ClientError) {
-                    throw new GeneralException(ServletManager.Code.UserMiss, "Email sent.");
-                } else {
-                    throw new GeneralException(ServletManager.Code.InternError, e);
+            if (user != null)
+                sm.setRedirectUrl("/");
+            else {
+                if (email == null || !Regex.isEmail(email)) {
+                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email format.");
+                }
+                try {
+                    String userId = User.findDBid(email, sm);
+                    Keys.passwordLost(email, userId, sm);
+                    sm.setResponse(ServletManager.Code.Success, "Email sent.");
+                } catch (GeneralException e) {
+                    if (e.getCode() == ServletManager.Code.ClientError) {
+                        throw new GeneralException(ServletManager.Code.UserMiss, "Email sent.");
+                    } else {
+                        throw new GeneralException(ServletManager.Code.InternError, e);
+                    }
                 }
             }
         } catch (GeneralException e) {

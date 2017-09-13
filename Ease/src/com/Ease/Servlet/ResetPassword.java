@@ -40,19 +40,20 @@ public class ResetPassword extends HttpServlet {
         String email = sm.getServletParam("email", true);
         String code = sm.getServletParam("code", true);
         try {
-            if (user != null) {
-                Logout.logoutUser(user, sm);
+            if (user != null)
+                sm.setRedirectUrl("/");
+            else {
+                if (email == null || email.equals("")) {
+                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+                } else if (code == null || code.equals("")) {
+                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
+                }
+                String userId = User.findDBid(email, sm);
+                if (Keys.checkCodeValidity(userId, code, sm))
+                    sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
+                else
+                    sm.setRedirectUrl("passwordLost?codeExpiration=true");
             }
-            if (email == null || email.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
-            } else if (code == null || code.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
-            }
-            String userId = User.findDBid(email, sm);
-            if (Keys.checkCodeValidity(userId, code, sm))
-                sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
-            else
-                sm.setRedirectUrl("passwordLost?codeExpiration=true");
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (Exception e) {
