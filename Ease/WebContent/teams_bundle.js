@@ -62958,7 +62958,7 @@ var VerifyTeamUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
           React.createElement(
             'div',
             { className: 'row title-row text-center' },
-            'Ready to get in team!'
+            'Ready to get in the team!'
           ),
           React.createElement(
             'div',
