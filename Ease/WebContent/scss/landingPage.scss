@@ -112,7 +112,6 @@ a.active, a:active, a:focus, a:hover {
     color: #fec503;
 }
 .navbar-custom .nav li a, .navbar-custom .navbar-toggle {
-    font-family: MuseoSans, sans-serif;
     font-size: 14px;
     font-weight: 300;
     text-transform: uppercase;
@@ -940,7 +939,7 @@ header .intro-text .intro-heading {
 
 
 .inTheMac {
-    margin-top: 13px;
+    margin-top: 17px;
     margin-left: 86px;
     #discoverButton {
         margin-left: 156px;
@@ -1002,6 +1001,9 @@ header .intro-text .intro-heading {
 }
 #mainNav.affix-top .nav a {
     color: white;
+}
+#mainNav a#connexionButton {
+    margin-left: 15px;
 }
 #mainNav.affix .nav a#connexionButton {
     color: #373b60;
@@ -1314,8 +1316,14 @@ header {
             }
         }
     }
+    .inTheMac {
+        margin:0;
+        padding:0;
+    }
     #footer {
         .container {
+            padding:0;
+            margin:0;
             .row {
                 margin: 0;
                 padding: 0 0;

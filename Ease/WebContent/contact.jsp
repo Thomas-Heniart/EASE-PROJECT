@@ -147,7 +147,7 @@
                         </div>
                         <div class="field">
                             <label class="contactLabel">Email*</label>
-                            <input required type="text" name="email" placeholder="richard@piedpiper.com">
+                            <input required type="email" name="email" placeholder="richard@piedpiper.com">
                         </div>
                     </div>
                 </div>

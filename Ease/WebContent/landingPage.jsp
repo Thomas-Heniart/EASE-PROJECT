@@ -53,7 +53,6 @@
         .digit {
             border-radius: 4px;
             background-color: #ffffff;
-            font-family: MuseoSans;
             font-size: 40px;
             font-weight: 300;
             line-height: 1.65;
@@ -108,7 +107,7 @@
             <div class="one wide column"></div>
 
             <div class="six wide column">
-                <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;">mots de passe</span>,</br>hello apps</p>
+                <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;">mots de passe</span></br>hello apps</p>
                 <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;margin-bottom: 20px;">
                     Une app est un compte web,</br>
                     ajouté par vous ou partagé au sein de votre équipe.</br>
@@ -129,11 +128,11 @@
                     </button></a>
                 </div>
             </div>
-            <div id="counter" class="sixteen wide column" style="text-align:center;">
+            <div class="sixteen wide column" style="text-align:center;">
 
             </div>
-            <div class="sixteen wide column" style="text-align:center;">
-                <p style="font-size:30px;color: #949eb7;">Comptes web connectés via Ease.space en 2017</p>
+            <div id="counter"  class="sixteen wide column" style="text-align:center;">
+                <p style="font-size:30px;color: #949eb7;margin-top: 15px">Comptes web connectés via Ease.space en 2017</p>
             </div>
         </div>
     </div>
@@ -148,6 +147,12 @@
 <script src="/jsMinified.v00016/basic-utils.js" async></script>
 <script src="/jsMinified.v00016/languageChooser.js" async></script>
 <script src="/jsMinified.v00016/tracker.js" async></script>
+<script type="text/javascript">
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        $('.inTheMac img').addClass('big');
+        $('.inTheMac img').removeClass('large');
+    }
+</script>
 <script type="text/javascript">
     $('button.sendContactButton').on('click', function() {
         if ($('#divInput').find("input[name='email']").val()) {
@@ -209,7 +214,7 @@
 <script>
     document.addEventListener('DOMContentLoaded',function(event){
         // array with texts to type in typewriter
-        var dataText = ['mots de passe', 'comptes', 'identifiants', 'liens', 'post-its', 'fichiers excel'];
+        var dataText = ['mots de passe,', 'comptes,', 'identifiants,', 'liens,', 'post-its,', 'fichiers excel,'];
 
         // type one text in the typwriter
         // keeps calling itself until the text is finished
