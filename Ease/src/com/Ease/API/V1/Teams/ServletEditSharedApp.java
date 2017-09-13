@@ -40,7 +40,7 @@ public class ServletEditSharedApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             JSONObject params = new JSONObject();
             params.put("account_information", sm.getParam("account_information", false));
-            params.put("can_see_information", (Boolean) sm.getParam("can_see_information", true));
+            params.put("can_see_information", sm.getParam("can_see_information", true));
             params.put("url", sm.getStringParam("url", true));
             sharedApp.modifyShared(sm.getDB(), params);
             JSONObject target = sharedApp.getHolder().getOrigin();

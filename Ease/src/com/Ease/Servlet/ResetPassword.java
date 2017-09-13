@@ -134,6 +134,7 @@ public class ResetPassword extends HttpServlet {
             databaseRequest.setInt(userId);
             databaseRequest.set();
             db.commitTransaction(transaction);
+            hibernateQuery.commit();
             sm.setResponse(ServletManager.Code.Success, "Account trunced and password set.");
         } catch (GeneralException e) {
             hibernateQuery.rollback();

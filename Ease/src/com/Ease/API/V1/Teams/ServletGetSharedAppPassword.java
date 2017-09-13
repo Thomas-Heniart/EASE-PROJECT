@@ -28,7 +28,7 @@ public class ServletGetSharedAppPassword extends HttpServlet {
             Integer app_id = sm.getIntParam("shared_app_id", true);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             SharedApp sharedApp = teamUser.getTeam().getAppManager().getSharedApp(app_id);
-            if (sharedApp.getTeamUser_tenant() != teamUser || !teamUser.isTeamAdmin())
+            if (sharedApp.getTeamUser_tenant() != teamUser && !teamUser.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot retrieve account information for this app.");
             App app = (App) sharedApp;
             if (!app.isClassicApp())
