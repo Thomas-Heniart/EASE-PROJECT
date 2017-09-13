@@ -1,3 +1,1 @@
-function simple_app() {
-    this.root = $("")
-}
+function simple_app(){this.root=$("")}
