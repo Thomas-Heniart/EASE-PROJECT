@@ -277,7 +277,7 @@ public class Keys {
             request.setInt(userId);
             rs = request.get();
             while (rs.next()) {
-                request2 = db.prepareRequest("SELECT apps.* FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id WHERE profile_id= ? AND apps.id NOT IN (SELECT pinned_app_id FROM sharedApps);");
+                request2 = db.prepareRequest("SELECT apps.* FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id WHERE profile_id= ? AND apps.pinned = 0;");
                 request2.setInt(rs.getString(Profile.Data.ID.ordinal()));
                 rs2 = request2.get();
                 while (rs2.next()) {
