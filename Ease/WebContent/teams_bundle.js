@@ -50984,7 +50984,7 @@ function Step4(props) {
             { positive: true,
               fluid: true,
               type: "submit",
-              loading: this.props.loading,
+              loading: props.loading,
               disabled: jobRole === null || jobRole === 15 && jobDetails.length === 0 },
             "Next"
           )
