@@ -65520,13 +65520,18 @@ function reducer() {
       }
     case 'DELETE_TEAM_USER_FULFILLED':
       {
-        if (state.id === action.payload.team_user_id && state.type === 'user') {
-          return _extends({}, state, {
-            type: null,
-            id: null
+        var user_id = action.payload.user_id;
+        var _apps = state.apps.map(function (item) {
+          var receivers = item.receivers.filter(function (item) {
+            return item.team_user_id !== user_id;
           });
-        }
-        break;
+          item.receivers = receivers;
+          return item;
+        });
+
+        return _extends({}, state, {
+          apps: _apps
+        });
       }
     case 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED':
       {
