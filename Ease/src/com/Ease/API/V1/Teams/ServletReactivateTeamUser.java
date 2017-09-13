@@ -49,7 +49,7 @@ public class ServletReactivateTeamUser extends HttpServlet {
                 String publicKey = (String) hibernateQuery.getSingleResult();
                 teamUser.setTeamKey(RSA.Encrypt(team_key, publicKey));
             }
-            teamUser.addNotification("@" + teamUser_connected.getUsername() + " validated again your access to " + team.getName(), team.getDb_id().toString(), "", sm.getTimestamp(), sm.getDB());
+            teamUser.addNotification("@" + teamUser_connected.getUsername() + " validated again your access to " + team.getName(), team.getDb_id().toString(), "/resources/notifications/flag.png", sm.getTimestamp(), sm.getDB());
             sm.saveOrUpdate(teamUser);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
