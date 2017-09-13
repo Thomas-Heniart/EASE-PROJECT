@@ -6,7 +6,7 @@
        value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
        scope="session"/>
 <c:if test="${language ne 'en' and language ne 'fr_FR'}">
-    <c:set var="language" value="en" scope="session"/>
+    <c:set var="language" value="fr" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="com.Ease.Languages.text"/>
