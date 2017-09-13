@@ -9,6 +9,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessage;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -71,7 +72,10 @@ public class ServletDeleteTeamUser extends HttpServlet {
             teamUser_to_delete.delete(sm.getDB());
             team.removeTeamUser(teamUser_to_delete);
             sm.deleteObject(teamUser_to_delete);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, team_user_id, teamUser_to_delete.getOrigin()));
+            WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, team_user_id, teamUser_to_delete.getOrigin());
+            sm.addWebSocketMessage(webSocketMessage);
+            if (teamUser_to_delete.getDashboard_user() != null)
+                teamUser_to_delete.getDashboard_user().getWebSocketManager().sendObject(webSocketMessage);
             sm.setSuccess("TeamUser deleted");
         } catch (Exception e) {
             sm.setError(e);

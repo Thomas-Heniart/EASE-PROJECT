@@ -763,6 +763,7 @@ exports.isUserInList = isUserInList;
 exports.checkForNewNotifications = checkForNewNotifications;
 exports.isAdminOrMe = isAdminOrMe;
 exports.isSuperior = isSuperior;
+exports.isSuperiorOrMe = isSuperiorOrMe;
 exports.isAdmin = isAdmin;
 exports.isOwner = isOwner;
 function getInfoValueByName(infoList, infoName) {
@@ -851,6 +852,9 @@ function isAdminOrMe(user, me) {
 
 function isSuperior(user, me) {
   return me.role > user.role;
+}
+function isSuperiorOrMe(user, me) {
+  return isSuperior(user, me) || user.id === me.id;
 }
 
 function isAdmin(userRole) {
@@ -1608,6 +1612,19 @@ module.exports = {
     }
   },
   teams: {
+    getInvitationInformation: function getInvitationInformation(_ref2) {
+      var code = _ref2.code;
+
+      return axios.get('/api/v1/teams/GetInvitationInformation', {
+        params: {
+          code: code
+        }
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
     finalizeRegistration: function finalizeRegistration(code) {
       return axios.get('/api/v1/teams/FinalizeRegistration', {
         params: {
@@ -1617,11 +1634,11 @@ module.exports = {
       }).then(function (response) {
         return response.data;
       }).catch(function (err) {
-        return err.response.data;
+        throw err.response.data;
       });
     },
-    getTeamPaymentInformation: function getTeamPaymentInformation(_ref2) {
-      var team_id = _ref2.team_id;
+    getTeamPaymentInformation: function getTeamPaymentInformation(_ref3) {
+      var team_id = _ref3.team_id;
 
       return axios.get('/api/v1/teams/GetTeamPaymentInformation', {
         params: {
@@ -49127,10 +49144,6 @@ var _queryString = __webpack_require__(235);
 
 var _queryString2 = _interopRequireDefault(_queryString);
 
-var _commonActions = __webpack_require__(47);
-
-var _reactRedux = __webpack_require__(12);
-
 var _SingleEaseLogo = __webpack_require__(182);
 
 var _SingleEaseLogo2 = _interopRequireDefault(_SingleEaseLogo);
@@ -49160,10 +49173,10 @@ var Step1 = function (_React$Component) {
       e.preventDefault();
       var usernameErrors = (0, _utils.checkTeamUsernameErrors)(_this.props.username);
       if (usernameErrors.error) {
-        _this.setState({ errorMessage: usernameErrors.message });
+        _this.setState({ usernameError: true });
         return;
       }
-      _this.setState({ errorMessage: '', loading: true });
+      _this.setState({ errorMessage: '', loading: true, usernameError: false });
       post_api.common.askRegistration(_this.props.email).then(function (response) {
         _this.setState({ loading: false });
         _this.props.onStepValidated();
@@ -49174,6 +49187,7 @@ var Step1 = function (_React$Component) {
 
     _this.state = {
       errorMessage: '',
+      usernameError: false,
       loading: false
     };
     return _this;
@@ -49204,7 +49218,7 @@ var Step1 = function (_React$Component) {
             { onSubmit: this.onSubmit, error: this.state.errorMessage.length > 0 },
             _react2.default.createElement(
               _semanticUiReact.Form.Field,
-              { required: true },
+              { required: true, error: this.state.usernameError },
               _react2.default.createElement(
                 "label",
                 null,
@@ -49219,8 +49233,8 @@ var Step1 = function (_React$Component) {
                 onChange: this.props.handleInput }),
               _react2.default.createElement(
                 _semanticUiReact.Label,
-                { pointing: true },
-                "Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. Maximum 22 characters."
+                { pointing: true, color: this.state.usernameError ? 'red' : null, basic: this.state.usernameError },
+                _utils.userNameRuleString
               )
             ),
             _react2.default.createElement(_semanticUiReact.Form.Input, {
@@ -50531,6 +50545,10 @@ var _CGUStep = __webpack_require__(592);
 
 var _CGUStep2 = _interopRequireDefault(_CGUStep);
 
+var _LoadingScreen = __webpack_require__(293);
+
+var _LoadingScreen2 = _interopRequireDefault(_LoadingScreen);
+
 var _semanticUiReact = __webpack_require__(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -50552,25 +50570,10 @@ var Step1 = function (_React$Component) {
   function Step1(props) {
     _classCallCheck(this, Step1);
 
-    var _this = _possibleConstructorReturn(this, (Step1.__proto__ || Object.getPrototypeOf(Step1)).call(this, props));
-
-    _this.createAccount = _this.createAccount.bind(_this);
-    _this.login = _this.login.bind(_this);
-    return _this;
+    return _possibleConstructorReturn(this, (Step1.__proto__ || Object.getPrototypeOf(Step1)).call(this, props));
   }
 
   _createClass(Step1, [{
-    key: "createAccount",
-    value: function createAccount() {
-      this.props.onStepValidated();
-    }
-  }, {
-    key: "login",
-    value: function login() {
-      this.props.dispatch((0, _commonActions.setLoginRedirectUrl)(this.props.match.url + '?skip'));
-      this.props.history.replace('/login');
-    }
-  }, {
     key: "render",
     value: function render() {
       return _react2.default.createElement(
@@ -50589,16 +50592,16 @@ var Step1 = function (_React$Component) {
               "Ease.space helps you secure, manage and organize web accesses in your team."
             )
           ),
-          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true, fitted: true }),
+          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true }),
           _react2.default.createElement(
             _semanticUiReact.Button,
-            { primary: true, onClick: this.createAccount, fluid: true },
+            { primary: true, onClick: this.props.onStepValidated, fluid: true },
             "Not yet! I am new on Ease.space"
           ),
           _react2.default.createElement(_semanticUiReact.Divider, null),
           _react2.default.createElement(
             _semanticUiReact.Button,
-            { positive: true, onClick: this.login, fluid: true },
+            { positive: true, onClick: this.props.login, fluid: true },
             "Yes! I already have an account"
           )
         )
@@ -50630,12 +50633,16 @@ var Step1AlreadyHaveAnAccount = function (_React$Component2) {
           _react2.default.createElement(
             _semanticUiReact.Header,
             { as: "h1" },
-            "Before joining #teamName, connect to your account (#emailAddress)"
+            "Before joining ",
+            this.props.team_name,
+            ", connect to your account (",
+            this.props.email,
+            ")"
           ),
-          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true, fitted: true }),
+          _react2.default.createElement(_semanticUiReact.Divider, { hidden: true }),
           _react2.default.createElement(
             _semanticUiReact.Button,
-            { positive: true, onClick: this.login, fluid: true },
+            { positive: true, onClick: this.props.login, fluid: true },
             "Continue"
           )
         )
@@ -50969,7 +50976,11 @@ function Step4(props) {
           null,
           _react2.default.createElement(
             _semanticUiReact.Button,
-            { positive: true, fluid: true, type: "submit", disabled: jobRole === null || jobRole === 15 && jobDetails.length === 0 },
+            { positive: true,
+              fluid: true,
+              type: "submit",
+              loading: this.props.loading,
+              disabled: jobRole === null || jobRole === 15 && jobDetails.length === 0 },
             "Next"
           )
         )
@@ -50990,8 +51001,15 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
 
     var _this6 = _possibleConstructorReturn(this, (TeamJoinView.__proto__ || Object.getPrototypeOf(TeamJoinView)).call(this, props));
 
+    _this6.login = function () {
+      _this6.props.dispatch((0, _commonActions.setLoginRedirectUrl)(_this6.props.match.url + '?skip'));
+      _this6.props.history.replace('/login');
+    };
+
     _this6.state = {
+      account_exists: false,
       email: '',
+      team_name: '',
       fname: '',
       lname: '',
       username: '',
@@ -51002,16 +51020,14 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
       jobDetails: '',
       currentStep: 0,
       code: '',
-      skipRegistration: false
+      skipRegistration: false,
+      loading: true,
+      lastStepLoading: false
     };
     _this6.handleInput = _this6.handleInput.bind(_this6);
     _this6.incrementStep = _this6.incrementStep.bind(_this6);
     _this6.finalizeModal = _this6.finalizeModal.bind(_this6);
     _this6.canSkip = _this6.canSkip.bind(_this6);
-    var query = _queryString2.default.parse(_this6.props.location.search);
-    if (query.skip !== undefined) {
-      _this6.state.skipRegistration = true;
-    }
     return _this6;
   }
 
@@ -51025,14 +51041,21 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function finalizeModal() {
       var _this7 = this;
 
+      this.setState({ lastStepLoading: true });
       if (this.canSkip()) {
         post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(function (response) {
+          _this7.setState({ lastStepLoading: false });
           window.location.href = '/';
+        }).catch(function (err) {
+          console.log(err);
         });
       } else {
         post_api.common.registration(this.state.email, this.state.username, this.state.password, null, this.state.code, false).then(function (r) {
           post_api.teams.finalizeRegistration(_this7.props.common.ws_id, _this7.state.fname, _this7.state.lname, _this7.state.username, _this7.state.jobRole, _this7.state.jobDetails, _this7.state.code).then(function (response) {
+            _this7.setState({ lastStepLoading: false });
             window.location.href = '/';
+          }).catch(function (err) {
+            console.log(err);
           });
         });
       }
@@ -51055,27 +51078,44 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function componentDidMount() {
       var _this8 = this;
 
+      var query = _queryString2.default.parse(this.props.location.search);
+      if (query.skip !== undefined) {
+        this.state.skipRegistration = true;
+      }
+      this.setState({ loading: true });
       if (this.props.common.authenticated && !this.state.skipRegistration) this.props.dispatch((0, _commonActions.processLogout)()).then(function () {
-        api.teams.finalizeRegistration(_this8.props.match.params.code).then(function (response) {
-          var teamUser = response;
-          _this8.setState({ fname: teamUser.first_name,
-            email: teamUser.email,
+        api.teams.getInvitationInformation({ code: _this8.props.match.params.code }).then(function (response) {
+          var info = response;
+          var teamUser = info.teamUser;
+          _this8.setState({
+            code: _this8.props.match.params.code,
+            fname: teamUser.first_name,
             lname: teamUser.last_name,
             username: teamUser.username,
-            code: _this8.props.match.params.code });
+            email: info.email,
+            team_name: info.team_name,
+            account_exists: info.account_exists,
+            loading: false
+          });
         }).catch(function (err) {
-          console.log(err);
+          window.location.href = '/';
         });
       });else {
-        api.teams.finalizeRegistration(this.props.match.params.code).then(function (response) {
-          var teamUser = response;
-          _this8.setState({ fname: teamUser.first_name,
-            email: teamUser.email,
+        api.teams.getInvitationInformation({ code: this.props.match.params.code }).then(function (response) {
+          var info = response;
+          var teamUser = info.teamUser;
+          _this8.setState({
+            code: _this8.props.match.params.code,
+            fname: teamUser.first_name,
             lname: teamUser.last_name,
             username: teamUser.username,
-            code: _this8.props.match.params.code });
+            email: info.email,
+            team_name: info.team_name,
+            account_exists: info.account_exists,
+            loading: false
+          });
         }).catch(function (err) {
-          console.log(err);
+          window.location.href = '/';
         });
       }
     }
@@ -51083,11 +51123,14 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
     key: "render",
     value: function render() {
       var steps = [];
-      if (!this.canSkip()) steps.push(_react2.default.createElement(Step1, { onStepValidated: this.incrementStep,
-        dispatch: this.props.dispatch,
-        match: this.props.match,
-        history: this.props.history,
-        key: "1" }));
+      if (!this.canSkip()) {
+        if (!this.state.account_exists) steps.push(_react2.default.createElement(Step1, { onStepValidated: this.incrementStep,
+          login: this.login,
+          key: "1" }));else steps.push(_react2.default.createElement(Step1AlreadyHaveAnAccount, { key: "1",
+          team_name: this.state.team_name,
+          email: this.state.email,
+          login: this.login }));
+      }
       steps.push(_react2.default.createElement(Step2, { onStepValidated: this.incrementStep,
         handleInput: this.handleInput,
         lname: this.state.lname,
@@ -51104,13 +51147,15 @@ var TeamJoinView = (_dec = (0, _reactRedux.connect)(function (store) {
         handleInput: this.handleInput,
         jobRole: this.state.jobRole,
         jobDetails: this.state.jobDetails,
+        loading: this.state.lastStepLoading,
         key: "4" }));
 
       return _react2.default.createElement(
         "div",
         { id: "team_join_view", className: "full_screen_centered_view" },
         _react2.default.createElement(_SingleEaseLogo2.default, null),
-        _react2.default.createElement(
+        this.state.loading && _react2.default.createElement(_LoadingScreen2.default, null),
+        !this.state.loading && _react2.default.createElement(
           _reactAddonsCssTransitionGroup2.default,
           {
             component: "div",
@@ -52269,6 +52314,7 @@ var MultiTeamAppAdd = function (_React$Component2) {
     value: function shareApp() {
       var _this3 = this;
 
+      if (this.state.selectedUsers.length === 0) return;
       var app = {
         website_id: this.state.choosenApp.info.id,
         name: this.state.appName,
@@ -52301,28 +52347,6 @@ var MultiTeamAppAdd = function (_React$Component2) {
     key: 'showDropdown',
     value: function showDropdown() {
       if (!this.state.dropdown) this.setState({ dropdown: true });
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(props) {
-      if (props !== this.props) {
-        var users = [];
-        if (props.selectedItem.type === 'channel') {
-          props.item.userIds.map(function (item) {
-            var user = props.userSelectFunc(item);
-            user.selected = false;
-            users.push(user);
-          }, this);
-        } else {
-          var item = props.item;
-          item.selected = false;
-          users.push(item);
-        }
-        this.setState({
-          selectedUsers: [],
-          users: users
-        });
-      }
     }
   }, {
     key: 'handleAppNameChange',
@@ -54024,28 +54048,6 @@ var LinkTeamAppAdd = function (_React$Component3) {
       this.setState({ users: users, selectedUsers: selectedUsers });
     }
   }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(props) {
-      if (props != this.props) {
-        var users = [];
-        if (props.selectedItem.type === 'channel') {
-          props.item.userIds.map(function (item) {
-            var user = props.userSelectFunc(item);
-            user.selected = false;
-            users.push(user);
-          }, this);
-        } else {
-          var item = props.item;
-          item.selected = false;
-          users.push(item);
-        }
-        this.setState({
-          selectedUsers: [],
-          users: users
-        });
-      }
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _this5 = this;
@@ -54220,6 +54222,11 @@ var SimpleTeamAppAdd = function (_React$Component4) {
     value: function shareApp() {
       var _this8 = this;
 
+      var credentials = Object.keys(this.state.credentials);
+
+      for (var i = 0; i < credentials.length; i++) {
+        if (this.state.credentials[credentials[i]].length === 0) return;
+      }
       var app = {
         website_id: this.state.choosenApp.info.id,
         name: this.state.appName,
@@ -54252,29 +54259,6 @@ var SimpleTeamAppAdd = function (_React$Component4) {
           this.setState({ users: users });
           return;
         }
-      }
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(props) {
-      if (props !== this.props) {
-        var users = [];
-        if (props.selectedItem.type === 'channel') {
-          props.item.userIds.map(function (item) {
-            var user = _extends({}, props.userSelectFunc(item));
-            user.selected = false;
-            users.push(user);
-          }, this);
-        } else {
-          var item = _extends({}, props.item);
-          item.selected = false;
-          item.can_see_information = true;
-          users.push(item);
-        }
-        this.setState({
-          selectedUsers: [],
-          users: users
-        });
       }
     }
   }, {
@@ -55183,7 +55167,7 @@ var TeamDeleteChannelModal = (_dec = (0, _reactRedux.connect)(function (store) {
               React.createElement(
                 'span',
                 null,
-                'Deleting a Group is usefull to clean things up when you do not anticipate using this group anymore. If you delete this group:'
+                'Deleting a Room is usefull to clean things up when you do not anticipate using this room anymore. If you delete this room:'
               )
             ),
             React.createElement(
@@ -56349,7 +56333,7 @@ var UsernameModifier = function (_React$Component2) {
           null,
           '@',
           user.username,
-          (0, _helperFunctions.isAdminOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setModifying.bind(null, true) })
+          (0, _helperFunctions.isSuperiorOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setModifying.bind(null, true) })
         ) : React.createElement(
           _semanticUiReact.Form,
           { onSubmit: this.validate },
@@ -56585,7 +56569,7 @@ var TeamUserFlexTab = function (_React$Component3) {
                   user.first_name,
                   ' ',
                   user.last_name,
-                  (0, _helperFunctions.isAdminOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setFirstLastNameModifying.bind(null, true) })
+                  (0, _helperFunctions.isSuperiorOrMe)(user, me) && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setFirstLastNameModifying.bind(null, true) })
                 ) : React.createElement(
                   _semanticUiReact.Form,
                   { as: 'div' },
@@ -57648,7 +57632,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function teamAppDispatcher(action, app, target) {
   return function (dispatch, getState) {
-    dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
+    var state = getState();
+    if (state.selection.id === target.id && state.selection.type === target.type && state.team.id === target.team_id) dispatch({ type: 'TEAM_APP_' + action, payload: { app: app, target: target } });
   };
 }
 
@@ -58492,7 +58477,7 @@ var TeamAppPasswordLine = function (_React$Component) {
     _this.getPassword = function () {
       (0, _utils.getTeamAppPasswordAndCopyToClipboard)({ team_id: _this.props.team_id, shared_app_id: _this.props.receiver.shared_app_id }).then(function (response) {
         _this.setState({ popupOpen: true, popupText: 'Copied!' });
-        window.setInterval(function () {
+        window.setTimeout(function () {
           this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
         }.bind(_this), 2000);
       });
@@ -58790,7 +58775,7 @@ var TeamMultiApp = function (_React$Component2) {
         React.createElement(
           'div',
           { className: 'team_app multiple_accounts_app' },
-          meReceiver != null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
+          meReceiver !== null && !meReceiver.accepted && React.createElement('div', { className: 'custom-overlay' }),
           React.createElement(
             'div',
             { className: 'name_holder' },
@@ -58859,7 +58844,7 @@ var TeamMultiApp = function (_React$Component2) {
                     'Join app'
                   )
                 ),
-                meReceiver !== null && meReceiver.accepted && React.createElement(
+                React.createElement(
                   'div',
                   { className: 'password_change_remind' },
                   React.createElement(
@@ -59305,7 +59290,7 @@ var TeamAppPasswordLine = function (_React$Component) {
     _this.getPassword = function () {
       (0, _utils.getTeamAppPasswordAndCopyToClipboard)({ team_id: _this.props.team_id, shared_app_id: _this.props.receiver.shared_app_id }).then(function (response) {
         _this.setState({ popupOpen: true, popupText: 'Copied!' });
-        window.setInterval(function () {
+        window.setTimeout(function () {
           this.setState({ popupOpen: undefined, popupText: 'Click to copy' });
         }.bind(_this), 2000);
       });
@@ -59644,7 +59629,7 @@ var TeamSimpleApp = function (_React$Component2) {
                 React.createElement(
                   'div',
                   { className: 'credentials' },
-                  (meReceiver != null || this.state.modifying) && Object.keys(app.account_information).reverse().map(function (item) {
+                  (meReceiver !== null || this.state.modifying) && Object.keys(app.account_information).reverse().map(function (item) {
                     return React.createElement(
                       'div',
                       { className: 'credentials_line', key: item },
@@ -59694,7 +59679,7 @@ var TeamSimpleApp = function (_React$Component2) {
                     'Join app'
                   )
                 ),
-                meReceiver !== null && meReceiver.accepted && React.createElement(
+                React.createElement(
                   'div',
                   { className: 'password_change_remind' },
                   React.createElement(
@@ -59837,7 +59822,7 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
       _post_api.dashboard.createProfile({ name: _this.state.profileName }).then(function (response) {
         var profiles = _this.state.profiles.slice();
         profiles.push(response);
-        _this.setState({ profiles: profiles, profileName: '' });
+        _this.setState({ profiles: profiles, profileName: '', selectedProfile: response.id });
       }).catch(function (err) {
         //do something
       });
@@ -65376,7 +65361,7 @@ function reducer() {
         return _extends({}, state, {
           type: 'user',
           id: action.payload.user.id,
-          apps: action.payload.apps
+          apps: action.payload.apps.reverse()
         });
       }
     case "FETCH_TEAM_FULFILLED":
@@ -65390,7 +65375,7 @@ function reducer() {
     case 'FETCH_TEAM_USER_APPS_FULFILLED':
       {
         return _extends({}, state, {
-          apps: action.payload.apps,
+          apps: action.payload.apps.reverse(),
           type: action.payload.type,
           id: action.payload.id
         });
@@ -65398,7 +65383,7 @@ function reducer() {
     case 'FETCH_TEAM_CHANNELS_APPS_FULFILLED':
       {
         return _extends({}, state, {
-          apps: action.payload.apps,
+          apps: action.payload.apps.reverse(),
           type: action.payload.type,
           id: action.payload.id
         });
@@ -65408,7 +65393,7 @@ function reducer() {
         return _extends({}, state, {
           type: 'channel',
           id: action.payload.channel.id,
-          apps: action.payload.apps
+          apps: action.payload.apps.reverse()
         });
       }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED":

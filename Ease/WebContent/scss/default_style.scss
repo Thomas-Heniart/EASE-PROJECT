@@ -6,7 +6,6 @@
 @import 'UIElements/textInputLogin';
 @import 'UIElements/PopupWindow';
 @import 'UIElements/SimpleAlertPopup';
-@import 'UIElements/Tutorial';
 @import 'UIElements/downloadExtension';
 @import 'settingsView';
 @import 'catalogView';
@@ -174,6 +173,7 @@ html {
   top:0;
   left: 0;
   height: 43px;
+  z-index: 1;
 }
 
 #main_navbar {
