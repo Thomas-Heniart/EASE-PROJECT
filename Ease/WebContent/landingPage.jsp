@@ -112,12 +112,14 @@
                     Une app est un compte web,</br>
                     ajouté par vous ou partagé au sein de votre équipe.</br>
                     Un clic suffit pour y accéder, directement connecté.</p>
-                <div id="divInput" class="ui action fluid input" style="height: 50px;">
-                    <input type="text" name="email" placeholder="Entrez votre adresse email">
-                    <button type="submit" class="sendContactButton ui button" style="font-size: 15px!important;font-weight:300;">
-                        ESSAYER
-                    </button>
-                </div>
+                <form id="formRedir" class="ui form" action="" method="post" onsubmit="return submitEmail()">
+                    <div id="divInput" class="ui action fluid input" style="height: 50px;">
+                        <input type="email" name="email" placeholder="Entrez votre adresse email" required>
+                        <button type="submit" class="sendContactButton ui button" style="font-size: 15px!important;font-weight:300;">
+                            ESSAYER
+                        </button>
+                    </div>
+                </form>
                 <p style="margin-top: 10px;font-size: 14px;font-weight: 300;color: #949eb7;">C’est gratuit, pas de CB requise</p>
             </div>
             <div class="rightLanding nine wide column">
@@ -154,14 +156,10 @@
     }
 </script>
 <script type="text/javascript">
-    $('button.sendContactButton').on('click', function() {
-        if ($('#divInput').find("input[name='email']").val()) {
-            document.location.href = "/teams#/registration?email="+$('#divInput').find("input[name='email']").val();
-        }
-        else {
-            document.location.href = "/teams#/registration";
-        }
-    });
+   function submitEmail() {
+       document.location.href = "/teams#/registration?email="+$('#divInput').find("input[name='email']").val();
+       return false;
+    };
     $(document).ready(function () {
         var count;
         $.get("/api/v1/common/ConnectionNumber", function (data) {
@@ -219,7 +217,7 @@
         // type one text in the typwriter
         // keeps calling itself until the text is finished
         function typeWriter(text, i, fnCallback) {
-            // chekc if text isn't finished yet
+            // check if text isn't finished yet
             if (i < (text.length)) {
                 // add next character to h1
                 document.querySelector("#changing").innerHTML = text.substring(0, i+1) +'<span aria-hidden="true"></span>';
@@ -230,20 +228,20 @@
                 }, 100);
             }
             // text finished, call callback if there is a callback function
-            else if (typeof fnCallback == 'function') {
+            else if (typeof fnCallback === 'function') {
                 // call callback after timeout
                 setTimeout(fnCallback, 1200);
             }
         }
         // start a typewriter animation for a text in the dataText array
         function StartTextAnimation(i) {
-            if (typeof dataText[i] == 'undefined'){
+            if (typeof dataText[i] === 'undefined'){
                 setTimeout(function() {
                     StartTextAnimation(0);
                 }, 2000);
             }
             // check if dataText[i] exists
-            if (i < dataText[i].length) {
+            if (dataText[i] !== undefined && i < dataText[i].length) {
                 // text exists! start typewriter animation
                 typeWriter(dataText[i], 0, function(){
                     // after callback (and whole text has been animated), start next text

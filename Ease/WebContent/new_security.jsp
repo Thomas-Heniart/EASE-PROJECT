@@ -155,7 +155,8 @@
                 <p>L’ensemble du trafic vers nos serveurs passe par un firewall. C’est à dire que le trafic d’origine inconnu est filtré et bloqué.</p>
                 <p>Des tests automatiques de vulnérabilité sont réalisés quotidiennement. De plus un test de pénétration interne est réalisé 4 fois par an à l’aide de l’outil Qualys (Qualys est une entreprise de sécurité utilisée par la plupart des entreprise de Forbes 100). D’autres tests réalisés par des tiers sont faits de manière régulière et notre objectif est de constamment augmenter leur récurrence.</p>
                 <p>Enfin, nous récoltons de manière anonyme un ensemble de rapports d’erreurs provenant de l’activité de nos utilisateurs. Aucunes informations personnelles ne sont collectées lors de ces rapports automatiques d'erreurs. Ils sont réalisés pour augmenter la qualité et la sécurité du produit.</p>
-                <p>Pour en savoir plus, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf  target="_blank"">téléchargez notre Security White paper.</a></p>
+                <p>Pour en savoir plus, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf"
+                                           target="_blank">téléchargez notre Security White paper.</a></p>
             </div>
             <div class="doc_section">
                 <h1 class="doc_header" id="5">5. Politique interne de sécurité</h1>
