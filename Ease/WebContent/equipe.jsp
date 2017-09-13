@@ -82,7 +82,7 @@ pageEncoding="UTF-8"%>
 					<h2 class="section-heading">
 						<fmt:message key="team.title" />
 					</h2>
-					<p class="join-us"><a href="https://easespace.welcomekit.co"><u>Vous souhaitez nous rejoindre ?</u></a></p>
+					<p class="join-us"><a href="https://easespace.welcomekit.co" target="_blank"><u>Vous souhaitez nous rejoindre ?</u></a></p>
 				</div>
 			</div>
 			<div class="row">
@@ -242,7 +242,7 @@ pageEncoding="UTF-8"%>
 			</div>
 			<div style="margin: auto; border-bottom: 1px solid #979797; width:200px; margin-top: 120px;"></div>
 			<div>
-				<p class="join-us" style="margin-top: 30px;"><a href="https://easespace.welcomekit.co"><u>Join us!</u></a></p>
+				<p class="join-us" style="margin-top: 30px;"><a href="https://easespace.welcomekit.co"  target="_blank"><u>Join us!</u></a></p>
 			</div>
 		</section>
 		<%@ include file="templates/landingPage/landingFooter.jsp" %>
