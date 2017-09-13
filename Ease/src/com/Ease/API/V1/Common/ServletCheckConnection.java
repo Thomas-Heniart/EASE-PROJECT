@@ -17,7 +17,7 @@ public class ServletCheckConnection extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             JSONObject res = new JSONObject();
-            res.put("connected", sm.getUser() == null);
+            res.put("connected", sm.getUser() != null);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
