@@ -92,15 +92,15 @@
 </header>
 <section style="background-color: white">
     <div class="container">
-            <ul class="docs-nav">
-                <li><a href="#1" class="cc-active">1. Anonymat</a></li>
-                <li><a href="#2" class="cc-active">2. Sécurité pour l'utilisateur</a></li>
-                <li><a href="#3" class="cc-active">3. Sécurité pour l'entreprise</a></li>
-                <li><a href="#4" class="cc-active">4. Nos technologies de sécurité</a></li>
-                <li><a href="#5" class="cc-active">5. Politique interne de sécurité</a></li>
-                <li><a href="#6" class="cc-active">6. F.A.Q.</a></li>
-                <li><a href="#7" class="cc-active">7. Notre Security White paper</a></li>
-            </ul>
+        <ul class="docs-nav">
+            <li><a href="#1" class="cc-active">1. Anonymat</a></li>
+            <li><a href="#2" class="cc-active">2. Sécurité pour l'utilisateur</a></li>
+            <li><a href="#3" class="cc-active">3. Sécurité pour l'entreprise</a></li>
+            <li><a href="#4" class="cc-active">4. Nos technologies de sécurité</a></li>
+            <li><a href="#5" class="cc-active">5. Politique interne de sécurité</a></li>
+            <li><a href="#6" class="cc-active">6. F.A.Q.</a></li>
+            <li><a href="#7" class="cc-active">7. Notre Security White paper</a></li>
+        </ul>
         <div id="docs-content" class="docs-content">
             <div class="doc_section">
                 <h1 class="doc_header" id="1">1. Anonymat</h1>
@@ -213,9 +213,9 @@
                     Security Whitepaper.</a></p>
             </div>
             <div style="text-align: center">
-            <a href="/teams#/registration" class="btn btn-xl signUpButton">
-                Essayez Ease.space gratuitement
-            </a>
+                <a href="/teams#/registration" class="btn btn-xl signUpButton">
+                    Essayez Ease.space gratuitement
+                </a>
             </div>
         </div>
     </div>
