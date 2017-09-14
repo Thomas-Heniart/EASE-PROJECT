@@ -134,11 +134,11 @@
         <url-pattern>/home/*</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>team.html</servlet-name>
-        <jsp-file>/team.html</jsp-file>
+        <servlet-name>team.jsp</servlet-name>
+        <jsp-file>/team.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
-        <servlet-name>team.html</servlet-name>
+        <servlet-name>team.jsp</servlet-name>
         <url-pattern>/teams/*</url-pattern>
     </servlet-mapping>
     <servlet>
