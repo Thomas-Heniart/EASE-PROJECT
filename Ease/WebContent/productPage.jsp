@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00012/lib/fonts/museo-font.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/default_style.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/bootstrap.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/landingPage.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/securityPage.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/productPage.css" />
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00013/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -230,14 +230,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00017/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00017/jquery.complexify.js"></script>
-<script src="/jsMinified.v00017/bootstrap.js" async></script>
-<script src="/jsMinified.v00017/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00017/landingPage.js" async></script>
-<script src="/jsMinified.v00017/basic-utils.js" async></script>
-<script src="/jsMinified.v00017/languageChooser.js" async></script>
-<script src="/jsMinified.v00017/tracker.js" async></script>
+<script src="/jsMinified.v00018/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00018/jquery.complexify.js"></script>
+<script src="/jsMinified.v00018/bootstrap.js" async></script>
+<script src="/jsMinified.v00018/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00018/landingPage.js" async></script>
+<script src="/jsMinified.v00018/basic-utils.js" async></script>
+<script src="/jsMinified.v00018/languageChooser.js" async></script>
+<script src="/jsMinified.v00018/tracker.js" async></script>
 <script>
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#tableHello').removeClass('product-tab');

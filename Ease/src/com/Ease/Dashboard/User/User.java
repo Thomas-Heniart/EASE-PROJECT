@@ -47,6 +47,12 @@ public class User {
         DatabaseResult rs = request.get();
         int transaction = db.startTransaction();
         if (rs.next()) {
+            if (!email.equals(email.toLowerCase())) {
+                request = db.prepareRequest("UPDATE users SET email = ? WHERE id = ?;");
+                request.setString(email.toLowerCase());
+                request.setInt(rs.getInt("id"));
+                request.set();
+            }
             Keys keys = Keys.loadKeys(rs.getString("key_id"), password, db);
             User newUser = loadUserWithKeys(rs, keys, context, db);
             db.commitTransaction(transaction);
@@ -105,10 +111,14 @@ public class User {
         User newUser = new User(db_id, firstName, email, keys, options, isAdmin, false,
                 sessionSave, status);
         newUser.loadTeamUsers(context);
+        System.out.println("Team users loaded.");
         newUser.initializeDashboardManager(context, db);
+        System.out.println("Dashboard loaded.");
         newUser.initializeNotificationManager();
-        newUser.loadExtensionKeys(db);
+        System.out.println("Notifications loaded");
+        //newUser.loadExtensionKeys(db);
         newUser.loadEmails(db);
+        System.out.println("Emails loaded");
         for (App app : newUser.getDashboardManager().getApps()) {
             if (app.getType().equals("LogwithApp")) {
                 LogwithApp logwithApp = (LogwithApp) app;
@@ -125,6 +135,7 @@ public class User {
             if (userGroup != null)
                 newUser.getGroups().add(userGroup);
         }
+        System.out.println("Load user done.");
         return newUser;
     }
 
