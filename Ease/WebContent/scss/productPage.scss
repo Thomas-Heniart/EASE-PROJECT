@@ -483,27 +483,7 @@ section#security {
 }
 
 @media screen and (max-width: 768px) {
-  .intro-text {
-    padding-top: 50px !important;
-    .intro-heading {
-      max-width: 722px;
-      font-family: Raleway, sans-serif !important;
-      font-size: 20px !important;
-      margin: auto;
-      line-height: 1.22;
-      font-weight: bold !important;
-      text-align: left;
-    }
-    .intro-lead-in {
-      max-width: 880px;
-      max-height: 76px;
-      font-weight: 300;
-      margin: auto;
-      font-family: MuseoSans, sans-serif !important;
-      line-height: 1.58 !important;
-      font-size: 10px !important;
-    }
-  }
+
   .tab-nav {
     width: 101%;
     height: 700px;
