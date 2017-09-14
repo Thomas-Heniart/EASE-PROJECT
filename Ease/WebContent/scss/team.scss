@@ -35,6 +35,10 @@ button.team_app_requests {
   color: $themeRedColor;
 }
 
+.team_app .custom-overlay {
+  border-radius: 5px;
+}
+
 #share_app_dropdown {
   color: white;
   background-color: $themeColor;
@@ -1299,6 +1303,7 @@ button.action_text_button {
             @include display-flex();
             @include flex-shrink(0);
             @include flex-direction(column);
+            z-index: 15;
             .add_buttons_wrapper {
               @include display-flex();
               @include flex(1);

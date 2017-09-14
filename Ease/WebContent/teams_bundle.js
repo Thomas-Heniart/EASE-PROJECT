@@ -48445,7 +48445,7 @@ var Base = (_dec = (0, _reactRedux.connect)(function (store) {
             window.location.href = '/';
           });
         }
-      }, 10000);
+      }, 30000);
     };
 
     _this.state = {
@@ -59345,6 +59345,8 @@ var TeamAppPasswordLine = function (_React$Component) {
         _this.setupPopup('Copy failed :( Click again');
       });
     };
+
+    _this.copyPassword = function () {};
 
     _this.state = {
       popupOpen: undefined,

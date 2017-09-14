@@ -6,14 +6,17 @@ import AppReceiverTooltip from "../teams/AppReceiverTooltip";
 import * as appActions from "../../actions/appsActions";
 import * as modalActions from "../../actions/teamModalActions"
 import {isAdmin} from "../../utils/helperFunctions";
+import api from "../../utils/api";
+import {getTeamAppPasswordAndCopyToClipboard} from "../../utils/utils";
 import {
-    selectUserFromListById,
-    getChannelUsers,
-    findMeInReceivers,
-    getReceiverInList,
-    isUserInList,
-    passwordChangeValues
+  selectUserFromListById,
+  getChannelUsers,
+  findMeInReceivers,
+  getReceiverInList,
+  isUserInList,
+  passwordChangeValues
 } from "../../utils/helperFunctions"
+import { Popup, Icon} from 'semantic-ui-react';
 
 function TeamSimpleAppButtonSet(props) {
   const app = props.app;
@@ -22,7 +25,7 @@ function TeamSimpleAppButtonSet(props) {
   const meSender = app.sender_id === me.id;
   return (
       <div class="team_app_actions_holder">
-        {app.sharing_requests.length > 0 && isAdmin(me) &&
+        {app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) &&
         <button class="button-unstyle team_app_requests"
                 data-tip="User(s) would like to access this app"
                 onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
@@ -88,6 +91,54 @@ function SimpleAppReceiverTagDesc(props){
         </div>
       </div>
   )
+}
+
+class TeamAppPasswordLine extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      popupOpen: undefined,
+      popupText: 'Click to copy'
+    };
+    this.timeoutId = -1;
+  }
+  setupPopup = (text) => {
+    if (this.timeoutId !== -1) {
+      window.clearTimeout(this.timeoutId);
+      this.timeoutId = -1;
+    }
+    this.setState({popupOpen: true, popupText: text});
+    this.timeoutId = window.setTimeout(() => {
+      this.setState({popupOpen:undefined, popupText: 'Click to copy'});
+      this.timeoutId = -1;
+    }, 2000);
+  };
+  getPassword = () => {
+    getTeamAppPasswordAndCopyToClipboard({team_id: this.props.team_id, shared_app_id: this.props.receiver.shared_app_id}).then(response => {
+      this.setupPopup('Copied!');
+    }).catch(err => {
+      this.setupPopup('Copy failed :( Click again');
+    });
+  };
+  copyPassword = () => {
+
+  };
+  render(){
+    return (
+        <span class="display_flex full_flex">
+          <span class="full_flex">********</span>
+          {this.props.receiver.can_see_information &&
+          <Popup
+              content={this.state.popupText}
+              open={this.state.popupOpen}
+              hideOnScroll={true}
+              size="mini"
+              inverted
+              position='top center'
+              trigger={<Icon name="eye" link onClick={this.getPassword}/>}/>}
+        </span>
+    )
+  }
 }
 
 class TeamSimpleApp extends React.Component {
@@ -301,11 +352,11 @@ class TeamSimpleApp extends React.Component {
             </span>}
           </div>
           <div class="team_app_sender_info">
-            <span class="team_app_sender_name">
-              <i class="fa fa-user mrgnRight5"/>
-              {senderUser.username}
-              {me.id === senderUser.id && "(you)"}
-            </span>
+    <span class="team_app_sender_name">
+    <i class="fa fa-user mrgnRight5"/>
+      {senderUser.username}
+      {me.id === senderUser.id && "(you)"}
+    </span>
             {meReceiver !== null && !meReceiver.accepted ?
                 <span>
               &nbsp;tagged you in a Single App,&nbsp;
@@ -339,20 +390,21 @@ class TeamSimpleApp extends React.Component {
                 </div>
                 <div class="credentials_holder">
                   <div class="credentials">
-                    {(meReceiver != null || this.state.modifying) &&
+                    {(meReceiver !== null || this.state.modifying) &&
                     Object.keys(app.account_information).reverse().map(function(item){
                       return (
                           <div class="credentials_line" key={item}>
                             <div class="credentials_type_icon">
                               <i class={classnames('fa', webInfo[item].placeholderIcon)} data-tip={"App " + item}/>
                             </div>
-                            <div class="credentials_value_holder">
+                            <div class="credentials_value_holder full_flex">
                               {!this.state.modifying ?
-                                  <span class="credentials_value">
+                                  <span class="credentials_value dispay_flex full_flex">
                                       {item != 'password' ?
                                           app.account_information[item]
                                           :
-                                          '********'}
+                                          <TeamAppPasswordLine team_id={app.origin.team_id} receiver={meReceiver}/>
+                                      }
                                   </span>
                                   :
                                   <input autoComplete="off"
@@ -373,18 +425,13 @@ class TeamSimpleApp extends React.Component {
                       <span class="default">Request sent</span>
                     </button>}
                     {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked &&
-                    <button class="button-unstyle requestAppButton"
-                            onClick={e => {this.props.dispatch(appActions.askJoinTeamApp(app.id))}}>
-                      <span class="onHover">Ask to access</span>
-                      <span class="default">This app does not concern you</span>
-                    </button>}
+                      <RequestAppButton action={e => {this.props.dispatch(appActions.askJoinTeamApp(app.id))}}/>}
                     {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
                     <button class="button-unstyle joinAppBtn"
                             onClick={this.selfJoinApp}>
                       Join app
                     </button>}
                   </div>
-                  {meReceiver != null && meReceiver.accepted &&
                   <div class="password_change_remind">
                     <div class="password_change_icon">
                       <i class="fa fa-clock-o" data-tip="Password update frequency"/>
@@ -404,7 +451,7 @@ class TeamSimpleApp extends React.Component {
                           }
                         </select>
                     }
-                  </div>}
+                  </div>
                 </div>
               </div>
               <div class="sharing_info full_flex">
