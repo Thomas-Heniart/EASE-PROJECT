@@ -125,7 +125,7 @@ function sendEvent(obj) {
                     document.dispatchEvent(event);
                 }, function (retMsg) {
                     //easeTracker.trackEvent("App fail clicks");
-                    showAlertPopup(retMsg, true);
+                  return;
                 }, 'text');
             }
         }
