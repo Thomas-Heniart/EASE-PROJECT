@@ -120,7 +120,7 @@
             <div class="ui grid discoverSpace">
                 <div class="ui three column stackable row">
                     <div class="column">
-                        <img src="/resources/images/appsIllimitées.png" height="150px" />
+                        <img src="/resources/images/appsIllimitees.png" height="150px" />
                         <h3>Apps illimitées</h3>
                         Que vous ayez beaucoup de comptes</br>ou nous. Nous intégrons tout, même</br>les sites connectés avec Facebook,</br>Linkedin…
                     </div>
