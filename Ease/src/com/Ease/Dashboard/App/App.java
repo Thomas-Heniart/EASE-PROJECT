@@ -18,6 +18,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class App implements ShareableApp, SharedApp {
 
@@ -267,7 +269,8 @@ public class App implements ShareableApp, SharedApp {
 
     /* Interface ShareableApp */
     protected List<SharedApp> sharedApps = new LinkedList<>();
-    protected HashMap<Integer, SharedApp> sharedAppIdMap = new HashMap<>();
+    protected ConcurrentMap<Integer, SharedApp> sharedAppIdMap = new ConcurrentHashMap<>();
+    // protected HashMap<Integer, SharedApp>  = new
     protected TeamUser teamUser_owner;
     protected Channel channel;
     protected String description;
@@ -776,8 +779,10 @@ public class App implements ShareableApp, SharedApp {
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
             JSONArray receivers = new JSONArray();
-            for (SharedApp sharedApp : this.getSharedApps())
+            for (SharedApp sharedApp : this.sharedAppIdMap.values())
                 receivers.add(sharedApp.getSharedJSON());
+            /* for (SharedApp sharedApp : this.getSharedApps())
+                receivers.add(sharedApp.getSharedJSON()); */
             res.put("receivers", receivers);
             JSONArray waitingTeamUsers = new JSONArray();
             for (TeamUser teamUser : this.getPendingTeamUsers())

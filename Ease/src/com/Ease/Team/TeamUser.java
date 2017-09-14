@@ -448,8 +448,6 @@ public class TeamUser {
                 if (shareableApp.getPendingTeamUsers().contains(this))
                     shareableApp.removePendingTeamUser(this, db);
             }
-            request.setInt(this.getDb_id());
-            request.set();
             db.commitTransaction(transaction);
             if (this.getDashboard_user() != null)
                 this.getDashboard_user().getTeamUsers().remove(this);

@@ -113,6 +113,9 @@
                 <div class="ui positive message" style="display: none">
                     <p>Message envoyé</p>
                 </div>
+                <div class="ui negative message" style="display: none">
+                    <p></p>
+                </div>
             </form>
         </div>
     </div>
@@ -150,7 +153,10 @@
     $('.contactSegment form').submit(function (e) {
         var self = $(this);
         e.preventDefault();
-        $("button", self).addClass("loading");
+        var button = $("button.sendContactButton", self);
+        button.addClass("loading");
+        $(".message.negative").hide();
+        $(".message.positive").hide();
         ajaxHandler.post(
             "/api/v1/common/PricingContact",
             {
@@ -163,12 +169,15 @@
                 phoneNumber: self.find("input[name='phoneNumber']").val()
             },
             function () {
-                $("button", self).addClass("loading");
             },
             function () {
-                $("button", self).hide();
+                button.hide();
                 $(".message.positive").show();
                 easeTracker.trackEvent("HomepageContactSubmit");
+            }, function (msg) {
+                $(".message.negative p").text(msg);
+                $(".message.negative").show();
+                button.removeClass("loading");
             });
     });
 </script>
