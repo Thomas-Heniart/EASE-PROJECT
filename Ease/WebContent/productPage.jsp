@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="/cssMinified.v00012/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/cssMinified.v00012/landingPage.css" />
     <link rel="stylesheet" href="/cssMinified.v00012/securityPage.css" />
-    <link rel="stylesheet" href="/scss/productPage.scss" />
+    <link rel="stylesheet" href="/cssMinified.v00012/productPage.css" />
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -171,14 +171,14 @@
                         accès à tous les comptes de la société. En plus, les besoins d’accès changent dans le temps.</p>
                 </div>
                 <div class="twelve wide column">
-                    <img class="ui huge image" src="/resources/images/teamSpace.png" style="margin-left:35px;border-radius:5px;box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);">
+                    <img class="ui huge image" src="/resources/images/teamSpace.png">
                 </div>
             </div>
         </div>
-        <div class="ui stackable mobile reversed two column grid textOrg">
-            <div class="ui row">
+        <div class="ui stackable two column grid textOrg">
+            <div class="ui mobile reversed row">
                 <div class="five wide column">
-                    <img class="ui small image" src="/resources/images/organisationApps.png" style="width:300px;height:260px;margin-top:40px;">
+                    <img class="ui small image" src="/resources/images/organisationApps.png">
                 </div>
                 <div class="eleven wide column">
                     <h2>Organisation</h2>
@@ -188,30 +188,47 @@
                 </div>
             </div>
         </div>
-        <div class="ui segment textControl" style="border:none;box-shadow:none;">
-            <img class="ui small right floated image" src="/resources/images/controlTagLouise.png" style="width:360px;height:200px;margin-top:100px;">
-            <h2>Contrôle</h2>
-            <p>Distribuez les accès automatiquement à une ou plusieurs personnes.</p>
-            <p>Notre technologie permet de donner les accès sans que les collaborateurs n’aient besoin de connaître les mots de passe.</p>
-             <p>Programmez les arrivées et départs des collaborateurs et révoquez les accès en un clic.</p>
+        <div class="ui stackable two column grid textControl">
+            <div class="ui row">
+                <div class="eleven wide column">
+                    <h2>Contrôle</h2>
+                    <p>Distribuez les accès automatiquement à une ou plusieurs personnes.</p>
+                    <p>Notre technologie permet de donner les accès sans que les collaborateurs n’aient besoin de connaître les mots de passe.</p>
+                    <p>Programmez les arrivées et départs des collaborateurs et révoquez les accès en un clic.</p>
+                </div>
+                <div class="five wide column">
+                    <img class="ui small right floated image" src="/resources/images/controlTagLouise.png">
+                </div>
+            </div>
         </div>
-        <div class="ui segment textShare" style="border:none;box-shadow:none;">
-            <img class="ui small left floated image" src="/resources/images/partageApps.png" style="width:350px;height:350px;margin-top:30px;">
-            <h2>Partage</h2>
-            <p>Qu’un compte soit partagé entre plusieurs personnes, ou que chaque utilisateur ait ses propres identifiants, ou que ce soit un intranet, un SSO ou un site sans identifiants, vous pouvez le partager.</p>
-            <p>Vous pouvez différencier chaque compte et les distribuer facilement à l’ensemble de l’équipe ou juste
-                certaines personnes.</p>
-             <p>L’outil est collaboratif, les membres peuvent partager des outils au sein des Rooms dont ils font partie.</p>
+        <div class="ui stackable two column grid textShare">
+            <div class="ui mobile reversed row">
+                <div class="five wide column">
+                    <img class="ui small left floated image" src="/resources/images/partageApps.png">
+                </div>
+                <div class="eleven wide column">
+                    <h2>Partage</h2>
+                    <p>Qu’un compte soit partagé entre plusieurs personnes, ou que chaque utilisateur ait ses propres identifiants, ou que ce soit un intranet, un SSO ou un site sans identifiants, vous pouvez le partager.</p>
+                    <p>Vous pouvez différencier chaque compte et de les distribuer facilement à l’ensemble de l’équipe ou juste certaines  personnes.</p>
+                    <p>L’outil est collaboratif, les membres peuvent partager des outils au sein des Rooms dont ils font partie.</p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="ui divider"></div>
+    <div class="ui divider" style="margin: 80px 0;"></div>
     <div class="container">
-        <div class="ui clearing segment textPlace" style="border:none;box-shadow:none;">
-            <a class="ui right floated blue button" href="/pricing" style="margin-top:80px;margin-right:30px;color:#ffffff;font-size: 20px;font-weight: bold;">Découvrez nos plans</a>
-            <h2>Mise en place</h2>
-            <p>Invitez vos membres et ajoutez les comptes web dont vous avez besoin, ou laissez vos collaborateurs le faire eux même.</p>
-             <p>La distribution des comptes se fait automatiquement.</p>
-            <a class="ui right floated button" href="/companyContact" style="margin-top:-80px;margin-right:30px;font-size: 20px;font-weight: bold;">Contactez l'équipe commerciale</a>
+        <div class="ui stackable two column grid textPlace">
+            <div class="ui row">
+                <div class="nine wide column">
+                    <h2>Mise en place</h2>
+                    <p>Invitez vos membres et ajoutez les comptes web dont vous avez besoin, ou laissez vos collaborateurs le faire eux même.</p>
+                    <p>La distribution des comptes se fait automatiquement.</p>
+                </div>
+                <div class="seven wide column">
+                    <a class="ui right floated blue button" href="/pricing" style="margin-top:60px;margin-right:30px;color:#ffffff;font-size: 20px;font-weight: bold;">Découvrez nos plans</a>
+                    <a class="ui right floated button" href="/companyContact" style="margin-top: 30px;margin-right:30px;font-size: 20px;font-weight: bold;">Contactez l'équipe commerciale</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
