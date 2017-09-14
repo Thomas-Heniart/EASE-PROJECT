@@ -34,12 +34,12 @@ pageEncoding="UTF-8"%>
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-	<link rel="stylesheet" type="text/css" href="/cssMinified.v00012/lib/fonts/museo-font.css"/>
-	<link rel="stylesheet" href="/cssMinified.v00012/default_style.css"/>
-	<link rel="stylesheet" href="/cssMinified.v00012/bootstrap.css"/>
-	<link rel="stylesheet" href="/cssMinified.v00012/landingPage.css"/>
-	<link rel="stylesheet" href="/cssMinified.v00012/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="/cssMinified.v00012/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00013/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/pricingPage.css"/>
 
 
 
@@ -185,13 +185,13 @@ pageEncoding="UTF-8"%>
 	</section>
 	<%@ include file="templates/landingPage/landingFooter.jsp" %>
 	<%@ include file="templates/landingPage/registrationPopup.jsp" %>
-    <script src="/jsMinified.v00017/jquery1.12.4.js"></script>
-    <script src="/jsMinified.v00017/languageChooser.js" async></script>
-    <script src="/jsMinified.v00017/basic-utils.js" async></script>
-    <script src="/jsMinified.v00017/ajaxHandler.js" async></script>
-    <script src="/jsMinified.v00017/jquery.complexify.js" async></script>
-    <script src="/jsMinified.v00017/registrationPopup.js" async></script>
-    <script src="/jsMinified.v00017/tracker.js" async></script>
+    <script src="/jsMinified.v00018/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00018/languageChooser.js" async></script>
+    <script src="/jsMinified.v00018/basic-utils.js" async></script>
+    <script src="/jsMinified.v00018/ajaxHandler.js" async></script>
+    <script src="/jsMinified.v00018/jquery.complexify.js" async></script>
+    <script src="/jsMinified.v00018/registrationPopup.js" async></script>
+    <script src="/jsMinified.v00018/tracker.js" async></script>
 	<script type="text/javascript">
 		window.addEventListener('load',function(){
 			$('#free button[type=submit]').click(function(){
@@ -206,7 +206,7 @@ pageEncoding="UTF-8"%>
             (function () {
                 d = document;
                 s = d.createElement("script");
-                s.src = "/jsMinified.v00017/thirdParty/crisp.js";
+                s.src = "/jsMinified.v00018/thirdParty/crisp.js";
                 s.async = 1;
                 d.getElementsByTagName("head")[0].appendChild(s);
             })();
@@ -216,7 +216,7 @@ pageEncoding="UTF-8"%>
 		window.addEventListener('load',function(){
 			(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
                 r.async = true;
-                r.src = "/jsMinified.v00017/amplitude-analytics.js";
+                r.src = "/jsMinified.v00018/amplitude-analytics.js";
 				r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
 				i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
 					return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];

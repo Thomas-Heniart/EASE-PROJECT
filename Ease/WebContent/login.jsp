@@ -98,10 +98,10 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00012/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00013/lib/fonts/museo-font.css"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00012/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00012/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/bootstrap.css"/>
     <link rel="manifest" href="manifest.json">
 </head>
 
@@ -256,15 +256,15 @@
 <div id="onMobile" style="display:none;">
     <%@ include file="templates/Mobile.html" %>
 </div>
-<script src="/jsMinified.v00017/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00017/postHandler.js" async></script>
-<script src="/jsMinified.v00017/basic-utils.js" async></script>
-<script src="/jsMinified.v00017/isMobile.js" async></script>
-<script src="/jsMinified.v00017/connection.js" async></script>
-<script src="/jsMinified.v00017/generalLogout.js" async></script>
-<script src="/jsMinified.v00017/tracker.js" async></script>
-<script src="/jsMinified.v00017/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00017/jsencrypt.js" async></script>
+<script src="/jsMinified.v00018/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00018/postHandler.js" async></script>
+<script src="/jsMinified.v00018/basic-utils.js" async></script>
+<script src="/jsMinified.v00018/isMobile.js" async></script>
+<script src="/jsMinified.v00018/connection.js" async></script>
+<script src="/jsMinified.v00018/generalLogout.js" async></script>
+<script src="/jsMinified.v00018/tracker.js" async></script>
+<script src="/jsMinified.v00018/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00018/jsencrypt.js" async></script>
 <script>
     window.addEventListener('load', function () {
         $.ajaxSetup({cache: true});
@@ -286,7 +286,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00017/amplitude-analytics.js";
+            r.src = "/jsMinified.v00018/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };
@@ -355,7 +355,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00017/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00018/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();

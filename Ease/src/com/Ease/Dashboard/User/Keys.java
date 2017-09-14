@@ -118,6 +118,17 @@ public class Keys {
             request.set();
         } else {
             privateKey = AES.decrypt(ciphered_privateKey, keyUser);
+            if (privateKey == null) {
+                Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+                publicKey = publicAndPrivateKey.getKey();
+                privateKey = publicAndPrivateKey.getValue();
+                ciphered_privateKey = AES.encrypt(privateKey, keyUser);
+                request = db.prepareRequest("UPDATE userKeys SET publicKey = ?, privateKey = ? WHERE id = ?;");
+                request.setString(publicKey);
+                request.setString(ciphered_privateKey);
+                request.setInt(id);
+                request.set();
+            }
         }
         return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
