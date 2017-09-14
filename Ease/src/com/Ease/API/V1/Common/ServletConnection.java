@@ -83,6 +83,8 @@ public class ServletConnection extends HttpServlet {
             } else {
                 throw new HttpServletException(HttpStatus.Forbidden, "Too much attempts to connect. Please retry in 5 minutes.");
             }
+        } catch (GeneralException e) {
+            sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         } catch (Exception e) {
             sm.setError(e);
         }
