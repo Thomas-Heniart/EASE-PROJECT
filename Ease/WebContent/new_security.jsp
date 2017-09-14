@@ -221,14 +221,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00016/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00016/jquery.complexify.js"></script>
-<script src="/jsMinified.v00016/bootstrap.js" async></script>
-<script src="/jsMinified.v00016/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00016/landingPage.js" async></script>
-<script src="/jsMinified.v00016/basic-utils.js" async></script>
-<script src="/jsMinified.v00016/languageChooser.js" async></script>
-<script src="/jsMinified.v00016/tracker.js" async></script>
+<script src="/jsMinified.v00017/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00017/jquery.complexify.js"></script>
+<script src="/jsMinified.v00017/bootstrap.js" async></script>
+<script src="/jsMinified.v00017/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00017/landingPage.js" async></script>
+<script src="/jsMinified.v00017/basic-utils.js" async></script>
+<script src="/jsMinified.v00017/languageChooser.js" async></script>
+<script src="/jsMinified.v00017/tracker.js" async></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#docs-content').removeClass('docs-content');
@@ -326,7 +326,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00016/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00017/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();
@@ -336,7 +336,7 @@
     window.addEventListener('load',function(){
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00016/amplitude-analytics.js";
+            r.src = "/jsMinified.v00017/amplitude-analytics.js";
             r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
             i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
                 return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];

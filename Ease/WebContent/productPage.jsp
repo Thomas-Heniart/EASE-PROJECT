@@ -233,14 +233,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00016/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00016/jquery.complexify.js"></script>
-<script src="/jsMinified.v00016/bootstrap.js" async></script>
-<script src="/jsMinified.v00016/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00016/landingPage.js" async></script>
-<script src="/jsMinified.v00016/basic-utils.js" async></script>
-<script src="/jsMinified.v00016/languageChooser.js" async></script>
-<script src="/jsMinified.v00016/tracker.js" async></script>
+<script src="/jsMinified.v00017/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00017/jquery.complexify.js"></script>
+<script src="/jsMinified.v00017/bootstrap.js" async></script>
+<script src="/jsMinified.v00017/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00017/landingPage.js" async></script>
+<script src="/jsMinified.v00017/basic-utils.js" async></script>
+<script src="/jsMinified.v00017/languageChooser.js" async></script>
+<script src="/jsMinified.v00017/tracker.js" async></script>
 <script>
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#tableHello').removeClass('product-tab');
