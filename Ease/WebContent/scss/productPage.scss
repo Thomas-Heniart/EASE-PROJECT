@@ -13,8 +13,11 @@ body {
 }
 
 header {
-  height: 500px;
+  height: 350px;
   background: #4990e2;
+}
+.intro-text {
+  padding-top: 125px !important;
 }
 .intro-product {
   padding-left: 98px;
@@ -48,7 +51,7 @@ header {
   }
 }
 .product-tab {
-  margin-top: 100px;
+  margin-top: 30px;
   width: 100.36%;
   height: 700px;
   display: flex;
