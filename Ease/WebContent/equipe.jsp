@@ -97,20 +97,20 @@ pageEncoding="UTF-8"%>
 									<p>Benjamin Prigent</p>
 								</div>
 								<div class="post">
-									<p>CEO</p>
+									<p>Customer Care</p>
 								</div>
 							</div>
 						</div>
 						<div class="card memberDescription">
 							<div class="memberPhoto">
-								<img src="resources/team/lanive.png"/>
+								<img src="resources/team/lanive.jpg"/>
 							</div>
 							<div class="content">
 								<div class="name">
 									<p>Victor Nivet</p>
 								</div>
 								<div class="post">
-									<p>CPO</p>
+									<p>Product Manager</p>
 								</div>
 							</div>
 						</div>
@@ -131,7 +131,7 @@ pageEncoding="UTF-8"%>
 					<div class="ui row cards">
 						<div class="card memberDescription">
 							<div class="memberPhoto">
-								<img src="resources/team/Toto.png"/>
+								<img src="resources/team/Toto.jpg"/>
 							</div>
 							<div class="content">
 								<div class="name">
@@ -157,7 +157,7 @@ pageEncoding="UTF-8"%>
 						</div>
 						<div class="card memberDescription">
 							<div class="memberPhoto">
-								<img src="resources/team/Fefe.png"/>
+								<img src="resources/team/Fefe.jpg"/>
 							</div>
 							<div class="content">
 								<div class="name">
