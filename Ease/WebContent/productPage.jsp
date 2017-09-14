@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00012/lib/fonts/museo-font.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/default_style.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/bootstrap.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/landingPage.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/securityPage.css" />
-    <link rel="stylesheet" href="/cssMinified.v00012/productPage.css" />
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00013/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -87,9 +87,6 @@
             <div class="intro-heading">
                 Le gestionnaire de mots de passe</br>sécurisé et intuitif
             </div>
-            <div class="intro-lead-in">
-                Gérer les mots de passe de son entreprise, c’est distribuer les outils aux bonnes</br>personnes au bon moment, et leur permettre d’accéder facilement et rapidement</br>aux différents comptes.
-            </div>
         </div>
     </div>
 </header>
@@ -120,7 +117,7 @@
             <div class="ui grid discoverSpace">
                 <div class="ui three column stackable row">
                     <div class="column">
-                        <img src="/resources/images/appsIllimitées.png" height="150px" />
+                        <img src="/resources/images/appsIllimitees.png" height="150px" />
                         <h3>Apps illimitées</h3>
                         Que vous ayez beaucoup de comptes</br>ou nous. Nous intégrons tout, même</br>les sites connectés avec Facebook,</br>Linkedin…
                     </div>
@@ -184,7 +181,7 @@
                     <h2>Organisation</h2>
                     <p>Créer des Rooms regroupant les membres de votre équipe, par projet, thème, client, ou autre, à l’image de votre entreprise.</p>
                     <p>En envoyant des apps dans des Rooms, taggez les membres ayant besoin de l’outil.</p>
-                     <p>Vous pouvez aussi envoyer une app à une seule personne.</p>
+                     <p style="margin-top:-16px;">Vous pouvez aussi envoyer une app à une seule personne.</p>
                 </div>
             </div>
         </div>
@@ -194,7 +191,7 @@
                     <h2>Contrôle</h2>
                     <p>Distribuez les accès automatiquement à une ou plusieurs personnes.</p>
                     <p>Notre technologie permet de donner les accès sans que les collaborateurs n’aient besoin de connaître les mots de passe.</p>
-                    <p>Programmez les arrivées et départs des collaborateurs et révoquez les accès en un clic.</p>
+                    <p>Programmez les arrivées et départs des collaborateurs et révoquez les accès en un clic.</p>
                 </div>
                 <div class="five wide column">
                     <img class="ui small right floated image" src="/resources/images/controlTagLouise.png">
@@ -210,7 +207,7 @@
                     <h2>Partage</h2>
                     <p>Qu’un compte soit partagé entre plusieurs personnes, ou que chaque utilisateur ait ses propres identifiants, ou que ce soit un intranet, un SSO ou un site sans identifiants, vous pouvez le partager.</p>
                     <p>Vous pouvez différencier chaque compte et de les distribuer facilement à l’ensemble de l’équipe ou juste certaines  personnes.</p>
-                    <p>L’outil est collaboratif, les membres peuvent partager des outils au sein des Rooms dont ils font partie.</p>
+                    <p style="margin-top:0;">L’outil est collaboratif, les membres peuvent partager des outils au sein des Rooms dont ils font partie.</p>
                 </div>
             </div>
         </div>
@@ -233,14 +230,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00017/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00017/jquery.complexify.js"></script>
-<script src="/jsMinified.v00017/bootstrap.js" async></script>
-<script src="/jsMinified.v00017/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00017/landingPage.js" async></script>
-<script src="/jsMinified.v00017/basic-utils.js" async></script>
-<script src="/jsMinified.v00017/languageChooser.js" async></script>
-<script src="/jsMinified.v00017/tracker.js" async></script>
+<script src="/jsMinified.v00018/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00018/jquery.complexify.js"></script>
+<script src="/jsMinified.v00018/bootstrap.js" async></script>
+<script src="/jsMinified.v00018/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00018/landingPage.js" async></script>
+<script src="/jsMinified.v00018/basic-utils.js" async></script>
+<script src="/jsMinified.v00018/languageChooser.js" async></script>
+<script src="/jsMinified.v00018/tracker.js" async></script>
 <script>
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#tableHello').removeClass('product-tab');

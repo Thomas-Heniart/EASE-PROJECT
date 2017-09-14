@@ -33,12 +33,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00012/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00012/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00012/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00012/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00012/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00012/securityPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00013/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00013/securityPage.css"/>
 
     <link rel="manifest" href="manifest.json">
 </head>
@@ -92,15 +92,15 @@
 </header>
 <section style="background-color: white">
     <div class="container">
-            <ul class="docs-nav">
-                <li><a href="#1" class="cc-active">1. Anonymat</a></li>
-                <li><a href="#2" class="cc-active">2. Sécurité pour l'utilisateur</a></li>
-                <li><a href="#3" class="cc-active">3. Sécurité pour l'entreprise</a></li>
-                <li><a href="#4" class="cc-active">4. Nos technologies de sécurité</a></li>
-                <li><a href="#5" class="cc-active">5. Politique interne de sécurité</a></li>
-                <li><a href="#6" class="cc-active">6. F.A.Q.</a></li>
-                <li><a href="#7" class="cc-active">7. Notre Security White paper</a></li>
-            </ul>
+        <ul class="docs-nav">
+            <li><a href="#1" class="cc-active">1. Anonymat</a></li>
+            <li><a href="#2" class="cc-active">2. Sécurité pour l'utilisateur</a></li>
+            <li><a href="#3" class="cc-active">3. Sécurité pour l'entreprise</a></li>
+            <li><a href="#4" class="cc-active">4. Nos technologies de sécurité</a></li>
+            <li><a href="#5" class="cc-active">5. Politique interne de sécurité</a></li>
+            <li><a href="#6" class="cc-active">6. F.A.Q.</a></li>
+            <li><a href="#7" class="cc-active">7. Notre Security White paper</a></li>
+        </ul>
         <div id="docs-content" class="docs-content">
             <div class="doc_section">
                 <h1 class="doc_header" id="1">1. Anonymat</h1>
@@ -213,22 +213,22 @@
                     Security Whitepaper.</a></p>
             </div>
             <div style="text-align: center">
-            <a href="/teams#/registration" class="btn btn-xl signUpButton">
-                Essayez Ease.space gratuitement
-            </a>
+                <a href="/teams#/registration" class="btn btn-xl signUpButton">
+                    Essayez Ease.space gratuitement
+                </a>
             </div>
         </div>
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00017/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00017/jquery.complexify.js"></script>
-<script src="/jsMinified.v00017/bootstrap.js" async></script>
-<script src="/jsMinified.v00017/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00017/landingPage.js" async></script>
-<script src="/jsMinified.v00017/basic-utils.js" async></script>
-<script src="/jsMinified.v00017/languageChooser.js" async></script>
-<script src="/jsMinified.v00017/tracker.js" async></script>
+<script src="/jsMinified.v00018/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00018/jquery.complexify.js"></script>
+<script src="/jsMinified.v00018/bootstrap.js" async></script>
+<script src="/jsMinified.v00018/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00018/landingPage.js" async></script>
+<script src="/jsMinified.v00018/basic-utils.js" async></script>
+<script src="/jsMinified.v00018/languageChooser.js" async></script>
+<script src="/jsMinified.v00018/tracker.js" async></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#docs-content').removeClass('docs-content');
@@ -326,7 +326,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00017/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00018/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();
@@ -336,7 +336,7 @@
     window.addEventListener('load',function(){
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00017/amplitude-analytics.js";
+            r.src = "/jsMinified.v00018/amplitude-analytics.js";
             r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
             i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
                 return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
