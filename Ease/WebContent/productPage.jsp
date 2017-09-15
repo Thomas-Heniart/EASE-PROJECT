@@ -96,13 +96,13 @@
             <div class="table">
                 <div class="goodbye">
                     <h2 style="font-size:40px;margin-bottom:20px;">Goodbye</h2>
-                    Les envois de mots de passe par email, les fichiers partagés désorganisés, les post-its…
+                    Les envois de mots de passe par email, les fichiers partagés, les post-its...
                 </div>
             </div>
             <div class="tab-nav">
                 <div class="hello">
                     <h2 style="font-size:40px;color:#373b60;margin-bottom:20px;">Hello!</h2>
-                    Les Apps, un clic et nous vous amènons directement connecté sur votre compte, instantanément.
+                    Les apps, un clic suffit pour accéder au compte connecté.
                 </div>
             </div>
         </div>
@@ -110,10 +110,6 @@
 
     <div class="ui bottom attached tab" data-tab="first">
         <div class="container">
-            <div class="introDiscover">
-                <h2>Découvrez le Personal Space</h2>
-                Il s’agit d’un dashboard d’Apps. Quelque soit les circonstances, lorsque vous cliquez sur une</br>App, notre robot vous amène directement connecté sur le compte correspondant (si vous ne</br>l’êtiez pas déjà), en remplissant tous les champs et cliquant sur tout les bontons necessaire.
-            </div>
             <div class="ui grid discoverSpace">
                 <div class="ui three column stackable row">
                     <div class="column">
@@ -124,7 +120,7 @@
                     <div class="column">
                         <img src="/resources/images/groupes.png" height="150px" />
                         <h3>Groupes illimités</h3>
-                        Rangez vos Apps dans des groupes,</br>pour vous organiser au mieux, en</br>fonction de  vos besoins.
+                        Ranger vos apps dans des groupes</br>pour vous organiser en fonction</br>de vos besoins.
                     </div>
                     <div class="column">
                         <img src="/resources/images/multiComptes.png" height="150px" />
@@ -152,20 +148,18 @@
             </div>
         </div>
         <div class="ui top attached tabular menu">
-            <a class="item right" data-tab="second" style="font-size:20px;font-weight:300;line-height:1.35;color:#4990e2;">Réduire</a>
+            <a class="item right" data-tab="second" style="font-size:20px;font-weight:300;line-height:1.35;color:#4990e2;"><u>Réduire</u></a>
         </div>
     </div>
     <div id="more" class="ui top attached tabular menu">
-        <a class="item right" data-tab="first" style="font-size:20px;font-weight:300;line-height:1.35;color:#4990e2;">En savoir plus</a>
+        <a class="item right" data-tab="first" style="font-size:20px;font-weight:300;line-height:1.35;color:#4990e2;"><u>En savoir plus</u></a>
     </div>
     <div class="container">
-        <div class="titleDistrib"><h2>Distribuez les bons outils aux bonnes personnes</h2></div>
         <div class="ui two column stackable grid textDistrib">
             <div class="ui row">
                 <div class="four wide column">
                     <h2>Team Space</h2>
-                    <p>Les entreprises ont des dizaines de mots de passe à gérer. Chaque employé n’a pas besoin d’avoir
-                        accès à tous les comptes de la société. En plus, les besoins d’accès changent dans le temps.</p>
+                    <p>En entreprise : organisez qui a accès à quels outils et visualisez facilement qui peut accéder aux différents comptes.</p>
                 </div>
                 <div class="twelve wide column">
                     <img class="ui huge image" src="/resources/images/teamSpace.png">
