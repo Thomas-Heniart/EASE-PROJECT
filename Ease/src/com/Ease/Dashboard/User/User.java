@@ -10,7 +10,6 @@ import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -110,7 +109,7 @@ public class User {
         SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
         User newUser = new User(db_id, firstName, email, keys, options, isAdmin, false,
                 sessionSave, status);
-        newUser.loadTeamUsers(context);
+        newUser.loadTeamUsers(context, db);
         System.out.println("Team users loaded.");
         newUser.initializeDashboardManager(context, db);
         System.out.println("Dashboard loaded.");
@@ -616,16 +615,14 @@ public class User {
             this.teamUsers.add(teamUser);
     }
 
-    public void loadTeamUsers(ServletContext context) throws HttpServletException, GeneralException {
-        HibernateQuery query = new HibernateQuery();
-        query.querySQLString("SELECT teamUsers.id, team_id FROM teamUsers JOIN teams ON teamUsers.team_id = teams.id WHERE user_id = ? AND teams.active = 1");
-        query.setParameter(1, Integer.parseInt(this.db_id));
-        List<Object[]> teamUsers = query.list();
-        query.commit();
-        for (Object[] teamUserIdAndTeamId : teamUsers) {
-            Integer teamUser_id = (Integer) teamUserIdAndTeamId[0];
-            Integer team_id = (Integer) teamUserIdAndTeamId[1];
-            TeamManager teamManager = (TeamManager) context.getAttribute("teamManager");
+    public void loadTeamUsers(ServletContext context, DataBaseConnection db) throws HttpServletException, GeneralException {
+        TeamManager teamManager = (TeamManager) context.getAttribute("teamManager");
+        DatabaseRequest request = db.prepareRequest("SELECT teamUsers.id, team_id FROM teamUsers JOIN teams ON teamUsers.team_id = teams.id WHERE user_id = ? AND teams.active = 1");
+        request.setInt(Integer.parseInt(this.db_id));
+        DatabaseResult rs = request.get();
+        while (rs.next()) {
+            Integer teamUser_id = rs.getInt(1);
+            Integer team_id = rs.getInt(2);
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             for (Channel channel : team.getChannels()) {

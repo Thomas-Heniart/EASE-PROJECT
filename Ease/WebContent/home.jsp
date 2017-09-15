@@ -112,7 +112,7 @@
     <div class="ease-header" id="app">
         <%--@ include file="/templates/Header.jsp"--%>
     </div>
-    <script src="teams_bundle.js?00000002"></script>
+    <script src="teams_bundle.js?00000004s"></script>
     <div id="loggedBody">
         <div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
             <%@ include file="/templates/ProfileView.jsp" %>
@@ -137,7 +137,7 @@
         <%@ include file="/templates/TutorialView.jsp" %>
         <script type="text/javascript">
             window.addEventListener('load', function () {
-                asyncLoading.loadScriptsOneByOne(["/jsMinified.v00018/tutorialSteps.js"]);
+                asyncLoading.loadScriptsOneByOne(["/jsMinified.v00019/tutorialSteps.js"]);
             });
         </script>
     </c:if>
@@ -146,27 +146,27 @@
 <noscript id="deferred-styles">
     <link rel="stylesheet" href="/cssMinified.v00013/lib/niftyPopupWindow/component.css">
 </noscript>
-<script src="/jsMinified.v00018/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00018/moment.js"></script>
-<script src="/jsMinified.v00018/jquery-ui-1.12.0.js" defer></script>
-<script src="/jsMinified.v00018/Sortable.js" defer></script>
-<script src="/jsMinified.v00018/app.js" defer></script>
-<script src="/jsMinified.v00018/profiles.js" defer></script>
-<script src="/jsMinified.v00018/dashboard.js" defer></script>
-<script src="/jsMinified.v00018/websocket.js" async></script>
-<script src="/jsMinified.v00018/tracker.js" async></script>
-<script src="/jsMinified.v00018/asyncContentLoading.js" async></script>
-<script src="/jsMinified.v00018/postHandler.js" async></script>
-<script src="/jsMinified.v00018/basic-utils.js" async></script>
-<script src="/jsMinified.v00018/extension.js" async></script>
-<script src="/jsMinified.v00018/header.js" async></script>
-<script src="/jsMinified.v00018/selectFx.js" async></script>
-<script src="/jsMinified.v00018/isMobile.js" async></script>
-<script src="/jsMinified.v00018/shortcut.js" async></script>
-<script src="/jsMinified.v00018/logout.js" async></script>
-<script src="/jsMinified.v00018/checkConnection.js" async></script>
-<script src="/jsMinified.v00018/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00018/jsencrypt.js" async></script>
+<script src="/jsMinified.v00019/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00019/moment.js"></script>
+<script src="/jsMinified.v00019/jquery-ui-1.12.0.js" defer></script>
+<script src="/jsMinified.v00019/Sortable.js" defer></script>
+<script src="/jsMinified.v00019/app.js" defer></script>
+<script src="/jsMinified.v00019/profiles.js" defer></script>
+<script src="/jsMinified.v00019/dashboard.js" defer></script>
+<script src="/jsMinified.v00019/websocket.js" async></script>
+<script src="/jsMinified.v00019/tracker.js" async></script>
+<script src="/jsMinified.v00019/asyncContentLoading.js" async></script>
+<script src="/jsMinified.v00019/postHandler.js" async></script>
+<script src="/jsMinified.v00019/basic-utils.js" async></script>
+<script src="/jsMinified.v00019/extension.js" async></script>
+<script src="/jsMinified.v00019/header.js" async></script>
+<script src="/jsMinified.v00019/selectFx.js" async></script>
+<script src="/jsMinified.v00019/isMobile.js" async></script>
+<script src="/jsMinified.v00019/shortcut.js" async></script>
+<script src="/jsMinified.v00019/logout.js" async></script>
+<script src="/jsMinified.v00019/checkConnection.js" async></script>
+<script src="/jsMinified.v00019/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00019/jsencrypt.js" async></script>
 <script>
     var images = document.getElementsByClassName('logo');
     Array.prototype.forEach.call(images, function (element) {
@@ -210,12 +210,12 @@
             callback: function () {
                 asyncLoading.loadScriptsOneByOne(
                     [
-                        "/jsMinified.v00018/modifyAppPopup.js",
-                        "/jsMinified.v00018/addAppPopup.js",
-                        "/jsMinified.v00018/deleteAccountPopup.js",
-                        "/jsMinified.v00018/deleteProfilePopup.js",
-                        "/jsMinified.v00018/addBookmarkPopup.js",
-                        "/jsMinified.v00018/popupHandler.js"
+                        "/jsMinified.v00019/modifyAppPopup.js",
+                        "/jsMinified.v00019/addAppPopup.js",
+                        "/jsMinified.v00019/deleteAccountPopup.js",
+                        "/jsMinified.v00019/deleteProfilePopup.js",
+                        "/jsMinified.v00019/addBookmarkPopup.js",
+                        "/jsMinified.v00019/popupHandler.js"
                     ]
                 );
             }
@@ -229,10 +229,10 @@
             appendTo: '.col-left .CatalogViewTab',
             callback: function () {
                 asyncLoading.loadScriptsOneByOne(
-                    ['/jsMinified.v00018/catalogApp.js',
-                        '/jsMinified.v00018/catalog.js',
-                        '/jsMinified.v00018/update.js',
-                        '/jsMinified.v00018/updatesManager.js'
+                    ['/jsMinified.v00019/catalogApp.js',
+                        '/jsMinified.v00019/catalog.js',
+                        '/jsMinified.v00019/update.js',
+                        '/jsMinified.v00019/updatesManager.js'
                     ],
                     function () {
                         $('.MenuButtonSet.waiting-load').removeClass('waiting-load');
@@ -243,7 +243,7 @@
             urls: ['/templates/Footer.html'],
             appendTo: '#onComputer',
             callback: function () {
-                asyncLoading.loadSingleScript("/jsMinified.v00018/footer.js");
+                asyncLoading.loadSingleScript("/jsMinified.v00019/footer.js");
             }
         });
     });
@@ -255,7 +255,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00018/amplitude-analytics.js";
+            r.src = "/jsMinified.v00019/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };
@@ -335,7 +335,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00018/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00019/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();

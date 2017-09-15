@@ -216,6 +216,8 @@ var actions = {
                 input[0].value = msg.detail[0].user[actionStep.what];
                 fire_onchange(input[0]);
                 input[0].blur();
+                input.prop("readonly", true);
+                console.log("put readonly");
                 msg.actionStep++;
                 callback(msg, sendResponse);
             }, timeoutfill);
