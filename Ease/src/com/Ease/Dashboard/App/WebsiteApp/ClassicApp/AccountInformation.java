@@ -1,13 +1,13 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.*;
+import org.json.simple.JSONObject;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import com.Ease.Utils.*;
-import com.Ease.Utils.Crypto.AES;
-import com.Ease.Utils.Crypto.RSA;
-import org.json.simple.JSONObject;
 
 public class AccountInformation {
 
@@ -113,6 +113,8 @@ public class AccountInformation {
         if (this.information_name.equals("password"))
             this.information_value = AES.decrypt(this.information_value, keyUser);
         DatabaseRequest request = db.prepareRequest("UPDATE accountsInformations SET information_value = ? WHERE id = ?;");
+        if (this.information_value == null)
+            this.information_value = "";
         request.setString(RSA.Encrypt(this.information_value, publicKey));
         request.setString(this.db_id);
         request.set();

@@ -25,6 +25,7 @@ public class Metrics {
             DatabaseRequest request = db.prepareRequest("UPDATE ease_metrics SET metric_value = ? WHERE metric_name = ?");
             request.setString(connection_number.toString());
             request.setString("app_connections");
+            request.set();
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
