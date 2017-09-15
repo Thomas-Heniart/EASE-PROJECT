@@ -25,12 +25,12 @@
 
     <link rel="manifest" href="manifest.json">
 
-    <script src="/jsMinified.v00018/jquery1.12.4.js"></script>
-    <script src="/jsMinified.v00018/bootstrap.js"></script>
-    <script src="/jsMinified.v00018/basic-utils.js"></script>
-    <script src="/jsMinified.v00018/ajaxHandler.js"></script>
-    <script src="/jsMinified.v00018/languageChooser.js"></script>
-    <script src="/jsMinified.v00018/tracker.js"></script>
+    <script src="/jsMinified.v00019/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00019/bootstrap.js"></script>
+    <script src="/jsMinified.v00019/basic-utils.js"></script>
+    <script src="/jsMinified.v00019/ajaxHandler.js"></script>
+    <script src="/jsMinified.v00019/languageChooser.js"></script>
+    <script src="/jsMinified.v00019/tracker.js"></script>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
     <link rel="stylesheet" href="/cssMinified.v00013/default_style.css"/>
@@ -43,7 +43,7 @@
     (function () {
         d = document;
         s = d.createElement("script");
-        s.src = "/jsMinified.v00018/crisp.js";
+        s.src = "/jsMinified.v00019/crisp.js";
         s.async = 1;
         d.getElementsByTagName("head")[0].appendChild(s);
     })();</script>
@@ -53,7 +53,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00018/amplitude-analytics.js";
+            r.src = "/jsMinified.v00019/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };

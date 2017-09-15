@@ -35,13 +35,13 @@
     <link rel="stylesheet" href="/cssMinified.v00013/lib/fonts/untitled-font-4/styles.css"/>
     <link rel="stylesheet" href="/cssMinified.v00013/team.css"/>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="/jsMinified.v00018/jsencrypt.js"></script>
+    <script src="/jsMinified.v00019/jsencrypt.js"></script>
 </head>
 <BODY>
 <div id="app">
 </div>
 <script src="teams_bundle.js?00000004"></script>
-<script src="/jsMinified.v00018/moment.js"></script>
+<script src="/jsMinified.v00019/moment.js"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];
@@ -49,7 +49,7 @@
     (function () {
       d = document;
       s = d.createElement("script");
-        s.src = "/jsMinified.v00018/thirdParty/crisp.js";
+        s.src = "/jsMinified.v00019/thirdParty/crisp.js";
       s.async = 1;
       d.getElementsByTagName("head")[0].appendChild(s);
     })();
