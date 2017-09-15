@@ -230,14 +230,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00018/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00018/jquery.complexify.js"></script>
-<script src="/jsMinified.v00018/bootstrap.js" async></script>
-<script src="/jsMinified.v00018/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00018/landingPage.js" async></script>
-<script src="/jsMinified.v00018/basic-utils.js" async></script>
-<script src="/jsMinified.v00018/languageChooser.js" async></script>
-<script src="/jsMinified.v00018/tracker.js" async></script>
+<script src="/jsMinified.v00019/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00019/jquery.complexify.js"></script>
+<script src="/jsMinified.v00019/bootstrap.js" async></script>
+<script src="/jsMinified.v00019/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00019/landingPage.js" async></script>
+<script src="/jsMinified.v00019/basic-utils.js" async></script>
+<script src="/jsMinified.v00019/languageChooser.js" async></script>
+<script src="/jsMinified.v00019/tracker.js" async></script>
 <script>
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#tableHello').removeClass('product-tab');

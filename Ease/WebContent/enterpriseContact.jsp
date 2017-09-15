@@ -131,12 +131,12 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00018/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00018/enterpriseContact.js" defer></script>
-<script src="/jsMinified.v00018/basic-utils.js" async></script>
-<script src="/jsMinified.v00018/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00018/languageChooser.js" async></script>
-<script src="/jsMinified.v00018/tracker.js" async></script>
+<script src="/jsMinified.v00019/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00019/enterpriseContact.js" defer></script>
+<script src="/jsMinified.v00019/basic-utils.js" async></script>
+<script src="/jsMinified.v00019/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00019/languageChooser.js" async></script>
+<script src="/jsMinified.v00019/tracker.js" async></script>
 
 <script type="text/javascript">
     window.addEventListener('load', function () {
@@ -145,7 +145,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00018/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00019/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();
@@ -188,7 +188,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00018/amplitude-analytics.js";
+            r.src = "/jsMinified.v00019/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };

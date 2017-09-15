@@ -107,11 +107,15 @@ function sendEvent(obj) {
 
                         easeTracker.trackEvent("ClickOnApp", {"type": "LinkApp", "appName": json.detail.app_name});
                     } else {
+                        json.detail.forEach(function (detail) {
+                            if (typeof detail.user !== "undefined") {
+                                for (var key in detail.user) {
+                                    if (detail.user.hasOwnProperty(key))
+                                        detail.user[key] = decipher(detail.user[key]);
+                                }
+                            }
+                        });
                         var jsonDetail = json.detail[json.detail.length - 1];
-                        for (var key in jsonDetail.user) {
-                            if (jsonDetail.user.hasOwnProperty(key))
-                                jsonDetail.user[key] = RSAEncryption.decrypt(jsonDetail.user[key]);
-                        }
                         easeTracker.trackEvent("ClickOnApp", {
                             "type": jsonDetail.type,
                             "appName": jsonDetail.app_name,
@@ -125,7 +129,7 @@ function sendEvent(obj) {
                     document.dispatchEvent(event);
                 }, function (retMsg) {
                     //easeTracker.trackEvent("App fail clicks");
-                  return;
+                    return;
                 }, 'text');
             }
         }
