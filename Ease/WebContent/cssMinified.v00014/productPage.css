@@ -7,9 +7,19 @@ body {
     line-height: 1.3;
     font-size: 16px; }
 
+body u {
+    text-decoration: none;
+    border-bottom: 1px solid;
+    line-height: 0.85;
+}
+
 header {
-  height: 500px;
+    height: 350px;
   background: #4990e2; }
+
+.intro-text {
+    padding-top: 125px !important;
+}
 
 .intro-product {
   padding-left: 98px;
@@ -42,7 +52,7 @@ header {
     margin-bottom: 20px; }
 
 .product-tab {
-  margin-top: 100px;
+    margin-top: 30px;
   width: 100.36%;
   height: 700px;
   display: flex;
@@ -81,6 +91,7 @@ header {
   color: #4f5267; }
 
 .discoverSpace {
+    margin-top: 100px !important;
   font-size: 20px;
   text-align: center;
   color: #949eb7;
@@ -108,6 +119,7 @@ header {
   color: #414141; }
 
 .textDistrib {
+    margin-top: 80px !important;
   height: 550px; }
 
 .textDistrib h2 {
@@ -396,25 +408,6 @@ section#security {
         padding-left: 15px;
         padding-right: 15px; } }
 @media screen and (max-width: 768px) {
-  .intro-text {
-    padding-top: 50px !important; }
-    .intro-text .intro-heading {
-      max-width: 722px;
-      font-family: Raleway, sans-serif !important;
-      font-size: 20px !important;
-      margin: auto;
-      line-height: 1.22;
-      font-weight: bold !important;
-      text-align: left; }
-    .intro-text .intro-lead-in {
-      max-width: 880px;
-      max-height: 76px;
-      font-weight: 300;
-      margin: auto;
-      font-family: MuseoSans, sans-serif !important;
-      line-height: 1.58 !important;
-      font-size: 10px !important; }
-
   .tab-nav {
     width: 101%;
     height: 700px;
