@@ -56,11 +56,11 @@ public class ServletShareApp extends HttpServlet {
                 sharedApp.accept(db);
             if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
                 shareableApp.removePendingTeamUser(teamUser_tenant, db);
-                String url = (channel == null) ? ("@" + teamUser_owner.getDb_id()) : channel.getDb_id().toString();
+                String url = ((channel == null) ? ("@" + teamUser_owner.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + ((App) shareableApp).getDBid();
                 teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App) shareableApp).getName() + ((channel == null) ? "" : " in #" + channel.getName()), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
                 sharedApp.accept(db);
             } else if (teamUser_owner != teamUser_tenant) {
-                String url = (channel == null) ? ("@" + teamUser_tenant.getDb_id()) : channel.getDb_id().toString();
+                String url = ((channel == null) ? ("@" + teamUser_tenant.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + ((App) shareableApp).getDBid();
                 teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + ((App) shareableApp).getName() + " in " + (shareableApp.getChannel() == null ? "your Personal Space" : ("#" + shareableApp.getChannel().getName())), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
             }
             db.commitTransaction(transaction);

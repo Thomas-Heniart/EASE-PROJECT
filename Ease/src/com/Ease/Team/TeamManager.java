@@ -145,7 +145,7 @@ public class TeamManager {
                             hibernateQuery.executeUpdate();
                             account.setPasswordMustBeUpdated(true);
                             Channel channel = sharedApp.getHolder().getChannel();
-                            String url = (channel == null) ? ("@" + sharedApp.getHolder().getTeamUser_owner().getDb_id()) : channel.getDb_id().toString();
+                            String url = ((channel == null) ? ("@" + sharedApp.getHolder().getTeamUser_owner().getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + app.getDBid();
                             sharedApp.getTeamUser_tenant().addNotification("Your password for " + app.getName() + " needs to be updated as soon as possible", url, app.getLogo(), timestamp, db);
                         } else {
                             if (!account.adminNotified() && DateComparator.isOutdated(account.getLastUpdatedDate(), account.getPasswordChangeInterval(), 7)) {
@@ -155,7 +155,7 @@ public class TeamManager {
                                 hibernateQuery.executeUpdate();
                                 account.setAdminNotified(true);
                                 Channel channel = sharedApp.getHolder().getChannel();
-                                String url = (channel == null) ? ("@" + sharedApp.getHolder().getTeamUser_owner().getDb_id()) : channel.getDb_id().toString();
+                                String url = ((channel == null) ? ("@" + sharedApp.getHolder().getTeamUser_owner().getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + app.getDBid();
                                 sharedApp.getHolder().getTeamUser_owner().addNotification("The password of " + sharedApp.getTeamUser_tenant().getUsername() + " for " + app.getName() + " is not up to date for the last 7 days.", url, app.getLogo(), timestamp, db);
                             }
                         }
