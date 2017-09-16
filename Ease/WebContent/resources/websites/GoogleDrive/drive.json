@@ -1,0 +1,110 @@
+{
+  "name": "googledrive",
+  "lastLogin": "",
+  "sso": "Google",
+  "home": "https://drive.google.com",
+  "connect": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a.go-to-drive"
+      },
+      {
+        "action": "aclick",
+        "search": "#account-chooser-link"
+      },
+      {
+        "action": "waitfor",
+        "search": "#identifierLink, #account-chooser-add-account, #identifierNext, #next, #profileIdentifier + div div[role='button']"
+      },
+      {
+        "action": "click",
+        "search": "#profileIdentifier + div div[role='button']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#identifierLink, #account-chooser-add-account, #identifierNext, #next"
+      },
+      {
+        "action": "click",
+        "search": "#identifierLink"
+      },
+      {
+        "action": "clickona",
+        "search": "#account-chooser-add-account"
+      },
+      {
+        "action": "waitfor",
+        "search": "#Email, #identifierId"
+      },
+      {
+        "action": "waitfor",
+        "search": "#next, #identifierNext, #identifierLink"
+      },
+      {
+        "action": "click",
+        "search": "#identifierLink"
+      },
+      {
+        "action": "waitfor",
+        "search": "#next, #identifierNext"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#Email, #identifierId",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "#next, #identifierNext"
+      },
+      {
+        "action": "click",
+        "search": "#next"
+      },
+      {
+        "action": "click",
+        "search": "#identifierNext"
+      },
+      {
+        "action": "waitfor",
+        "search": "#Passwd, #password input[type='password']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#passwordNext, #gaia_loginform"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#Passwd, #password input[type='password']"
+      },
+      {
+        "action": "click",
+        "search": "#passwordNext"
+      },
+      {
+        "action": "submit",
+        "search": "#gaia_loginform"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a[href*='https://accounts.google.com/Logout?']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='Logout'], #identifierLink, #identifierId, div[aria-label='Google'], #profileIdentifier + div div[role='button'], a.go-to-drive"
+    },
+    {
+      "search": "a[title='Drive']"
+    }
+  ]
+}

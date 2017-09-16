@@ -4,8 +4,26 @@
   "home":"https://app.craft.io/",
   "connect":{
     "todo":[
-      {"action":"fill", "what":"login", "search":"form input[type='email']"},
-      {"action":"fill", "what":"password", "search":"form input[type='password']"},
+      {
+        "action": "waitfor",
+        "search": "form input[type='email']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "form input[type='email']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "form input[type='password']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "form input[type='password']",
+        "grave": true
+      },
       {"action":"click", "search":"form #login-submit"}
     ]
   },
