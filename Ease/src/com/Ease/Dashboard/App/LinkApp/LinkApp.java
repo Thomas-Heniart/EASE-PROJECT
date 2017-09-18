@@ -193,20 +193,17 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
-        Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
-        elevator.put("canSeeInformation", canSeeInformation);
         Integer appDBid = App.createSharedApp(null, null, this.getName(), "linkApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(this.linkInfos.getDb_id());
         Integer linkDBid = request.set();
         db.commitTransaction(transaction);
-        this.channel = channel;
         LinkApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), linkInfos, linkDBid, this);
         sharedApp.setAdminHasAccess(true, sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         sharedApp.setReceived(true);
-        sharedApp.setCanSeeInformation(canSeeInformation);
+        sharedApp.setCanSeeInformation(true);
         return sharedApp;
     }
 
