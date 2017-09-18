@@ -242,7 +242,6 @@ public class Team {
                     this.default_channel = channel;
             }
         }
-        System.out.println("Default channel is null: " + (this.default_channel == null));
         return this.default_channel;
     }
 
@@ -483,7 +482,8 @@ public class Team {
             return;
         try {
             String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
-            if (DateComparator.isEqualsAfter(this.subscription_date, 25) && !this.card_entered) {
+            Long trialEnd = Subscription.retrieve(this.subscription_id).getTrialEnd() * 1000;
+            if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
                 mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setTemplateId(208643);
@@ -492,7 +492,7 @@ public class Team {
                 mailJetBuilder.addVariable("teamName", this.getName());
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
-            } else if (DateComparator.isEqualsAfter(this.subscription_date, 29) && !this.card_entered) {
+            } else if (DateComparator.isInDays(new Date(trialEnd), 1)) {
                 System.out.println(this.getName() + " trial will end in 1 day.");
                 mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setTemplateId(208644);
