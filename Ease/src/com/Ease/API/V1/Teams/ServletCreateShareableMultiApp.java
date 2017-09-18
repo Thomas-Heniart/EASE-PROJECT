@@ -36,8 +36,8 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            Integer channel_id = sm.getIntParam("channel_id", true, false);
-            Integer team_user_id = sm.getIntParam("team_user_id", true, false);
+            Integer channel_id = sm.getIntParam("channel_id", true, true);
+            Integer team_user_id = sm.getIntParam("team_user_id", true, true);
             if (channel_id == null && team_user_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
             String app_name = sm.getStringParam("name", true, false);

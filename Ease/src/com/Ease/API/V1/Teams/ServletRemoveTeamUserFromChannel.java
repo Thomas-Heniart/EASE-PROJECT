@@ -38,8 +38,10 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_remove = team.getTeamUserWithId(teamUser_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            if (!teamUser_connected.isSuperior(teamUser_to_remove) && teamUser_to_remove != teamUser_connected)
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove this user from the channel");
+            if (!channel.getTeamUsers().contains(teamUser_connected))
+                throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
+            if (channel.getRoom_manager() == teamUser_to_remove)
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove the room manager.");
             List<ShareableApp> shareableApps = team.getAppManager().getShareableAppsForTeamUser(teamUser_to_remove);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();

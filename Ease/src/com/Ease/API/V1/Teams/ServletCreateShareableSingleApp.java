@@ -43,7 +43,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Integer website_id = sm.getIntParam("website_id", true, false);
             JSONArray account_information = (JSONArray) sm.getParam("account_information", false, false);
             Integer channel_id = sm.getIntParam("channel_id", true, true);
-            Integer team_user_id = sm.getIntParam("team_user_id", true, false);
+            Integer team_user_id = sm.getIntParam("team_user_id", true, true);
             if (channel_id == null && team_user_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
             String app_name = sm.getStringParam("name", true, false);
