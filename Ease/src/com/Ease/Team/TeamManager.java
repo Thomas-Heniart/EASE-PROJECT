@@ -1,6 +1,7 @@
 package com.Ease.Team;
 
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
@@ -131,6 +132,28 @@ public class TeamManager {
         try {
             int transaction = db.startTransaction();
             for (Team team : this.getTeams()) {
+                for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                    App app = (App) shareableApp;
+                    if (!app.isClassicApp())
+                        continue;
+                    ClassicApp classicApp = (ClassicApp) app;
+                    Account account = classicApp.getAccount();
+                    if (account.mustUpdatePassword()) {
+                        System.out.println("Account: " + account.getDBid() + " must update password.");
+                        if (!account.passwordMustBeUpdated()) {
+                            hibernateQuery.querySQLString("UPDATE accounts SET passwordMustBeUpdated = 1 WHERE id = ?;");
+                            hibernateQuery.setParameter(1, account.getDBid());
+                            hibernateQuery.executeUpdate();
+                            account.setPasswordMustBeUpdated(true);
+                            Channel channel = shareableApp.getChannel();
+                            String url = ((channel == null) ? ("@" + shareableApp.getTeamUser_owner().getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + app.getDBid();
+                            if (channel != null)
+                                channel.getRoom_manager().addNotification("Password for " + app.getName() + " needs to be updated as soon as possible", url, app.getLogo(), timestamp, db);
+                            else
+                                shareableApp.getTeamUser_owner().addNotification("Password for " + app.getName() + " needs to be updated as soon as possible", url, app.getLogo(), timestamp, db);
+                        }
+                    }
+                }
                 for (SharedApp sharedApp : team.getAppManager().getSharedApps()) {
                     App holder = (App) sharedApp.getHolder();
                     if (!holder.isEmpty())
