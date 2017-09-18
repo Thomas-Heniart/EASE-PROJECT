@@ -458,7 +458,7 @@ public class Account {
         if (accountInformationJson != null) {
             for (AccountInformation accountInformation : this.getAccountInformations()) {
                 String new_info_value = (String) accountInformationJson.get(accountInformation.getInformationName());
-                if (new_info_value == null)
+                if (new_info_value == null || new_info_value.equals(""))
                     continue;
                 accountInformation.setInformation_value(new_info_value, this.publicKey, db);
                 if (accountInformation.getInformationName().equals("password"))

@@ -18,7 +18,7 @@ public class ServletFirstAppReceived extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             if (teamUser.getTeamUserStatus().first_app_received())

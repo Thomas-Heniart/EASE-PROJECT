@@ -22,12 +22,12 @@ public class ServletEditTeamUserRole extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
-            Integer roleValue = sm.getIntParam("role", true);
+            Integer roleValue = sm.getIntParam("role", true, false);
             if (roleValue == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty role.");
             if (!TeamUserRole.isInferiorToOwner(roleValue))

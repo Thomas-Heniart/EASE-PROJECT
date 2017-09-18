@@ -21,7 +21,7 @@ public class ServletCreateProfile extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            String name = sm.getStringParam("name", true);
+            String name = sm.getStringParam("name", true, false);
             if (name == null || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name");
             Profile profile = user.getDashboardManager().addProfile(name, "#373B60", sm.getDB());

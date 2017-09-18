@@ -17,8 +17,8 @@ public class ServletToggleWebsiteVisibility extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Integer website_id = sm.getIntParam("id", true);
-            Boolean is_private = sm.getBooleanParam("private", true);
+            Integer website_id = sm.getIntParam("id", true, false);
+            Boolean is_private = sm.getBooleanParam("private", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             catalog.getWebsiteWithId(website_id).setPublic(!is_private, sm.getDB());
             sm.setSuccess("Website edited");

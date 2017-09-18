@@ -12,7 +12,6 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Card;
 import com.stripe.model.Customer;
-import com.stripe.model.ExternalAccount;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -32,13 +31,13 @@ public class ServletAddCreditCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
             if (!teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
-            String token = sm.getStringParam("token", false);
+            String token = sm.getStringParam("token", false, false);
             Customer customer = Customer.retrieve(team.getCustomer_id());
             String default_source = customer.getDefaultSource();
             if (default_source != null && !default_source.equals(""))

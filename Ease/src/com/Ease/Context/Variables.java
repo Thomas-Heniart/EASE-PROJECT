@@ -43,18 +43,19 @@ public class Variables {
     */
 
     //Fifi
-    /*
     public static final String ENVIRONNEMENT = "PC de Fifi";
     public static final String PROJECT_PATH = "/home/nicetwice/EASE-PROJECT/Ease/WebContent/";
     public static final String KEYS_PATH = "/home/nicetwice/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt";
     public static final String WEBSITES_PATH = "/resources/websites/";
     public static final String URL_PATH = "http://localhost:8080/";
-    */
+    public static final String DATABASE_IP = "127.0.0.1";
     //Toto
+    /*
     public static final String ENVIRONNEMENT = "PC de Toto";
     public static final String PROJECT_PATH = "/Users/thomas/EASE-PROJECT/Ease/WebContent";
     public static final String KEYS_PATH = "/Users/thomas/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt";
     public static final String WEBSITES_PATH = "/resources/websites/";
     public static final String URL_PATH = "https://localhost:8443/";
     public static final String DATABASE_IP = "127.0.0.1";
+    */
 }

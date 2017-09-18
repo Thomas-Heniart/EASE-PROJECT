@@ -76,7 +76,7 @@ class TeamJoinMultiAppModal extends React.Component {
             </div>
             <div class="row display-flex flex_direction_column" style={{padding: "20px 30px 30px 30px"}}>
               {
-                Object.keys(credentials).map(function (item) {
+                Object.keys(credentials).reverse().map(function (item) {
                   return (
                       <div key={item} class="display-flex flex_direction_column input_handler">
                         <label htmlFor={item}>{webInfo[item].placeholder}</label>

@@ -1,6 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 var api = require('../../utils/api');
+import {dashboard} from "../../utils/post_api";
 import {showPinTeamAppToDashboardModal} from "../../actions/teamModalActions"
 import {teamAppPinToDashboard} from "../../actions/appsActions"
 import {findMeInReceivers} from "../../utils/helperFunctions"
@@ -30,6 +31,15 @@ class PinTeamAppToDashboardModal extends React.Component {
     this.setNameModifying = this.setNameModifying.bind(this);
     this.confirmModal = this.confirmModal.bind(this);
   }
+  createProfile = () => {
+    dashboard.createProfile({name: this.state.profileName}).then(response => {
+      let profiles = this.state.profiles.slice();
+      profiles.push(response);
+      this.setState({profiles: profiles, profileName: '', selectedProfile: response.id});
+    }).catch(err => {
+      //do something
+    });
+  };
   confirmModal(){
     const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
     if (meReceiver.profile_id === -1 && this.state.selectedProfile === -1){
@@ -117,7 +127,7 @@ class PinTeamAppToDashboardModal extends React.Component {
                          value={this.state.profileName}
                          onChange={this.handleInput}/>
                   {this.state.profileName.length > 0 &&
-                  <button class="button-unstyle">
+                  <button class="button-unstyle" onClick={this.createProfile}>
                     Create
                   </button>
                   }

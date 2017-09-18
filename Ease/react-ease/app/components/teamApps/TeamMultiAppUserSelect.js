@@ -53,7 +53,7 @@ class TeamMultiAppUserSelect extends React.Component {
                       <div class="credential_container" key={item}>
                         <i class={classnames("fa", "mrgnRight5", webInfo[item].placeholderIcon)}/>
                         <input class="value_input input_unstyle"
-                               placeholder={webInfo[item].placeholder}
+                               placeholder={webInfo[item].placeholder === 'Password' ? '********' : webInfo[item].placeholder}
                                type={webInfo[item].type}
                                name={item}
                                value={receiver.credentials[item]}
@@ -80,7 +80,7 @@ class TeamMultiAppUserSelect extends React.Component {
                            key={item.id}
                            onClick={this.props.selectUserFunc.bind(null, item.id)}>
                         <span className="main_value">{item.username}{item.id === myId ? '(you)': null}</span>
-                        {item.first_name != null &&
+                        {item.first_name !== null &&
                         <span className="text-muted">&nbsp;- {item.first_name}&nbsp;{item.last_name}</span>}
                       </div>
                   )

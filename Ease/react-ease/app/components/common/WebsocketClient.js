@@ -6,6 +6,8 @@ import {connect} from "react-redux";
 
 function teamAppDispatcher(action, app, target){
   return function (dispatch, getState){
+    const state = getState();
+    if (state.selection.id === target.id && state.selection.type === target.type && state.team.id === target.team_id)
       dispatch({type: 'TEAM_APP_' + action, payload: {app: app, target: target}});
   }
 }
@@ -13,6 +15,8 @@ function teamAppDispatcher(action, app, target){
 function teamUserDispatcher(action, user, target){
   return function (dispatch, getState){
     const state = getState();
+    if (action === 'REMOVED' && state.team.myTeamUserId === user.id)
+      window.location.href = '/';
     if (state.team.id === target.team_id)
       dispatch({type: 'TEAM_USER_' + action, payload: {user: user, target: target}});
   }

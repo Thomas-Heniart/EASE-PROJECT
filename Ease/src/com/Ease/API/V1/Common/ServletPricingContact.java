@@ -19,13 +19,13 @@ public class ServletPricingContact extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String name = sm.getStringParam("name", true);
-            String role = sm.getStringParam("role", true);
-            String phoneNumber = sm.getStringParam("phoneNumber", true);
-            String enterprise = sm.getStringParam("enterprise", true);
-            String message = sm.getStringParam("message", false);
-            String email = sm.getStringParam("email", true);
-            String collaboratorsString = sm.getStringParam("collaborators", true);
+            String name = sm.getStringParam("name", true, true);
+            String role = sm.getStringParam("role", true, true);
+            String phoneNumber = sm.getStringParam("phoneNumber", true, true);
+            String enterprise = sm.getStringParam("enterprise", true, true);
+            String message = sm.getStringParam("message", false, true);
+            String email = sm.getStringParam("email", true, true);
+            String collaboratorsString = sm.getStringParam("collaborators", true, true);
             Integer collaborators;
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Please provide us a valid email.");

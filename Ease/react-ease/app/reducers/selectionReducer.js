@@ -11,7 +11,7 @@ export default function reducer(state={
         ...state,
         type: 'user',
         id:action.payload.user.id,
-        apps:action.payload.apps
+        apps:action.payload.apps.reverse()
       }
     }
     case "FETCH_TEAM_FULFILLED": {
@@ -25,7 +25,7 @@ export default function reducer(state={
     case 'FETCH_TEAM_USER_APPS_FULFILLED' : {
       return {
         ...state,
-        apps: action.payload.apps,
+        apps: action.payload.apps.reverse(),
         type: action.payload.type,
         id: action.payload.id
       }
@@ -33,7 +33,7 @@ export default function reducer(state={
     case 'FETCH_TEAM_CHANNELS_APPS_FULFILLED' : {
       return {
         ...state,
-        apps: action.payload.apps,
+        apps: action.payload.apps.reverse(),
         type: action.payload.type,
         id: action.payload.id
       }
@@ -43,7 +43,7 @@ export default function reducer(state={
         ...state,
         type:'channel',
         id: action.payload.channel.id,
-        apps: action.payload.apps
+        apps: action.payload.apps.reverse()
       }
     }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED": {
@@ -145,15 +145,41 @@ export default function reducer(state={
       }
       break;
     }
-    case 'DELETE_TEAM_USER_FULFILLED': {
-      if (state.id === action.payload.team_user_id && state.type === 'user'){
+    case 'REMOVE_TEAM_USER_FROM_CHANNEL_FULFILLED' : {
+      const channel_id = action.payload.channel_id;
+      const user_id = action.payload.team_user_id;
+      if (state.id === channel_id && state.type === 'channel'){
+        let apps = state.apps.map(item => {
+          item.receivers = item.receivers.filter(item => {
+            return item.team_user_id !== user_id;
+          });
+          item.sharing_requests = item.sharing_requests.filter(item => {
+            return item !== user_id;
+          });
+          return item;
+        });
         return {
-          ...state,
-          type:null,
-          id:null
+            ...state,
+          apps: apps
         }
       }
       break;
+    }
+    case 'DELETE_TEAM_USER_FULFILLED': {
+      const user_id = action.payload.team_user_id;
+      let apps = state.apps.map(item => {
+        item.receivers = item.receivers.filter(item => {
+          return item.team_user_id !== user_id;
+        });
+        item.sharing_requests = item.sharing_requests.filter(item => {
+          return item !== user_id;
+        });
+        return item;
+      });
+      return {
+          ...state,
+          apps: apps
+      };
     }
     case 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED': {
       var apps = state.apps;

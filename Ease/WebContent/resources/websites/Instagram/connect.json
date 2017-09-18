@@ -3,27 +3,80 @@
     "lastLogin":"",
     "home":"https://www.instagram.com",
     "connect":{
-        "todo":[
-            {"action":"waitfor", "search":["a._niffh","a._fcn8k"]},
-            {"action":"clickona", "search":"a._fcn8k"},
-    		{"action":"clickona", "search":"a._niffh"},
-    		{"action":"fill", "what":"login", "search":"input[name='username']", "grave":true},
-            {"action":"fill", "what":"password", "search":"input[name='password']", "grave":true},
-            {"action":"click", "search":"form button"}
-        ]
+      "todo": [
+        {
+          "action": "waitfor",
+          "search": "._8vrqg, ._b93kq"
+        },
+        {
+          "action": "trueClick",
+          "search": "._8vrqg"
+        },
+        {
+          "action": "waitfor",
+          "search": "._b93kq"
+        },
+        {
+          "action": "trueClick",
+          "search": "._b93kq"
+        },
+        {
+          "action": "waitfor",
+          "search": "._3jvtb input[name='username']"
+        },
+        {
+          "action": "waitfor",
+          "search": "._3jvtb input[name='password']"
+        },
+        {
+          "action": "waitfor",
+          "search": "._3jvtb input[name='username']"
+        },
+        {
+          "action": "fill",
+          "what": "login",
+          "search": "._3jvtb input[name='username']",
+          "grave": true
+        },
+        {
+          "action": "fill",
+          "what": "password",
+          "search": "._3jvtb input[name='password']",
+          "grave": true
+        },
+        {
+          "action": "click",
+          "search": "form._3jvtb button"
+        }
+      ]
     },
     "Facebook":{
-    	"todo":[
-    		{"action":"waitfor", "search":["a._niffh","a._fcn8k"]},
-    		{"action":"click", "search":"._ah57t"}
-    	]
+      "todo": [
+        {
+          "action": "waitfor",
+          "search": "button._qv64e._njrw0"
+        },
+        {
+          "action": "click",
+          "search": "button._qv64e._njrw0"
+        }
+      ]
     },
     "logout":{
-        "todo":[
-            {"action":"goto", "url":"https://www.instagram.com/accounts/logout/"}
-       	]
+      "todo": [
+        {
+          "action": "goto",
+          "url": "https://www.instagram.com/accounts/logout/"
+        }
+      ]
     },
     "checkAlreadyLogged":[
-        {"search":"a._soakw._vbtk2.coreSpriteDesktopNavProfile"}
+      {
+        "action": "waitfor",
+        "search": "._b93kq, .coreSpriteDesktopNavProfile, ._8vrqg"
+      },
+      {
+        "search": ".coreSpriteDesktopNavProfile"
+      }
     ]
 }

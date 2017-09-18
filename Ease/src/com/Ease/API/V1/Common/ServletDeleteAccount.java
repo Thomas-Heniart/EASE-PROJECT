@@ -21,7 +21,7 @@ public class ServletDeleteAccount extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String password = sm.getStringParam("password", false);
+            String password = sm.getStringParam("password", false, false);
             if (password == null || password.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password does not not match.");
             String key = (String) sm.getContextAttr("privateKey");

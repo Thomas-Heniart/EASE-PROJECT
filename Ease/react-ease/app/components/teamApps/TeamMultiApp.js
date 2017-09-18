@@ -2,6 +2,7 @@ var React = require('react');
 var classnames = require('classnames');
 var TeamMultiAppUserSelect = require('./TeamMultiAppUserSelect');
 var RequestAppButton = require('./RequestAppButton');
+import {getTeamAppPasswordAndCopyToClipboard} from "../../utils/utils";
 import AppReceiverTooltip from "../teams/AppReceiverTooltip";
 import * as appActions from "../../actions/appsActions";
 import * as modalActions from "../../actions/teamModalActions";
@@ -13,7 +14,8 @@ import {
     getReceiverInList,
     isUserInList,
     passwordChangeValues
-} from "../../utils/helperFunctions"
+} from "../../utils/helperFunctions";
+import { Popup, Icon} from 'semantic-ui-react';
 
 function TeamMultiAppButtonSet(props) {
   const app = props.app;
@@ -23,7 +25,7 @@ function TeamMultiAppButtonSet(props) {
 
   return (
       <div class="team_app_actions_holder">
-        {app.sharing_requests.length > 0 && isAdmin(me) &&
+        {app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) &&
         <button class="button-unstyle team_app_requests"
                 data-tip="User(s) would like to access this app"
                 onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
@@ -92,6 +94,49 @@ function MultiAppReceiverTag(props){
   )
 }
 
+class TeamAppPasswordLine extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      popupOpen: undefined,
+      popupText: 'Click to copy'
+    };
+    this.timeoutId = -1;
+  }
+  setupPopup = (text) => {
+    if (this.timeoutId !== -1) {
+      window.clearTimeout(this.timeoutId);
+      this.timeoutId = -1;
+    }
+    this.setState({popupOpen: true, popupText: text});
+    this.timeoutId = window.setTimeout(() => {
+      this.setState({popupOpen:undefined, popupText: 'Click to copy'});
+      this.timeoutId = -1;
+    }, 2000);
+  };
+  getPassword = () => {
+    getTeamAppPasswordAndCopyToClipboard({team_id: this.props.team_id, shared_app_id: this.props.receiver.shared_app_id}).then(response => {
+      this.setupPopup('Copied!');
+    }).catch(err => {
+      this.setupPopup('Copy failed :( Click again');
+    });
+  };
+  render(){
+    return (
+        <span class="display_flex full_flex">
+          <span class="full_flex">********</span>
+          <Popup
+              content={this.state.popupText}
+              open={this.state.popupOpen}
+              hideOnScroll={true}
+              size="mini"
+              inverted
+              position='top center'
+              trigger={<Icon name="eye" link onClick={this.getPassword}/>}/>
+        </span>
+    )
+  }
+}
 
 class TeamMultiApp extends React.Component {
   constructor(props){
@@ -269,6 +314,7 @@ class TeamMultiApp extends React.Component {
     const me = this.props.me;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
     const webInfo = app.website.information;
+    const asked = app.sharing_requests.indexOf(me.id) !== -1;
 
     return(
         <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
@@ -311,7 +357,7 @@ class TeamMultiApp extends React.Component {
                 <span>&nbsp;sent an Enterprise App</span>}
           </div>
           <div class="team_app multiple_accounts_app">
-            {meReceiver != null && !meReceiver.accepted &&
+            {meReceiver !== null && !meReceiver.accepted &&
             <div class="custom-overlay"></div>}
             <div class="name_holder">
               {!this.state.modifying ?
@@ -335,26 +381,30 @@ class TeamMultiApp extends React.Component {
                             <div class="credentials_type_icon">
                               <i class={classnames('fa', webInfo[item].placeholderIcon)} data-tip={"App " + item}/>
                             </div>
-                            <div class="credentials_value_holder">
-                                  <span class="credentials_value">
-                                    {item != 'password' ?
+                            <div class="credentials_value_holder full_flex">
+                                  <span class="credentials_value dispay_flex full_flex">
+                                    {item !== 'password' ?
                                         meReceiver.account_information[item]
                                         :
-                                        '********'}
+                                        <TeamAppPasswordLine team_id={app.origin.team_id} receiver={meReceiver}/>}
                                   </span>
                             </div>
                           </div>
                       )
                     }, this)}
-                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 &&
-                    <RequestAppButton/>}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && asked &&
+                    <button class="button-unstyle requestAppButton">
+                      <span class="onHover">Request sent</span>
+                      <span class="default">Request sent</span>
+                    </button>}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked &&
+                    <RequestAppButton action={e => {this.props.dispatch(appActions.askJoinTeamApp(app.id))}}/>}
                     {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
                     <button class="button-unstyle joinAppBtn"
                             onClick={this.selfJoinApp}>
                       Join app
                     </button>}
                   </div>
-                  {meReceiver !== null && meReceiver.accepted &&
                   <div class="password_change_remind">
                     <div class="password_change_icon">
                       <i class="fa fa-clock-o" data-tip="Password update frequency"/>
@@ -374,7 +424,7 @@ class TeamMultiApp extends React.Component {
                           }
                         </select>
                     }
-                  </div>}
+                  </div>
                 </div>
               </div>
               <div class="sharing_info display_flex full_flex flex_direction_column">

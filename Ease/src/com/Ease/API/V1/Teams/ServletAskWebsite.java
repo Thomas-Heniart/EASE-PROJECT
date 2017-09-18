@@ -26,11 +26,11 @@ public class ServletAskWebsite extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String url = sm.getStringParam("url", true);
-            Boolean is_public = sm.getBooleanParam("is_public", true);
-            String login = sm.getStringParam("login", false);
-            String password = sm.getStringParam("password", false);
-            Integer team_id = sm.getIntParam("team_id", true);
+            String url = sm.getStringParam("url", true, false);
+            Boolean is_public = sm.getBooleanParam("is_public", true, false);
+            String login = sm.getStringParam("login", false, false);
+            String password = sm.getStringParam("password", false, false);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             if (url == null || url.equals("") || !Regex.isValidLink(url))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");

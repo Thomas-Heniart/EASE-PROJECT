@@ -24,17 +24,17 @@ public class ServletEditTeamUserPhoneNumber extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_connected = sm.getTeamUserForTeamId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             if (!teamUser_connected.isSuperior(teamUser) && teamUser != teamUser_connected)
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot edit this user.");
-            String phone_number = sm.getStringParam("phone_number", true);
-            if (phone_number == null || phone_number.equals("") || !Regex.isPhoneNumber(phone_number))
+            String phone_number = sm.getStringParam("phone_number", true, false);
+            if (phone_number.equals("") || !Regex.isPhoneNumber(phone_number))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number.");
             teamUser.setPhone_number(phone_number);
             sm.saveOrUpdate(teamUser);

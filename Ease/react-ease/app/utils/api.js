@@ -169,7 +169,33 @@ module.exports = {
       });
     }
   },
+  teamApps: {
+    getSharedAppPassword: function({team_id, shared_app_id}){
+      return axios.get('/api/v1/teams/GetSharedAppPassword', {
+        params: {
+          team_id: team_id,
+          shared_app_id: shared_app_id,
+          timestamp: new Date().getTime()
+        }
+      }).then(response => {
+        return decipher(response.data.password);
+      }).catch(err => {
+        throw err.response.data;
+      });
+    }
+  },
   teams: {
+    getInvitationInformation : function({code}){
+      return axios.get('/api/v1/teams/GetInvitationInformation', {
+        params : {
+          code: code
+        }
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
     finalizeRegistration: function(code){
       return axios.get('/api/v1/teams/FinalizeRegistration', {
         params: {
@@ -179,7 +205,7 @@ module.exports = {
       }).then(response => {
         return response.data;
       }).catch(err => {
-        return err.response.data;
+        throw err.response.data;
       });
     },
     getTeamPaymentInformation: function({team_id}){
@@ -190,11 +216,18 @@ module.exports = {
       }).then(response => {
         return response.data;
       }).catch(err => {
-        return err.response.data;
+        throw err.response.data;
       })
     }
   },
   common: {
+    bz : function(){
+      return axios.post('/bz').then(response => {
+        return response.data.connected;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
     checkAuthentication : function(){
       return axios.get('/api/v1/common/checkAuthentication').then(response => {
         return response.data;

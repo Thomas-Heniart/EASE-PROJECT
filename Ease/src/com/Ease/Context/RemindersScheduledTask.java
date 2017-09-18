@@ -22,8 +22,8 @@ public class RemindersScheduledTask extends TimerTask {
     public void run() {
         try {
             /* teamManager.reminderThreeDays();
-            teamManager.passwordReminder();
             reminderEmailManager.lunchReminders(); */
+            teamManager.passwordReminder();
             teamManager.checkFreeTrialEnd();
         } catch (Exception e) {
             e.printStackTrace();

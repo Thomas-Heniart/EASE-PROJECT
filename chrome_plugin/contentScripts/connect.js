@@ -111,19 +111,10 @@ if (window.top === window) {
 
     extension.runtime.onMessage("goooo", function (msg, sendResponse) {
         console.log("goooo");
-        $("form, input").attr('autocomplete', 'off');
-        $("input[type='password']").attr("data-password-autocomplete", "off");
-        $("input[type='password']").each(function () {
-            $(this).prop('type', 'text');
-            $('<input type="password"/>').hide().insertBefore(this);
-            $(this).focus(function () {
-                $(this).prop('type', 'password');
-            });
-        });
-        /* $("input[type='password']").attr("data-password-autocomplete", "off");
-        $("input[type='password']").attr("autocomplete", "off");
-        $("input[type='password']").prop("readonly", true);
-        $("input[type='password']").attr("onFocus", "this.removeAttribute('readonly')"); */
+        /* $("<input type=\"password\" " +
+            "style=\"position: absolute; border:none;width:0px;height:0px;background-color:white;overflow: hidden; opacity: 0;\" " +
+            "onfocus=\"$(this).next().focus()\" " +
+            "/>").insertBefore($("input[type='password']")); */
         if (msg.todo == "checkAlreadyConnected") {
             checkConnectionOverlay(msg);
             checkIsConnected(msg, function () {

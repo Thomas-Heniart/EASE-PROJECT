@@ -1,7 +1,7 @@
 var React = require('react');
 var api = require('../utils/api');
 var classnames = require('classnames');
-import {requestWebsite} from "../actions/teamModalActions";
+import {requestWebsite, showPinTeamAppToDashboardModal} from "../actions/teamModalActions";
 import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 import {teamCreateMultiApp, teamShareApp} from "../actions/appsActions"
 
@@ -93,6 +93,10 @@ class MultiTeamAppAdd extends React.Component {
     }
   }
   shareApp(){
+    let meSelected = false;
+
+    if (this.state.selectedUsers.length === 0)
+      return;
     var app = {
       website_id: this.state.choosenApp.info.id,
       name: this.state.appName,
@@ -107,6 +111,8 @@ class MultiTeamAppAdd extends React.Component {
     this.props.dispatch(teamCreateMultiApp(app)).then(response => {
       var id = response.id;
       var sharing = selectedUsers.map(function(user){
+        if (this.props.my_id === user.id)
+          meSelected = true;
         var user_info = {
           team_user_id: user.id,
           account_information: user.credentials,
@@ -115,6 +121,8 @@ class MultiTeamAppAdd extends React.Component {
         return this.props.dispatch(teamShareApp(id, user_info));
       }, this);
       Promise.all(sharing).then(() => {
+        if (meSelected)
+          this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
         this.props.dispatch(closeAppAddUI());
       });
     });
@@ -126,26 +134,6 @@ class MultiTeamAppAdd extends React.Component {
   showDropdown(){
     if (!this.state.dropdown)
       this.setState({dropdown: true});
-  }
-  componentWillReceiveProps(props){
-    if (props !== this.props){
-      var users = [];
-      if (props.selectedItem.type === 'channel'){
-        props.item.userIds.map(function(item){
-          var user = props.userSelectFunc(item);
-          user.selected = false;
-          users.push(user);
-        }, this);
-      } else {
-        var item = props.item;
-        item.selected = false;
-        users.push(item);
-      }
-      this.setState({
-        selectedUsers: [],
-        users: users
-      });
-    }
   }
   handleAppNameChange(event){
     this.setState({appName: event.target.value});

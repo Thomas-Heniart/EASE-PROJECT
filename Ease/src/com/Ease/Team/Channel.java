@@ -32,8 +32,9 @@ public class Channel {
     @Column(name = "purpose")
     protected String purpose;
 
-    @Column(name = "creator_id")
-    private Integer creator_id;
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private TeamUser room_manager;
 
     @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
@@ -46,11 +47,11 @@ public class Channel {
     @Transient
     private WebSocketManager webSocketManager = new WebSocketManager();
 
-    public Channel(Team team, String name, String purpose, Integer creator_id) {
+    public Channel(Team team, String name, String purpose, TeamUser room_manager) {
         this.team = team;
         this.name = name;
         this.purpose = purpose;
-        this.creator_id = creator_id;
+        this.room_manager = room_manager;
     }
 
     public Channel() {
@@ -88,12 +89,12 @@ public class Channel {
         this.purpose = purpose;
     }
 
-    public Integer getCreator_id() {
-        return creator_id;
+    public TeamUser getRoom_manager() {
+        return room_manager;
     }
 
-    public void setCreator_id(Integer creator_id) {
-        this.creator_id = creator_id;
+    public void setRoom_manager(TeamUser room_manager) {
+        this.room_manager = room_manager;
     }
 
     public List<TeamUser> getTeamUsers() {

@@ -5,6 +5,8 @@ import queryString from "query-string";
 import {processLogout, setLoginRedirectUrl} from "../../actions/commonActions";
 import {connect} from "react-redux";
 import SingleEaseLogo from "../common/SingleEaseLogo";
+import CGUStep from "./CGUStep";
+import LoadingScreen from '../common/LoadingScreen';
 import { Header, Container, Segment, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 var api = require('../../utils/api');
 var post_api = require('../../utils/post_api');
@@ -12,15 +14,6 @@ var post_api = require('../../utils/post_api');
 class Step1 extends React.Component {
   constructor(props){
     super(props);
-    this.createAccount = this.createAccount.bind(this);
-    this.login = this.login.bind(this);
-  }
-  createAccount(){
-    this.props.onStepValidated();
-  }
-  login(){
-    this.props.dispatch(setLoginRedirectUrl(this.props.match.url + '?skip'));
-    this.props.history.replace('/login');
   }
   render(){
     return (
@@ -31,14 +24,35 @@ class Step1 extends React.Component {
               <Header.Subheader style={{marginTop:'1rem'}}>
                 Ease.space helps you secure, manage and organize web accesses in your team.
               </Header.Subheader>
-              </Header>
-            <Divider hidden fitted/>
-            <Button primary onClick={this.createAccount} fluid>
+            </Header>
+            <Divider hidden/>
+            <Button primary onClick={this.props.onStepValidated} fluid>
               Not yet! I am new on Ease.space
             </Button>
             <Divider/>
-            <Button positive onClick={this.login} fluid>
+            <Button positive onClick={this.props.login} fluid>
               Yes! I already have an account
+            </Button>
+          </Segment>
+        </div>
+    )
+  }
+}
+
+class Step1AlreadyHaveAnAccount extends React.Component {
+  constructor(props){
+    super(props);
+  }
+  render(){
+    return (
+        <div class="contents">
+          <Segment>
+            <Header as="h1">
+              Before joining {this.props.team_name}, connect to your account ({this.props.email})
+            </Header>
+            <Divider hidden/>
+            <Button positive onClick={this.props.login} fluid>
+              Continue
             </Button>
           </Segment>
         </div>
@@ -50,7 +64,8 @@ class Step2 extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      errorMessage: ''
+      errorMessage: '',
+      usernameError: false
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -58,7 +73,7 @@ class Step2 extends React.Component{
     e.preventDefault();
     let usernameErrors = checkTeamUsernameErrors(this.props.username);
     if (usernameErrors.error){
-      this.setState({errorMessage: usernameErrors.message});
+      this.setState({usernameError: true});
       return;
     }
     this.props.onStepValidated();
@@ -68,7 +83,7 @@ class Step2 extends React.Component{
         <div class="contents" id="step4">
           <Segment>
             <Header as="h1">
-              What's your name
+              What's your name?
               <Header.Subheader>
                 Your name will be displayed for your team members in Ease.space
               </Header.Subheader>
@@ -89,7 +104,7 @@ class Step2 extends React.Component{
                             onChange={this.props.handleInput}
                             name="lname" type="text"/>
               </Form.Group>
-              <Form.Field required>
+              <Form.Field required error={this.state.usernameError}>
                 <label>Username</label>
                 <Input type="text"
                        value={this.props.username}
@@ -97,7 +112,7 @@ class Step2 extends React.Component{
                        name="username"
                        placeholder="Username"
                        required/>
-                <Label pointing>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. Maximum 22 characters.</Label>
+                <Label pointing basic={this.state.usernameError} color={this.state.usernameError ? 'red': null}>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.</Label>
               </Form.Field>
               <Message error content={this.state.errorMessage}/>
               <Form.Field>
@@ -115,7 +130,7 @@ class StepCGU extends React.Component{
     super(props);
   }
   submit = () => {
-      this.props.onStepValidated();
+    this.props.onStepValidated();
   };
   render() {
     return (
@@ -151,7 +166,7 @@ class StepCGU extends React.Component{
             <p>
               By clicking « I Agree », you understand and agree to our General Terms and <a>Privacy Policy</a>.
             </p>
-            <Button positive fluid onClick={this.submit}>I Agree</Button>
+            <Button positive fluid loading={this.props.loading} onClick={this.submit}>I Agree</Button>
           </Segment>
         </div>
     )
@@ -164,7 +179,7 @@ class Step3 extends React.Component{
     this.state = {
       errorMessage: '',
       passwordError: false,
-      confirmPasswordMessage: "Passwords doesn't match"
+      confirmPasswordMessage: "Passwords are different"
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -252,7 +267,11 @@ function Step4(props){
                 required
                 onChange={props.handleInput}/>}
             <Form.Field>
-              <Button positive fluid type="submit" disabled={jobRole === null || (jobRole === 15 && jobDetails.length === 0)}>Next</Button>
+              <Button positive
+                      fluid
+                      type="submit"
+                      loading={props.loading}
+                      disabled={jobRole === null || (jobRole === 15 && jobDetails.length === 0)}>Next</Button>
             </Form.Field>
           </Form>
         </Segment>
@@ -269,7 +288,9 @@ class TeamJoinView extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      account_exists: false,
       email: '',
+      team_name: '',
       fname: '',
       lname: '',
       username: '',
@@ -280,30 +301,38 @@ class TeamJoinView extends React.Component {
       jobDetails: '',
       currentStep: 0,
       code: '',
-      teamUser: null,
-      skipRegistration: false
+      skipRegistration: false,
+      loading: true,
+      lastStepLoading: false
     };
     this.handleInput = this.handleInput.bind(this);
     this.incrementStep = this.incrementStep.bind(this);
     this.finalizeModal = this.finalizeModal.bind(this);
     this.canSkip = this.canSkip.bind(this);
-    const query = queryString.parse(this.props.location.search);
-    if (query.skip !== undefined) {
-      this.state.skipRegistration = true;
-    }
   }
+  login = () => {
+    this.props.dispatch(setLoginRedirectUrl(this.props.match.url + '?skip'));
+    this.props.history.replace('/login');
+  };
   canSkip(){
     return this.state.skipRegistration && this.props.common.authenticated;
   }
   finalizeModal(){
+    this.setState({lastStepLoading: true});
     if (this.canSkip()){
       post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
+        this.setState({lastStepLoading: false});
         window.location.href = '/';
+      }).catch(err => {
+        console.log(err);
       });
     }else {
-      post_api.common.registration(this.state.teamUser.email, this.state.username, this.state.password, null, this.state.code, false).then(r => {
+      post_api.common.registration(this.state.email, this.state.username, this.state.password, null, this.state.code, false).then(r => {
         post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
+          this.setState({lastStepLoading: false});
           window.location.href = '/';
+        }).catch(err => {
+          console.log(err);
         });
       })
     }
@@ -312,33 +341,65 @@ class TeamJoinView extends React.Component {
     this.setState({[name]: value});
   }
   incrementStep(){
-      this.setState({currentStep: this.state.currentStep + 1});
+    this.setState({currentStep: this.state.currentStep + 1});
   }
   componentDidMount(){
+    const query = queryString.parse(this.props.location.search);
+    if (query.skip !== undefined) {
+      this.state.skipRegistration = true;
+    }
+    this.setState({loading: true});
     if (this.props.common.authenticated && !this.state.skipRegistration)
       this.props.dispatch(processLogout()).then(() => {
-        api.teams.finalizeRegistration(this.props.match.params.code).then(response => {
-          this.setState({teamUser: response, code: this.props.match.params.code});
+        api.teams.getInvitationInformation({code: this.props.match.params.code}).then(response => {
+          const info = response;
+          const teamUser = info.teamUser;
+          this.setState({
+            code: this.props.match.params.code,
+            fname: teamUser.first_name,
+            lname: teamUser.last_name,
+            username: teamUser.username,
+            email: info.email,
+            team_name: info.team_name,
+            account_exists:info.account_exists,
+            loading: false
+          });
         }).catch(err => {
-          console.log(err);
+          window.location.href = '/';
         });
       });
     else {
-      api.teams.finalizeRegistration(this.props.match.params.code).then(response => {
-        this.setState({teamUser: response, code: this.props.match.params.code});
+      api.teams.getInvitationInformation({code: this.props.match.params.code}).then(response => {
+        const info = response;
+        const teamUser = info.teamUser;
+        this.setState({
+          code: this.props.match.params.code,
+          fname: teamUser.first_name,
+          lname: teamUser.last_name,
+          username: teamUser.username,
+          email: info.email,
+          team_name: info.team_name,
+          account_exists:info.account_exists,
+          loading: false
+        });
       }).catch(err => {
-        console.log(err);
+        window.location.href = '/';
       });
     }
   }
   render(){
     var steps = [];
-    if (!this.canSkip())
-      steps.push(<Step1 onStepValidated={this.incrementStep}
-                      dispatch={this.props.dispatch}
-                      match={this.props.match}
-                      history={this.props.history}
-                      key="1"/>);
+    if (!this.canSkip()) {
+      if (!this.state.account_exists)
+        steps.push(<Step1 onStepValidated={this.incrementStep}
+                          login={this.login}
+                          key="1"/>);
+      else
+        steps.push(<Step1AlreadyHaveAnAccount key="1"
+                                              team_name={this.state.team_name}
+                                              email={this.state.email}
+                                              login={this.login}/>)
+    }
     steps.push(<Step2 onStepValidated={this.incrementStep}
                       handleInput={this.handleInput}
                       lname={this.state.lname}
@@ -346,22 +407,26 @@ class TeamJoinView extends React.Component {
                       username={this.state.username}
                       key="2"/>);
     if (!this.canSkip())
-      steps.push(<StepCGU onStepValidated={this.incrementStep}/>);
+      steps.push(<CGUStep key="cgu" onStepValidated={this.incrementStep}/>);
     if (!this.canSkip())
       steps.push(<Step3 onStepValidated={this.incrementStep}
-                      password={this.state.password}
-                      confirmPassword={this.state.confirmPassword}
-                      handleInput={this.handleInput}
-                      key="3"/>);
+                        password={this.state.password}
+                        confirmPassword={this.state.confirmPassword}
+                        handleInput={this.handleInput}
+                        key="3"/>);
     steps.push(<Step4 onStepValidated={this.finalizeModal}
                       handleInput={this.handleInput}
                       jobRole={this.state.jobRole}
                       jobDetails={this.state.jobDetails}
+                      loading={this.state.lastStepLoading}
                       key="4"/>);
 
     return (
         <div id="team_join_view" class="full_screen_centered_view">
           <SingleEaseLogo/>
+          {this.state.loading &&
+          <LoadingScreen/>}
+          {!this.state.loading &&
           <ReactCSSTransitionGroup
               component="div"
               className="carousel"
@@ -377,7 +442,7 @@ class TeamJoinView extends React.Component {
                 return null;
               }, this)
             }
-          </ReactCSSTransitionGroup>
+          </ReactCSSTransitionGroup>}
         </div>
     )
   }

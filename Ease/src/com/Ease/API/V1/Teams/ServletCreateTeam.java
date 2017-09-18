@@ -31,29 +31,46 @@ import java.util.Map;
  */
 @WebServlet("/api/v1/teams/CreateTeam")
 public class ServletCreateTeam extends HttpServlet {
+    private static final String[] jobRoles = {
+            "Adminisrative/Facilities",
+            "Accounting/Finance",
+            "Business Development",
+            "Business Owner",
+            "Customer Support",
+            "Data/Analytics/Business Intelligence",
+            "Design",
+            "Engineering (Software)",
+            "Marketing",
+            "Media/Communications",
+            "Operations",
+            "Product Management",
+            "Program/Project Management",
+            "Research",
+            "Sales",
+            "Other"
+    };
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            String digits = sm.getStringParam("digits", false);
-            String teamName = sm.getStringParam("team_name", true);
-            String firstName = sm.getStringParam("first_name", true);
-            String lastName = sm.getStringParam("last_name", true);
-            String email = sm.getStringParam("email", true);
-            String username = sm.getStringParam("username", true);
-            String jobTitle = sm.getStringParam("job_title", true);
-            if (teamName == null || teamName.equals(""))
+            String digits = sm.getStringParam("digits", false, true);
+            String teamName = sm.getStringParam("team_name", true, false);
+            String firstName = sm.getStringParam("first_name", true, false);
+            String lastName = sm.getStringParam("last_name", true, false);
+            String email = sm.getStringParam("email", true, false);
+            String username = sm.getStringParam("username", true, false);
+            Integer job_index = sm.getIntParam("job_index", true, false);
+            if (teamName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
-            if (firstName == null || firstName.equals(""))
+            if (firstName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "firstName is needed.");
-            if (lastName == null || lastName.equals(""))
+            if (lastName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
-            if (email == null || email.equals(""))
+            if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "email is needed.");
             checkUsernameIntegrity(username);
-            if (jobTitle == null)
-                jobTitle = "";
             if (!user.getVerifiedEmails().contains(email) && (digits == null || digits.equals("") || digits.length() != 6))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot create a team.");
             if (user.getUnverifiedEmails().contains(email)) {
@@ -71,14 +88,19 @@ public class ServletCreateTeam extends HttpServlet {
             String teamKey = AES.keyGenerator();
             Team team = new Team(teamName);
             String teamKey_ciphered = user.encrypt(teamKey);
-            Date arrivalDate = new Date(sm.getLongParam("timestamp", true));
+            Date arrivalDate = new Date(sm.getLongParam("timestamp", true, false));
             TeamUser owner = TeamUser.createOwner(firstName, lastName, email, username, arrivalDate, teamKey_ciphered, team);
+            String jobTitle;
+            if (job_index < jobRoles.length - 1)
+                jobTitle = jobRoles[job_index];
+            else
+                jobTitle = sm.getStringParam("job_details", true, false);
             owner.setJobTitle(jobTitle);
             owner.setDeciphered_teamKey(teamKey);
             owner.setUser_id(user.getDBid());
             sm.saveOrUpdate(team);
             sm.saveOrUpdate(owner);
-            Channel channel = team.createDefaultChannel(owner.getDb_id());
+            Channel channel = team.createDefaultChannel(owner);
             sm.saveOrUpdate(channel);
             owner.setDashboard_user(user);
             user.addTeamUser(owner);

@@ -28,20 +28,20 @@ public class ServletEditSharedApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            Integer sharedApp_id = sm.getIntParam("app_id", true);
+            Integer sharedApp_id = sm.getIntParam("app_id", true, false);
             SharedApp sharedApp = team.getAppManager().getSharedApp(sharedApp_id);
             //Integer team_user_id = sm.getIntParam("team_user_id", true);
             if (!teamUser_connected.isTeamAdmin() && !(sm.getTeamUserForTeam(team) == sharedApp.getTeamUser_tenant()))
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             JSONObject params = new JSONObject();
-            params.put("account_information", sm.getParam("account_information", false));
-            params.put("can_see_information", sm.getParam("can_see_information", true));
-            params.put("url", sm.getStringParam("url", true));
+            params.put("account_information", sm.getParam("account_information", false, true));
+            params.put("can_see_information", sm.getParam("can_see_information", true, true));
+            params.put("url", sm.getStringParam("url", true, true));
             sharedApp.modifyShared(sm.getDB(), params);
             JSONObject target = sharedApp.getHolder().getOrigin();
             target.put("team_id", team_id);

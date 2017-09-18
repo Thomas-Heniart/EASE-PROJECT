@@ -27,19 +27,19 @@ public class ServletCreateChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            String name = sm.getStringParam("name", true);
-            String purpose = sm.getStringParam("purpose", true);
+            String name = sm.getStringParam("name", true, false);
+            String purpose = sm.getStringParam("purpose", true, true);
             if (name == null || name.equals("") || !Regex.isValidRoomName(name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation and must be shorter than 22 characters.");
             if (purpose == null)
                 purpose = "";
             if (team.getChannelNamed(name) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another room");
-            Channel channel = new Channel(team, name, purpose, sm.getTeamUserForTeamId(team_id).getDb_id());
+            Channel channel = new Channel(team, name, purpose, sm.getTeamUserForTeamId(team_id));
             sm.saveOrUpdate(channel);
             team.addChannel(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.ADDED, channel.getJson(), channel.getOrigin()));

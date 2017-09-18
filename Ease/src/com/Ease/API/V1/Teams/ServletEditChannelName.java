@@ -27,15 +27,15 @@ public class ServletEditChannelName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer channel_id = sm.getIntParam("channel_id", true);
+            Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
             if (channel.isDefault())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
-            String name = sm.getStringParam("name", true);
+            String name = sm.getStringParam("name", true, false);
             if (name == null || name.equals("") || !Regex.isValidRoomName(name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation and must be shorter than 22 characters.");
             for (Channel channel1 : team.getChannels()) {
