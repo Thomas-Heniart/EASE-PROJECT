@@ -8,6 +8,7 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -62,22 +63,26 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Channel channel = null;
             if (channel_id != null) {
                 channel = team.getChannelWithId(channel_id);
-                teamUser_owner = channel.getRoom_manager();
                 if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
                     throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             }
+            String key = (String) sm.getContextAttr("privateKey");
             List<JSONObject> accountInformationList = new LinkedList<>();
             for (Object accountInformationObj : account_information) {
                 JSONObject accountInformation = (JSONObject) accountInformationObj;
+                String ciphered_value = (String) accountInformation.get("info_value");
+                accountInformation.put("info_value", RSA.Decrypt(ciphered_value, key));
                 accountInformationList.add(accountInformation);
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_owner, reminderInterval, sm);
             classicApp.becomeShareable(db, team, teamUser_owner, team_user_id, channel, description);
+            if (channel != null)
+                classicApp.setTeamUser_owner(channel.getRoom_manager());
             for (Object receiver : receivers) {
                 JSONObject receiver_json = (JSONObject) receiver;
-                Integer receiver_id = (Integer) receiver_json.get("team_user_id");
+                Integer receiver_id = Math.toIntExact((Long) receiver_json.get("team_user_id"));
                 TeamUser teamUser_tenant = team.getTeamUserWithId(receiver_id);
                 SharedApp sharedApp = classicApp.share(teamUser_owner, teamUser_tenant, channel, team, receiver_json, sm);
                 if (teamUser_tenant == sm.getTeamUserForTeam(team))

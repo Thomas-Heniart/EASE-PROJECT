@@ -288,7 +288,7 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(sharedAccount.getDBid());
         Integer classicDBid = request.set();
         App sharedApp = new ClassicApp((Integer) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
-        sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
+        sharedApp.setAdminHasAccess(true, sm.getDB());
         db.commitTransaction(transaction);
         sharedApp.setReceived(false);
         sharedApp.setTeamUser_tenant(teamUser_tenant);

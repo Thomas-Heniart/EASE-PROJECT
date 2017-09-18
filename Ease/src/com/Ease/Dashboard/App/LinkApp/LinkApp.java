@@ -203,7 +203,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         db.commitTransaction(transaction);
         this.channel = channel;
         LinkApp sharedApp = new LinkApp(appDBid, null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), linkInfos, linkDBid, this);
-        sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
+        sharedApp.setAdminHasAccess(true, sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         sharedApp.setReceived(true);
         sharedApp.setCanSeeInformation(canSeeInformation);
