@@ -57,6 +57,8 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                 mailJetBuilder.setTemplateId(180165);
                 mailJetBuilder.addTo(teamUser_connected.getEmail());
+                mailJetBuilder.setTemplateErrorDeliver();
+                mailJetBuilder.setTemplateErrorReporting();
                 mailJetBuilder.addVariable("first_name", teamUser_to_delete.getFirstName());
                 mailJetBuilder.addVariable("last_name", teamUser_to_delete.getLastName());
                 mailJetBuilder.addVariable("team_name", team.getName());

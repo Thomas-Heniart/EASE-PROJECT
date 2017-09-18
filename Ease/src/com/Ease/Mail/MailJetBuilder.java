@@ -1,14 +1,12 @@
 package com.Ease.Mail;
 
 import com.Ease.Context.Variables;
-import com.Ease.Utils.Mail;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.Resource;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
-import com.mailjet.client.resource.ContactslistManageContact;
 import com.mailjet.client.resource.Email;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -148,5 +146,16 @@ public class MailJetBuilder {
 
     public void property(String key, Object value) {
         request.property(key, value);
+    }
+
+    public void setTemplateErrorDeliver() {
+        request.property(Email.MJTEMPLATEERRORDELIVERY, true);
+    }
+
+    public void setTemplateErrorReporting() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Email", "thomas@ease.space");
+        jsonObject.put("Name", "Thomas Heniart");
+        request.property(Email.MJTEMPLATEERRORREPORTING, jsonObject);
     }
 }
