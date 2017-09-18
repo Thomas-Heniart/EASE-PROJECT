@@ -31,6 +31,53 @@ button.team_app_requests {
   }
 }
 
+.list {
+  .user-card {
+    padding: 10px !important;
+    transition: background-color .1s;
+    &:hover {
+      background-color: $themeGreyLightColor;
+      border-bottom: 1px solid $themeBlueColor;
+    }
+    .header {
+      margin-bottom: 5px !important;
+    }
+    p {
+      color: $themeDarkGrayTextColor;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+#team_user_tab {
+  .rooms .label {
+    margin-top: .14285714em;
+    margin-bottom: .14285714em;
+  }
+}
+
+#team_tab {
+  .users .label {
+    margin-top: .14285714em;
+    margin-bottom: .14285714em;
+  }
+}
+
+.room-card {
+  padding: 10px;
+  .room-name {
+    height: 30px;
+  }
+  .room-purpose {
+    margin-top: 20px;
+    color: $themeDarkGreyColor;
+    @include align-items(center);
+    span {
+      padding-right: 10px;
+    }
+  }
+}
+
 .team_app_indicators .fa-user {
   color: $themeRedColor;
 }

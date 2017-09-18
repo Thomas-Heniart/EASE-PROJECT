@@ -7,7 +7,7 @@ const app_receiver_tooltip_style = {
     display: 'inline-block',
     zIndex: '0',
     color: '#000',
-    cursor: 'normal',
+    cursor: 'normal'
   },
   tooltip: {
     position: 'absolute',

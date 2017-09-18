@@ -72,7 +72,7 @@
   margin: 0em 0em;
   padding: 1.14285714em 2em;
   background: #FFFFFF;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(41, 41, 41, 0.95);
   -webkit-box-shadow: none;
           box-shadow: none;
   border-radius: 0em;
@@ -147,7 +147,7 @@
 .ui.steps .step .description {
   font-weight: normal;
   font-size: 0.92857143em;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(41, 41, 41, 0.95);
 }
 .ui.steps .step > .description {
   width: 100%;
@@ -389,7 +389,7 @@
 .ui.steps a.active.step:hover {
   cursor: pointer;
   background: #DCDDDE;
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(41, 41, 41, 0.95);
 }
 
 /* Completed */

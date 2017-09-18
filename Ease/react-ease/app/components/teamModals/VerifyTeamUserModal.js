@@ -32,7 +32,7 @@ class VerifyTeamUserModal extends React.Component {
               <i class="fa fa-times"/>
             </button>
             <div class="row title-row text-center">
-              Ready to get in team!
+              Ready to get in the team!
             </div>
             <div class="row display-flex flex_direction_column single-row">
               <span><strong>{user.username}</strong> accepted your invitation to join {team.name}.</span>

@@ -85,6 +85,7 @@ export function addTeamUserToChannel(channel_id, team_user_id){
     dispatch({type: 'ADD_TEAM_USER_TO_CHANNEL_PENDING'});
     return post_api.teamChannel.addTeamUserToChannel(getState().common.ws_id, getState().team.id, channel_id, team_user_id).then(response => {
       dispatch({type: 'ADD_TEAM_USER_TO_CHANNEL_FULFILLED', payload:{channel_id: channel_id, team_user_id:team_user_id}});
+      return response;
     }).catch(err => {
       dispatch({type: 'ADD_TEAM_USER_TO_CHANNEL_REJECTED', payload: err});
       throw err;
@@ -97,8 +98,6 @@ export function removeTeamUserFromChannel(channel_id, team_user_id){
     dispatch({type: 'REMOVE_TEAM_USER_FROM_CHANNEL_PENDING'});
     return post_api.teamChannel.removeTeamUserFromChannel(getState().common.ws_id, getState().team.id, channel_id, team_user_id).then(response => {
       dispatch({type: 'REMOVE_TEAM_USER_FROM_CHANNEL_FULFILLED', payload:{channel_id: channel_id, team_user_id:team_user_id}});
-      if (getState().selection.type === 'channel' && getState().selection.id === channel_id)
-        dispatch(autoSelectTeamItem());
     }).catch(err => {
       dispatch({type: 'REMOVE_TEAM_USER_FROM_CHANNEL_REJECTED', payload:err});
       throw err;

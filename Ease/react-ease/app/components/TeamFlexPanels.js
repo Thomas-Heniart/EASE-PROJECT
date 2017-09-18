@@ -4,17 +4,18 @@ import * as teamModalActions from "../actions/teamModalActions"
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
 import {showTeamDeleteUserModal,
-    showTeamDeleteChannelModal,
-    showTeamDeleteUserFromChannelModal,
-    showTeamTransferOwnershipModal}
-    from "../actions/teamModalActions";
-import {teamUserRoles,
-    selectChannelFromListById,
-    selectUserFromListById,
-    isAdmin,
-    isAdminOrMe,
-    isSuperior} from "../utils/helperFunctions";
-import {teamUserRoleValues} from "../utils/utils";
+  showTeamDeleteChannelModal,
+  showTeamDeleteUserFromChannelModal,
+  showTeamTransferOwnershipModal}
+  from "../actions/teamModalActions";
+import {selectChannelFromListById,
+  selectUserFromListById,
+  isAdmin,
+  isAdminOrMe,
+  isSuperior,
+  isSuperiorOrMe} from "../utils/helperFunctions";
+import {renderUserLabel} from "../utils/renderHelpers";
+import {teamUserRoleValues, userNameRuleString, handleSemanticInput, teamUserRoles, reflect} from "../utils/utils";
 import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, TextArea, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 import {withRouter, Switch, Route} from "react-router-dom";
 import {connect} from "react-redux";
@@ -43,6 +44,84 @@ function ChannelJoinRequestList(props){
         })}
       </List>
   )
+}
+
+@connect(store => ({
+  users: store.users.users
+}))
+class AddMemberToRoomDiv extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      modifying: false,
+      loading:false,
+      options: [],
+      value: []
+    };
+  }
+  handleInput = handleSemanticInput.bind(this);
+  validate = (e) => {
+    e.preventDefault();
+    const room = this.props.room;
+    this.setState({loading: true});
+    const calls = this.state.value.map(item => {
+      return this.props.dispatch(channelActions.addTeamUserToChannel(room.id, item));
+    });
+    Promise.all(calls.map(reflect)).then(results => {
+      this.setState({loading: false, modifying:false});
+    });
+  };
+  setModifying = (state) => {
+    if (state){
+      const room = this.props.room;
+      const options = this.props.users.filter(item => {
+        return room.userIds.indexOf(item.id) === -1;
+      }).map(item => {
+        return {
+          key: item.id,
+          text: `${item.username} (${teamUserRoles[item.role]})`,
+          value: item.id,
+          username: item.username
+        }
+      });
+      this.setState({modifying:true, options: options, loading: false, value : []});
+      return;
+    }
+    this.setState({modifying: state});
+  };
+  render(){
+    return (
+        <div>
+          {!this.state.modifying ?
+              <Button primary size="mini"
+                      onClick={this.setModifying.bind(null, true)}>
+                <Icon name="add user"/>
+                Add a member
+              </Button>
+              :
+              <Form onSubmit={this.validate}>
+                <Form.Field>
+                  <Dropdown
+                    search={true}
+                    options={this.state.options}
+                    value={this.state.value}
+                    name="value"
+                    class="mini"
+                    onChange={this.handleInput}
+                    fluid
+                    selection={true}
+                    multiple
+                    renderLabel={renderUserLabel}
+                    placeholder="Tag users here..."/>
+                </Form.Field>
+                <Form.Field>
+                  <Button basic size="mini" type="button" onClick={this.setModifying.bind(null, false)}>Cancel</Button>
+                  <Button primary size="mini" loading={this.state.loading}>Save</Button>
+                </Form.Field>
+              </Form>}
+        </div>
+    )
+  }
 }
 
 class TeamChannelFlexTab extends React.Component{
@@ -145,7 +224,7 @@ class TeamChannelFlexTab extends React.Component{
                         </Form.Field>
                         <Form.Field>
                           <Button basic size="mini" onClick={this.setNameModifying.bind(null, false)}>Cancel</Button>
-                          <Button primary size="mini" onClick={this.confirmNameChange}>Edit</Button>
+                          <Button primary size="mini" onClick={this.confirmNameChange}>Save</Button>
                         </Form.Field>
                       </Form>
                   }
@@ -173,25 +252,23 @@ class TeamChannelFlexTab extends React.Component{
                         </Form.Field>
                         <Form.Field>
                           <Button basic size="mini" onClick={this.setPurposeModifying.bind(null, false)}>Cancel</Button>
-                          <Button primary size="mini" onClick={this.confirmPurposeChange}>Edit</Button>
+                          <Button primary size="mini" onClick={this.confirmPurposeChange}>Save</Button>
                         </Form.Field>
                       </Form>
                   }
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column>
+                <Grid.Column class="users">
                   <Header as="h5">
                     {isAdmin(me.role) && this.props.item.join_requests.length > 0 ?
                         <Label circular color="red" size="mini">{this.props.item.join_requests.length}</Label>: null}
                     Members :
                   </Header>
-                  <List>
                     {this.props.item.userIds.map(function (item) {
                       const user = selectUserFromListById(this.props.users, item);
                       return (
-                          <List.Item key={item}>
-                            <Label size="mini">
+                            <Label size="mini" key={item}>
                               <Icon name="user"/>
                               {user.username}
                               {(isSuperior(user, me) || user.id === me.id) && !channel.default &&
@@ -199,21 +276,17 @@ class TeamChannelFlexTab extends React.Component{
                                     onClick={e => {
                                       this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))
                                     }}/>}
-                            </Label>
-                          </List.Item>)}, this)}
-                  </List>
+                            </Label>)}, this)}
                   {isAdmin(me.role) &&
                   <ChannelJoinRequestList
                       channel_id={this.props.item.id}
                       users={this.props.users}
                       requests={this.props.item.join_requests}
                       dispatch={this.props.dispatch}/>}
-                  {isAdmin(me.role) && !channel.default &&
-                  <Button primary size="mini"
-                          onClick={e => {this.props.dispatch(teamModalActions.showTeamChannelAddUserModal(true, this.props.item.id))}}>
-                    <Icon name="add user"/>
-                    Add a member
-                  </Button>}
+                  <div>
+                    {isAdmin(me.role) && !channel.default &&
+                    <AddMemberToRoomDiv room={channel}/>}
+                  </div>
                 </Grid.Column>
               </Grid.Row>
               {isAdmin(me.role) && !channel.default &&
@@ -232,6 +305,63 @@ class TeamChannelFlexTab extends React.Component{
   }
 }
 
+
+class UsernameModifier extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      username: '',
+      modifying: false,
+      loading: false,
+      error: false
+    }
+  }
+  handleInput = handleSemanticInput.bind(this);
+  setModifying  = (state) => {
+    this.setState({username: this.props.user.username, modifying: state, error : false, loading: false});
+  };
+  validate = (e) => {
+    e.preventDefault();
+    const user = this.props.user;
+    this.setState({loading: true, error: false});
+    this.props.dispatch(userActions.editTeamUserUsername(user.id, this.state.username)).then(response => {
+      this.setModifying(false);
+    }).catch(err => {
+      this.setState({error: true, loading: false});
+    });
+  };
+  render(){
+    const user = this.props.user;
+    const me = this.props.me;
+    return (
+        <Grid.Column>
+          {!this.state.modifying ?
+              <div>
+                @{user.username}
+                {isSuperiorOrMe(user, me) &&
+                <Icon link name="pencil" class="mrgnLeft5" onClick={this.setModifying.bind(null, true)}/>}
+              </div> :
+              <Form onSubmit={this.validate}>
+                <Form.Field>
+                  <Input
+                      size="mini"
+                      placeholder="Username"
+                      type="text" name="username" fluid
+                      value={this.state.username}
+                      onChange={this.handleInput}/>
+                  <Label pointing basic={this.state.error} size="mini" color={this.state.error ? 'red': null}>
+                    {userNameRuleString}
+                  </Label>
+                </Form.Field>
+                <Form.Field>
+                  <Button basic size="mini" type="button" onClick={this.setModifying.bind(null, false)}>Cancel</Button>
+                  <Button primary size="mini">Save</Button>
+                </Form.Field>
+              </Form>}
+        </Grid.Column>
+    )
+  }
+}
 
 class TeamUserFlexTab extends React.Component{
   constructor(props){
@@ -369,7 +499,7 @@ class TeamUserFlexTab extends React.Component{
                   {!this.state.firstNameLastNameModifying ?
                       <h4>
                         {user.first_name} {user.last_name}
-                        {isAdminOrMe(user, me) &&
+                        {isSuperiorOrMe(user, me) &&
                         <Icon link name="pencil" class="mrgnLeft5" onClick={this.setFirstLastNameModifying.bind(null, true)}/>}
                       </h4> :
                       <Form as="div">
@@ -387,32 +517,13 @@ class TeamUserFlexTab extends React.Component{
                             onChange={this.handleInput}/>
                         <Form.Field>
                           <Button basic size="mini" onClick={this.setFirstLastNameModifying.bind(null, false)}>Cancel</Button>
-                          <Button primary size="mini" onClick={this.confirmUserLastFirstNameChange}>Edit</Button>
+                          <Button primary size="mini" onClick={this.confirmUserLastFirstNameChange}>Save</Button>
                         </Form.Field>
                       </Form>}
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column>
-                  {!this.state.usernameModifying ?
-                      <div>
-                        @{user.username}
-                        {isAdminOrMe(user, me) &&
-                        <Icon link name="pencil" class="mrgnLeft5" onClick={this.setUsernameModifying.bind(null, true)}/>}
-                      </div> :
-                      <Form as="div">
-                        <Form.Input
-                            size="mini"
-                            placeholder="Username"
-                            type="text" name="username" fluid
-                            value={this.state.username}
-                            onChange={this.handleInput}/>
-                        <Form.Field>
-                          <Button basic size="mini" onClick={this.setUsernameModifying.bind(null, false)}>Cancel</Button>
-                          <Button primary size="mini" onClick={this.confirmUsernameChange}>Edit</Button>
-                        </Form.Field>
-                      </Form>}
-                </Grid.Column>
+                <UsernameModifier dispatch={this.props.dispatch} user={user} me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
@@ -427,7 +538,7 @@ class TeamUserFlexTab extends React.Component{
                       <span>
                         {teamUserRoles[user.role]}
                         {isSuperior(user, me) && user.id !== me.id &&
-                        <Icon link name="pencil" onClick={this.setRoleModifying.bind(null, true)}/>}
+                        <Icon link name="pencil" className="mrgnLeft5" onClick={this.setRoleModifying.bind(null, true)}/>}
                    </span> :
                       <span>
                       <Dropdown floating inline name="role" options={userRoles} defaultValue={user.role} onChange={this.handleInput}/>
@@ -449,7 +560,7 @@ class TeamUserFlexTab extends React.Component{
                       <span>
                       {user.departure_date.length > 0 ? user.departure_date : 'not planned'}
                         {isSuperior(user, me) && me.id !== user.id &&
-                        <Icon link name="pencil" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
+                        <Icon link name="pencil" className="mrgnLeft5" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
                         </span> :
                       <Input type="date" size="mini"
                              fluid action name="departureDate"
@@ -462,24 +573,20 @@ class TeamUserFlexTab extends React.Component{
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column>
+                <Grid.Column class="rooms">
                   <Header as="h5">Rooms:</Header>
-                  <List>
                     {user.channel_ids.map(item => {
                       const channel = selectChannelFromListById(this.props.channels, item);
                       return (
-                          <List.Item key={item}>
-                            <Label size="mini">
+                            <Label size="mini" key={item}>
                               <Icon name="hashtag"/>
                               {channel.name}
                               {isAdmin(me.role) && !channel.default &&
                               <Icon name="delete" link
                                     onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}/>}
                             </Label>
-                          </List.Item>
                       )
                     }, this)}
-                  </List>
                 </Grid.Column>
               </Grid.Row>
               {isSuperior(user,me) &&

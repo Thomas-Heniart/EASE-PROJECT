@@ -73,7 +73,7 @@ export default function reducer(state={
       var nChannels = state.channels.map(item => {
         if (item.id === action.payload.channel_id) {
           const index = item.userIds.indexOf(action.payload.team_user_id);
-          if (index != -1)
+          if (index !== -1)
             item.userIds.splice(index, 1);
         }
         return item;

@@ -7,7 +7,7 @@ import * as appActions from "../../actions/appsActions";
 import * as modalActions from "../../actions/teamModalActions"
 import {isAdmin} from "../../utils/helperFunctions";
 import api from "../../utils/api";
-import {getTeamAppPasswordAndCopyToClipboard} from "../../utils/utils";
+import {getTeamAppPasswordAndCopyToClipboard, copyTextToClipboard} from "../../utils/utils";
 import {
   selectUserFromListById,
   getChannelUsers,
@@ -119,9 +119,6 @@ class TeamAppPasswordLine extends React.Component {
     }).catch(err => {
       this.setupPopup('Copy failed :( Click again');
     });
-  };
-  copyPassword = () => {
-
   };
   render(){
     return (

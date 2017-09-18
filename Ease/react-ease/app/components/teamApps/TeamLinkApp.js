@@ -194,6 +194,7 @@ class TeamLinkApp extends React.Component {
     const senderUser = selectUserFromListById(this.props.users, app.sender_id);
     const me = this.props.me;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
+    const asked = app.sharing_requests.indexOf(me.id) !== -1;
 
     return(
         <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
@@ -237,8 +238,13 @@ class TeamLinkApp extends React.Component {
                 </div>
                 <div class="credentials_holder">
                   <div class="credentials">
-                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 &&
-                    <RequestAppButton/>}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && asked &&
+                    <button class="button-unstyle requestAppButton">
+                      <span class="onHover">Request sent</span>
+                      <span class="default">Request sent</span>
+                    </button>}
+                    {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked &&
+                    <RequestAppButton action={e => {this.props.dispatch(appActions.askJoinTeamApp(app.id))}}/>}
                     {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
                     <button class="button-unstyle joinAppBtn"
                             onClick={this.selfJoinApp}>

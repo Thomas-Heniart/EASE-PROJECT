@@ -8,13 +8,11 @@ var TeamHeader = require('./TeamHeader');
 var FlexPanels = require('./TeamFlexPanels');
 var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var TeamAppAddingUi = require('./TeamAppAddingUi');
-var TeamAddUserModal = require('./TeamAddUserModal');
-var TeamBrowseChannelsModal = require('./teamModals/TeamBrowseChannelsModal');
-var TeamAddChannelModal = require('./TeamAddChannelModal');
-var TeamChannelAddUserModal = require('./TeamChannelAddUserModal');
-var TeamDeleteUserModal = require('./TeamDeleteUserModal');
-var TeamDeleteChannelModal = require('./TeamDeleteChannelModal');
-var TeamDeleteUserFromChannelModal = require('./TeamDeleteUserFromChannelModal');
+var TeamAddUserModal = require('./teamModals/TeamAddUserModal');
+var TeamAddChannelModal = require('./teamModals/TeamAddChannelModal');
+var TeamDeleteUserModal = require('./teamModals/TeamDeleteUserModal');
+var TeamDeleteRoomModal = require('./teamModals/TeamDeleteRoomModal');
+var TeamDeleteUserFromRoomModal = require('./teamModals/TeamDeleteUserFromRoomModal');
 var PinTeamAppToDashboardModal = require('./teamModals/PinTeamAppToDashboardModal');
 var TeamAppsContainer = require('./TeamAppsContainer');
 var TeamDeleteAppModal = require('./teamModals/TeamDeleteAppModal');
@@ -30,6 +28,9 @@ var RequestWebsiteModal = require('./teamModals/RequestWebsiteModal');
 import queryString from "query-string";
 import VerifyTeamUserModal from './teamModals/VerifyTeamUserModal';
 import ReactivateTeamUserModal from './teamModals/ReactivateTeamUserModal';
+import TeamAddMultipleUsersModal from './teamModals/TeamAddMultipleUsersModal';
+import TeamBrowsePeopleModal from "./teamModals/TeamBrowsePeopleModal";
+import TeamBrowseRoomsModal from "./teamModals/TeamBrowseRoomsModal";
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
@@ -53,7 +54,6 @@ import {connect} from "react-redux"
     selectedItem: store.selection,
     addUserModalActive: store.teamModals.addUserModalActive,
     addChannelModalActive: store.teamModals.addChannelModalActive,
-    teamChannelAddUserModal: store.teamModals.teamChannelAddUserModal,
     teamDeleteUserModal: store.teamModals.teamDeleteUserModal,
     teamDeleteChannelModal: store.teamModals.teamDeleteChannelModal,
     teamDeleteUserFromChannelModal: store.teamModals.teamDeleteUserFromChannelModal,
@@ -63,9 +63,9 @@ import {connect} from "react-redux"
     teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
     teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
     teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
-    teamBrowseChannelsModalActive: store.teamModals.teamBrowseChannelsModalActive,
     teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
     verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
+    teamAddMultipleUsersModal: store.teamModals.teamAddMultipleUsersModal,
     reactivateTeamUserModal: store.teamModals.reactivateTeamUserModal,
     teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
@@ -84,21 +84,25 @@ class TeamView extends React.Component {
   }
   componentWillReceiveProps(nextProps){
     const itemId = nextProps.match.params.itemId;
-    if (this.props.match.params.teamId !== nextProps.match.params.teamId){
-      this.setState({loadingInfo: true});
-      this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(nextProps.match.params.teamId)).then(()=>{
-        this.setState({loadingInfo: false});
+    if (this.props !== nextProps) {
+      if (this.props.match.params.teamId !== nextProps.match.params.teamId) {
+        this.setState({loadingInfo: true});
+        this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(nextProps.match.params.teamId)).then(() => {
+          this.setState({loadingInfo: false});
+          if (this.isValidTeamItemId(itemId)) {
+            this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
+          } else
+            this.autoSelectItem();
+        }).catch(err => {
+          window.location.href = '/';
+        });
+      }
+      else if (this.props.match.params.itemId !== itemId) {
         if (this.isValidTeamItemId(itemId)) {
           this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
-        }else
+        } else
           this.autoSelectItem();
-      });
-    }
-    else if (this.props.match.params.itemId !== itemId) {
-      if (this.isValidTeamItemId(itemId)) {
-        this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
-      }else
-        this.autoSelectItem();
+      }
     }
   }
   componentDidUpdate(){
@@ -122,6 +126,10 @@ class TeamView extends React.Component {
         this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
       }else
         this.autoSelectItem();
+    }).catch(err => {
+      console.log('error !');
+      console.log(err);
+      window.location.href = '/';
     });
   };
   isValidTeamItemId(itemId){
@@ -161,7 +169,7 @@ class TeamView extends React.Component {
         <div id="teamsHandler">
           <div className="team_view" id="team_view">
             {this.state.loadingInfo && <LoadingScreen/>}
-            {!this.state.loadingInfo && <TeamSideBar/>}
+            {!this.state.loadingInfo && <TeamSideBar me={me}/>}
             {this.props.team.teamMenuActive &&
             <TeamMenu
                 me={me}
@@ -192,20 +200,24 @@ class TeamView extends React.Component {
               </div>
             </div>}
             {!this.state.loadingInfo &&
+            <Switch>
               <Route path={`${this.props.match.path}/settings`}
-                     component={TeamSettings}/>}
+                     component={TeamSettings}/>
+              <Route path={`${this.props.match.path}/members`}
+                     component={TeamBrowsePeopleModal}/>
+              <Route path={`${this.props.match.path}/rooms`}
+                     component={TeamBrowseRoomsModal}/>
+            </Switch>}
             {this.props.addUserModalActive &&
             <TeamAddUserModal key="1"/>}
             {this.props.addChannelModalActive &&
             <TeamAddChannelModal/>}
-            {this.props.teamChannelAddUserModal.active &&
-            <TeamChannelAddUserModal/>}
             {this.props.teamDeleteUserModal.active &&
             <TeamDeleteUserModal/>}
             {this.props.teamDeleteChannelModal.active &&
-            <TeamDeleteChannelModal/>}
+            <TeamDeleteRoomModal/>}
             {this.props.teamDeleteUserFromChannelModal.active &&
-            <TeamDeleteUserFromChannelModal/>}
+            <TeamDeleteUserFromRoomModal/>}
             {this.props.teamDeleteAppModal.active &&
             <TeamDeleteAppModal/>}
             {this.props.pinTeamAppToDashboardModal.active &&
@@ -218,8 +230,6 @@ class TeamView extends React.Component {
             <TeamAcceptMultiAppModal/>}
             {this.props.teamJoinMultiAppModal.active &&
             <TeamJoinMultiAppModal/>}
-            {this.props.teamBrowseChannelsModalActive &&
-            <TeamBrowseChannelsModal/>}
             {this.props.teamSettingsModalActive &&
             <TeamSettingsModal/>}
             {this.props.verifyTeamUserModal.active &&
@@ -230,6 +240,8 @@ class TeamView extends React.Component {
             <TeamTransferOwnershipModal/>}
             {this.props.teamPhoneNumberModal.active &&
             <TeamPhoneNumberModal/>}
+            {this.props.teamAddMultipleUsersModal.active &&
+            <TeamAddMultipleUsersModal/>}
             {this.props.requestWebsiteModal.active &&
             <RequestWebsiteModal/>}
           </div>

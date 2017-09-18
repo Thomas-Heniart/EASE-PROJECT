@@ -12,16 +12,6 @@ export function showAddTeamChannelModal(state){
   }
 }
 
-export function showTeamChannelAddUserModal(state, channel_id){
-  return {
-    type: 'SHOW_TEAM_CHANNEL_ADD_USER_MODAL',
-    payload: {
-      active: state,
-      channel_id: channel_id
-    }
-  }
-}
-
 export function showTeamDeleteUserModal(state, team_user_id){
   return {
     type: 'SHOW_TEAM_DELETE_USER_MODAL',
@@ -116,15 +106,6 @@ export function showTeamJoinMultiAppModal(state, user, app){
   }
 }
 
-export function showTeamBrowseChannelsModal(state){
-  return {
-    type: 'SHOW_TEAM_BROWSE_CHANNELS_MODAL',
-    payload: {
-      active: state
-    }
-  }
-}
-
 export function showTeamSettingsModal(state){
   return {
     type: 'SHOW_TEAM_SETTINGS_MODAL',
@@ -186,6 +167,15 @@ export function showRequestWebsiteModal(state, resolve, reject){
       active: state,
       resolve: resolve,
       reject: reject
+    }
+  }
+}
+
+export function showTeamAddMultipleUsersModal(state){
+  return {
+    type: 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL',
+    payload: {
+      active: state
     }
   }
 }

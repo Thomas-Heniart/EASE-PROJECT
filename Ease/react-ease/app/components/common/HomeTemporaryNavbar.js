@@ -147,6 +147,8 @@ class HomeTemporaryNavbar extends React.Component {
       <Menu.Item data-tip="Settings" onClick={e => {goToSettings()}}>
         <Icon name="setting"/>
         </Menu.Item>
+      <NotificationList notifications={this.props.notifications} history={this.props.history} dispatch={this.props.dispatch}/>
+      <TeamsList user={this.props.user}/>
       <Menu.Item id="catalog_button" data-tip="Apps Catalogue" onClick={e => {enterEditMode()}}>
         <Icon name="plus"/>
       </Menu.Item>

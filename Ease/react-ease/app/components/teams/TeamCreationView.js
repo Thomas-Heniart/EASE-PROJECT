@@ -3,7 +3,7 @@ var classnames = require('classnames');
 var post_api = require('../../utils/post_api');
 var api = require('../../utils/api');
 var axios = require('axios');
-import { NavLink } from 'react-router-dom';
+import InvitePeopleStep from "./InvitePeopleStep";
 import {passwordRegexp, emailRegexp, checkTeamUsernameErrors, jobRoles} from "../../utils/utils";
 import {withRouter} from "react-router-dom";
 import {setLoginRedirectUrl} from "../../actions/commonActions";
@@ -136,7 +136,7 @@ class Step3 extends React.Component{
     this.state = {
       errorMessage: '',
       passwordError: false,
-      confirmPasswordMessage: "Passwords doesn't match"
+      confirmPasswordMessage: "Passwords are different"
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -197,7 +197,8 @@ class Step4 extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      errorMessage: ''
+      errorMessage: '',
+      usernameError: false
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -205,7 +206,7 @@ class Step4 extends React.Component{
     e.preventDefault();
     const usernameErrors = checkTeamUsernameErrors(this.props.username);
     if (usernameErrors.error){
-      this.setState({errorMessage: usernameErrors.message});
+      this.setState({usernameError: true});
       return;
     }
     this.props.onStepValidated();
@@ -215,7 +216,7 @@ class Step4 extends React.Component{
         <div class="contents" id="step4">
           <Segment>
             <Header as="h1">
-              What's your name
+              What's your name?
               <Header.Subheader>
                 Your name will be displayed for your team members in Ease.space
               </Header.Subheader>
@@ -226,14 +227,14 @@ class Step4 extends React.Component{
                 <Form.Input required label='First name' placeholder='First name' onChange={this.props.handleInput} name="fname" type="text"/>
                 <Form.Input required label='Last name' placeholder='Last name' onChange={this.props.handleInput} name="lname" type="text"/>
               </Form.Group>
-              <Form.Field required>
+              <Form.Field required error={this.state.usernameError}>
                 <label>Username</label>
                 <Input type="text"
                        onChange={this.props.handleInput}
                        name="username"
                        placeholder="Username"
                        required/>
-                <Label pointing>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. Maximum 22 characters.</Label>
+                <Label pointing basic={this.state.usernameError} color={this.state.usernameError ? 'red': null}>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.</Label>
               </Form.Field>
               <Message error content={this.state.errorMessage}/>
               <Form.Field>
@@ -269,32 +270,12 @@ class StepCGU extends React.Component{
             <Header as="h1">
               Review the General Terms
             </Header>
-            <Container style={{maxHeight: '300px', overflow:'auto', marginBottom: '1rem', paddingLeft: '0'}}>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla ipsum. Ut tincidunt nisi
-                nec risus scelerisque, in hendrerit ligula blandit. Etiam iaculis dui quis iaculis lobortis. Morbi
-                bibendum fermentum diam, at blandit urna vulputate at. Donec commodo, sapien quis sollicitudin
-                vestibulum, justo augue sagittis lacus, et varius diam nunc a massa. Vivamus et auctor mauris. Nunc ut
-                aliquet massa. In euismod pellentesque urna, vel dictum nibh vulputate et. Phasellus posuere rutrum
-                mauris, vel porta erat vestibulum id. Etiam aliquet fermentum porttitor. Nam fermentum in dolor vitae
-                porta. Vivamus condimentum at urna sodales egestas. Phasellus tristique justo at scelerisque
-                condimentum.</p>
-              <p>Sed varius interdum tincidunt. Cras ac rhoncus nisl. Vestibulum id fringilla risus, in euismod ante.
-                Etiam tristique nunc elit, sed venenatis risus mollis eu. Nulla risus nulla, fermentum eget orci in,
-                bibendum sollicitudin felis. Vivamus eros sem, aliquet a tempus non, blandit eu justo. Suspendisse ut
-                turpis at leo lacinia volutpat. Sed at ante at lacus facilisis porttitor. Vestibulum ante ipsum primis
-                in faucibus orci luctus et ultrices posuere cubilia Curae; Nam risus dui, volutpat nec ipsum eu, viverra
-                scelerisque nulla. Etiam imperdiet tortor finibus tellus faucibus tincidunt. Integer elit purus, dictum
-                ac facilisis vel, sodales et orci. Maecenas egestas gravida</p>
-              <p>Nunc viverra velit in ullamcorper lobortis. In pharetra hendrerit ultricies. Integer et ipsum vel
-                tortor tempus ornare vitae nec libero. Praesent faucibus in dolor sed efficitur. Proin consequat ligula
-                sed neque luctus faucibus. Aenean justo risus, convallis sed lacus ac, rutrum vestibulum quam. Nulla in
-                dapibus lectus. Integer sit amet felis turpis. Pellentesque scelerisque sodales justo at varius. Nulla
-                pulvinar cursus enim vitae lobortis. Mauris eu arcu euismod, dignissim mauris in, vestibulum ante.
-                Aenean congue, tellus sit amet gravida ultricies, dolor lacus vehicula tortor, ut vestibulum elit turpis
-                eu urna. Ut quis urna porttitor, viverra eros tristique, suscipit risus.</p>
+            <Divider hidden clearing/>
+            <Container style={{maxHeight: '300px', overflow:'hidden', marginBottom: '1rem', paddingLeft: '0'}}>
+              Before continuing your registration, please read our General Terms and Privacy Policy.
             </Container>
             <p>
-              By clicking « I Agree », you understand and agree to our General Terms and <a>Privacy Policy</a>.
+              By clicking « I Agree », you understand and agree to our <a href="/resources/CGU_Ease.pdf" target="_blank">General Terms</a> and <a href="/resources/Privacy_Policy.pdf" target="_blank">Privacy Policy</a>.
             </p>
             <Button positive fluid loading={this.state.loading} onClick={this.submit}>I Agree</Button>
           </Segment>
@@ -366,7 +347,7 @@ class Step6 extends React.Component{
   render() {
     return (
         <div class="contents" id="step6">
-          <Segment error={this.state.errorMessage.length > 0}>
+          <Segment>
             <Header as="h1">
               What's your company called ?
             </Header>
@@ -385,89 +366,6 @@ class Step6 extends React.Component{
               <Form.Field>
                 <Button positive fluid loading={this.state.loading} type="submit" disabled={this.props.teamName.length === 0}>Next</Button>
               </Form.Field>
-            </Form>
-          </Segment>
-        </div>
-    )
-  }
-}
-
-class Step7 extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      errorMessage: '',
-      loading: false,
-    };
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-  onSubmit(e){
-    e.preventDefault();
-    var calls = [];
-    this.props.invitations.map(function (item) {
-      if (item.email.match(emailRegexp) !== null && item.username.length > 0){
-        calls.push(post_api.teamUser.createTeamUser(this.props.ws_id, this.props.teamId, '', '', item.email, item.username, null, 1));
-      }
-    }, this);
-    this.setState({errorMessage: '', loading: true});
-    axios.all(calls).then(() => {
-      this.props.handleInput(null, {name: "invitedPeople", value: calls.length});
-      this.setState({loading: false});
-      this.props.onStepValidated();
-    }).catch(err => {
-      this.setState({errorMessage: err, loading: false});
-    });
-  }
-  render() {
-    const fields = this.props.invitations.map((item, idx) => {
-      return (
-          <Form.Group key={idx}>
-            <Form.Field width={9}>
-              <Input
-                  action={<Button icon="delete" onClick={this.props.removeInvitationField.bind(null, idx)}/>}
-                  actionPosition="left"
-                  type="email"
-                  required
-                  value={item.email}
-                  placeholder="Email"
-                  onChange={(e, {value}) => {
-                    this.props.editInvitationEmail(value, idx)
-                  }}/>
-            </Form.Field>
-            <Form.Input required width={7} type="text"
-                        placeholder="Username"
-                        value={item.username}
-                        onChange={(e, {value}) => {
-                          this.props.editInvitationUsername(value, idx)
-                        }}/>
-          </Form.Group>
-      )
-    }, this);
-    return (
-        <div class="contents" id="step7">
-          <Segment>
-            <Header as="h1">
-              Send invitations
-              <Header.Subheader>
-                Your Ease.space team is ready to go. Know few coworkers who'd like to stop using passwords with you?
-              </Header.Subheader>
-            </Header>
-            <Divider hidden clearing/>
-            <Form onSubmit={this.onSubmit} error={this.state.errorMessage.length > 0}>
-              <Form.Group>
-                <Form.Field width={9}><label>Email address</label></Form.Field>
-                <Form.Field width={7}><label>Username (editable later)</label></Form.Field>
-              </Form.Group>
-              {fields}
-              <Form.Button primary onClick={this.props.addInvitationField}>
-                <Icon name="add user"/>
-                Add another field
-              </Form.Button>
-              <Message error content={this.state.errorMessage}/>
-              <Form.Group>
-                <Form.Button width={8} fluid type="button" onClick={this.props.onStepValidated}>Skip for now</Form.Button>
-                <Form.Button width={8} fluid positive type="submit" loading={this.state.loading}>Send invitations</Form.Button>
-              </Form.Group>
             </Form>
           </Segment>
         </div>
@@ -620,16 +518,11 @@ class TeamCreationView extends React.Component {
                       jobDetails={this.state.jobDetails}
                       handleInput={this.handleInput}
                       key="6"/>);
-    steps.push(<Step7 onStepValidated={this.submitStep8}
-                      teamId={this.state.teamId}
-                      handleInput={this.handleInput}
-                      invitations={this.state.invitations}
-                      editInvitationEmail={this.editInvitationEmail}
-                      editInvitationUsername={this.editInvitationUsername}
-                      removeInvitationField={this.removeInvitationField}
-                      addInvitationField={this.addInvitationField}
-                      ws_id={this.props.ws_id}
-                      key="7"/>);
+    steps.push(<InvitePeopleStep
+        key="7"
+        ws_id={this.props.ws_id}
+        team_id={this.state.teamId}
+        onStepValidated={this.submitStep8}/>);
     return (
         <div id="team_creation_view" class="full_screen_centered_view">
           <SingleEaseLogo/>

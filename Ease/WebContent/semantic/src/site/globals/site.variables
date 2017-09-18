@@ -17,3 +17,5 @@
 
 @googleProtocol    : 'https://';
 @googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
+
+@textColor           : rgba(41, 41, 41, 0.95);
