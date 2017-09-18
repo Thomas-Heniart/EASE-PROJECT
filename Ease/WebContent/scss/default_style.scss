@@ -129,6 +129,22 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 100%;
 }
 
+.ui.search.inverted {
+  .ui.icon.input > input {
+    padding: .67857143em 1em !important;
+    padding-left: 2.67142857em!important;
+  }
+  .ui.icon.input>i.icon {
+    left: 0;
+    right: inherit;
+  }
+}
+
+.ui.container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .ui.grid > .row {
   display: inline-block;
   float: left;

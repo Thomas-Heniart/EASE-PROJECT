@@ -269,6 +269,22 @@ export default function reducer(state={
         }
       }
     }
+    case 'TEAM_USER_REMOVED': {
+      const user_id = action.payload.user.id;
+      let apps = state.apps.map(item => {
+        item.receivers = item.receivers.filter(item => {
+          return item.team_user_id !== user_id;
+        });
+        item.sharing_requests = item.sharing_requests.filter(item => {
+          return item !== user_id;
+        });
+        return item;
+      });
+      return {
+        ...state,
+        apps: apps
+      };
+    }
     case 'TEAM_APP_CHANGED' : {
       var apps = state.apps;
 

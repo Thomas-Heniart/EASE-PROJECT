@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import {selectUserFromListById} from "../utils/helperFunctions";
 import * as appActions from "../actions/appsActions";
 import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
-
+import SimpleTeamAppAdder from "./teamAppAdders/SimpleTeamAppAdder";
 class DashboardAndTeamAppSearch extends React.Component{
   constructor(props){
     super(props);
@@ -581,6 +581,7 @@ class TeamAppAddingUi extends React.Component {
     const item = this.props.selection;
     return (
         <div className="add_actions_container" id="app_add_actions">
+          <SimpleTeamAppAdder/>
           {this.props.addAppUI.TeamSimpleAppAddActive &&
           <SimpleTeamAppAdd
               team_id={this.props.team_id}

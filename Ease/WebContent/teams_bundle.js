@@ -2239,7 +2239,7 @@ module.exports = {
     });
   },
   dashboardAndTeamAppSearch: function dashboardAndTeamAppSearch(team_id, query) {
-    return axios.all([this.dashboardAppSearch(query), this.teamAppSearch(team_id, query)]).then(axios.spread(function (dashboard, teams) {
+    return axios.all([module.exports.dashboardAppSearch(query), module.exports.teamAppSearch(team_id, query)]).then(axios.spread(function (dashboard, teams) {
       var apps = dashboard.concat(teams);
       apps.sort(function (a, b) {
         if (a.website_name < b.website_name) return -1;
@@ -52166,6 +52166,12 @@ var appActions = _interopRequireWildcard(_appsActions);
 
 var _teamAppsAddUIActions = __webpack_require__(123);
 
+var _SimpleTeamAppAdder = __webpack_require__(1147);
+
+var _SimpleTeamAppAdder2 = _interopRequireDefault(_SimpleTeamAppAdder);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -52986,6 +52992,7 @@ var TeamAppAddingUi = (_dec = (0, _reactRedux.connect)(function (store) {
       return React.createElement(
         'div',
         { className: 'add_actions_container', id: 'app_add_actions' },
+        React.createElement(_SimpleTeamAppAdder2.default, null),
         this.props.addAppUI.TeamSimpleAppAddActive && React.createElement(SimpleTeamAppAdd, {
           team_id: this.props.team_id,
           selectedItem: this.props.selectedItem,
@@ -63496,11 +63503,22 @@ function reducer() {
           channels: nChannels
         });
       }
+    case 'TEAM_USER_REMOVED':
+      {
+        var nChannels = state.channels.map(function (item) {
+          var index = item.userIds.indexOf(action.payload.user.id);
+          if (index !== -1) item.userIds.splice(index, 1);
+          return item;
+        });
+        return _extends({}, state, {
+          channels: nChannels
+        });
+      }
     case 'DELETE_TEAM_USER_FULFILLED':
       {
         var nChannels = state.channels.map(function (item) {
           var index = item.userIds.indexOf(action.payload.team_user_id);
-          if (index != -1) item.userIds.splice(index, 1);
+          if (index !== -1) item.userIds.splice(index, 1);
           return item;
         });
         return _extends({}, state, {
@@ -64076,6 +64094,22 @@ function reducer() {
             apps: apps
           });
         }
+      }
+    case 'TEAM_USER_REMOVED':
+      {
+        var _user_id2 = action.payload.user.id;
+        var _apps3 = state.apps.map(function (item) {
+          item.receivers = item.receivers.filter(function (item) {
+            return item.team_user_id !== _user_id2;
+          });
+          item.sharing_requests = item.sharing_requests.filter(function (item) {
+            return item !== _user_id2;
+          });
+          return item;
+        });
+        return _extends({}, state, {
+          apps: _apps3
+        });
       }
     case 'TEAM_APP_CHANGED':
       {
@@ -64692,26 +64726,38 @@ function reducer() {
       }
     case 'TEAM_USER_REMOVED':
       {
-        var users = state.users;
+        var _users3 = state.users;
 
-        for (var i = 0; i < users.length; i++) {
-          if (users[i].id === action.payload.user.id) {
-            users.splice(i, 1);
+        for (var i = 0; i < _users3.length; i++) {
+          if (_users3[i].id === action.payload.user.id) {
+            _users3.splice(i, 1);
             return _extends({}, state, {
-              users: users
+              users: _users3
             });
           }
         }
       }
-    case 'DELETE_TEAM_CHANNEL_FULFILLED':
+    case 'TEAM_ROOM_REMOVED':
       {
-        var users = state.users.map(function (item) {
-          var idx = item.channel_ids.indexOf(action.payload.channel_id);
-          if (idx != -1) item.channel_ids.splice(idx, 1);
+        var room_id = action.payload.channel.id;
+        var _users4 = state.users.map(function (item) {
+          var idx = item.channel_ids.indexOf(room_id);
+          if (idx !== -1) item.channel_ids.splice(idx, 1);
           return item;
         });
         return _extends({}, state, {
-          users: users
+          users: _users4
+        });
+      }
+    case 'DELETE_TEAM_CHANNEL_FULFILLED':
+      {
+        var _users5 = state.users.map(function (item) {
+          var idx = item.channel_ids.indexOf(action.payload.channel_id);
+          if (idx !== -1) item.channel_ids.splice(idx, 1);
+          return item;
+        });
+        return _extends({}, state, {
+          users: _users5
         });
       }
   }
@@ -111923,6 +111969,122 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1147 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _dec, _class;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _api = __webpack_require__(25);
+
+var _utils = __webpack_require__(26);
+
+var _reactRedux = __webpack_require__(12);
+
+var _semanticUiReact = __webpack_require__(16);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AppResultRenderer = function AppResultRenderer(props) {
+  return _react2.default.createElement("div", null);
+};
+
+var SimpleTeamAppSearch = function (_Component) {
+  _inherits(SimpleTeamAppSearch, _Component);
+
+  function SimpleTeamAppSearch(props) {
+    _classCallCheck(this, SimpleTeamAppSearch);
+
+    var _this = _possibleConstructorReturn(this, (SimpleTeamAppSearch.__proto__ || Object.getPrototypeOf(SimpleTeamAppSearch)).call(this, props));
+
+    _this.handleInput = function (e, _ref) {
+      var value = _ref.value;
+
+      _this.setState({ value: value });
+    };
+
+    _this.state = {
+      apps: [],
+      loading: true,
+      value: ''
+    };
+    return _this;
+  }
+
+  _createClass(SimpleTeamAppSearch, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      console.log('starting');
+      (0, _api.dashboardAndTeamAppSearch)(this.props.team_id, '').then(function (response) {
+        console.log(response);
+        _this2.setState({ apps: response, loading: false });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(_semanticUiReact.Search, {
+        fluid: true,
+        minCharacters: 0,
+        placeholder: "Search websites here...",
+        value: this.state.value,
+        className: "inverted",
+        onSearchChange: this.handleInput,
+        size: "mini",
+        results: this.state.apps });
+    }
+  }]);
+
+  return SimpleTeamAppSearch;
+}(_react.Component);
+
+var SimpleTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    team_id: store.team.id
+  };
+}), _dec(_class = function (_Component2) {
+  _inherits(SimpleTeamAppAdder, _Component2);
+
+  function SimpleTeamAppAdder(props) {
+    _classCallCheck(this, SimpleTeamAppAdder);
+
+    return _possibleConstructorReturn(this, (SimpleTeamAppAdder.__proto__ || Object.getPrototypeOf(SimpleTeamAppAdder)).call(this, props));
+  }
+
+  _createClass(SimpleTeamAppAdder, [{
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        _semanticUiReact.Container,
+        { fluid: true, id: "simple_team_app_add" },
+        _react2.default.createElement(SimpleTeamAppSearch, { team_id: this.props.team_id })
+      );
+    }
+  }]);
+
+  return SimpleTeamAppAdder;
+}(_react.Component)) || _class);
+
+
+module.exports = SimpleTeamAppAdder;
 
 /***/ })
 /******/ ]);

@@ -139,9 +139,9 @@ module.exports = {
     });
   },
   dashboardAndTeamAppSearch: function(team_id, query){
-    return axios.all([this.dashboardAppSearch(query), this.teamAppSearch(team_id, query)])
+    return axios.all([module.exports.dashboardAppSearch(query), module.exports.teamAppSearch(team_id, query)])
         .then(axios.spread(function(dashboard, teams){
-          var apps = dashboard.concat(teams);
+          let apps = dashboard.concat(teams);
           apps.sort(function(a,b){
             if (a.website_name < b.website_name)
               return -1;
