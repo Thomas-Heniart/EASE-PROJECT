@@ -6,65 +6,106 @@
 	"folder":"Youtube",
 	"connect":{
       "todo":[
-        {"action":"waitfor", "search":["button[href*='https://accounts.google.com/ServiceLogin?']","div[aria-label='Google']", "paper-icon-button#button"]},
-        {"action":"click", "search":"button[href*='https://accounts.google.com/ServiceLogin?']"},
-        {"action":"click", "search":"paper-icon-button#button"},
+        {
+          "action": "waitfor",
+          "search": "paper-button#button"
+        },
+        {
+          "action": "trueClick",
+          "search": "paper-button#button"
+        },
         {"action":"waitload"},
-        {"action":"aclick", "search":"#account-chooser-link"},
-        {"action":"waitfor", "search":"#identifierLink, #account-chooser-add-account, #identifierNext, #next, #profileIdentifier + div div[role='button']"},
-        {"action":"click", "search":"#profileIdentifier + div div[role='button']"},
-        {"action":"waitfor", "search":"#identifierLink, #account-chooser-add-account, #identifierNext, #next"},
-        {"action":"click", "search":"#identifierLink"},
-        {"action":"clickona", "search":"#account-chooser-add-account"},
-        {"action":"waitfor", "search":"#Email, #identifierId"},
-        {"action":"waitfor", "search":"#next, #identifierNext"},
-        {"action":"fill", "what":"login", "search":"#Email, #identifierId", "grave":true},
-        {"action":"click", "search":"#next"},
-        {"action":"click", "search":"#identifierNext"},
-        {"action":"waitfor", "search":"#Passwd, #password input[type='password']"},
-        {"action":"waitfor", "search":"#passwordNext, #gaia_loginform"},
-        {"action":"fill", "what":"password", "search":"#Passwd, #password input[type='password']"},
-        {"action":"click", "search":"#passwordNext"},
-        {"action":"submit", "search":"#gaia_loginform"}
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #profileIdentifier + div div[role='button'], #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#profileIdentifier + div div[role='button']"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierLink"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierLink"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "fill",
+          "what": "login",
+          "search": "#identifierId",
+          "grave": "true"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "waitfor",
+          "search": "#password input"
+        },
+        {
+          "action": "waitfor",
+          "search": "#passwordNext"
+        },
+        {
+          "action": "fill",
+          "what": "password",
+          "search": "#password input",
+          "grave": "true"
+        },
+        {
+          "action": "waitfor",
+          "search": "#passwordNext"
+        },
+        {
+          "action": "click",
+          "search": "#passwordNext"
+        }
       ]
 	},
 	"logout":{
       "todo":[
-        {"action":"clickona", "search":"#yt-masthead-account-picker"},
-        {"action":"click", "search":"button.ytd-topbar-menu-button-renderer"},
+        {
+          "action": "trueClick",
+          "search": "#img"
+        },
         {"action":"waitfor", "search":"a[href='/logout']"},
-        {"action":"clickona", "search":"a[href='/logout']"},
+        {
+          "action": "trueClick",
+          "search": "a[href='/logout']"
+        },
         {"action":"waitload"}
       ]
 	},
-	"switchAccount":{
-      "todo":[
-        {"action":"clickona", "search":"#yt-masthead-account-picker"},
-        {"action":"waitfor", "search":"a[href='/logout']"},
-        {"action":"clickona", "search":"yt-masthead-picker-footer a:first-child"},
-        {"action":"waitload"},
-        {"action":"waitfor", "search":["button[href*='https://accounts.google.com/ServiceLogin?']","div[aria-label='Google']", "paper-icon-button#button"]},
-        {"action":"click", "search":"button[href*='https://accounts.google.com/ServiceLogin?']"},
-        {"action":"click", "search":"paper-icon-button#button"},
-        {"action":"waitload"},
-        {"action":"waitfor", "search":["#account-chooser-link","#account-chooser-add-account"]},
-        {"action":"aclick", "search":"#account-chooser-link"},
-        {"action":"aclick", "search":"#account-chooser-add-account"},
-        {"action":"fill", "what":"login", "search":"#Email", "grave":true},
-        {"action":"click", "search":"#next", "grave":true},
-        {"action":"waitfor", "time":10, "search":"#Passwd"},
-        {"action":"fill", "what":"password", "search":"#Passwd", "grave":true},
-        {"action":"submit", "search":"#gaia_loginform", "grave":true}
-      ]
-	},
-	"checkAlreadyConnected":{
-      "todo":[
-        {"action":"waitfor", "search":"#masthead-search-term"},
-        {"check":"present", "search":"#yt-masthead-account-picker"},
-        {"who":"onPage", "search":"a.yt-masthead-picker-active-account", "attribute":"text"}
-      ]
-	},
 	"checkAlreadyLogged":[
-      {"search":"#yt-masthead-account-picker, button.ytd-topbar-menu-button-renderer"}
+      {
+        "action": "waitfor",
+        "search": "ytd-topbar-menu-button-renderer #img, paper-button#button, #identifierId, #profileIdentifier + div div[role='button'], #identifierLink"
+      },
+      {
+        "search": "ytd-topbar-menu-button-renderer #img"
+      }
 	]
 }
