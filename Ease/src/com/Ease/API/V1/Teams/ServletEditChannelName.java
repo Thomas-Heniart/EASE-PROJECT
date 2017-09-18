@@ -38,7 +38,7 @@ public class ServletEditChannelName extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name == null || name.equals("") || !Regex.isValidRoomName(name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation and must be shorter than 22 characters.");
-            for (Channel channel1 : team.getChannels()) {
+            for (Channel channel1 : team.getChannels().values()) {
                 if (channel1 == channel)
                     continue;
                 if (channel1.getName().equals(name))

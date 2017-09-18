@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -42,6 +43,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer website_id = sm.getIntParam("website_id", true, false);
             JSONArray account_information = (JSONArray) sm.getParam("account_information", false, false);
+            JSONArray receivers = (JSONArray) sm.getParam("receivers", false, false);
             Integer channel_id = sm.getIntParam("channel_id", true, true);
             Integer team_user_id = sm.getIntParam("team_user_id", true, true);
             if (channel_id == null && team_user_id == null)
@@ -60,6 +62,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Channel channel = null;
             if (channel_id != null) {
                 channel = team.getChannelWithId(channel_id);
+                teamUser_owner = channel.getRoom_manager();
                 if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
                     throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             }
@@ -71,7 +74,21 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_owner, reminderInterval, sm);
-            classicApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
+            classicApp.becomeShareable(db, team, teamUser_owner, team_user_id, channel, description);
+            for (Object receiver : receivers) {
+                JSONObject receiver_json = (JSONObject) receiver;
+                Integer receiver_id = (Integer) receiver_json.get("team_user_id");
+                TeamUser teamUser_tenant = team.getTeamUserWithId(receiver_id);
+                SharedApp sharedApp = classicApp.share(teamUser_owner, teamUser_tenant, channel, team, receiver_json, sm);
+                if (teamUser_tenant == sm.getTeamUserForTeam(team))
+                    sharedApp.accept(db);
+                else {
+                    String url = ((channel == null) ? ("@" + teamUser_tenant.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + classicApp.getDBid();
+                    teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + classicApp.getName() + " in " + (channel == null ? "your Personal Space" : ("#" + channel.getName())), url, classicApp.getLogo(), sm.getTimestamp(), db);
+                }
+                classicApp.addSharedApp(sharedApp);
+                team.getAppManager().addSharedApp(sharedApp);
+            }
             db.commitTransaction(transaction);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, classicApp.getShareableJson(), classicApp.getOrigin()));
             sm.setSuccess(classicApp.getShareableJson());

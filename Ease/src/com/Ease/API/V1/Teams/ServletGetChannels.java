@@ -25,7 +25,7 @@ public class ServletGetChannels extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             JSONArray jsonArray = new JSONArray();
-            for (Channel channel : teamManager.getTeamWithId(team_id).getChannels())
+            for (Channel channel : teamManager.getTeamWithId(team_id).getChannels().values())
                 jsonArray.add(channel.getSimpleJson());
             sm.setSuccess(jsonArray);
         } catch (Exception e) {

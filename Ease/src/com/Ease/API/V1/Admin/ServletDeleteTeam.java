@@ -47,9 +47,9 @@ public class ServletDeleteTeam extends HttpServlet {
                 for (ShareableApp shareableApp : team.getAppManager().getShareableApps())
                     shareableApp.deleteShareable(db);
                 db.commitTransaction(transaction);
-                for (TeamUser teamUser : team.getTeamUsers())
+                for (TeamUser teamUser : team.getTeamUsers().values())
                     sm.deleteObject(teamUser);
-                for (Channel channel : team.getChannels())
+                for (Channel channel : team.getChannels().values())
                     sm.deleteObject(channel);
                 sm.setSuccess("team deleted");
             }

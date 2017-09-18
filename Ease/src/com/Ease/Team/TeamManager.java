@@ -41,11 +41,11 @@ public class TeamManager {
         Team team = this.teamIdMap.get(team_id);
         if (team == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No such team");
-        for (Channel channel : team.getChannels()) {
+        /* for (Channel channel : team.getChannels().values()) {
             if (!channel.getTeamUsers().isEmpty()) {
 
             }
-        }
+        } */
         return team;
     }
 
@@ -86,7 +86,7 @@ public class TeamManager {
         System.out.println("Three days reminder start...");
         List<TeamUser> unregistered_teamUsers = new LinkedList<>();
         for (Team team : this.getTeams()) {
-            for (TeamUser teamUser : team.getTeamUsers()) {
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.isRegistered() || teamUser.getTeamUserStatus().reminder_three_days_sended())
                     continue;
                 if (DateComparator.isOutdated(teamUser.getArrivalDate(), 3))
@@ -207,7 +207,7 @@ public class TeamManager {
         try {
             int transaction = db.startTransaction();
             for (Team team : this.getTeams()) {
-                for (TeamUser teamUser : team.getTeamUsers()) {
+                for (TeamUser teamUser : team.getTeamUsers().values()) {
                     if (teamUser.isDisabled()) {
                         hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
                         hibernateQuery.setParameter(1, teamUser.getDisabledDate());

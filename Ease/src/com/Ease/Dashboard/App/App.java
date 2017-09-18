@@ -19,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class App implements ShareableApp, SharedApp {
 
@@ -268,14 +267,12 @@ public class App implements ShareableApp, SharedApp {
     protected boolean disabled;
 
     /* Interface ShareableApp */
-    protected List<SharedApp> sharedApps = new LinkedList<>();
-    protected ConcurrentMap<Integer, SharedApp> sharedAppIdMap = new ConcurrentHashMap<>();
-    // protected HashMap<Integer, SharedApp>  = new
+    protected Map<Integer, SharedApp> sharedApps = new ConcurrentHashMap<>();
     protected TeamUser teamUser_owner;
     protected Channel channel;
     protected String description;
     protected JSONObject origin = new JSONObject();
-    protected List<TeamUser> pending_teamUsers = new LinkedList<>();
+    protected Map<Integer, TeamUser> pending_teamUsers = new ConcurrentHashMap<>();
 
     /* Interface SharedApp */
     protected ShareableApp holder;
@@ -723,10 +720,10 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public List<SharedApp> getSharedApps() {
+    public Collection<SharedApp> getSharedApps() {
         if (this.sharedApps == null)
-            this.sharedApps = new LinkedList<>();
-        return this.sharedApps;
+            this.sharedApps = new ConcurrentHashMap<>();
+        return this.sharedApps.values();
     }
 
     @Override
@@ -737,19 +734,17 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void addSharedApp(SharedApp sharedApp) {
-        this.sharedAppIdMap.put(Integer.valueOf(((App) sharedApp).getDBid()), sharedApp);
-        this.sharedApps.add(sharedApp);
+        this.sharedApps.put(((App) sharedApp).getDBid(), sharedApp);
     }
 
     @Override
     public SharedApp getSharedAppWithId(Integer sharedApp_id) throws HttpServletException {
-        SharedApp sharedApp = this.sharedAppIdMap.get(sharedApp_id);
+        SharedApp sharedApp = this.sharedApps.get(sharedApp_id);
         if (sharedApp == null) {
             HttpServletException servletException = new HttpServletException(HttpStatus.BadRequest, "Wrong shared app id");
             servletException.printStackTrace();
             throw servletException;
         }
-
         return sharedApp;
     }
 
@@ -779,7 +774,7 @@ public class App implements ShareableApp, SharedApp {
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
             JSONArray receivers = new JSONArray();
-            for (SharedApp sharedApp : this.sharedAppIdMap.values())
+            for (SharedApp sharedApp : this.sharedApps.values())
                 receivers.add(sharedApp.getSharedJSON());
             /* for (SharedApp sharedApp : this.getSharedApps())
                 receivers.add(sharedApp.getSharedJSON()); */
@@ -854,18 +849,17 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void removeSharedApp(SharedApp sharedApp) {
-        this.sharedAppIdMap.remove(((App) sharedApp).getDBid());
-        this.getSharedApps().remove(sharedApp);
+        this.sharedApps.remove(((App) sharedApp).getDBid());
     }
 
     @Override
     public void addPendingTeamUser(TeamUser teamUser) {
-        this.pending_teamUsers.add(teamUser);
+        this.pending_teamUsers.put(teamUser.getDb_id(), teamUser);
     }
 
     @Override
     public void addPendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
-        if (this.pending_teamUsers.contains(teamUser) || this.getTeamUser_tenants().contains(teamUser))
+        if (this.pending_teamUsers.containsKey(teamUser.getDb_id()) || this.getTeamUser_tenants().contains(teamUser))
             return;
         try {
             DatabaseRequest request = db.prepareRequest("INSERT INTO pendingJoinAppRequests values (null, ?, ?);");
@@ -879,8 +873,10 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public List<TeamUser> getPendingTeamUsers() {
-        return this.pending_teamUsers;
+    public Collection<TeamUser> getPendingTeamUsers() {
+        if (pending_teamUsers == null)
+            pending_teamUsers = new ConcurrentHashMap<>();
+        return this.pending_teamUsers.values();
     }
 
     @Override

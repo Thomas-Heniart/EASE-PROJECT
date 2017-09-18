@@ -8,24 +8,19 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by thomas on 13/06/2017.
  */
 public class AppManager {
-    protected List<ShareableApp> shareableApps = new LinkedList<>();
+    protected Map<Integer, ShareableApp> shareableApps = new ConcurrentHashMap<>();
 
-    protected Map<Integer, ShareableApp> shareableAppMap = new HashMap<>();
-
-    protected List<SharedApp> sharedApps = new LinkedList<>();
-
-    protected Map<Integer, SharedApp> sharedAppMap = new HashMap<>();
-
-    protected Map<TeamUser, List<SharedApp>> teamUserAndSharedAppMap = new HashMap<>();
+    protected Map<Integer, SharedApp> sharedApps = new ConcurrentHashMap<>();
 
     public AppManager() {
 
@@ -35,41 +30,30 @@ public class AppManager {
     /* ======= Part about shared apps ======== */
     /* ======================================= */
 
-    public List<SharedApp> getSharedApps() {
-        return sharedApps;
+    public Collection<SharedApp> getSharedApps() {
+        return sharedApps.values();
     }
 
     public void addSharedApp(SharedApp sharedApp) {
-        this.sharedApps.add(sharedApp);
-        this.sharedAppMap.put(Integer.valueOf(((App) sharedApp).getDBid()), sharedApp);
-        TeamUser teamUser_tenant = sharedApp.getTeamUser_tenant();
-        List<SharedApp> sharedAppList = this.teamUserAndSharedAppMap.get(teamUser_tenant);
-        if (sharedAppList == null)
-            sharedAppList = new LinkedList<>();
-        sharedAppList.add(sharedApp);
-        this.teamUserAndSharedAppMap.put(teamUser_tenant, sharedAppList);
+        App app = (App) sharedApp;
+        this.sharedApps.put(app.getDBid(), sharedApp);
     }
 
     public SharedApp getSharedApp(Integer sharedApp_id) throws HttpServletException {
-        SharedApp sharedApp = this.sharedAppMap.get(sharedApp_id);
+        SharedApp sharedApp = this.sharedApps.get(sharedApp_id);
         if (sharedApp == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No shared app with this id.");
         return sharedApp;
     }
 
     public void removeSharedApp(SharedApp sharedApp) {
-        this.sharedApps.remove(sharedApp);
-        this.sharedAppMap.remove(Integer.valueOf(((App) sharedApp).getDBid()));
-        this.teamUserAndSharedAppMap.get(sharedApp.getTeamUser_tenant()).remove(sharedApp);
+        App app = (App) sharedApp;
+        this.sharedApps.remove(app.getDBid());
     }
 
     public void removeSharedAppsForTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         List<SharedApp> sharedApps = this.getSharedAppsForTeamUser(teamUser);
         this.removeSharedApps(sharedApps, db);
-        /* for (SharedApp sharedApp : sharedApps) {
-            this.removeSharedApp(sharedApp);
-        } */
-        this.teamUserAndSharedAppMap.remove(teamUser);
     }
 
     public void removeSharedApps(List<SharedApp> sharedApps, DataBaseConnection db) throws HttpServletException {
@@ -87,9 +71,11 @@ public class AppManager {
     }
 
     public List<SharedApp> getSharedAppsForTeamUser(TeamUser teamUser) {
-        List<SharedApp> sharedApps = this.teamUserAndSharedAppMap.get(teamUser);
-        if (sharedApps == null)
-            sharedApps = new LinkedList<>();
+        List<SharedApp> sharedApps = new LinkedList<>();
+        for (SharedApp sharedApp : this.getSharedApps()) {
+            if (sharedApp.getTeamUser_tenant() == teamUser)
+                sharedApps.add(sharedApp);
+        }
         return sharedApps;
     }
 
@@ -102,8 +88,10 @@ public class AppManager {
     /* ===== Part about shareable apps ======= */
     /* ======================================= */
 
-    public List<ShareableApp> getShareableApps() {
-        return shareableApps;
+    public Collection<ShareableApp> getShareableApps() {
+        if (shareableApps == null)
+            shareableApps = new ConcurrentHashMap<>();
+        return shareableApps.values();
     }
 
     public void setShareableApps(List<ShareableApp> shareableApps) {
@@ -112,12 +100,12 @@ public class AppManager {
     }
 
     public void addShareableApp(ShareableApp shareableApp) {
-        this.shareableApps.add(shareableApp);
-        this.shareableAppMap.put(Integer.valueOf(((App) shareableApp).getDBid()), shareableApp);
+        App app = (App) shareableApp;
+        this.shareableApps.put(app.getDBid(), shareableApp);
     }
 
     public ShareableApp getShareableAppWithId(Integer db_id) throws HttpServletException {
-        ShareableApp shareableApp = this.shareableAppMap.get(db_id);
+        ShareableApp shareableApp = this.shareableApps.get(db_id);
         if (shareableApp == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This shareable app does not exist.");
         return shareableApp;
@@ -133,8 +121,8 @@ public class AppManager {
     }
 
     public void removeShareableApp(ShareableApp shareableApp) {
-        this.shareableApps.remove(shareableApp);
-        this.shareableAppMap.remove(Integer.valueOf(((App) shareableApp).getDBid()));
+        App app = (App) shareableApp;
+        this.shareableApps.remove(app.getDBid());
     }
 
     public void removeShareableApp(ShareableApp shareableApp, DataBaseConnection db) throws HttpServletException {

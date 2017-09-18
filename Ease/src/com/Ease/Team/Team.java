@@ -13,14 +13,13 @@ import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.servlet.ServletContext;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -35,20 +34,7 @@ public class Team {
         HibernateQuery query = new HibernateQuery();
         //query.querySQLString("SELECT id FROM teams");
         query.queryString("SELECT t FROM Team t WHERE t.active = true");
-        List<Team> teams = new LinkedList<>();
-        teams = query.list();
-        /* for (Object team_id : query.list()) {
-            Integer id = (Integer) team_id;
-            Team team = (Team) query.get(Team.class, new Integer(id));
-            team.lazyInitialize(db);
-            team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, context, db);
-                shareableApp.setSharedApps(sharedApps);
-                team.getAppManager().setSharedApps(sharedApps);
-            }
-            teams.add(team);
-        } */
+        List<Team> teams = query.list();
         for (Team team : teams) {
             team.lazyInitialize();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
@@ -56,11 +42,6 @@ public class Team {
                 List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, context, db);
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);
-            }
-            for (Channel channel : team.getChannels()) {
-                if (!channel.getTeamUsers().isEmpty()) {
-
-                }
             }
         }
         query.commit();
@@ -94,19 +75,15 @@ public class Team {
     protected boolean active = true;
 
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
-    protected List<TeamUser> teamUsers = new LinkedList<>();
+    @MapKey(name = "db_id")
+    protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
-    protected List<Channel> channels = new LinkedList<>();
+    @MapKey(name = "db_id")
+    protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
     @Transient
-    protected Map<Integer, Channel> channelIdMap = new HashMap<>();
-
-    @Transient
-    protected Map<Integer, TeamUser> teamUserIdMap = new HashMap<>();
-
-    @Transient
-    protected List<TeamUser> teamUsersWaitingForVerification = new LinkedList<>();
+    protected Map<Integer, TeamUser> teamUsersWaitingForVerification = new ConcurrentHashMap<>();
 
     @Transient
     protected AppManager appManager = new AppManager();
@@ -191,23 +168,23 @@ public class Team {
         this.active = active;
     }
 
-    public List<TeamUser> getTeamUsers() {
-        if (this.teamUsers == null)
-            this.teamUsers = new LinkedList<>();
+    public Map<Integer, TeamUser> getTeamUsers() {
+        if (teamUsers == null)
+            teamUsers = new ConcurrentHashMap<>();
         return teamUsers;
     }
 
-    public void setTeamUsers(List<TeamUser> teamUsers) {
+    public void setTeamUsers(Map<Integer, TeamUser> teamUsers) {
         this.teamUsers = teamUsers;
     }
 
-    public List<Channel> getChannels() {
+    public Map<Integer, Channel> getChannels() {
         if (channels == null)
-            channels = new LinkedList<>();
+            channels = new ConcurrentHashMap<>();
         return channels;
     }
 
-    public void setChannels(List<Channel> channels) {
+    public void setChannels(Map<Integer, Channel> channels) {
         this.channels = channels;
     }
 
@@ -216,17 +193,15 @@ public class Team {
     }
 
     public void lazyInitialize() {
-        for (TeamUser teamUser : this.getTeamUsers()) {
-            this.teamUserIdMap.put(teamUser.getDb_id(), teamUser);
+        for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
+            TeamUser teamUser = entry.getValue();
             if (!teamUser.isVerified())
-                this.teamUsersWaitingForVerification.add(teamUser);
+                this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
         }
-        for (Channel channel : this.getChannels())
-            this.channelIdMap.put(channel.getDb_id(), channel);
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
-        Channel channel = this.channelIdMap.get(channel_id);
+        Channel channel = this.channels.get(channel_id);
         if (channel == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This channel does not exist");
         return channel;
@@ -234,7 +209,8 @@ public class Team {
 
     public List<Channel> getChannelsForTeamUser(TeamUser teamUser) {
         List<Channel> channels = new LinkedList<>();
-        for (Channel channel : this.getChannels()) {
+        for (Map.Entry<Integer, Channel> entry : this.getChannels().entrySet()) {
+            Channel channel = entry.getValue();
             if (channel.getTeamUsers().contains(teamUser))
                 channels.add(channel);
         }
@@ -242,27 +218,26 @@ public class Team {
     }
 
     public TeamUser getTeamUserWithId(Integer teamUser_id) throws HttpServletException {
-        TeamUser teamUser = this.teamUserIdMap.get(teamUser_id);
+        TeamUser teamUser = this.teamUsers.get(teamUser_id);
         if (teamUser == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This teamUser does not exist");
         return teamUser;
     }
 
     public void addTeamUser(TeamUser teamUser) {
-        this.getTeamUsers().add(teamUser);
-        this.teamUserIdMap.put(teamUser.getDb_id(), teamUser);
+        this.teamUsers.put(teamUser.getDb_id(), teamUser);
         if (!teamUser.isVerified())
-            this.teamUsersWaitingForVerification.add(teamUser);
+            this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
     }
 
     public void addChannel(Channel channel) {
-        this.getChannels().add(channel);
-        this.channelIdMap.put(channel.getDb_id(), channel);
+        this.channels.put(channel.getDb_id(), channel);
     }
 
     public Channel getDefaultChannel() throws HttpServletException {
         if (this.default_channel == null) {
-            for (Channel channel : this.getChannels()) {
+            for (Map.Entry<Integer, Channel> entry : this.getChannels().entrySet()) {
+                Channel channel = entry.getValue();
                 if (channel.getName().equals(DEFAULT_CHANNEL_NAME))
                     this.default_channel = channel;
             }
@@ -272,13 +247,11 @@ public class Team {
     }
 
     public void removeTeamUser(TeamUser teamUser) {
-        this.teamUserIdMap.remove(teamUser.getDb_id());
-        this.getTeamUsers().remove(teamUser);
+        this.teamUsers.remove(teamUser.getDb_id());
     }
 
     public void removeChannel(Channel channel) {
-        this.channelIdMap.remove(channel.getDb_id());
-        this.getChannels().remove(channel);
+        this.channels.remove(channel.getDb_id());
     }
 
     public void edit(JSONObject editJson) {
@@ -293,7 +266,8 @@ public class Team {
 
     public Map<String, String> getAdministratorsUsernameAndEmail() {
         Map<String, String> res = new HashMap<>();
-        for (TeamUser teamUser : this.getTeamUsers()) {
+        for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
+            TeamUser teamUser = entry.getValue();
             if (teamUser.isTeamAdmin())
                 res.put(teamUser.getUsername(), teamUser.getEmail());
         }
@@ -318,7 +292,7 @@ public class Team {
     }
 
     public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
-        if (!this.teamUsersWaitingForVerification.contains(teamUser))
+        if (!this.teamUsersWaitingForVerification.containsKey(teamUser.getDb_id()))
             throw new HttpServletException(HttpStatus.BadRequest, "teamUser already validated");
         try {
             DatabaseRequest request = db.prepareRequest("SELECT userKeys.publicKey FROM (userKeys JOIN users ON userKeys.id = users.key_id) JOIN teamUsers ON users.id = teamUsers.user_id WHERE teamUsers.id = ?;");
@@ -380,35 +354,18 @@ public class Team {
     }
 
     public Channel getChannelNamed(String name) {
-        for (Channel channel : this.getChannels()) {
+        for (Map.Entry<Integer, Channel> entry : this.getChannels().entrySet()) {
+            Channel channel = entry.getValue();
             if (channel.getName().equals(name))
                 return channel;
         }
         return null;
     }
 
-    @Override
-    public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder();
-        hcb.append(this.db_id);
-        return hcb.toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof TeamUser))
-            return false;
-        TeamUser teamUser = (TeamUser) obj;
-        EqualsBuilder eb = new EqualsBuilder();
-        eb.append(this.db_id, teamUser.db_id);
-        return eb.isEquals();
-    }
-
     public Integer getActiveTeamUserNumber() {
         int res = 0;
-        for (TeamUser teamUser : this.getTeamUsers()) {
+        for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
+            TeamUser teamUser = entry.getValue();
             if (teamUser.isActive_subscription())
                 res++;
         }
@@ -419,7 +376,7 @@ public class Team {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
         this.activeSubscriptions = 0;
-        this.getTeamUsers().forEach(teamUser -> {
+        this.getTeamUsers().forEach((id, teamUser) -> {
             if (!this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty())
                 teamUser.setActive_subscription(true);
             for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
@@ -512,7 +469,8 @@ public class Team {
     }
 
     public TeamUser getTeamUserOwner() {
-        for (TeamUser teamUser : this.getTeamUsers()) {
+        for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
+            TeamUser teamUser = entry.getValue();
             if (teamUser.isTeamOwner())
                 return teamUser;
         }

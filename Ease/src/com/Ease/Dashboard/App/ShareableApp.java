@@ -9,6 +9,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public interface ShareableApp {
 
     public List<TeamUser> getTeamUser_tenants();
 
-    public List<SharedApp> getSharedApps();
+    public Collection<SharedApp> getSharedApps();
 
     public void setTeamUser_owner(TeamUser teamUser_owner);
 
@@ -61,7 +62,7 @@ public interface ShareableApp {
 
     public void addPendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException;
 
-    public List<TeamUser> getPendingTeamUsers();
+    public Collection<TeamUser> getPendingTeamUsers();
 
     public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException;
 }

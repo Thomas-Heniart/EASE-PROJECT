@@ -5,8 +5,20 @@
 	"folder":"Facebook",
 	"connect":{
 		"todo":[
+          {
+            "action": "waitfor",
+            "search": "#email"
+          },
 			{"action":"fill", "what":"login", "search":"#email", "grave":true},
+          {
+            "action": "waitfor",
+            "search": "#password"
+          },
 			{"action":"fill", "what":"password", "search":"#pass", "grave":true},
+          {
+            "action": "waitfor",
+            "search": "#loginbutton"
+          },
 			{"action":"click", "search":"#loginbutton", "grave":true}
 			]
 	},

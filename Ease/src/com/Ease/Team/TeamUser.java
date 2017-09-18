@@ -426,6 +426,7 @@ public class TeamUser {
         try {
             int transaction = db.startTransaction();
             Team team = this.getTeam();
+            /* @TODO remove this */
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                 if (shareableApp.getTeamUser_owner() == this)
@@ -433,7 +434,7 @@ public class TeamUser {
             }
             team.getAppManager().removeShareableApps(shareableAppsToRemove, db);
             team.getAppManager().removeSharedAppsForTeamUser(this, db);
-            for (Channel channel : this.getTeam().getChannels())
+            for (Channel channel : this.getTeam().getChannels().values())
                 channel.removeTeamUser(this, db);
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");
             request.setInt(this.getDb_id());

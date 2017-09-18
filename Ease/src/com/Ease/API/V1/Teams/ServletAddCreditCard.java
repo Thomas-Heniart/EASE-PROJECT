@@ -54,7 +54,7 @@ public class ServletAddCreditCard extends HttpServlet {
             team.setActive(true);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            for (TeamUser teamUser1 : team.getTeamUsers()) {
+            for (TeamUser teamUser1 : team.getTeamUsers().values()) {
                 if (teamUser1.isDisabled())
                     continue;
                 for (SharedApp sharedApp : teamUser1.getSharedApps()) {
