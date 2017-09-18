@@ -90,7 +90,7 @@
         </div>
     </div>
 </header>
-<section style="background-color: white">
+<section style="background-color:white;padding:0 0 170px 0;">
     <div class="container">
         <ul class="docs-nav">
             <li><a href="#1" class="cc-active">1. Anonymat</a></li>
@@ -102,37 +102,32 @@
             <li><a href="#7" class="cc-active">7. Notre Security White paper</a></li>
         </ul>
         <div id="docs-content" class="docs-content">
-            <div class="doc_section">
-                <h1 class="doc_header" id="1">1. Anonymat</h1>
+            <div class="doc_section" id="1" style="padding-top:70px;">
+                <h1 class="doc_header">1. Anonymat</h1>
                 <p>Nous vous facilitons la vie sans la connaître.</p>
                 <p><strong>Il y a seulement deux informations personnelles que nous connaissons sur vous</strong> : une
                     adresse email et un pseudo.</p>
                 <p>Les autres données (identifiants de comptes, mots de passe, etc.) sont stockées chiffrées et 100% anonymes. Voir explications techniques sur le chiffrement plus bas.</p>
                 <p>Nous ne vendons pas vos données. D’abord car cela ne correspond pas à nos valeurs et ensuite car notre mode de revenu est la sécurisation des données pour les entreprises.</p>
             </div>
-            <div class="doc_section">
-                <h1 class="doc_header" id="2">2. Sécurité pour l’utilisateur</h1>
+            <div class="doc_section" id="2" style="padding-top:70px;">
+                <h1 class="doc_header">2. Sécurité pour l’utilisateur</h1>
                 <p>Augmentez le niveau de sécurité de vos mots de passe personnels.</p>
                 <p>Vos mots de passe ne sont plus stockés sur votre ordinateur mais dans les serveurs d’un leader du cloud. C’est un atout si votre ordinateur casse, et une protection supplémentaire s’il se fait pirater.</p>
-                <p>Vos mots de passe sont maintenant stockés chiffrés 24h/24 7J/7. Fini les fichiers excel et les
-                    post-its.</p>
+                <p>Vos mots de passe sont maintenant stockés chiffrés 24h/24 7J/7. Fini les fichiers excel et les post-its.</p>
                 <p>Grâce à Ease.space, vous restez à jour sur les dernières technologies de sécurité informatique.</p>
-                <p>Système de prévention à la fraude : au bout de 10 mots de passe erronés, votre compte est bloqué
-                    pendant 5 minutes.</p>
-                <p>Il existe la possibilité de bloquer la mémorisation des mots de passe sur navigateur pour ne plus
-                    laisser des mots de passe sensibles sur des ordinateurs dont vous n’êtes pas propriétaire.</p>
+                <p>Système de prévention à la fraude : au bout de 10 mots de passe erronés, votre compte est bloqué pendant 5 minutes.</p>
+                <p>Il existe la possibilité de bloquer la mémorisation des mots de passe sur navigateur pour ne plus laisser des mots de passe sensibles sur des ordinateurs dont vous n’êtes pas propriétaire.</p>
                 <p>Lorsque vous souhaitez choisir des mots de passe compliqués et différents pour chaque compte (majuscules, minuscules, chiffres etc), Ease.space s’en souvient pour vous.</p>
-                <p>Grâce à des procédés de chiffrement avancés (Cf. White paper), nous ne connaissons pas votre mot de passe maître. Si vous le perdez, votre compte sera renouvelé et vous devrez entrer à nouveau les mots de passe des comptes que vous aviez intégré.</p>
+                <p>Grâce à des procédés de chiffrement avancés (Cf. White paper), nous ne connaissons pas votre mot de passe maître. Si vous le perdez, votre compte sera renouvelé et vous devrez entrer à nouveau les mots de passe des comptes que vous aviez intégrés.</p>
             </div>
-            <div class="doc_section">
-                <h1 class="doc_header" id="3">3. Sécurité pour l’entreprise</h1>
-                <p>Mettez en place des technologies de pointe et des bonnes pratiques. <i>(Rappel de notre plateforme B2B)</i>.</p>
+            <div class="doc_section" id="3" style="padding-top:70px;">
+                <h1 class="doc_header">3. Sécurité pour l’entreprise</h1>
+                <p>Mettez en place des technologies de pointe et des bonnes pratiques.</p>
                 <p>Principe de base : grâce à notre système de sécurité, vos collaborateurs reçoivent des accès (sous la forme d’app). Ils n’ont plus besoin de connaître les mots de passe des comptes de l’entreprise. Un collaborateur qui n’a plus besoin de connaître de mots de passe ne peut plus les oublier et n’a plus besoin de les noter sur des post its.</p>
                 <p>Un meilleur contrôle : Grâce à une interface d’organisation simple et customisable, les accès ne sont distribués qu’aux personnes en ayant réellement besoin.</p>
                 <p>Pour empêcher que des mots de passe sensibles se retrouvent sur les ordinateurs personnels des collaborateurs, notre extension peut bloquer la mémorisation des mots de passe sur le navigateur. Les mots de passe ne peuvent donc pas se retrouver mémorisés sur des machines inconnues.</p>
-                <p>Vous pouvez contrôler la durée de partage des accès à un collaborateur, visualiser l’historique d'activité des outils de la société, programmez le départ d’un collaborateur et supprimez ses accès automatiquement.</p>
-                <p>Notre extension peut bloquer la popup chrome permettant de mémoriser les mots de passe sur le navigateur. Les mots de passe ne peuvent donc pas se retrouver mémorisés sur des machines inconnues.</p>
-                <p>Vous pouvez contrôler le temps de partage des accès à un collaborateur.</p>
+                <p>Vous pouvez contrôler la durée de partage des accès à un collaborateur, visualiser l’historique d'activité des outils de la société, programmer le départ d’un collaborateur et supprimer ses accès automatiquement.</p>
                 <p>Mettez facilement en place une politique de changement des mots de passe de vos outils sensibles.</p>
                 <p>Partage sécurisé de comptes entre collaborateurs : les envois de mots de passe sont 100% chiffrés de
                     l’envoie à la réception. Ce n’est pas le mot de passe qui est transféré, c’est l’accès (l’app).<br/>Programmez
@@ -144,13 +139,13 @@
                     pour s’assurer de son identité.</p>
                 <p>Pour en savoir plus, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf" target="_blank">téléchargez notre Security White paper.</a></p>
             </div>
-            <div class="doc_section">
-                <h1 class="doc_header" id="4">4. Nos technologies de securité</h1>
+            <div class="doc_section" id="4" style="padding-top:70px;">
+                <h1 class="doc_header">4. Nos technologies de securité</h1>
                 <p>Cette partie est expliquée plus en détail dans notre White paper.</p>
                 <p>Sécurité des mots de passe de vos différents comptes web.</p>
                 <p>Nous sécurisons vos mots de passe avec un chiffrement asymétrique, qui crée 2 clés, une privée et une publique. la clé publique nous permet de vous envoyer des données chiffrées que vous seul pouvez déchiffrer avec votre clé privée uniquement.</p>
                 <p>Nous protégeons chaque clé privée en la chiffrant une nouvelle fois (symétriquement). Le chiffrement symétrique crée une nouvelle clé unique qui sert autant à chiffrer que déchiffrer la clé privée (qui elle sert à déchiffrer vos mots de passe et vous connecter).</p>
-                <p>Cette clé symétrique est une nouvelle fois chiffrée (par votre mot de passe Ease.space et une variable inconnue appelé un “salt”).</p>
+                <p>Cette clé symétrique est une nouvelle fois chiffrée (par votre mot de passe Ease.space et une variable inconnue appelée un “salt”).</p>
                 <p class="sub_header">Sécurité de votre mot de passe Ease.space.</p>
                 <p>Nous ne connaissons pas votre mot de passe maître. La méthode utilisée pour le stocker de manière anonyme et sécurisée est appelée “hashage”.</p>
                 <p>Hasher (différent de chiffrer) un mot de passe fonctionne dans un seul sens et ne crée pas de clé. C’est une fonction mathématique (comme le chiffrement) sauf qu’elle n’a pas d’inverse. Il n’y a pas de moyen (pas de clé) de retrouver la valeur initiale (le mot de passe).</p>
@@ -167,31 +162,29 @@
                 <p>HTTPS permet 2 choses : la sécurité des données “pendant le voyage”, la vérification de
                     l’authenticité de l’envoyeur et du receveur.</p>
                 <p>Chiffrement : Tous les transferts de data qui surviennent entre l’ordinateur de l’utilisateur et nos serveurs doivent être chiffrés, afin d’éviter que n’importe qui puisse accéder à vos informations sensibles pendant l’envoi des données.</p>
-                <p>Authentification : Cela signifie que le bon ordinateur communique avec le bon serveur, et le serveur est “digne de confiance”. </p>
+                <p>Authentification : Cela signifie que le bon ordinateur communique avec le bon serveur, et que le serveur est “digne de confiance”. </p>
                 <p class="sub_header">Serveurs</p>
-                <p>L’ensemble du trafic vers nos serveurs passe par un firewall. C’est à dire que le trafic d’origine inconnu est filtré et bloqué.</p>
+                <p>L’ensemble du trafic vers nos serveurs passe par un firewall. C’est-à-dire que le trafic d’origine inconnu est filtré et bloqué.</p>
                 <p>Des tests automatiques de vulnérabilité sont réalisés quotidiennement. De plus un test de pénétration interne est réalisé 4 fois par an à l’aide de l’outil Qualys (Qualys est une entreprise de sécurité utilisée par la plupart des entreprise de Forbes 100). D’autres tests réalisés par des tiers sont faits de manière régulière et notre objectif est de constamment augmenter leur récurrence.</p>
-                <p>Enfin, nous récoltons de manière anonyme un ensemble de rapports d’erreurs provenant de l’activité de nos utilisateurs. Aucunes informations personnelles ne sont collectées lors de ces rapports automatiques d'erreurs. Ils sont réalisés pour augmenter la qualité et la sécurité du produit.</p>
+                <p>Enfin, nous récoltons de manière anonyme un ensemble de rapports d’erreurs provenant de l’activité de nos utilisateurs. Aucune information personnelle n'est collectée lors de ces rapports automatiques d'erreurs. Ils sont réalisés pour augmenter la qualité et la sécurité du produit.</p>
                 <p>Pour en savoir plus, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf"
                                            target="_blank">téléchargez notre Security White paper.</a></p>
             </div>
-            <div class="doc_section">
-                <h1 class="doc_header" id="5">5. Politique interne de sécurité</h1>
+            <div class="doc_section" id="5" style="padding-top:70px;">
+                <h1 class="doc_header">5. Politique interne de sécurité</h1>
                 <p>En interne, nous utilisons Ease.space pour sécuriser, gérer et organiser les accès de la société.</p>
                 <p>Une charte de confidentialité est signée par les membres de l’équipe dont l’activité nécessite
                     l’accès à des données sensibles.</p>
                 <p>Au départ d’un collaborateur, ses accès sont supprimés et les mots de passe partagés de la société
-                    auxquels il/elle avait accès sont changés.</p>
+                    auxquels il avait accès sont changés.</p>
                 <p>Une politique de modification récurrente des mots de passe est en place sur l’intégralité des outils de la société.</p>
                 <p>Nos serveurs sont chez un leader Européen du Cloud, et sont Infogérés.</p>
             </div>
-            <div class="doc_section">
-                <h1 class="doc_header" id="6">6. FAQ</h1>
+            <div class="doc_section" id="6" style="padding-top:70px;">
+                <h1 class="doc_header">6. FAQ</h1>
                 <p class="sub_header">Si un hacker cherche à trouver mon mot de passe maître ?</p>
-                <p>Nous vous encourageons à utiliser un mot de passe «compliqué» pour sécuriser votre plateforme. En
-                    choisissant un mot de passe avec 8 caractères (minuscules, majuscules et chiffres) cela implique 280
-                    000 milliards de possibilités de combinaisons. Cela prendrait des dizaines de milliers d’années pour
-                    un pirate de réaliser les tests nécessaires pour trouver votre mot de passe (à raison d’ 1 milliard
+                <p>Nous vous encourageons à utiliser un mot de passe «compliqué» pour sécuriser votre plateforme. Choisir un mot de passe avec 8 caractères (minuscules, majuscules et chiffres) implique 280
+                    000 milliards de possibilités de combinaisons. Des dizaines de milliers d’années seraient donc nécessaires si un pirate souhaitait réaliser des tests pour trouver votre mot de passe (à raison d’un milliard
                     de tests par jour cela représenterait environ 750 années). Pour d’avantage de sécurité nous bloquons
                     le compte pendant plusieurs minutes suite à 10 échecs de connexion.</p>
                 <p class="sub_header">Si je souhaite accéder à mes mots de passe sur un ordinateur qui n’est pas le mien ?</p>
@@ -201,13 +194,13 @@
                 <p class="sub_header">Si je perds mon mot de passe maître ?</p>
                 <p>Pour des raisons de sécurité, Ease.space ne stocke pas votre mot de passe maître, car c’est ce mot de
                     passe maître qui sécurise l’ensemble de vos données. S’il est perdu, et que vous le réinitialisez,
-                    l’ensemble des données sensibles stockées sur Ease.space auront disparus, il vous faudra les entrer
+                    l’ensemble des données sensibles stockées sur Ease.space aura disparu, il vous faudra les entrer
                     à nouveau comme le jour de votre inscription.</p>
                 <p class="sub_header">Si un hacker accède à la base de données d’Ease.space ?</p>
                 <p>Les données stockées sur Ease.space sont entièrement chiffrées. Personne d’autre que vous ne peut accéder à vos informations personnelles. Si un hacker accède à la base de données, il aura accès à des données illisibles.</p>
             </div>
-            <div class="doc_section">
-                <h1 class="doc_header" id="7">7. Notre Whitepaper</h1>
+            <div class="doc_section" id="7" style="padding-top:70px;">
+                <h1 class="doc_header">7. Notre Whitepaper</h1>
                 <p>Pour obtenir toutes les informations relatives à la sécurité, <a
                         href="/resources/documents/Ease.space_Security-Whitepaper.pdf" target="_blank">téléchargez notre
                     Security Whitepaper.</a></p>

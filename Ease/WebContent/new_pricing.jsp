@@ -57,7 +57,7 @@
                     <%--<img src="/resources/other/Spaceship.svg" alt="icon" class="styleImage" style="background-size:400px 400px;width:400px;height:400px;" />--%>
                     <h1 class="text-center title">Starter</h1>
                     <span class="text-center price" style="margin-bottom: 33px">Gratuit</span>
-                    <span class="tip" style="margin: 15px 0 35px 0">Pour les utilisateurs solo souhaitant essayer Ease.space pour une periode de temps illimitée</span>
+                    <span class="tip" style="margin: 15px 0 35px 0">Pour les utilisateurs solo souhaitant essayer Ease.space pour une période de temps illimitée</span>
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Groupes illimitées</span>
+                            <span>Groupes illimités</span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>

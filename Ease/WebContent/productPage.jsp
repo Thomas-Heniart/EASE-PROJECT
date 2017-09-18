@@ -7,7 +7,7 @@
 </c:if>
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="com.Ease.Languages.text" />
-<html>
+<!DOCTYPE html>
 <head>
     <title> Ease.space | Product</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
@@ -111,38 +111,38 @@
     <div class="ui bottom attached tab" data-tab="first">
         <div class="container">
             <div class="ui grid discoverSpace">
-                <div class="ui three column stackable row">
-                    <div class="column">
+                <div class="ui three column stackable row" style="display:inline-block;float:left">
+                    <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/appsIllimitees.png" height="150px" />
                         <h3>Apps illimitées</h3>
-                        Que vous ayez beaucoup de comptes</br>ou nous. Nous intégrons tout, même</br>les sites connectés avec Facebook,</br>Linkedin…
+                        <p>Que vous ayez beaucoup de comptes ou nous. Nous intégrons tout, même les sites connectés avec Facebook, Linkedin…</p>
                     </div>
-                    <div class="column">
+                    <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/groupes.png" height="150px" />
                         <h3>Groupes illimités</h3>
-                        Ranger vos apps dans des groupes</br>pour vous organiser en fonction</br>de vos besoins.
+                        <p>Ranger vos apps dans des groupes pour vous organiser en fonction de vos besoins.</p>
                     </div>
-                    <div class="column">
+                    <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/multiComptes.png" height="150px" />
                         <h3>Multi-comptes</h3>
-                        Vous avez plusieurs compte sur un</br>même site ? Ease vous permet de</br>passer de l’un à l’autre en un clic.
+                        <p>Vous avez plusieurs compte sur un même site ? Ease vous permet de passer de l’un à l’autre en un clic.</p>
                     </div>
                 </div>
-                <div class="ui three column stackable row">
-                    <div class="column">
+                <div class="ui three column stackable row" style="display:inline-block;float:left">
+                    <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/favoris.png" height="90px" />
                         <h3>Gérez vos favoris</h3>
-                        Intégrez vos favoris parmis votre</br>dashboard d’Apps, pour y accéder</br>facilement.
+                        <p>Intégrez vos favoris parmis votre dashboard d’Apps, pour y accéder facilement.</p>
                     </div>
-                    <div class="column">
+                    <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/updates.png" height="90px" />
                         <h3>Détection de vos identifiants</h3>
-                        Vous pouvez intégrer facilement les</br>derniers comptes que vous avez créé</br>par un simple Oui (ou Non).
+                        <p>Vous pouvez intégrer facilement les derniers comptes que vous avez créé par un simple Oui (ou Non).</p>
                     </div>
-                    <div class="column">
+                    <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/logout.png" height="90px" />
                         <h3>Log out général</h3>
-                        La porte d’entrée devient aussi la porte</br>de sortie. En 1 clic déconnectez-vous</br>de toutes les applications utilisées</br>pendant la session.
+                        <p>La porte d’entrée devient aussi la porte de sortie. En 1 clic déconnectez-vous de toutes les applications utilisées pendant la session.</p>
                     </div>
                 </div>
             </div>
@@ -156,52 +156,58 @@
     </div>
     <div class="container">
         <div class="ui two column stackable grid textDistrib">
-            <div class="ui row">
-                <div class="four wide column">
+            <div class="ui row" style="display:inline-block;float:left">
+                <div class="four wide column" style="display:inline-block;float:left">
                     <h2>Team Space</h2>
                     <p>En entreprise : organisez qui a accès à quels outils et visualisez facilement qui peut accéder aux différents comptes.</p>
                 </div>
-                <div class="twelve wide column">
+                <div class="twelve wide column" style="display:inline-block;float:left">
                     <img class="ui huge image" src="/resources/images/teamSpace.png">
                 </div>
             </div>
         </div>
         <div class="ui stackable two column grid textOrg">
-            <div class="ui mobile reversed row">
-                <div class="five wide column">
+            <div class="ui mobile reversed row" style="display:inline-block;float:left">
+                <div class="five wide computer only column" style="display:inline-block;float:left">
                     <img class="ui small image" src="/resources/images/organisationApps.png">
                 </div>
-                <div class="eleven wide column">
+                <div class="eleven wide column" style="display:inline-block;float:left">
                     <h2>Organisation</h2>
-                    <p>Créer des Rooms regroupant les membres de votre équipe, par projet, thème, client, ou autre, à l’image de votre entreprise.</p>
-                    <p>En envoyant des apps dans des Rooms, taggez les membres ayant besoin de l’outil.</p>
-                     <p style="margin-top:-16px;">Vous pouvez aussi envoyer une app à une seule personne.</p>
+                    <p>Créez des Rooms pour regrouper des membres par équipe, projet, client, en fonction de votre organisation.</p>
+                    <p>Envoyez des Apps dans des Rooms et taggez les membres ayant besoin de l’outil, il recevront l’accès automatiquement.</p>
+                     <p style="margin-top:-16px;">Choisissez d’envoyer des comptes a certaines personnes, lorsque d’autres n’ont pas besoin d’y accéder.</p>
+                </div>
+                <div class="five wide mobile only column" style="display:inline-block;float:left">
+                    <img class="ui small image" src="/resources/images/organisationApps.png">
                 </div>
             </div>
         </div>
         <div class="ui stackable two column grid textControl">
-            <div class="ui row">
-                <div class="eleven wide column">
+            <div class="ui row" style="display:inline-block;float:left">
+                <div class="eleven wide column" style="display:inline-block;float:left">
                     <h2>Contrôle</h2>
-                    <p>Distribuez les accès automatiquement à une ou plusieurs personnes.</p>
-                    <p>Notre technologie permet de donner les accès sans que les collaborateurs n’aient besoin de connaître les mots de passe.</p>
-                    <p>Programmez les arrivées et départs des collaborateurs et révoquez les accès en un clic.</p>
+                    <p>Donnez l’accès sans que le collaborateur ait besoin de connaître le mot de passe.</p>
+                    <p>Programmez les départs des collaborateurs et révoquez leurs accès en un clic.</p>
+                    <p>Visualisez qui accède à quels outils.</p>
                 </div>
-                <div class="five wide column">
+                <div class="five wide column" style="display:inline-block;float:left">
                     <img class="ui small right floated image" src="/resources/images/controlTagLouise.png">
                 </div>
             </div>
         </div>
         <div class="ui stackable two column grid textShare">
-            <div class="ui mobile reversed row">
-                <div class="five wide column">
+            <div class="ui mobile reversed row" style="display:inline-block;float:left">
+                <div class="five wide computer only column" style="display:inline-block;float:left">
                     <img class="ui small left floated image" src="/resources/images/partageApps.png">
                 </div>
-                <div class="eleven wide column">
+                <div class="eleven wide column" style="display:inline-block;float:left">
                     <h2>Partage</h2>
-                    <p>Qu’un compte soit partagé entre plusieurs personnes, ou que chaque utilisateur ait ses propres identifiants, ou que ce soit un intranet, un SSO ou un site sans identifiants, vous pouvez le partager.</p>
-                    <p>Vous pouvez différencier chaque compte et de les distribuer facilement à l’ensemble de l’équipe ou juste certaines  personnes.</p>
-                    <p style="margin-top:0;">L’outil est collaboratif, les membres peuvent partager des outils au sein des Rooms dont ils font partie.</p>
+                    <p>Que les identifiants soient partagés entre plusieurs membres de l’équipe ou que chaque collaborateur ait ses propres identifiants...</p>
+                    <p>Que ce soit un site sans identifiants, un intranet, un SSO, un blog...</p>
+                    <p style="margin-top:0;">Vous pouvez les partager à votre équipe sur Ease.space.</p>
+                </div>
+                <div class="five wide mobile only column" style="display:inline-block;float:left">
+                    <img class="ui small left floated image" src="/resources/images/partageApps.png">
                 </div>
             </div>
         </div>
@@ -209,15 +215,16 @@
     <div class="ui divider" style="margin: 80px 0;"></div>
     <div class="container">
         <div class="ui stackable two column grid textPlace">
-            <div class="ui row">
-                <div class="nine wide column">
+            <div class="ui row" style="display:inline-block;float:left">
+                <div class="nine wide column" style="display:inline-block;float:left">
                     <h2>Mise en place</h2>
-                    <p>Invitez vos membres et ajoutez les comptes web dont vous avez besoin, ou laissez vos collaborateurs le faire eux même.</p>
-                    <p>La distribution des comptes se fait automatiquement.</p>
+                    <p>Invitez les membres de votre équipe.</p>
+                    <p>Ajoutez les comptes web dont vous avez besoin.</p>
+                    <p>Laissez vos collaborateurs ajouter des comptes eux même.</p>
                 </div>
-                <div class="seven wide column">
-                    <a class="ui right floated blue button" href="/pricing" style="margin-top:60px;margin-right:30px;color:#ffffff;font-size: 20px;font-weight: bold;">Découvrez nos plans</a>
-                    <a class="ui right floated button" href="/companyContact" style="margin-top: 30px;margin-right:30px;font-size: 20px;font-weight: bold;">Contactez l'équipe commerciale</a>
+                <div class="seven wide column" style="display:inline-block;float:left">
+                    <a class="ui right floated blue button" href="/pricing" style="margin-top:60px;color:#ffffff;font-size: 20px;font-weight: bold;">Découvrez nos plans</a>
+                    <a class="ui right floated button" href="/companyContact" style="margin-top: 30px;font-size: 20px;font-weight: bold;">Contactez l'équipe commerciale</a>
                 </div>
             </div>
         </div>

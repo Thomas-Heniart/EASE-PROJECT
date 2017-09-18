@@ -3,7 +3,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="left-part left">
-				<div class="ui row menu-column">
+				<div class="left-menu ui row menu-column">
 					<div class="links">
 						<a href="product">
 							<fmt:message key="landing.footer.section-product.title"/>
@@ -22,7 +22,7 @@
 						</a>
 					</div>
 				</div>
-				<div class="ui row menu-column">
+				<div class="right-menu ui row menu-column">
 					<div class="links">
 						<a href="equipe">
 							<fmt:message key="landing.header.team-link"/>
