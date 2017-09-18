@@ -129,6 +129,15 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 100%;
 }
 
+.ui.grid > .row {
+  display: inline-block;
+  float: left;
+  & > .column {
+    display: inline-block;
+    float: left;
+  }
+}
+
 .ui.input.max-border-radius input {
   border-radius: 500px;
 }
@@ -787,6 +796,7 @@ body {
 .flex_direction_column {
   @include flex-direction(column);
 }
+
 .mainBody {
   padding-top: 0px;
   background-color: white;
