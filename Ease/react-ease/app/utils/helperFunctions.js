@@ -80,12 +80,6 @@ export function checkForNewNotifications(n){
   return false;
 }
 
-export const teamUserRoles = {
-  1: 'Member',
-  2: 'Admin',
-  3: 'Owner'
-};
-
 export function isAdminOrMe(user, me){
   const admin = isAdmin(me.role);
   return admin || !admin && user.id === me.id;
@@ -93,6 +87,9 @@ export function isAdminOrMe(user, me){
 
 export function isSuperior(user, me){
   return me.role > user.role;
+}
+export function isSuperiorOrMe(user, me){
+  return isSuperior(user, me) || user.id === me.id;
 }
 
 export function isAdmin(userRole){

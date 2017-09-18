@@ -32,14 +32,14 @@ public class ServletShareApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeamId(team_id);
-            Integer teamUser_tenant_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_tenant_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_tenant = team.getTeamUserWithId(teamUser_tenant_id);
-            Integer app_id = sm.getIntParam("app_id", true);
+            Integer app_id = sm.getIntParam("app_id", true, false);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             if (!(shareableApp.getTeamUser_owner() == teamUser_owner) && !teamUser_owner.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "Not allowed");
@@ -56,11 +56,11 @@ public class ServletShareApp extends HttpServlet {
                 sharedApp.accept(db);
             if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
                 shareableApp.removePendingTeamUser(teamUser_tenant, db);
-                String url = (channel == null) ? ("@" + teamUser_owner.getDb_id()) : channel.getDb_id().toString();
+                String url = ((channel == null) ? ("@" + teamUser_owner.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + ((App) shareableApp).getDBid();
                 teamUser_tenant.addNotification(teamUser_owner.getUsername() + " approved your access to " + ((App) shareableApp).getName() + ((channel == null) ? "" : " in #" + channel.getName()), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
                 sharedApp.accept(db);
             } else if (teamUser_owner != teamUser_tenant) {
-                String url = (channel == null) ? ("@" + teamUser_tenant.getDb_id()) : channel.getDb_id().toString();
+                String url = ((channel == null) ? ("@" + teamUser_tenant.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + ((App) shareableApp).getDBid();
                 teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + ((App) shareableApp).getName() + " in " + (shareableApp.getChannel() == null ? "your Personal Space" : ("#" + shareableApp.getChannel().getName())), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
             }
             db.commitTransaction(transaction);

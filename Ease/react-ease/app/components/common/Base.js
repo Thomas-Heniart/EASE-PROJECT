@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {fetchNotifications} from "../../actions/notificationsActions";
 import {fetchMyInformation} from "../../actions/commonActions";
+import api from "../../utils/api";
 import ReactTooltip from 'react-tooltip';
 import WebsocketClient from './WebsocketClient';
 
@@ -20,7 +21,20 @@ class Base extends React.Component {
     };
     window.refs = {};
   }
+  checkConnection = () => {
+    window.setInterval(() => {
+      if (this.props.common.authenticated){
+        api.common.bz().then(connected => {
+          if (!connected)
+            window.location.href = '/';
+        }).catch(err => {
+          window.location.href = '/';
+        });
+      }
+    }, 30000);
+  };
   componentDidMount(){
+    this.checkConnection();
     if (!this.props.common.authenticated){
       this.props.dispatch(fetchMyInformation()).then(response => {
         this.setState({fetching: false});

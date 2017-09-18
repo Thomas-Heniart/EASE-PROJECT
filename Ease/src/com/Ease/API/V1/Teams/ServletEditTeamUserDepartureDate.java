@@ -31,16 +31,16 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
 
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_modify = team.getTeamUserWithId(teamUser_id);
             if (!teamUser.isSuperior(teamUser_to_modify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
-            String departureDateString = sm.getStringParam("departure_date", true);
+            String departureDateString = sm.getStringParam("departure_date", true, false);
             if (departureDateString == null || departureDateString.equals(""))
                 teamUser_to_modify.setDepartureDate(null);
             else {

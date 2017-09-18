@@ -1,8 +1,9 @@
 var React = require('react');
 import {connect} from "react-redux";
-import {showAddTeamChannelModal} from "../actions/teamModalActions";
-import * as channelActions from "../actions/channelActions";
-import {renderUserLabel} from "../utils/renderHelpers";
+import {showAddTeamChannelModal} from "../../actions/teamModalActions";
+import * as channelActions from "../../actions/channelActions";
+import {renderUserLabel} from "../../utils/renderHelpers";
+import {reflect} from "../../utils/utils";
 import {withRouter} from "react-router-dom";
 import { Header, Container, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
@@ -48,7 +49,7 @@ class TeamAddChannelModal extends React.Component {
       var addUserActions = selectedUsers.map(function(item){
         return this.props.dispatch(channelActions.addTeamUserToChannel(channel_id, item));
       }, this);
-      Promise.all(addUserActions).then(() => {
+      Promise.all(addUserActions.map(reflect)).then(() => {
         this.props.dispatch(showAddTeamChannelModal(false));
         this.props.history.push(`/teams/${this.props.match.params.teamId}/${channel_id}`);
       });

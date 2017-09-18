@@ -27,13 +27,13 @@ public class ServletRegistration extends HttpServlet {
             User user = sm.getUser();
             if (user != null)
                 user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
-            String username = sm.getStringParam("username", true);
-            String email = sm.getStringParam("email", true);
-            String password = sm.getStringParam("password", false);
-            String digits = sm.getStringParam("digits", false);
-            String code = sm.getStringParam("code", false);
-            Long registration_date = sm.getLongParam("registration_date", true);
-            Boolean send_news = sm.getBooleanParam("newsletter", true);
+            String username = sm.getStringParam("username", true, false);
+            String email = sm.getStringParam("email", true, false);
+            String password = sm.getStringParam("password", false, false);
+            String digits = sm.getStringParam("digits", false, true);
+            String code = sm.getStringParam("code", false, true);
+            Long registration_date = sm.getLongParam("registration_date", true, false);
+            Boolean send_news = sm.getBooleanParam("newsletter", true, false);
             checkUsernameIntegrity(username);
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");

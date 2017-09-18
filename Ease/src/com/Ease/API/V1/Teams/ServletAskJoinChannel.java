@@ -27,19 +27,19 @@ public class ServletAskJoinChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
-            Integer channel_id = sm.getIntParam("channel_id", true);
+            Integer channel_id = sm.getIntParam("channel_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
             channel.addPendingTeamUser(teamUser, sm.getDB());
-            team.getTeamUserWithId(channel.getCreator_id()).addNotification(teamUser.getUsername() + " would like to join #" + channel.getName(), channel.getDb_id() + "/flexPanel", "/resources/notifications/sign_in.png", sm.getTimestamp(), sm.getDB());
+            channel.getRoom_manager().addNotification(teamUser.getUsername() + " would like to join #" + channel.getName(), channel.getDb_id() + "/flexPanel", "/resources/notifications/sign_in.png", sm.getTimestamp(), sm.getDB());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
-            TeamUser channel_admin = team.getTeamUserWithId(channel.getCreator_id());
-            mailJetBuilder.addTo(channel_admin.getEmail(), channel_admin.getUsername());
+            TeamUser room_manager = channel.getRoom_manager();
+            mailJetBuilder.addTo(room_manager.getEmail(), room_manager.getUsername());
             mailJetBuilder.setTemplateId(210939);
             mailJetBuilder.addVariable("room_name", channel.getName());
             mailJetBuilder.addVariable("team_name", team.getName());

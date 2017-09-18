@@ -29,12 +29,12 @@ public class ServletDeleteSharedApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            Integer sharedApp_id = sm.getIntParam("app_id", true);
+            Integer sharedApp_id = sm.getIntParam("app_id", true, false);
             SharedApp sharedApp = team.getAppManager().getSharedApp(sharedApp_id);
             if (teamUser_connected != sharedApp.getTeamUser_tenant() && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");

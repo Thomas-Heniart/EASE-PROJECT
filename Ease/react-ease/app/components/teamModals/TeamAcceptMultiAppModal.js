@@ -1,6 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 var post_api = require('../../utils/post_api');
+import api from "../../utils/api";
 import {showTeamAcceptMultiAppModal, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions"
 import * as appActions from "../../actions/appsActions"
 import {findMeInReceivers} from "../../utils/helperFunctions"
@@ -8,7 +9,8 @@ import {connect} from "react-redux"
 
 @connect((store)=>{
   return {
-    modal: store.teamModals.teamAcceptMultiAppModal
+    modal: store.teamModals.teamAcceptMultiAppModal,
+    team_id: store.team.id
   };
 })
 class TeamAcceptMultiAppModal extends React.Component {
@@ -49,6 +51,11 @@ class TeamAcceptMultiAppModal extends React.Component {
       })
     })
   }
+  componentDidMount(){
+    api.teamApps.getSharedAppPassword({team_id: this.props.team_id, shared_app_id :this.state.receiver.shared_app_id}).then(response => {
+      this.handleInput({target : {name: 'password', value: response}});
+    });
+  }
   render(){
     const app = this.state.app;
     const receiver = this.state.receiver;
@@ -72,7 +79,7 @@ class TeamAcceptMultiAppModal extends React.Component {
             </div>
             <div class="row display-flex flex_direction_column" style={{padding: "20px 30px 30px 30px"}}>
               {
-                Object.keys(receiver.account_information).map(function (item) {
+                Object.keys(receiver.account_information).reverse().map(function (item) {
                   return (
                       <div key={item} class="display-flex flex_direction_column input_handler">
                         <label htmlFor={item}>{webInfo[item].placeholder}</label>

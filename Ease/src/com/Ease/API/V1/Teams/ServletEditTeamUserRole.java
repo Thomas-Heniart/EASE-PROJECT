@@ -27,20 +27,18 @@ public class ServletEditTeamUserRole extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
             if (teamUserToModify.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You are the owner, you can only transfer your ownership to someone else.");
-            Integer roleValue = sm.getIntParam("role", true);
-            if (roleValue == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty role.");
+            Integer roleValue = sm.getIntParam("role", true, false);
             if (!TeamUserRole.isInferiorToOwner(roleValue))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership from here.");
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);

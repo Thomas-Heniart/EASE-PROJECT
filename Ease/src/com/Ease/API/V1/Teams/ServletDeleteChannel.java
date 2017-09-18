@@ -4,6 +4,7 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -30,27 +31,30 @@ public class ServletDeleteChannel extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
-            Integer channel_id = sm.getIntParam("channel_id", true);
+            Integer channel_id = sm.getIntParam("channel_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
+            TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
+            if (!teamUser.isTeamOwner() && channel.getRoom_manager() != teamUser)
+                throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
                 if (shareableApp.getChannel() == channel) {
                     shareableAppsToRemove.add(shareableApp);
                 }
             }
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
             for (ShareableApp shareableApp : shareableAppsToRemove)
-                team.getAppManager().removeShareableApp(shareableApp, sm.getDB());
-            team.removeChannel(channel);
-            channel.delete(sm.getDB());
+                team.getAppManager().removeShareableApp(shareableApp, db);
+            channel.delete(db);
             db.commitTransaction(transaction);
+            team.removeChannel(channel);
             sm.deleteObject(channel);
             sm.saveOrUpdate(team);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.REMOVED, channel_id, channel.getOrigin()));

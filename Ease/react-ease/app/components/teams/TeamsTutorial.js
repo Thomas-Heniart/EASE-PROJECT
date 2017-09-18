@@ -89,7 +89,7 @@ class TeamsTutorial extends React.Component {
         skip={this.skipTutorial}
         validateStep={this.incrementStep}
         title="Rooms"
-        body="Rooms can be teams, topics or anything. They gather your company tools and the people to access them. #general is the one gathering everyone."
+        body="Rooms can be teams, topics or anything. They gather your company tools and the people to access them. #openspace is the one gathering everyone."
         step={this.state.step}
         button_text={'Next tip'}
         maxStep={this.state.maxStep}/>);
@@ -98,7 +98,7 @@ class TeamsTutorial extends React.Component {
         skip={this.skipTutorial}
         validateStep={this.incrementStep}
         title="Create Rooms"
-        body="Admins can create rooms. Any member can send tools and web accounts in it."
+        body="Admins can create rooms, also admins and room members can share tools and web accounts in them."
         step={this.state.step}
         button_text={'Next tip'}
         maxStep={this.state.maxStep}/>);

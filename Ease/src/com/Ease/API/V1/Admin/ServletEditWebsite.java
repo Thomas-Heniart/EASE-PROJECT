@@ -33,14 +33,14 @@ public class ServletEditWebsite extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Integer id = sm.getIntParam("id", true);
-            String name = sm.getStringParam("name", true);
-            String folder = sm.getStringParam("folder", true);
-            String login_url = sm.getStringParam("login_url", true);
-            String landing_url = sm.getStringParam("landing_url", true);
-            JSONArray teams = (JSONArray) sm.getParam("teams", false);
-            Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true));
-            Boolean integrated = sm.getBooleanParam("integrated", true);
+            Integer id = sm.getIntParam("id", true, false);
+            String name = sm.getStringParam("name", true, false);
+            String folder = sm.getStringParam("folder", true, false);
+            String login_url = sm.getStringParam("login_url", true, false);
+            String landing_url = sm.getStringParam("landing_url", true, false);
+            JSONArray teams = (JSONArray) sm.getParam("teams", false, false);
+            Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true, false));
+            Boolean integrated = sm.getBooleanParam("integrated", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id);
             DataBaseConnection db = sm.getDB();

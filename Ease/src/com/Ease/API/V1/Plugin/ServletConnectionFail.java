@@ -17,7 +17,7 @@ public class ServletConnectionFail extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String website = sm.getStringParam("website", true);
+            String website = sm.getStringParam("website", true, false);
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease support");
             mailJetBuilder.addTo("thomas@ease.space");

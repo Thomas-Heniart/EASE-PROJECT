@@ -27,7 +27,7 @@ public class ServletUpdateBillingInformation extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
@@ -39,27 +39,27 @@ public class ServletUpdateBillingInformation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You must enter a credit card first.");
             Card card = (Card) customer.getSources().retrieve(default_source);
             Map<String, Object> updateParams = new HashMap<>();
-            String address_city = sm.getStringParam("address_city", true);
+            String address_city = sm.getStringParam("address_city", true, true);
             if (address_city != null && !address_city.equals(""))
                 updateParams.put("address_city", address_city);
-            String address_country = sm.getStringParam("address_country", true);
+            String address_country = sm.getStringParam("address_country", true, true);
             if (address_country != null && !address_country.equals(""))
                 updateParams.put("address_country", address_country);
-            String address_line1 = sm.getStringParam("address_line1", true);
+            String address_line1 = sm.getStringParam("address_line1", true, true);
             if (address_line1 != null && !address_line1.equals(""))
                 updateParams.put("address_line1", address_line1);
-            String address_line2 = sm.getStringParam("address_line2", true);
+            String address_line2 = sm.getStringParam("address_line2", true, true);
             if (address_line2 != null && !address_line2.equals(""))
                 updateParams.put("address_line2", address_line2);
-            String address_state = sm.getStringParam("address_state", true);
+            String address_state = sm.getStringParam("address_state", true, true);
             if (address_state != null && !address_state.equals(""))
                 updateParams.put("address_state", address_state);
-            String address_zip = sm.getStringParam("address_zip", true);
+            String address_zip = sm.getStringParam("address_zip", true, true);
             if (address_zip != null && !address_zip.equals(""))
                 updateParams.put("address_zip", address_zip);
             card.update(updateParams);
             updateParams.clear();
-            String business_vat_id = sm.getStringParam("business_vat_id", true);
+            String business_vat_id = sm.getStringParam("business_vat_id", true, true);
             if (business_vat_id != null && !business_vat_id.equals(""))
                 updateParams.put("business_vat_id", business_vat_id);
             if (!updateParams.isEmpty())

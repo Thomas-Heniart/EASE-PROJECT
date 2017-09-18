@@ -31,23 +31,21 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            Integer channel_id = sm.getIntParam("channel_id", true);
-            Integer team_user_id = sm.getIntParam("team_user_id", true);
+            Integer channel_id = sm.getIntParam("channel_id", true, true);
+            Integer team_user_id = sm.getIntParam("team_user_id", true, true);
             if (channel_id == null && team_user_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
-            String app_name = sm.getStringParam("name", true);
-            Integer website_id = sm.getIntParam("website_id", true);
-            Integer reminderValue = Integer.parseInt(sm.getStringParam("reminder_interval", true));
-            String description = sm.getStringParam("description", false);
+            String app_name = sm.getStringParam("name", true, false);
+            Integer website_id = sm.getIntParam("website_id", true, false);
+            Integer reminderValue = Integer.parseInt(sm.getStringParam("reminder_interval", true, false));
+            String description = sm.getStringParam("description", false, true);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
-            if (reminderValue == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval is null.");
             if (description == null)
                 description = "";
             Channel channel = null;

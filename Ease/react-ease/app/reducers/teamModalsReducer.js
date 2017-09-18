@@ -1,11 +1,9 @@
 const initialState = {
   addUserModalActive: false,
   addChannelModalActive: false,
-  teamBrowseChannelsModalActive: false,
   teamSettingsModalActive: false,
-  teamChannelAddUserModal: {
-    active: false,
-    channel_id: -1
+  teamAddMultipleUsersModal:{
+    active: false
   },
   teamDeleteUserModal: {
     active: false,
@@ -142,12 +140,6 @@ export default function reducer(state=initialState, action){
         teamJoinMultiAppModal: action.payload
       }
     }
-    case 'SHOW_TEAM_BROWSE_CHANNELS_MODAL': {
-      return {
-          ...state,
-        teamBrowseChannelsModalActive: action.payload.active
-      }
-    }
     case 'SHOW_TEAM_SETTINGS_MODAL': {
       return {
           ...state,
@@ -182,6 +174,12 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         requestWebsiteModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL': {
+      return {
+          ...state,
+        teamAddMultipleUsersModal: action.payload
       }
     }
   }

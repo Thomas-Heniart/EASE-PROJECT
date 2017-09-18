@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by thomas on 09/05/2017.
@@ -22,8 +19,8 @@ public class ServletCheckTeamCreationDigits extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String email = sm.getStringParam("email", true);
-            String digits = sm.getStringParam("digits", true);
+            String email = sm.getStringParam("email", true, true);
+            String digits = sm.getStringParam("digits", true, true);
             if (email == null || email.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty email");
             if (digits == null || digits.equals(""))

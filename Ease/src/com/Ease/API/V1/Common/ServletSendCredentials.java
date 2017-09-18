@@ -20,10 +20,10 @@ public class ServletSendCredentials extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("INSERT INTO customerCredentialsReception VALUES (null, ?, ?, ?, ?, ?, default);");
             hibernateQuery.setParameter(1, sm.getUser().getEmail());
-            hibernateQuery.setParameter(2, sm.getStringParam("url", false));
-            hibernateQuery.setParameter(3, sm.getStringParam("login", false));
-            hibernateQuery.setParameter(4, sm.getStringParam("password", false));
-            hibernateQuery.setParameter(5, sm.getIntParam("serverPublicKey_id", false));
+            hibernateQuery.setParameter(2, sm.getStringParam("url", false, false));
+            hibernateQuery.setParameter(3, sm.getStringParam("login", false, false));
+            hibernateQuery.setParameter(4, sm.getStringParam("password", false, false));
+            hibernateQuery.setParameter(5, sm.getIntParam("serverPublicKey_id", false, false));
             hibernateQuery.executeUpdate();
             sm.setSuccess("Credentials sent");
         } catch (Exception e) {

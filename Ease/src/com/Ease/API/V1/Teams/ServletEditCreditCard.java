@@ -23,13 +23,13 @@ public class ServletEditCreditCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             if (team.getCustomer_id() == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You don't have credit card registered on Ease.space.");
-            String token = sm.getStringParam("token", false);
+            String token = sm.getStringParam("token", false, false);
             if (token == null || token.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid token.");
             Customer customer = Customer.retrieve(team.getCustomer_id());

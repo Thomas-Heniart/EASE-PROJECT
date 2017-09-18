@@ -3,7 +3,7 @@ var classnames = require('classnames');
 var api = require('../utils/api');
 var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var MultiTeamAppAdd = require('./MultiTeamAppAdd');
-import {requestWebsite} from "../actions/teamModalActions";
+import {requestWebsite, showPinTeamAppToDashboardModal} from "../actions/teamModalActions";
 import {connect} from "react-redux";
 import {selectUserFromListById} from "../utils/helperFunctions";
 import * as appActions from "../actions/appsActions";
@@ -164,6 +164,7 @@ class LinkTeamAppAdd extends React.Component {
     }
   }
   shareApp(){
+    let meSelected = false;
     var app = {
       name: this.state.appName,
       url: this.state.url,
@@ -177,9 +178,13 @@ class LinkTeamAppAdd extends React.Component {
     this.props.dispatch(appActions.teamCreateLinkApp(app)).then(response => {
       var id = response.id;
       var sharing = selectedUsers.map(function (item) {
+        if (this.props.my_id === item.id)
+          meSelected = true;
         return this.props.dispatch(appActions.teamShareApp(id, {team_user_id: item.id}));
       }, this);
       Promise.all(sharing).then(() => {
+        if (meSelected)
+          this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
         this.props.dispatch(closeAppAddUI());
       });
     });
@@ -220,26 +225,6 @@ class LinkTeamAppAdd extends React.Component {
       }
     }
     this.setState({users: users, selectedUsers: selectedUsers});
-  }
-  componentWillReceiveProps(props){
-    if (props != this.props){
-      var users = [];
-      if (props.selectedItem.type === 'channel'){
-        props.item.userIds.map(function(item){
-          var user = props.userSelectFunc(item);
-          user.selected = false;
-          users.push(user);
-        }, this);
-      } else {
-        var item = props.item;
-        item.selected = false;
-        users.push(item);
-      }
-      this.setState({
-        selectedUsers: [],
-        users: users
-      });
-    }
   }
   render(){
     return (
@@ -358,6 +343,13 @@ class SimpleTeamAppAdd extends React.Component {
     });
   }
   shareApp(){
+    let credentials = Object.keys(this.state.credentials);
+    let meSelected = false;
+
+    for (let i = 0; i < credentials.length; i++) {
+      if (this.state.credentials[credentials[i]].length === 0)
+        return;
+    }
     var app = {
       website_id: this.state.choosenApp.info.id,
       name: this.state.appName,
@@ -376,9 +368,13 @@ class SimpleTeamAppAdd extends React.Component {
     this.props.dispatch(appActions.teamCreateSingleApp(app)).then(response => {
       var id = response.id;
       var sharing = selectedUsers.map(function (item) {
+        if (this.props.my_id === item.id)
+          meSelected = true;
         return this.props.dispatch(appActions.teamShareApp(id, {team_user_id: item.id, can_see_information: item.can_see_information}));
       }, this);
       Promise.all(sharing).then(() => {
+        if (meSelected)
+          this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
         this.props.dispatch(closeAppAddUI());
       });
     });
@@ -391,27 +387,6 @@ class SimpleTeamAppAdd extends React.Component {
         this.setState({users: users});
         return;
       }
-    }
-  }
-  componentWillReceiveProps(props){
-    if (props !== this.props){
-      var users = [];
-      if (props.selectedItem.type === 'channel'){
-        props.item.userIds.map(function(item){
-          var user = {...props.userSelectFunc(item)};
-          user.selected = false;
-          users.push(user);
-        }, this);
-      } else {
-        var item = {...props.item};
-        item.selected = false;
-        item.can_see_information = true;
-        users.push(item);
-      }
-      this.setState({
-        selectedUsers: [],
-        users: users
-      });
     }
   }
   handleAppNameChange(event){
@@ -594,7 +569,8 @@ class SimpleTeamAppAdd extends React.Component {
     selectedItem: store.selection,
     team_id: store.team.id,
     addAppUI: store.teamAppsAddUI,
-    users: store.users.users
+    users: store.users.users,
+    my_id: store.team.myTeamUserId
   };
 })
 class TeamAppAddingUi extends React.Component {
@@ -610,6 +586,7 @@ class TeamAppAddingUi extends React.Component {
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
               item={item}
+              my_id={this.props.my_id}
               userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
               dispatch={this.props.dispatch}/>}
           {this.props.addAppUI.TeamLinkAppAddActive &&
@@ -617,6 +594,7 @@ class TeamAppAddingUi extends React.Component {
                   team_id={this.props.team_id}
                   selectedItem={this.props.selectedItem}
                   item={item}
+                  my_id={this.props.my_id}
                   userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
                   dispatch={this.props.dispatch}/>}
           {this.props.addAppUI.TeamMultiAppAddActive &&
@@ -624,6 +602,7 @@ class TeamAppAddingUi extends React.Component {
               team_id={this.props.team_id}
               selectedItem={this.props.selectedItem}
               item={item}
+              my_id={this.props.my_id}
               userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
               dispatch={this.props.dispatch}/>}
         </div>

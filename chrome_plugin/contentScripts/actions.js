@@ -100,44 +100,8 @@ var actions = {
             if (iteration % 20 == 0) {
                 console.log("-- waiting for element(s) " + div + " --");
             }
-        }, 100);
+        }, 200);
     },
-    /* waitfor:function(msg, callback, sendResponse){
-        var div = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
-        var time = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].time;
-        if(!time){time = 100;}
-        var iteration = 0;
-
-        function waitfor(callback){
-        if(typeof div === 'string'){div = [div];}
-            var absent = true;
-            for(var i in div){
-                var obj = $(div[i]);
-                if(obj.length>0){
-                    absent = false;
-                    break;
-                }
-            }
-            if(iteration % 20 == 0){
-                console.log("-- waiting for element "+div[0]+" --");
-            }
-            if (iteration > 100){
-                msg.type = "error: connection too long";
-                sendResponse(msg);
-                errorOverlay(msg);
-            } else if(absent){
-                setTimeout(function(){
-                    iteration ++;
-                    waitfor(callback);
-                }, time);
-            } else {
-                msg.actionStep++;
-                callback(msg, sendResponse);
-            }
-        }
-
-        waitfor(callback);
-    }, */
     setattr: function (msg, callback, sendResponse) {
         var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
         var input = $(actionStep.search);
@@ -189,7 +153,8 @@ var actions = {
         }
     },
     fill: function (msg, callback, sendResponse) {
-        var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
+        var actionStep
+            = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
         var input = $(actionStep.search);
         if (input.length == 0) {
             if (actionStep.grave == true) {
@@ -210,13 +175,26 @@ var actions = {
                 callback(msg, sendResponse);
             }
         } else {
+            var jInput = $(input[0]);
             input[0].focus();
-            input.select();
-            input.click();
+            jInput.select();
+            jInput.click();
             fire_before_fill(input[0]);
             input[0].value = msg.detail[0].user[actionStep.what];
             fire_onchange(input[0]);
             input[0].blur();
+            jInput.prop("readonly", true);
+            jInput.focus(function () {
+                $(this).prop("readonly", false)
+            });
+            if (jInput.attr("type") === "password") {
+                var fakePwd = $("<input type=\"password\" " +
+                    "style=\"position: absolute; border:none;width:0px;height:0px;background-color:white;overflow: hidden; opacity: 0;\" />");
+                fakePwd.insertBefore(jInput);
+                fakePwd.focus(function() {
+                    $(this).next().focus();
+                });
+            }
             msg.actionStep++;
             callback(msg, sendResponse);
         }

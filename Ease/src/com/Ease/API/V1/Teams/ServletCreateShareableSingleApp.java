@@ -35,20 +35,20 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            Integer website_id = sm.getIntParam("website_id", true);
-            JSONArray account_information = (JSONArray) sm.getParam("account_information", false);
-            Integer channel_id = sm.getIntParam("channel_id", true);
-            Integer team_user_id = sm.getIntParam("team_user_id", true);
+            Integer website_id = sm.getIntParam("website_id", true, false);
+            JSONArray account_information = (JSONArray) sm.getParam("account_information", false, false);
+            Integer channel_id = sm.getIntParam("channel_id", true, true);
+            Integer team_user_id = sm.getIntParam("team_user_id", true, true);
             if (channel_id == null && team_user_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
-            String app_name = sm.getStringParam("name", true);
-            String description = sm.getStringParam("description", true);
-            Integer reminderInterval = Integer.parseInt(sm.getStringParam("reminder_interval", true));
+            String app_name = sm.getStringParam("name", true, false);
+            String description = sm.getStringParam("description", true, true);
+            Integer reminderInterval = Integer.parseInt(sm.getStringParam("reminder_interval", true, true));
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (description == null)

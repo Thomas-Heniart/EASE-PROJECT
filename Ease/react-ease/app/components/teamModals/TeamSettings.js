@@ -442,7 +442,7 @@ class TeamAccount extends React.Component {
             </Header>
             <div style={{marginBottom:'1rem'}}>
               While you are in free trial or have a credit card set up, your account is activated.<br/>
-              Our subscription system is made so that you do not have to worry about unsubscription, you can unsuscribe at anytime. At the beginning of each 30 day period you are billed for the period, so if you unsuscribe you won’t own us anything and the monthly billing will stop instantly.
+              Our subscription system is made so that you do not have to worry about unsubscription, you can unsuscribe at anytime. At the beginning of each 30 day period you are billed for the period, so if you unsuscribe you won’t owe us anything and the monthly billing will stop instantly.
             </div>
             {!this.state.modifying &&
             <div class="overflow-hidden">
@@ -537,6 +537,8 @@ class TeamSettings extends React.Component {
   }
   componentDidMount(){
     this.props.dispatch(fetchTeamPaymentInformation());
+    if (this.props.match.isExact)
+      this.props.history.replace(`${this.props.match.url}/information`);
   }
   render() {
     return (

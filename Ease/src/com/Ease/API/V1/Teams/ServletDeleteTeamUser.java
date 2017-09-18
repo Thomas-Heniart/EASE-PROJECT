@@ -3,6 +3,7 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -32,11 +33,11 @@ public class ServletDeleteTeamUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer team_user_id = sm.getIntParam("team_user_id", true);
+            Integer team_user_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_delete = team.getTeamUserWithId(team_user_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
@@ -50,6 +51,7 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     forEmail.put(app);
                 }
             }
+            System.out.println("Email apps size: " + forEmail.length());
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
@@ -60,6 +62,12 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 mailJetBuilder.addVariable("team_name", team.getName());
                 mailJetBuilder.addVariable("apps", forEmail);
                 mailJetBuilder.sendEmail();
+            }
+            for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
+                if (channel.getRoom_manager() == teamUser_to_delete) {
+                    channel.setRoom_manager(teamUser_connected);
+                    sm.saveOrUpdate(channel);
+                }
             }
             for (TeamUser teamUser : team.getTeamUsers()) {
                 if (teamUser.getAdmin_id() == null)

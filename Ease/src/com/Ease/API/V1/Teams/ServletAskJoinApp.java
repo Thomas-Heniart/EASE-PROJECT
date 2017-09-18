@@ -29,19 +29,22 @@ public class ServletAskJoinApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer app_id = sm.getIntParam("app_id", true);
+            Integer app_id = sm.getIntParam("app_id", true, false);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = shareableApp.getChannel();
             if (channel != null && !(channel.getTeamUsers().contains(teamUser)))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel");
             shareableApp.addPendingTeamUser(teamUser, sm.getDB());
-            String url = (channel == null) ? ("@" + teamUser.getDb_id()) : channel.getDb_id().toString();
-            shareableApp.getTeamUser_owner().addNotification(teamUser.getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
+            String url = ((channel == null) ? ("@" + teamUser.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + ((App) shareableApp).getDBid();
+            if (channel != null) {
+                channel.getRoom_manager().addNotification(teamUser.getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
+            } else
+                shareableApp.getTeamUser_owner().addNotification(teamUser.getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {

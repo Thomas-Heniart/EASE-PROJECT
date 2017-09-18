@@ -29,10 +29,10 @@ public class ServletAcceptSharedApp extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeTeamUser();
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer app_id = sm.getIntParam("shared_app_id", true);
+            Integer app_id = sm.getIntParam("shared_app_id", true, false);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
             if (teamUser != sharedApp.getTeamUser_tenant())

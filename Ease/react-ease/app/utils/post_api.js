@@ -44,6 +44,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     createChannel: function (ws_id, team_id, name, purpose) {
@@ -67,6 +69,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     askJoinChannel: function (ws_id, team_id, channel_id){
@@ -119,6 +123,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     verifyTeamUser: function(ws_id, team_id, team_user_id){
@@ -209,7 +215,9 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(r => {
         return r.data;
-      })
+      }).catch(err => {
+        throw err.response.data;
+      });
     },
     editPhoneNumber: function (ws_id, team_id, team_user_id, phone){
       return axios.post('/api/v1/teams/EditTeamUserPhoneNumber', {
@@ -541,6 +549,17 @@ module.exports = {
       return axios.post('/api/v1/teams/Unsubscribe', {
         team_id: team_id,
         password: password
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    }
+  },
+  dashboard: {
+    createProfile : function({name}){
+      return axios.post('/api/v1/dashboard/CreateProfile', {
+        name: name
       }).then(response => {
         return response.data;
       }).catch(err => {

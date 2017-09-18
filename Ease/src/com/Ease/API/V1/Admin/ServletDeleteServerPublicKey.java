@@ -17,7 +17,7 @@ public class ServletDeleteServerPublicKey extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Integer id = sm.getIntParam("id", false);
+            Integer id = sm.getIntParam("id", false, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("DELETE FROM customerCredentialsReception WHERE serverPublicKey_id = ?");
             hibernateQuery.setParameter(1, id);
