@@ -94,7 +94,7 @@ public class ServletCreateTeam extends HttpServlet {
             if (job_index < jobRoles.length - 1)
                 jobTitle = jobRoles[job_index];
             else
-                jobTitle = sm.getStringParam("job_tilte", true, false);
+                jobTitle = sm.getStringParam("job_details", true, false);
             owner.setJobTitle(jobTitle);
             owner.setDeciphered_teamKey(teamKey);
             owner.setUser_id(user.getDBid());
