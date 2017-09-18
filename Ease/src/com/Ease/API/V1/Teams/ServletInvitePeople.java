@@ -27,12 +27,12 @@ public class ServletInvitePeople extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            String email1 = sm.getStringParam("email1", true);
-            String email2 = sm.getStringParam("email2", true);
-            String email3 = sm.getStringParam("email3", true);
+            String email1 = sm.getStringParam("email1", true, false);
+            String email2 = sm.getStringParam("email2", true, false);
+            String email3 = sm.getStringParam("email3", true, false);
             if (email1 == null || email2 == null || email3 == null || email1.equals("") || email2.equals("") || email3.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "One or more emails are empty");
             if (!Regex.isEmail(email1))

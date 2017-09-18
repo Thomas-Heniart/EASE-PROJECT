@@ -2,8 +2,8 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.CodeGenerator;
+import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -25,7 +25,7 @@ public class ServletAskTeamCreation extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            String email = sm.getStringParam("email", true);
+            String email = sm.getStringParam("email", true, true);
             if (email == null || email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
             DataBaseConnection db = sm.getDB();

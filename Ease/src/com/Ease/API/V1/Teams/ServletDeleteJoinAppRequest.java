@@ -25,10 +25,10 @@ public class ServletDeleteJoinAppRequest extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
-            Integer pending_teamUser_id = sm.getIntParam("team_user_id", true);
-            Integer app_id = sm.getIntParam("app_id", true);
+            Integer pending_teamUser_id = sm.getIntParam("team_user_id", true, false);
+            Integer app_id = sm.getIntParam("app_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);

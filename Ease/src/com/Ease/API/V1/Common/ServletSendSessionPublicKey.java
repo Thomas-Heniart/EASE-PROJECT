@@ -16,7 +16,7 @@ public class ServletSendSessionPublicKey extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String sessionPublicKey = sm.getStringParam("publicKey", false);
+            String sessionPublicKey = sm.getStringParam("publicKey", false, false);
             sm.getSession().setAttribute("publicKey", sessionPublicKey);
             JSONObject res = new JSONObject();
             res.put("publicKey", sm.getContextAttr("publicKey"));

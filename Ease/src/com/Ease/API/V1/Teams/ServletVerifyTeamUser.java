@@ -23,12 +23,12 @@ public class ServletVerifyTeamUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT publicKey FROM userKeys JOIN users ON users.key_id = userKeys.id WHERE users.id = ?");

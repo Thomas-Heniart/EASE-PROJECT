@@ -23,7 +23,7 @@ public class ServletAskRegistrationEdhec extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String email = sm.getStringParam("email", true);
+            String email = sm.getStringParam("email", true, true);
             if (email == null || email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             if (!email.endsWith("@edhec.com"))

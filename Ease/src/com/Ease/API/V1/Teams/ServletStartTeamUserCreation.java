@@ -36,21 +36,21 @@ public class ServletStartTeamUserCreation extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
-            String email = sm.getStringParam("email", true);
-            String username = sm.getStringParam("username", true);
-            Integer role = sm.getIntParam("role", true);
-            if (email == null || email.equals("") || !Regex.isEmail(email))
+            String email = sm.getStringParam("email", true, false);
+            String username = sm.getStringParam("username", true, false);
+            Integer role = sm.getIntParam("role", true, false);
+            if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             checkUsernameIntegrity(username);
             if (role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
-            String first_name = sm.getStringParam("first_name", true);
-            String last_name = sm.getStringParam("last_name", true);
+            String first_name = sm.getStringParam("first_name", true, false);
+            String last_name = sm.getStringParam("last_name", true, false);
             HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id FROM teamUsers WHERE email = ? AND team_id = ?;");
             query.setParameter(1, email);
@@ -63,7 +63,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (!query.list().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
-            String departure_date_string = sm.getStringParam("departure_date", true);
+            String departure_date_string = sm.getStringParam("departure_date", true, false);
             Date departure_date = null;
             if (departure_date_string != null && !departure_date_string.equals("")) {
                 departure_date = departure_format.parse(departure_date_string);

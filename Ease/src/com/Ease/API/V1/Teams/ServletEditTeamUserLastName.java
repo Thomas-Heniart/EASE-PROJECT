@@ -26,16 +26,16 @@ public class ServletEditTeamUserLastName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if  (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
-            String lastName = sm.getStringParam("last_name", true);
+            String lastName = sm.getStringParam("last_name", true, true);
             if (lastName == null || lastName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty lastName.");
             teamUserToModify.editLastName(lastName);

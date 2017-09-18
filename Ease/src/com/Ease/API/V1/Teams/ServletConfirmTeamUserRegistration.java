@@ -1,11 +1,8 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -24,11 +21,11 @@ public class ServletConfirmTeamUserRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser admin = sm.getTeamUserForTeam(team);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             team.validateTeamUserRegistration(admin.getDeciphered_teamKey(), teamUser, sm.getDB());

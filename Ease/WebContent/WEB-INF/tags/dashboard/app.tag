@@ -34,7 +34,7 @@
         logwith=""
         data-type="${app.getType()}">
         <div class="linkImage">
-            <c:if test='${app.havePerm("DELETE")}'>
+            <c:if test='${app.havePerm("DELETE") && app.isPinned() eq false}'>
                 <div class="showAppActionsButton">
                     <i class="fa fa-cog"></i>
                 </div>

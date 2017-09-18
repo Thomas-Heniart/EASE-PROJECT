@@ -28,23 +28,23 @@ public class ServletPinAppToDashboard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer app_id = sm.getIntParam("shared_app_id", true);
+            Integer app_id = sm.getIntParam("shared_app_id", true, false);
             SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             if (teamUser != sharedApp.getTeamUser_tenant())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot pin this app to your dashboard.");
             User user = sm.getUser();
-            Integer profile_id = sm.getIntParam("profile_id", true);
+            Integer profile_id = sm.getIntParam("profile_id", true, false);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             if (profile_id == -1)
                 sharedApp.unpin(db);
             else {
-                String name = sm.getStringParam("app_name", true);
+                String name = sm.getStringParam("app_name", true, false);
                 if (name == null || name.equals(""))
                     throw new HttpServletException(HttpStatus.BadRequest, "You cannot leave name empty.");
                 Profile profile = user.getDashboardManager().getProfile(profile_id);

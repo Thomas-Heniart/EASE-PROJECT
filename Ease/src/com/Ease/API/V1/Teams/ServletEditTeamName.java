@@ -22,11 +22,11 @@ public class ServletEditTeamName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true));
+            Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true, false));
             sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            String name = (String) sm.getParam("name", true);
+            String name = (String) sm.getParam("name", true, true);
             if (name == null || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
             Team otherTeam = teamManager.getTeamWithName(name);

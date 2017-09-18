@@ -31,12 +31,12 @@ public class ServletRegistrationIeseg extends HttpServlet {
             User user = sm.getUser();
             if (user != null)
                 user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
-            String username = sm.getStringParam("username", true);
-            String email = sm.getStringParam("email", true);
-            String password = sm.getStringParam("password", false);
-            String digits = sm.getStringParam("digits", false);
-            Long registration_date = sm.getLongParam("registration_date", true);
-            Boolean send_news = sm.getBooleanParam("newsletter", true);
+            String username = sm.getStringParam("username", true, true);
+            String email = sm.getStringParam("email", true, true);
+            String password = sm.getStringParam("password", false, true);
+            String digits = sm.getStringParam("digits", false, true);
+            Long registration_date = sm.getLongParam("registration_date", true, true);
+            Boolean send_news = sm.getBooleanParam("newsletter", true, true);
             JSONObject errors = new JSONObject();
             if (username == null || username.length() < 2 || username.length() > 30)
                 errors.put("username", "Invalid username");

@@ -59,47 +59,47 @@ public class PostServletManager extends ServletManager {
 
     @Override
     protected Date getCurrentTime() throws HttpServletException {
-        Long timestamp = this.getLongParam("timestamp", false);
-        if (timestamp == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing current time.");
+        Long timestamp = this.getLongParam("timestamp", false, false);
         return new Date(timestamp);
     }
 
-    public Object getParam(String paramName, boolean saveInLogs) {
+    public Object getParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         Object param = params.get(paramName);
+        if (param == null && !canBeNull)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter: " + paramName);
         if (param != null && saveInLogs)
             args.put(paramName, param.toString());
         return param;
     }
 
-    public String getStringParam(String paramName, boolean saveInLogs) throws HttpServletException {
+    public String getStringParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return (String) getParam(paramName, saveInLogs);
+            return (String) getParam(paramName, saveInLogs, canBeNull);
         } catch (ClassCastException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
         }
 
     }
 
-    public Long getLongParam(String paramName, boolean saveInLogs) throws HttpServletException {
+    public Long getLongParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return (Long) getParam(paramName, saveInLogs);
+            return (Long) getParam(paramName, saveInLogs, canBeNull);
         } catch (ClassCastException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Long).");
         }
     }
 
-    public Integer getIntParam(String paramName, boolean saveInLogs) throws HttpServletException {
-        Long param = getLongParam(paramName, saveInLogs);
+    public Integer getIntParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
+        Long param = getLongParam(paramName, saveInLogs, canBeNull);
         if (param == null)
             return null;
         else
             return Math.toIntExact(param);
     }
 
-    public Boolean getBooleanParam(String paramName, boolean saveInLogs) throws HttpServletException {
+    public Boolean getBooleanParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return (Boolean) this.getParam(paramName, saveInLogs);
+            return (Boolean) this.getParam(paramName, saveInLogs, canBeNull);
         } catch (ClassCastException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Boolean).");
         }
@@ -117,12 +117,12 @@ public class PostServletManager extends ServletManager {
         if (this.webSocketMessages.isEmpty())
             return;
         try {
-            String ws_id = this.getStringParam("ws_id", false);
+            String ws_id = this.getStringParam("ws_id", false, true);
             if (ws_id == null || ws_id.equals("-1"))
                 return;
-            Integer team_id = this.getIntParam("team_id", false);
+            Integer team_id = this.getIntParam("team_id", false, true);
             if (team_id != null) {
-                Integer channel_id = this.getIntParam("channel_id", false);
+                Integer channel_id = this.getIntParam("channel_id", false, true);
                 Team team = this.getTeamUserForTeamId(team_id).getTeam();
                 System.out.println("WebSocketMessage to team " + team_id);
                 if (channel_id == null) {

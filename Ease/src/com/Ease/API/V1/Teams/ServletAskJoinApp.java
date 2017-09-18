@@ -29,11 +29,11 @@ public class ServletAskJoinApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer app_id = sm.getIntParam("app_id", true);
+            Integer app_id = sm.getIntParam("app_id", true, false);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = shareableApp.getChannel();

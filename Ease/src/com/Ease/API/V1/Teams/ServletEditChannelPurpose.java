@@ -24,13 +24,13 @@ public class ServletEditChannelPurpose extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer channel_id = sm.getIntParam("channel_id", true);
+            Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
-            String purpose = sm.getStringParam("purpose", true);
+            String purpose = sm.getStringParam("purpose", true, true);
             if (purpose == null)
                 purpose = "";
             channel.editPurpose(purpose);

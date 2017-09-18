@@ -19,7 +19,7 @@ public class ServletAddServerPublicKey extends HttpServlet {
             sm.needToBeEaseAdmin();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("INSERT INTO serverPublicKeys VALUES (null, ?, ?, default);");
-            hibernateQuery.setParameter(1, sm.getStringParam("publicKey", false));
+            hibernateQuery.setParameter(1, sm.getStringParam("publicKey", false, false));
             hibernateQuery.setParameter(2, sm.getUser().getEmail());
             hibernateQuery.executeUpdate();
             hibernateQuery.commit();

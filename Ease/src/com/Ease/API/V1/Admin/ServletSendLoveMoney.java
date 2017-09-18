@@ -22,10 +22,10 @@ public class ServletSendLoveMoney extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer credit = sm.getIntParam("credit", true);
+            Integer credit = sm.getIntParam("credit", true, false);
             if (credit < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Don't be an asshole ^^ ");
             team.increaseAccountBalance(credit, sm.getHibernateQuery());

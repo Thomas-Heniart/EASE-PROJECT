@@ -506,8 +506,8 @@ public class Team {
         return webSocketManager;
     }
 
-    public Channel createDefaultChannel(Integer owner_id) {
-        this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide apps and tools sharing", owner_id);
+    public Channel createDefaultChannel(TeamUser owner) {
+        this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide apps and tools sharing", owner);
         return this.default_channel;
     }
 

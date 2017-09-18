@@ -27,7 +27,7 @@ public class ServletReloadTeam extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            Integer team_id = sm.getIntParam("team_id", true);
+            Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             String team_key = null;
