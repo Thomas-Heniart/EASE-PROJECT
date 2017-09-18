@@ -125,6 +125,18 @@ input[type=number]::-webkit-inner-spin-button {
   position: inherit;
 }
 
+.max-border-radius {
+  border-radius: 100%;
+}
+
+.ui.input.max-border-radius input {
+  border-radius: 500px;
+}
+
+.ui.fluid.search > .input {
+  width: 100%;
+}
+
 .ui.checkbox.mini {
   font-size: inherit;
 }
@@ -501,6 +513,11 @@ input.checkbox_unstyle[type=checkbox] {
 .display-inline-block {
   display: inline-block;
 }
+
+.full_height {
+  height: 100%
+}
+
 .full_width {
   width: 100%;
 }
@@ -751,7 +768,11 @@ body {
 }
 
 .display_flex {
-  @include display-flex();
+  display: -webkit-box !important;
+  display: -webkit-flex !important;
+  display: -moz-flex !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
 }
 
 .full_flex {

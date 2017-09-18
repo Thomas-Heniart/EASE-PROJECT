@@ -1,9 +1,9 @@
 var React = require('react');
-var classnames = require('classnames');
 import {connect} from "react-redux";
 import {showAddTeamChannelModal} from "../actions/teamModalActions";
 import * as channelActions from "../actions/channelActions";
 import {renderUserLabel} from "../utils/renderHelpers";
+import {withRouter} from "react-router-dom";
 import { Header, Container, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
 @connect((store)=>{
@@ -36,19 +36,6 @@ class TeamAddChannelModal extends React.Component {
     this.dropdownChange = this.dropdownChange.bind(this);
     this.inputChange = this.inputChange.bind(this);
   }
-  componentWillReceiveProps(nextProps){
-    if (this.props.users !== nextProps.users){
-      var options = nextProps.users.map(item => {
-        return {
-          key: item.id,
-          text: item.username + ' - ' + item.first_name + ' ' + item.last_name,
-          username: item.username,
-          value: item.id
-        }
-      });
-      this.setState({options: options});
-    }
-  }
   validateChannelCreation(e){
     e.preventDefault();
     const name = this.state.name;
@@ -63,6 +50,7 @@ class TeamAddChannelModal extends React.Component {
       }, this);
       Promise.all(addUserActions).then(() => {
         this.props.dispatch(showAddTeamChannelModal(false));
+        this.props.history.push(`/teams/${this.props.match.params.teamId}/${channel_id}`);
       });
     }).catch(err => {
       this.setState({loading: false, errorMessage: err})
@@ -129,4 +117,4 @@ class TeamAddChannelModal extends React.Component {
   }
 }
 
-module.exports = TeamAddChannelModal;
+module.exports = withRouter(TeamAddChannelModal);
