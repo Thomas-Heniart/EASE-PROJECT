@@ -11,7 +11,6 @@ import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Notification.NotificationManager;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -625,10 +624,6 @@ public class User {
             Integer team_id = rs.getInt(2);
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            for (Channel channel : team.getChannels()) {
-                if (!channel.getTeamUsers().isEmpty())
-                    System.out.println("Is that broken ? " + (!team.getTeamUsers().contains(channel.getTeamUsers().get(0))));
-            }
             this.teamUsers.add(teamUser);
             teamUser.setDashboard_user(this);
             if (teamUser.isVerified() && !teamUser.isDisabled()) {

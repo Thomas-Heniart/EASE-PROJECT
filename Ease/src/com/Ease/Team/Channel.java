@@ -2,14 +2,14 @@ package com.Ease.Team;
 
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -37,12 +37,12 @@ public class Channel {
     private TeamUser room_manager;
 
     @ManyToMany
-    @JoinTable(name = "channelAndTeamUserMap", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "team_user_id")})
-    protected List<TeamUser> teamUsers = new LinkedList<>();
+    @JoinTable(name = "channelAndTeamUserMap", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "team_user_id"))
+    protected Set<TeamUser> teamUsers = ConcurrentHashMap.newKeySet();
 
     @ManyToMany
-    @JoinTable(name = "pendingJoinChannelRequests", joinColumns = {@JoinColumn(name = "channel_id")}, inverseJoinColumns = {@JoinColumn(name = "teamUser_id")})
-    private List<TeamUser> pending_teamUsers = new LinkedList<>();
+    @JoinTable(name = "pendingJoinChannelRequests", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "teamUser_id"))
+    private Set<TeamUser> pending_teamUsers = ConcurrentHashMap.newKeySet();
 
     @Transient
     private WebSocketManager webSocketManager = new WebSocketManager();
@@ -97,23 +97,23 @@ public class Channel {
         this.room_manager = room_manager;
     }
 
-    public List<TeamUser> getTeamUsers() {
-        if (this.teamUsers == null)
-            this.teamUsers = new LinkedList<>();
+    public Set<TeamUser> getTeamUsers() {
+        if (teamUsers == null)
+            teamUsers = ConcurrentHashMap.newKeySet();
         return teamUsers;
     }
 
-    public void setTeamUsers(List<TeamUser> teamUsers) {
+    public void setTeamUsers(Set<TeamUser> teamUsers) {
         this.teamUsers = teamUsers;
     }
 
-    public List<TeamUser> getPending_teamUsers() {
-        if (this.pending_teamUsers == null)
-            this.pending_teamUsers = new LinkedList<>();
+    public Set<TeamUser> getPending_teamUsers() {
+        if (pending_teamUsers == null)
+            pending_teamUsers = ConcurrentHashMap.newKeySet();
         return pending_teamUsers;
     }
 
-    public void setPending_teamUsers(List<TeamUser> pending_teamUsers) {
+    public void setPending_teamUsers(Set<TeamUser> pending_teamUsers) {
         this.pending_teamUsers = pending_teamUsers;
     }
 
@@ -123,10 +123,10 @@ public class Channel {
 
     public void addTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         try {
-            if (this.getTeamUsers().contains(teamUser))
+            if (this.teamUsers.contains(teamUser))
                 throw new HttpServletException(HttpStatus.BadRequest, "This channel already contains this user");
             int transaction = db.startTransaction();
-            if (this.getPending_teamUsers().contains(teamUser))
+            if (this.pending_teamUsers.contains(teamUser))
                 this.removePendingTeamUser(teamUser, db);
             DatabaseRequest request = db.prepareRequest("INSERT INTO channelAndTeamUserMap values (null, ?, ?);");
             request.setInt(this.getDb_id());
@@ -146,7 +146,7 @@ public class Channel {
     public void removeTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         System.out.println("Remove contains teamUser: " + this.getTeamUsers().contains(teamUser));
         try {
-            if (this.getPending_teamUsers().contains(teamUser))
+            if (this.pending_teamUsers.contains(teamUser))
                 this.removePendingTeamUser(teamUser, db);
             else {
                 DatabaseRequest request = db.prepareRequest("DELETE FROM channelAndTeamUserMap WHERE team_user_id = ? AND channel_id = ?;");
@@ -163,14 +163,14 @@ public class Channel {
     }
 
     private void addPendingTeamUser(TeamUser teamUser) {
-        this.getPending_teamUsers().add(teamUser);
+        this.pending_teamUsers.add(teamUser);
     }
 
     public void addPendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
         try {
-            if (this.getTeamUsers().contains(teamUser))
+            if (this.teamUsers.contains(teamUser))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already in this channel");
-            if (this.getPending_teamUsers().contains(teamUser))
+            if (this.pending_teamUsers.contains(teamUser))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already pending for this channel");
             DatabaseRequest request = db.prepareRequest("INSERT INTO pendingJoinChannelRequests VALUE (null, ?, ?);");
             request.setInt(this.getDb_id());
@@ -183,7 +183,7 @@ public class Channel {
     }
 
     private void removePendingTeamUser(TeamUser teamUser) {
-        this.getPending_teamUsers().remove(teamUser);
+        this.pending_teamUsers.remove(teamUser.getDb_id());
     }
 
     public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
@@ -242,36 +242,14 @@ public class Channel {
         this.purpose = purpose;
     }
 
-    @Override
-    public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder();
-        hcb.append(this.db_id);
-        return hcb.toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof TeamUser))
-            return false;
-        TeamUser teamUser = (TeamUser) obj;
-        EqualsBuilder eb = new EqualsBuilder();
-        eb.append(this.db_id, teamUser.db_id);
-        return eb.isEquals();
-    }
-
     public void delete(DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
             List<TeamUser> teamUsersToRemove = new LinkedList<>();
             teamUsersToRemove.addAll(this.getTeamUsers());
             teamUsersToRemove.addAll(this.getPending_teamUsers());
-            System.out.println("TeamUsers size: " + teamUsersToRemove.size());
-            for (TeamUser teamUser : teamUsersToRemove) {
+            for (TeamUser teamUser : teamUsersToRemove)
                 this.removeTeamUser(teamUser, db);
-            }
-
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);

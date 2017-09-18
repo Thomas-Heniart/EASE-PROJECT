@@ -1,37 +1,25 @@
 package com.Ease.Utils.Crypto;
 
+import com.Ease.Context.Variables;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
+import org.apache.tomcat.util.codec.binary.Base64;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.collections4.keyvalue.AbstractMapEntry;
-import org.apache.tomcat.util.codec.binary.Base64;
-
-import com.Ease.Context.OnStart;
-import com.Ease.Context.Variables;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 public class RSA {
 

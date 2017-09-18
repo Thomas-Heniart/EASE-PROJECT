@@ -31,7 +31,7 @@ public class ServletReloadTeam extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             String team_key = null;
-            for (TeamUser teamUser : team.getTeamUsers()) {
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.getDeciphered_teamKey() == null || teamUser.getDeciphered_teamKey().equals("") || (teamUser.getState() != 3))
                     continue;
                 team_key = teamUser.getDeciphered_teamKey();
@@ -46,7 +46,7 @@ public class ServletReloadTeam extends HttpServlet {
                 team.getAppManager().setSharedApps(sharedApps);
             }
             db.commitTransaction(transaction);
-            for (Channel channel : team.getChannels()) {
+            for (Channel channel : team.getChannels().values()) {
                 if (!channel.getTeamUsers().isEmpty()) {
 
                 }

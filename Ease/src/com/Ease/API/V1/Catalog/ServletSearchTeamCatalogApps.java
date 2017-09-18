@@ -26,9 +26,11 @@ public class ServletSearchTeamCatalogApps extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team_id);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONArray jsonArray = new JSONArray();
-            if (search != null && !search.equals("")) {
-                for (Website website : catalog.getWebsites()) {
-                    if (website.isInCatalogForTeam(String.valueOf(team_id)) && website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.isIntegrated())
+            if (search == null)
+                search = "";
+            for (Website website : catalog.getWebsites()) {
+                if (search.equals("") || (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.isIntegrated())) {
+                    if (website.isInCatalogForTeam(String.valueOf(team_id)))
                         jsonArray.add(website.getSearchJson());
                 }
             }

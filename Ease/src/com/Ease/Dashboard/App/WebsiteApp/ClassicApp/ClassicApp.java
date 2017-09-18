@@ -262,7 +262,7 @@ public class ClassicApp extends WebsiteApp {
             int transaction = db.startTransaction();
             super.modifyShareable(db, editJson, sharedApp);
             this.getAccount().edit(editJson, db);
-            for (SharedApp app : this.sharedApps)
+            for (SharedApp app : this.sharedApps.values())
                 ((ClassicApp) app).getAccount().edit(editJson, db);
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
@@ -276,10 +276,9 @@ public class ClassicApp extends WebsiteApp {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
-        Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
+        Boolean canSeeInformation = (Boolean) params.get("can_see_information");
         if (canSeeInformation == null)
             canSeeInformation = false;
-        //elevator.put("canSeeInformation", canSeeInformation);
         Integer websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);

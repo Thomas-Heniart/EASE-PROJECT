@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by thomas on 09/06/2017.
@@ -42,6 +44,22 @@ public class ServletDeleteTeamUser extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
+            List<Channel> channelList = new LinkedList<>();
+            for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
+                if (channel.getRoom_manager() == teamUser_to_delete)
+                    channelList.add(channel);
+            }
+            if (!channelList.isEmpty()) {
+                String message = "You cannot delete this user because he is still room manager for ";
+                for (Channel channel : channelList) {
+                    message += ("#" + channel.getName());
+                    if (channelList.indexOf(channel) == channelList.size() - 1)
+                        message += ".";
+                    else
+                        message += ", ";
+                }
+                throw new HttpServletException(HttpStatus.Forbidden, message);
+            }
             JSONArray forEmail = new JSONArray();
             for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser_to_delete)) {
                 App holder = (App) sharedApp.getHolder();
@@ -65,13 +83,7 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 mailJetBuilder.addVariable("apps", forEmail);
                 mailJetBuilder.sendEmail();
             }
-            for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
-                if (channel.getRoom_manager() == teamUser_to_delete) {
-                    channel.setRoom_manager(teamUser_connected);
-                    sm.saveOrUpdate(channel);
-                }
-            }
-            for (TeamUser teamUser : team.getTeamUsers()) {
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.getAdmin_id() == null)
                     continue;
                 if (teamUser.getAdmin_id().equals(teamUser_to_delete.getDb_id())) {

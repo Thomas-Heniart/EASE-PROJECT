@@ -38,7 +38,7 @@ public class ServletEditTeamUserUsername extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
             String username = sm.getStringParam("username", true, false);
             checkUsernameIntegrity(username);
-            for (TeamUser teamUser1 : team.getTeamUsers()) {
+            for (TeamUser teamUser1 : team.getTeamUsers().values()) {
                 if (teamUser1 == teamUserToModify)
                     continue;
                 if (teamUser1.getUsername().equals(username))

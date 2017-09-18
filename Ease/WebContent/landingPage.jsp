@@ -109,9 +109,9 @@
             <div class="six wide column">
                 <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;">mots de passe</span></br>hello apps</p>
                 <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;margin-bottom: 20px;">
-                    Une app est un compte web,</br>
-                    ajouté par vous ou partagé au sein de votre équipe.</br>
-                    Un clic suffit pour y accéder, directement connecté.</p>
+                    Les apps permettent d’accéder à ses comptes intuitivement,
+                    de les partager en équipe rapidement et  appliquer
+                    de bonnes pratiques de sécurité devient facile.</p>
                 <form id="formRedir" class="ui form" action="" method="post" onsubmit="return submitEmail()">
                     <div id="divInput" class="ui action fluid input" style="height: 50px;">
                         <input type="email" name="email" placeholder="Entrez votre adresse email" required>

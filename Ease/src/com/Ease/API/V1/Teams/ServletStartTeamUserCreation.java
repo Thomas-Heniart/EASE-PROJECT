@@ -63,7 +63,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (!query.list().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
-            String departure_date_string = sm.getStringParam("departure_date", true, false);
+            String departure_date_string = sm.getStringParam("departure_date", true, true);
             Date departure_date = null;
             if (departure_date_string != null && !departure_date_string.equals("")) {
                 departure_date = departure_format.parse(departure_date_string);

@@ -32,7 +32,7 @@ public class ServletEditRoomManager extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             Channel channel = team.getChannelWithId(channel_id);
             TeamUser new_room_manager = team.getTeamUserWithId(sm.getIntParam("team_user_id", true, false));
-            if (channel.getRoom_manager() != teamUser)
+            if (channel.getRoom_manager() != teamUser && !teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be the room manager to transfer the room manager.");
             if (!new_room_manager.isTeamAdmin() || !new_room_manager.isVerified())
                 throw new HttpServletException(HttpStatus.Forbidden, "New room manager must be verified and an admin of your team.");

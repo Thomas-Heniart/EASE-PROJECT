@@ -1,6 +1,12 @@
 package com.Ease.Servlet.BackOffice;
 
-import java.io.IOException;
+import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Context.Variables;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,15 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import com.Ease.Context.Variables;
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
 
 /**
  * Servlet implementation class GetWebsiteTags

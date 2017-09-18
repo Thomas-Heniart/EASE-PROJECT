@@ -50,7 +50,7 @@ public class ServletUnsubscribe extends HttpServlet {
             /* ===== Stripe end ===== */
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            for (TeamUser teamUser1 : team.getTeamUsers()) {
+            for (TeamUser teamUser1 : team.getTeamUsers().values()) {
                 if (teamUser1.getDashboard_user() != null)
                     teamUser1.getDashboard_user().getTeamUsers().remove(teamUser1);
                 for (SharedApp sharedApp : teamUser1.getSharedApps()) {
