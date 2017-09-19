@@ -16,7 +16,7 @@ import java.util.List;
  * Created by thomas on 03/05/2017.
  */
 public interface ShareableApp {
-    public SharedApp share(TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException;
+    public SharedApp share(TeamUser teamUser_tenant, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException;
 
     public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException;
 

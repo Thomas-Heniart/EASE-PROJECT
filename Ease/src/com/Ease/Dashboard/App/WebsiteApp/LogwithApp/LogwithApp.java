@@ -5,7 +5,6 @@ import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
@@ -172,7 +171,7 @@ public class LogwithApp extends WebsiteApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException {
+    public SharedApp share(TeamUser teamUser_tenant, Team team, JSONObject params, PostServletManager sm) throws GeneralException {
         throw new GeneralException(ServletManager.Code.ClientError, "You shouldn't be there");
     }
 }

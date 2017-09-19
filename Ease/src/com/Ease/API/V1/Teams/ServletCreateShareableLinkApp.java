@@ -59,7 +59,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             for (Object receiver : receivers) {
                 Integer receiver_id = Math.toIntExact((Long) receiver);
                 TeamUser teamUser_tenant = team.getTeamUserWithId(receiver_id);
-                SharedApp sharedApp = linkApp.share(teamUser_tenant, channel, team, new JSONObject(), sm);
+                SharedApp sharedApp = linkApp.share(teamUser_tenant, team, new JSONObject(), sm);
                 linkApp.addSharedApp(sharedApp);
                 if (teamUser_tenant != teamUser_owner) {
                     String notif_url = channel.getDb_id() + "?app_id=" + linkApp.getDBid();

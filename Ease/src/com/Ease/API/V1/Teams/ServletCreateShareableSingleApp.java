@@ -76,7 +76,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
                 JSONObject receiver_json = (JSONObject) receiver;
                 Integer receiver_id = Math.toIntExact((Long) receiver_json.get("team_user_id"));
                 TeamUser teamUser_tenant = team.getTeamUserWithId(receiver_id);
-                SharedApp sharedApp = classicApp.share(teamUser_tenant, channel, team, receiver_json, sm);
+                SharedApp sharedApp = classicApp.share(teamUser_tenant, team, receiver_json, sm);
                 if (teamUser_tenant == sm.getTeamUserForTeam(team))
                     sharedApp.accept(db);
                 else {

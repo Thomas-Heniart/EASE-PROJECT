@@ -7,6 +7,9 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -34,6 +37,7 @@ public class ServletEditSingleAppReceiver extends HttpServlet {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("can_see_information", sm.getParam("can_see_information", true, false));
             sharedApp.modifyShared(sm.getDB(), jsonObject);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, sharedApp.getHolder().getShareableJson(), sharedApp.getHolder().getOrigin()));
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);
