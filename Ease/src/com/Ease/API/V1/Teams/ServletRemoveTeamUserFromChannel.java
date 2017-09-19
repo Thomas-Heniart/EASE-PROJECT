@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/api/v1/teams/RemoveUserFromChannel")
 public class ServletRemoveTeamUserFromChannel extends HttpServlet {
@@ -42,13 +40,8 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             if (channel.getRoom_manager() == teamUser_to_remove)
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove the room manager.");
-            List<ShareableApp> shareableApps = team.getAppManager().getShareableAppsForTeamUser(teamUser_to_remove);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            for (ShareableApp shareableApp : shareableApps) {
-                if (shareableApp.getChannel() == channel)
-                    team.getAppManager().removeShareableApp(shareableApp, db);
-            }
             team.getAppManager().removeSharedAppsForTeamUserInChannel(teamUser_to_remove, channel, db);
             channel.removeTeamUser(teamUser_to_remove, sm.getDB());
             db.commitTransaction(transaction);

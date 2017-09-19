@@ -36,10 +36,7 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            Integer channel_id = sm.getIntParam("channel_id", true, true);
-            Integer team_user_id = sm.getIntParam("team_user_id", true, true);
-            if (channel_id == null && team_user_id == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
+            Integer channel_id = sm.getIntParam("channel_id", true, false);
             String app_name = sm.getStringParam("name", true, false);
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer reminderValue = Integer.parseInt(sm.getStringParam("reminder_interval", true, false));
@@ -48,18 +45,15 @@ public class ServletCreateShareableMultiApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (description == null)
                 description = "";
-            Channel channel = null;
-            if (channel_id != null) {
-                channel = team.getChannelWithId(channel_id);
-                if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
-                    throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
-            }
+            Channel channel = team.getChannelWithId(channel_id);
+            if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
+                throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, reminderValue, sm);
-            websiteApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
+            websiteApp.becomeShareable(sm.getDB(), team, channel, description);
             db.commitTransaction(transaction);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, websiteApp.getShareableJson(), websiteApp.getOrigin()));
             sm.setSuccess(websiteApp.getShareableJson());

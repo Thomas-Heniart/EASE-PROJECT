@@ -72,6 +72,14 @@ public class PostServletManager extends ServletManager {
         return param;
     }
 
+    public JSONObject getJsonParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
+        try {
+            return (JSONObject) getParam(paramName, saveInLogs, canBeNull);
+        } catch (ClassCastException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected JSON).");
+        }
+    }
+
     public String getStringParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
             return (String) getParam(paramName, saveInLogs, canBeNull);

@@ -111,15 +111,6 @@ public class AppManager {
         return shareableApp;
     }
 
-    public List<ShareableApp> getShareableAppsForTeamUser(TeamUser teamUser) {
-        List<ShareableApp> shareableApps = new LinkedList<>();
-        for (ShareableApp shareableApp : this.getShareableApps()) {
-            if (shareableApp.getTeamUser_owner() == teamUser)
-                shareableApps.add(shareableApp);
-        }
-        return shareableApps;
-    }
-
     public void removeShareableApp(ShareableApp shareableApp) {
         App app = (App) shareableApp;
         this.shareableApps.remove(app.getDBid());

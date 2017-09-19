@@ -1,12 +1,8 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
-import com.Ease.Utils.Servlets.PostServletManager;
-import org.json.simple.JSONArray;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,7 +17,8 @@ public class ServletGetTeamUserShareableApps extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true);
+            throw new HttpServletException(HttpStatus.Forbidden, "This servlet shouldn't be used anymore.");
+            /* Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
@@ -30,7 +27,7 @@ public class ServletGetTeamUserShareableApps extends HttpServlet {
             JSONArray shareableApps = new JSONArray();
             for (ShareableApp shareableApp : team.getAppManager().getShareableAppsForTeamUser(teamUser))
                 shareableApps.add(shareableApp.getShareableJson());
-            sm.setSuccess(shareableApps);
+            sm.setSuccess(shareableApps); */
         } catch (Exception e) {
             sm.setError(e);
         }

@@ -38,11 +38,8 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
-            Integer channel_id = sm.getIntParam("channel_id", true, true);
-            Integer team_user_id = sm.getIntParam("team_user_id", true, true);
+            Integer channel_id = sm.getIntParam("channel_id", true, false);
             JSONArray receivers = (JSONArray) sm.getParam("receivers", false, false);
-            if (channel_id == null && team_user_id == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot create this app here");
             String app_name = sm.getStringParam("name", true, false);
             String url = sm.getStringParam("url", true, false);
             String description = sm.getStringParam("description", false, true);
@@ -52,28 +49,23 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
             if (description == null)
                 description = "";
-            Channel channel = null;
-            if (channel_id != null) {
-                channel = team.getChannelWithId(channel_id);
+            Channel channel = team.getChannelWithId(channel_id);
                 if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
                     throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
-            }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, sm);
-            linkApp.becomeShareable(sm.getDB(), team, teamUser_owner, team_user_id, channel, description);
+            linkApp.becomeShareable(sm.getDB(), team, channel, description);
             for (Object receiver : receivers) {
                 Integer receiver_id = Math.toIntExact((Long) receiver);
                 TeamUser teamUser_tenant = team.getTeamUserWithId(receiver_id);
-                SharedApp sharedApp = linkApp.share(teamUser_owner, teamUser_tenant, channel, team, new JSONObject(), sm);
+                SharedApp sharedApp = linkApp.share(teamUser_tenant, channel, team, new JSONObject(), sm);
                 linkApp.addSharedApp(sharedApp);
                 if (teamUser_tenant != teamUser_owner) {
-                    String notif_url = ((channel == null) ? ("@" + teamUser_tenant.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + linkApp.getDBid();
+                    String notif_url = channel.getDb_id() + "?app_id=" + linkApp.getDBid();
                     teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + linkApp.getName() + " in " + (channel == null ? "your Personal Space" : ("#" + channel.getName())), notif_url, linkApp.getLogo(), sm.getTimestamp(), db);
                 }
             }
-            if (channel != null)
-                linkApp.setTeamUser_owner(channel.getRoom_manager());
             db.commitTransaction(transaction);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, linkApp.getShareableJson(), linkApp.getOrigin()));
             sm.setSuccess(linkApp.getShareableJson());

@@ -40,11 +40,8 @@ public class ServletAskJoinApp extends HttpServlet {
             if (channel != null && !(channel.getTeamUsers().contains(teamUser)))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel");
             shareableApp.addPendingTeamUser(teamUser, sm.getDB());
-            String url = ((channel == null) ? ("@" + teamUser.getDb_id()) : channel.getDb_id().toString()) + "?app_id=" + ((App) shareableApp).getDBid();
-            if (channel != null) {
-                channel.getRoom_manager().addNotification(teamUser.getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
-            } else
-                shareableApp.getTeamUser_owner().addNotification(teamUser.getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
+            String url = channel.getDb_id() + "?app_id=" + ((App) shareableApp).getDBid();
+            channel.getRoom_manager().addNotification(teamUser.getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {

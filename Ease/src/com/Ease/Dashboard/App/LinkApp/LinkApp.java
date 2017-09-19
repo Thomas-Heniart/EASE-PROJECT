@@ -173,7 +173,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
-        this.getHolder().modifyShareable(db, editJson, this);
+        throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify a shared link app");
     }
 
     @Override
@@ -189,7 +189,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
+    public SharedApp share(TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();

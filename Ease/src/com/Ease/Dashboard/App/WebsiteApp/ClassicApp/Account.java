@@ -42,7 +42,6 @@ public class Account {
         String publicKey = rs.getString("publicKey");
         String ciphered_privateKey = rs.getString("privateKey");
         Boolean mustBeReciphered = rs.getBoolean("mustBeReciphered");
-        Boolean canSeeInformation = rs.getBoolean("canSeeInformation");
         List<AccountInformation> infos = AccountInformation.loadInformations(db_id, db);
         Integer reminderValue = rs.getInt(Data.REMINDER_VALUE.ordinal());
         String reminderType = rs.getString(Data.REMINDER_TYPE.ordinal());
@@ -59,7 +58,6 @@ public class Account {
             account.setAdminNotified(rs.getBoolean("adminNotified"));
             account.setLastUpdatedDate(lastUpdatedDate);
         }
-        account.setCanSeeInformation(canSeeInformation);
         return account;
     }
 
@@ -74,7 +72,7 @@ public class Account {
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = sm.getUser().encrypt(privateKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, ?, ?, ?, ?, 0, 0, 0, 1);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, ?, ?, ?, ?, 0, 0, 0);");
         request.setBoolean(shared);
         if (reminderValue != null && reminderType != null) {
             request.setInt(reminderValue);
@@ -100,7 +98,7 @@ public class Account {
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0, 0, 0, 1);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0, 0, 0);");
         if (reminderValue != null) {
             request.setInt(reminderValue);
             request.setString("MONTH");
@@ -119,23 +117,21 @@ public class Account {
         return account;
     }
 
-    public static Account createSharedAccount(List<AccountInformation> information, String deciphered_teamKey, Boolean canSeeInformation, DataBaseConnection db) throws GeneralException {
+    public static Account createSharedAccount(List<AccountInformation> information, String deciphered_teamKey, DataBaseConnection db) throws GeneralException {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 0, 0, 0, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, null, null, ?, ?, 0, 0, 0);");
         request.setString(publicKey);
         request.setString(ciphered_key);
-        request.setBoolean(canSeeInformation);
         String db_id = request.set().toString();
         List<AccountInformation> accountInformationList = AccountInformation.createSharedAccountInformationList(db_id, information, publicKey, db);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, publicKey, ciphered_key, accountInformationList, true);
         account.setPrivateKey(privateKey);
         account.setLastUpdatedDate(new Date());
-        account.setCanSeeInformation(canSeeInformation);
         return account;
     }
 
@@ -150,7 +146,7 @@ public class Account {
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = AES.encrypt(privateKey, deciphered_teamKey);
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0, 0, 0, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, 0, default, ?, ?, ?, ?, 0, 0, 0);");
         request.setInt((reminderIntervalValue == null) ? 0 : reminderIntervalValue);
         request.setString("MONTH");
         request.setString(publicKey);
@@ -171,7 +167,7 @@ public class Account {
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
         String ciphered_key = sm.getUser().encrypt(privateKey);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0, 0, 0, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0, 0, 0);");
         request.setBoolean(shared);
         request.setString(publicKey);
         request.setString(ciphered_key);
@@ -309,14 +305,6 @@ public class Account {
 
     public void setAdminNotified(Boolean adminNotified) {
         this.adminNotified = adminNotified;
-    }
-
-    public Boolean canSeeInformation() {
-        return this.canSeeInformation;
-    }
-
-    public void setCanSeeInformation(Boolean canSeeInformation) {
-        this.canSeeInformation = canSeeInformation;
     }
 
     public List<AccountInformation> getAccountInformations() {

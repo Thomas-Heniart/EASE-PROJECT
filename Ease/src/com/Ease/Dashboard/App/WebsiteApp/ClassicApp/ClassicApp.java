@@ -243,17 +243,11 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
-        try {
-            int transaction = db.startTransaction();
+            /* int transaction = db.startTransaction();
             super.modifyShared(db, editJson);
-            this.getAccount().edit(editJson, db);
-            Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
-            if (canSeeInformation != null)
-                this.setCanSeeInformation(canSeeInformation, db);
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+            this.getAccount().edit(editJson, db); */
+        Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
+        this.setCanSeeInformation(canSeeInformation, db);
     }
 
     @Override
@@ -272,17 +266,18 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
+    public SharedApp share(TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         Boolean canSeeInformation = (Boolean) params.get("can_see_information");
         if (canSeeInformation == null)
             canSeeInformation = false;
+        elevator.put("can_see_information", canSeeInformation);
         Integer websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, canSeeInformation, sm.getDB());
+        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(sharedAccount.getDBid());
