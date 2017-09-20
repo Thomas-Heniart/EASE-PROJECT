@@ -110,14 +110,6 @@ class SimpleTeamAppAdder extends Component {
       description: '',
       users: []
     };
-    this.state.users = this.props.item.userIds.map(item => {
-      const user = selectUserFromListById(item);
-      return {
-        key: item,
-        text: setUserDropdownText(user),
-        value: item
-      }
-    });
   };
   handleInput = handleSemanticInput.bind(this);
   handleCredentialInput = (e, {name, value}) => {
@@ -141,6 +133,17 @@ class SimpleTeamAppAdder extends Component {
       this.setState({app: app, credentials: credentials});
     });
   };
+  componentDidMount(){
+    let users = this.props.item.userIds.map(item => {
+      const user = selectUserFromListById(this.props.users, item);
+      return {
+        key: item,
+        text: setUserDropdownText(user),
+        value: item
+      }
+    });
+    this.setState({users: users});
+  }
   render(){
     const app = this.state.app;
     const credentialsInputs = this.state.credentials.map(item => {
