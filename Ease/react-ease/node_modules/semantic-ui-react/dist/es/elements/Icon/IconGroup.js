@@ -33,7 +33,7 @@ IconGroup._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? IconGroup.propTypes = {
+IconGroup.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -45,7 +45,7 @@ process.env.NODE_ENV !== "production" ? IconGroup.propTypes = {
 
   /** Size of the icon group. */
   size: PropTypes.oneOf(_without(SUI.SIZES, 'medium'))
-} : void 0;
+} : {};
 
 IconGroup.defaultProps = {
   as: 'i'

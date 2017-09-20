@@ -31,7 +31,7 @@ ListDescription._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? ListDescription.propTypes = {
+ListDescription.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,7 +43,7 @@ process.env.NODE_ENV !== "production" ? ListDescription.propTypes = {
 
   /** Shorthand for primary content. */
   content: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 ListDescription.create = createShorthandFactory(ListDescription, function (content) {
   return { content: content };

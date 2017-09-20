@@ -103,7 +103,7 @@ Card.Header = CardHeader;
 Card.Meta = CardMeta;
 Card.handledProps = ['as', 'centered', 'children', 'className', 'color', 'description', 'extra', 'fluid', 'header', 'href', 'image', 'link', 'meta', 'onClick', 'raised'];
 export default Card;
-process.env.NODE_ENV !== "production" ? Card.propTypes = {
+Card.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -154,4 +154,4 @@ process.env.NODE_ENV !== "production" ? Card.propTypes = {
 
   /** A Card can be formatted to raise above the page. */
   raised: PropTypes.bool
-} : void 0;
+} : {};

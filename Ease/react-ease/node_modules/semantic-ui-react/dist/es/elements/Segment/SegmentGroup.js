@@ -39,7 +39,7 @@ SegmentGroup._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? SegmentGroup.propTypes = {
+SegmentGroup.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -66,6 +66,6 @@ process.env.NODE_ENV !== "production" ? SegmentGroup.propTypes = {
 
   /** Formatted to show it contains multiple pages. */
   stacked: PropTypes.bool
-} : void 0;
+} : {};
 
 export default SegmentGroup;

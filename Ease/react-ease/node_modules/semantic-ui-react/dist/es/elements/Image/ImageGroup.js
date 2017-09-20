@@ -31,7 +31,7 @@ ImageGroup._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? ImageGroup.propTypes = {
+ImageGroup.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,6 +43,6 @@ process.env.NODE_ENV !== "production" ? ImageGroup.propTypes = {
 
   /** A group of images can be formatted to have the same size. */
   size: PropTypes.oneOf(SUI.SIZES)
-} : void 0;
+} : {};
 
 export default ImageGroup;

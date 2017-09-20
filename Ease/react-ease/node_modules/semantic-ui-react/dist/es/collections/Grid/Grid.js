@@ -50,7 +50,7 @@ Grid._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? Grid.propTypes = {
+Grid.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -101,6 +101,6 @@ process.env.NODE_ENV !== "production" ? Grid.propTypes = {
 
   /** A grid can specify its vertical alignment to have all its columns vertically centered. */
   verticalAlign: PropTypes.oneOf(SUI.VERTICAL_ALIGNMENTS)
-} : void 0;
+} : {};
 
 export default Grid;

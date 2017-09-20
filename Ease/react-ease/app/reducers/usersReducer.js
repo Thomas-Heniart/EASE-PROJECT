@@ -206,7 +206,7 @@ export default function reducer(state={
       }
     }
     case 'TEAM_USER_REMOVED': {
-      var users = state.users;
+      let users = state.users;
 
       for (var i = 0; i < users.length; i++){
         if (users[i].id === action.payload.user.id){
@@ -218,10 +218,23 @@ export default function reducer(state={
         }
       }
     }
+    case 'TEAM_ROOM_REMOVED': {
+      const room_id = action.payload.channel.id;
+      const users = state.users.map(item => {
+        const idx = item.channel_ids.indexOf(room_id);
+        if (idx !== -1)
+          item.channel_ids.splice(idx, 1);
+        return item;
+      });
+      return {
+        ...state,
+        users: users
+      }
+    }
     case 'DELETE_TEAM_CHANNEL_FULFILLED': {
-      var users = state.users.map(item => {
+      let users = state.users.map(item => {
         const idx = item.channel_ids.indexOf(action.payload.channel_id);
-        if (idx != -1)
+        if (idx !== -1)
           item.channel_ids.splice(idx, 1);
         return item;
       });

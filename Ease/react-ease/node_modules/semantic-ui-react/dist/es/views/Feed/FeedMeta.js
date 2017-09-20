@@ -45,7 +45,7 @@ FeedMeta._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? FeedMeta.propTypes = {
+FeedMeta.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -60,6 +60,6 @@ process.env.NODE_ENV !== "production" ? FeedMeta.propTypes = {
 
   /** Shorthand for FeedLike. */
   like: customPropTypes.itemShorthand
-} : void 0;
+} : {};
 
 export default FeedMeta;

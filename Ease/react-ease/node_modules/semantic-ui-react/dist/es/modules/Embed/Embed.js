@@ -136,7 +136,7 @@ Embed._meta = {
 };
 Embed.handledProps = ['active', 'as', 'aspectRatio', 'autoplay', 'brandedUI', 'children', 'className', 'color', 'defaultActive', 'hd', 'icon', 'id', 'iframe', 'onClick', 'placeholder', 'source', 'url'];
 export default Embed;
-process.env.NODE_ENV !== "production" ? Embed.propTypes = {
+Embed.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -192,4 +192,4 @@ process.env.NODE_ENV !== "production" ? Embed.propTypes = {
 
   /** Specifies a url to use for embed. */
   url: customPropTypes.every([customPropTypes.disallow(['source']), PropTypes.string])
-} : void 0;
+} : {};

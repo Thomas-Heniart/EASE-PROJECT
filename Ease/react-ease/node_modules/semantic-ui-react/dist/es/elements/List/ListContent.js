@@ -46,7 +46,7 @@ ListContent._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? ListContent.propTypes = {
+ListContent.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -70,7 +70,7 @@ process.env.NODE_ENV !== "production" ? ListContent.propTypes = {
 
   /** An element inside a list can be vertically aligned. */
   verticalAlign: PropTypes.oneOf(SUI.VERTICAL_ALIGNMENTS)
-} : void 0;
+} : {};
 
 ListContent.create = createShorthandFactory(ListContent, function (content) {
   return { content: content };

@@ -31,7 +31,7 @@ StepTitle._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? StepTitle.propTypes = {
+StepTitle.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,6 +43,6 @@ process.env.NODE_ENV !== "production" ? StepTitle.propTypes = {
 
   /** Shorthand for primary content. */
   title: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 export default StepTitle;

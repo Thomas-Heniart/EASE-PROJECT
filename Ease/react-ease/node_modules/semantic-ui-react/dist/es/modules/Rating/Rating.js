@@ -142,7 +142,7 @@ var _initialiseProps = function _initialiseProps() {
 };
 
 export default Rating;
-process.env.NODE_ENV !== "production" ? Rating.propTypes = {
+Rating.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -181,4 +181,4 @@ process.env.NODE_ENV !== "production" ? Rating.propTypes = {
 
   /** A progress bar can vary in size. */
   size: PropTypes.oneOf(_without(SUI.SIZES, 'medium', 'big'))
-} : void 0;
+} : {};

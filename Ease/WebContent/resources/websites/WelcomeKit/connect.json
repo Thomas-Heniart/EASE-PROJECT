@@ -1,0 +1,36 @@
+{
+  "name":"WelcomeKit",
+  "lastLogin":"",
+  "home":"https://www.welcomekit.co/users/sign_in",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url":"https://www.welcomekit.co/users/sign_in"},
+      {
+        "action": "waitfor",
+        "search": "#user_email"
+      },
+      {"action":"fill", "what":"login", "search":"#user_email", "grave":true},
+      {
+        "action": "waitfor",
+        "search": "#user_password"
+      },
+      {"action":"fill", "what":"password", "search":"#user_password", "grave":true},
+      {
+        "action": "waitfor",
+        "search": "#new_user .btn"
+      },
+      {"action":"click", "search":"#new_user .btn", "grave":true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href='/users/sign_out']", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":".main-header-logo"}
+  ],
+  "checkChangeLogin":[
+    {"action":"click", "search":"#loginbutton"}
+  ]
+}

@@ -118,7 +118,7 @@ Dimmer._meta = {
 Dimmer.Dimmable = DimmerDimmable;
 Dimmer.handledProps = ['active', 'as', 'children', 'className', 'content', 'disabled', 'inverted', 'onClick', 'onClickOutside', 'page', 'simple'];
 export default Dimmer;
-process.env.NODE_ENV !== "production" ? Dimmer.propTypes = {
+Dimmer.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -161,7 +161,7 @@ process.env.NODE_ENV !== "production" ? Dimmer.propTypes = {
 
   /** A dimmer can be controlled with simple prop. */
   simple: PropTypes.bool
-} : void 0;
+} : {};
 
 
 Dimmer.create = createShorthandFactory(Dimmer, function (value) {

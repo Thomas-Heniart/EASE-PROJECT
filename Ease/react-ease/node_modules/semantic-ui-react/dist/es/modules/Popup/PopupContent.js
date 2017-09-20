@@ -24,7 +24,7 @@ export default function PopupContent(props) {
 }
 
 PopupContent.handledProps = ['as', 'children', 'className'];
-process.env.NODE_ENV !== "production" ? PopupContent.propTypes = {
+PopupContent.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -33,7 +33,7 @@ process.env.NODE_ENV !== "production" ? PopupContent.propTypes = {
 
   /** Classes to add to the Popup content className. */
   className: PropTypes.string
-} : void 0;
+} : {};
 
 PopupContent._meta = {
   name: 'PopupContent',

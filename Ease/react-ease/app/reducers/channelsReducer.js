@@ -98,10 +98,22 @@ export default function reducer(state={
         channels: nChannels
       }
     }
+    case 'TEAM_USER_REMOVED': {
+      var nChannels = state.channels.map(function(item){
+        const index = item.userIds.indexOf(action.payload.user.id);
+        if (index !== -1)
+          item.userIds.splice(index, 1);
+        return item;
+      });
+      return {
+        ...state,
+        channels: nChannels
+      }
+    }
     case 'DELETE_TEAM_USER_FULFILLED': {
       var nChannels = state.channels.map(function(item){
         const index = item.userIds.indexOf(action.payload.team_user_id);
-        if (index != -1)
+        if (index !== -1)
           item.userIds.splice(index, 1);
         return item;
       });

@@ -54,7 +54,7 @@ StepGroup._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? StepGroup.propTypes = {
+StepGroup.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -84,6 +84,6 @@ process.env.NODE_ENV !== "production" ? StepGroup.propTypes = {
 
   /** A step can be displayed stacked vertically. */
   vertical: PropTypes.bool
-} : void 0;
+} : {};
 
 export default StepGroup;

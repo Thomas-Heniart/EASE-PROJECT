@@ -51,7 +51,7 @@ StatisticGroup._meta = {
   parent: 'Statistic'
 };
 
-process.env.NODE_ENV !== "production" ? StatisticGroup.propTypes = {
+StatisticGroup.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -78,6 +78,6 @@ process.env.NODE_ENV !== "production" ? StatisticGroup.propTypes = {
 
   /** A statistic group can have its items divided evenly. */
   widths: PropTypes.oneOf(SUI.WIDTHS)
-} : void 0;
+} : {};
 
 export default StatisticGroup;

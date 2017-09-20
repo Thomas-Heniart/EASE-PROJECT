@@ -72,7 +72,7 @@ BreadcrumbSection._meta = {
 };
 BreadcrumbSection.handledProps = ['active', 'as', 'children', 'className', 'content', 'href', 'link', 'onClick'];
 export default BreadcrumbSection;
-process.env.NODE_ENV !== "production" ? BreadcrumbSection.propTypes = {
+BreadcrumbSection.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -102,7 +102,7 @@ process.env.NODE_ENV !== "production" ? BreadcrumbSection.propTypes = {
    * @param {object} data - All props.
    */
   onClick: PropTypes.func
-} : void 0;
+} : {};
 
 
 BreadcrumbSection.create = createShorthandFactory(BreadcrumbSection, function (content) {

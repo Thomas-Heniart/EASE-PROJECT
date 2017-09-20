@@ -34,7 +34,7 @@ ModalContent._meta = {
   parent: 'Modal'
 };
 
-process.env.NODE_ENV !== "production" ? ModalContent.propTypes = {
+ModalContent.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -52,7 +52,7 @@ process.env.NODE_ENV !== "production" ? ModalContent.propTypes = {
 
   /** A modal can use the entire size of the screen. */
   scrolling: PropTypes.bool
-} : void 0;
+} : {};
 
 ModalContent.create = createShorthandFactory(ModalContent, function (content) {
   return { content: content };

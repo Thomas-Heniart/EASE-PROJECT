@@ -92,7 +92,7 @@ Table.defaultProps = {
   as: 'table'
 };
 
-process.env.NODE_ENV !== "production" ? Table.propTypes = {
+Table.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -184,7 +184,7 @@ process.env.NODE_ENV !== "production" ? Table.propTypes = {
 
   /** A table can adjust its text alignment. */
   verticalAlign: PropTypes.oneOf(SUI.VERTICAL_ALIGNMENTS)
-} : void 0;
+} : {};
 
 Table.Body = TableBody;
 Table.Cell = TableCell;

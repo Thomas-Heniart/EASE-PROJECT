@@ -78,7 +78,7 @@ Header._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? Header.propTypes = {
+Header.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -129,7 +129,7 @@ process.env.NODE_ENV !== "production" ? Header.propTypes = {
 
   /** Align header content. */
   textAlign: PropTypes.oneOf(SUI.TEXT_ALIGNMENTS)
-} : void 0;
+} : {};
 
 Header.Content = HeaderContent;
 Header.Subheader = HeaderSubheader;

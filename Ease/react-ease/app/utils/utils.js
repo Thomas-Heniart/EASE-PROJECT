@@ -14,14 +14,26 @@ export function isUrl(url){
 export function reflect(promise){
   return promise.then(function(v){ return {data:v, error: false }},
       function(e){ return {data:e, error: true }});
-};
+}
 
 export function handleSemanticInput(e, {name, value, checked}){
   if (checked !== undefined){
-    this.setState({[name]: checked});
+    this.setState({[name]: !checked});
     return;
   }
   this.setState({[name]: value});
+}
+
+export function transformWebsiteInfoIntoList(informations){
+  return Object.keys(informations)
+      .sort((a,b) => (informations[a].priority - informations[b].priority))
+      .map(item => {
+        return {
+          ...informations[item],
+          value: '',
+          name: item
+        };
+      });
 }
 
 export function getTeamAppPasswordAndCopyToClipboard({team_id, shared_app_id}){
@@ -103,6 +115,30 @@ export const teamUserRoles = {
   2: 'Admin',
   3: 'Owner'
 };
+
+export const passwordChangeValues = {
+  0: 'never',
+  1: "1 months",
+  3: "3 months",
+  6: "6 months",
+  12: "12 months"
+};
+
+export const credentialIconType = {
+  password: 'lock',
+  login: 'user',
+  team: 'slack',
+  storeName: 'shopping bag',
+  subdomain: 'link'
+};
+
+export const passwordChangeOptions = [
+  {key: 0, text: 'never', value: 0},
+  {key: 1, text: '1 months', value: 1},
+  {key: 3, text: '3 months', value: 3},
+  {key: 6, text: '6 months', value: 6},
+  {key: 12, text: '12 months', value: 12},
+];
 
 export const teamUserRoleValues = [
   {key: '1', text: 'member', value:1},

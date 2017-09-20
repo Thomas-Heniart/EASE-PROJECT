@@ -47,7 +47,7 @@ FeedLike.defaultProps = {
   as: 'a'
 };
 
-process.env.NODE_ENV !== "production" ? FeedLike.propTypes = {
+FeedLike.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -62,6 +62,6 @@ process.env.NODE_ENV !== "production" ? FeedLike.propTypes = {
 
   /** Shorthand for icon. Mutually exclusive with children. */
   icon: customPropTypes.itemShorthand
-} : void 0;
+} : {};
 
 export default FeedLike;

@@ -108,7 +108,7 @@ SearchResult._meta = {
 };
 SearchResult.handledProps = ['active', 'as', 'className', 'description', 'id', 'image', 'onClick', 'price', 'renderer', 'title'];
 export default SearchResult;
-process.env.NODE_ENV !== "production" ? SearchResult.propTypes = {
+SearchResult.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -148,4 +148,4 @@ process.env.NODE_ENV !== "production" ? SearchResult.propTypes = {
 
   /** Display title. */
   title: PropTypes.string
-} : void 0;
+} : {};

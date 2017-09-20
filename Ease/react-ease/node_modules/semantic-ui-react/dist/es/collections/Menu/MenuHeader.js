@@ -31,7 +31,7 @@ MenuHeader._meta = {
   parent: 'Menu'
 };
 
-process.env.NODE_ENV !== "production" ? MenuHeader.propTypes = {
+MenuHeader.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,6 +43,6 @@ process.env.NODE_ENV !== "production" ? MenuHeader.propTypes = {
 
   /** Shorthand for primary content. */
   content: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 export default MenuHeader;

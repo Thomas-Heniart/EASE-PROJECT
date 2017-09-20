@@ -129,6 +129,31 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 100%;
 }
 
+.ui.search.inverted {
+  .ui.icon.input > input {
+    padding: .67857143em 1em !important;
+    padding-left: 2.67142857em!important;
+  }
+  .ui.icon.input>i.icon {
+    left: 0;
+    right: inherit;
+  }
+}
+
+.ui.container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.ui.grid > .row {
+  display: inline-block;
+  float: left;
+  & > .column {
+    display: inline-block;
+    float: left;
+  }
+}
+
 .ui.input.max-border-radius input {
   border-radius: 500px;
 }
@@ -334,6 +359,12 @@ a.link-unstyle {
   margin-left: 0;
 }
 
+.ui.label {
+  i.icon:last-child {
+    margin-right: 0;
+  }
+}
+
 button.button-unstyle {
   background: inherit;
   text-decoration: none;
@@ -530,6 +561,10 @@ input.checkbox_unstyle[type=checkbox] {
 
 .display-flex {
   @include display-flex();
+}
+
+.display-inline-flex {
+  @include display-inline-flex();
 }
 
 .justify_content_center {
@@ -787,6 +822,7 @@ body {
 .flex_direction_column {
   @include flex-direction(column);
 }
+
 .mainBody {
   padding-top: 0px;
   background-color: white;

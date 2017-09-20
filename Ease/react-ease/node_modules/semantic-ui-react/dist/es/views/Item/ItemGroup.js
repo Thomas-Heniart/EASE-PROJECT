@@ -57,7 +57,7 @@ ItemGroup._meta = {
   parent: 'Item'
 };
 
-process.env.NODE_ENV !== "production" ? ItemGroup.propTypes = {
+ItemGroup.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -81,6 +81,6 @@ process.env.NODE_ENV !== "production" ? ItemGroup.propTypes = {
 
   /** Prevent items from stacking on mobile. */
   unstackable: PropTypes.bool
-} : void 0;
+} : {};
 
 export default ItemGroup;

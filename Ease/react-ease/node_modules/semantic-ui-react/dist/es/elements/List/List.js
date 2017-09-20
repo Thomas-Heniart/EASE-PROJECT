@@ -106,7 +106,7 @@ List.Icon = ListIcon;
 List.Item = ListItem;
 List.List = ListList;
 List.handledProps = ['animated', 'as', 'bulleted', 'celled', 'children', 'className', 'divided', 'floated', 'horizontal', 'inverted', 'items', 'link', 'onItemClick', 'ordered', 'relaxed', 'selection', 'size', 'verticalAlign'];
-process.env.NODE_ENV !== "production" ? List.propTypes = {
+List.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -165,7 +165,7 @@ process.env.NODE_ENV !== "production" ? List.propTypes = {
 
   /** An element inside a list can be vertically aligned. */
   verticalAlign: PropTypes.oneOf(SUI.VERTICAL_ALIGNMENTS)
-} : void 0;
+} : {};
 
 
 export default List;

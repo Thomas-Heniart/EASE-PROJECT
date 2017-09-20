@@ -185,7 +185,7 @@ Input._meta = {
   type: META.TYPES.ELEMENT
 };
 Input.handledProps = ['action', 'actionPosition', 'as', 'children', 'className', 'disabled', 'error', 'fluid', 'focus', 'icon', 'iconPosition', 'input', 'inverted', 'label', 'labelPosition', 'loading', 'onChange', 'size', 'tabIndex', 'transparent', 'type'];
-process.env.NODE_ENV !== "production" ? Input.propTypes = {
+Input.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -253,7 +253,7 @@ process.env.NODE_ENV !== "production" ? Input.propTypes = {
 
   /** The HTML input type. */
   type: PropTypes.string
-} : void 0;
+} : {};
 
 
 Input.create = createShorthandFactory(Input, function (type) {

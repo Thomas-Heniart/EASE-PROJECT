@@ -31,7 +31,7 @@ ItemExtra._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? ItemExtra.propTypes = {
+ItemExtra.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,7 +43,7 @@ process.env.NODE_ENV !== "production" ? ItemExtra.propTypes = {
 
   /** Shorthand for primary content. */
   content: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 ItemExtra.create = createShorthandFactory(ItemExtra, function (content) {
   return { content: content };

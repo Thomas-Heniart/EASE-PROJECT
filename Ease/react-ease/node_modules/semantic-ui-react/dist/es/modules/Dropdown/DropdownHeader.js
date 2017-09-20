@@ -41,7 +41,7 @@ DropdownHeader._meta = {
   type: META.TYPES.MODULE
 };
 
-process.env.NODE_ENV !== "production" ? DropdownHeader.propTypes = {
+DropdownHeader.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function) */
   as: customPropTypes.as,
 
@@ -56,7 +56,7 @@ process.env.NODE_ENV !== "production" ? DropdownHeader.propTypes = {
 
   /** Shorthand for Icon. */
   icon: customPropTypes.itemShorthand
-} : void 0;
+} : {};
 
 DropdownHeader.create = createShorthandFactory(DropdownHeader, function (content) {
   return { content: content };

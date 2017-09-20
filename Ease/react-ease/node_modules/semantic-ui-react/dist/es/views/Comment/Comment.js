@@ -39,7 +39,7 @@ Comment._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? Comment.propTypes = {
+Comment.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -51,7 +51,7 @@ process.env.NODE_ENV !== "production" ? Comment.propTypes = {
 
   /** Comment can be collapsed, or hidden from view. */
   collapsed: PropTypes.bool
-} : void 0;
+} : {};
 
 Comment.Author = CommentAuthor;
 Comment.Action = CommentAction;

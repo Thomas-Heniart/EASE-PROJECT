@@ -112,7 +112,7 @@ DropdownItem._meta = {
   type: META.TYPES.MODULE
 };
 DropdownItem.handledProps = ['active', 'as', 'children', 'className', 'content', 'description', 'disabled', 'flag', 'icon', 'image', 'label', 'onClick', 'selected', 'text', 'value'];
-process.env.NODE_ENV !== "production" ? DropdownItem.propTypes = {
+DropdownItem.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -165,7 +165,7 @@ process.env.NODE_ENV !== "production" ? DropdownItem.propTypes = {
 
   /** Stored value. */
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-} : void 0;
+} : {};
 
 
 DropdownItem.create = createShorthandFactory(DropdownItem, function (opts) {

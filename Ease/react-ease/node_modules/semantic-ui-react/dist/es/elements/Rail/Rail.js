@@ -38,7 +38,7 @@ Rail._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? Rail.propTypes = {
+Rail.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -65,6 +65,6 @@ process.env.NODE_ENV !== "production" ? Rail.propTypes = {
 
   /** A rail can have different sizes. */
   size: PropTypes.oneOf(_without(SUI.SIZES, 'medium'))
-} : void 0;
+} : {};
 
 export default Rail;

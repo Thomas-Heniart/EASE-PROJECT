@@ -51,7 +51,7 @@ FeedEvent._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? FeedEvent.propTypes = {
+FeedEvent.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -84,6 +84,6 @@ process.env.NODE_ENV !== "production" ? FeedEvent.propTypes = {
 
   /** Shorthand for FeedSummary. */
   summary: customPropTypes.itemShorthand
-} : void 0;
+} : {};
 
 export default FeedEvent;

@@ -34,7 +34,7 @@ MessageList._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? MessageList.propTypes = {
+MessageList.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -46,7 +46,7 @@ process.env.NODE_ENV !== "production" ? MessageList.propTypes = {
 
   /** Shorthand Message.Items. */
   items: customPropTypes.collectionShorthand
-} : void 0;
+} : {};
 
 MessageList.defaultProps = {
   as: 'ul'

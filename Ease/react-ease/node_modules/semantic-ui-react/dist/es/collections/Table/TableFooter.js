@@ -22,10 +22,10 @@ TableFooter._meta = {
   parent: 'Table'
 };
 
-process.env.NODE_ENV !== "production" ? TableFooter.propTypes = {
+TableFooter.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as
-} : void 0;
+} : {};
 
 TableFooter.defaultProps = {
   as: 'tfoot'

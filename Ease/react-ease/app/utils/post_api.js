@@ -432,8 +432,8 @@ module.exports = {
         first_name: first_name,
         last_name: last_name,
         username: username,
-        jobIndex: jobRole,
-        jobDetails: jobDetails,
+        job_index: jobRole,
+        job_details: jobDetails,
         digits: digits,
         timestamp: new Date().getTime()
       }).then(response => {

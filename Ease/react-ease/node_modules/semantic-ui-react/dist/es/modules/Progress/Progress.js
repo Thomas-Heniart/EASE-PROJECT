@@ -129,7 +129,7 @@ Progress._meta = {
   type: META.TYPES.MODULE
 };
 Progress.handledProps = ['active', 'as', 'attached', 'autoSuccess', 'children', 'className', 'color', 'disabled', 'error', 'indicating', 'inverted', 'label', 'percent', 'precision', 'progress', 'size', 'success', 'total', 'value', 'warning'];
-process.env.NODE_ENV !== "production" ? Progress.propTypes = {
+Progress.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -189,7 +189,7 @@ process.env.NODE_ENV !== "production" ? Progress.propTypes = {
 
   /** A progress bar can show a warning state. */
   warning: PropTypes.bool
-} : void 0;
+} : {};
 
 
 export default Progress;

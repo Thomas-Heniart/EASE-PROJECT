@@ -66,7 +66,7 @@ Item.Header = ItemHeader;
 Item.Image = ItemImage;
 Item.Meta = ItemMeta;
 
-process.env.NODE_ENV !== "production" ? Item.propTypes = {
+Item.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -93,6 +93,6 @@ process.env.NODE_ENV !== "production" ? Item.propTypes = {
 
   /** Shorthand for ItemMeta component. */
   meta: customPropTypes.itemShorthand
-} : void 0;
+} : {};
 
 export default Item;

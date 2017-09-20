@@ -3,7 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { customPropTypes, getElementType, getUnhandledProps, META, SUI, useKeyOnly, useOnlyProp, useTextAlignProp, useValueAndKey, useVerticalAlignProp, useWidthProp } from '../../lib';
+import { customPropTypes, createShorthandFactory, getElementType, getUnhandledProps, META, SUI, useKeyOnly, useOnlyProp, useTextAlignProp, useValueAndKey, useVerticalAlignProp, useWidthProp } from '../../lib';
 
 /**
  * A column sub-component for Grid.
@@ -43,7 +43,7 @@ GridColumn._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? GridColumn.propTypes = {
+GridColumn.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -88,6 +88,10 @@ process.env.NODE_ENV !== "production" ? GridColumn.propTypes = {
 
   /** Represents width of column. */
   width: PropTypes.oneOf(SUI.WIDTHS)
-} : void 0;
+} : {};
+
+GridColumn.create = createShorthandFactory(GridColumn, function (children) {
+  return { children: children };
+});
 
 export default GridColumn;

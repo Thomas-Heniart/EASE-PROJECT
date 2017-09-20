@@ -25,12 +25,12 @@ DropdownDivider._meta = {
   type: META.TYPES.MODULE
 };
 
-process.env.NODE_ENV !== "production" ? DropdownDivider.propTypes = {
+DropdownDivider.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
   /** Additional classes. */
   className: PropTypes.string
-} : void 0;
+} : {};
 
 export default DropdownDivider;

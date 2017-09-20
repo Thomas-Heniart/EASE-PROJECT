@@ -22,10 +22,10 @@ ItemImage._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? ItemImage.propTypes = {
+ItemImage.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An image may appear at different sizes. */
   size: Image.propTypes.size
-} : void 0;
+} : {};
 
 ItemImage.create = createShorthandFactory(ItemImage, function (src) {
   return { src: src };
