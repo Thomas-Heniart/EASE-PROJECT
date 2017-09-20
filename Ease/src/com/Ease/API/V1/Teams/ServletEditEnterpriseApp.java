@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -30,11 +31,11 @@ public class ServletEditEnterpriseApp extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
+            App app = (App) shareableApp;
+            if (!app.isEmpty())
+                throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject params = new JSONObject();
             String name = sm.getStringParam("name", true, false);
-            if (name.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "You must provide a name");
-            params.put("name", name);
             params.put("description", sm.getStringParam("description", false, false));
             params.put("password_change_interval", sm.getIntParam("password_change_interval", true, false));
             shareableApp.modifyShareable(sm.getDB(), params);

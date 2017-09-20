@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -34,6 +35,9 @@ public class ServletEditEnterpriseAppReceiver extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             SharedApp sharedApp = team.getAppManager().getSharedApp(shared_app_id);
+            App app = (App) sharedApp.getHolder();
+            if (!app.isEmpty())
+                throw new HttpServletException(HttpStatus.Forbidden);
             if (teamUser_connected != sharedApp.getTeamUser_tenant() && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot edit this app.");
             JSONObject account_information = sm.getJsonParam("account_information", false, true);

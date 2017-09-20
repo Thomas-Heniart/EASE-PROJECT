@@ -1,8 +1,11 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -28,6 +31,9 @@ public class ServletEditSingleAppReceiver extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             SharedApp sharedApp = team.getAppManager().getSharedApp(shared_app_id);
+            App app = (App) sharedApp.getHolder();
+            if (!app.isClassicApp())
+                throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("can_see_information", sm.getParam("can_see_information", true, false));
             sharedApp.modifyShared(sm.getDB(), jsonObject);

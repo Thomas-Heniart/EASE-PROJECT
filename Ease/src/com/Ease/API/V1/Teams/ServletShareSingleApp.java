@@ -39,13 +39,15 @@ public class ServletShareSingleApp extends HttpServlet {
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             App app = (App) shareableApp;
             if (!app.isClassicApp())
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid app_id");
+                throw new HttpServletException(HttpStatus.BadRequest);
             JSONObject params = new JSONObject();
             params.put("can_see_information", can_see_information);
             TeamUser teamUser_tenant = team.getTeamUserWithId(team_user_id);
             Channel channel = shareableApp.getChannel();
             if (!channel.getTeamUsers().contains(teamUser_tenant))
                 throw new HttpServletException(HttpStatus.Forbidden, "You can only share this app with people in this room.");
+            if (shareableApp.getTeamUser_tenants().contains(teamUser_tenant))
+                throw new HttpServletException(HttpStatus.BadRequest, "This user already have this app.");
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();

@@ -34,7 +34,7 @@ public class ServletEditLinkApp extends HttpServlet {
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             App app = (App) shareableApp;
             if (!app.isLinkApp())
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot edit this app.");
+                throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject params = new JSONObject();
             params.put("name", sm.getStringParam("name", true, false));
             params.put("description", sm.getStringParam("description", true, false));

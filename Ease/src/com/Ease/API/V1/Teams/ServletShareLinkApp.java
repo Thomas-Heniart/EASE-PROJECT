@@ -39,10 +39,12 @@ public class ServletShareLinkApp extends HttpServlet {
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
             App app = (App) shareableApp;
             if (!app.isLinkApp())
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot share this app.");
+                throw new HttpServletException(HttpStatus.Forbidden);
             Channel channel = shareableApp.getChannel();
             if (!channel.getTeamUsers().contains(teamUser_tenant))
                 throw new HttpServletException(HttpStatus.Forbidden, "You can only share this app with people in this room.");
+            if (shareableApp.getTeamUser_tenants().contains(teamUser_tenant))
+                throw new HttpServletException(HttpStatus.BadRequest, "This user already have this app.");
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();

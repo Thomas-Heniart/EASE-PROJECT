@@ -42,13 +42,10 @@ public class ServletCreateEnterpriseApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            String app_name = sm.getStringParam("name", true, false);
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer password_change_interval = sm.getIntParam("password_change_interval", true, false);
             String description = sm.getStringParam("description", false, false);
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
-            if (app_name.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             Channel channel = team.getChannelWithId(channel_id);
             if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
@@ -74,7 +71,7 @@ public class ServletCreateEnterpriseApp extends HttpServlet {
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(app_name, website, password_change_interval, sm);
+            WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(website.getName(), website, password_change_interval, sm);
             websiteApp.becomeShareable(sm.getDB(), team, channel, description);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             for (Object receiver : jsonArray) {

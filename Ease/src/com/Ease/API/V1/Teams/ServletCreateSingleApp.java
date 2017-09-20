@@ -46,11 +46,8 @@ public class ServletCreateSingleApp extends HttpServlet {
             JSONArray account_information = sm.getArrayParam("account_information", false, false);
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            String app_name = sm.getStringParam("name", true, false);
             String description = sm.getStringParam("description", true, true);
             Integer password_change_interval = sm.getIntParam("password_change_interval", true, false);
-            if (app_name == null || app_name.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (description == null)
                 description = "";
             if (account_information == null || account_information.isEmpty())
@@ -70,7 +67,7 @@ public class ServletCreateSingleApp extends HttpServlet {
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_connected, password_change_interval, sm);
+            ClassicApp classicApp = ClassicApp.createShareableClassicApp(website.getName(), website, accountInformationList, teamUser_connected, password_change_interval, sm);
             classicApp.becomeShareable(db, team, channel, description);
             for (Object receiver : receivers) {
                 JSONObject receiver_json = (JSONObject) receiver;
