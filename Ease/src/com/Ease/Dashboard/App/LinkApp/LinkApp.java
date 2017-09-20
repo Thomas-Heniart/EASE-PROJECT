@@ -165,6 +165,10 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return this.linkInfos;
     }
 
+    public boolean isLinkApp() {
+        return true;
+    }
+
     @Override
     public String getLogo() {
         return this.linkInfos.getImgUrl();

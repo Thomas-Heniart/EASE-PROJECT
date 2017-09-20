@@ -401,6 +401,10 @@ public class App implements ShareableApp, SharedApp {
         return false;
     }
 
+    public boolean isLinkApp() {
+        return false;
+    }
+
     public JSONArray getJSON(ServletManager sm) throws GeneralException {
         return new JSONArray();
     }

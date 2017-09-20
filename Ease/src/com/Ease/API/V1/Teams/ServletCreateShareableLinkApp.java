@@ -63,7 +63,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
                 linkApp.addSharedApp(sharedApp);
                 if (teamUser_tenant != teamUser_owner) {
                     String notif_url = channel.getDb_id() + "?app_id=" + linkApp.getDBid();
-                    teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + linkApp.getName() + " in " + (channel == null ? "your Personal Space" : ("#" + channel.getName())), notif_url, linkApp.getLogo(), sm.getTimestamp(), db);
+                    teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + linkApp.getName() + " in #" + channel.getName(), notif_url, linkApp.getLogo(), sm.getTimestamp(), db);
                 }
             }
             db.commitTransaction(transaction);
