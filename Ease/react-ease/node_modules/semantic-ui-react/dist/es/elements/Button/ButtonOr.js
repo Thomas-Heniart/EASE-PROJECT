@@ -26,7 +26,7 @@ ButtonOr._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? ButtonOr.propTypes = {
+ButtonOr.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -35,6 +35,6 @@ process.env.NODE_ENV !== "production" ? ButtonOr.propTypes = {
 
   /** Or buttons can have their text localized, or adjusted by using the text prop. */
   text: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-} : void 0;
+} : {};
 
 export default ButtonOr;

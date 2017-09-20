@@ -31,7 +31,7 @@ TableBody.defaultProps = {
   as: 'tbody'
 };
 
-process.env.NODE_ENV !== "production" ? TableBody.propTypes = {
+TableBody.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -40,6 +40,6 @@ process.env.NODE_ENV !== "production" ? TableBody.propTypes = {
 
   /** Additional classes. */
   className: PropTypes.string
-} : void 0;
+} : {};
 
 export default TableBody;

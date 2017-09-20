@@ -43,7 +43,7 @@ BreadcrumbDivider._meta = {
   parent: 'Breadcrumb'
 };
 
-process.env.NODE_ENV !== "production" ? BreadcrumbDivider.propTypes = {
+BreadcrumbDivider.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -58,7 +58,7 @@ process.env.NODE_ENV !== "production" ? BreadcrumbDivider.propTypes = {
 
   /** Render as an `Icon` component with `divider` class instead of a `div`. */
   icon: customPropTypes.itemShorthand
-} : void 0;
+} : {};
 
 BreadcrumbDivider.create = createShorthandFactory(BreadcrumbDivider, function (icon) {
   return { icon: icon };

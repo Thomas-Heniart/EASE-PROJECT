@@ -41,7 +41,7 @@ GridRow._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? GridRow.propTypes = {
+GridRow.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -77,6 +77,6 @@ process.env.NODE_ENV !== "production" ? GridRow.propTypes = {
 
   /** A row can specify its vertical alignment to have all its columns vertically centered. */
   verticalAlign: PropTypes.oneOf(SUI.VERTICAL_ALIGNMENTS)
-} : void 0;
+} : {};
 
 export default GridRow;

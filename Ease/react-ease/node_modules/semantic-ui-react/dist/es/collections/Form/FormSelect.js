@@ -26,13 +26,13 @@ FormSelect._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? FormSelect.propTypes = {
+FormSelect.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
   /** A FormField control prop. */
   control: FormField.propTypes.control
-} : void 0;
+} : {};
 
 FormSelect.defaultProps = {
   as: FormField,

@@ -32,7 +32,7 @@ Container._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? Container.propTypes = {
+Container.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -50,6 +50,6 @@ process.env.NODE_ENV !== "production" ? Container.propTypes = {
 
   /** Align container text. */
   textAlign: PropTypes.oneOf(SUI.TEXT_ALIGNMENTS)
-} : void 0;
+} : {};
 
 export default Container;

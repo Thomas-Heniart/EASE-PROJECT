@@ -31,7 +31,7 @@ DropdownMenu._meta = {
   type: META.TYPES.MODULE
 };
 
-process.env.NODE_ENV !== "production" ? DropdownMenu.propTypes = {
+DropdownMenu.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,6 +43,6 @@ process.env.NODE_ENV !== "production" ? DropdownMenu.propTypes = {
 
   /** A dropdown menu can scroll. */
   scrolling: PropTypes.bool
-} : void 0;
+} : {};
 
 export default DropdownMenu;

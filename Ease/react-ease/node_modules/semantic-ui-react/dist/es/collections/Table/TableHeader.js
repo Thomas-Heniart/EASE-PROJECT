@@ -35,7 +35,7 @@ TableHeader.defaultProps = {
   as: 'thead'
 };
 
-process.env.NODE_ENV !== "production" ? TableHeader.propTypes = {
+TableHeader.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -47,6 +47,6 @@ process.env.NODE_ENV !== "production" ? TableHeader.propTypes = {
 
   /** A definition table can have a full width header or footer, filling in the gap left by the first column. */
   fullWidth: PropTypes.bool
-} : void 0;
+} : {};
 
 export default TableHeader;

@@ -31,7 +31,7 @@ ModalHeader._meta = {
   parent: 'Modal'
 };
 
-process.env.NODE_ENV !== "production" ? ModalHeader.propTypes = {
+ModalHeader.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,7 +43,7 @@ process.env.NODE_ENV !== "production" ? ModalHeader.propTypes = {
 
   /** Shorthand for primary content. */
   content: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 ModalHeader.create = createShorthandFactory(ModalHeader, function (content) {
   return { content: content };

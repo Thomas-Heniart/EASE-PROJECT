@@ -51,7 +51,7 @@ FeedExtra._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? FeedExtra.propTypes = {
+FeedExtra.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -69,6 +69,6 @@ process.env.NODE_ENV !== "production" ? FeedExtra.propTypes = {
 
   /** An event can contain additional text information. */
   text: PropTypes.bool
-} : void 0;
+} : {};
 
 export default FeedExtra;

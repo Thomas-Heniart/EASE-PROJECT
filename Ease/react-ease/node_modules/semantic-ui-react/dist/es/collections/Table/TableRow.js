@@ -60,7 +60,7 @@ TableRow.defaultProps = {
   cellAs: 'td'
 };
 
-process.env.NODE_ENV !== "production" ? TableRow.propTypes = {
+TableRow.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -99,7 +99,7 @@ process.env.NODE_ENV !== "production" ? TableRow.propTypes = {
 
   /** A row may warn a user. */
   warning: PropTypes.bool
-} : void 0;
+} : {};
 
 TableRow.create = createShorthandFactory(TableRow, function (cells) {
   return { cells: cells };

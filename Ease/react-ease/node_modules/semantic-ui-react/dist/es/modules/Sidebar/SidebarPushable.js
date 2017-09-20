@@ -30,7 +30,7 @@ SidebarPushable._meta = {
   parent: 'Sidebar'
 };
 
-process.env.NODE_ENV !== "production" ? SidebarPushable.propTypes = {
+SidebarPushable.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -39,6 +39,6 @@ process.env.NODE_ENV !== "production" ? SidebarPushable.propTypes = {
 
   /** Additional classes. */
   className: PropTypes.string
-} : void 0;
+} : {};
 
 export default SidebarPushable;

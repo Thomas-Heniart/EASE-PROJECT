@@ -37,7 +37,7 @@ FormGroup._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? FormGroup.propTypes = {
+FormGroup.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -58,6 +58,6 @@ process.env.NODE_ENV !== "production" ? FormGroup.propTypes = {
 
   /** Fields Groups can specify their width in grid columns or automatically divide fields to be equal width. */
   widths: PropTypes.oneOf([].concat(_toConsumableArray(SUI.WIDTHS), ['equal']))
-} : void 0;
+} : {};
 
 export default FormGroup;

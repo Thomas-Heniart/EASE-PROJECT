@@ -26,13 +26,13 @@ ListIcon._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? ListIcon.propTypes = {
+ListIcon.propTypes = process.env.NODE_ENV !== "production" ? {
   /** Additional classes. */
   className: PropTypes.string,
 
   /** An element inside a list can be vertically aligned. */
   verticalAlign: PropTypes.oneOf(SUI.VERTICAL_ALIGNMENTS)
-} : void 0;
+} : {};
 
 ListIcon.create = createShorthandFactory(ListIcon, function (name) {
   return { name: name };

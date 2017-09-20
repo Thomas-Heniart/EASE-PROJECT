@@ -31,7 +31,7 @@ ListHeader._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? ListHeader.propTypes = {
+ListHeader.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,7 +43,7 @@ process.env.NODE_ENV !== "production" ? ListHeader.propTypes = {
 
   /** Shorthand for primary content. */
   content: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 ListHeader.create = createShorthandFactory(ListHeader, function (content) {
   return { content: content };

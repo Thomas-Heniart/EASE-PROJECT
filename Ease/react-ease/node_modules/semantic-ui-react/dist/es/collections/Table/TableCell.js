@@ -61,7 +61,7 @@ TableCell.defaultProps = {
   as: 'td'
 };
 
-process.env.NODE_ENV !== "production" ? TableCell.propTypes = {
+TableCell.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -112,7 +112,7 @@ process.env.NODE_ENV !== "production" ? TableCell.propTypes = {
 
   /** A table can specify the width of individual columns independently. */
   width: PropTypes.oneOf(SUI.WIDTHS)
-} : void 0;
+} : {};
 
 TableCell.create = createShorthandFactory(TableCell, function (content) {
   return { content: content };

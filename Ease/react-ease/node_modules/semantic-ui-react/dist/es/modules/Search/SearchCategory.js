@@ -41,7 +41,7 @@ SearchCategory.defaultProps = {
   }
 };
 
-process.env.NODE_ENV !== "production" ? SearchCategory.propTypes = {
+SearchCategory.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -67,6 +67,6 @@ process.env.NODE_ENV !== "production" ? SearchCategory.propTypes = {
 
   /** Array of Search.Result props. */
   results: PropTypes.array
-} : void 0;
+} : {};
 
 export default SearchCategory;

@@ -59,7 +59,7 @@ Breadcrumb._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? Breadcrumb.propTypes = {
+Breadcrumb.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -81,7 +81,7 @@ process.env.NODE_ENV !== "production" ? Breadcrumb.propTypes = {
 
   /** Size of Breadcrumb. */
   size: PropTypes.oneOf(_without(SUI.SIZES, 'medium'))
-} : void 0;
+} : {};
 
 Breadcrumb.Divider = BreadcrumbDivider;
 Breadcrumb.Section = BreadcrumbSection;

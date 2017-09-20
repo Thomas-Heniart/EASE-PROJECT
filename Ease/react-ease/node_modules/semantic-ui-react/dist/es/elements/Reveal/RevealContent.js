@@ -33,7 +33,7 @@ RevealContent._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? RevealContent.propTypes = {
+RevealContent.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -48,6 +48,6 @@ process.env.NODE_ENV !== "production" ? RevealContent.propTypes = {
 
   /** A reveal may contain content that is hidden before user interaction. */
   visible: PropTypes.bool
-} : void 0;
+} : {};
 
 export default RevealContent;

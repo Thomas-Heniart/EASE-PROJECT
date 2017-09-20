@@ -50,7 +50,7 @@ Statistic._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? Statistic.propTypes = {
+Statistic.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -83,7 +83,7 @@ process.env.NODE_ENV !== "production" ? Statistic.propTypes = {
 
   /** Value content of the Statistic. */
   value: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 Statistic.Group = StatisticGroup;
 Statistic.Label = StatisticLabel;

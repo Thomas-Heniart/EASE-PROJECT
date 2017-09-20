@@ -76,7 +76,7 @@ DropdownSearchInput._meta = {
   type: META.TYPES.MODULE
 };
 DropdownSearchInput.handledProps = ['as', 'className', 'inputRef', 'tabIndex', 'type', 'value'];
-process.env.NODE_ENV !== "production" ? DropdownSearchInput.propTypes = {
+DropdownSearchInput.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -94,7 +94,7 @@ process.env.NODE_ENV !== "production" ? DropdownSearchInput.propTypes = {
 
   /** Stored value. */
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-} : void 0;
+} : {};
 
 
 DropdownSearchInput.create = createShorthandFactory(DropdownSearchInput, function (type) {

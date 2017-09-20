@@ -117,7 +117,7 @@ Label.Detail = LabelDetail;
 Label.Group = LabelGroup;
 Label.handledProps = ['active', 'as', 'attached', 'basic', 'children', 'circular', 'className', 'color', 'content', 'corner', 'detail', 'empty', 'floating', 'horizontal', 'icon', 'image', 'onClick', 'onRemove', 'pointing', 'removeIcon', 'ribbon', 'size', 'tag'];
 export default Label;
-process.env.NODE_ENV !== "production" ? Label.propTypes = {
+Label.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -196,7 +196,7 @@ process.env.NODE_ENV !== "production" ? Label.propTypes = {
 
   /** A label can appear as a tag. */
   tag: PropTypes.bool
-} : void 0;
+} : {};
 
 
 Label.create = createShorthandFactory(Label, function (value) {

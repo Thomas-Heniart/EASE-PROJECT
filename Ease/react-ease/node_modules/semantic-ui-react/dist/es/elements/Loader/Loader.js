@@ -38,7 +38,7 @@ Loader._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? Loader.propTypes = {
+Loader.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -68,6 +68,6 @@ process.env.NODE_ENV !== "production" ? Loader.propTypes = {
 
   /** Loaders can have different sizes. */
   size: PropTypes.oneOf(SUI.SIZES)
-} : void 0;
+} : {};
 
 export default Loader;

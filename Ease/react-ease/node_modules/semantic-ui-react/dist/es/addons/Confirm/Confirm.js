@@ -100,7 +100,7 @@ Confirm._meta = {
   type: META.TYPES.ADDON
 };
 Confirm.handledProps = ['cancelButton', 'confirmButton', 'content', 'header', 'onCancel', 'onConfirm', 'open'];
-process.env.NODE_ENV !== "production" ? Confirm.propTypes = {
+Confirm.propTypes = process.env.NODE_ENV !== "production" ? {
   /** The cancel button text. */
   cancelButton: customPropTypes.itemShorthand,
 
@@ -131,7 +131,7 @@ process.env.NODE_ENV !== "production" ? Confirm.propTypes = {
 
   /** Whether or not the modal is visible. */
   open: PropTypes.bool
-} : void 0;
+} : {};
 
 
 export default Confirm;

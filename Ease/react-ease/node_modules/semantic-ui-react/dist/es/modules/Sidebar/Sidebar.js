@@ -89,7 +89,7 @@ Sidebar._meta = {
 Sidebar.Pushable = SidebarPushable;
 Sidebar.Pusher = SidebarPusher;
 Sidebar.handledProps = ['animation', 'as', 'children', 'className', 'defaultVisible', 'direction', 'visible', 'width'];
-process.env.NODE_ENV !== "production" ? Sidebar.propTypes = {
+Sidebar.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -113,7 +113,7 @@ process.env.NODE_ENV !== "production" ? Sidebar.propTypes = {
 
   /** Sidebar width. */
   width: PropTypes.oneOf(['very thin', 'thin', 'wide', 'very wide'])
-} : void 0;
+} : {};
 
 
 export default Sidebar;

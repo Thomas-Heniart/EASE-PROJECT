@@ -49,8 +49,71 @@ button.team_app_requests {
   }
 }
 
+.ui.input.team-app-input {
+  & > .ui.label .icon {
+    color: white;
+  }
+}
+
+.team-app {
+  .ui.segment {
+    background-color: $themeGreyLightColor;
+  }
+  .logo_column {
+    width: 80px;
+    margin-right:1rem;
+    .logo, .logo img {
+      width: 100%;
+      border-radius: 5px;
+    }
+  }
+  .main_column {
+    @include flex(1);
+    .credentials {
+      display: inline-block;
+      margin-bottom: 0;
+      & > div {
+        margin-bottom: .5rem;
+      }
+      .ui.input  {
+        margin-right: .5rem;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    & > div {
+      margin-bottom: .5rem;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.ui.label.pwd-manager {
+  background-color: $themeColor;
+  color: white;
+  font-weight: normal;
+}
+
 #simple_team_app_add {
   padding: .6rem;
+  .ui.search {
+    .results {
+      max-height: 300px;
+      overflow: auto;
+    }
+  }
+  .ui.grid>.row {
+    margin: 0;
+  }
+  .search .logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 5px;
+  }
 }
 
 #team_user_tab {

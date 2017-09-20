@@ -123,7 +123,7 @@ var _initialiseProps = function _initialiseProps() {
   };
 };
 
-process.env.NODE_ENV !== "production" ? Form.propTypes = {
+Form.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -165,7 +165,7 @@ process.env.NODE_ENV !== "production" ? Form.propTypes = {
 
   /** Forms can automatically divide fields to be equal width. */
   widths: PropTypes.oneOf(['equal'])
-} : void 0;
+} : {};
 
 
 export default Form;

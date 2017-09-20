@@ -30,7 +30,7 @@ ModalDescription._meta = {
   parent: 'Modal'
 };
 
-process.env.NODE_ENV !== "production" ? ModalDescription.propTypes = {
+ModalDescription.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -39,6 +39,6 @@ process.env.NODE_ENV !== "production" ? ModalDescription.propTypes = {
 
   /** Additional classes. */
   className: PropTypes.string
-} : void 0;
+} : {};
 
 export default ModalDescription;

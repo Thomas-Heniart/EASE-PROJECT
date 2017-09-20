@@ -32,7 +32,7 @@ MenuMenu._meta = {
   parent: 'Menu'
 };
 
-process.env.NODE_ENV !== "production" ? MenuMenu.propTypes = {
+MenuMenu.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -44,6 +44,6 @@ process.env.NODE_ENV !== "production" ? MenuMenu.propTypes = {
 
   /** A sub menu can take left or right position. */
   position: PropTypes.oneOf(['left', 'right'])
-} : void 0;
+} : {};
 
 export default MenuMenu;

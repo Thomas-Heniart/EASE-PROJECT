@@ -581,7 +581,7 @@ class TeamAppAddingUi extends React.Component {
     const item = this.props.selection;
     return (
         <div className="add_actions_container" id="app_add_actions">
-          <SimpleTeamAppAdder/>
+          <SimpleTeamAppAdder item={item}/>
           {this.props.addAppUI.TeamSimpleAppAddActive &&
           <SimpleTeamAppAdd
               team_id={this.props.team_id}

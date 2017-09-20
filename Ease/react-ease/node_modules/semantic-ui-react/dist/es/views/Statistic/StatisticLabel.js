@@ -31,7 +31,7 @@ StatisticLabel._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? StatisticLabel.propTypes = {
+StatisticLabel.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,6 +43,6 @@ process.env.NODE_ENV !== "production" ? StatisticLabel.propTypes = {
 
   /** Shorthand for primary content. */
   label: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 export default StatisticLabel;

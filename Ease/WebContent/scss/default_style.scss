@@ -359,6 +359,12 @@ a.link-unstyle {
   margin-left: 0;
 }
 
+.ui.label {
+  i.icon:last-child {
+    margin-right: 0;
+  }
+}
+
 button.button-unstyle {
   background: inherit;
   text-decoration: none;
@@ -555,6 +561,10 @@ input.checkbox_unstyle[type=checkbox] {
 
 .display-flex {
   @include display-flex();
+}
+
+.display-inline-flex {
+  @include display-inline-flex();
 }
 
 .justify_content_center {

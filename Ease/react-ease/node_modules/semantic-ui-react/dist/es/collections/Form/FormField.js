@@ -106,7 +106,7 @@ FormField._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? FormField.propTypes = {
+FormField.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -150,6 +150,6 @@ process.env.NODE_ENV !== "production" ? FormField.propTypes = {
 
   /** A field can specify its width in grid columns */
   width: PropTypes.oneOf(SUI.WIDTHS)
-} : void 0;
+} : {};
 
 export default FormField;

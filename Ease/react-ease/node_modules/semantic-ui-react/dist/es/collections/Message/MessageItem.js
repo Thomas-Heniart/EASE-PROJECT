@@ -31,7 +31,7 @@ MessageItem._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? MessageItem.propTypes = {
+MessageItem.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -43,7 +43,7 @@ process.env.NODE_ENV !== "production" ? MessageItem.propTypes = {
 
   /** Shorthand for primary content. */
   content: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 MessageItem.defaultProps = {
   as: 'li'

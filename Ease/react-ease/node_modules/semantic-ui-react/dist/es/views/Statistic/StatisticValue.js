@@ -33,7 +33,7 @@ StatisticValue._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? StatisticValue.propTypes = {
+StatisticValue.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -48,6 +48,6 @@ process.env.NODE_ENV !== "production" ? StatisticValue.propTypes = {
 
   /** Primary content of the StatisticValue. Mutually exclusive with the children prop. */
   value: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 export default StatisticValue;

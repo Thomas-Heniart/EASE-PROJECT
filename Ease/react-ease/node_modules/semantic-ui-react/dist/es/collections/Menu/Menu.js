@@ -118,7 +118,7 @@ Menu.Header = MenuHeader;
 Menu.Item = MenuItem;
 Menu.Menu = MenuMenu;
 Menu.handledProps = ['activeIndex', 'as', 'attached', 'borderless', 'children', 'className', 'color', 'compact', 'defaultActiveIndex', 'fixed', 'floated', 'fluid', 'icon', 'inverted', 'items', 'onItemClick', 'pagination', 'pointing', 'secondary', 'size', 'stackable', 'tabular', 'text', 'vertical', 'widths'];
-process.env.NODE_ENV !== "production" ? Menu.propTypes = {
+Menu.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -198,7 +198,7 @@ process.env.NODE_ENV !== "production" ? Menu.propTypes = {
 
   /** A menu can have its items divided evenly. */
   widths: PropTypes.oneOf(SUI.WIDTHS)
-} : void 0;
+} : {};
 
 
 Menu.create = createShorthandFactory(Menu, function (items) {

@@ -70,7 +70,7 @@ Feed._meta = {
   type: META.TYPES.VIEW
 };
 
-process.env.NODE_ENV !== "production" ? Feed.propTypes = {
+Feed.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -85,7 +85,7 @@ process.env.NODE_ENV !== "production" ? Feed.propTypes = {
 
   /** A feed can have different sizes. */
   size: PropTypes.oneOf(_without(SUI.SIZES, 'mini', 'tiny', 'medium', 'big', 'huge', 'massive'))
-} : void 0;
+} : {};
 
 Feed.Content = FeedContent;
 Feed.Date = FeedDate;

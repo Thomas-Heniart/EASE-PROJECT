@@ -24,7 +24,7 @@ export default function PopupHeader(props) {
 }
 
 PopupHeader.handledProps = ['as', 'children', 'className'];
-process.env.NODE_ENV !== "production" ? PopupHeader.propTypes = {
+PopupHeader.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -33,7 +33,7 @@ process.env.NODE_ENV !== "production" ? PopupHeader.propTypes = {
 
   /** Additional classes. */
   className: PropTypes.string
-} : void 0;
+} : {};
 
 PopupHeader._meta = {
   name: 'PopupHeader',

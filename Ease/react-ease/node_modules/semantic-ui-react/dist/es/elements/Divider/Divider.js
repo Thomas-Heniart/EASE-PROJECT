@@ -37,7 +37,7 @@ Divider._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? Divider.propTypes = {
+Divider.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -67,6 +67,6 @@ process.env.NODE_ENV !== "production" ? Divider.propTypes = {
 
   /** Divider can segment content vertically. */
   vertical: PropTypes.bool
-} : void 0;
+} : {};
 
 export default Divider;

@@ -26,13 +26,13 @@ FormInput._meta = {
   type: META.TYPES.COLLECTION
 };
 
-process.env.NODE_ENV !== "production" ? FormInput.propTypes = {
+FormInput.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
   /** A FormField control prop. */
   control: FormField.propTypes.control
-} : void 0;
+} : {};
 
 FormInput.defaultProps = {
   as: FormField,

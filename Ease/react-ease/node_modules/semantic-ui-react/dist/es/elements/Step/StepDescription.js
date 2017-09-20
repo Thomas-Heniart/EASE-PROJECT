@@ -28,7 +28,7 @@ StepDescription._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? StepDescription.propTypes = {
+StepDescription.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -40,6 +40,6 @@ process.env.NODE_ENV !== "production" ? StepDescription.propTypes = {
 
   /** Shorthand for primary content. */
   description: customPropTypes.contentShorthand
-} : void 0;
+} : {};
 
 export default StepDescription;

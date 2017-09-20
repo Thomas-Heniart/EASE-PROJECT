@@ -30,7 +30,7 @@ Radio._meta = {
   type: META.TYPES.ADDON
 };
 
-process.env.NODE_ENV !== "production" ? Radio.propTypes = {
+Radio.propTypes = process.env.NODE_ENV !== "production" ? {
   /** Format to emphasize the current selection state. */
   slider: Checkbox.propTypes.slider,
 
@@ -39,7 +39,7 @@ process.env.NODE_ENV !== "production" ? Radio.propTypes = {
 
   /** HTML input type, either checkbox or radio. */
   type: Checkbox.propTypes.type
-} : void 0;
+} : {};
 
 Radio.defaultProps = {
   type: 'radio'

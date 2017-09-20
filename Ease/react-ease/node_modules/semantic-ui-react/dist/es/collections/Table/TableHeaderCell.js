@@ -27,7 +27,7 @@ TableHeaderCell._meta = {
   parent: 'Table'
 };
 
-process.env.NODE_ENV !== "production" ? TableHeaderCell.propTypes = {
+TableHeaderCell.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -36,7 +36,7 @@ process.env.NODE_ENV !== "production" ? TableHeaderCell.propTypes = {
 
   /** A header cell can be sorted in ascending or descending order. */
   sorted: PropTypes.oneOf(['ascending', 'descending'])
-} : void 0;
+} : {};
 
 TableHeaderCell.defaultProps = {
   as: 'th'

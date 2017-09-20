@@ -114,7 +114,7 @@ Message.List = MessageList;
 Message.Item = MessageItem;
 Message.handledProps = ['as', 'attached', 'children', 'className', 'color', 'compact', 'content', 'error', 'floating', 'header', 'hidden', 'icon', 'info', 'list', 'negative', 'onDismiss', 'positive', 'size', 'success', 'visible', 'warning'];
 export default Message;
-process.env.NODE_ENV !== "production" ? Message.propTypes = {
+Message.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -183,4 +183,4 @@ process.env.NODE_ENV !== "production" ? Message.propTypes = {
 
   /** A message may be formatted to display warning messages. */
   warning: PropTypes.bool
-} : void 0;
+} : {};

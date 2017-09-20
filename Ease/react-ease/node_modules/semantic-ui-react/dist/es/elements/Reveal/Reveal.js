@@ -35,7 +35,7 @@ Reveal._meta = {
   type: META.TYPES.ELEMENT
 };
 
-process.env.NODE_ENV !== "production" ? Reveal.propTypes = {
+Reveal.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -56,7 +56,7 @@ process.env.NODE_ENV !== "production" ? Reveal.propTypes = {
 
   /** An element can show its content without delay. */
   instant: PropTypes.bool
-} : void 0;
+} : {};
 
 Reveal.Content = RevealContent;
 

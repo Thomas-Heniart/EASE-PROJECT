@@ -32,7 +32,7 @@ SidebarPusher._meta = {
   parent: 'Sidebar'
 };
 
-process.env.NODE_ENV !== "production" ? SidebarPusher.propTypes = {
+SidebarPusher.propTypes = process.env.NODE_ENV !== "production" ? {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
 
@@ -44,6 +44,6 @@ process.env.NODE_ENV !== "production" ? SidebarPusher.propTypes = {
 
   /** Controls whether or not the dim is displayed. */
   dimmed: PropTypes.bool
-} : void 0;
+} : {};
 
 export default SidebarPusher;
