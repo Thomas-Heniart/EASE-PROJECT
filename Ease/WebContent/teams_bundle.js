@@ -56360,6 +56360,7 @@ var SimpleTeamAppSearch = function (_Component) {
       return _react2.default.createElement(_semanticUiReact.Search, {
         fluid: true,
         minCharacters: 0,
+        loading: this.state.loading,
         placeholder: "Search websites here...",
         value: this.state.value,
         className: "inverted",

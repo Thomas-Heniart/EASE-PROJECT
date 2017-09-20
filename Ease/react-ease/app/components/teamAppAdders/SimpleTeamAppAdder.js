@@ -50,6 +50,7 @@ class SimpleTeamAppSearch extends Component {
         <Search
             fluid
             minCharacters={0}
+            loading={this.state.loading}
             placeholder="Search websites here..."
             value={this.state.value}
             class="inverted"
