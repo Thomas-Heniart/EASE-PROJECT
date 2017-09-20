@@ -42,11 +42,14 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             JSONArray receivers = (JSONArray) sm.getParam("receivers", false, false);
             String app_name = sm.getStringParam("name", true, false);
             String url = sm.getStringParam("url", true, false);
+            String img_url = sm.getStringParam("img_url", false, false);
             String description = sm.getStringParam("description", false, true);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
-            if (url == null || url.equals("") || !Regex.isValidLink(url))
+            if (!Regex.isValidLink(url))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
+            if (!img_url.equals("") && !Regex.isValidLink(img_url))
+                throw new HttpServletException(HttpStatus.BadRequest, "Url entered for icon is invalid.");
             if (description == null)
                 description = "";
             Channel channel = team.getChannelWithId(channel_id);
@@ -54,7 +57,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
                     throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, sm);
+            LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, img_url, sm);
             linkApp.becomeShareable(sm.getDB(), team, channel, description);
             for (Object receiver : receivers) {
                 Integer receiver_id = Math.toIntExact((Long) receiver);

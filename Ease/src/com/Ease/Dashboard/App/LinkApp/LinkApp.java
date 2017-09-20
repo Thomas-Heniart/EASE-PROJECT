@@ -87,8 +87,8 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), infos, linkDBid);
     }
 
-    public static LinkApp createShareableLinkApp(String name, String link, PostServletManager sm) throws GeneralException, HttpServletException {
-        return createLinkApp(null, null, name, link, "/resources/icons/link_app.png", sm);
+    public static LinkApp createShareableLinkApp(String name, String link, String img_url, PostServletManager sm) throws GeneralException, HttpServletException {
+        return createLinkApp(null, null, name, link, img_url.equals("") ? "/resources/icons/link_app.png" : img_url, sm);
     }
 
 	/*

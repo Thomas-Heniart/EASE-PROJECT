@@ -26,12 +26,12 @@ public class ServletSearchDashboardApps extends HttpServlet {
             String search = sm.getParam("q", true);
             List<ClassicApp> classicAppList = sm.getUser().getDashboardManager().getClassicApps();
             JSONArray jsonArray = new JSONArray();
-            if (search != null && !search.equals("")) {
-                for (ClassicApp classicApp : classicAppList) {
-                    Website website = classicApp.getSite();
-                    if (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.isIntegrated())
-                        jsonArray.add(classicApp.getSearchJson());
-                }
+            for (ClassicApp classicApp : classicAppList) {
+                Website website = classicApp.getSite();
+                if (search == null || search.equals(""))
+                    jsonArray.add(classicApp.getSearchJson());
+                else if (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.isIntegrated())
+                    jsonArray.add(classicApp.getSearchJson());
             }
             sm.setSuccess(jsonArray);
         } catch (Exception e) {

@@ -101,16 +101,16 @@ public class LinkAppInformation {
 
     public void edit(JSONObject editJson, DataBaseConnection db) throws HttpServletException {
         try {
-            String imgUrl = (String) editJson.get("imgUrl");
+            String imgUrl = (String) editJson.get("img_url");
             String url = (String) editJson.get("url");
             int transaction = db.startTransaction();
             if (url != null && !url.equals("")) {
-                if (!Regex.isValidLink(url))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Bad url.");
                 this.setLink(url, db);
             }
-            if (imgUrl != null && !imgUrl.equals(""))
+            if (!imgUrl.equals(""))
                 this.setImgUrl(imgUrl, db);
+            else
+                this.setImgUrl("/resources/icons/link_app.png", db);
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
