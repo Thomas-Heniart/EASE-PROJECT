@@ -316,14 +316,14 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         }
         websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
-        Boolean adminHasAccess = (Boolean) params.get("adminHasAccess");
+        Boolean adminHasAccess = true;
         Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(), sm.getDB());
         request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(account.getDBid());
         Integer classicDBid = request.set();
         sharedApp = new ClassicApp((Integer) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), this.getSite(), websiteAppId, account, classicDBid, this);
-        sharedApp.setAdminHasAccess((Boolean) params.get("adminHasAccess"), sm.getDB());
+        sharedApp.setAdminHasAccess(adminHasAccess, sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         sharedApp.setReceived(false);
         sharedApp.setCanSeeInformation(canSeeInformation);

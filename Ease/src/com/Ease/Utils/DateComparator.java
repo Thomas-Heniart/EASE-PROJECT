@@ -29,15 +29,8 @@ public class DateComparator {
         return (now - date.getTime()) > (numberOfMonth * millisecondsInMonth + numberOfDays * millisecondsInDay);
     }
 
-    public static boolean isEqualsAfter(Date date, int numberOfDays) {
-        long time = new Date().getTime() - date.getTime();
-        return time >= (numberOfDays * millisecondsInDay) && time <= ((numberOfDays + 1) * millisecondsInDay);
-    }
-
     public static boolean isInDays(Date date, int numberOfDays) {
-        System.out.println("Free trial end: " + date.getTime());
-        System.out.println("Now: " + new Date().getTime());
         long time = date.getTime() - new Date().getTime();
-        return time >= (numberOfDays * millisecondsInDay) && time < -((numberOfDays + 1) * millisecondsInDay);
+        return time <= (numberOfDays * millisecondsInDay) && time >= ((numberOfDays - 1) * millisecondsInDay);
     }
 }
