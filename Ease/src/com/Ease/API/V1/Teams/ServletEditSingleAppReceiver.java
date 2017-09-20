@@ -1,11 +1,8 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -31,13 +28,10 @@ public class ServletEditSingleAppReceiver extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             SharedApp sharedApp = team.getAppManager().getSharedApp(shared_app_id);
-            Channel channel = sharedApp.getHolder().getChannel();
-            if (channel == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "All apps are in channels for the moment.");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("can_see_information", sm.getParam("can_see_information", true, false));
             sharedApp.modifyShared(sm.getDB(), jsonObject);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, sharedApp.getHolder().getShareableJson(), sharedApp.getHolder().getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, sharedApp.getHolder().getShareableJson(), sharedApp.getHolder().getOrigin()));
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);

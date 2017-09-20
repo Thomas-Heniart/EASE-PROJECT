@@ -95,8 +95,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid);
     }
 
-    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
-        return createEmptyApp(null, null, name, website, reminderValue, "MONTH", sm);
+    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer password_change_interval, PostServletManager sm) throws GeneralException, HttpServletException {
+        return createEmptyApp(null, null, name, website, password_change_interval, "MONTH", sm);
     }
 
     public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, ServletManager sm) throws GeneralException {
@@ -305,10 +305,10 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
         elevator.put("canSeeInformation", canSeeInformation);
         JSONObject account_information = (JSONObject) params.get("account_information");
-        App sharedApp = null;
-        DatabaseRequest request = null;
-        Integer websiteAppId = null;
-        if (account_information == null) {
+        App sharedApp;
+        DatabaseRequest request;
+        Integer websiteAppId;
+        if (account_information.isEmpty()) {
             account_information = new JSONObject();
             for (WebsiteInformation websiteInformation : this.getSite().getInformations())
                 account_information.put(websiteInformation.getInformationName(), "");
@@ -370,16 +370,15 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             int transaction = db.startTransaction();
             super.modifyShareable(db, editJson);
             if (this.isEmpty()) {
-                Integer reminderInterval = (Integer) editJson.get("reminderInterval");
-                if (reminderInterval != null) {
+                Integer password_change_interval = (Integer) editJson.get("password_change_interval");
+                if (!password_change_interval.equals(this.getReminderIntervalValue())) {
                     DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET reminderIntervalValue = ? WHERE id = ?;");
-                    request.setInt(reminderInterval);
+                    request.setInt(password_change_interval);
                     request.setInt(this.websiteAppDBid);
                     request.set();
-                    this.reminderIntervalValue = reminderInterval;
-                    for (SharedApp sharedApp1 : this.getSharedApps()) {
-                        ((ClassicApp) sharedApp1).getAccount().setReminderInterval(reminderInterval, db);
-                    }
+                    this.reminderIntervalValue = password_change_interval;
+                    for (SharedApp sharedApp : this.getSharedApps())
+                        ((ClassicApp) sharedApp).getAccount().setReminderInterval(password_change_interval, db);
                 }
             }
             db.commitTransaction(transaction);

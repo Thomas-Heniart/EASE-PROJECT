@@ -28,8 +28,8 @@ import java.io.IOException;
 /**
  * Created by thomas on 08/05/2017.
  */
-@WebServlet("/api/v1/teams/CreateShareableLinkApp")
-public class ServletCreateShareableLinkApp extends HttpServlet {
+@WebServlet("/api/v1/teams/CreateLinkApp")
+public class ServletCreateLinkApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -39,7 +39,7 @@ public class ServletCreateShareableLinkApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            JSONArray receivers = (JSONArray) sm.getParam("receivers", false, false);
+            JSONArray receivers = sm.getArrayParam("receivers", false, false);
             String app_name = sm.getStringParam("name", true, false);
             String url = sm.getStringParam("url", true, false);
             String img_url = sm.getStringParam("img_url", false, false);

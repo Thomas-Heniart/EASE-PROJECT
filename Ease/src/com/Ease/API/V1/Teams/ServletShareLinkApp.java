@@ -54,7 +54,7 @@ public class ServletShareLinkApp extends HttpServlet {
             db.commitTransaction(transaction);
             shareableApp.addSharedApp(sharedApp);
             team.getAppManager().addSharedApp(sharedApp);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.ADDED, app.getShareableJson(), app.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, app.getShareableJson(), app.getOrigin()));
             sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);

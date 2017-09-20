@@ -32,8 +32,8 @@ import java.util.List;
 /**
  * Created by thomas on 08/05/2017.
  */
-@WebServlet("/api/v1/teams/CreateShareableSingleApp")
-public class ServletCreateShareableSingleApp extends HttpServlet {
+@WebServlet("/api/v1/teams/CreateSingleApp")
+public class ServletCreateSingleApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -43,8 +43,8 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer website_id = sm.getIntParam("website_id", true, false);
-            JSONArray account_information = (JSONArray) sm.getParam("account_information", false, false);
-            JSONArray receivers = (JSONArray) sm.getParam("receivers", false, false);
+            JSONArray account_information = sm.getArrayParam("account_information", false, false);
+            JSONArray receivers = sm.getArrayParam("receivers", false, false);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             String app_name = sm.getStringParam("name", true, false);
             String description = sm.getStringParam("description", true, true);

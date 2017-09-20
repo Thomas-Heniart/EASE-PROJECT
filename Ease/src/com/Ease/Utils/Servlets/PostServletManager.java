@@ -4,6 +4,7 @@ import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketMessage;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -77,6 +78,14 @@ public class PostServletManager extends ServletManager {
             return (JSONObject) getParam(paramName, saveInLogs, canBeNull);
         } catch (ClassCastException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected JSON).");
+        }
+    }
+
+    public JSONArray getArrayParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
+        try {
+            return (JSONArray) getParam(paramName, saveInLogs, canBeNull);
+        } catch (ClassCastException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Array).");
         }
     }
 

@@ -245,8 +245,17 @@ public class ClassicApp extends WebsiteApp {
             /* int transaction = db.startTransaction();
             super.modifyShared(db, editJson);
             this.getAccount().edit(editJson, db); */
-        Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
-        this.setCanSeeInformation(canSeeInformation, db);
+        try {
+            App holder = (App) this.getHolder();
+            if (holder.isClassicApp()) {
+                Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
+                this.setCanSeeInformation(canSeeInformation, db);
+            } else if (holder.isEmpty()) {
+                this.getAccount().edit(editJson, db);
+            }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @Override

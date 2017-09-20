@@ -752,7 +752,7 @@ public class App implements ShareableApp, SharedApp {
     public JSONObject getShareableJson() throws HttpServletException {
         try {
             JSONObject res = new JSONObject();
-            res.put("id", Integer.valueOf(this.getDBid()));
+            res.put("id", this.getDBid());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date shared_date = dateFormat.parse(this.getInsertDate());
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
@@ -760,8 +760,6 @@ public class App implements ShareableApp, SharedApp {
             JSONArray receivers = new JSONArray();
             for (SharedApp sharedApp : this.sharedApps.values())
                 receivers.add(sharedApp.getSharedJSON());
-            /* for (SharedApp sharedApp : this.getSharedApps())
-                receivers.add(sharedApp.getSharedJSON()); */
             res.put("receivers", receivers);
             JSONArray waitingTeamUsers = new JSONArray();
             for (TeamUser teamUser : this.getPendingTeamUsers())
