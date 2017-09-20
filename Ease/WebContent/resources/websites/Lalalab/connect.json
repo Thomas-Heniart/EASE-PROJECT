@@ -1,0 +1,96 @@
+{
+  "name": "Lalalab",
+  "lastLogin": "",
+  "home": "https://www.lalalab.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": ".user > button:first-child"
+      },
+      {
+        "action": "trueClick",
+        "search": ".user > button:first-child"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-modal='login'] form input[type='email'][autocomplete='off']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-modal='login'] form input[type='password'][autocomplete='off']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "div[data-modal='login'] form input[type='email'][autocomplete='off']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-modal='login'] form input[type='password'][autocomplete='off']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "div[data-modal='login'] input[type='password'][autocomplete='off']"
+      },
+      {
+        "action": "click",
+        "search": "div[data-modal='login'] button[type='submit']"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": ".user > button:first-child"
+      },
+      {
+        "action": "trueClick",
+        "search": ".user > button:first-child"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-modal='login'] form input[type='email'][autocomplete='off']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-modal='login'] form input[type='password'][autocomplete='off']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-modal='login'] button.btn-facebook"
+      },
+      {
+        "action": "trueClick",
+        "search": "div[data-modal='login'] button.btn-facebook"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".account.dropdown-menu li:last-child() button"
+      },
+      {
+        "action": "waitfor",
+        "search": ".user > button:first-child"
+      },
+      {
+        "action": "goto",
+        "url": "https://www.lalalab.com/"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".account.dropdown-menu li:last-child() button, .user > button:first-child"
+    },
+    {
+      "search": ".account.dropdown-menu li:last-child() button"
+    }
+  ]
+}

@@ -250,10 +250,10 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            super.modifyShareable(db, editJson, sharedApp);
+            super.modifyShareable(db, editJson);
             this.getAccount().edit(editJson, db);
             for (SharedApp app : this.sharedApps.values())
                 ((ClassicApp) app).getAccount().edit(editJson, db);

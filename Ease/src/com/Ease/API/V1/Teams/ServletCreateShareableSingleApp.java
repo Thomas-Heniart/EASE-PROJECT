@@ -48,7 +48,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             String app_name = sm.getStringParam("name", true, false);
             String description = sm.getStringParam("description", true, true);
-            Integer reminderInterval = Integer.parseInt(sm.getStringParam("reminder_interval", true, true));
+            Integer password_change_interval = sm.getIntParam("password_change_interval", true, false);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
             if (description == null)
@@ -70,7 +70,7 @@ public class ServletCreateShareableSingleApp extends HttpServlet {
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_connected, reminderInterval, sm);
+            ClassicApp classicApp = ClassicApp.createShareableClassicApp(app_name, website, accountInformationList, teamUser_connected, password_change_interval, sm);
             classicApp.becomeShareable(db, team, channel, description);
             for (Object receiver : receivers) {
                 JSONObject receiver_json = (JSONObject) receiver;

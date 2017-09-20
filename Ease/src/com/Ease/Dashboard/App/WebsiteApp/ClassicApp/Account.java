@@ -453,7 +453,7 @@ public class Account {
                     updateLastUpdateDate(db);
             }
         }
-        Integer reminderInterval = (Integer) editJson.get("reminderInterval");
+        Integer reminderInterval = (Integer) editJson.get("password_change_interval");
         if (reminderInterval != null) {
             DatabaseRequest request = db.prepareRequest("UPDATE accounts SET reminderIntervalValue = ? WHERE id = ?;");
             request.setInt(reminderInterval);

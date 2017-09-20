@@ -18,7 +18,7 @@ import java.util.List;
 public interface ShareableApp {
     public SharedApp share(TeamUser teamUser_tenant, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException;
 
-    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException;
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson) throws HttpServletException;
 
     public void deleteShareable(DataBaseConnection db) throws HttpServletException;
 

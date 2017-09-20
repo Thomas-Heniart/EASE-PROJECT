@@ -4,9 +4,6 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -30,14 +27,11 @@ public class ServletDeleteSharedApp extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
+            sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            Integer sharedApp_id = sm.getIntParam("app_id", true, false);
+            Integer sharedApp_id = sm.getIntParam("shared_app_id", true, false);
             SharedApp sharedApp = team.getAppManager().getSharedApp(sharedApp_id);
-            if (teamUser_connected != sharedApp.getTeamUser_tenant() && !teamUser_connected.isTeamAdmin())
-                throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to do this.");
             ShareableApp shareableApp = sharedApp.getHolder();
             team.getAppManager().removeSharedApp(sharedApp);
             sharedApp.deleteShared(sm.getDB());

@@ -365,10 +365,10 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            super.modifyShareable(db, editJson, sharedApp);
+            super.modifyShareable(db, editJson);
             if (this.isEmpty()) {
                 Integer reminderInterval = (Integer) editJson.get("reminderInterval");
                 if (reminderInterval != null) {
