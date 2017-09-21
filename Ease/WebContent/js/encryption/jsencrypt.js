@@ -4640,17 +4640,20 @@
     exports.JSEncrypt = JSEncrypt;
 });
 
-var RSAEncryption = new JSEncrypt({default_key_size: 1024});
 var serverRSAEncryption = new JSEncrypt({default_key_size: 1024});
 
 function setServerPublicKey(serverPublicKey) {
-    serverPublicKey = "-----BEGIN PUBLIC KEY-----\n" + serverPublicKey;
-    serverPublicKey = serverPublicKey.substring(0, 91) + "\n" + serverPublicKey.substring(91, 91 + 64) + "\n" + serverPublicKey.substring(91 + 64, 91 + 64 + 64) + "\n" + serverPublicKey.substring(91 + 64 + 64, serverPublicKey.length) + "\n-----END PUBLIC KEY-----";
-    serverRSAEncryption.setKey(serverPublicKey);
+    serverPublicKey = "-----BEGIN PUBLIC KEY-----" + serverPublicKey + "-----END PUBLIC KEY-----";
+    serverRSAEncryption.setPublicKey(serverPublicKey);
+}
+
+function setServerPrivateKey(serverPrivateKey) {
+    serverPrivateKey = "-----BEGIN RSA PRIVATE KEY-----" + serverPrivateKey + "-----END RSA PRIVATE KEY-----";
+    serverRSAEncryption.setPrivateKey(serverPrivateKey);
 }
 
 function decipher(msg) {
-    return RSAEncryption.decrypt(msg);
+    return serverRSAEncryption.decrypt(msg);
 }
 
 function cipher(msg) {
@@ -4658,9 +4661,18 @@ function cipher(msg) {
 }
 
 window.addEventListener("load", function () {
+    var tmpRSA = new JSEncrypt({default_key_size: 1024});
     var request = new XMLHttpRequest();
-    request.open("GET", "/api/v1/common/GetServerKey?public_key=" + encodeURIComponent(RSAEncryption.getPublicKeyB64()), false);
+    request.open("GET", "/api/v1/common/GetServerKey?public_key=" + encodeURIComponent(tmpRSA.getPublicKeyB64()), false);
     request.send();
-    if (request.status === 200)
-        setServerPublicKey(JSON.parse(request.responseText).server_public_key);
+    if (request.status === 200) {
+        var keys = JSON.parse(request.responseText);
+        setServerPublicKey(tmpRSA.decrypt(keys.server_public_key));
+        var private_key = "";
+        keys.server_private_key.forEach(function (part) {
+            private_key += tmpRSA.decrypt(part);
+        });
+        setServerPrivateKey(private_key);
+    }
+
 });
