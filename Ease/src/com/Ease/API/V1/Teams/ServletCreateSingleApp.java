@@ -26,8 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by thomas on 08/05/2017.
@@ -43,14 +42,14 @@ public class ServletCreateSingleApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer website_id = sm.getIntParam("website_id", true, false);
-            JSONArray account_information = sm.getArrayParam("account_information", false, false);
+            JSONObject account_information = sm.getJsonParam("account_information", false, false);
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             String description = sm.getStringParam("description", true, true);
             Integer password_change_interval = sm.getIntParam("password_change_interval", true, false);
             if (description == null)
                 description = "";
-            if (account_information == null || account_information.isEmpty())
+            if (account_information.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Account information are null.");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
@@ -58,16 +57,13 @@ public class ServletCreateSingleApp extends HttpServlet {
             if (!channel.getTeamUsers().contains(teamUser_connected) && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             String key = (String) sm.getContextAttr("privateKey");
-            List<JSONObject> accountInformationList = new LinkedList<>();
-            for (Object accountInformationObj : account_information) {
-                JSONObject accountInformation = (JSONObject) accountInformationObj;
-                String ciphered_value = (String) accountInformation.get("info_value");
-                accountInformation.put("info_value", RSA.Decrypt(ciphered_value, key));
-                accountInformationList.add(accountInformation);
+            for (Object entry : account_information.entrySet()) {
+                Map.Entry<String, String> type_value = (Map.Entry<String, String>) entry;
+                account_information.put(type_value.getKey(), RSA.Decrypt(type_value.getValue(), key));
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            ClassicApp classicApp = ClassicApp.createShareableClassicApp(website.getName(), website, accountInformationList, teamUser_connected, password_change_interval, sm);
+            ClassicApp classicApp = ClassicApp.createShareableClassicApp(website.getName(), website, account_information, teamUser_connected, password_change_interval, sm);
             classicApp.becomeShareable(db, team, channel, description);
             for (Object receiver : receivers) {
                 JSONObject receiver_json = (JSONObject) receiver;

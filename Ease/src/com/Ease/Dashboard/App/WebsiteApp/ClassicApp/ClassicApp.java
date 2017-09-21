@@ -14,7 +14,6 @@ import org.json.simple.JSONObject;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ClassicApp extends WebsiteApp {
@@ -66,12 +65,12 @@ public class ClassicApp extends WebsiteApp {
         return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
     }
 
-    public static ClassicApp createShareableClassicApp(String name, Website website, List<JSONObject> accountInformationList, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static ClassicApp createShareableClassicApp(String name, Website website, JSONObject account_information, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
         Integer websiteAppDBid = WebsiteApp.createWebsiteApp(null, null, name, "classicApp", website, elevator, db);
-        Account account = Account.createShareableAccount(accountInformationList, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
+        Account account = Account.createShareableAccount(account_information, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());

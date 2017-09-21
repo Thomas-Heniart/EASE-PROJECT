@@ -843,6 +843,20 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
+    public Integer addPendingTeamUser(TeamUser teamUser, JSONObject params, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("INSERT INTO pendingJoinAppRequests values (null, ?, ?);");
+            request.setInt(this.getDBid());
+            request.setInt(teamUser.getDb_id());
+            Integer request_id = request.set();
+            this.addPendingTeamUser(teamUser);
+            return request_id;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    @Override
     public Collection<TeamUser> getPendingTeamUsers() {
         if (pending_teamUsers == null)
             pending_teamUsers = new ConcurrentHashMap<>();
@@ -854,11 +868,18 @@ public class App implements ShareableApp, SharedApp {
         if (!this.getPendingTeamUsers().contains(teamUser))
             return;
         try {
-            DatabaseRequest request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE shareable_app_id = ? AND team_user_id = ?;");
+            DatabaseRequest request;
+            if (this.isEmpty()) {
+                request = db.prepareRequest("DELETE FROM enterpriseAppRequests WHERE request_id IN (SELECT id FROM pendingJoinAppRequests WHERE shareable_app_id = ? AND team_user_id = ?);");
+                request.setInt(this.getDBid());
+                request.setInt(teamUser.getDb_id());
+                request.set();
+            }
+            request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE shareable_app_id = ? AND team_user_id = ?;");
             request.setInt(this.getDBid());
             request.setInt(teamUser.getDb_id());
             request.set();
-            this.pending_teamUsers.remove(teamUser);
+            this.pending_teamUsers.remove(teamUser.getDb_id());
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

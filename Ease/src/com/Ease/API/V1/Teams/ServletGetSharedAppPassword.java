@@ -38,7 +38,7 @@ public class ServletGetSharedAppPassword extends HttpServlet {
             if (password == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "No password for this app.");
             JSONObject res = new JSONObject();
-            String key = (String) sm.getSession().getAttribute("public_key");
+            String key = (String) sm.getContextAttr("publicKey");
             res.put("password", RSA.Encrypt(password, key));
             sm.setSuccess(res);
         } catch (Exception e) {
