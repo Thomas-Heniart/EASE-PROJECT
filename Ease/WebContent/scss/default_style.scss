@@ -367,6 +367,9 @@ a.link-unstyle {
   i.icon:last-child {
     margin-right: 0;
   }
+  i.icon:first-child {
+    margin-right: inherit;
+  }
 }
 
 button.button-unstyle {

@@ -245,8 +245,7 @@ class LinkTeamAppAdd extends React.Component {
                      placeholder="App name..."
                      name="app_name"
                      value={this.state.appName}
-                     onChange={this.handleAppNameChange}
-              />
+                     onChange={this.handleAppNameChange}/>
             </div>
           </div>
           <div>
@@ -275,8 +274,7 @@ class LinkTeamAppAdd extends React.Component {
                     users={this.state.users}
                     selectedUsers={this.state.selectedUsers}
                     selectFunc={this.handleUserSelect}
-                    deselectFunc={this.handleUserDeselect}
-                />
+                    deselectFunc={this.handleUserDeselect}/>
               </div>
             </div>
             <div className="comment_holder">

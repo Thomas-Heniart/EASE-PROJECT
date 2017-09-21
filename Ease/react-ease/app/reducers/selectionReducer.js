@@ -47,7 +47,7 @@ export default function reducer(state={
       }
     }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
+      if(state.type === action.payload.app.origin.type && state.id === action.payload.app.origin.id){
         var state = {
           ...state
         };

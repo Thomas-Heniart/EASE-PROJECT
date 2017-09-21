@@ -1,14 +1,15 @@
 import React, {Component} from "react";
 import {dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
 import {handleSemanticInput,
+  transformCredentialsListIntoObject,
   transformWebsiteInfoIntoList,
-  passwordChangeOptions,
   credentialIconType} from "../../utils/utils";
 import {selectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite} from "../../actions/teamModalActions";
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
+import {setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
 const AppResultRenderer = ({website_name, logo, request, profile_name, login}) => {
@@ -19,9 +20,9 @@ const AppResultRenderer = ({website_name, logo, request, profile_name, login}) =
         <img src={logo} class="logo"/>
         {website_name}
         {profile_name !== undefined &&
-        <span class="text-muted">&nbsp;- from {profile_name} - {login}</span>
-        }
-      </div>)
+        <span class="text-muted">&nbsp;- from {profile_name} - {login}</span>}
+      </div>
+  )
 };
 
 class SimpleTeamAppSearch extends Component {
@@ -74,37 +75,6 @@ class SimpleTeamAppSearch extends Component {
   }
 }
 
-const PasswordChangeDropdown = ({value, onChange}) => {
-  return (
-      <Popup size="mini"
-             position="top center"
-             inverted
-             trigger={
-               <Dropdown class="mini icon"
-                         value={value}
-                         onChange={onChange}
-                         button
-                         name="password_change_interval"
-                         icon="refresh"
-                         labeled
-                         options={passwordChangeOptions}/>
-             }
-             content='Password update reminder'/>
-  )
-};
-
-const PasswordChangeManagerLabel = ({username})=> {
-  return (
-      <Popup size="mini"
-             position="top center"
-             inverted
-             trigger={
-               <Label class="pwd-manager">{username}&nbsp;&nbsp;<Icon name="eye"/></Label>
-             }
-             content={`${username} updates the password`}/>
-  )
-};
-
 const TeamAppCredentialInput = ({item, onChange}) => {
   return <Input size="mini"
                 autoFocus={item.autoFocus}
@@ -119,19 +89,6 @@ const TeamAppCredentialInput = ({item, onChange}) => {
                 type={item.type}/>;
 };
 
-const setUserDropdownText = (user) => {
-  return (user.username + (user.first_name.length > 0 || user.last_name > 0 ? ` - ${user.first_name} ${user.last_name}` : ''));
-};
-
-const renderUserLabelNew = (label, index, props) => {
-  return (
-      <Label color="blue" class="user-label">
-        {label.username}
-        <Icon link name={label.can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>
-        <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
-      </Label>
-  )
-};
 
 @connect(store => ({
   team_id: store.team.id,
@@ -156,7 +113,7 @@ class SimpleTeamAppAdder extends Component {
     let users = this.state.users.map(item => {
       return {
         ...item,
-        can_see_information: item.key === id ? !item.can_see_information : item.can_see_information
+        can_see_information: item.id === id ? !item.can_see_information : item.can_see_information
       }
     });
     this.setState({users: users});
@@ -219,11 +176,6 @@ class SimpleTeamAppAdder extends Component {
   send = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    const credentials = this.state.credentials.map(item => {
-      return {
-        info_name: item.name,
-        info_value: item.value
-      }});
     const receivers = this.state.users
         .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
         .map(item => ({
@@ -236,7 +188,7 @@ class SimpleTeamAppAdder extends Component {
       website_id: this.state.app.id,
       description: this.state.description,
       password_change_interval: this.state.password_change_interval,
-      account_information: credentials,
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
       receivers: receivers
     })).then(response => {
       this.setState({loading: false});
@@ -292,7 +244,7 @@ class SimpleTeamAppAdder extends Component {
                           onChange={this.handleInput}
                           value={this.state.selected_users}
                           selection={true}
-                          renderLabel={renderUserLabelNew}
+                          renderLabel={renderSimpleAppUserLabel}
                           multiple
                           placeholder="Tag your team members here..."/>
                     </div>

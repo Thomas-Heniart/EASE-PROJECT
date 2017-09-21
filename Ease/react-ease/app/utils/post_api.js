@@ -235,17 +235,14 @@ module.exports = {
   },
   teamApps: {
     createSingleApp: ({team_id, channel_id, website_id, description, password_change_interval, account_information, receivers, ws_id}) => {
-      let infos = account_information.map(item => {
-        item.info_value = cipher(item.info_value);
-        return item;
-      });
+      account_information.password = cipher(account_information.password);
       return axios.post('/api/v1/teams/CreateSingleApp', {
         team_id: team_id,
         channel_id: channel_id,
         website_id:website_id,
         description: description,
         password_change_interval: password_change_interval,
-        account_information: infos,
+        account_information: account_information,
         receivers: receivers,
         ws_id: ws_id,
         timestamp: new Date().getTime()
@@ -282,6 +279,49 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      });
+    },
+    shareSingleApp: ({team_id, app_id, team_user_id, can_see_information, ws_id}) => {
+      return axios.post('/api/v1/teams/ShareSingleApp', {
+        team_id: team_id,
+        app_id: app_id,
+        team_user_id: team_user_id,
+        can_see_information: can_see_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    editSingleApp: ({team_id, app_id, description, account_information, password_change_interval, ws_id}) => {
+      account_information.password = cipher(account_information.password);
+      return axios.post('/api/v1/teams/EditSingleApp', {
+        team_id: team_id,
+        app_id:app_id,
+        description: description,
+        account_information: account_information,
+        password_change_interval: password_change_interval,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    editSingleAppReceiver: ({team_id, shared_app_id, can_see_information, ws_id}) => {
+      return axios.post('/api/v1/teams/EditSingleAppReceiver', {
+        team_id: team_id,
+        shared_app_id: shared_app_id,
+        can_see_information: can_see_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     deleteApp: function (ws_id, team_id, app_id) {
@@ -335,7 +375,7 @@ module.exports = {
         return response.data;
       });
     },
-    deleteReceiver: function(ws_id, team_id, app_id, team_user_id){
+    deleteReceiver: function({ws_id, team_id, app_id, team_user_id}){
       return axios.post('/api/v1/teams/DeleteSharedApp', {
         ws_id: ws_id,
         team_id: team_id,

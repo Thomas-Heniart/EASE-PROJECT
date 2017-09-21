@@ -50,13 +50,32 @@ button.team_app_requests {
 }
 
 .ui.input.team-app-input {
+  input[readonly] {
+    background-color: transparent;
+  }
   & > .ui.label .icon {
     color: white;
   }
 }
 
 .team-app {
+  &:hover {
+    .team_app_actions_holder {
+      display: inherit;
+    }
+  }
+  .team_app_actions_holder {
+    display: none;
+  }
   .ui.label.user-label {
+    &.static {
+      color: white;
+      font-weight:normal;
+      background-color: $themeLightBlueColor;
+      &.accepted {
+        background-color: $themeBlue2Color;
+      }
+    }
     i.icon {
       margin-right: 0;
       margin-left: .5rem;
@@ -706,21 +725,21 @@ button.action_text_button {
   }
 }
 .ease_modal {
-    .ease_icon {
-      position: absolute;
-      top: 0.7rem;
-      left: 0;
-      width: 100%;
-      font-size: 30px;
-      display: block;
-    }
-    .key_label {
-      position: absolute;
-      top: 2.25rem;
-      left: 0;
-      width: 100%;
-      display: block;
-    }
+  .ease_icon {
+    position: absolute;
+    top: 0.7rem;
+    left: 0;
+    width: 100%;
+    font-size: 30px;
+    display: block;
+  }
+  .key_label {
+    position: absolute;
+    top: 2.25rem;
+    left: 0;
+    width: 100%;
+    display: block;
+  }
   .input_tag {
     span {
       color: white;
@@ -1033,6 +1052,41 @@ button.action_text_button {
           text-align: left;
         }
       }
+    }
+  }
+}
+
+.team_app_actions_holder, .team_app_edit_actions {
+  @include display-flex();
+  z-index: 1;
+  border: 1px solid rgba(0,0,0,0.15);
+  background-color: white;
+  overflow: hidden;
+  border-radius: 5px;
+  position: absolute;
+  top:.6rem;
+  right: .6rem;
+  color: #555459;
+  font-size: .7rem;
+  transition: all 50ms ease-in;
+  &:hover {
+    @include simple-box-shadow(0 1px 1px rgba(0,0,0,.1));
+    border-color: rgba(0,0,0,0.3);
+  }
+  button {
+    width: 32px;
+    height: 25px;
+    border-right: 1px solid rgba(0,0,0,0.15);
+    &:last-child {
+      border-right: none;
+    }
+    &:hover {
+      color: #45C997;
+    }
+  }
+  .team_app_delete {
+    &:hover {
+      color: $themeRedColor;
     }
   }
 }
@@ -1392,40 +1446,6 @@ button.action_text_button {
                 }
                 .team_app_edit_actions {
                   .cancel {
-                    &:hover {
-                      color: $themeRedColor;
-                    }
-                  }
-                }
-                .team_app_actions_holder, .team_app_edit_actions {
-                  display: none;
-                  z-index: 1;
-                  border: 1px solid rgba(0,0,0,0.15);
-                  background-color: white;
-                  overflow: hidden;
-                  border-radius: 5px;
-                  position: absolute;
-                  top:2.3rem;
-                  right: .6rem;
-                  color: #555459;
-                  font-size: .7rem;
-                  transition: all 50ms ease-in;
-                  &:hover {
-                    @include simple-box-shadow(0 1px 1px rgba(0,0,0,.1));
-                    border-color: rgba(0,0,0,0.3);
-                  }
-                  button {
-                    width: 32px;
-                    height: 25px;
-                    border-right: 1px solid rgba(0,0,0,0.15);
-                    &:last-child {
-                      border-right: none;
-                    }
-                    &:hover {
-                      color: #45C997;
-                    }
-                  }
-                  .team_app_delete {
                     &:hover {
                       color: $themeRedColor;
                     }

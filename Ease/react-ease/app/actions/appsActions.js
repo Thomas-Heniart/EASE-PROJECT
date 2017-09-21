@@ -27,7 +27,7 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, descriptio
       receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_CREATE_SINGLE_APP_FULFILLED', payload: app});
+      dispatch({type: 'TEAM_CREATE_SINGLE_APP_FULFILLED', payload: {app:app}});
     }).catch(err => {
       dispatch({type: 'TEAM_CREATE_SINGLE_APP_REJECTED', payload: err});
       throw err;
@@ -43,6 +43,55 @@ export function teamCreateLinkApp(app){
       return response;
     }).catch(err => {
       dispatch({type: 'TEAM_CREATE_LINK_APP_REJECTED', payload: err});
+      throw err;
+    });
+  }
+}
+
+export function teamEditSingleApp({app_id, description, account_information, password_change_interval}){
+  return function (dispatch, getState){
+    return post_api.teamApps.editSingleApp({
+      team_id: getState().team.id,
+      ws_id: getState().common.ws_id,
+      app_id: app_id,
+      description: description,
+      account_information: account_information,
+      password_change_interval: password_change_interval
+    }).then(response => {
+      dispatch({type: 'TEAM_APP_CHANGED', payload: {app: response}});
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEditSingleAppReceiver({team_id, shared_app_id, can_see_information, app_id}){
+  return function (dispatch, getState){
+    return post_api.teamApps.editSingleAppReceiver({
+      team_id: team_id,
+      shared_app_id: shared_app_id,
+      can_see_information: can_see_information,
+      ws_id: getState().common.ws_id
+    }).then(receiver => {
+      dispatch({type: 'TEAM_APP_EDIT_RECEIVER_FULFILLED', payload: {app_id: app_id, receiver_info: receiver}});
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamShareSingleApp({team_id, app_id, team_user_id, can_see_password}){
+  return function (dispatch, getState){
+    return post_api.teamApps.shareSingleApp({
+      team_id: team_id,
+      app_id: app_id,
+      team_user_id: team_user_id,
+      can_see_password: can_see_password,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'TEAM_SHARE_APP_FULFILLED', payload: {app_id: app_id, user_info: response}});
+    }).catch(err => {
       throw err;
     });
   }
@@ -98,13 +147,16 @@ export function teamAppEditReceiver(app_id,user_app_id, receiver_info){
   }
 }
 
-export function teamAppDeleteReceiver(app_id,user_app_id, team_user_id){
-  return function(dispatch, getState){
-    dispatch({type: 'TEAM_APP_DELETE_RECEIVER_PENDING'});
-    return post_api.teamApps.deleteReceiver(getState().common.ws_id, getState().team.id, user_app_id, team_user_id).then(response => {
+export function teamAppDeleteReceiver({team_id, app_id, team_user_id}){
+  return function (dispatch, getState){
+    return post_api.teamApps.deleteReceiver({
+      team_id: team_id,
+      app_id: app_id,
+      team_user_id: team_user_id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
       dispatch({type: 'TEAM_APP_DELETE_RECEIVER_FULFILLED', payload: {app_id: app_id, team_user_id: team_user_id}});
     }).catch(err => {
-      dispatch({type: 'TEAM_APP_DELETE_RECEIVER_REJECTED', payload: err});
       throw err;
     });
   }
