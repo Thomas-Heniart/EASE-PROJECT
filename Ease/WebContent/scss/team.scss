@@ -56,8 +56,39 @@ button.team_app_requests {
 }
 
 .team-app {
+  .ui.label.user-label {
+    i.icon {
+      margin-right: 0;
+      margin-left: .5rem;
+    }
+  }
+  .button.close {
+    height: 25px;
+    padding: 4px;
+    margin-right: 0;
+    background-color: $themeGreyDarkColor;
+    color: $themeDarkGrayTextColor;
+    opacity: .8;
+    &:hover {
+      background-color: $themeGreyDarkColor;
+      color: $themeDarkGrayTextColor;
+      opacity: 1;
+    }
+    i.icon {
+      margin-bottom: 2px !important;
+    }
+  }
   .ui.segment {
     background-color: $themeGreyLightColor;
+    margin-bottom: .5rem;
+    .button.close {
+      position: absolute;
+      top:7px;
+      right: 7px;
+      i.icon {
+        margin-bottom: 2px !important;
+      }
+    }
   }
   .logo_column {
     width: 80px;

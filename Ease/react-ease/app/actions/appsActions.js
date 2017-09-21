@@ -14,12 +14,20 @@ export function teamCreateMultiApp(app){
   }
 }
 
-export function teamCreateSingleApp(app){
-  return function (dispatch, getState){
+export function teamCreateSingleApp({team_id, channel_id, website_id, description, password_change_interval, account_information, receivers}) {
+  return (dispatch, getState) => {
     dispatch({type: 'TEAM_CREATE_SINGLE_APP_PENDING'});
-    return post_api.teamApps.createSingleApp(getState().common.ws_id, getState().team.id, app).then(response => {
-      dispatch({type: 'TEAM_CREATE_SINGLE_APP_FULFILLED', payload: response});
-      return response;
+    return post_api.teamApps.createSingleApp({
+      team_id: team_id,
+      channel_id: channel_id,
+      website_id:website_id,
+      description: description,
+      password_change_interval: password_change_interval,
+      account_information: account_information,
+      receivers: receivers,
+      ws_id: getState().common.ws_id
+    }).then(app => {
+      dispatch({type: 'TEAM_CREATE_SINGLE_APP_FULFILLED', payload: app});
     }).catch(err => {
       dispatch({type: 'TEAM_CREATE_SINGLE_APP_REJECTED', payload: err});
       throw err;

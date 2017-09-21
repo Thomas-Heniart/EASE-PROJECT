@@ -91,7 +91,7 @@ module.exports = {
         team_user_id: team_user_id,
         timestamp: new Date().getTime()
       }).then(r => {
-          return r.data;
+        return r.data;
       }).catch(err => {
         throw err.response.data;
       })
@@ -234,20 +234,25 @@ module.exports = {
     }
   },
   teamApps: {
-    createSingleApp: function(ws_id, team_id, app){
-      return axios.post('/api/v1/teams/CreateShareableSingleApp', {
-        ws_id: ws_id,
+    createSingleApp: ({team_id, channel_id, website_id, description, password_change_interval, account_information, receivers, ws_id}) => {
+      let infos = account_information.map(item => {
+        item.info_value = cipher(item.info_value);
+        return item;
+      });
+      return axios.post('/api/v1/teams/CreateSingleApp', {
         team_id: team_id,
-        channel_id: app.channel_id,
-        team_user_id: app.team_user_id,
-        website_id: app.website_id,
-        name: app.name,
-        description: app.description,
-        reminder_interval: app.reminder_interval,
-        account_information: app.account_information,
+        channel_id: channel_id,
+        website_id:website_id,
+        description: description,
+        password_change_interval: password_change_interval,
+        account_information: infos,
+        receivers: receivers,
+        ws_id: ws_id,
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     createMultiApp: function(ws_id, team_id, app){
@@ -571,7 +576,7 @@ module.exports = {
     connect : function(email, password){
       return axios.post('/api/v1/common/Connection', {
         email: email,
-          password: cipher(password)
+        password: cipher(password)
       }).then(response => {
         return response.data;
       }).catch(err => {
@@ -624,8 +629,8 @@ module.exports = {
         team_id: team_id,
         url:url,
         is_public: is_public,
-          login: cipher(login),
-          password: cipher(password),
+        login: cipher(login),
+        password: cipher(password),
         timestamp: new Date().getTime()
       }).then(r => {
         return r.data;

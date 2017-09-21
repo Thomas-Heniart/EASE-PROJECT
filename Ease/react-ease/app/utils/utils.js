@@ -27,11 +27,12 @@ export function handleSemanticInput(e, {name, value, checked}){
 export function transformWebsiteInfoIntoList(informations){
   return Object.keys(informations)
       .sort((a,b) => (informations[a].priority - informations[b].priority))
-      .map(item => {
+      .map((item, idx) => {
         return {
           ...informations[item],
           value: '',
-          name: item
+          name: item,
+          autoFocus: idx === 0
         };
       });
 }

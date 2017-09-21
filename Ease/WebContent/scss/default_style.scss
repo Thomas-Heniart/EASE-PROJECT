@@ -145,6 +145,10 @@ input[type=number]::-webkit-inner-spin-button {
   padding-right: 0;
 }
 
+i.icon.hide {
+  display: inherit !important;
+}
+
 .ui.grid > .row {
   display: inline-block;
   float: left;
@@ -473,6 +477,11 @@ input.modal_input, select.modal_input {
 .overflow-hidden {
   overflow: hidden;
 }
+
+.mrgn0 {
+  margin: 0 !important;
+}
+
 .mrgnBottom5 {
   margin-bottom: 5px;
 }
@@ -482,11 +491,9 @@ input.modal_input, select.modal_input {
 .mrgnLeft5 {
   margin-left: 5px;
 }
-
 i.icon.mrgnLeft5 {
   margin-left: 5px;
 }
-
 .mrgnRight5 {
   margin-right: 5px;
 }

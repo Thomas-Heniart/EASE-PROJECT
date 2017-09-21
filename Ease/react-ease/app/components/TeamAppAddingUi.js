@@ -9,6 +9,7 @@ import {selectUserFromListById} from "../utils/helperFunctions";
 import * as appActions from "../actions/appsActions";
 import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 import SimpleTeamAppAdder from "./teamAppAdders/SimpleTeamAppAdder";
+
 class DashboardAndTeamAppSearch extends React.Component{
   constructor(props){
     super(props);
