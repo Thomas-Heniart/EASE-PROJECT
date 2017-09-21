@@ -11,6 +11,7 @@ import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
@@ -316,7 +317,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         Boolean adminHasAccess = true;
-        Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(), sm.getDB());
+        Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(), db);
         request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(account.getDBid());
@@ -382,6 +383,33 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
                 }
             }
             db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    @Override
+    public Integer addPendingTeamUser(TeamUser teamUser, JSONObject params, DataBaseConnection db) throws HttpServletException {
+        try {
+
+            JSONObject account_information = (JSONObject) params.get("account_information");
+            String team_key = (String) params.get("team_key");
+            int transaction = db.startTransaction();
+            Integer request_id = super.addPendingTeamUser(teamUser, params, db);
+            if (account_information == null || team_key == null) {
+                db.commitTransaction(transaction);
+                return request_id;
+            }
+            for (Object entry : account_information.entrySet()) {
+                Map.Entry<String, String> key_value = (Map.Entry<String, String>) entry;
+                DatabaseRequest request = db.prepareRequest("INSERT INTO enterpriseAppRequests values (null, ?, ?, ?);");
+                request.setInt(request_id);
+                request.setString(key_value.getKey());
+                request.setString(AES.encrypt(key_value.getValue(), team_key));
+                request.set();
+            }
+            db.commitTransaction(transaction);
+            return request_id;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

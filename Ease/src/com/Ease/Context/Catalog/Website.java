@@ -621,12 +621,12 @@ public class Website {
 
     public JSONObject getSearchJson() {
         JSONObject res = this.getSimpleJson();
-        res.put("id", this.getDb_id());
         return res;
     }
 
     public JSONObject getSimpleJson() {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", this.getDb_id());
         jsonObject.put("website_name", this.name);
         jsonObject.put("logo", this.getLogo());
         jsonObject.put("pinneable", this.isIntegrated());
