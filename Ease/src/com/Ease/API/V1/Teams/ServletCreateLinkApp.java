@@ -41,7 +41,7 @@ public class ServletCreateLinkApp extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             String app_name = sm.getStringParam("name", true, false);
-            String url = sm.getStringParam("url", true, false);
+            String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
             String description = sm.getStringParam("description", false, true);
             if (app_name == null || app_name.equals(""))
