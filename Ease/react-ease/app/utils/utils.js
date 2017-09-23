@@ -86,6 +86,7 @@ export function copyTextToClipboard(str){
   return worked;
 }
 
+
 export function checkTeamUsernameErrors(username){
   let value = {
     error: false,

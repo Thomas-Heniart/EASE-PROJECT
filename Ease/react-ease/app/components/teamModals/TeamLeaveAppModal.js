@@ -14,7 +14,8 @@ import {connect} from "react-redux";
   return {
     modal: store.teamModals.teamLeaveAppModal,
     channels: store.channels.channels,
-    users: store.users.users
+    users: store.users.users,
+    team_id: store.team.id
   };
 })
 class TeamLeaveAppModal extends React.Component {
@@ -28,7 +29,12 @@ class TeamLeaveAppModal extends React.Component {
   }
   confirmModal(){
     const receiver = findMeInReceivers(this.props.modal.app.receivers, this.props.modal.team_user_id);
-    this.props.dispatch(teamAppDeleteReceiver(this.props.modal.app.id, receiver.shared_app_id, this.props.modal.team_user_id)).then(response => {
+    this.props.dispatch(teamAppDeleteReceiver({
+      team_id: this.props.team_id,
+      app_id: this.props.modal.app.id,
+      team_user_id: this.props.modal.team_user_id,
+      shared_app_id: receiver.shared_app_id
+    })).then(response => {
       this.props.dispatch(showTeamLeaveAppModal(false));
     });
   }

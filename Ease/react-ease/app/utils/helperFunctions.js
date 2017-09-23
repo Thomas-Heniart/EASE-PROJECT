@@ -88,6 +88,19 @@ export function checkForNewNotifications(n){
   return false;
 }
 
+export function sortReceiversAndMap(receivers, users, myId) {
+  return receivers.map(item => {
+    return {
+      receiver: item,
+      user: selectItemFromListById(users, item.team_user_id)
+    }
+  }).sort((a,b) => {
+    if (a.user.id === myId)
+      return -1000;
+    return a.user.username.localeCompare(b.user.username);
+  });
+}
+
 export function isAdminOrMe(user, me){
   const admin = isAdmin(me.role);
   return admin || !admin && user.id === me.id;

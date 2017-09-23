@@ -1,4 +1,5 @@
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import classnames from "classnames";
 import {passwordChangeOptions, passwordChangeValues} from "../../utils/utils";
 import React, {Component} from "react";
 
@@ -36,13 +37,55 @@ export const PasswordChangeDropdown = ({value, onChange, disabled}) => {
   )
 };
 
+export const SharingRequestButton = ({onClick}) => {
+  return (
+      <Popup size="mini"
+             position="top center"
+             inverted
+             flowing
+             trigger={
+               <Icon name="user add" class="team_app_indicator" style={{color: '#e84855'}} link onClick={onClick}/>
+             }
+             content='User(s) would like to acces this App'/>
+  )
+};
+
+export const PinAppButton = ({is_pinned, onClick}) => {
+  return (
+      <Popup size="mini"
+             position="top center"
+             inverted
+             trigger={
+               <Icon name="pin" class={classnames('pin_button team_app_indicator', is_pinned ? 'active' : null)} onClick={onClick}/>
+             }
+             content='Pin to your Personnal Space'/>
+  )
+};
+
+export const TeamAppActionButton = ({onClick, icon, text, disabled}) => {
+  return (
+      <Popup size="mini"
+             position="top center"
+             inverted
+             trigger={
+               <button class="button-unstyle"
+                       class={classnames('button-unstyle', disabled ? 'disabled': null)}
+                       type="button"
+                       onClick={onClick}>
+                 <Icon name={icon}/>
+               </button>
+             }
+             content={text}/>
+  )
+};
+
 export const PasswordChangeHolder = ({value}) => {
   return (
       <Popup size="mini"
              position="top center"
              inverted
              trigger={
-               <Button icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
+               <Button as='div' icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
              }
              content='Password update reminder'/>
   )

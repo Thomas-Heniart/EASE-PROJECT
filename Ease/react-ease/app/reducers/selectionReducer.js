@@ -159,7 +159,7 @@ export default function reducer(state={
           return item;
         });
         return {
-            ...state,
+          ...state,
           apps: apps
         }
       }
@@ -177,8 +177,8 @@ export default function reducer(state={
         return item;
       });
       return {
-          ...state,
-          apps: apps
+        ...state,
+        apps: apps
       };
     }
     case 'TEAM_APP_TRANSFER_OWNERSHIP_FULFILLED': {
@@ -299,24 +299,66 @@ export default function reducer(state={
       }
     }
     case 'TEAM_APP_ADDED' : {
-      var apps = state.apps;
-      apps.unshift(action.payload.app);
-      return {
-        ...state,
-        apps:apps
+      let apps = state.apps;
+      const app = action.payload.app;
+      if(state.type === app.origin.type && state.id === app.origin.id) {
+        apps.unshift(app);
+        return {
+          ...state,
+          apps: apps
+        }
       }
     }
     case 'TEAM_APP_REMOVED' : {
-      var apps = state.apps;
-
-      for (var i = 0; i < apps.length; i++){
-        if (apps[i].id === action.payload.app.id){
-          apps.splice(i, 1);
-          return {
-            ...state,
-            apps: apps
-          }
+      const apps = state.apps.filter(app => (app.id !== action.payload.app_id));
+      return {
+        ...state,
+        apps: apps
+      }
+    }
+    case 'TEAM_APP_RECEIVER_CHANGED' : {
+      const app_id = action.payload.app_id;
+      const receiver = action.payload.receiver;
+      const apps = state.apps.map(app => {
+        if (app.id === app_id)
+          app.receivers = app.receivers.map(item => {
+            if (item.team_user_id === receiver.team_user_id)
+              return receiver;
+            return item;
+          });
+        return app;
+      });
+      return {
+        ...state,
+        apps: apps
+      }
+    }
+    case 'TEAM_APP_RECEIVER_ADDED' : {
+      const app_id = action.payload.app_id;
+      const receiver = action.payload.receiver;
+      const apps = state.apps.map(app => {
+        if (app.id === app_id) {
+          app.sharing_requests = app.sharing_requests.filter(req => (req !== receiver.team_user_id));
+          app.receivers.push(receiver);
         }
+        return app;
+      });
+      return {
+        ...state,
+        apps: apps
+      }
+    }
+    case 'TEAM_APP_RECEIVER_REMOVED' : {
+      const app_id = action.payload.app_id;
+      const team_user_id = action.payload.team_user_id;
+      const apps = state.apps.map(app => {
+        if (app.id === app_id)
+          app.receivers = app.receivers.filter(item => (item.team_user_id !== team_user_id));
+        return app;
+      });
+      return {
+        ...state,
+        apps:apps
       }
     }
   }

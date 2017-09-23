@@ -129,6 +129,10 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 100%;
 }
 
+.fw-normal {
+  font-weight: normal !important;
+}
+
 .ui.search.inverted {
   .ui.icon.input > input {
     padding: .67857143em 1em !important;
