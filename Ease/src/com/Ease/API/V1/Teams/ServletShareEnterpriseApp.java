@@ -66,6 +66,7 @@ public class ServletShareEnterpriseApp extends HttpServlet {
                     String url = channel.getDb_id() + "?app_id=" + app.getDBid();
                     teamUser_tenant.addNotification(teamUser_connected.getUsername() + " approved your access to " + ((App) shareableApp).getName() + " in #" + channel.getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
                 }
+                sharedApp.accept(db);
             } else {
                 String privateKey = (String) sm.getContextAttr("privateKey");
                 for (Object entry : account_information.entrySet()) {

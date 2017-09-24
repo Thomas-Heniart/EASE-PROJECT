@@ -56,6 +56,7 @@ public class ServletShareSingleApp extends HttpServlet {
                 shareableApp.removePendingTeamUser(teamUser_tenant, db);
                 String url = channel.getDb_id() + "?app_id=" + app.getDBid();
                 teamUser_tenant.addNotification(teamUser_connected.getUsername() + " approved your access to " + ((App) shareableApp).getName() + " in #" + channel.getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
+                sharedApp.accept(db);
             } else {
                 if (teamUser_tenant == teamUser_connected)
                     sharedApp.accept(db);
