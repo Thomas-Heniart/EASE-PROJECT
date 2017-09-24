@@ -129,6 +129,10 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 100%;
 }
 
+.fw-normal {
+  font-weight: normal !important;
+}
+
 .ui.search.inverted {
   .ui.icon.input > input {
     padding: .67857143em 1em !important;
@@ -143,6 +147,10 @@ input[type=number]::-webkit-inner-spin-button {
 .ui.container {
   padding-left: 0;
   padding-right: 0;
+}
+
+i.icon.hide {
+  display: inherit !important;
 }
 
 .ui.grid > .row {
@@ -363,6 +371,9 @@ a.link-unstyle {
   i.icon:last-child {
     margin-right: 0;
   }
+  i.icon:first-child {
+    margin-right: inherit;
+  }
 }
 
 button.button-unstyle {
@@ -473,6 +484,11 @@ input.modal_input, select.modal_input {
 .overflow-hidden {
   overflow: hidden;
 }
+
+.mrgn0 {
+  margin: 0 !important;
+}
+
 .mrgnBottom5 {
   margin-bottom: 5px;
 }
@@ -482,11 +498,9 @@ input.modal_input, select.modal_input {
 .mrgnLeft5 {
   margin-left: 5px;
 }
-
 i.icon.mrgnLeft5 {
   margin-left: 5px;
 }
-
 .mrgnRight5 {
   margin-right: 5px;
 }

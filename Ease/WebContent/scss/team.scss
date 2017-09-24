@@ -50,14 +50,106 @@ button.team_app_requests {
 }
 
 .ui.input.team-app-input {
+  input[readonly] {
+    background-color: transparent;
+  }
   & > .ui.label .icon {
     color: white;
   }
 }
 
-.team-app {
+i.icon.pin_button {
+  color: #d8d8d8;
+  transform: rotate(30deg);
+  &.active {
+    color: #949eb7 !important;
+  }
+  &:hover {
+    color: #979797;
+  }
+}
+
+.receiver_popup {
+  .content {
+    & > * {
+      display: block;
+    }
+  }
+}
+
+.team-app.simple-team-app {
+  .copy_pwd_button {
+    margin-right: .5rem;
+  }
+}
+
+.ui.container.team-app {
+  padding: .6rem .6rem 0 .6rem;
+  &:hover {
+    .team_app_actions_holder {
+      display: inherit;
+    }
+  }
+  i.icon.team_app_indicator {
+    display: inline-block;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  .ui.segment .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left:0;
+    z-index: 2;
+    background-color: rgba(74, 144, 226, 0.1);
+  }
+
+  .team_app_actions_holder {
+    display: none;
+  }
+  .ui.label.user-label {
+    &.static {
+      color: white;
+      font-weight:normal;
+      background-color: $themeLightBlueColor;
+      &.accepted {
+        background-color: $themeBlue2Color;
+      }
+    }
+    i.icon {
+      margin-right: 0;
+      margin-left: .5rem;
+    }
+  }
+  .button.close {
+    height: 25px;
+    padding: 4px;
+    margin-right: 0;
+    background-color: $themeGreyDarkColor;
+    color: $themeDarkGrayTextColor;
+    opacity: .8;
+    &:hover {
+      background-color: $themeGreyDarkColor;
+      color: $themeDarkGrayTextColor;
+      opacity: 1;
+    }
+    i.icon {
+      margin-bottom: 2px !important;
+    }
+  }
   .ui.segment {
     background-color: $themeGreyLightColor;
+    margin-bottom: .5rem;
+    margin-top: 0;
+    .button.close {
+      position: absolute;
+      top:7px;
+      right: 7px;
+      i.icon {
+        margin-bottom: 2px !important;
+      }
+    }
   }
   .logo_column {
     width: 80px;
@@ -155,7 +247,7 @@ button.team_app_requests {
 
 #share_app_dropdown {
   color: white;
-  background-color: $themeColor;
+  background-color: $LightGreen;
   width: 40px;
   height: 40px;
   padding: 0;
@@ -166,9 +258,7 @@ button.team_app_requests {
     @include display-flex();
     @include align-items(center);
     @include justify-content(center);
-    &:hover {
-      opacity: 1;
-    }
+    opacity: 1;
   }
   .menu {
     width: 240px;
@@ -675,21 +765,21 @@ button.action_text_button {
   }
 }
 .ease_modal {
-    .ease_icon {
-      position: absolute;
-      top: 0.7rem;
-      left: 0;
-      width: 100%;
-      font-size: 30px;
-      display: block;
-    }
-    .key_label {
-      position: absolute;
-      top: 2.25rem;
-      left: 0;
-      width: 100%;
-      display: block;
-    }
+  .ease_icon {
+    position: absolute;
+    top: 0.7rem;
+    left: 0;
+    width: 100%;
+    font-size: 30px;
+    display: block;
+  }
+  .key_label {
+    position: absolute;
+    top: 2.25rem;
+    left: 0;
+    width: 100%;
+    display: block;
+  }
   .input_tag {
     span {
       color: white;
@@ -1006,6 +1096,42 @@ button.action_text_button {
   }
 }
 
+.team_app_actions_holder {
+  @include display-flex();
+  z-index: 1;
+  border: 1px solid rgba(0,0,0,0.15);
+  overflow: hidden;
+  border-radius: 5px;
+  position: absolute;
+  top:.6rem;
+  right: .6rem;
+  color: #555459;
+  font-size: 1rem;
+  transition: all 50ms ease-in;
+  &:hover {
+    @include simple-box-shadow(0 1px 1px rgba(0,0,0,.1));
+    border-color: rgba(0,0,0,0.3);
+  }
+  button {
+    width: 40px;
+    height: 36px;
+    border-right: 1px solid rgba(0,0,0,0.15);
+    color: $themeBlue2Color;
+    i.icon {
+      margin-right: 0;
+    }
+    &.disabled {
+      color: #d2dae4 !important;
+    }
+    &:last-child {
+      border-right: none;
+    }
+    &:hover {
+      color: $themeColor;
+    }
+  }
+}
+
 #teamsHandler {
   font-family: Museo;
   width: 100%;
@@ -1314,6 +1440,7 @@ button.action_text_button {
         position: relative;
         #col_main {
           position: relative;
+          overflow: auto;
           @include display-flex();
           @include flex(1);
           @include flex-direction(column);
@@ -1324,10 +1451,8 @@ button.action_text_button {
             padding-bottom: .25em;
             .apps_scroller_div {
               @include flex(1);
-              overflow: hidden;
-              overflow-y: auto;
+              overflow: visible;
               padding-bottom: 70px;
-              border-right: 0.25em solid transparent;
               .team_app_holder {
                 padding-top: .6rem;
                 padding-left: .6rem;
@@ -1361,40 +1486,6 @@ button.action_text_button {
                 }
                 .team_app_edit_actions {
                   .cancel {
-                    &:hover {
-                      color: $themeRedColor;
-                    }
-                  }
-                }
-                .team_app_actions_holder, .team_app_edit_actions {
-                  display: none;
-                  z-index: 1;
-                  border: 1px solid rgba(0,0,0,0.15);
-                  background-color: white;
-                  overflow: hidden;
-                  border-radius: 5px;
-                  position: absolute;
-                  top:2.3rem;
-                  right: .6rem;
-                  color: #555459;
-                  font-size: .7rem;
-                  transition: all 50ms ease-in;
-                  &:hover {
-                    @include simple-box-shadow(0 1px 1px rgba(0,0,0,.1));
-                    border-color: rgba(0,0,0,0.3);
-                  }
-                  button {
-                    width: 32px;
-                    height: 25px;
-                    border-right: 1px solid rgba(0,0,0,0.15);
-                    &:last-child {
-                      border-right: none;
-                    }
-                    &:hover {
-                      color: #45C997;
-                    }
-                  }
-                  .team_app_delete {
                     &:hover {
                       color: $themeRedColor;
                     }

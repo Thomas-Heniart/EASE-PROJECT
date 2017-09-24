@@ -30,6 +30,22 @@ export function fetchTeamChannelApps(id){
   }
 }
 
+export function editRoomManager({team_id, channel_id, team_user_id}){
+  return (dispatch, getState) => {
+    return post_api.teamChannel.editRoomManager({
+      team_id: team_id,
+      channel_id: channel_id,
+      team_user_id: team_user_id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'TEAM_ROOM_CHANGED', payload: {channel: response}});
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function fetchChannels(team_id) {
   return function(dispatch){
     dispatch({type: "FETCH_TEAM_CHANNELS_PENDING"});

@@ -10,6 +10,7 @@ import {showTeamDeleteUserModal,
   from "../actions/teamModalActions";
 import {selectChannelFromListById,
   selectUserFromListById,
+  selectItemFromListById,
   isAdmin,
   isAdminOrMe,
   isSuperior,
@@ -102,17 +103,17 @@ class AddMemberToRoomDiv extends React.Component {
               <Form onSubmit={this.validate}>
                 <Form.Field>
                   <Dropdown
-                    search={true}
-                    options={this.state.options}
-                    value={this.state.value}
-                    name="value"
-                    class="mini"
-                    onChange={this.handleInput}
-                    fluid
-                    selection={true}
-                    multiple
-                    renderLabel={renderUserLabel}
-                    placeholder="Tag users here..."/>
+                      search={true}
+                      options={this.state.options}
+                      value={this.state.value}
+                      name="value"
+                      class="mini"
+                      onChange={this.handleInput}
+                      fluid
+                      selection={true}
+                      multiple
+                      renderLabel={renderUserLabel}
+                      placeholder="Tag users here..."/>
                 </Form.Field>
                 <Form.Field>
                   <Button basic size="mini" type="button" onClick={this.setModifying.bind(null, false)}>Cancel</Button>
@@ -123,6 +124,88 @@ class AddMemberToRoomDiv extends React.Component {
     )
   }
 }
+
+const RoomManagerInfoIcon = () => {
+  return (
+      <Popup size="mini"
+             position="bottom right"
+             inverted
+             trigger={
+               <Icon class="mrgnRight5" name="info circle"/>
+             }
+             content='Room Managers receive notifications related to their rooms, answer join requests and update some Single Apps passwords, if needed. There can be only 1 Room Manager per room. This person has to be Admin or Owner.'/>
+  )
+};
+
+@connect(store => ({
+  team_id: store.team.id
+}))
+class RoomManagerSection extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false,
+      errorMessage: ''
+    }
+  }
+  editRoomManager = (id) => {
+    if (id === this.props.room.room_manager_id)
+      return;
+    this.setState({loading: true, errorMessage: ''});
+    this.props.dispatch(channelActions.editRoomManager({
+      team_id: this.props.team_id,
+      channel_id: this.props.room.id,
+      team_user_id: id
+    })).then(response => {
+      this.setState({loading: false});
+    }).catch(err => {
+      this.setState({loading: false, errorMessage:err});
+      setTimeout(() => {this.setState({errorMessage: ''})}, 3000);
+    });
+  };
+  render(){
+    const manager = selectItemFromListById(this.props.users, this.props.room.room_manager_id);
+    const me = this.props.me;
+    return (
+        <Grid.Column>
+          <h5>Room Manager</h5>
+          <div>
+            <Label class="display-inline-block" style={{margin: '0 .5em .5em 0'}}><Icon name="user" link class="mrgnRight5"/>{manager.username}</Label>
+            {isAdmin(me.role) &&
+                <AdminsDropdown style={{marginBottom: '.5em'}} value={manager.id} users={this.props.users} onSelect={this.editRoomManager} loading={this.state.loading}/>}
+          </div>
+          {this.state.errorMessage.length > 0 &&
+            <Message  color="red" content={this.state.errorMessage}/>}
+          <p>Room Managers are responsible for administer rooms and apps in it. <RoomManagerInfoIcon/></p>
+        </Grid.Column>
+    )
+  }
+}
+
+const AdminsDropdown = ({value, users, onSelect, loading, style}) => {
+  const admins = users.filter(item => (isAdmin(item.role))).map(item => {
+    return {
+      key: item.id,
+      text: `${item.username}(${teamUserRoles[item.role]})`,
+      value: item.id
+    }
+  });
+  return (
+      <Dropdown onChange={(e, {value}) => {onSelect(value)}}
+                button
+                style={style}
+                class="icon mini"
+                basic
+                value={value}
+                labeled
+                size="mini"
+                disabled={loading}
+                loading={loading}
+                text="Modify"
+                icon="exchange"
+                options={admins}/>
+  )
+};
 
 class TeamChannelFlexTab extends React.Component{
   constructor(props){
@@ -187,7 +270,9 @@ class TeamChannelFlexTab extends React.Component{
   render() {
     const me = this.props.me;
     const channel = this.props.item;
-
+    const channel_users = channel.userIds.map(id => {
+      return selectItemFromListById(this.props.users, id);
+    });
     return (
         <div className="flex_contents_panel active" id="team_tab">
           <div className="tab_heading">
@@ -259,24 +344,26 @@ class TeamChannelFlexTab extends React.Component{
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
+                <RoomManagerSection me={this.props.me} room={channel} users={channel_users}/>
+              </Grid.Row>
+              <Grid.Row>
                 <Grid.Column class="users">
                   <Header as="h5">
                     {isAdmin(me.role) && this.props.item.join_requests.length > 0 ?
                         <Label circular color="red" size="mini">{this.props.item.join_requests.length}</Label>: null}
                     Members :
                   </Header>
-                    {this.props.item.userIds.map(function (item) {
-                      const user = selectUserFromListById(this.props.users, item);
-                      return (
-                            <Label size="mini" key={item}>
-                              <Icon name="user"/>
-                              {user.username}
-                              {(isSuperior(user, me) || user.id === me.id) && !channel.default &&
-                              <Icon name="delete" link
-                                    onClick={e => {
-                                      this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))
-                                    }}/>}
-                            </Label>)}, this)}
+                  {channel_users.map(user => {
+                    return (
+                        <Label size="mini" key={user.id}>
+                          <Icon name="user"/>
+                          {user.username}
+                          {(isSuperior(user, me) || user.id === me.id) && !channel.default &&
+                          <Icon name="delete" link
+                                onClick={e => {
+                                  this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))
+                                }}/>}
+                        </Label>)}, this)}
                   {isAdmin(me.role) &&
                   <ChannelJoinRequestList
                       channel_id={this.props.item.id}
@@ -575,18 +662,18 @@ class TeamUserFlexTab extends React.Component{
               <Grid.Row>
                 <Grid.Column class="rooms">
                   <Header as="h5">Rooms:</Header>
-                    {user.channel_ids.map(item => {
-                      const channel = selectChannelFromListById(this.props.channels, item);
-                      return (
-                            <Label size="mini" key={item}>
-                              <Icon name="hashtag"/>
-                              {channel.name}
-                              {isAdmin(me.role) && !channel.default &&
-                              <Icon name="delete" link
-                                    onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}/>}
-                            </Label>
-                      )
-                    }, this)}
+                  {user.channel_ids.map(item => {
+                    const channel = selectChannelFromListById(this.props.channels, item);
+                    return (
+                        <Label size="mini" key={item}>
+                          <Icon name="hashtag"/>
+                          {channel.name}
+                          {isAdmin(me.role) && !channel.default &&
+                          <Icon name="delete" link
+                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}/>}
+                        </Label>
+                    )
+                  }, this)}
                 </Grid.Column>
               </Grid.Row>
               {isSuperior(user,me) &&

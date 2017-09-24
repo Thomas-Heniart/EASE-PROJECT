@@ -6,6 +6,14 @@ export function getInfoValueByName(infoList, infoName){
   return "********";
 }
 
+export function selectItemFromListById(list, id){
+  for (let i = 0; i < list.length; i++){
+    if (list[i].id === id)
+      return list[i];
+  }
+  return null;
+}
+
 export function selectUserFromListById(user_list, user_id){
   for (var i = 0; i < user_list.length; i++){
     if (user_list[i].id === user_id)
@@ -78,6 +86,19 @@ export function checkForNewNotifications(n){
       return true;
   }
   return false;
+}
+
+export function sortReceiversAndMap(receivers, users, myId) {
+  return receivers.map(item => {
+    return {
+      receiver: item,
+      user: selectItemFromListById(users, item.team_user_id)
+    }
+  }).sort((a,b) => {
+    if (a.user.id === myId)
+      return -1000;
+    return a.user.username.localeCompare(b.user.username);
+  });
 }
 
 export function isAdminOrMe(user, me){

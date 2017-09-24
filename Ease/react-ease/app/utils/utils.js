@@ -24,16 +24,30 @@ export function handleSemanticInput(e, {name, value, checked}){
   this.setState({[name]: value});
 }
 
+export function transformCredentialsListIntoObject(credentials){
+  return credentials.reduce((prev, curr) =>{
+    return {...prev, [curr.name]: curr.value}
+  }, {});
+}
+
 export function transformWebsiteInfoIntoList(informations){
   return Object.keys(informations)
       .sort((a,b) => (informations[a].priority - informations[b].priority))
-      .map(item => {
+      .map((item, idx) => {
         return {
           ...informations[item],
           value: '',
-          name: item
+          name: item,
+          autoFocus: idx === 0
         };
       });
+}
+
+export function transformWebsiteInfoIntoListAndSetValues(information, values){
+  return transformWebsiteInfoIntoList(information).map(item => {
+    item.value = values[item.name];
+    return item;
+  });
 }
 
 export function getTeamAppPasswordAndCopyToClipboard({team_id, shared_app_id}){
@@ -71,6 +85,7 @@ export function copyTextToClipboard(str){
   document.body.removeChild(dummy);
   return worked;
 }
+
 
 export function checkTeamUsernameErrors(username){
   let value = {
@@ -118,7 +133,7 @@ export const teamUserRoles = {
 
 export const passwordChangeValues = {
   0: 'never',
-  1: "1 months",
+  1: "1 month",
   3: "3 months",
   6: "6 months",
   12: "12 months"
@@ -134,7 +149,7 @@ export const credentialIconType = {
 
 export const passwordChangeOptions = [
   {key: 0, text: 'never', value: 0},
-  {key: 1, text: '1 months', value: 1},
+  {key: 1, text: '1 month', value: 1},
   {key: 3, text: '3 months', value: 3},
   {key: 6, text: '6 months', value: 6},
   {key: 12, text: '12 months', value: 12},

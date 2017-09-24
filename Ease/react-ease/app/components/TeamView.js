@@ -181,7 +181,7 @@ class TeamView extends React.Component {
                   item={selectedItem}
                   match={this.props.match}
                   appsLength={this.props.selectedItem.apps.length}/>
-              <div className="team_client_body">
+              <div className="team_client_body bordered_scrollbar">
                 <OpacityTransition appear={true}>
                   {this.props.common.user !== null && !this.props.common.user.status.team_tuto_done &&
                   <TeamsTutorial/>}
