@@ -857,6 +857,15 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
+    public SharedApp getSharedAppForTeamUser(TeamUser teamUser) {
+        for (SharedApp sharedApp : this.getSharedApps()) {
+            if (sharedApp.getTeamUser_tenant() == teamUser)
+                return sharedApp;
+        }
+        return null;
+    }
+
+    @Override
     public Collection<TeamUser> getPendingTeamUsers() {
         if (pending_teamUsers == null)
             pending_teamUsers = new ConcurrentHashMap<>();

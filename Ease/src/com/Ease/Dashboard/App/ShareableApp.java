@@ -61,4 +61,6 @@ public interface ShareableApp {
     public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException;
 
     Integer addPendingTeamUser(TeamUser teamUser_connected, JSONObject params, DataBaseConnection db) throws HttpServletException;
+
+    SharedApp getSharedAppForTeamUser(TeamUser teamUser);
 }
