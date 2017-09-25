@@ -431,7 +431,7 @@ public class Team {
 
     public boolean isBlocked() {
         try {
-            return (this.subscription_date == null) || (!card_entered && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+            return (this.subscription_date == null) || (!card_entered && this.getSubscription().getTrialEnd() != null && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
         } catch (HttpServletException e) {
             e.printStackTrace();
             return true;
