@@ -35,7 +35,6 @@ public class ServletEditEnterpriseApp extends HttpServlet {
             if (!app.isEmpty())
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject params = new JSONObject();
-            String name = sm.getStringParam("name", true, false);
             params.put("description", sm.getStringParam("description", false, false));
             params.put("password_change_interval", sm.getIntParam("password_change_interval", true, false));
             shareableApp.modifyShareable(sm.getDB(), params);
