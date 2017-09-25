@@ -103,47 +103,6 @@ var actions = {
             }
         }, 100);
     },
-    /* waitfor: function (msg, callback, sendResponse) {
-
-        var div = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].search;
-        var time = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep].time;
-        if (!time) {
-            time = 100;
-        }
-        var iteration = 0;
-
-        function waitfor(callback) {
-            if (typeof div === 'string') {
-                div = [div];
-            }
-            var absent = true;
-            for (var i in div) {
-                var obj = $(div[i]);
-                if (obj.length > 0) {
-                    absent = false;
-                    break;
-                }
-            }
-            if (iteration % 20 == 0) {
-                console.log("-- waiting for element " + div[0] + " --");
-            }
-            if (iteration > 100) {
-                msg.type = "error: connection too long";
-                sendResponse(msg);
-                errorOverlay(msg);
-            } else if (absent) {
-                setTimeout(function () {
-                    iteration++;
-                    waitfor(callback);
-                }, time);
-            } else {
-                msg.actionStep++;
-                callback(msg, sendResponse);
-            }
-        }
-
-        waitfor(callback);
-    }, */
     setattr: function (msg, callback, sendResponse) {
         var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];
         var input = $(actionStep.search);
@@ -207,17 +166,31 @@ var actions = {
                 callback(msg, sendResponse);
             }
         } else {
-            if (waited) var timeoutfill = 1;
-            else var timeoutfill = 500;
+            var timeoutfill;
+            if (waited)
+                timeoutfill = 1;
+            else
+                timeoutfill = 500;
             setTimeout(function () {
-                input.select();
-                input.click();
+                var jInput = $(input[0]);
+                jInput.select();
+                jInput.click();
                 input[0].focus();
                 input[0].value = msg.detail[0].user[actionStep.what];
                 fire_onchange(input[0]);
                 input[0].blur();
-                input.prop("readonly", true);
-                console.log("put readonly");
+                jInput.prop("readonly", true);
+                jInput.focus(function () {
+                    $(this).prop("readonly", false)
+                });
+                if (jInput.attr("type") === "password") {
+                    var fakePwd = $("<input type=\"password\" " +
+                        "style=\"position: absolute; border:none;width:0px;height:0px;background-color:white;overflow: hidden; opacity: 0;\" />");
+                    fakePwd.insertBefore(jInput);
+                    fakePwd.focus(function () {
+                        $(this).next().focus();
+                    });
+                }
                 msg.actionStep++;
                 callback(msg, sendResponse);
             }, timeoutfill);
@@ -247,14 +220,6 @@ var actions = {
         }
     },
     checkIfPopup: function (msg, callback, sendResponse) {
-        /*var popupButton = document.createElement("button");
-        popupButton.id = "testtest23";
-         document.body.appendChild(popupButton);
-        $("#testtest23").click(function(){window.open('http://www.zebest3000.com','lenomdusite','width=300, height=250'); return false;});
-
-        $("#testtest23").click();*/
-
-
         msg.actionStep++;
         callback(msg, sendResponse);
     },

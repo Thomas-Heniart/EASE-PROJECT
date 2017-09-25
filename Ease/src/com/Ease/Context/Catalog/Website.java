@@ -122,7 +122,7 @@ public class Website {
             infos.add(WebsiteInformation.createInformation(db_id, "login", "text", "0", "Login", "fa-user-o", db));
             infos.add(WebsiteInformation.createInformation(db_id, "password", "password", "1", "Password", "fa-lock", db));
             db.commitTransaction(transaction);
-            Website newWebsite = new Website(db_id, website_name, url, "undefined", null, false, url, 0, 1, infos, websiteAttributes, null);
+            Website newWebsite = new Website(db_id, website_name, url, "undefined", null, false, url, 0, 1, infos, websiteAttributes, new LinkedList<>());
             WebsitesVisitedManager websitesVisitedManager = (WebsitesVisitedManager) context.getAttribute("websitesVisitedManager");
             int visits = websitesVisitedManager.websiteDone(newWebsite.getHostname(), db);
             websiteAttributes.setVisits(visits, db);
@@ -228,7 +228,7 @@ public class Website {
     protected int ratio;
     protected WebsiteAttributes websiteAttributes;
     protected List<WebsiteInformation> website_informations;
-    protected List<Website> loginWithWebsites;
+    protected List<Website> loginWithWebsites = new LinkedList<>();
     protected List<String> groupIds;
     protected List<String> teamIds = new LinkedList<>();
 

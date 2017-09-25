@@ -40,7 +40,7 @@ public class ServletUnsubscribe extends HttpServlet {
 
             /* ==== Stripe start ==== */
 
-            Subscription subscription = Subscription.retrieve(team.getSubscription_id());
+            Subscription subscription = team.getSubscription();
             subscription.cancel(new HashMap<>());
             Customer customer = Customer.retrieve(team.getCustomer_id());
             String default_source = customer.getDefaultSource();

@@ -16,7 +16,7 @@ function showExtensionPopup() {
     if (ease_extension.length) {
         if (!waitForExtension) {
             if (getUserNavigator() == "Safari") {
-                if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.8") {
+                if (!$('#ease_extension').attr("safariversion") || $('#ease_extension').attr("safariversion") != "2.2.9") {
                     $('#extension .title p').text("Update your extension");
                     $('#extension #download #line1').text("A new version of the extension is now available.");
                     $('#extension #download #line2').text("We added new features and made it faster !");

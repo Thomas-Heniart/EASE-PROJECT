@@ -89,6 +89,9 @@ public class Team {
     protected AppManager appManager = new AppManager();
 
     @Transient
+    private Subscription subscription;
+
+    @Transient
     private int activeSubscriptions;
 
     @Transient
@@ -134,6 +137,16 @@ public class Team {
 
     public void setSubscription_id(String subscription_id) {
         this.subscription_id = subscription_id;
+    }
+
+    public Subscription getSubscription() throws HttpServletException {
+        if (subscription == null)
+            try {
+                subscription = Subscription.retrieve(this.getSubscription_id());
+            } catch (Exception e) {
+                throw new HttpServletException(HttpStatus.InternError, e);
+            }
+        return subscription;
     }
 
     public boolean isCard_entered() {
@@ -387,11 +400,10 @@ public class Team {
         });
         System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
-            Subscription subscription = Subscription.retrieve(this.subscription_id);
-            if (subscription.getQuantity() != activeSubscriptions) {
+            if (this.getSubscription().getQuantity() != activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
-                subscription.update(updateParams);
+                this.getSubscription().update(updateParams);
             }
         } catch (AuthenticationException e) {
             e.printStackTrace();
@@ -402,6 +414,8 @@ public class Team {
         } catch (CardException e) {
             e.printStackTrace();
         } catch (APIException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -480,7 +494,7 @@ public class Team {
             return;
         try {
             String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
-            Long trialEnd = Subscription.retrieve(this.subscription_id).getTrialEnd() * 1000;
+            Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
                 mailJetBuilder = new MailJetBuilder();

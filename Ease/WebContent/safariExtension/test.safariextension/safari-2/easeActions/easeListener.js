@@ -1,6 +1,6 @@
 if (window.location.href.indexOf("https://ease.space") == 0 || window.location.href.indexOf("https://51.254.207.91:8443") == 0 || window.location.href.indexOf("https://localhost:8443") == 0 || window.location.href.indexOf("https://192.168.0.19:8443") == 0 || window.location.href.indexOf("https://turfu.ease.space:8443") == 0) {
 
-    $('body').prepend('<div id="ease_extension" safariVersion="2.2.8" style="display:none;">');
+    $('body').prepend('<div id="ease_extension" safariVersion="2.2.9" style="display:none;">');
     $(".displayedByPlugin").show();
     extension.runtime.sendMessage("getSettings", {}, function (response) {
         if (response.homepage) {
