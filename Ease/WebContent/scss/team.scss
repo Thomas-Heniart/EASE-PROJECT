@@ -189,7 +189,76 @@ i.icon.pin_button {
   font-weight: normal;
 }
 
-#simple_team_app_add {
+.enterprise-extend-switch {
+  @include display-flex();
+  @include align-items(center);
+  margin-left: 10px;
+  font-size: .8rem;
+  color: #9a9a9a;
+  .checkbox {
+    margin: 0 0 0 9px;
+  }
+}
+
+.team-app.enterprise-team-app {
+  .receiver-label {
+    color: white;
+    font-weight:normal;
+  }
+  .credentials .display-inline-flex {
+    & > * {
+      margin-right: .5rem;
+    }
+  }
+  .receiver {
+    .ui.label {
+      background-color: #D2DAE4;
+      &.accepted {
+        background-color: $themeBlue2Color;
+      }
+    }
+  }
+}
+
+#enterprise-app-adder, .team-app.enterprise-team-app {
+  .receivers {
+    & > * {
+      margin-bottom: .5rem;
+      &:last-child {
+        margin-bottom: .5rem;
+      }
+    }
+  }
+  .receiver {
+    @include display-flex();
+    & > * {
+      margin-right: .5rem;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    .receiver-label {
+      width: 130px;
+      @include display-flex();
+      @include align-items(center);
+      span {
+        @include flex(1);
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  .users-dropdown {
+    .ui.label {
+      display: none;
+    }
+    input {
+      width: 100%;
+    }
+  }
+}
+
+.team-app.team-app-adder {
   padding: .6rem;
   .ui.search {
     .results {
