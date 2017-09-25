@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
@@ -37,6 +38,11 @@ public class ServletEditEnterpriseApp extends HttpServlet {
             JSONObject params = new JSONObject();
             params.put("description", sm.getStringParam("description", false, false));
             params.put("password_change_interval", sm.getIntParam("password_change_interval", true, false));
+            Boolean fill_in_switch = sm.getBooleanParam("fill_in_switch", true, false);
+            WebsiteApp websiteApp = (WebsiteApp) app;
+            if (websiteApp.getEnterpriseAppAttributes().getFill_in_switch() && !fill_in_switch)
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot disable this switch.");
+            params.put("fill_in_switch", fill_in_switch);
             shareableApp.modifyShareable(sm.getDB(), params);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
             sm.setSuccess(shareableApp.getShareableJson());

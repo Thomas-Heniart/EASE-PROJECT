@@ -1,6 +1,7 @@
 package com.Ease.Dashboard.App;
 
 import com.Ease.Context.Group.GroupManager;
+import com.Ease.Dashboard.App.EnterpriseApp.EnterpriseAppAttributes;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
@@ -122,6 +123,9 @@ public class App implements ShareableApp, SharedApp {
                     default:
                         throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
                 }
+                App app = (App) shareableApp;
+                if (app.isEmpty())
+                    ((WebsiteApp) app).setEnterpriseAppAttributes(EnterpriseAppAttributes.loadEnterpriseAppAttributes(app.getDBid(), db));
                 shareableApp.setDescription(description);
                 shareableApp.setOrigin(rs.getString("origin_type"), rs.getInt("origin_id"), team.getDb_id());
                 Integer channel_id = rs.getInt("channel_id");
