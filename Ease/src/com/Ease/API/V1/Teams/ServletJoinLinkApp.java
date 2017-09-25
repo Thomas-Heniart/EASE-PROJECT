@@ -1,5 +1,8 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -11,6 +14,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,34 +24,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/teams/RemoveUserFromChannel")
-public class ServletRemoveTeamUserFromChannel extends HttpServlet {
+@WebServlet("/api/v1/teams/JoinLinkApp")
+public class ServletJoinLinkApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team_id);
+            Integer app_id = sm.getIntParam("app_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer channel_id = sm.getIntParam("channel_id", true, false);
-            Channel channel = team.getChannelWithId(channel_id);
-            if (channel.isDefault())
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove user from default channel.");
-            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
-            TeamUser teamUser_to_remove = team.getTeamUserWithId(teamUser_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            if (!channel.getTeamUsers().contains(teamUser_connected))
-                throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
-            if (channel.getRoom_manager() == teamUser_to_remove)
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove the room manager.");
+            TeamUser teamUser_tenant = sm.getTeamUserForTeam(team);
+            ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
+            App app = (App) shareableApp;
+            if (!app.isLinkApp())
+                throw new HttpServletException(HttpStatus.Forbidden);
+            Channel channel = shareableApp.getChannel();
+            if (!channel.getTeamUsers().contains(teamUser_tenant))
+                throw new HttpServletException(HttpStatus.Forbidden, "You can only share this app with people in this room.");
+            if (shareableApp.getTeamUser_tenants().contains(teamUser_tenant))
+                throw new HttpServletException(HttpStatus.BadRequest, "This user already have this app.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            team.getAppManager().removeSharedAppsForTeamUserInChannel(teamUser_to_remove, channel, db);
-            channel.removeTeamUser(teamUser_to_remove, sm.getDB());
+            SharedApp sharedApp = shareableApp.share(teamUser_tenant, team, new JSONObject(), sm);
             db.commitTransaction(transaction);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_remove.getJson(), teamUser_to_remove.getOrigin()));
-            sm.setSuccess(channel.getJson());
+            shareableApp.addSharedApp(sharedApp);
+            team.getAppManager().addSharedApp(sharedApp);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, app.getShareableJson(), app.getOrigin()));
+            sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);
         }

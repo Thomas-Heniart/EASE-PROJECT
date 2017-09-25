@@ -41,7 +41,7 @@ public class ServletReloadTeam extends HttpServlet {
             int transaction = db.startTransaction();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, sm.getServletContext(), db));
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, sm.getServletContext(), db);
+                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, sm.getServletContext(), db);
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);
             }

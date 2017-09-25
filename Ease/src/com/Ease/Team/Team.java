@@ -39,7 +39,7 @@ public class Team {
             team.lazyInitialize();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, context, db);
+                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, context, db);
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);
             }
@@ -376,8 +376,6 @@ public class Team {
             return;
         this.activeSubscriptions = 0;
         this.getTeamUsers().forEach((id, teamUser) -> {
-            if (!this.getAppManager().getShareableAppsForTeamUser(teamUser).isEmpty())
-                teamUser.setActive_subscription(true);
             for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
                 if (!((App) sharedApp).isReceived())
                     continue;

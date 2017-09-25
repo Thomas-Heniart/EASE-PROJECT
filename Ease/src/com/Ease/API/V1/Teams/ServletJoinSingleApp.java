@@ -9,9 +9,6 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,28 +18,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by thomas on 05/05/2017.
- */
-@WebServlet("/api/v1/teams/AskJoinApp")
-public class ServletAskJoinApp extends HttpServlet {
+@WebServlet("/api/v1/teams/JoinSingleApp")
+public class ServletJoinSingleApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
+            Integer app_id = sm.getIntParam("app_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            Integer app_id = sm.getIntParam("app_id", true, false);
+            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            App app = (App) shareableApp;
+            if (!app.isClassicApp())
+                throw new HttpServletException(HttpStatus.Forbidden);
             Channel channel = shareableApp.getChannel();
-            if (channel != null && !(channel.getTeamUsers().contains(teamUser)))
-                throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel");
-            shareableApp.addPendingTeamUser(teamUser, sm.getDB());
-            String url = channel.getDb_id() + "?app_id=" + ((App) shareableApp).getDBid();
-            channel.getRoom_manager().addNotification(teamUser.getUsername() + " would like to have access to " + ((App) shareableApp).getName(), url, ((App) shareableApp).getLogo(), sm.getTimestamp(), sm.getDB());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
+            if (!channel.getTeamUsers().contains(teamUser_connected))
+                throw new HttpServletException(HttpStatus.Forbidden, "You are not of channel of this app.");
+            if (shareableApp.getTeamUser_tenants().contains(teamUser_connected))
+                throw new HttpServletException(HttpStatus.BadRequest, "You already have this app.");
+            if (shareableApp.getPendingTeamUsers().contains(teamUser_connected))
+                throw new HttpServletException(HttpStatus.BadRequest, "You already ask to join this app.");
+            shareableApp.addPendingTeamUser(teamUser_connected, sm.getDB());
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);

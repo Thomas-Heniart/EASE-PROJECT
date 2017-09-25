@@ -4,13 +4,27 @@
   "home":"https://business.facebook.com/",
   "connect": {
     "todo": [
+      {
+        "action": "waitfor",
+        "search": "a[href*='login']"
+      },
+      {
+        "action": "aclick",
+        "search": "a[href*='login']"
+      },
       {"action":"fill", "what":"login","search":"#email", "grave":"true"},
       {"action":"fill", "what":"password","search":"#pass"},
-      {"action":"click", "search":"#loginbutton input"}
+      {
+        "action": "click",
+        "search": "#loginbutton"
+      }
     ]
   },
   "checkAlreadyLogged": [
-    {"action":"waitfor", "search":"div[data-testid='persona-selector'], #loginbutton input"},
+    {
+      "action": "waitfor",
+      "search": "div[data-testid='persona-selector'], a[href*='login']"
+    },
     {"search":"div[data-testid='persona-selector']"}
   ],
   "logout": {

@@ -1,20 +1,21 @@
 var React = require('react');
 var classnames = require('classnames');
 import {showTeamManageAppRequestModal} from "../../actions/teamModalActions";
-import {teamShareApp, deleteJoinAppRequest} from "../../actions/appsActions";
+import {teamShareApp, deleteJoinAppRequest, teamShareSingleApp, teamAcceptSharedApp} from "../../actions/appsActions";
 import {
     selectChannelFromListById,
     selectUserFromListById,
     findMeInReceivers
-} from "../../utils/helperFunctions"
+} from "../../utils/helperFunctions";
 
-import {connect} from "react-redux"
+import {connect} from "react-redux";
 
 @connect((store)=>{
   return {
     modal: store.teamModals.teamManageAppRequestModal,
     channels: store.channels.channels,
-    users: store.users.users
+    users: store.users.users,
+    team_id: store.team.id
   };
 })
 class TeamManageAppRequestModal extends React.Component {
@@ -35,16 +36,24 @@ class TeamManageAppRequestModal extends React.Component {
     this.refuseUser = this.refuseUser.bind(this);
   }
   acceptUser(id){
-    this.props.dispatch(teamShareApp(this.props.modal.app.id, {team_user_id: id, can_see_information: false})).then(() => {
-      const users = this.state.users.map(item => {
-        if (item.user.id === id){
-          item.checked = true;
-          item.accepted = true;
-        }
-        return item;
+    const app = this.props.modal.app;
+    if (app.type === 'simple'){
+      this.props.dispatch(teamShareSingleApp({
+        team_id: this.props.team_id,
+        app_id: app.id,
+        team_user_id: id,
+        can_see_information: false
+      })).then(() => {
+        const users = this.state.users.map(item => {
+          if (item.user.id === id){
+            item.checked = true;
+            item.accepted = true;
+          }
+          return item;
+        });
+        this.setState({users : users});
       });
-      this.setState({users : users});
-    });
+    }
   }
   refuseUser(id){
     this.props.dispatch(deleteJoinAppRequest(this.props.modal.app.id, id)).then(() => {

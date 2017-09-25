@@ -10,10 +10,8 @@ public class Regex {
             Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$");
     public static final Pattern VALID_COLOR_REGEX =
             Pattern.compile("^#[0-9a-fA-F]{6}$");
-    public static final Pattern VALID_URL_REGEX =
-            Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", Pattern.CASE_INSENSITIVE);
     public static final Pattern URL_REGEX =
-            Pattern.compile("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$");
+            Pattern.compile("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})(/?)");
     public static final Pattern VALID_PHONE_NUMBER =
             Pattern.compile("^(\\+|[0-9])(?:[0-9] ?){5,13}[0-9]$", Pattern.CASE_INSENSITIVE);
     public static final Pattern VALID_USERNAME = Pattern.compile("^[a-z0-9_\\-]{3,21}$");
@@ -32,11 +30,6 @@ public class Regex {
 
     public static boolean isColor(String colorStr) {
         Matcher matcher = VALID_COLOR_REGEX.matcher(colorStr);
-        return matcher.find();
-    }
-
-    public static boolean isUrl(String urlStr) {
-        Matcher matcher = VALID_URL_REGEX.matcher(urlStr);
         return matcher.find();
     }
 

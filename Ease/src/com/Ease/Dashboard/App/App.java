@@ -124,14 +124,8 @@ public class App implements ShareableApp, SharedApp {
                 }
                 shareableApp.setDescription(description);
                 shareableApp.setOrigin(rs.getString("origin_type"), rs.getInt("origin_id"), team.getDb_id());
-                TeamUser teamUser_owner = team.getTeamUserWithId(rs.getInt("teamUser_owner_id"));
                 Integer channel_id = rs.getInt("channel_id");
-                Channel channel = null;
-                if (channel_id != null && channel_id > 0) {
-                    channel = team.getChannelWithId(channel_id);
-                    shareableApp.setChannel(channel);
-                }
-                shareableApp.setTeamUser_owner(teamUser_owner);
+                shareableApp.setChannel(team.getChannelWithId(channel_id));
                 shareableApps.add(shareableApp);
                 DatabaseRequest request1 = db.prepareRequest("SELECT team_user_id FROM pendingJoinAppRequests WHERE shareable_app_id = ?;");
                 request1.setInt(((App) shareableApp).getDBid());
@@ -145,7 +139,7 @@ public class App implements ShareableApp, SharedApp {
         }
     }
 
-    public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, ServletContext context, DataBaseConnection db) throws HttpServletException {
+    public static List<SharedApp> loadSharedAppsForShareableApp(ShareableApp shareableApp, Team team, ServletContext context, DataBaseConnection db) throws HttpServletException {
         try {
             List<SharedApp> sharedApps = new LinkedList<>();
             DatabaseRequest request = db.prepareRequest("SELECT * FROM apps JOIN sharedApps ON sharedApps.id = apps.id AND sharedApps.shareable_app_id = ?;");
@@ -154,7 +148,7 @@ public class App implements ShareableApp, SharedApp {
             Integer db_id;
             String insertDate;
             AppInformation infos;
-            SharedApp sharedApp = null;
+            SharedApp sharedApp;
             while (rs.next()) {
                 db_id = rs.getInt("apps.id");
                 insertDate = rs.getString("insert_date");
@@ -175,7 +169,7 @@ public class App implements ShareableApp, SharedApp {
                 }
                 sharedApp.setPinned(rs.getBoolean("pinned"));
                 Integer teamUser_tenant_id = rs.getInt("teamUser_tenant_id");
-                sharedApp.setTeamUser_tenant(shareableApp.getTeamUser_owner().getTeam().getTeamUserWithId(teamUser_tenant_id));
+                sharedApp.setTeamUser_tenant(team.getTeamUserWithId(teamUser_tenant_id));
                 sharedApp.setHolder(shareableApp);
                 sharedApp.setCanSeeInformation(rs.getBoolean("canSeeInformation"));
                 sharedApps.add(sharedApp);
@@ -211,7 +205,7 @@ public class App implements ShareableApp, SharedApp {
 
     }
 
-    public static Integer createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, App holder, boolean received, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static Integer createSharedApp(Profile profile, Integer position, String name, String type, Map<String, Object> elevator, Integer team_id, Integer team_user_tenant_id, App holder, boolean received, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         AppInformation infos = AppInformation.createAppInformation(name, db);
@@ -230,17 +224,13 @@ public class App implements ShareableApp, SharedApp {
             request.setInt(position);
             request.set();
         }
-        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, ?, 0, ?, default);");
+        request = db.prepareRequest("INSERT INTO sharedApps values (?, ?, ?, ?, ?, 0, ?, default);");
         request.setInt(appDBid);
         request.setInt(team_id);
         request.setInt(team_user_tenant_id);
         request.setInt(holder.getDBid());
-        if (channel_id == null)
-            request.setNull();
-        else
-            request.setInt(channel_id);
         request.setBoolean(received);
-        Boolean canSeeInformation = (Boolean) elevator.get("canSeeInformation");
+        Boolean canSeeInformation = (Boolean) elevator.get("can_see_information");
         if (canSeeInformation == null)
             canSeeInformation = false;
         request.setBoolean(canSeeInformation);
@@ -268,16 +258,17 @@ public class App implements ShareableApp, SharedApp {
 
     /* Interface ShareableApp */
     protected Map<Integer, SharedApp> sharedApps = new ConcurrentHashMap<>();
-    protected TeamUser teamUser_owner;
     protected Channel channel;
     protected String description;
     protected JSONObject origin = new JSONObject();
+    /* @TODO replace by pending_sharedApps */
     protected Map<Integer, TeamUser> pending_teamUsers = new ConcurrentHashMap<>();
 
     /* Interface SharedApp */
     protected ShareableApp holder;
     protected TeamUser teamUser_tenant;
     protected Boolean canSeeInformation;
+    /* @TODO remove adminHasAccess */
     protected boolean adminHasAccess;
     protected boolean pinned = false;
 
@@ -407,6 +398,10 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public boolean isClassicApp() {
+        return false;
+    }
+
+    public boolean isLinkApp() {
         return false;
     }
 
@@ -660,12 +655,12 @@ public class App implements ShareableApp, SharedApp {
 
     /* Interface ShareableApp */
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
+    public SharedApp share(TeamUser teamUser_tenant, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         throw new HttpServletException(HttpStatus.BadRequest, "App cannot be instantiate");
     }
 
     @Override
-    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
             String description = (String) editJson.get("description");
@@ -707,11 +702,6 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public TeamUser getTeamUser_owner() {
-        return this.teamUser_owner;
-    }
-
-    @Override
     public List<TeamUser> getTeamUser_tenants() {
         List<TeamUser> teamUsers = new LinkedList<>();
         for (SharedApp sharedApp : this.getSharedApps())
@@ -749,11 +739,6 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public void setTeamUser_owner(TeamUser teamUser_owner) {
-        this.teamUser_owner = teamUser_owner;
-    }
-
-    @Override
     public Channel getChannel() {
         return this.channel;
     }
@@ -767,8 +752,7 @@ public class App implements ShareableApp, SharedApp {
     public JSONObject getShareableJson() throws HttpServletException {
         try {
             JSONObject res = new JSONObject();
-            res.put("id", Integer.valueOf(this.getDBid()));
-            res.put("sender_id", this.getTeamUser_owner().getDb_id());
+            res.put("id", this.getDBid());
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date shared_date = dateFormat.parse(this.getInsertDate());
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
@@ -776,8 +760,6 @@ public class App implements ShareableApp, SharedApp {
             JSONArray receivers = new JSONArray();
             for (SharedApp sharedApp : this.sharedApps.values())
                 receivers.add(sharedApp.getSharedJSON());
-            /* for (SharedApp sharedApp : this.getSharedApps())
-                receivers.add(sharedApp.getSharedJSON()); */
             res.put("receivers", receivers);
             JSONArray waitingTeamUsers = new JSONArray();
             for (TeamUser teamUser : this.getPendingTeamUsers())
@@ -836,18 +818,6 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public void transferOwnership(TeamUser teamUser_new_owner, DataBaseConnection db) throws HttpServletException {
-        try {
-            DatabaseRequest request = db.prepareRequest("UPDATE shareableApps SET teamUser_owner_id = ?;");
-            request.setInt(teamUser_new_owner.getDb_id());
-            request.set();
-            this.setTeamUser_owner(teamUser_new_owner);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    @Override
     public void removeSharedApp(SharedApp sharedApp) {
         this.sharedApps.remove(((App) sharedApp).getDBid());
     }
@@ -873,6 +843,20 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
+    public Integer addPendingTeamUser(TeamUser teamUser, JSONObject params, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("INSERT INTO pendingJoinAppRequests values (null, ?, ?);");
+            request.setInt(this.getDBid());
+            request.setInt(teamUser.getDb_id());
+            Integer request_id = request.set();
+            this.addPendingTeamUser(teamUser);
+            return request_id;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    @Override
     public Collection<TeamUser> getPendingTeamUsers() {
         if (pending_teamUsers == null)
             pending_teamUsers = new ConcurrentHashMap<>();
@@ -884,11 +868,18 @@ public class App implements ShareableApp, SharedApp {
         if (!this.getPendingTeamUsers().contains(teamUser))
             return;
         try {
-            DatabaseRequest request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE shareable_app_id = ? AND team_user_id = ?;");
+            DatabaseRequest request;
+            if (this.isEmpty()) {
+                request = db.prepareRequest("DELETE FROM enterpriseAppRequests WHERE request_id IN (SELECT id FROM pendingJoinAppRequests WHERE shareable_app_id = ? AND team_user_id = ?);");
+                request.setInt(this.getDBid());
+                request.setInt(teamUser.getDb_id());
+                request.set();
+            }
+            request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE shareable_app_id = ? AND team_user_id = ?;");
             request.setInt(this.getDBid());
             request.setInt(teamUser.getDb_id());
             request.set();
-            this.pending_teamUsers.remove(teamUser);
+            this.pending_teamUsers.remove(teamUser.getDb_id());
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
@@ -936,24 +927,17 @@ public class App implements ShareableApp, SharedApp {
         return jsonObject;
     }
 
-    public void becomeShareable(DataBaseConnection db, Team team, TeamUser teamUser_owner, Integer team_user_id, Channel channel, String description) throws GeneralException {
-        if (this.teamUser_owner != null)
-            return;
-        String origin_type = (channel == null) ? "user" : "channel";
-        Integer origin_id = (channel == null) ? team_user_id : channel.getDb_id();
-        DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?, ?, ?, ?);");
+    public void becomeShareable(DataBaseConnection db, Team team, Channel channel, String description) throws GeneralException {
+        String origin_type = "channel";
+        Integer origin_id = channel.getDb_id();
+        DatabaseRequest databaseRequest = db.prepareRequest("INSERT INTO shareableApps values (?, ?, ?, ?, ?, ?);");
         databaseRequest.setInt(this.getDBid());
         databaseRequest.setInt(team.getDb_id());
-        databaseRequest.setInt(teamUser_owner.getDb_id());
-        if (channel == null)
-            databaseRequest.setNull();
-        else
-            databaseRequest.setInt(channel.getDb_id());
+        databaseRequest.setInt(channel.getDb_id());
         databaseRequest.setString((description == null) ? "" : description);
         databaseRequest.setString(origin_type);
         databaseRequest.setInt(origin_id);
         databaseRequest.set();
-        this.teamUser_owner = teamUser_owner;
         this.channel = channel;
         this.description = description;
         this.setOrigin(origin_type, origin_id, team.getDb_id());

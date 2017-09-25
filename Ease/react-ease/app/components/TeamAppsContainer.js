@@ -1,6 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 var TeamSimpleApp = require('./teamApps/TeamSimpleApp');
+import SimpleTeamApp from "./teamAppAdders/SimpleTeamApp";
 var TeamLinkApp = require('./teamApps/TeamLinkApp');
 var TeamMultiApp = require('./teamApps/TeamMultiApp');
 import {connect} from "react-redux"
@@ -10,7 +11,8 @@ import {connect} from "react-redux"
     selectedItem: store.selection,
     users: store.users.users,
     channels: store.channels.channels,
-    me: store.users.me
+    me: store.users.me,
+    team_id: store.team.id
   };
 })
 class TeamAppsContainer extends React.Component{
@@ -24,15 +26,16 @@ class TeamAppsContainer extends React.Component{
             {this.props.selectedItem.apps.map(function(item){
                 if (item.type === 'simple')
                   return (
-                      <TeamSimpleApp
+                      <SimpleTeamApp
                           app={item}
                           users={this.props.users}
                           channels={this.props.channels}
                           me={this.props.me}
                           key={item.id}
+                          team_id={this.props.team_id}
                           dispatch={this.props.dispatch}/>
                   );
-                if (item.type === 'link')
+/*                if (item.type === 'link')
                   return (
                       <TeamLinkApp
                           app={item}
@@ -51,7 +54,7 @@ class TeamAppsContainer extends React.Component{
                           me={this.props.me}
                           key={item.id}
                           dispatch={this.props.dispatch}/>
-                  );
+                  );*/
               }, this)
             }
           </div>

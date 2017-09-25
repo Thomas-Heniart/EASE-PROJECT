@@ -16,7 +16,6 @@ import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -427,12 +426,6 @@ public class TeamUser {
             int transaction = db.startTransaction();
             Team team = this.getTeam();
             /* @TODO remove this */
-            List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                if (shareableApp.getTeamUser_owner() == this)
-                    shareableAppsToRemove.add(shareableApp);
-            }
-            team.getAppManager().removeShareableApps(shareableAppsToRemove, db);
             team.getAppManager().removeSharedAppsForTeamUser(this, db);
             for (Channel channel : this.getTeam().getChannels().values())
                 channel.removeTeamUser(this, db);

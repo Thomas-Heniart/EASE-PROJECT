@@ -8,7 +8,7 @@ function teamAppDispatcher(action, app, target){
   return function (dispatch, getState){
     const state = getState();
     if (state.selection.id === target.id && state.selection.type === target.type && state.team.id === target.team_id)
-      dispatch({type: 'TEAM_APP_' + action, payload: {app: app, target: target}});
+      dispatch({type: 'TEAM_APP_' + action, payload: {app: app, app_id: app.id, target: target}});
   }
 }
 

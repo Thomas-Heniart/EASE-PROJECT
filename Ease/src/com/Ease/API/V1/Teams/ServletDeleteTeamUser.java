@@ -50,7 +50,7 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     channelList.add(channel);
             }
             if (!channelList.isEmpty()) {
-                String message = "You cannot delete this user because he is still room manager for ";
+                String message = "This user can’t be deleted as long as he/she remains Room Manager for ";
                 for (Channel channel : channelList) {
                     message += ("#" + channel.getName());
                     if (channelList.indexOf(channel) == channelList.size() - 1)

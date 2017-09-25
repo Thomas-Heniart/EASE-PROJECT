@@ -223,6 +223,8 @@ public class Channel {
             joinRequests.add(teamUser.getDb_id());
         jsonObject.put("join_requests", joinRequests);
         jsonObject.put("default", this.isDefault());
+        jsonObject.put("room_manager_id", this.getRoom_manager().getDb_id());
+        /* WTF */
         return jsonObject;
     }
 

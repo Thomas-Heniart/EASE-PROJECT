@@ -554,10 +554,13 @@ public class Website {
             if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
                 return true;
         }
+        /* Sell EaseTeam to school to remove this fucking shit */
         if (user.getEmail().endsWith("@iscparis.com") && (this.folder.contains("ISC") || this.folder.contains("isc") || this.name.contains("ISC") || this.name.contains("isc")))
             return true;
         if (this.folder.contains("ISC") || this.folder.contains("isc") || this.name.contains("ISC") || this.name.contains("isc"))
             return false;
+        if (user.getEmail().endsWith("@ieseg.fr") && (this.folder.toLowerCase().contains("ieseg") || this.folder.toLowerCase().contains("iéseg")))
+            return true;
         return (this.groupIds.isEmpty() && this.teamIds.isEmpty() && this.isPublic());
     }
 
@@ -618,12 +621,12 @@ public class Website {
 
     public JSONObject getSearchJson() {
         JSONObject res = this.getSimpleJson();
-        res.put("id", this.getDb_id());
         return res;
     }
 
     public JSONObject getSimpleJson() {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", this.getDb_id());
         jsonObject.put("website_name", this.name);
         jsonObject.put("logo", this.getLogo());
         jsonObject.put("pinneable", this.isIntegrated());

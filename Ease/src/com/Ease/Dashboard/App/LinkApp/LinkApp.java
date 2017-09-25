@@ -2,7 +2,6 @@ package com.Ease.Dashboard.App.LinkApp;
 
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
@@ -88,8 +87,8 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), infos, linkDBid);
     }
 
-    public static LinkApp createShareableLinkApp(String name, String link, PostServletManager sm) throws GeneralException, HttpServletException {
-        return createLinkApp(null, null, name, link, "/resources/icons/link_app.png", sm);
+    public static LinkApp createShareableLinkApp(String name, String link, String img_url, PostServletManager sm) throws GeneralException, HttpServletException {
+        return createLinkApp(null, null, name, link, img_url.equals("") ? "/resources/icons/link_app.png" : img_url, sm);
     }
 
 	/*
@@ -166,6 +165,10 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return this.linkInfos;
     }
 
+    public boolean isLinkApp() {
+        return true;
+    }
+
     @Override
     public String getLogo() {
         return this.linkInfos.getImgUrl();
@@ -173,14 +176,14 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
 
     @Override
     public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
-        this.getHolder().modifyShareable(db, editJson, this);
+        throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify a shared link app");
     }
 
     @Override
-    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            super.modifyShareable(db, editJson, sharedApp);
+            super.modifyShareable(db, editJson);
             this.getLinkAppInformations().edit(editJson, db);
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
@@ -189,11 +192,11 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
+    public SharedApp share(TeamUser teamUser_tenant, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
-        Integer appDBid = App.createSharedApp(null, null, this.getName(), "linkApp", elevator, team.getDb_id(), (channel == null) ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
+        Integer appDBid = App.createSharedApp(null, null, this.getName(), "linkApp", elevator, team.getDb_id(), teamUser_tenant.getDb_id(), this, true, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?, NULL);");
         request.setInt(appDBid);
         request.setInt(this.linkInfos.getDb_id());

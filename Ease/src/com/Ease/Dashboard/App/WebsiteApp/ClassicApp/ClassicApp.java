@@ -5,7 +5,6 @@ import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
@@ -15,7 +14,6 @@ import org.json.simple.JSONObject;
 
 import javax.servlet.ServletContext;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ClassicApp extends WebsiteApp {
@@ -67,12 +65,12 @@ public class ClassicApp extends WebsiteApp {
         return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
     }
 
-    public static ClassicApp createShareableClassicApp(String name, Website website, List<JSONObject> accountInformationList, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static ClassicApp createShareableClassicApp(String name, Website website, JSONObject account_information, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
         Integer websiteAppDBid = WebsiteApp.createWebsiteApp(null, null, name, "classicApp", website, elevator, db);
-        Account account = Account.createShareableAccount(accountInformationList, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
+        Account account = Account.createShareableAccount(account_information, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
@@ -243,24 +241,27 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public void modifyShared(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
-        try {
-            int transaction = db.startTransaction();
+            /* int transaction = db.startTransaction();
             super.modifyShared(db, editJson);
-            this.getAccount().edit(editJson, db);
-            Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
-            if (canSeeInformation != null)
+            this.getAccount().edit(editJson, db); */
+        try {
+            App holder = (App) this.getHolder();
+            if (holder.isClassicApp()) {
+                Boolean canSeeInformation = (Boolean) editJson.get("can_see_information");
                 this.setCanSeeInformation(canSeeInformation, db);
-            db.commitTransaction(transaction);
+            } else if (holder.isEmpty()) {
+                this.getAccount().edit(editJson, db);
+            }
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
 
     @Override
-    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            super.modifyShareable(db, editJson, sharedApp);
+            super.modifyShareable(db, editJson);
             this.getAccount().edit(editJson, db);
             for (SharedApp app : this.sharedApps.values())
                 ((ClassicApp) app).getAccount().edit(editJson, db);
@@ -272,17 +273,18 @@ public class ClassicApp extends WebsiteApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
+    public SharedApp share(TeamUser teamUser_tenant, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         Boolean canSeeInformation = (Boolean) params.get("can_see_information");
         if (canSeeInformation == null)
             canSeeInformation = false;
-        Integer websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
+        elevator.put("can_see_information", canSeeInformation);
+        Integer websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, canSeeInformation, sm.getDB());
+        Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, sm.getDB());
         DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(sharedAccount.getDBid());

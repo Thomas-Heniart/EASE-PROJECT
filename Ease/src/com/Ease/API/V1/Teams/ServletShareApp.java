@@ -1,20 +1,8 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Team.Channel;
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,7 +20,8 @@ public class ServletShareApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
+            throw new HttpServletException(HttpStatus.Forbidden, "This servlet is not accessible anymore.");
+            /* Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
@@ -41,8 +30,6 @@ public class ServletShareApp extends HttpServlet {
             TeamUser teamUser_tenant = team.getTeamUserWithId(teamUser_tenant_id);
             Integer app_id = sm.getIntParam("app_id", true, false);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
-            if (!(shareableApp.getTeamUser_owner() == teamUser_owner) && !teamUser_owner.isTeamAdmin())
-                throw new HttpServletException(HttpStatus.Forbidden, "Not allowed");
             if (shareableApp.getTeamUser_tenants().contains(teamUser_tenant))
                 throw new HttpServletException(HttpStatus.BadRequest, "You already shared this app to this user");
             Channel channel = shareableApp.getChannel();
@@ -51,7 +38,7 @@ public class ServletShareApp extends HttpServlet {
             JSONObject params = shareableApp.getNeededParams(sm);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            SharedApp sharedApp = shareableApp.share(teamUser_owner, teamUser_tenant, channel, team, params, sm);
+            SharedApp sharedApp = shareableApp.share(teamUser_tenant, channel, team, params, sm);
             if (teamUser_tenant == sm.getTeamUserForTeam(team))
                 sharedApp.accept(db);
             if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
@@ -69,7 +56,7 @@ public class ServletShareApp extends HttpServlet {
             JSONObject target = shareableApp.getOrigin();
             target.put("team_id", team_id);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
-            sm.setSuccess(sharedApp.getSharedJSON());
+            sm.setSuccess(sharedApp.getSharedJSON()); */
         } catch (Exception e) {
             sm.setError(e);
         }

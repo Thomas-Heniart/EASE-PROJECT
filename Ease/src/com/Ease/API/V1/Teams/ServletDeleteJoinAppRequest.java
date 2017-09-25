@@ -3,9 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -26,15 +23,12 @@ public class ServletDeleteJoinAppRequest extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
+            sm.needToBeAdminOfTeam(team_id);
             Integer pending_teamUser_id = sm.getIntParam("team_user_id", true, false);
             Integer app_id = sm.getIntParam("app_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
-            if (!teamUser.isTeamAdmin() && shareableApp.getTeamUser_owner() != teamUser)
-                throw new HttpServletException(HttpStatus.Forbidden, "Not allowed");
             shareableApp.removePendingTeamUser(team.getTeamUserWithId(pending_teamUser_id), sm.getDB());
             JSONObject target = shareableApp.getOrigin();
             target.put("team_id", team_id);

@@ -38,11 +38,7 @@ function TeamSimpleAppButtonSet(props) {
           <i class="fa fa-thumb-tack"/>
         </button>}
         {meReceiver !== null && meReceiver.accepted &&
-        <button class="button-unstyle team_app_leave"
-                data-tip="Leave App"
-                onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}>
-          <i class="fa fa-sign-out"/>
-        </button>}
+        <LeaveAppButton onClick={e => {props.dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>}
         {(meSender || me.role > 1) &&
         <button class="button-unstyle team_app_edit"
                 data-tip="Edit App"
@@ -422,7 +418,7 @@ class TeamSimpleApp extends React.Component {
                       <span class="default">Request sent</span>
                     </button>}
                     {!this.state.modifying && meReceiver === null && me.id !== app.sender_id && me.role === 1 && !asked &&
-                      <RequestAppButton action={e => {this.props.dispatch(appActions.askJoinTeamApp(app.id))}}/>}
+                    <RequestAppButton action={e => {this.props.dispatch(appActions.askJoinTeamApp(app.id))}}/>}
                     {!this.state.modifying && meReceiver === null && (me.role > 1 || me.id === app.sender_id) &&
                     <button class="button-unstyle joinAppBtn"
                             onClick={this.selfJoinApp}>

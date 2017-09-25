@@ -9,9 +9,9 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.SendGridMail;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
@@ -96,8 +96,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid);
     }
 
-    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
-        return createEmptyApp(null, null, name, website, reminderValue, "MONTH", sm);
+    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer password_change_interval, PostServletManager sm) throws GeneralException, HttpServletException {
+        return createEmptyApp(null, null, name, website, password_change_interval, "MONTH", sm);
     }
 
     public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, ServletManager sm) throws GeneralException {
@@ -130,10 +130,10 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
     }
 
-    public static Integer createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer channel_id, Integer team_user_tenant_id, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static Integer createSharedWebsiteApp(WebsiteApp websiteApp, Map<String, Object> elevator, Integer team_id, Integer team_user_tenant_id, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
-        Integer appDBid = App.createSharedApp(null, null, websiteApp.getName(), "websiteApp", elevator, team_id, channel_id == null ? null : channel_id, team_user_tenant_id, websiteApp, false, sm);
+        Integer appDBid = App.createSharedApp(null, null, websiteApp.getName(), "websiteApp", elevator, team_id, team_user_tenant_id, websiteApp, false, sm);
         DatabaseRequest request = db.prepareRequest("INSERT INTO websiteApps VALUES(NULL, ?, ?, NULL, 'classicApp', null, null);");
         request.setInt(websiteApp.getSite().getDb_id());
         request.setInt(appDBid);
@@ -299,25 +299,25 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public SharedApp share(TeamUser teamUser_owner, TeamUser teamUser_tenant, Channel channel, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
+    public SharedApp share(TeamUser teamUser_tenant, Team team, JSONObject params, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<>();
         Boolean canSeeInformation = (Boolean) params.get("canSeeInformation");
         elevator.put("canSeeInformation", canSeeInformation);
         JSONObject account_information = (JSONObject) params.get("account_information");
-        App sharedApp = null;
-        DatabaseRequest request = null;
-        Integer websiteAppId = null;
-        if (account_information == null) {
+        App sharedApp;
+        DatabaseRequest request;
+        Integer websiteAppId;
+        if (account_information.isEmpty()) {
             account_information = new JSONObject();
             for (WebsiteInformation websiteInformation : this.getSite().getInformations())
                 account_information.put(websiteInformation.getInformationName(), "");
         }
-        websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), channel == null ? null : channel.getDb_id(), teamUser_tenant.getDb_id(), sm);
+        websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         Boolean adminHasAccess = true;
-        Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(), sm.getDB());
+        Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(), db);
         request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
         request.setInt(websiteAppId);
         request.setInt(account.getDBid());
@@ -366,24 +366,50 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     }
 
     @Override
-    public void modifyShareable(DataBaseConnection db, JSONObject editJson, SharedApp sharedApp) throws HttpServletException {
+    public void modifyShareable(DataBaseConnection db, JSONObject editJson) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            super.modifyShareable(db, editJson, sharedApp);
+            super.modifyShareable(db, editJson);
             if (this.isEmpty()) {
-                Integer reminderInterval = (Integer) editJson.get("reminderInterval");
-                if (reminderInterval != null) {
+                Integer password_change_interval = (Integer) editJson.get("password_change_interval");
+                if (!password_change_interval.equals(this.getReminderIntervalValue())) {
                     DatabaseRequest request = db.prepareRequest("UPDATE websiteApps SET reminderIntervalValue = ? WHERE id = ?;");
-                    request.setInt(reminderInterval);
+                    request.setInt(password_change_interval);
                     request.setInt(this.websiteAppDBid);
                     request.set();
-                    this.reminderIntervalValue = reminderInterval;
-                    for (SharedApp sharedApp1 : this.getSharedApps()) {
-                        ((ClassicApp) sharedApp1).getAccount().setReminderInterval(reminderInterval, db);
-                    }
+                    this.reminderIntervalValue = password_change_interval;
+                    for (SharedApp sharedApp : this.getSharedApps())
+                        ((ClassicApp) sharedApp).getAccount().setReminderInterval(password_change_interval, db);
                 }
             }
             db.commitTransaction(transaction);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    @Override
+    public Integer addPendingTeamUser(TeamUser teamUser, JSONObject params, DataBaseConnection db) throws HttpServletException {
+        try {
+
+            JSONObject account_information = (JSONObject) params.get("account_information");
+            String team_key = (String) params.get("team_key");
+            int transaction = db.startTransaction();
+            Integer request_id = super.addPendingTeamUser(teamUser, params, db);
+            if (account_information == null || team_key == null) {
+                db.commitTransaction(transaction);
+                return request_id;
+            }
+            for (Object entry : account_information.entrySet()) {
+                Map.Entry<String, String> key_value = (Map.Entry<String, String>) entry;
+                DatabaseRequest request = db.prepareRequest("INSERT INTO enterpriseAppRequests values (null, ?, ?, ?);");
+                request.setInt(request_id);
+                request.setString(key_value.getKey());
+                request.setString(AES.encrypt(key_value.getValue(), team_key));
+                request.set();
+            }
+            db.commitTransaction(transaction);
+            return request_id;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
