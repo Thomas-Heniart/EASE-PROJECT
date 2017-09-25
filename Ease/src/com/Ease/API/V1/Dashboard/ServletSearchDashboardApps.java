@@ -27,6 +27,8 @@ public class ServletSearchDashboardApps extends HttpServlet {
             List<ClassicApp> classicAppList = sm.getUser().getDashboardManager().getClassicApps();
             JSONArray jsonArray = new JSONArray();
             for (ClassicApp classicApp : classicAppList) {
+                if (classicApp.isPinned())
+                    continue;
                 Website website = classicApp.getSite();
                 if (search == null || search.equals(""))
                     jsonArray.add(classicApp.getSearchJson());
