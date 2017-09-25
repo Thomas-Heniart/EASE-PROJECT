@@ -347,7 +347,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         res.put("type", "multi");
         res.put("website", this.website.getInformationJson());
         res.put("password_change_interval", this.getReminderIntervalValue());
-        res.put("fill_in_switch", this.getEnterpriseAppAttributes().getFill_in_switch());
+        if (this.isEmpty())
+            res.put("fill_in_switch", this.getEnterpriseAppAttributes().getFill_in_switch());
         JSONArray jsonArray = (JSONArray) res.get("receivers");
         for (Object object : jsonArray) {
             JSONObject sharedAppObject = (JSONObject) object;
