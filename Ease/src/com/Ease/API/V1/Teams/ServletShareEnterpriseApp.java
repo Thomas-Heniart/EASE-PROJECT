@@ -49,14 +49,15 @@ public class ServletShareEnterpriseApp extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             SharedApp sharedApp;
             JSONObject params = new JSONObject();
-            JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            JSONObject account_information = sm.getJsonParam("account_information", false, true);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            if (account_information.isEmpty() && shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
+            if (account_information == null && shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
                 DatabaseRequest databaseRequest = db.prepareRequest("SELECT information_name, information_value FROM enterpriseAppRequests JOIN pendingJoinAppRequests ON enterpriseAppRequests.request_id = pendingJoinAppRequests.id WHERE shareable_app_id = ? AND team_user_id = ?;");
                 databaseRequest.setInt(app.getDBid());
                 databaseRequest.setInt(teamUser_tenant.getDb_id());
                 DatabaseResult rs = databaseRequest.get();
+                account_information = new JSONObject();
                 while (rs.next())
                     account_information.put(rs.getString(1), AES.decrypt(rs.getString(2), teamUser_connected.getDeciphered_teamKey()));
                 params.put("account_information", account_information);

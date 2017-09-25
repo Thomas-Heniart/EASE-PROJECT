@@ -507,6 +507,8 @@ public class Team {
         if (this.card_entered)
             return;
         try {
+            if (this.getSubscription().getTrialEnd() == null)
+                return;
             String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             if (!this.isFreemium())
                 return;

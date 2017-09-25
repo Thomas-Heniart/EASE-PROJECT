@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -14,8 +15,6 @@ import com.Ease.websocketV1.WebSocketMessage;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -60,23 +59,27 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 }
                 throw new HttpServletException(HttpStatus.Forbidden, message);
             }
-            JSONArray forEmail = new JSONArray();
+            String forEmail = "";
             for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser_to_delete)) {
                 App holder = (App) sharedApp.getHolder();
                 if (holder.isEmpty() || (holder.isClassicApp() && sharedApp.getHolder().getTeamUser_tenants().size() == 1)) {
-                    JSONObject app = new JSONObject();
-                    app.put("name", holder.getName());
-                    forEmail.put(app);
+                    ClassicApp classicApp = (ClassicApp) sharedApp;
+                    String login = classicApp.getAccount().getInformationNamed("login");
+                    forEmail += holder.getName();
+                    if (login != null)
+                        forEmail += " (" + login + ")";
+                    forEmail += ", ";
                 }
+
             }
-            System.out.println("Email apps size: " + forEmail.length());
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
+                forEmail = forEmail.substring(0, forEmail.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                 mailJetBuilder.setTemplateId(180165);
                 mailJetBuilder.addTo(teamUser_connected.getEmail());
-                mailJetBuilder.setTemplateErrorDeliver();
-                mailJetBuilder.setTemplateErrorReporting();
+                /* mailJetBuilder.setTemplateErrorDeliver();
+                mailJetBuilder.setTemplateErrorReporting(); */
                 mailJetBuilder.addVariable("first_name", teamUser_to_delete.getFirstName());
                 mailJetBuilder.addVariable("last_name", teamUser_to_delete.getLastName());
                 mailJetBuilder.addVariable("team_name", team.getName());
