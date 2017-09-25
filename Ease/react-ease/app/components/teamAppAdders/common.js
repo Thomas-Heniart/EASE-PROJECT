@@ -1,6 +1,7 @@
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import classnames from "classnames";
-import {passwordChangeOptions, passwordChangeValues} from "../../utils/utils";
+import api from "../../utils/api";
+import {passwordChangeOptions, passwordChangeValues, copyTextToClipboard} from "../../utils/utils";
 import React, {Component} from "react";
 
 export const setUserDropdownText = (user) => {
@@ -34,6 +35,21 @@ export const PasswordChangeDropdown = ({value, onChange, disabled}) => {
                          options={passwordChangeOptions}/>
              }
              content='Password update reminder'/>
+  )
+};
+
+export const ExtendFillSwitch = ({value, onClick}) => {
+  return (
+      <Popup size="mini"
+             position="top center"
+             inverted
+             trigger={
+               <div class="enterprise-extend-switch">
+                 I fill user’s credentials myslef
+                 <Checkbox toggle name="fill_in_switch" checked={value} onClick={onClick}/>
+               </div>
+             }
+             content='You can fill logins and passwords for each of your users (enabled only on Pro plan), or let them do it.'/>
   )
 };
 
@@ -101,4 +117,58 @@ export const PasswordChangeManagerLabel = ({username})=> {
              }
              content={`${username} updates the password`}/>
   )
+};
+
+export class CopyPasswordButton extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      state: 0,
+      open: false,
+      pwd: ''
+    }
+  }
+  copyPassword = () => {
+    copyTextToClipboard(this.state.pwd);
+    this.setState({state: 3, open: true});
+    setTimeout(() => {
+      this.setState({state: 0, open: false});
+    }, 2000);
+  };
+  fetchPassword = () => {
+    this.setState({state: 1, open: true});
+    api.teamApps.getSharedAppPassword({team_id: this.props.team_id, shared_app_id: this.props.shared_app_id}).then(pwd => {
+      this.setState({pwd: pwd, state: 2, open: true});
+    }).catch(err => {
+      this.setState({state: 4, open: true});
+      setTimeout(() => {
+        this.setState({state: 0, open: false});
+      }, 2000);
+    });
+  };
+  render(){
+    const content = <div>
+      {this.state.state === 0 &&
+      'Copy password'}
+      {this.state.state === 1 &&
+      <Icon name="asterisk" loading/>}
+      {this.state.state === 2 &&
+      <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
+      {this.state.state === 3 &&
+      'Copied!'}
+      {this.state.state === 4 &&
+      'Error'}
+    </div>;
+    return (
+        <Popup size="mini"
+               position="top center"
+               open={this.state.state > 0 ? true : undefined}
+               inverted
+               hoverable
+               trigger={
+                 <Icon name="copy" class="copy_pwd_button" link onClick={this.fetchPassword}/>
+               }
+               content={content}/>
+    )
+  }
 };

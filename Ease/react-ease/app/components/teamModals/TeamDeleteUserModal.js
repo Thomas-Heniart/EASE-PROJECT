@@ -44,7 +44,7 @@ class TeamDeleteUserModal extends Component {
               {username} will lose access to all accounts. But be carefull : we don't delete accounts on the websites themselves... Yet ;) Don't forget to go delete them by yourself.
             </Form.Field>
             <Form.Field>
-              <Checkbox label="I'm sure to remove this member" name="confirm" checked={this.state.confirm} onChange={this.handleInput}/>
+              <Checkbox label="I'm sure to remove this member" name="confirm" checked={this.state.confirm} onClick={this.handleInput}/>
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button

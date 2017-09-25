@@ -184,6 +184,20 @@ export default function reducer(state={
         users: users
       }
     }
+    case 'EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED': {
+      const date = action.payload.departure_date;
+      const user_id = action.payload.id;
+
+      const users = state.users.map(item => {
+        if (item.id === user_id)
+          item.departure_date = date;
+        return item;
+      });
+      return {
+          ...state,
+        users: users
+      }
+    }
     case 'TEAM_USER_CHANGED': {
       var users = state.users.map(item => {
         if (item.id === action.payload.user.id)

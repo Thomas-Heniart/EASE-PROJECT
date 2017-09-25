@@ -14,7 +14,7 @@ export function teamCreateMultiApp(app){
   }
 }
 
-export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, description, password_change_interval, receivers}){
+export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, description, password_change_interval, receivers,fill_in_switch}){
   return (dispatch, getState) => {
     return post_api.teamApps.createEnterpriseApp({
       team_id: team_id,
@@ -23,6 +23,7 @@ export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, 
       name: name,
       description: description,
       password_change_interval: password_change_interval,
+      fill_in_switch:fill_in_switch,
       receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(app => {
@@ -34,13 +35,14 @@ export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, 
   }
 }
 
-export function teamEditEnterpriseApp({team_id, app_id, description, password_change_interval, ws_id}) {
+export function teamEditEnterpriseApp({team_id, app_id, description, password_change_interval,fill_in_switch}) {
   return (dispatch, getState) => {
     return post_api.teamApps.editEnterpriseApp({
       team_id: team_id,
       app_id: app_id,
       description: description,
       password_change_interval: password_change_interval,
+      fill_in_switch:fill_in_switch,
       ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
@@ -69,7 +71,40 @@ export function teamShareEnterpriseApp({team_id, app_id, team_user_id, account_i
   }
 }
 
-export function teamEditEnterpriseAppReceiver({team_id, shared_app_id, account_information}){
+export function teamAcceptEnterpriseApp({team_id, shared_app_id, account_information, app_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.acceptEnterpriseApp({
+      team_id: team_id,
+      shared_app_id: shared_app_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(receiver => {
+      console.log(receiver);
+      dispatch({type: 'TEAM_APP_RECEIVER_CHANGED', payload: {app_id: app_id, receiver: receiver}});
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamJoinEnterpriseApp({team_id, app_id, account_information}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.joinEnterpriseApp({
+      team_id: team_id,
+      app_id: app_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(app => {
+      dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
+      return app;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEditEnterpriseAppReceiver({team_id, app_id, shared_app_id, account_information}){
   return (dispatch, getState) => {
     return post_api.teamApps.editEnterpriseAppReceiver({
       team_id: team_id,
@@ -116,7 +151,7 @@ export function teamEditSingleApp({app_id, description, account_information, pas
       password_change_interval: password_change_interval
     }).then(app => {
       dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
-      return response;
+      return app;
     }).catch(err => {
       throw err;
     });
@@ -149,13 +184,14 @@ export function teamShareSingleApp({team_id, app_id, team_user_id, can_see_infor
       ws_id: getState().common.ws_id
     }).then(receiver => {
       dispatch({type: 'TEAM_APP_RECEIVER_ADDED', payload: {app_id: app_id, receiver: receiver}});
+      return receiver;
     }).catch(err => {
       throw err;
     });
   }
 }
 
-export function teamCreateLinkAppNew({team_id, channel_id, name, description, url, img_url})  {
+export function teamCreateLinkAppNew({team_id, channel_id, name, description, url, img_url}) {
   return (dispatch, getState) => {
     return post_api.teamApps.createLinkAppNew({
       team_id: team_id,
@@ -164,9 +200,10 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
       description: description,
       url: url,
       img_url: img_url,
-      ws_id: getState().common.ws_id,
+      ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({type: 'TEAM_APP_ADDED', payload: {app:app}});
+      return app;
     }).catch(err => {
       throw err;
     });
@@ -182,9 +219,10 @@ export function teamEditLinkAppNew({team_id, app_id, name, description, url, img
       description: description,
       url: url,
       img_url: img_url,
-      ws_id: getState().common.ws_id,
+      ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
+      return app;
     }).catch(err => {
       throw err;
     });

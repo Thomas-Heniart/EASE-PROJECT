@@ -286,9 +286,9 @@ export default function reducer(state={
       };
     }
     case 'TEAM_APP_CHANGED' : {
-      var apps = state.apps;
+      let apps = state.apps;
 
-      for (var i = 0; i < apps.length; i++){
+      for (let i = 0; i < apps.length; i++){
         if (apps[i].id === action.payload.app.id){
           apps[i] = action.payload.app;
           return {
@@ -297,6 +297,7 @@ export default function reducer(state={
           }
         }
       }
+      break;
     }
     case 'TEAM_APP_ADDED' : {
       let apps = state.apps;
