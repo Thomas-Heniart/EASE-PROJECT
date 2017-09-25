@@ -430,7 +430,12 @@ public class Team {
     }
 
     public boolean isBlocked() {
-        return (this.subscription_date == null) || (!card_entered && DateComparator.isOutdated(this.subscription_date, 30));
+        try {
+            return (this.subscription_date == null) || (!card_entered && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+        } catch (HttpServletException e) {
+            e.printStackTrace();
+            return true;
+        }
     }
 
     public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
