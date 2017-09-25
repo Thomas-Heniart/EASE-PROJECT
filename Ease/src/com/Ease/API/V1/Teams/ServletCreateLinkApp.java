@@ -14,7 +14,6 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -39,7 +38,7 @@ public class ServletCreateLinkApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            JSONArray receivers = sm.getArrayParam("receivers", false, false);
+            //JSONArray receivers = sm.getArrayParam("receivers", false, false);
             String app_name = sm.getStringParam("name", true, false);
             String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
@@ -59,9 +58,7 @@ public class ServletCreateLinkApp extends HttpServlet {
             int transaction = db.startTransaction();
             LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, img_url, sm);
             linkApp.becomeShareable(sm.getDB(), team, channel, description);
-            for (Object receiver : receivers) {
-                Integer receiver_id = Math.toIntExact((Long) receiver);
-                TeamUser teamUser_tenant = team.getTeamUserWithId(receiver_id);
+            for (TeamUser teamUser_tenant : channel.getTeamUsers()) {
                 SharedApp sharedApp = linkApp.share(teamUser_tenant, team, new JSONObject(), sm);
                 linkApp.addSharedApp(sharedApp);
                 if (teamUser_tenant != teamUser_owner) {
