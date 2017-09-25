@@ -113,14 +113,12 @@ public class ServletCreateTeam extends HttpServlet {
             customerParams.put("email", email);
             team.setCustomer_id(Customer.create(customerParams).getId());
             Map<String, Object> item = new HashMap<>();
-            item.put("plan", "EaseFreemium");
+            item.put("plan", "FreePlan");
             Map<String, Object> items = new HashMap<>();
             items.put("0", item);
             Map<String, Object> params = new HashMap<>();
             params.put("customer", team.getCustomer_id());
             params.put("items", items);
-            params.put("trial_period_days", 30);
-            params.put("tax_percent", 20.0);
             team.setSubscription_id(Subscription.create(params).getId());
             team.setSubscription_date(new Date());
 

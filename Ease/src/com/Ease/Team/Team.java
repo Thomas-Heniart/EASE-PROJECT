@@ -181,6 +181,10 @@ public class Team {
         this.active = active;
     }
 
+    public boolean isFreemium() throws HttpServletException {
+        return this.getSubscription().getPlan().getId().equals("EaseFreemium");
+    }
+
     public Map<Integer, TeamUser> getTeamUsers() {
         if (teamUsers == null)
             teamUsers = new ConcurrentHashMap<>();
@@ -286,11 +290,12 @@ public class Team {
         return res;
     }
 
-    public JSONObject getSimpleJson() {
+    public JSONObject getSimpleJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
         res.put("valid_subscription", !this.isBlocked());
+        res.put("freemium", this.isFreemium());
         return res;
     }
 
