@@ -8,6 +8,7 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -94,7 +95,12 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     sm.saveOrUpdate(teamUser);
                 }
             }
-            teamUser_to_delete.delete(sm.getDB());
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
+            for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete))
+                channel.removeTeamUser(teamUser_to_delete, db);
+            teamUser_to_delete.delete(db);
+            db.commitTransaction(transaction);
             team.removeTeamUser(teamUser_to_delete);
             sm.deleteObject(teamUser_to_delete);
             WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, team_user_id, teamUser_to_delete.getOrigin());
