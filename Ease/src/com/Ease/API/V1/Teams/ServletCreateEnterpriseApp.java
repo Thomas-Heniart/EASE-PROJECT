@@ -74,9 +74,9 @@ public class ServletCreateEnterpriseApp extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(website.getName(), website, password_change_interval, fill_in_switch, sm);
+            websiteApp.becomeShareable(sm.getDB(), team, channel, description);
             EnterpriseAppAttributes enterpriseAppAttributes = EnterpriseAppAttributes.createEnterpriseAppAttributes(websiteApp.getDBid(), fill_in_switch, db);
             websiteApp.setEnterpriseAppAttributes(enterpriseAppAttributes);
-            websiteApp.becomeShareable(sm.getDB(), team, channel, description);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             for (Object receiver : jsonArray) {
                 JSONObject receiver_json = (JSONObject) receiver;

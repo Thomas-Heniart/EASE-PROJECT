@@ -695,6 +695,9 @@ public class App implements ShareableApp, SharedApp {
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingJoinAppRequests WHERE shareable_app_id = ?");
             request.setInt(this.getDBid());
             request.set();
+            request = db.prepareRequest("DELETE FROM enterpriseAppAttributes WHERE enterprise_app_id = ?;");
+            request.setInt(this.getDBid());
+            request.set();
             request = db.prepareRequest("DELETE FROM shareableApps WHERE id = ?;");
             request.setInt(this.getDBid());
             request.set();
