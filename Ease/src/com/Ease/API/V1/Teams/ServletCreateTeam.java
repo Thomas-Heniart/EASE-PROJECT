@@ -120,6 +120,8 @@ public class ServletCreateTeam extends HttpServlet {
             Map<String, Object> params = new HashMap<>();
             params.put("customer", team.getCustomer_id());
             params.put("items", items);
+            params.put("trial_period_days", 30);
+            params.put("tax_percent", 20.0);
             team.setSubscription_id(Subscription.create(params).getId());
             team.setSubscription_date(new Date());
 
