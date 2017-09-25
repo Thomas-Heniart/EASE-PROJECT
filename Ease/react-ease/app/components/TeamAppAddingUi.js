@@ -9,6 +9,7 @@ import {selectUserFromListById} from "../utils/helperFunctions";
 import * as appActions from "../actions/appsActions";
 import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 import SimpleTeamAppAdder from "./teamAppAdders/SimpleTeamAppAdder";
+import LinkTeamAppAdder from "./teamAppAdders/LinkTeamAppAdder";
 class DashboardAndTeamAppSearch extends React.Component{
   constructor(props){
     super(props);
@@ -591,6 +592,7 @@ class TeamAppAddingUi extends React.Component {
               userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
               dispatch={this.props.dispatch}/>*/}
           {this.props.addAppUI.TeamLinkAppAddActive &&
+                //<LinkTeamAppAdder item={item} dispatch={this.props.dispatch}/>
               <LinkTeamAppAdd
                   team_id={this.props.team_id}
                   selectedItem={this.props.selectedItem}
