@@ -149,6 +149,10 @@ public class Team {
         return subscription;
     }
 
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
+
     public boolean isCard_entered() {
         return card_entered;
     }
@@ -499,6 +503,8 @@ public class Team {
             return;
         try {
             String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
+            if (!this.isFreemium())
+                return;
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
