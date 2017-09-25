@@ -332,8 +332,11 @@ public class ClassicApp extends WebsiteApp {
         JSONObject res = super.getSharedJSON();
         App app_holder = (App) this.getHolder();
         /* MultiApp */
-        if (app_holder.isEmpty())
+        if (app_holder.isEmpty()) {
             res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
+            res.put("password_filled", !this.getAccount().getInformationNamed("password").equals(""));
+        }
+
         /* SimpleApp */
         if (app_holder.isClassicApp())
             res.put("can_see_information", this.canSeeInformation());
