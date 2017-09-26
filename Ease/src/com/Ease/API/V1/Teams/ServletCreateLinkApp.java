@@ -43,6 +43,8 @@ public class ServletCreateLinkApp extends HttpServlet {
             String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
             String description = sm.getStringParam("description", false, true);
+            if (description == null)
+                description = "";
             if (description.length() >= 250)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
             if (app_name == null || app_name.equals(""))
