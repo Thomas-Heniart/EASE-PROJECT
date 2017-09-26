@@ -39,11 +39,11 @@ class TeamPhoneNumberModal extends React.Component {
               <i class="fa fa-times"/>
             </button>
             <div class="row title-row text-center">
-              You are Team Owner!
+              You are the team owner
             </div>
             <div class="row display-flex flex_direction_column single-row">
-              <span>As you are the one creating team, you are the team owner. It is an important role that you will be able to give to another team member later.</span>
-              <span>For safety reasons, we need your phone number in case you lose you Ease.space password.</span>
+              <span>As owner, if you lose your password, we will contact you to make sure your password renewal is legitimate.</span>
+              <span>If you want, you can transfer the ownership to someone else in your team.</span>
               <Phone
                   placeholder="Enter phone number"
                   value={ this.state.phone }

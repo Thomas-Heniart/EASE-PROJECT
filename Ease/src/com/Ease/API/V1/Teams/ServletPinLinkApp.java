@@ -47,6 +47,7 @@ public class ServletPinLinkApp extends HttpServlet {
             if (sharedApp == null) {
                 sharedApp = shareableApp.share(teamUser, team, new JSONObject(), sm);
                 shareableApp.addSharedApp(sharedApp);
+                team.getAppManager().addSharedApp(sharedApp);
             }
             if (profile_id == -1)
                 sharedApp.unpin(db);

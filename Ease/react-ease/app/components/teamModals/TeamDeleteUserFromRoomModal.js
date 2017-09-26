@@ -42,6 +42,7 @@ class TeamDeleteUserFromRoomModal extends Component {
             onClose={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(false))}}
             headerContent={<span>You are about to <strong>remove {username} from {channel.name}</strong></span>}>
           <Form class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
+            <Form.Field class="first_word_capitalize">{username} will lose access to <strong>#{channel.name}</strong> and all Apps it includes.</Form.Field>
             <Form.Field class="first_word_capitalize">{username} will lose access to <strong>#{channel.name}</strong>, and to all Apps included in <strong>{channel.name}</strong></Form.Field>
             <Form.Field >Also, all Apps from #{channel.name} pinned to {username}'s dashboard will disapear.</Form.Field>
             <Message error content={this.state.errorMessage}/>

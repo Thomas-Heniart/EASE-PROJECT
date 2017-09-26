@@ -1,6 +1,8 @@
 package com.Ease.websocketV1;
 
+import javax.websocket.EncodeException;
 import javax.websocket.Session;
+import java.io.IOException;
 
 public class WebSocketSession {
 
@@ -15,7 +17,16 @@ public class WebSocketSession {
     }
 
     public void sendObject(Object o) {
-        this.session.getAsyncRemote().sendObject(o);
+        try {
+            synchronized (session) {
+                this.session.getBasicRemote().sendObject(o);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (EncodeException e) {
+            e.printStackTrace();
+        }
+        //this.session.getAsyncRemote().sendObject(o);
     }
 
     public Session getSession() {

@@ -37,6 +37,8 @@ public class ServletPricingContact extends HttpServlet {
                 role = "";
             if (phoneNumber == null)
                 phoneNumber = "";
+            if (!phoneNumber.equals("") && !Regex.isPhoneNumber(phoneNumber))
+                throw new HttpServletException(HttpStatus.BadRequest, "Please provide a valid phone number.");
             if (enterprise == null)
                 enterprise = "";
             if (collaboratorsString == null || collaboratorsString.equals(""))
