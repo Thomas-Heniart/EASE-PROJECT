@@ -28,6 +28,7 @@ class LinkTeamAppAdder extends React.Component {
             img_url: '',
             comment: '',
             selectedUsers: [],
+            loading: false,
             users: [],
         };
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
@@ -122,19 +123,18 @@ class LinkTeamAppAdder extends React.Component {
             <Container fluid id="simple_team_app_add" class="team-app" as="form" onSubmit={this.send}>
                 <Segment>
                     <Button icon="delete" style={{margin: '0 0 0 .6rem'}} size="mini" class="close" onClick={this.close} color="grey"/>
-                    <div className="app_name_input_handler display_flex locked margin_b5rem">
+                    <div className="display_flex margin_b5rem">
                         <div>
-                            <Input
-                                className="team-app-input"
-                                placeholder="Name your link"
-                                name="app_name"
-                                value={this.state.appName}
-                                autoComplete="off"
-                                onChange={this.handleAppNameChange}
-                                size="mini"
-                                label={<Label><Icon name="home"/></Label>}
-                                labelPosition="left"
-                                required/>
+                            <Input  className="team-app-input"
+                                    placeholder="Name your link"
+                                    name="app_name"
+                                    value={this.state.appName}
+                                    autoComplete="off"
+                                    onChange={this.handleAppNameChange}
+                                    size="mini"
+                                    label={<Label><Icon name="home"/></Label>}
+                                    labelPosition="left"
+                                    required/>
                         </div>
                     </div>
                     <div class="display_flex">
@@ -157,7 +157,6 @@ class LinkTeamAppAdder extends React.Component {
                                        labelPosition="left"
                                        required/>
                             </div>
-
                             <div>
                                 <Input size="mini"
                                        fluid
@@ -176,8 +175,9 @@ class LinkTeamAppAdder extends React.Component {
                 <div>
                     <Button positive
                             size="mini"
-                            // onClick={this.send}
-                            floated="right">
+                            floated="right"
+                            loading={this.state.loading}
+                            disabled={this.state.loading}>
                         <Icon name="send" />
                         Send
                     </Button>
