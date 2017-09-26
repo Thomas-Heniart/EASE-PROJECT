@@ -52,7 +52,7 @@ public class ServletContactUs extends HttpServlet {
             if (enterprise == null)
                 enterprise = "";
             try {
-                demandType = demand_types[Integer.parseInt(demandType)];
+                demandType = demand_types[Integer.parseInt(demandType) - 1];
             } catch (Exception e) {
                 throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid demand type.");
             }
