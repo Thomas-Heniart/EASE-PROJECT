@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00014/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00014/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00014/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00014/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00014/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00014/enterpriseContact.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00015/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00015/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00015/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00015/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00015/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00015/enterpriseContact.css"/>
 
     <link rel="manifest" href="manifest.json">
 
@@ -131,12 +131,12 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00019/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00019/enterpriseContact.js" defer></script>
-<script src="/jsMinified.v00019/basic-utils.js" async></script>
-<script src="/jsMinified.v00019/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00019/languageChooser.js" async></script>
-<script src="/jsMinified.v00019/tracker.js" async></script>
+<script src="/jsMinified.v00020/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00020/enterpriseContact.js" defer></script>
+<script src="/jsMinified.v00020/basic-utils.js" async></script>
+<script src="/jsMinified.v00020/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00020/languageChooser.js" async></script>
+<script src="/jsMinified.v00020/tracker.js" async></script>
 
 <script type="text/javascript">
     window.addEventListener('load', function () {
@@ -145,7 +145,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00019/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00020/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();
@@ -188,7 +188,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00019/amplitude-analytics.js";
+            r.src = "/jsMinified.v00020/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };
