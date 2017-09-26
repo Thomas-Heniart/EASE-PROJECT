@@ -47,6 +47,7 @@ class TeamAppsContainer extends React.Component{
                           key={item.id}
                           team_id={this.props.team_id}
                           dispatch={this.props.dispatch}/>
+                  );
                 if (item.type === 'multi')
                   return (
                       <EnterpriseTeamApp
