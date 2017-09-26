@@ -37,7 +37,7 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
   return (
       <div class="team_app_actions_holder">
         {meReceiver === null &&
-        <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Request App'}
+        <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
@@ -66,6 +66,18 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly}) => {
                 type={item.type}/>;
 };
 
+const ReadOnlyTeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, pwd_filled}) => {
+  return <Input size="mini"
+                class="team-app-input"
+                readOnly={readOnly}
+                name={item.name}
+                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+                labelPosition="left"
+                placeholder={item.placeholder}
+                value={item.name === 'password' && pwd_filled ? 'abcdabcd' : item.value}
+                type={item.type}/>;
+};
+
 const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
   return (
       <div class="receiver">
@@ -90,15 +102,41 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnl
   )
 };
 
+const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
+  return (
+      <Popup size="mini"
+             position="bottom center"
+             inverted
+             flowing
+             hideOnScroll={true}
+             trigger={
+               <Label class={classnames('receiver-label', accepted ? 'accepted': null)}>
+                 <span>{username}</span>
+                 <Icon name="refresh"/>
+               </Label>
+             }
+             header={<h5 class="mrgn0 text-center">User informations</h5>}
+             content={
+               <div>
+                 {up_to_date &&
+                 <span><Icon name='refresh'/> Password is up to date</span>}
+                 {!up_to_date &&
+                 <span><Icon name='refresh' color="red"/> Password is not up to date</span>}
+                 <br/>
+                 {accepted &&
+                 <span><Icon name='circle' style={{color: '#949EB7'}}/> User accepted the app</span>}
+                 {!accepted &&
+                 <span><Icon name='circle' style={{color: '#D2DAE4'}}/> User didn't accept the app</span>}
+               </div>}/>
+  )
+};
+
 const SimpleCredentialsInput = ({receiver, me, team_id}) => {
   return (
       <div class="receiver align_items_center">
-        <Label class={classnames('receiver-label', receiver.accepted ? 'accepted': null)}>
-          <span>{receiver.username}</span>
-          <Icon name="refresh"/>
-        </Label>
+        <EnterpriseAppReceiverLabel username={receiver.username} up_to_date={!receiver.password_must_be_updated} accepted={receiver.accepted}/>
         {receiver.credentials.map(item => {
-          return <TeamAppCredentialInput readOnly={true} receiver_id={receiver.id} key={item.priority} onChange={null} item={item}/>
+          return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true} receiver_id={receiver.id} key={item.priority} onChange={null} item={item}/>
         })}
         {(isAdmin(me.role) || receiver.team_user_id === me.id) &&
         <CopyPasswordButton team_id={team_id} shared_app_id={receiver.shared_app_id}/>}
@@ -144,7 +182,7 @@ const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
         &nbsp;or&nbsp;
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
-        &nbsp; it?
+        &nbsp;it?
       </span>
   )
 };
@@ -336,8 +374,10 @@ class EnterpriseTeamApp extends Component {
     return app.receivers.map(item => {
       const user = selectItemFromListById(this.props.users, item.team_user_id);
       return {
+        password_must_be_updated: item.password_must_be_updated,
         accepted: item.accepted,
         id: item.team_user_id,
+        password_filled: item.password_filled,
         shared_app_id: item.shared_app_id,
         credentials: transformWebsiteInfoIntoListAndSetValues(app.website.information, item.account_information),
         username: user.username
@@ -360,8 +400,6 @@ class EnterpriseTeamApp extends Component {
           {meReceiver !== null && !meReceiver.accepted &&
           <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
-            {meReceiver !== null && !meReceiver.accepted &&
-            <div class="overlay"/>}
             <Header as="h4">
               {website.website_name}
               {meReceiver !== null && meReceiver.accepted &&
@@ -369,6 +407,8 @@ class EnterpriseTeamApp extends Component {
               {app.sharing_requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
             </Header>
+            {meReceiver !== null && !meReceiver.accepted &&
+            <div class="overlay"/>}
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}
                                         me={me}
@@ -426,7 +466,7 @@ class EnterpriseTeamApp extends Component {
                          name="description"
                          readOnly={!this.state.edit}
                          value={this.state.edit ? this.state.description : app.description}
-                         placeholder="What is this about? Any comment?"
+                         placeholder="You can add a comment here"
                          type="text"
                          label={<Label><Icon name="sticky note"/></Label>}
                          labelPosition="left"/>

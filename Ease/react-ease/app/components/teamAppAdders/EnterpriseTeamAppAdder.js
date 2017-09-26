@@ -78,15 +78,16 @@ class TeamAppSearch extends Component {
   }
 }
 
-const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly}) => {
+const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) => {
   return <Input size="mini"
                 class="team-app-input"
                 readOnly={readOnly}
                 name={item.name}
+                required={isMe}
                 onChange={(e, data) => {onChange(receiver_id, data)}}
                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                 labelPosition="left"
-                placeholder={item.placeholder}
+                placeholder={isMe ? item.placeholder : `${item.placeholder} (Optional)`}
                 value={item.value}
                 type={item.type}/>;
 };
@@ -99,13 +100,13 @@ const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
   )
 };
 
-const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly}) => {
+const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe}) => {
   return (
       <div class="receiver">
         <Label class="receiver-label" color="blue"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
         {
           receiver.credentials.map(item => {
-            return <TeamAppCredentialInput readOnly={readOnly} receiver_id={receiver.id} key={item.priority} onChange={onChange} item={item}/>
+            return <TeamAppCredentialInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item}/>
           })
         }
       </div>
@@ -117,7 +118,7 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
       <div class="receivers">
         {receivers.map(item => {
           if (extended || item.id === myId)
-            return <ExtendedReceiverCredentialsInput key={item.id} extended={extended} receiver={item} onChange={onChange} onDelete={onDelete}/>
+            return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} extended={extended} receiver={item} onChange={onChange} onDelete={onDelete}/>
           return <ReceiverCredentialsInput key={item.id} extended={extended} receiver={item} onChange={onChange} onDelete={onDelete}/>
         })}
       </div>
@@ -265,7 +266,7 @@ class EnterpriseTeamAppAdder extends Component {
                              onChange={this.handleInput}
                              name="description"
                              value={this.state.description}
-                             placeholder="What is this about? Any comment?"
+                             placeholder="You can add a comment here"
                              type="text"
                              label={<Label><Icon name="sticky note"/></Label>}
                              labelPosition="left"/>

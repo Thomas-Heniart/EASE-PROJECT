@@ -14,6 +14,7 @@ const CredentialInput = ({item, onChange}) => {
       name={item.name}
       autoFocus={item.autoFocus}
       onChange={onChange}
+      required
       placeholder={item.placeholder}
       value={item.value}
       type={item.type}/>;
@@ -32,6 +33,13 @@ class AcceptEnterpriseAppModal extends Component {
       errorMessage: '',
       credentials: transformWebsiteInfoIntoList(this.props.app.website.information)
     }
+  };
+  checkInputs = () => {
+    for (let i = 0; i < this.state.credentials.length; i++){
+      if (this.state.credentials[i].value.length === 0)
+        return true;
+    }
+    return false;
   };
   handleCredentialInput = (e, {name, value}) => {
     const credentials = this.state.credentials.map(item => {
@@ -99,6 +107,7 @@ class AcceptEnterpriseAppModal extends Component {
                 attached='bottom'
                 type="submit"
                 loading={this.state.loading}
+                disabled={this.checkInputs()}
                 positive
                 onClick={this.confirm}
                 className="modal-button"

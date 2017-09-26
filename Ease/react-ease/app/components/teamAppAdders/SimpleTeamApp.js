@@ -42,7 +42,7 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                 labelPosition="left"
                 placeholder={item.placeholder}
-                value={item.value}
+                value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
                 type={item.type}>
   </Input>
 };
@@ -53,7 +53,7 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
   return (
       <div class="team_app_actions_holder">
         {meReceiver === null &&
-        <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Request App'}
+        <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
@@ -89,9 +89,9 @@ const TeamAppReceiverLabel = ({username, accepted, can_see_information}) => {
                  <span><Icon name='hide'/> User cannot see the password</span>}
                  <br/>
                  {accepted &&
-                 <span><Icon name='circle' color="green"/> User accepted the app</span>}
+                 <span><Icon name='circle' style={{color: '#949EB7'}}/> User accepted the app</span>}
                  {!accepted &&
-                 <span><Icon name='circle' color="grey"/> User accepted the app</span>}
+                 <span><Icon name='circle' style={{color: '#D2DAE4'}}/> User didn't accept the app</span>}
                </div>}/>
   )
 };
@@ -145,7 +145,7 @@ const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
         &nbsp;or&nbsp;
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
-        &nbsp; it?
+        &nbsp;it?
       </span>
   )
 };
@@ -317,8 +317,6 @@ class SimpleTeamApp extends Component {
           {meReceiver !== null && !meReceiver.accepted &&
           <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
-            {meReceiver !== null && !meReceiver.accepted &&
-            <div class="overlay"/>}
             <Header as="h4">
               {website.website_name}
               {meReceiver !== null && meReceiver.accepted &&
@@ -326,6 +324,8 @@ class SimpleTeamApp extends Component {
               {app.sharing_requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
             </Header>
+            {meReceiver !== null && !meReceiver.accepted &&
+            <div class="overlay"/>}
             {!this.state.edit &&
             <TeamSimpleAppButtonSet app={app}
                                     me={me}
@@ -375,7 +375,7 @@ class SimpleTeamApp extends Component {
                          name="description"
                          readOnly={!this.state.edit}
                          value={this.state.edit ? this.state.description : app.description}
-                         placeholder="What is this about? Any comment?"
+                         placeholder="You can add a comment here"
                          type="text"
                          label={<Label><Icon name="sticky note"/></Label>}
                          labelPosition="left"/>

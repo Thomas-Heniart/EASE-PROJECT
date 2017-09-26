@@ -27,41 +27,44 @@ class TeamAddAppsButton extends React.Component {
               Sending apps directly to one person will be available soon. <a href="mailto:victor@ease.space">Help us build this feature!</a>
             </Dropdown.Item>}
             {targetType === 1 &&
-            <Dropdown.Item onClick={this.selectItem.bind(null,'Simple')}>
-              <Icon name="square"/>
-              Single app
               <Popup
                   size="mini"
                   style={{fontWeight: 'bold', textAlign:'center'}}
-                  inverted
                   position="right center"
-                  trigger={<Icon name='info' link className='right floated'/>}
-                  content="Let multiple people have access to one account. Like your Twitter, Wordpress etc."/>
-            </Dropdown.Item>}
+                  trigger={
+                    <Dropdown.Item onClick={this.selectItem.bind(null,'Simple')}>
+                      <Icon name="square"/>
+                      Single app
+                    </Dropdown.Item>
+                  }
+                  content="Multiple people have access to one account (ex: twitter)."/>
+            }
             {targetType === 1 &&
-            <Dropdown.Item onClick={this.selectItem.bind(null,'Multi')}>
-              <Icon name="sitemap"/>
-              Enterprise app
               <Popup
                   size="mini"
                   style={{fontWeight: 'bold', textAlign:'center'}}
-                  inverted
                   position="right center"
-                  trigger={<Icon name='info' link className='right floated'/>}
-                  content="Share an account where each member uses his/her own ID and password to login to one website. Like Gmail, Trello, Slack... You can fill the credentials for your team members or let them do it."/>
-            </Dropdown.Item>}
+                  trigger={
+                    <Dropdown.Item onClick={this.selectItem.bind(null,'Multi')}>
+                      <Icon name="sitemap"/>
+                      Enterprise app
+                    </Dropdown.Item>
+                  }
+                  content="Each person has a different account on one website (ex: Gmail, Trello)."/>
+            }
             {targetType === 1 &&
-            <Dropdown.Item onClick={this.selectItem.bind(null, 'Link')}>
-              <Icon name="linkify"/>
-              Link app
               <Popup
                   size="mini"
                   style={{fontWeight: 'bold', textAlign:'center'}}
-                  inverted
                   position="right center"
-                  trigger={<Icon name='info' link className='right floated'/>}
+                  trigger={
+                    <Dropdown.Item onClick={this.selectItem.bind(null, 'Link')}>
+                      <Icon name="linkify"/>
+                      Link app
+                    </Dropdown.Item>
+                  }
                   content="Are you using tools without accounts? Need to share a blog or a source your team frequently uses? Here it is!"/>
-            </Dropdown.Item>}
+            }
             {targetType === 1 &&
             <Dropdown.Item disabled className="align_items_center" style={{display:'flex'}}>
               <Icon name="disk outline"/>
