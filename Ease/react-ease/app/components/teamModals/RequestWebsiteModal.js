@@ -56,7 +56,7 @@ function Step1(props){
             onChange={props.handleCheckbox}
             label="Yes, I give my authorization"/>
         <Button
-            disabled={!props.authorization || !isUrl(props.url)}
+            disabled={!props.authorization || props.url.length === 0}
             onClick={props.validate}
             attached='bottom' positive className="modal-button" type="submit" content="NEXT"/>
       </Form>
