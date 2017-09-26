@@ -563,7 +563,7 @@ public class Team {
                 }
                 String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
                 try {
-                    this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resrouces/notifications/settings.png", date, db);
+                    this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
                 } catch (HttpServletException e) {
                     e.printStackTrace();
                 }

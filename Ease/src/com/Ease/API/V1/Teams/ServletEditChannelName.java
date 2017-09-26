@@ -52,7 +52,7 @@ public class ServletEditChannelName extends HttpServlet {
                 for (TeamUser teamUser : channel.getTeamUsers()) {
                     if (teamUser == teamUser_connected)
                         continue;
-                    teamUser.addNotification("#" + old_name + " has been renamed to #" + channel.getName(), channel.getDb_id().toString(), "/resources/notifications/channel.png", sm.getTimestamp(), sm.getDB());
+                    teamUser.addNotification("#" + old_name + " has been renamed to #" + channel.getName(), channel.getDb_id().toString(), "/resources/notifications/room_renamed.png", sm.getTimestamp(), sm.getDB());
                 }
             }
             sm.saveOrUpdate(channel);
