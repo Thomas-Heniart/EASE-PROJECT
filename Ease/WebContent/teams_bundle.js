@@ -667,6 +667,8 @@ exports.showTeamPhoneNumberModal = showTeamPhoneNumberModal;
 exports.requestWebsite = requestWebsite;
 exports.showRequestWebsiteModal = showRequestWebsiteModal;
 exports.showTeamAddMultipleUsersModal = showTeamAddMultipleUsersModal;
+exports.showUpgradeTeamPlanModal = showUpgradeTeamPlanModal;
+exports.showFreeTrialEndModal = showFreeTrialEndModal;
 function showAddTeamUserModal(state) {
   return {
     type: 'SHOW_ADD_TEAM_USER_MODAL',
@@ -865,6 +867,25 @@ function showRequestWebsiteModal(state, resolve, reject) {
 function showTeamAddMultipleUsersModal(state) {
   return {
     type: 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL',
+    payload: {
+      active: state
+    }
+  };
+}
+
+function showUpgradeTeamPlanModal(state, desc) {
+  return {
+    type: 'SHOW_UPGRADE_TEAM_PLAN_MODAL',
+    payload: {
+      active: state,
+      featureDescription: desc
+    }
+  };
+}
+
+function showFreeTrialEndModal(state) {
+  return {
+    type: 'SHOW_FREE_TRIAL_END_MODAL',
     payload: {
       active: state
     }
@@ -58356,7 +58377,7 @@ var EnterpriseTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
                 { as: "h4" },
                 app.website_name
               ),
-              _react2.default.createElement(_semanticUiReact.Button, { icon: "delete", size: "mini", className: "close", onClick: this.close }),
+              _react2.default.createElement(_semanticUiReact.Button, { icon: "delete", type: "button", size: "mini", className: "close", onClick: this.close }),
               _react2.default.createElement(
                 "div",
                 { className: "display_flex" },
@@ -59273,7 +59294,7 @@ var SimpleTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
                 { as: "h4" },
                 app.website_name
               ),
-              _react2.default.createElement(_semanticUiReact.Button, { icon: "delete", size: "mini", className: "close", onClick: this.close }),
+              _react2.default.createElement(_semanticUiReact.Button, { icon: "delete", type: "button", size: "mini", className: "close", onClick: this.close }),
               _react2.default.createElement(
                 "div",
                 { className: "display_flex" },
@@ -69280,6 +69301,13 @@ var initialState = {
     active: false,
     resolve: null,
     reject: null
+  },
+  upgradeTeamPlanModal: {
+    active: false,
+    featureDescription: ''
+  },
+  freeTrialEndModal: {
+    active: false
   }
 };
 function reducer() {
@@ -69411,6 +69439,18 @@ function reducer() {
       {
         return _extends({}, state, {
           teamAddMultipleUsersModal: action.payload
+        });
+      }
+    case 'SHOW_UPGRADE_TEAM_PLAN_MODAL':
+      {
+        return _extends({}, state, {
+          upgradeTeamPlanModal: action.payload
+        });
+      }
+    case 'SHOW_FREE_TRIAL_END_MODAL':
+      {
+        return _extends({}, state, {
+          freeTrialEndModal: action.payload
         });
       }
   }

@@ -217,7 +217,7 @@ class SimpleTeamAppAdder extends Component {
                 <Header as="h4">
                   {app.website_name}
                 </Header>
-                <Button icon="delete" size="mini" class="close" onClick={this.close}/>
+                <Button icon="delete" type="button" size="mini" class="close" onClick={this.close}/>
                 <div class="display_flex">
                   <div class="logo_column">
                     <div class="logo">
