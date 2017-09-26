@@ -121,7 +121,7 @@ class LinkTeamAppAdder extends React.Component {
         return (
             <Container fluid id="simple_team_app_add" class="team-app mrgn0" as="form" onSubmit={this.send}>
                 <Segment>
-                    <Button icon="delete" style={{margin: '0 0 0 .6rem'}} size="mini" class="close" onClick={this.close} color="grey"/>
+                    <Button icon="delete" type="button" style={{margin: '0 0 0 .6rem'}} size="mini" class="close" onClick={this.close} color="grey"/>
                     <div className="display_flex margin_b5rem">
                         <div>
                             <Input  className="team-app-input"
