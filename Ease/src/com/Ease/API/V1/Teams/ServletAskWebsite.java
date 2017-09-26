@@ -8,7 +8,6 @@ import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -32,8 +31,10 @@ public class ServletAskWebsite extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
-            if (url == null || url.equals("") || !Regex.isValidLink(url))
+            if (url.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
+            if (url.length() >= 2000)
+                throw new HttpServletException(HttpStatus.BadRequest, "Url cannot exceed 2000 characters.");
             if (is_public == null)
                 is_public = true;
             if (login == null || login.equals(""))
@@ -57,12 +58,9 @@ public class ServletAskWebsite extends HttpServlet {
                     host = host.split("//")[1];
                 }
             }
-            if (catalog.getWebsiteWithHost(host) != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "This website already exists");
             Website website = Website.createWebsite(team_id, url, host, websiteAttributes, sm.getServletContext(), db);
             catalog.addWebsite(website);
             db.commitTransaction(transaction);
-            /* @TODO Decipher login and password */
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT id, publicKey FROM serverPublicKeys LIMIT 1");
             Object[] idAndPublicKey = (Object[]) hibernateQuery.getSingleResult();
