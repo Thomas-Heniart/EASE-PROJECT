@@ -23,7 +23,6 @@ class FreeTrialEndModal extends Component {
             onClose={e => {this.props.dispatch(showTeamJoinMultiAppModal(false))}}
             headerContent={'Free trial ended'}>
           <Form class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
-
             <Message error content={this.state.errorMessage}/>
             <Button
                 attached='bottom'

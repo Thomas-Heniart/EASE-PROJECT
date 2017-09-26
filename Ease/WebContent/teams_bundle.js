@@ -68590,6 +68590,9 @@ Object.defineProperty(exports, "__esModule", {
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 exports.default = reducer;
+
+var _helperFunctions = __webpack_require__(15);
+
 function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
     channels: []
@@ -68749,8 +68752,8 @@ function reducer() {
     case 'TEAM_ROOM_ADDED':
       {
         var channels = state.channels;
-        if (selectUserFromListById(state.channels, action.payload.channel.id) !== null) break;
-        users.push(action.payload.channel);
+        if ((0, _helperFunctions.selectItemFromListById)(channels, action.payload.channel.id) !== null) break;
+        channels.push(action.payload.channel);
         return _extends({}, state, {
           channels: channels
         });
