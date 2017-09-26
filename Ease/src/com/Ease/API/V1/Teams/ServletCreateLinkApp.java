@@ -43,8 +43,12 @@ public class ServletCreateLinkApp extends HttpServlet {
             String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
             String description = sm.getStringParam("description", false, true);
+            if (description.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
+            if (app_name.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Name of an app cannot be greater than 250 characters");
             if (url.length() >= 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Url length must be fewer than 2000 characters");
             if (!img_url.equals("") && !Regex.isValidLink(img_url) && !img_url.startsWith("https://logo.clearbit.com/"))
