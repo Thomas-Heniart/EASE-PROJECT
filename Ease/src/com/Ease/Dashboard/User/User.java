@@ -641,7 +641,7 @@ public class User {
         throw new HttpServletException(HttpStatus.BadRequest, "You are not in this team");
     }
 
-    public JSONObject getJson() {
+    public JSONObject getJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("email", this.getEmail());
         res.put("first_name", this.getFirstName());

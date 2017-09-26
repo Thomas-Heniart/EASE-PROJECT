@@ -225,4 +225,10 @@ public class TeamManager {
         db.close();
         System.out.println("Password lost reminder end...");
     }
+
+    public void checkDepartureDates(DataBaseConnection db) {
+        for (Team team : this.getTeams()) {
+            team.checkDepartureDates(new Date(), db);
+        }
+    }
 }

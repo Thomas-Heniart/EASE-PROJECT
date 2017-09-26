@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
+import com.Ease.Dashboard.App.EnterpriseApp.EnterpriseAppAttributes;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Channel;
@@ -46,6 +47,7 @@ public class ServletCreateEnterpriseApp extends HttpServlet {
             Integer password_change_interval = sm.getIntParam("password_change_interval", true, false);
             String description = sm.getStringParam("description", false, false);
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
+            Boolean fill_in_switch = sm.getBooleanParam("fill_in_switch", true, false);
             Channel channel = team.getChannelWithId(channel_id);
             if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
@@ -71,8 +73,10 @@ public class ServletCreateEnterpriseApp extends HttpServlet {
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(website.getName(), website, password_change_interval, sm);
+            WebsiteApp websiteApp = WebsiteApp.createShareableMultiApp(website.getName(), website, password_change_interval, fill_in_switch, sm);
             websiteApp.becomeShareable(sm.getDB(), team, channel, description);
+            EnterpriseAppAttributes enterpriseAppAttributes = EnterpriseAppAttributes.createEnterpriseAppAttributes(websiteApp.getDBid(), fill_in_switch, db);
+            websiteApp.setEnterpriseAppAttributes(enterpriseAppAttributes);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             for (Object receiver : jsonArray) {
                 JSONObject receiver_json = (JSONObject) receiver;

@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.servlet.ServletContext;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -149,6 +150,10 @@ public class Team {
         return subscription;
     }
 
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
+
     public boolean isCard_entered() {
         return card_entered;
     }
@@ -179,6 +184,10 @@ public class Team {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isFreemium() throws HttpServletException {
+        return this.getSubscription().getPlan().getId().equals("EaseFreemium");
     }
 
     public Map<Integer, TeamUser> getTeamUsers() {
@@ -286,11 +295,12 @@ public class Team {
         return res;
     }
 
-    public JSONObject getSimpleJson() {
+    public JSONObject getSimpleJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
         res.put("valid_subscription", !this.isBlocked());
+        res.put("freemium", this.isFreemium());
         return res;
     }
 
@@ -421,7 +431,12 @@ public class Team {
     }
 
     public boolean isBlocked() {
-        return (this.subscription_date == null) || (!card_entered && DateComparator.isOutdated(this.subscription_date, 30));
+        try {
+            return (this.subscription_date == null) || (!card_entered && this.getSubscription().getTrialEnd() != null && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+        } catch (HttpServletException e) {
+            e.printStackTrace();
+            return true;
+        }
     }
 
     public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
@@ -493,7 +508,11 @@ public class Team {
         if (this.card_entered)
             return;
         try {
+            if (this.getSubscription().getTrialEnd() == null)
+                return;
             String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
+            if (!this.isFreemium())
+                return;
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
@@ -516,6 +535,39 @@ public class Team {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void checkDepartureDates(Date date, DataBaseConnection db) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
+        for (TeamUser teamUser : this.getTeamUsers().values()) {
+            if (teamUser.getDepartureDate() == null)
+                continue;
+            if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
+                calendar.setTime(teamUser.getDepartureDate());
+                String suffixe = "th";
+                switch (calendar.get(Calendar.DAY_OF_MONTH)) {
+                    case 1: {
+                        suffixe = "st";
+                        break;
+                    }
+                    case 2: {
+                        suffixe = "nd";
+                        break;
+                    }
+                    case 3: {
+                        suffixe = "rd";
+                        break;
+                    }
+                }
+                String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
+                try {
+                    this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
+                } catch (HttpServletException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

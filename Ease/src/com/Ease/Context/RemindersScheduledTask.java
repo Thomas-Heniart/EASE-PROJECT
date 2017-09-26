@@ -2,7 +2,10 @@ package com.Ease.Context;
 
 import com.Ease.Mail.ReminderEmailManager;
 import com.Ease.Team.TeamManager;
+import com.Ease.Utils.DataBase;
+import com.Ease.Utils.DataBaseConnection;
 
+import java.sql.SQLException;
 import java.util.TimerTask;
 
 /**
@@ -25,6 +28,14 @@ public class RemindersScheduledTask extends TimerTask {
             reminderEmailManager.lunchReminders(); */
             teamManager.passwordReminder();
             teamManager.checkFreeTrialEnd();
+            DataBaseConnection db;
+            try {
+                db = new DataBaseConnection(DataBase.getConnection());
+                teamManager.checkDepartureDates(db);
+                db.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

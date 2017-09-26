@@ -1,31 +1,29 @@
 import React, {Component} from "react";
-import {dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
+import {teamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
 import {handleSemanticInput,
   transformCredentialsListIntoObject,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
 import {selectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite} from "../../actions/teamModalActions";
-import {teamCreateSingleApp} from "../../actions/appsActions";
+import {teamCreateSingleApp, teamCreateEnterpriseApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
-import {setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
+import {ExtendFillSwitch, setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
-const AppResultRenderer = ({website_name, logo, request, profile_name, login}) => {
+const AppResultRenderer = ({website_name, logo, request}) => {
   if (request)
     return (<div><Icon name="gift" color="red"/><strong>Didn't found your website? Request it!</strong></div>);
   return (
       <div>
         <img src={logo} class="logo"/>
         {website_name}
-        {profile_name !== undefined &&
-        <span class="text-muted">&nbsp;- from {profile_name} - {login}</span>}
       </div>
   )
 };
 
-class SimpleTeamAppSearch extends Component {
+class TeamAppSearch extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -46,10 +44,16 @@ class SimpleTeamAppSearch extends Component {
     this.setState({apps: apps});
   };
   componentDidMount(){
-    dashboardAndTeamAppSearch(this.props.team_id, '').then(response => {
+    teamAppSearch(this.props.team_id, '').then(response => {
       const apps = response.map(item => {
         item.key = item.id;
         return item;
+      }).sort(function(a,b){
+        if (a.website_name < b.website_name)
+          return -1;
+        if (a.website_name > b.website_name)
+          return 1;
+        return 0;
       });
       this.setState({allApps: apps, apps: apps, loading: false});
     });
@@ -74,89 +78,103 @@ class SimpleTeamAppSearch extends Component {
   }
 }
 
-const TeamAppCredentialInput = ({item, onChange}) => {
+const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) => {
   return <Input size="mini"
-                autoFocus={item.autoFocus}
                 class="team-app-input"
-                required
+                readOnly={readOnly}
                 name={item.name}
-                onChange={onChange}
+                required={isMe}
+                onChange={(e, data) => {onChange(receiver_id, data)}}
                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                 labelPosition="left"
-                placeholder={item.placeholder}
+                placeholder={isMe ? item.placeholder : `${item.placeholder} (Optional)`}
                 value={item.value}
                 type={item.type}/>;
 };
 
+const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
+  return (
+      <div class="receiver">
+        <Label class="receiver-label" color="blue"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+      </div>
+  )
+};
+
+const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe}) => {
+  return (
+      <div class="receiver">
+        <Label class="receiver-label" color="blue"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        {
+          receiver.credentials.map(item => {
+            return <TeamAppCredentialInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item}/>
+          })
+        }
+      </div>
+  )
+};
+
+const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
+  return (
+      <div class="receivers">
+        {receivers.map(item => {
+          if (extended || item.id === myId)
+            return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} extended={extended} receiver={item} onChange={onChange} onDelete={onDelete}/>
+          return <ReceiverCredentialsInput key={item.id} extended={extended} receiver={item} onChange={onChange} onDelete={onDelete}/>
+        })}
+      </div>
+  )
+};
 
 @connect(store => ({
   team_id: store.team.id,
-  users: store.users.users
+  users: store.users.users,
+  myId: store.team.myTeamUserId
 }))
-class SimpleTeamAppAdder extends Component {
+class EnterpriseTeamAppAdder extends Component {
   constructor(props){
     super(props);
     this.state = {
       loading: false,
       app: null,
-      credentials: [],
       password_change_interval: 0,
       description: '',
-      room_manager_name: 'johny',
       users: [],
-      selected_users: []
-    };
-  };
+      selected_users: [],
+      fill_in_switch: false
+    }
+  }
   handleInput = handleSemanticInput.bind(this);
-  toggleCanSeeInformation = (id) => {
-    let users = this.state.users.map(item => {
-      return {
-        ...item,
-        can_see_information: item.id === id ? !item.can_see_information : item.can_see_information
+  onDeleteReceiver = (id) => {
+    const selected_users = this.state.selected_users.filter(item => (item !== id));
+    this.setState({selected_users: selected_users});
+  };
+  handleReceiverInput = (id, {name, value}) => {
+    const users = this.state.users.map(user => {
+      if (user.id === id){
+        user.credentials.map(item => {
+          if (item.name === name)
+            item.value = value;
+          return item;
+        })
       }
+      return user;
     });
     this.setState({users: users});
   };
-  handleCredentialInput = (e, {name, value}) => {
-    let credentials = this.state.credentials.map(item => {
-      if (name === item.name)
-        item.value = value;
-      return item;
-    });
-    this.setState({credentials: credentials});
-  };
-  setDashboardApp = (app) => {
-    getDashboardApp(app.id).then(app => {
-      fetchWebsiteInfo(app.website_id).then(info => {
-        let credentials = transformWebsiteInfoIntoList(info.information).map(credential => {
-          app.information.map(item => {
-            if (item.info_name === credential.name)
-              credential.value = item.info_value;
-          });
-          return credential;
-        });
-        this.setState({app: info, credentials: credentials});
-      });
-    });
-  };
   setApp = (app) => {
-    if (app.login !== undefined) {
-      this.setDashboardApp(app);
-      return;
-    }
     if (app.request){
       requestWebsite(this.props.dispatch).then(app => {
-        let credentials = transformWebsiteInfoIntoList(app.information);
-        this.setState({app: app, credentials: credentials});
+        this.setUsers(app);
+        this.setState({app: app});
       }).catch(err => ({}));
       return;
     }
     fetchWebsiteInfo(app.id).then(app => {
-      let credentials = transformWebsiteInfoIntoList(app.information);
-      this.setState({app: app, credentials: credentials});
+      this.setUsers(app);
+      this.setState({app: app});
     });
   };
-  componentDidMount(){
+  setUsers = (app) => {
     let users = this.props.item.userIds.map(item => {
       const user = selectUserFromListById(this.props.users, item);
       return {
@@ -164,14 +182,12 @@ class SimpleTeamAppAdder extends Component {
         text: setUserDropdownText(user),
         value: item,
         id: item,
-        username: user.username,
-        can_see_information: false,
-        toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
+        credentials: transformWebsiteInfoIntoList(app.information),
+        username: user.username
       }
     });
-    const room_manager_name = selectUserFromListById(this.props.users, this.props.item.room_manager_id).username;
-    this.setState({users: users, room_manager_name: room_manager_name});
-  }
+    this.setState({users: users});
+  };
   send = (e) => {
     e.preventDefault();
     this.setState({loading: true});
@@ -179,15 +195,15 @@ class SimpleTeamAppAdder extends Component {
         .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
         .map(item => ({
           team_user_id: item.id,
-          can_see_information: item.can_see_information
+          account_information: transformCredentialsListIntoObject(item.credentials)
         }));
-    this.props.dispatch(teamCreateSingleApp({
+    this.props.dispatch(teamCreateEnterpriseApp({
       team_id: this.props.team_id,
       channel_id: this.props.item.id,
       website_id: this.state.app.id,
       description: this.state.description,
       password_change_interval: this.state.password_change_interval,
-      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      fill_in_switch: this.state.fill_in_switch,
       receivers: receivers
     })).then(response => {
       this.setState({loading: false});
@@ -199,15 +215,13 @@ class SimpleTeamAppAdder extends Component {
   };
   render(){
     const app = this.state.app;
-    const credentialsInputs = this.state.credentials.map(item => {
-      return <TeamAppCredentialInput key={item.priority} onChange={this.handleCredentialInput} item={item}/>
-    });
+    const selected_users = this.state.users.filter(item => (this.state.selected_users.indexOf(item.id) !== -1));
 
     return (
-        <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
+        <Container fluid id='enterprise-app-adder' class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
           {this.state.app === null &&
           <div class="display-flex align_items_center">
-            <SimpleTeamAppSearch team_id={this.props.team_id} select_app_func={this.setApp}/>
+            <TeamAppSearch team_id={this.props.team_id} select_app_func={this.setApp}/>
             <Button type="button" icon="delete" style={{margin: '0 0 0 .6rem'}} size="mini" class="close" onClick={this.close} color="grey"/>
           </div>}
           <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
@@ -226,16 +240,15 @@ class SimpleTeamAppAdder extends Component {
                   </div>
                   <div class="main_column">
                     <div class="credentials">
-                      {credentialsInputs}
                       <div class="display-inline-flex">
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>
-                        {this.state.password_change_interval !== 0 &&
-                        <PasswordChangeManagerLabel username={this.state.room_manager_name}/>}
+                        <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.handleInput}/>
                       </div>
                     </div>
+                    <Receivers extended={this.state.fill_in_switch} myId={this.props.myId} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
                     <div>
                       <Dropdown
-                          class="mini"
+                          class="mini users-dropdown"
                           search={true}
                           fluid
                           name="selected_users"
@@ -243,7 +256,6 @@ class SimpleTeamAppAdder extends Component {
                           onChange={this.handleInput}
                           value={this.state.selected_users}
                           selection={true}
-                          renderLabel={renderSimpleAppUserLabel}
                           multiple
                           placeholder="Tag your team members here..."/>
                     </div>
@@ -270,4 +282,4 @@ class SimpleTeamAppAdder extends Component {
   }
 }
 
-module.exports = SimpleTeamAppAdder;
+module.exports = EnterpriseTeamAppAdder;

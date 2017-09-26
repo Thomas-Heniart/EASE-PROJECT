@@ -47,10 +47,8 @@ class TeamJoinMultiAppModal extends React.Component {
     const user = this.state.user;
 
     this.props.dispatch(appActions.teamShareApp(app.id, {account_information: credentials, team_user_id: user.id})).then(response => {
-      this.props.dispatch(appActions.teamAcceptSharedApp(app.id, response.shared_app_id)).then(response => {
-        this.props.dispatch(showTeamJoinMultiAppModal(false));
-        this.props.dispatch(showPinTeamAppToDashboardModal(true, {...app}));
-      })
+      this.props.dispatch(showTeamJoinMultiAppModal(false));
+      this.props.dispatch(showPinTeamAppToDashboardModal(true, {...app}));
     });
   }
   render(){
@@ -60,7 +58,7 @@ class TeamJoinMultiAppModal extends React.Component {
 
     return (
         <div class="popupHandler myshow">
-          <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamJoinMultiAppModal(false))}}></div>
+          <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamJoinMultiAppModal(false))}}/>
           <div class="ease_popup ease_team_popup" id="accept_multi_app_modal">
             <button class="button-unstyle action_button close_button" onClick={e => {this.props.dispatch(showTeamJoinMultiAppModal(false))}}>
               <i class="fa fa-times"/>

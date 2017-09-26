@@ -179,7 +179,10 @@ public class Profile {
         }
         int transaction = db.startTransaction();
         for (App app : apps) {
-            app.removeFromDB(db);
+            if (app.isPinned())
+                app.unpin(db);
+            else
+                app.removeFromDB(db);
         }
         DatabaseRequest request = db.prepareRequest("DELETE FROM profiles WHERE id = ?;");
         request.setInt(db_id);
@@ -190,7 +193,7 @@ public class Profile {
     }
 
 	/*
-	 * 
+     *
 	 * Getter and Setter
 	 * 
 	 */

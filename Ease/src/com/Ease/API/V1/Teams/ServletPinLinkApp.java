@@ -2,9 +2,13 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
+import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -21,31 +25,43 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/teams/EditEnterpriseApp")
-public class ServletEditEnterpriseApp extends HttpServlet {
+@WebServlet("/api/v1/teams/PinLinkApp")
+public class ServletPinLinkApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
-            Integer app_id = sm.getIntParam("app_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(app_id);
+            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            ShareableApp shareableApp = team.getAppManager().getShareableAppWithId(sm.getIntParam("app_id", true, false));
             App app = (App) shareableApp;
-            if (!app.isEmpty())
+            if (!app.isLinkApp())
                 throw new HttpServletException(HttpStatus.Forbidden);
-            JSONObject params = new JSONObject();
-            params.put("description", sm.getStringParam("description", false, false));
-            params.put("password_change_interval", sm.getIntParam("password_change_interval", true, false));
-            Boolean fill_in_switch = sm.getBooleanParam("fill_in_switch", true, false);
-            WebsiteApp websiteApp = (WebsiteApp) app;
-            if (websiteApp.getEnterpriseAppAttributes().getFill_in_switch() && !fill_in_switch)
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot disable this switch.");
-            params.put("fill_in_switch", fill_in_switch);
-            shareableApp.modifyShareable(sm.getDB(), params);
+            Integer profile_id = sm.getIntParam("profile_id", true, false);
+            User user = sm.getUser();
+            SharedApp sharedApp = shareableApp.getSharedAppForTeamUser(teamUser);
+            DataBaseConnection db = sm.getDB();
+            int transaction = db.startTransaction();
+            if (sharedApp == null) {
+                sharedApp = shareableApp.share(teamUser, team, new JSONObject(), sm);
+                shareableApp.addSharedApp(sharedApp);
+            }
+            if (profile_id == -1)
+                sharedApp.unpin(db);
+            else {
+                String name = sm.getStringParam("app_name", true, false);
+                if (name == null || name.equals(""))
+                    throw new HttpServletException(HttpStatus.BadRequest, "You cannot leave name empty.");
+                Profile profile = user.getDashboardManager().getProfile(profile_id);
+                app = (App) sharedApp;
+                app.setName(name, db);
+                sharedApp.pinToDashboard(profile, db);
+            }
+            db.commitTransaction(transaction);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
-            sm.setSuccess(shareableApp.getShareableJson());
+            sm.setSuccess(sharedApp.getSharedJSON());
         } catch (Exception e) {
             sm.setError(e);
         }

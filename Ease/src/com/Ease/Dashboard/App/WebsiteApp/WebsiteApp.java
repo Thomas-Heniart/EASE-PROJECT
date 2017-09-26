@@ -4,6 +4,7 @@ import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Catalog.WebsiteInformation;
 import com.Ease.Dashboard.App.*;
+import com.Ease.Dashboard.App.EnterpriseApp.EnterpriseAppAttributes;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
@@ -53,7 +54,6 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             String groupWebsiteId = rs.getString(Data.GROUP_WEBSITE_ID.ordinal());
 			if (groupWebsiteId != null)
 				groupWebsiteApp = (GroupWebsiteApp) GroupManager.getGroupManager(sm).getGroupAppFromDBid(groupWebsiteId); */
-            IdGenerator idGenerator = (IdGenerator) context.getAttribute("idGenerator");
             switch (rs.getString(Data.TYPE.ordinal())) {
                 case "websiteApp":
                     return new WebsiteApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, reminderInterval, reminderType, websiteAppDBid);
@@ -96,8 +96,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid);
     }
 
-    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer password_change_interval, PostServletManager sm) throws GeneralException, HttpServletException {
-        return createEmptyApp(null, null, name, website, password_change_interval, "MONTH", sm);
+    public static WebsiteApp createShareableMultiApp(String name, Website website, Integer password_change_interval, Boolean fill_in_switch, PostServletManager sm) throws GeneralException, HttpServletException {
+        return createEmptyApp(null, null, name, website, password_change_interval, "MONTH", fill_in_switch, sm);
     }
 
     public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, ServletManager sm) throws GeneralException {
@@ -115,7 +115,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
     }
 
-    public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, PostServletManager sm) throws GeneralException, HttpServletException {
+    public static WebsiteApp createEmptyApp(Profile profile, Integer position, String name, Website site, Integer reminderIntervalValue, String reminderIntervalType, Boolean fill_in_switch, PostServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         Map<String, Object> elevator = new HashMap<String, Object>();
@@ -126,6 +126,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         request.setInt(reminderIntervalValue);
         request.setString(reminderIntervalType);
         Integer websiteAppDBid = request.set();
+
         db.commitTransaction(transaction);
         return new WebsiteApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, reminderIntervalValue, reminderIntervalType, websiteAppDBid);
     }
@@ -194,6 +195,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     protected GroupWebsiteApp groupWebsiteApp;
     protected Integer reminderIntervalValue = null;
     protected String reminderIntervalType = null;
+    protected EnterpriseAppAttributes enterpriseAppAttributes;
 
 
     public WebsiteApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, Integer reminderIntervalValue, String reminderIntervalType, Integer websiteAppDBid) {
@@ -252,7 +254,15 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return reminderIntervalType;
     }
 
-	/*
+    public EnterpriseAppAttributes getEnterpriseAppAttributes() {
+        return enterpriseAppAttributes;
+    }
+
+    public void setEnterpriseAppAttributes(EnterpriseAppAttributes enterpriseAppAttributes) {
+        this.enterpriseAppAttributes = enterpriseAppAttributes;
+    }
+
+    /*
      *
 	 * Utils
 	 * 
@@ -337,6 +347,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         res.put("type", "multi");
         res.put("website", this.website.getInformationJson());
         res.put("password_change_interval", this.getReminderIntervalValue());
+        if (this.isEmpty())
+            res.put("fill_in_switch", this.getEnterpriseAppAttributes().getFill_in_switch());
         JSONArray jsonArray = (JSONArray) res.get("receivers");
         for (Object object : jsonArray) {
             JSONObject sharedAppObject = (JSONObject) object;
@@ -381,6 +393,9 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
                     for (SharedApp sharedApp : this.getSharedApps())
                         ((ClassicApp) sharedApp).getAccount().setReminderInterval(password_change_interval, db);
                 }
+                Boolean fill_in_switch = (Boolean) editJson.get("fill_in_switch");
+                if (fill_in_switch != this.getEnterpriseAppAttributes().getFill_in_switch())
+                    this.getEnterpriseAppAttributes().setFill_in_switch(fill_in_switch, db);
             }
             db.commitTransaction(transaction);
         } catch (GeneralException e) {

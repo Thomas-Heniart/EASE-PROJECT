@@ -10,6 +10,7 @@ import {setUserDropdownText,
   PasswordChangeManagerLabel,
   PinAppButton,
   TeamAppActionButton,
+  CopyPasswordButton,
   SharingRequestButton} from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {teamEditSingleApp, teamShareSingleApp, teamAppDeleteReceiver, teamEditSingleAppReceiver, askJoinTeamApp} from "../../actions/appsActions";
@@ -20,8 +21,7 @@ import {handleSemanticInput,
   passwordChangeOptions,
   credentialIconType,
   passwordChangeValues,
-  reflect,
-  copyTextToClipboard
+  reflect
 } from "../../utils/utils";
 import {selectItemFromListById,
   findMeInReceivers,
@@ -42,63 +42,9 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                 labelPosition="left"
                 placeholder={item.placeholder}
-                value={item.value}
+                value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
                 type={item.type}>
   </Input>
-};
-
-class CopyPasswordButton extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      state: 0,
-      open: false,
-      pwd: ''
-    }
-  }
-  copyPassword = () => {
-    copyTextToClipboard(this.state.pwd);
-    this.setState({state: 3, open: true});
-    setTimeout(() => {
-      this.setState({state: 0, open: false});
-    }, 2000);
-  };
-  fetchPassword = () => {
-    this.setState({state: 1, open: true});
-    api.teamApps.getSharedAppPassword({team_id: this.props.team_id, shared_app_id: this.props.shared_app_id}).then(pwd => {
-      this.setState({pwd: pwd, state: 2, open: true});
-    }).catch(err => {
-      this.setState({state: 4, open: true});
-      setTimeout(() => {
-        this.setState({state: 0, open: false});
-      }, 2000);
-    });
-  };
-  render(){
-    const content = <div>
-      {this.state.state === 0 &&
-      'Copy password'}
-      {this.state.state === 1 &&
-      <Icon name="asterisk" loading/>}
-      {this.state.state === 2 &&
-      <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
-      {this.state.state === 3 &&
-      'Copied!'}
-      {this.state.state === 4 &&
-      'Error'}
-    </div>
-    return (
-        <Popup size="mini"
-               position="top center"
-               open={this.state.state > 0 ? true : undefined}
-               inverted
-               hoverable
-               trigger={
-                 <Icon name="copy" class="copy_pwd_button" link onClick={this.fetchPassword}/>
-               }
-               content={content}/>
-    )
-  }
 };
 
 const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
@@ -107,7 +53,7 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
   return (
       <div class="team_app_actions_holder">
         {meReceiver === null &&
-        <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Request App'}
+        <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
@@ -143,9 +89,9 @@ const TeamAppReceiverLabel = ({username, accepted, can_see_information}) => {
                  <span><Icon name='hide'/> User cannot see the password</span>}
                  <br/>
                  {accepted &&
-                 <span><Icon name='circle' color="green"/> User accepted the app</span>}
+                 <span><Icon name='circle' style={{color: '#949EB7'}}/> User accepted the app</span>}
                  {!accepted &&
-                 <span><Icon name='circle' color="grey"/> User accepted the app</span>}
+                 <span><Icon name='circle' style={{color: '#D2DAE4'}}/> User didn't accept the app</span>}
                </div>}/>
   )
 };
@@ -177,11 +123,15 @@ class ReceiversLabelGroup extends Component {
             )
           })}
           {receivers.length > 15 && !this.state.show_all &&
-          <Button size="mini" type="button" class="label fw-normal" onClick={this.showAll.bind(null, true)}><Icon name="add user"/>
+          <Button size="mini" type="button" class="label fw-normal" onClick={this.showAll.bind(null, true)}>
+            <Icon name="add user"/>
             {receivers.length - 15}&nbsp;users
           </Button>}
           {receivers.length > 15 && this.state.show_all &&
-          <Button size="mini" type="button"  class="label fw-normal" onClick={this.showAll.bind(null, false)}><Icon name="hide"/>Hide</Button>}
+          <Button size="mini" type="button"  class="label fw-normal" onClick={this.showAll.bind(null, false)}>
+            <Icon name="remove user"/>
+            Show less
+          </Button>}
         </Label.Group>
     )
   }
@@ -190,12 +140,12 @@ class ReceiversLabelGroup extends Component {
 const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
   return (
       <span style={{lineHeight: '1.7'}}>
-        You was tagged in a Single App,
+        You received in a Single App,
         &nbsp;
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
         &nbsp;or&nbsp;
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
-        &nbsp; it?
+        &nbsp;it?
       </span>
   )
 };
@@ -299,7 +249,7 @@ class SimpleTeamApp extends Component {
       if (receiver !== null)
         selected_users.push(item.id);
       return {
-          ...item,
+        ...item,
         can_see_information: can_see_information
       }
     });
@@ -364,82 +314,80 @@ class SimpleTeamApp extends Component {
         });
     return (
         <Container fluid class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
-          <div>
+          {meReceiver !== null && !meReceiver.accepted &&
+          <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
+          <Segment>
+            <Header as="h4">
+              {website.website_name}
+              {meReceiver !== null && meReceiver.accepted &&
+              <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
+              {app.sharing_requests.length > 0 && isAdmin(me.role) &&
+              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
+            </Header>
             {meReceiver !== null && !meReceiver.accepted &&
-            <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
-            <Segment>
-              {meReceiver !== null && !meReceiver.accepted &&
-              <div class="overlay"/>}
-              <Header as="h4">
-                {website.website_name}
-                {meReceiver !== null && meReceiver.accepted &&
-                <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
-                {app.sharing_requests.length > 0 && isAdmin(me.role) &&
-                <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
-              </Header>
-              {!this.state.edit &&
-              <TeamSimpleAppButtonSet app={app}
-                                      me={me}
-                                      selfJoin={this.selfJoinApp}
-                                      requestApp={e => {this.props.dispatch(askJoinTeamApp(app.id))}}
-                                      dispatch={this.props.dispatch} editMode={this.setEdit.bind(null, true)}/>}
-              <div class="display_flex">
-                <div class="logo_column">
-                  <div class="logo">
-                    <img src={website.logo}/>
-                  </div>
-                </div>
-                <div class="main_column">
-                  <div class="credentials">
-                    {credentials}
-                    {(meReceiver !== null && meReceiver.can_see_information) &&
-                      <CopyPasswordButton team_id={this.props.team_id} shared_app_id={meReceiver.shared_app_id}/>}
-                    <div class="display-inline-flex">
-                      {!this.state.edit ?
-                          <PasswordChangeHolder value={app.password_change_interval}/> :
-                          <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
-                      {((!this.state.edit && app.password_change_interval !== 0) || (this.state.edit && this.state.password_change_interval !== 0)) &&
-                      <PasswordChangeManagerLabel username={room_manager_name}/>}
-                    </div>
-                  </div>
-                  <div>
-                    {!this.state.edit ?
-                        <ReceiversLabelGroup receivers={userReceiversMap}/> :
-                        <Dropdown
-                            class="mini"
-                            search={true}
-                            fluid
-                            name="selected_users"
-                            options={this.state.users}
-                            onChange={this.handleInput}
-                            value={this.state.selected_users}
-                            selection={true}
-                            renderLabel={renderSimpleAppUserLabel}
-                            multiple
-                            placeholder="Tag your team members here..."/>}
-                  </div>
-                  <div>
-                    <Input size="mini"
-                           fluid
-                           class="team-app-input"
-                           onChange={this.handleInput}
-                           name="description"
-                           readOnly={!this.state.edit}
-                           value={this.state.edit ? this.state.description : app.description}
-                           placeholder="What is this about? Any comment?"
-                           type="text"
-                           label={<Label><Icon name="sticky note"/></Label>}
-                           labelPosition="left"/>
-                  </div>
+            <div class="overlay"/>}
+            {!this.state.edit &&
+            <TeamSimpleAppButtonSet app={app}
+                                    me={me}
+                                    selfJoin={this.selfJoinApp}
+                                    requestApp={e => {this.props.dispatch(askJoinTeamApp(app.id))}}
+                                    dispatch={this.props.dispatch} editMode={this.setEdit.bind(null, true)}/>}
+            <div class="display_flex">
+              <div class="logo_column">
+                <div class="logo">
+                  <img src={website.logo}/>
                 </div>
               </div>
-            </Segment>
-            {this.state.edit &&
-            <div>
-              <Button content="Save" floated="right" positive size="mini" loading={this.state.loading} disabled={this.state.loading}/>
-              <Button content="Cancel" type="button" floated="right" onClick={this.setEdit.bind(null, false)} size="mini"/>
-            </div>}
-          </div>
+              <div class="main_column">
+                <div class="credentials">
+                  {credentials}
+                  {(meReceiver !== null && meReceiver.can_see_information) &&
+                  <CopyPasswordButton team_id={this.props.team_id} shared_app_id={meReceiver.shared_app_id}/>}
+                  <div class="display-inline-flex">
+                    {!this.state.edit ?
+                        <PasswordChangeHolder value={app.password_change_interval}/> :
+                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
+                    {((!this.state.edit && app.password_change_interval !== 0) || (this.state.edit && this.state.password_change_interval !== 0)) &&
+                    <PasswordChangeManagerLabel username={room_manager_name}/>}
+                  </div>
+                </div>
+                <div>
+                  {!this.state.edit ?
+                      <ReceiversLabelGroup receivers={userReceiversMap}/> :
+                      <Dropdown
+                          class="mini"
+                          search={true}
+                          fluid
+                          name="selected_users"
+                          options={this.state.users}
+                          onChange={this.handleInput}
+                          value={this.state.selected_users}
+                          selection={true}
+                          renderLabel={renderSimpleAppUserLabel}
+                          multiple
+                          placeholder="Tag your team members here..."/>}
+                </div>
+                <div>
+                  <Input size="mini"
+                         fluid
+                         class="team-app-input"
+                         onChange={this.handleInput}
+                         name="description"
+                         readOnly={!this.state.edit}
+                         value={this.state.edit ? this.state.description : app.description}
+                         placeholder="You can add a comment here"
+                         type="text"
+                         label={<Label><Icon name="sticky note"/></Label>}
+                         labelPosition="left"/>
+                </div>
+              </div>
+            </div>
+          </Segment>
+          {this.state.edit &&
+          <div>
+            <Button content="Save" floated="right" positive size="mini" loading={this.state.loading} disabled={this.state.loading}/>
+            <Button content="Cancel" type="button" floated="right" onClick={this.setEdit.bind(null, false)} size="mini"/>
+          </div>}
         </Container>
     )
   }

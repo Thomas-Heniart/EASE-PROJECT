@@ -275,16 +275,13 @@ module.exports = {
         throw err.response.data;
       });
     },
-    createEnterpriseApp: ({team_id, channel_id, website_id, name, description, password_change_interval, receivers, ws_id}) => {
-      return axios.post('/api/v1/teams/CreateEnterpriseApp', {
+    shareSingleApp: ({team_id, app_id, team_user_id, can_see_information, ws_id}) => {
+      return axios.post('/api/v1/teams/ShareSingleApp', {
         team_id: team_id,
-        channel_id: channel_id,
-        website_id: website_id,
-        name: name,
-        description: description,
-        password_change_interval: password_change_interval,
-        receivers: receivers,
-        ws_id:ws_id,
+        app_id: app_id,
+        team_user_id: team_user_id,
+        can_see_information: can_see_information,
+        ws_id: ws_id,
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
@@ -292,11 +289,15 @@ module.exports = {
         throw err.response.data;
       });
     },
-    editEnterpriseApp: ({team_id, app_id, description, password_change_interval, ws_id}) => {
-      return axios.post('/api/v1/teams/EditEnterpriseApp', {
+    editSingleApp: ({team_id, app_id, description, account_information, password_change_interval, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return axios.post('/api/v1/teams/EditSingleApp', {
         team_id: team_id,
-        app_id: app_id,
+        app_id:app_id,
         description: description,
+        account_information: account_information,
         password_change_interval: password_change_interval,
         ws_id: ws_id,
         timestamp: new Date().getTime()
@@ -306,7 +307,63 @@ module.exports = {
         throw err.response.data;
       });
     },
+    editSingleAppReceiver: ({team_id, shared_app_id, can_see_information, ws_id}) => {
+      return axios.post('/api/v1/teams/EditSingleAppReceiver', {
+        team_id: team_id,
+        shared_app_id: shared_app_id,
+        can_see_information: can_see_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    createEnterpriseApp: ({team_id, channel_id, website_id, name, description, password_change_interval, receivers, ws_id,fill_in_switch}) => {
+      receivers = receivers.map(receiver => {
+        Object.keys(receiver.account_information).map(item => {
+          receiver.account_information[item] = cipher(receiver.account_information[item]);
+        });
+        return receiver;
+      });
+      return axios.post('/api/v1/teams/CreateEnterpriseApp', {
+        team_id: team_id,
+        channel_id: channel_id,
+        website_id: website_id,
+        name: name,
+        description: description,
+        password_change_interval: password_change_interval,
+        fill_in_switch:fill_in_switch,
+        receivers: receivers,
+        ws_id:ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    editEnterpriseApp: ({team_id, app_id, description, password_change_interval, ws_id,fill_in_switch}) => {
+      return axios.post('/api/v1/teams/EditEnterpriseApp', {
+        team_id: team_id,
+        app_id: app_id,
+        description: description,
+        password_change_interval: password_change_interval,
+        fill_in_switch:fill_in_switch,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
     shareEnterpriseApp: ({team_id, app_id, team_user_id, account_information, ws_id}) => {
+      if (account_information !== undefined)
+        Object.keys(account_information).map(item => {
+          account_information[item] = cipher(account_information[item]);
+        });
       return axios.post('/api/v1/teams/ShareEnterpriseApp', {
         team_id: team_id,
         app_id: app_id,
@@ -320,7 +377,42 @@ module.exports = {
         throw err.response.data;
       });
     },
+    joinEnterpriseApp : ({team_id, app_id, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return axios.post('/api/v1/teams/JoinEnterpriseApp', {
+        team_id: team_id,
+        app_id: app_id,
+        account_information: account_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    acceptEnterpriseApp: ({team_id, shared_app_id, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return axios.post('/api/v1/teams/AcceptEnterpriseApp', {
+        team_id: team_id,
+        shared_app_id: shared_app_id,
+        account_information: account_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
     editEnterpriseAppReceiver: ({team_id, shared_app_id, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return axios.post('/api/v1/teams/EditEnterpriseAppReceiver', {
         team_id: team_id,
         shared_app_id: shared_app_id,
@@ -365,6 +457,20 @@ module.exports = {
         return err.response.data;
       });
     },
+    pinLinkApp : ({team_id, app_id, app_name, profile_id, ws_id}) => {
+      return axios.post('/api/v1/team/PinLinkApp', {
+        team_id: team_id,
+        app_id: app_id,
+        app_name:app_name,
+        profile_id: profile_id,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        return err.response.data;
+      });
+    },
     createMultiApp: function(ws_id, team_id, app){
       return axios.post('/api/v1/teams/CreateShareableMultiApp', {
         ws_id: ws_id,
@@ -392,51 +498,6 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
-      });
-    },
-    shareSingleApp: ({team_id, app_id, team_user_id, can_see_information, ws_id}) => {
-      return axios.post('/api/v1/teams/ShareSingleApp', {
-        team_id: team_id,
-        app_id: app_id,
-        team_user_id: team_user_id,
-        can_see_information: can_see_information,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
-      });
-    },
-    editSingleApp: ({team_id, app_id, description, account_information, password_change_interval, ws_id}) => {
-      Object.keys(account_information).map(item => {
-        account_information[item] = cipher(account_information[item]);
-      });
-      return axios.post('/api/v1/teams/EditSingleApp', {
-        team_id: team_id,
-        app_id:app_id,
-        description: description,
-        account_information: account_information,
-        password_change_interval: password_change_interval,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
-      });
-    },
-    editSingleAppReceiver: ({team_id, shared_app_id, can_see_information, ws_id}) => {
-      return axios.post('/api/v1/teams/EditSingleAppReceiver', {
-        team_id: team_id,
-        shared_app_id: shared_app_id,
-        can_see_information: can_see_information,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
       });
     },
     deleteApp: function (ws_id, team_id, app_id) {
