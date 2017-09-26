@@ -97,10 +97,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
-                team.getAppManager().removeSharedAppsForTeamUserInChannel(teamUser_to_delete, channel, db);
-                channel.removeTeamUser(teamUser_to_delete, db);
-            }
             teamUser_to_delete.delete(db);
             db.commitTransaction(transaction);
             team.removeTeamUser(teamUser_to_delete);
