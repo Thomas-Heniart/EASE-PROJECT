@@ -226,8 +226,6 @@ class LinkTeamApp extends Component {
                             }
                             {!this.state.edit &&
                             <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
-                            {app.sharing_requests.length > 0 && isAdmin(me.role) &&
-                            <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
                         </Header>
                         {!this.state.edit &&
                         <TeamLinkAppButtonSet app={app}
