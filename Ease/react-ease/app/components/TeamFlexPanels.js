@@ -502,7 +502,7 @@ class TeamUserRole extends React.Component {
     e.preventDefault();
     this.setState({errorMessage: ''});
     if (this.state.role === 3){
-      this.props.dispatch(showTeamTransferOwnershipModal(true, this.props.item));
+      this.props.dispatch(showTeamTransferOwnershipModal(true, this.props.user));
       this.setState({edit: false});
       return;
     }
