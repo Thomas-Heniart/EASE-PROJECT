@@ -41,6 +41,7 @@ public class ServletJoinSingleApp extends HttpServlet {
             if (shareableApp.getPendingTeamUsers().contains(teamUser_connected))
                 throw new HttpServletException(HttpStatus.BadRequest, "You already ask to join this app.");
             shareableApp.addPendingTeamUser(teamUser_connected, sm.getDB());
+            channel.getRoom_manager().addNotification(teamUser_connected.getUsername() + " would like to have access to " + app.getName(), channel.getDb_id().toString() + "?app_id=" + app.getDBid(), app.getLogo(), sm.getTimestamp(), sm.getDB());
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {
             sm.setError(e);
