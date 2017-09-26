@@ -3,6 +3,7 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -44,7 +45,16 @@ public class ServletEditChannelName extends HttpServlet {
                 if (channel1.getName().equals(name))
                     throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another room");
             }
+            String old_name = channel.getName();
             channel.editName(name);
+            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            if (!old_name.equals(channel.getName())) {
+                for (TeamUser teamUser : channel.getTeamUsers()) {
+                    if (teamUser == teamUser_connected)
+                        continue;
+                    teamUser.addNotification("#" + old_name + " has been renamed to #" + channel.getName(), channel.getDb_id().toString(), "/resources/notifications/channel.png", sm.getTimestamp(), sm.getDB());
+                }
+            }
             sm.saveOrUpdate(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());

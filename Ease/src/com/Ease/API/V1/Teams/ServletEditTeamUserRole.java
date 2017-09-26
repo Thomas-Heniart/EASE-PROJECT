@@ -42,6 +42,8 @@ public class ServletEditTeamUserRole extends HttpServlet {
             if (!TeamUserRole.isInferiorToOwner(roleValue))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership from here.");
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
+            if (teamUser != teamUserToModify)
+                teamUserToModify.addNotification(teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "@" + teamUserToModify.getDb_id(), "/resources/notifications/user_info.png", sm.getTimestamp(), sm.getDB());
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
             sm.setSuccess("TeamUser role edited.");
