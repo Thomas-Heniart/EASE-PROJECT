@@ -2,38 +2,23 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import api from '../../utils/api';
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {getClearbitLogo, dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
+import {getClearbitLogo} from "../../utils/api";
 import {setUserDropdownText,
-    PasswordChangeHolder,
-    renderSimpleAppUserLabel,
-    PasswordChangeDropdown,
-    PasswordChangeManagerLabel,
     PinAppButton,
-    TeamAppActionButton,
-    SharingRequestButton} from "./common";
+    TeamAppActionButton} from "./common";
 import * as modalActions from "../../actions/teamModalActions";
-import {teamEditLinkAppNew, teamShareSingleApp, teamAppDeleteReceiver, teamEditSingleAppReceiver, askJoinTeamApp} from "../../actions/appsActions";
+import {teamEditLinkAppNew} from "../../actions/appsActions";
 import {handleSemanticInput,
-    transformWebsiteInfoIntoList,
-    transformCredentialsListIntoObject,
-    transformWebsiteInfoIntoListAndSetValues,
-    passwordChangeOptions,
-    credentialIconType,
-    passwordChangeValues,
-    reflect,
-    copyTextToClipboard
+    reflect
 } from "../../utils/utils";
 import {selectItemFromListById,
     findMeInReceivers,
     getReceiverInList,
     sortReceiversAndMap,
     isAdmin} from "../../utils/helperFunctions";
-import {teamCreateLinkApp, teamAcceptSharedApp} from "../../actions/appsActions";
 import {connect} from "react-redux";
 
-const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
-    const meReceiver = findMeInReceivers(app.receivers, me.id);
-    const asked = app.sharing_requests.indexOf(me.id) !== -1;
+const TeamLinkAppButtonSet = ({app, me, dispatch, editMode}) => {
     return (
         <div class="team_app_actions_holder">
             {isAdmin(me.role) &&
@@ -44,7 +29,7 @@ const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp
     )
 };
 
-const TeamAppReceiverLabel = ({username, accepted, can_see_information}) => {
+const TeamAppReceiverLabel = ({username}) => {
     return (
         <Popup size="mini"
                position="bottom center"
@@ -52,7 +37,7 @@ const TeamAppReceiverLabel = ({username, accepted, can_see_information}) => {
                flowing
                hideOnScroll={true}
                trigger={
-                   <Label class={classnames("user-label static", accepted ? 'accepted' : null)}>
+                   <Label class={classnames("user-label static accepted")}>
                        {username}
                    </Label>
                }
@@ -125,15 +110,6 @@ class LinkTeamApp extends Component {
         this.setState({url: value}, this.getLogo);
     };
     handleInput = handleSemanticInput.bind(this);
-    toggleCanSeeInformation = (id) => {
-        let users = this.state.users.map(item => {
-            return {
-                ...item,
-                can_see_information: item.id === id ? !item.can_see_information : item.can_see_information
-            }
-        });
-        this.setState({users: users});
-    };
     modify = (e) => {
         e.preventDefault();
         this.setState({loading: true});
@@ -145,64 +121,23 @@ class LinkTeamApp extends Component {
             app_id: this.props.app.id,
             description: this.state.description,
         })).then(response => {
-            const app = response;
-            let deleting = [];
-            let edit = [];
-            let sharing = [];
-            const calls = deleting.concat(sharing, edit);
-            Promise.all(calls.map(reflect)).then(response => {
-                this.setEdit(false);
-            });
+            this.setEdit(false);
         }).catch(err => {
             console.log(err);
         });
     };
-    setupUsers = () => {
-        const channel = selectItemFromListById(this.props.channels, this.props.app.origin.id);
-        let selected_users = [];
-        const users = channel.userIds.map(item => {
-            const user = selectItemFromListById(this.props.users, item);
-            return {
-                key: item,
-                text: setUserDropdownText(user),
-                value: item,
-                id: item,
-                username: user.username,
-                user: user,
-                toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
-            }
-        }).sort((a, b) => {
-            if (a.id === this.props.me.id)
-                return -1000;
-            return a.username.localeCompare(b.username);
-        }).map(item => {
-            const receiver = getReceiverInList(this.props.app.receivers, item.id);
-            const can_see_information = receiver !== null ? receiver.can_see_information : false;
-            if (receiver !== null)
-                selected_users.push(item.id);
-            return {
-                ...item,
-                can_see_information: can_see_information
-            }
-        });
-        this.setState({users: users, selected_users:selected_users});
-    };
     setEdit = (state) => {
         if (state){
             const app = this.props.app;
-            this.setupUsers();
             this.setState({name: app.name, url: app.url, description: app.description, img_url: app.logo});
         }
         this.setState({edit: state, loading: false});
     };
 
-
     render(){
         const app = this.props.app;
         const me = this.props.me;
-        const room_manager_name = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.origin.id).room_manager_id).username;
         const meReceiver = getReceiverInList(app.receivers, me.id);
-        const website = app.website;
         const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
 
         return (
@@ -230,8 +165,8 @@ class LinkTeamApp extends Component {
                         {!this.state.edit &&
                         <TeamLinkAppButtonSet app={app}
                                                 me={me}
-                                                selfJoin={this.selfJoinApp}
-                                                dispatch={this.props.dispatch} editMode={this.setEdit.bind(null, true)}/>}
+                                                dispatch={this.props.dispatch}
+                                                editMode={this.setEdit.bind(null, true)}/>}
 
                         <div class="display_flex">
                             <div class="logo_column">
@@ -254,8 +189,7 @@ class LinkTeamApp extends Component {
                                            labelPosition="left"
                                            required/>
                                 </div>
-                                {userReceiversMap &&
-                                    <ReceiversLabelGroup receivers={userReceiversMap}/>}
+                                    <ReceiversLabelGroup receivers={userReceiversMap}/>
                                 <div>
                                     <Input size="mini"
                                            fluid
