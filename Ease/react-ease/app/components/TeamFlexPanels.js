@@ -483,6 +483,63 @@ class UsernameModifier extends React.Component {
   }
 }
 
+class TeamUserRole extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      errorMessage: '',
+      edit: false,
+      role: 1
+    }
+  }
+  handleInput = handleSemanticInput.bind(this);
+  setEdit = (state) => {
+    this.setState({edit: state, role: this.props.user.role, errorMessage: ''});
+  };
+  confirm = (e) => {
+    e.preventDefault();
+    this.setState({errorMessage: ''});
+    if (this.state.role === 3){
+      this.props.dispatch(showTeamTransferOwnershipModal(true, this.props.item));
+      this.setState({edit: false});
+      return;
+    }
+    if (this.state.role !== this.props.user.role){
+      this.props.dispatch(userActions.editTeamUserRole(this.props.user.id, this.state.role)).then(response => {
+        this.setEdit(false);
+      }).catch(err => {
+        this.setState({errorMessage: err});
+      });
+    }else
+      this.setEdit(false);
+  };
+  render(){
+    const user = this.props.user;
+    const me = this.props.me;
+    const userRoles = teamUserRoleValues.filter(item => {
+      return item.value <= me.role;
+    });
+    return (
+        <Grid.Column>
+          <strong>Role: </strong>
+          {!this.state.edit ?
+              <span>
+                        {teamUserRoles[user.role]}
+                {isSuperior(user, me) && user.id !== me.id &&
+                <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
+                   </span> :
+              <span>
+                      <Dropdown floating inline name="role" options={userRoles} defaultValue={this.state.role} onChange={this.handleInput}/>
+                       <Icon link name="delete" onClick={this.setEdit.bind(null, false)}/>
+                       <Icon link name="checkmark" onClick={this.confirm}/>
+                {this.state.errorMessage.length > 0 &&
+                <Message color="red" content={this.state.errorMessage}/>}
+                        </span>}
+        </Grid.Column>
+    )
+  }
+}
+
 class TeamUserFlexTab extends React.Component{
   constructor(props){
     super(props);
@@ -652,20 +709,7 @@ class TeamUserFlexTab extends React.Component{
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column>
-                  <strong>Role: </strong>
-                  {!this.state.roleModifying ?
-                      <span>
-                        {teamUserRoles[user.role]}
-                        {isSuperior(user, me) && user.id !== me.id &&
-                        <Icon link name="pencil" className="mrgnLeft5" onClick={this.setRoleModifying.bind(null, true)}/>}
-                   </span> :
-                      <span>
-                      <Dropdown floating inline name="role" options={userRoles} defaultValue={user.role} onChange={this.handleInput}/>
-                       <Icon link name="delete" onClick={this.setRoleModifying.bind(null, false)}/>
-                       <Icon link name="checkmark" onClick={this.confirmUserRoleChange}/>
-                        </span>}
-                </Grid.Column>
+                <TeamUserRole dispatch={this.props.dispatch} user={user} me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
