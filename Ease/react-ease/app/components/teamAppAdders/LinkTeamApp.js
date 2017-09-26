@@ -70,10 +70,7 @@ class ReceiversLabelGroup extends Component {
                     const receiver = item.receiver;
                     if (item.receiver.profile_id !== -1)
                         return (
-                            <TeamAppReceiverLabel key={receiver.team_user_id}
-                                              username={user.username}
-                                              can_see_information={receiver.can_see_information}
-                                              accepted={receiver.accepted}/>
+                            <TeamAppReceiverLabel username={user.username}/>
                         );
                 })}
                 {receivers.length > 15 && !this.state.show_all &&
