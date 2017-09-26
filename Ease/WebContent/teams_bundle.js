@@ -66979,7 +66979,7 @@ var TeamTransferOwnershipModal = (_dec = (0, _reactRedux.connect)(function (stor
           React.createElement(
             _semanticUiReact.Header,
             { as: 'h3', attached: 'top' },
-            'Transfer Team ownership'
+            'Transfer team Ownership'
           ),
           React.createElement(
             _semanticUiReact.Form,
@@ -66990,33 +66990,12 @@ var TeamTransferOwnershipModal = (_dec = (0, _reactRedux.connect)(function (stor
               React.createElement(
                 'p',
                 null,
-                'For safety reasons, we need know the phone number of the team owner.'
+                'Transferring the ownership of a team in a one-way street. You won\u2019t be able to undo this action.'
               ),
               React.createElement(
                 'p',
                 null,
-                'Before transfering the ownership to ',
-                user.username,
-                ', we need his/her phone number.'
-              ),
-              React.createElement(
-                'p',
-                null,
-                'Don\'t worry, you will receive a notification once ownership transfer is completed.'
-              ),
-              React.createElement(
-                'p',
-                null,
-                React.createElement(
-                  'strong',
-                  null,
-                  'Transfering ownership is one-way street. You won\'t be able to undo this action.'
-                )
-              ),
-              React.createElement(
-                'p',
-                null,
-                'Enter your Ease.space password to confirm the trasfer.'
+                'Enter your Ease.space password to confirm the transfer.'
               )
             ),
             React.createElement(_semanticUiReact.Form.Input, {
@@ -67033,7 +67012,7 @@ var TeamTransferOwnershipModal = (_dec = (0, _reactRedux.connect)(function (stor
               disabled: this.state.password.length === 0,
               attached: 'bottom', negative: true,
               className: 'modal-button',
-              content: 'CONFIRM ACCESS' })
+              content: 'CONFIRM TRANSFER' })
           )
         )
       );
