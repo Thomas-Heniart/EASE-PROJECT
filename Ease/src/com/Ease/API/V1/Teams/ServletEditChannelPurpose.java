@@ -3,6 +3,8 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -33,6 +35,8 @@ public class ServletEditChannelPurpose extends HttpServlet {
             String purpose = sm.getStringParam("purpose", true, true);
             if (purpose == null)
                 purpose = "";
+            if (purpose.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Room purpose cannot exceed 250 characters");
             channel.editPurpose(purpose);
             sm.saveOrUpdate(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
