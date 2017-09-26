@@ -99,6 +99,17 @@ public class LinkAppInformation {
         this.imgUrl = imgUrl;
     }
 
+    public void edit(JSONObject editJson) {
+        String imgUrl = (String) editJson.get("img_url");
+        String url = (String) editJson.get("url");
+        if (url != null && !url.equals(""))
+            this.link = url;
+        if (!imgUrl.equals(""))
+            this.imgUrl = imgUrl;
+        else
+            this.imgUrl = "/resources/icons/link_app.png";
+    }
+
     public void edit(JSONObject editJson, DataBaseConnection db) throws HttpServletException {
         try {
             String imgUrl = (String) editJson.get("img_url");
