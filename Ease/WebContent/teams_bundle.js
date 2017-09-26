@@ -2567,6 +2567,7 @@ exports.teamEditSingleAppReceiver = teamEditSingleAppReceiver;
 exports.teamShareSingleApp = teamShareSingleApp;
 exports.teamCreateLinkAppNew = teamCreateLinkAppNew;
 exports.teamEditLinkAppNew = teamEditLinkAppNew;
+exports.teamPinLinkApp = teamPinLinkApp;
 exports.teamCreateLinkApp = teamCreateLinkApp;
 exports.teamDeleteApp = teamDeleteApp;
 exports.teamShareApp = teamShareApp;
@@ -2880,6 +2881,28 @@ function teamEditLinkAppNew(_ref12) {
   };
 }
 
+function teamPinLinkApp(_ref13) {
+  var team_id = _ref13.team_id,
+      app_id = _ref13.app_id,
+      app_name = _ref13.app_name,
+      profile_id = _ref13.profile_id;
+
+  return function (dispatch, getState) {
+    return post_api.teamApps.pinLinkApp({
+      team_id: team_id,
+      app_id: app_id,
+      app_name: app_name,
+      profile_id: profile_id,
+      ws_id: getState().common.ws_id
+    }).then(function (receiver) {
+      dispatch({ type: 'TEAM_LINK_APP_RECEIVER_ADDED', payload: { app_id: app_id, receiver: receiver } });
+      return receiver;
+    }).catch(function (err) {
+      throw err;
+    });
+  };
+}
+
 function teamCreateLinkApp(app) {
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_CREATE_LINK_APP_PENDING' });
@@ -2941,11 +2964,11 @@ function teamAppEditReceiver(app_id, user_app_id, receiver_info) {
   };
 }
 
-function teamAppDeleteReceiver(_ref13) {
-  var team_id = _ref13.team_id,
-      app_id = _ref13.app_id,
-      shared_app_id = _ref13.shared_app_id,
-      team_user_id = _ref13.team_user_id;
+function teamAppDeleteReceiver(_ref14) {
+  var team_id = _ref14.team_id,
+      app_id = _ref14.app_id,
+      shared_app_id = _ref14.shared_app_id,
+      team_user_id = _ref14.team_user_id;
 
   return function (dispatch, getState) {
     return post_api.teamApps.deleteReceiver({
@@ -2961,10 +2984,10 @@ function teamAppDeleteReceiver(_ref13) {
   };
 }
 
-function teamAcceptSharedApp(_ref14) {
-  var team_id = _ref14.team_id,
-      app_id = _ref14.app_id,
-      shared_app_id = _ref14.shared_app_id;
+function teamAcceptSharedApp(_ref15) {
+  var team_id = _ref15.team_id,
+      app_id = _ref15.app_id,
+      shared_app_id = _ref15.shared_app_id;
 
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_ACCEPT_SHARED_APP_PENDING' });
@@ -3747,6 +3770,26 @@ module.exports = {
         return err.response.data;
       });
     },
+    pinLinkApp: function pinLinkApp(_ref15) {
+      var team_id = _ref15.team_id,
+          app_id = _ref15.app_id,
+          app_name = _ref15.app_name,
+          profile_id = _ref15.profile_id,
+          ws_id = _ref15.ws_id;
+
+      return axios.post('/api/v1/team/PinLinkApp', {
+        team_id: team_id,
+        app_id: app_id,
+        app_name: app_name,
+        profile_id: profile_id,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        return err.response.data;
+      });
+    },
     createMultiApp: function createMultiApp(ws_id, team_id, app) {
       return axios.post('/api/v1/teams/CreateShareableMultiApp', {
         ws_id: ws_id,
@@ -3827,11 +3870,11 @@ module.exports = {
         return response.data;
       });
     },
-    deleteReceiver: function deleteReceiver(_ref15) {
-      var ws_id = _ref15.ws_id,
-          team_id = _ref15.team_id,
-          app_id = _ref15.app_id,
-          shared_app_id = _ref15.shared_app_id;
+    deleteReceiver: function deleteReceiver(_ref16) {
+      var ws_id = _ref16.ws_id,
+          team_id = _ref16.team_id,
+          app_id = _ref16.app_id,
+          shared_app_id = _ref16.shared_app_id;
 
       return axios.post('/api/v1/teams/DeleteSharedApp', {
         ws_id: ws_id,
@@ -3856,10 +3899,10 @@ module.exports = {
         return response.data;
       });
     },
-    acceptSharedApp: function acceptSharedApp(_ref16) {
-      var ws_id = _ref16.ws_id,
-          team_id = _ref16.team_id,
-          shared_app_id = _ref16.shared_app_id;
+    acceptSharedApp: function acceptSharedApp(_ref17) {
+      var ws_id = _ref17.ws_id,
+          team_id = _ref17.team_id,
+          shared_app_id = _ref17.shared_app_id;
 
       return axios.post('/api/v1/teams/AcceptSharedApp', {
         ws_id: ws_id,
@@ -4028,9 +4071,9 @@ module.exports = {
         throw err.response.data;
       });
     },
-    addCreditCard: function addCreditCard(_ref17) {
-      var team_id = _ref17.team_id,
-          cardToken = _ref17.cardToken;
+    addCreditCard: function addCreditCard(_ref18) {
+      var team_id = _ref18.team_id,
+          cardToken = _ref18.cardToken;
 
       return axios.post('/api/v1/teams/AddCreditCard', {
         team_id: team_id,
@@ -4041,15 +4084,15 @@ module.exports = {
         throw err.response.data;
       });
     },
-    updateBillingInformation: function updateBillingInformation(_ref18) {
-      var team_id = _ref18.team_id,
-          address_city = _ref18.address_city,
-          address_country = _ref18.address_country,
-          address_line1 = _ref18.address_line1,
-          address_line2 = _ref18.address_line2,
-          address_state = _ref18.address_state,
-          address_zip = _ref18.address_zip,
-          business_vat_id = _ref18.business_vat_id;
+    updateBillingInformation: function updateBillingInformation(_ref19) {
+      var team_id = _ref19.team_id,
+          address_city = _ref19.address_city,
+          address_country = _ref19.address_country,
+          address_line1 = _ref19.address_line1,
+          address_line2 = _ref19.address_line2,
+          address_state = _ref19.address_state,
+          address_zip = _ref19.address_zip,
+          business_vat_id = _ref19.business_vat_id;
 
       return axios.post('/api/v1/teams/UpdateBillingInformation', {
         team_id: team_id,
@@ -4066,9 +4109,9 @@ module.exports = {
         throw err.response.data;
       });
     },
-    unsubscribe: function unsubscribe(_ref19) {
-      var team_id = _ref19.team_id,
-          password = _ref19.password;
+    unsubscribe: function unsubscribe(_ref20) {
+      var team_id = _ref20.team_id,
+          password = _ref20.password;
 
       return axios.post('/api/v1/teams/Unsubscribe', {
         team_id: team_id,
@@ -4081,8 +4124,8 @@ module.exports = {
     }
   },
   dashboard: {
-    createProfile: function createProfile(_ref20) {
-      var name = _ref20.name;
+    createProfile: function createProfile(_ref21) {
+      var name = _ref21.name;
 
       return axios.post('/api/v1/dashboard/CreateProfile', {
         name: name
@@ -4145,12 +4188,12 @@ module.exports = {
         throw err;
       });
     },
-    requestWebsite: function requestWebsite(_ref21) {
-      var team_id = _ref21.team_id,
-          url = _ref21.url,
-          is_public = _ref21.is_public,
-          login = _ref21.login,
-          password = _ref21.password;
+    requestWebsite: function requestWebsite(_ref22) {
+      var team_id = _ref22.team_id,
+          url = _ref22.url,
+          is_public = _ref22.is_public,
+          login = _ref22.login,
+          password = _ref22.password;
 
       return axios.post('/api/v1/teams/AskWebsite', {
         team_id: team_id,
@@ -54125,7 +54168,7 @@ var TeamAddAppsButton = (_dec = (0, _reactRedux.connect)(), _dec(_class = functi
               React.createElement(_semanticUiReact.Icon, { name: "linkify" }),
               "Link app"
             ),
-            content: "Are you using tools without accounts? Need to share a blog or a source your team frequently uses? Here it is!" }),
+            content: "Using tools without accounts? Need to share a blog or a source?" }),
           targetType === 1 && React.createElement(
             _semanticUiReact.Dropdown.Item,
             { disabled: true, className: "align_items_center", style: { display: 'flex' } },
@@ -56293,7 +56336,7 @@ function TeamHeader(props) {
             React.createElement(
               'div',
               { className: 'channel_header_info_item', id: 'apps_number' },
-              React.createElement('i', { className: 'icon_left fa fa-share-alt-square' }),
+              React.createElement('i', { className: 'icon_left fa fa-square' }),
               React.createElement(
                 'span',
                 { className: 'value' },
@@ -61976,7 +62019,8 @@ var api = __webpack_require__(18);
 var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     modal: store.teamModals.pinTeamAppToDashboardModal,
-    me: store.users.me
+    me: store.users.me,
+    team_id: store.team.id
   };
 }), _dec(_class = function (_React$Component) {
   _inherits(PinTeamAppToDashboardModal, _React$Component);
@@ -62020,6 +62064,17 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(this.props.modal.app.receivers, this.props.me.id);
       if (meReceiver.profile_id === -1 && this.state.selectedProfile === -1) {
         this.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
+        return;
+      }
+      if (this.props.modal.app.type === 'link') {
+        this.props.dispatch((0, _appsActions.teamPinLinkApp)({
+          team_id: this.props.team_id,
+          app_id: this.props.modal.app.id,
+          app_name: this.state.name,
+          profile_id: this.state.selectedProfile
+        })).then(function () {
+          _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
+        });
         return;
       }
       this.props.dispatch((0, _appsActions.teamAppPinToDashboard)(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name, this.props.modal.app.id)).then(function (response) {
@@ -69067,6 +69122,29 @@ function reducer() {
         });
         return _extends({}, state, {
           apps: _apps9
+        });
+      }
+    case 'TEAM_LINK_APP_RECEIVER_ADDED':
+      {
+        var _app_id3 = action.payload.app_id;
+        var _receiver2 = action.payload.receiver;
+        var changed = false;
+
+        var _apps10 = state.apps.map(function (app) {
+          if (app.id === _app_id3) {
+            app.receivers = app.receivers.map(function (item) {
+              if (item.team_user_id === _receiver2.team_user_id) {
+                changed = true;
+                return _receiver2;
+              }
+              return item;
+            });
+            if (!changed) app.receivers.push(_receiver2);
+          }
+          return app;
+        });
+        return _extends({}, state, {
+          apps: _apps10
         });
       }
   }
