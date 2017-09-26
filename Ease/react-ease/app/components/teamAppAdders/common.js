@@ -46,7 +46,7 @@ export const ExtendFillSwitch = ({value, onClick}) => {
              trigger={
                <div class="enterprise-extend-switch">
                  I fill user’s credentials myslef
-                 <Checkbox toggle name="fill_in_switch" checked={value} onClick={onClick}/>
+                 <Checkbox toggle class="enterprise-app-switch" name="fill_in_switch" checked={value} onClick={onClick}/>
                </div>
              }
              content='You can fill logins and passwords for each of your users (enabled only on Pro plan), or let them do it.'/>
@@ -115,7 +115,7 @@ export const PasswordChangeManagerLabel = ({username})=> {
              trigger={
                <Label class="pwd-manager">{username}&nbsp;&nbsp;<Icon name="eye"/></Label>
              }
-             content={`${username} updates the password`}/>
+             content={`${username} can see the password and will update it`}/>
   )
 };
 

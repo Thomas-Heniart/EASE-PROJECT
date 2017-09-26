@@ -254,7 +254,7 @@ class SimpleTeamAppAdder extends Component {
                              onChange={this.handleInput}
                              name="description"
                              value={this.state.description}
-                             placeholder="What is this about? Any comment?"
+                             placeholder="You can add a comment here"
                              type="text"
                              label={<Label><Icon name="sticky note"/></Label>}
                              labelPosition="left"/>

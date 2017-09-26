@@ -14,6 +14,7 @@ const CredentialInput = ({item, onChange}) => {
       name={item.name}
       autoFocus={item.autoFocus}
       onChange={onChange}
+      required
       placeholder={item.placeholder}
       value={item.value}
       type={item.type}/>;
