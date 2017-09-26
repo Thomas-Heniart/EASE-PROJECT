@@ -140,7 +140,7 @@ class ReceiversLabelGroup extends Component {
 const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
   return (
       <span style={{lineHeight: '1.7'}}>
-        You received in a Single App,
+        You received a Single App,
         &nbsp;
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
         &nbsp;or&nbsp;
