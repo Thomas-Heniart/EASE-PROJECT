@@ -119,7 +119,7 @@ class LinkTeamAppAdder extends React.Component {
     render(){
 
         return (
-            <Container fluid id="simple_team_app_add" class="team-app" as="form">
+            <Container fluid id="simple_team_app_add" class="team-app" as="form" onSubmit={this.send}>
                 <Segment>
                     <Button icon="delete" style={{margin: '0 0 0 .6rem'}} size="mini" class="close" onClick={this.close} color="grey"/>
                     <div className="app_name_input_handler display_flex locked margin_b5rem">
@@ -133,7 +133,8 @@ class LinkTeamAppAdder extends React.Component {
                                 onChange={this.handleAppNameChange}
                                 size="mini"
                                 label={<Label><Icon name="home"/></Label>}
-                                labelPosition="left" />
+                                labelPosition="left"
+                                required/>
                         </div>
                     </div>
                     <div class="display_flex">
@@ -153,7 +154,8 @@ class LinkTeamAppAdder extends React.Component {
                                        onChange={this.changeUrl}
                                        size="mini"
                                        label={<Label><Icon name="linkify"/></Label>}
-                                       labelPosition="left" />
+                                       labelPosition="left"
+                                       required/>
                             </div>
 
                             <div>
@@ -174,7 +176,7 @@ class LinkTeamAppAdder extends React.Component {
                 <div>
                     <Button positive
                             size="mini"
-                            onClick={this.send}
+                            // onClick={this.send}
                             floated="right">
                         <Icon name="send" />
                         Send
