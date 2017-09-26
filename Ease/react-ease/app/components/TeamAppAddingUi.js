@@ -9,6 +9,7 @@ import {selectUserFromListById} from "../utils/helperFunctions";
 import * as appActions from "../actions/appsActions";
 import {closeAppAddUI} from "../actions/teamAppsAddUIActions"
 import SimpleTeamAppAdder from "./teamAppAdders/SimpleTeamAppAdder";
+import EnterpriseTeamAppAdder from "./teamAppAdders/EnterpriseTeamAppAdder";
 
 class DashboardAndTeamAppSearch extends React.Component{
   constructor(props){
@@ -581,14 +582,7 @@ class TeamAppAddingUi extends React.Component {
     return (
         <div className="add_actions_container" id="app_add_actions">
           {this.props.addAppUI.TeamSimpleAppAddActive &&
-                   <SimpleTeamAppAdder item={item}/>
-            /*<SimpleTeamAppAdd
-              team_id={this.props.team_id}
-              selectedItem={this.props.selectedItem}
-              item={item}
-              my_id={this.props.my_id}
-              userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
-              dispatch={this.props.dispatch}/>*/}
+                   <SimpleTeamAppAdder item={item}/>}
           {this.props.addAppUI.TeamLinkAppAddActive &&
               <LinkTeamAppAdd
                   team_id={this.props.team_id}
@@ -598,13 +592,7 @@ class TeamAppAddingUi extends React.Component {
                   userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
                   dispatch={this.props.dispatch}/>}
           {this.props.addAppUI.TeamMultiAppAddActive &&
-            <MultiTeamAppAdd
-              team_id={this.props.team_id}
-              selectedItem={this.props.selectedItem}
-              item={item}
-              my_id={this.props.my_id}
-              userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
-              dispatch={this.props.dispatch}/>}
+          <EnterpriseTeamAppAdder item={item}/>}
         </div>
     )
   }

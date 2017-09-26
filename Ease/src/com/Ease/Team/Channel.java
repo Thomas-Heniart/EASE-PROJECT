@@ -183,7 +183,7 @@ public class Channel {
     }
 
     private void removePendingTeamUser(TeamUser teamUser) {
-        this.pending_teamUsers.remove(teamUser.getDb_id());
+        this.pending_teamUsers.remove(teamUser);
     }
 
     public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {

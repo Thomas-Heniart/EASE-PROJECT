@@ -306,6 +306,7 @@ public class ClassicApp extends WebsiteApp {
         res.put("last_modification", this.getAccount().printLastUpdatedDate());
         res.put("password_must_be_updated", this.getAccount().mustUpdatePassword());
         res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
+        res.put("password_filled", !this.getAccount().getInformationNamed("password").equals(""));
         JSONArray jsonArray = (JSONArray) res.get("receivers");
         for (Object object : jsonArray) {
             JSONObject sharedAppObject = (JSONObject) object;
@@ -332,8 +333,11 @@ public class ClassicApp extends WebsiteApp {
         JSONObject res = super.getSharedJSON();
         App app_holder = (App) this.getHolder();
         /* MultiApp */
-        if (app_holder.isEmpty())
+        if (app_holder.isEmpty()) {
             res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
+            res.put("password_filled", !this.getAccount().getInformationNamed("password").equals(""));
+        }
+
         /* SimpleApp */
         if (app_holder.isClassicApp())
             res.put("can_see_information", this.canSeeInformation());

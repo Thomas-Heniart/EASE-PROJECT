@@ -106,6 +106,28 @@ export function showTeamJoinMultiAppModal(state, user, app){
   }
 }
 
+export function showTeamEditEnterpriseAppModal(state, user, app){
+  return {
+    type: 'SHOW_TEAM_EDIT_ENTERPRISE_APP_MODAL',
+    payload: {
+      active: state,
+      user: user,
+      app:app
+    }
+  }
+}
+
+export function showTeamAskJoinMultiAppModal(state, user, app){
+  return {
+    type: 'SHOW_TEAM_ASK_JOIN_ENTERPRISE_APP_MODAL',
+    payload: {
+      active: state,
+      user: user,
+      app:app
+    }
+  }
+}
+
 export function showTeamSettingsModal(state){
   return {
     type: 'SHOW_TEAM_SETTINGS_MODAL',

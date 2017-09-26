@@ -29,7 +29,7 @@ class TeamsList extends React.Component {
                                                {item.name}
                                            </Dropdown.Item>
                                        }
-                                       content='You need to wait until an admin accept you.'/>
+                                       content='You need to wait until an admin accepts you.'/>
                             );
                         return (
                             <Dropdown.Item key={item.id} as={NavLink} to={`/teams/${item.id}`} activeClassName="active">

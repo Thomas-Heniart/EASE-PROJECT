@@ -56,6 +56,7 @@ public class ServletJoinEnterpriseApp extends HttpServlet {
             params.put("account_information", account_information);
             params.put("team_key", teamUser_connected.getDeciphered_teamKey());
             shareableApp.addPendingTeamUser(teamUser_connected, params, sm.getDB());
+            channel.getRoom_manager().addNotification(teamUser_connected.getUsername() + " would like to have access to " + app.getName(), channel.getDb_id().toString() + "?app_id=" + app.getDBid(), app.getLogo(), sm.getTimestamp(), sm.getDB());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), shareableApp.getOrigin()));
             sm.setSuccess(shareableApp.getShareableJson());
         } catch (Exception e) {

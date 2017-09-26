@@ -35,6 +35,16 @@ const initialState = {
     active: false,
     app: null
   },
+  teamEditEnterpriseAppModal: {
+    active: false,
+    user: null,
+    app: null
+  },
+  teamAskJoinEnterpriseAppModal: {
+    active: false,
+    user: null,
+    app: null
+  },
   teamAcceptMultiAppModal: {
     active: false,
     user: null,
@@ -136,6 +146,18 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         teamAcceptMultiAppModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_ASK_JOIN_ENTERPRISE_APP_MODAL': {
+      return {
+        ...state,
+        teamAskJoinEnterpriseAppModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_EDIT_ENTERPRISE_APP_MODAL': {
+      return {
+          ...state,
+        teamEditEnterpriseAppModal: action.payload
       }
     }
     case 'SHOW_TEAM_JOIN_MULTI_APP_MODAL': {

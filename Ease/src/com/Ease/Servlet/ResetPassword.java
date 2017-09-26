@@ -106,7 +106,7 @@ public class ResetPassword extends HttpServlet {
                 for (SharedApp sharedApp : teamUser.getSharedApps())
                     sharedApp.setDisableShared(true, sm.getDB());
                 if (teamUser.getAdmin_id() != null)
-                    team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id().toString(), "/resources/notifications/flag.png", new Date(), sm.getDB());
+                    team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id().toString(), "/resources/notifications/user_password_lost.png", new Date(), sm.getDB());
                 mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                 if (admin_id == null || admin_id == 0) {

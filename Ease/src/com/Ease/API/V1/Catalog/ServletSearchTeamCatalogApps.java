@@ -29,6 +29,8 @@ public class ServletSearchTeamCatalogApps extends HttpServlet {
             if (search == null)
                 search = "";
             for (Website website : catalog.getWebsites()) {
+                if (website.getInformations().isEmpty())
+                    continue;
                 if (search.equals("") || (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.isIntegrated())) {
                     if (website.isInCatalogForTeam(String.valueOf(team_id)))
                         jsonArray.add(website.getSearchJson());

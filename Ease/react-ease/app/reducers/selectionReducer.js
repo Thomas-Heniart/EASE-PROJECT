@@ -286,9 +286,9 @@ export default function reducer(state={
       };
     }
     case 'TEAM_APP_CHANGED' : {
-      var apps = state.apps;
+      let apps = state.apps;
 
-      for (var i = 0; i < apps.length; i++){
+      for (let i = 0; i < apps.length; i++){
         if (apps[i].id === action.payload.app.id){
           apps[i] = action.payload.app;
           return {
@@ -297,6 +297,7 @@ export default function reducer(state={
           }
         }
       }
+      break;
     }
     case 'TEAM_APP_ADDED' : {
       let apps = state.apps;
@@ -354,6 +355,30 @@ export default function reducer(state={
       const apps = state.apps.map(app => {
         if (app.id === app_id)
           app.receivers = app.receivers.filter(item => (item.team_user_id !== team_user_id));
+        return app;
+      });
+      return {
+        ...state,
+        apps:apps
+      }
+    }
+    case 'TEAM_LINK_APP_RECEIVER_ADDED' : {
+      const app_id = action.payload.app_id;
+      const receiver = action.payload.receiver;
+      let changed = false;
+
+      const apps = state.apps.map(app => {
+        if (app.id === app_id){
+          app.receivers = app.receivers.map(item => {
+            if (item.team_user_id === receiver.team_user_id){
+              changed = true;
+              return receiver;
+            }
+            return item;
+          });
+          if (!changed)
+            app.receivers.push(receiver);
+        }
         return app;
       });
       return {

@@ -2,8 +2,6 @@ package com.Ease.Team;
 
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -20,6 +18,12 @@ public class TeamUserRole {
         put(Role.MEMBER.getValue(), Role.MEMBER);
         put(Role.ADMINISTRATOR.getValue(), Role.ADMINISTRATOR);
         put(Role.OWNER.getValue(), Role.OWNER);
+    }};
+
+    private static final Map<Integer, String> roleNames = new HashMap<Integer, String>() {{
+        put(Role.MEMBER.getValue(), "Member");
+        put(Role.ADMINISTRATOR.getValue(), "Admin");
+        put(Role.OWNER.getValue(), "Owner");
     }};
 
     public static boolean isInferiorToOwner(Integer roleValue) {
@@ -87,7 +91,6 @@ public class TeamUserRole {
         Role role = roleMap.get(roleValue);
         if (role == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This role does not exist.");
-        System.out.println("Role value: " + roleValue);
         this.roleValue = roleValue;
     }
 
@@ -118,22 +121,7 @@ public class TeamUserRole {
         return this.getRoleValue() >= role.getValue();
     }
 
-    @Override
-    public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder();
-        hcb.append(this.db_id);
-        return hcb.toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof TeamUser))
-            return false;
-        TeamUser teamUser = (TeamUser) obj;
-        EqualsBuilder eb = new EqualsBuilder();
-        eb.append(this.db_id, teamUser.db_id);
-        return eb.isEquals();
+    public String getRoleName() {
+        return roleNames.get(this.getRoleValue());
     }
 }

@@ -1202,6 +1202,16 @@ header {
 }
 
 #landingBody.school {
+    .loading {
+        margin:auto;
+        display: none;
+    }
+    .alert-message {
+        display: none;
+    }
+    .submitButton.not-show {
+        display: none !important;
+    }
     .vp {
         .section-subheading {
             font-size: 24px;

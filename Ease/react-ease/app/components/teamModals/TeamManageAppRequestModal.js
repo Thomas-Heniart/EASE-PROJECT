@@ -1,11 +1,15 @@
 var React = require('react');
 var classnames = require('classnames');
 import {showTeamManageAppRequestModal} from "../../actions/teamModalActions";
-import {teamShareApp, deleteJoinAppRequest, teamShareSingleApp, teamAcceptSharedApp} from "../../actions/appsActions";
+import {teamShareApp,
+  deleteJoinAppRequest,
+  teamShareSingleApp,
+  teamShareEnterpriseApp,
+  teamAcceptSharedApp} from "../../actions/appsActions";
 import {
-    selectChannelFromListById,
-    selectUserFromListById,
-    findMeInReceivers
+  selectChannelFromListById,
+  selectUserFromListById,
+  findMeInReceivers
 } from "../../utils/helperFunctions";
 
 import {connect} from "react-redux";
@@ -43,6 +47,22 @@ class TeamManageAppRequestModal extends React.Component {
         app_id: app.id,
         team_user_id: id,
         can_see_information: false
+      })).then(() => {
+        const users = this.state.users.map(item => {
+          if (item.user.id === id){
+            item.checked = true;
+            item.accepted = true;
+          }
+          return item;
+        });
+        this.setState({users : users});
+      });
+    }
+    else if (app.type === 'multi'){
+      this.props.dispatch(teamShareEnterpriseApp({
+        team_id: this.props.team_id,
+        app_id: app.id,
+        team_user_id: id
       })).then(() => {
         const users = this.state.users.map(item => {
           if (item.user.id === id){

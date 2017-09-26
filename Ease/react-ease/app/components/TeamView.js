@@ -25,12 +25,16 @@ var TeamSettings = require('./teamModals/TeamSettings');
 var TeamTransferOwnershipModal = require('./teamModals/TeamTransferOwnershipModal');
 var TeamPhoneNumberModal = require('./teamModals/TeamPhoneNumberModal');
 var RequestWebsiteModal = require('./teamModals/RequestWebsiteModal');
+import AskJoinEnterpriseAppModal from "./teamModals/AskJoinEnterpriseAppModal";
 import queryString from "query-string";
 import VerifyTeamUserModal from './teamModals/VerifyTeamUserModal';
 import ReactivateTeamUserModal from './teamModals/ReactivateTeamUserModal';
 import TeamAddMultipleUsersModal from './teamModals/TeamAddMultipleUsersModal';
 import TeamBrowsePeopleModal from "./teamModals/TeamBrowsePeopleModal";
 import TeamBrowseRoomsModal from "./teamModals/TeamBrowseRoomsModal";
+import JoinEnterpriseAppModal from "./teamModals/JoinEnterpriseAppModal";
+import AcceptEnterpriseAppModal from "./teamModals/AcceptEnterpriseAppModal";
+import EditEnterpriseAppModal from "./teamModals/EditEnterpriseAppModal";
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
@@ -60,9 +64,11 @@ import {connect} from "react-redux"
     teamDeleteAppModal: store.teamModals.teamDeleteAppModal,
     pinTeamAppToDashboardModal: store.teamModals.pinTeamAppToDashboardModal,
     teamLeaveAppModal: store.teamModals.teamLeaveAppModal,
+    teamEditEnterpriseAppModal: store.teamModals.teamEditEnterpriseAppModal,
     teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
     teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
     teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
+    teamAskJoinEnterpriseAppModal: store.teamModals.teamAskJoinEnterpriseAppModal,
     teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
     verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
     teamAddMultipleUsersModal: store.teamModals.teamAddMultipleUsersModal,
@@ -224,12 +230,16 @@ class TeamView extends React.Component {
             <PinTeamAppToDashboardModal/>}
             {this.props.teamLeaveAppModal.active &&
             <TeamLeaveAppModal/>}
+            {this.props.teamEditEnterpriseAppModal.active &&
+            <EditEnterpriseAppModal/>}
             {this.props.teamManageAppRequestModal.active &&
             <TeamManageAppRequestModal/>}
             {this.props.teamAcceptMultiAppModal.active &&
-            <TeamAcceptMultiAppModal/>}
+            <AcceptEnterpriseAppModal/>}
             {this.props.teamJoinMultiAppModal.active &&
-            <TeamJoinMultiAppModal/>}
+            <JoinEnterpriseAppModal/>}
+            {this.props.teamAskJoinEnterpriseAppModal.active &&
+            <AskJoinEnterpriseAppModal/>}
             {this.props.teamSettingsModalActive &&
             <TeamSettingsModal/>}
             {this.props.verifyTeamUserModal.active &&

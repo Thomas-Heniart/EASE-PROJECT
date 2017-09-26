@@ -657,6 +657,8 @@ exports.showTeamLeaveAppModal = showTeamLeaveAppModal;
 exports.showTeamManageAppRequestModal = showTeamManageAppRequestModal;
 exports.showTeamAcceptMultiAppModal = showTeamAcceptMultiAppModal;
 exports.showTeamJoinMultiAppModal = showTeamJoinMultiAppModal;
+exports.showTeamEditEnterpriseAppModal = showTeamEditEnterpriseAppModal;
+exports.showTeamAskJoinMultiAppModal = showTeamAskJoinMultiAppModal;
 exports.showTeamSettingsModal = showTeamSettingsModal;
 exports.showVerifyTeamUserModal = showVerifyTeamUserModal;
 exports.showReactivateTeamUserModal = showReactivateTeamUserModal;
@@ -665,7 +667,6 @@ exports.showTeamPhoneNumberModal = showTeamPhoneNumberModal;
 exports.requestWebsite = requestWebsite;
 exports.showRequestWebsiteModal = showRequestWebsiteModal;
 exports.showTeamAddMultipleUsersModal = showTeamAddMultipleUsersModal;
-exports.showUpgradeTeamPlanModal = showUpgradeTeamPlanModal;
 function showAddTeamUserModal(state) {
   return {
     type: 'SHOW_ADD_TEAM_USER_MODAL',
@@ -774,6 +775,28 @@ function showTeamJoinMultiAppModal(state, user, app) {
   };
 }
 
+function showTeamEditEnterpriseAppModal(state, user, app) {
+  return {
+    type: 'SHOW_TEAM_EDIT_ENTERPRISE_APP_MODAL',
+    payload: {
+      active: state,
+      user: user,
+      app: app
+    }
+  };
+}
+
+function showTeamAskJoinMultiAppModal(state, user, app) {
+  return {
+    type: 'SHOW_TEAM_ASK_JOIN_ENTERPRISE_APP_MODAL',
+    payload: {
+      active: state,
+      user: user,
+      app: app
+    }
+  };
+}
+
 function showTeamSettingsModal(state) {
   return {
     type: 'SHOW_TEAM_SETTINGS_MODAL',
@@ -844,16 +867,6 @@ function showTeamAddMultipleUsersModal(state) {
     type: 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL',
     payload: {
       active: state
-    }
-  };
-}
-
-function showUpgradeTeamPlanModal(state, desc) {
-  return {
-    type: 'SHOW_UPGRADE_TEAM_PLAN_MODAL',
-    payload: {
-      active: state,
-      featureDescription: desc
     }
   };
 }
@@ -2545,6 +2558,8 @@ exports.teamCreateMultiApp = teamCreateMultiApp;
 exports.teamCreateEnterpriseApp = teamCreateEnterpriseApp;
 exports.teamEditEnterpriseApp = teamEditEnterpriseApp;
 exports.teamShareEnterpriseApp = teamShareEnterpriseApp;
+exports.teamAcceptEnterpriseApp = teamAcceptEnterpriseApp;
+exports.teamJoinEnterpriseApp = teamJoinEnterpriseApp;
 exports.teamEditEnterpriseAppReceiver = teamEditEnterpriseAppReceiver;
 exports.teamCreateSingleApp = teamCreateSingleApp;
 exports.teamEditSingleApp = teamEditSingleApp;
@@ -2552,6 +2567,7 @@ exports.teamEditSingleAppReceiver = teamEditSingleAppReceiver;
 exports.teamShareSingleApp = teamShareSingleApp;
 exports.teamCreateLinkAppNew = teamCreateLinkAppNew;
 exports.teamEditLinkAppNew = teamEditLinkAppNew;
+exports.teamPinLinkApp = teamPinLinkApp;
 exports.teamCreateLinkApp = teamCreateLinkApp;
 exports.teamDeleteApp = teamDeleteApp;
 exports.teamShareApp = teamShareApp;
@@ -2586,7 +2602,8 @@ function teamCreateEnterpriseApp(_ref) {
       name = _ref.name,
       description = _ref.description,
       password_change_interval = _ref.password_change_interval,
-      receivers = _ref.receivers;
+      receivers = _ref.receivers,
+      fill_in_switch = _ref.fill_in_switch;
 
   return function (dispatch, getState) {
     return post_api.teamApps.createEnterpriseApp({
@@ -2596,6 +2613,7 @@ function teamCreateEnterpriseApp(_ref) {
       name: name,
       description: description,
       password_change_interval: password_change_interval,
+      fill_in_switch: fill_in_switch,
       receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(function (app) {
@@ -2612,7 +2630,7 @@ function teamEditEnterpriseApp(_ref2) {
       app_id = _ref2.app_id,
       description = _ref2.description,
       password_change_interval = _ref2.password_change_interval,
-      ws_id = _ref2.ws_id;
+      fill_in_switch = _ref2.fill_in_switch;
 
   return function (dispatch, getState) {
     return post_api.teamApps.editEnterpriseApp({
@@ -2620,6 +2638,7 @@ function teamEditEnterpriseApp(_ref2) {
       app_id: app_id,
       description: description,
       password_change_interval: password_change_interval,
+      fill_in_switch: fill_in_switch,
       ws_id: getState().common.ws_id
     }).then(function (app) {
       dispatch({ type: 'TEAM_APP_CHANGED', payload: { app: app } });
@@ -2653,10 +2672,53 @@ function teamShareEnterpriseApp(_ref3) {
   };
 }
 
-function teamEditEnterpriseAppReceiver(_ref4) {
+function teamAcceptEnterpriseApp(_ref4) {
   var team_id = _ref4.team_id,
       shared_app_id = _ref4.shared_app_id,
-      account_information = _ref4.account_information;
+      account_information = _ref4.account_information,
+      app_id = _ref4.app_id;
+
+  return function (dispatch, getState) {
+    return post_api.teamApps.acceptEnterpriseApp({
+      team_id: team_id,
+      shared_app_id: shared_app_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(function (receiver) {
+      console.log(receiver);
+      dispatch({ type: 'TEAM_APP_RECEIVER_CHANGED', payload: { app_id: app_id, receiver: receiver } });
+      return receiver;
+    }).catch(function (err) {
+      throw err;
+    });
+  };
+}
+
+function teamJoinEnterpriseApp(_ref5) {
+  var team_id = _ref5.team_id,
+      app_id = _ref5.app_id,
+      account_information = _ref5.account_information;
+
+  return function (dispatch, getState) {
+    return post_api.teamApps.joinEnterpriseApp({
+      team_id: team_id,
+      app_id: app_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(function (app) {
+      dispatch({ type: 'TEAM_APP_CHANGED', payload: { app: app } });
+      return app;
+    }).catch(function (err) {
+      throw err;
+    });
+  };
+}
+
+function teamEditEnterpriseAppReceiver(_ref6) {
+  var team_id = _ref6.team_id,
+      app_id = _ref6.app_id,
+      shared_app_id = _ref6.shared_app_id,
+      account_information = _ref6.account_information;
 
   return function (dispatch, getState) {
     return post_api.teamApps.editEnterpriseAppReceiver({
@@ -2673,14 +2735,14 @@ function teamEditEnterpriseAppReceiver(_ref4) {
   };
 }
 
-function teamCreateSingleApp(_ref5) {
-  var team_id = _ref5.team_id,
-      channel_id = _ref5.channel_id,
-      website_id = _ref5.website_id,
-      description = _ref5.description,
-      password_change_interval = _ref5.password_change_interval,
-      account_information = _ref5.account_information,
-      receivers = _ref5.receivers;
+function teamCreateSingleApp(_ref7) {
+  var team_id = _ref7.team_id,
+      channel_id = _ref7.channel_id,
+      website_id = _ref7.website_id,
+      description = _ref7.description,
+      password_change_interval = _ref7.password_change_interval,
+      account_information = _ref7.account_information,
+      receivers = _ref7.receivers;
 
   return function (dispatch, getState) {
     return post_api.teamApps.createSingleApp({
@@ -2701,11 +2763,11 @@ function teamCreateSingleApp(_ref5) {
   };
 }
 
-function teamEditSingleApp(_ref6) {
-  var app_id = _ref6.app_id,
-      description = _ref6.description,
-      account_information = _ref6.account_information,
-      password_change_interval = _ref6.password_change_interval;
+function teamEditSingleApp(_ref8) {
+  var app_id = _ref8.app_id,
+      description = _ref8.description,
+      account_information = _ref8.account_information,
+      password_change_interval = _ref8.password_change_interval;
 
   return function (dispatch, getState) {
     return post_api.teamApps.editSingleApp({
@@ -2717,18 +2779,18 @@ function teamEditSingleApp(_ref6) {
       password_change_interval: password_change_interval
     }).then(function (app) {
       dispatch({ type: 'TEAM_APP_CHANGED', payload: { app: app } });
-      return response;
+      return app;
     }).catch(function (err) {
       throw err;
     });
   };
 }
 
-function teamEditSingleAppReceiver(_ref7) {
-  var team_id = _ref7.team_id,
-      shared_app_id = _ref7.shared_app_id,
-      can_see_information = _ref7.can_see_information,
-      app_id = _ref7.app_id;
+function teamEditSingleAppReceiver(_ref9) {
+  var team_id = _ref9.team_id,
+      shared_app_id = _ref9.shared_app_id,
+      can_see_information = _ref9.can_see_information,
+      app_id = _ref9.app_id;
 
   return function (dispatch, getState) {
     return post_api.teamApps.editSingleAppReceiver({
@@ -2745,11 +2807,11 @@ function teamEditSingleAppReceiver(_ref7) {
   };
 }
 
-function teamShareSingleApp(_ref8) {
-  var team_id = _ref8.team_id,
-      app_id = _ref8.app_id,
-      team_user_id = _ref8.team_user_id,
-      can_see_information = _ref8.can_see_information;
+function teamShareSingleApp(_ref10) {
+  var team_id = _ref10.team_id,
+      app_id = _ref10.app_id,
+      team_user_id = _ref10.team_user_id,
+      can_see_information = _ref10.can_see_information;
 
   return function (dispatch, getState) {
     return post_api.teamApps.shareSingleApp({
@@ -2760,19 +2822,20 @@ function teamShareSingleApp(_ref8) {
       ws_id: getState().common.ws_id
     }).then(function (receiver) {
       dispatch({ type: 'TEAM_APP_RECEIVER_ADDED', payload: { app_id: app_id, receiver: receiver } });
+      return receiver;
     }).catch(function (err) {
       throw err;
     });
   };
 }
 
-function teamCreateLinkAppNew(_ref9) {
-  var team_id = _ref9.team_id,
-      channel_id = _ref9.channel_id,
-      name = _ref9.name,
-      description = _ref9.description,
-      url = _ref9.url,
-      img_url = _ref9.img_url;
+function teamCreateLinkAppNew(_ref11) {
+  var team_id = _ref11.team_id,
+      channel_id = _ref11.channel_id,
+      name = _ref11.name,
+      description = _ref11.description,
+      url = _ref11.url,
+      img_url = _ref11.img_url;
 
   return function (dispatch, getState) {
     return post_api.teamApps.createLinkAppNew({
@@ -2785,19 +2848,20 @@ function teamCreateLinkAppNew(_ref9) {
       ws_id: getState().common.ws_id
     }).then(function (app) {
       dispatch({ type: 'TEAM_APP_ADDED', payload: { app: app } });
+      return app;
     }).catch(function (err) {
       throw err;
     });
   };
 }
 
-function teamEditLinkAppNew(_ref10) {
-  var team_id = _ref10.team_id,
-      app_id = _ref10.app_id,
-      name = _ref10.name,
-      description = _ref10.description,
-      url = _ref10.url,
-      img_url = _ref10.img_url;
+function teamEditLinkAppNew(_ref12) {
+  var team_id = _ref12.team_id,
+      app_id = _ref12.app_id,
+      name = _ref12.name,
+      description = _ref12.description,
+      url = _ref12.url,
+      img_url = _ref12.img_url;
 
   return function (dispatch, getState) {
     return post_api.teamApps.createLinkAppNew({
@@ -2810,6 +2874,29 @@ function teamEditLinkAppNew(_ref10) {
       ws_id: getState().common.ws_id
     }).then(function (app) {
       dispatch({ type: 'TEAM_APP_CHANGED', payload: { app: app } });
+      return app;
+    }).catch(function (err) {
+      throw err;
+    });
+  };
+}
+
+function teamPinLinkApp(_ref13) {
+  var team_id = _ref13.team_id,
+      app_id = _ref13.app_id,
+      app_name = _ref13.app_name,
+      profile_id = _ref13.profile_id;
+
+  return function (dispatch, getState) {
+    return post_api.teamApps.pinLinkApp({
+      team_id: team_id,
+      app_id: app_id,
+      app_name: app_name,
+      profile_id: profile_id,
+      ws_id: getState().common.ws_id
+    }).then(function (receiver) {
+      dispatch({ type: 'TEAM_LINK_APP_RECEIVER_ADDED', payload: { app_id: app_id, receiver: receiver } });
+      return receiver;
     }).catch(function (err) {
       throw err;
     });
@@ -2877,11 +2964,11 @@ function teamAppEditReceiver(app_id, user_app_id, receiver_info) {
   };
 }
 
-function teamAppDeleteReceiver(_ref11) {
-  var team_id = _ref11.team_id,
-      app_id = _ref11.app_id,
-      shared_app_id = _ref11.shared_app_id,
-      team_user_id = _ref11.team_user_id;
+function teamAppDeleteReceiver(_ref14) {
+  var team_id = _ref14.team_id,
+      app_id = _ref14.app_id,
+      shared_app_id = _ref14.shared_app_id,
+      team_user_id = _ref14.team_user_id;
 
   return function (dispatch, getState) {
     return post_api.teamApps.deleteReceiver({
@@ -2897,10 +2984,10 @@ function teamAppDeleteReceiver(_ref11) {
   };
 }
 
-function teamAcceptSharedApp(_ref12) {
-  var team_id = _ref12.team_id,
-      app_id = _ref12.app_id,
-      shared_app_id = _ref12.shared_app_id;
+function teamAcceptSharedApp(_ref15) {
+  var team_id = _ref15.team_id,
+      app_id = _ref15.app_id,
+      shared_app_id = _ref15.shared_app_id;
 
   return function (dispatch, getState) {
     dispatch({ type: 'TEAM_ACCEPT_SHARED_APP_PENDING' });
@@ -3430,16 +3517,86 @@ module.exports = {
         throw err.response.data;
       });
     },
-    createEnterpriseApp: function createEnterpriseApp(_ref4) {
+    shareSingleApp: function shareSingleApp(_ref4) {
       var team_id = _ref4.team_id,
-          channel_id = _ref4.channel_id,
-          website_id = _ref4.website_id,
-          name = _ref4.name,
-          description = _ref4.description,
-          password_change_interval = _ref4.password_change_interval,
-          receivers = _ref4.receivers,
+          app_id = _ref4.app_id,
+          team_user_id = _ref4.team_user_id,
+          can_see_information = _ref4.can_see_information,
           ws_id = _ref4.ws_id;
 
+      return axios.post('/api/v1/teams/ShareSingleApp', {
+        team_id: team_id,
+        app_id: app_id,
+        team_user_id: team_user_id,
+        can_see_information: can_see_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
+    editSingleApp: function editSingleApp(_ref5) {
+      var team_id = _ref5.team_id,
+          app_id = _ref5.app_id,
+          description = _ref5.description,
+          account_information = _ref5.account_information,
+          password_change_interval = _ref5.password_change_interval,
+          ws_id = _ref5.ws_id;
+
+      Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return axios.post('/api/v1/teams/EditSingleApp', {
+        team_id: team_id,
+        app_id: app_id,
+        description: description,
+        account_information: account_information,
+        password_change_interval: password_change_interval,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
+    editSingleAppReceiver: function editSingleAppReceiver(_ref6) {
+      var team_id = _ref6.team_id,
+          shared_app_id = _ref6.shared_app_id,
+          can_see_information = _ref6.can_see_information,
+          ws_id = _ref6.ws_id;
+
+      return axios.post('/api/v1/teams/EditSingleAppReceiver', {
+        team_id: team_id,
+        shared_app_id: shared_app_id,
+        can_see_information: can_see_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
+    createEnterpriseApp: function createEnterpriseApp(_ref7) {
+      var team_id = _ref7.team_id,
+          channel_id = _ref7.channel_id,
+          website_id = _ref7.website_id,
+          name = _ref7.name,
+          description = _ref7.description,
+          password_change_interval = _ref7.password_change_interval,
+          receivers = _ref7.receivers,
+          ws_id = _ref7.ws_id,
+          fill_in_switch = _ref7.fill_in_switch;
+
+      receivers = receivers.map(function (receiver) {
+        Object.keys(receiver.account_information).map(function (item) {
+          receiver.account_information[item] = cipher(receiver.account_information[item]);
+        });
+        return receiver;
+      });
       return axios.post('/api/v1/teams/CreateEnterpriseApp', {
         team_id: team_id,
         channel_id: channel_id,
@@ -3447,6 +3604,7 @@ module.exports = {
         name: name,
         description: description,
         password_change_interval: password_change_interval,
+        fill_in_switch: fill_in_switch,
         receivers: receivers,
         ws_id: ws_id,
         timestamp: new Date().getTime()
@@ -3456,18 +3614,20 @@ module.exports = {
         throw err.response.data;
       });
     },
-    editEnterpriseApp: function editEnterpriseApp(_ref5) {
-      var team_id = _ref5.team_id,
-          app_id = _ref5.app_id,
-          description = _ref5.description,
-          password_change_interval = _ref5.password_change_interval,
-          ws_id = _ref5.ws_id;
+    editEnterpriseApp: function editEnterpriseApp(_ref8) {
+      var team_id = _ref8.team_id,
+          app_id = _ref8.app_id,
+          description = _ref8.description,
+          password_change_interval = _ref8.password_change_interval,
+          ws_id = _ref8.ws_id,
+          fill_in_switch = _ref8.fill_in_switch;
 
       return axios.post('/api/v1/teams/EditEnterpriseApp', {
         team_id: team_id,
         app_id: app_id,
         description: description,
         password_change_interval: password_change_interval,
+        fill_in_switch: fill_in_switch,
         ws_id: ws_id,
         timestamp: new Date().getTime()
       }).then(function (response) {
@@ -3476,13 +3636,16 @@ module.exports = {
         throw err.response.data;
       });
     },
-    shareEnterpriseApp: function shareEnterpriseApp(_ref6) {
-      var team_id = _ref6.team_id,
-          app_id = _ref6.app_id,
-          team_user_id = _ref6.team_user_id,
-          account_information = _ref6.account_information,
-          ws_id = _ref6.ws_id;
+    shareEnterpriseApp: function shareEnterpriseApp(_ref9) {
+      var team_id = _ref9.team_id,
+          app_id = _ref9.app_id,
+          team_user_id = _ref9.team_user_id,
+          account_information = _ref9.account_information,
+          ws_id = _ref9.ws_id;
 
+      if (account_information !== undefined) Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
       return axios.post('/api/v1/teams/ShareEnterpriseApp', {
         team_id: team_id,
         app_id: app_id,
@@ -3496,12 +3659,57 @@ module.exports = {
         throw err.response.data;
       });
     },
-    editEnterpriseAppReceiver: function editEnterpriseAppReceiver(_ref7) {
-      var team_id = _ref7.team_id,
-          shared_app_id = _ref7.shared_app_id,
-          account_information = _ref7.account_information,
-          ws_id = _ref7.ws_id;
+    joinEnterpriseApp: function joinEnterpriseApp(_ref10) {
+      var team_id = _ref10.team_id,
+          app_id = _ref10.app_id,
+          account_information = _ref10.account_information,
+          ws_id = _ref10.ws_id;
 
+      Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return axios.post('/api/v1/teams/JoinEnterpriseApp', {
+        team_id: team_id,
+        app_id: app_id,
+        account_information: account_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
+    acceptEnterpriseApp: function acceptEnterpriseApp(_ref11) {
+      var team_id = _ref11.team_id,
+          shared_app_id = _ref11.shared_app_id,
+          account_information = _ref11.account_information,
+          ws_id = _ref11.ws_id;
+
+      Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return axios.post('/api/v1/teams/AcceptEnterpriseApp', {
+        team_id: team_id,
+        shared_app_id: shared_app_id,
+        account_information: account_information,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
+      });
+    },
+    editEnterpriseAppReceiver: function editEnterpriseAppReceiver(_ref12) {
+      var team_id = _ref12.team_id,
+          shared_app_id = _ref12.shared_app_id,
+          account_information = _ref12.account_information,
+          ws_id = _ref12.ws_id;
+
+      Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
       return axios.post('/api/v1/teams/EditEnterpriseAppReceiver', {
         team_id: team_id,
         shared_app_id: shared_app_id,
@@ -3514,14 +3722,14 @@ module.exports = {
         throw err.response.data;
       });
     },
-    createLinkAppNew: function createLinkAppNew(_ref8) {
-      var team_id = _ref8.team_id,
-          channel_id = _ref8.channel_id,
-          name = _ref8.name,
-          description = _ref8.description,
-          url = _ref8.url,
-          img_url = _ref8.img_url,
-          ws_id = _ref8.ws_id;
+    createLinkAppNew: function createLinkAppNew(_ref13) {
+      var team_id = _ref13.team_id,
+          channel_id = _ref13.channel_id,
+          name = _ref13.name,
+          description = _ref13.description,
+          url = _ref13.url,
+          img_url = _ref13.img_url,
+          ws_id = _ref13.ws_id;
 
       return axios.post('/api/v1/teams/CreateLinkApp', {
         team_id: team_id,
@@ -3538,14 +3746,14 @@ module.exports = {
         return err.response.data;
       });
     },
-    editLinkAppNew: function editLinkAppNew(_ref9) {
-      var team_id = _ref9.team_id,
-          app_id = _ref9.app_id,
-          name = _ref9.name,
-          description = _ref9.description,
-          url = _ref9.url,
-          img_url = _ref9.img_url,
-          ws_id = _ref9.ws_id;
+    editLinkAppNew: function editLinkAppNew(_ref14) {
+      var team_id = _ref14.team_id,
+          app_id = _ref14.app_id,
+          name = _ref14.name,
+          description = _ref14.description,
+          url = _ref14.url,
+          img_url = _ref14.img_url,
+          ws_id = _ref14.ws_id;
 
       return axios.post('/api/v1/teams/EditLinkApp', {
         team_id: team_id,
@@ -3554,6 +3762,26 @@ module.exports = {
         description: description,
         url: url,
         img_url: img_url,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(function (response) {
+        return response.data;
+      }).catch(function (err) {
+        return err.response.data;
+      });
+    },
+    pinLinkApp: function pinLinkApp(_ref15) {
+      var team_id = _ref15.team_id,
+          app_id = _ref15.app_id,
+          app_name = _ref15.app_name,
+          profile_id = _ref15.profile_id,
+          ws_id = _ref15.ws_id;
+
+      return axios.post('/api/v1/team/PinLinkApp', {
+        team_id: team_id,
+        app_id: app_id,
+        app_name: app_name,
+        profile_id: profile_id,
         ws_id: ws_id,
         timestamp: new Date().getTime()
       }).then(function (response) {
@@ -3589,69 +3817,6 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(function (response) {
         return response.data;
-      });
-    },
-    shareSingleApp: function shareSingleApp(_ref10) {
-      var team_id = _ref10.team_id,
-          app_id = _ref10.app_id,
-          team_user_id = _ref10.team_user_id,
-          can_see_information = _ref10.can_see_information,
-          ws_id = _ref10.ws_id;
-
-      return axios.post('/api/v1/teams/ShareSingleApp', {
-        team_id: team_id,
-        app_id: app_id,
-        team_user_id: team_user_id,
-        can_see_information: can_see_information,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(function (response) {
-        return response.data;
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    },
-    editSingleApp: function editSingleApp(_ref11) {
-      var team_id = _ref11.team_id,
-          app_id = _ref11.app_id,
-          description = _ref11.description,
-          account_information = _ref11.account_information,
-          password_change_interval = _ref11.password_change_interval,
-          ws_id = _ref11.ws_id;
-
-      Object.keys(account_information).map(function (item) {
-        account_information[item] = cipher(account_information[item]);
-      });
-      return axios.post('/api/v1/teams/EditSingleApp', {
-        team_id: team_id,
-        app_id: app_id,
-        description: description,
-        account_information: account_information,
-        password_change_interval: password_change_interval,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(function (response) {
-        return response.data;
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    },
-    editSingleAppReceiver: function editSingleAppReceiver(_ref12) {
-      var team_id = _ref12.team_id,
-          shared_app_id = _ref12.shared_app_id,
-          can_see_information = _ref12.can_see_information,
-          ws_id = _ref12.ws_id;
-
-      return axios.post('/api/v1/teams/EditSingleAppReceiver', {
-        team_id: team_id,
-        shared_app_id: shared_app_id,
-        can_see_information: can_see_information,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(function (response) {
-        return response.data;
-      }).catch(function (err) {
-        throw err.response.data;
       });
     },
     deleteApp: function deleteApp(ws_id, team_id, app_id) {
@@ -3705,11 +3870,11 @@ module.exports = {
         return response.data;
       });
     },
-    deleteReceiver: function deleteReceiver(_ref13) {
-      var ws_id = _ref13.ws_id,
-          team_id = _ref13.team_id,
-          app_id = _ref13.app_id,
-          shared_app_id = _ref13.shared_app_id;
+    deleteReceiver: function deleteReceiver(_ref16) {
+      var ws_id = _ref16.ws_id,
+          team_id = _ref16.team_id,
+          app_id = _ref16.app_id,
+          shared_app_id = _ref16.shared_app_id;
 
       return axios.post('/api/v1/teams/DeleteSharedApp', {
         ws_id: ws_id,
@@ -3734,10 +3899,10 @@ module.exports = {
         return response.data;
       });
     },
-    acceptSharedApp: function acceptSharedApp(_ref14) {
-      var ws_id = _ref14.ws_id,
-          team_id = _ref14.team_id,
-          shared_app_id = _ref14.shared_app_id;
+    acceptSharedApp: function acceptSharedApp(_ref17) {
+      var ws_id = _ref17.ws_id,
+          team_id = _ref17.team_id,
+          shared_app_id = _ref17.shared_app_id;
 
       return axios.post('/api/v1/teams/AcceptSharedApp', {
         ws_id: ws_id,
@@ -3906,9 +4071,9 @@ module.exports = {
         throw err.response.data;
       });
     },
-    addCreditCard: function addCreditCard(_ref15) {
-      var team_id = _ref15.team_id,
-          cardToken = _ref15.cardToken;
+    addCreditCard: function addCreditCard(_ref18) {
+      var team_id = _ref18.team_id,
+          cardToken = _ref18.cardToken;
 
       return axios.post('/api/v1/teams/AddCreditCard', {
         team_id: team_id,
@@ -3919,15 +4084,15 @@ module.exports = {
         throw err.response.data;
       });
     },
-    updateBillingInformation: function updateBillingInformation(_ref16) {
-      var team_id = _ref16.team_id,
-          address_city = _ref16.address_city,
-          address_country = _ref16.address_country,
-          address_line1 = _ref16.address_line1,
-          address_line2 = _ref16.address_line2,
-          address_state = _ref16.address_state,
-          address_zip = _ref16.address_zip,
-          business_vat_id = _ref16.business_vat_id;
+    updateBillingInformation: function updateBillingInformation(_ref19) {
+      var team_id = _ref19.team_id,
+          address_city = _ref19.address_city,
+          address_country = _ref19.address_country,
+          address_line1 = _ref19.address_line1,
+          address_line2 = _ref19.address_line2,
+          address_state = _ref19.address_state,
+          address_zip = _ref19.address_zip,
+          business_vat_id = _ref19.business_vat_id;
 
       return axios.post('/api/v1/teams/UpdateBillingInformation', {
         team_id: team_id,
@@ -3944,9 +4109,9 @@ module.exports = {
         throw err.response.data;
       });
     },
-    unsubscribe: function unsubscribe(_ref17) {
-      var team_id = _ref17.team_id,
-          password = _ref17.password;
+    unsubscribe: function unsubscribe(_ref20) {
+      var team_id = _ref20.team_id,
+          password = _ref20.password;
 
       return axios.post('/api/v1/teams/Unsubscribe', {
         team_id: team_id,
@@ -3959,8 +4124,8 @@ module.exports = {
     }
   },
   dashboard: {
-    createProfile: function createProfile(_ref18) {
-      var name = _ref18.name;
+    createProfile: function createProfile(_ref21) {
+      var name = _ref21.name;
 
       return axios.post('/api/v1/dashboard/CreateProfile', {
         name: name
@@ -4023,12 +4188,12 @@ module.exports = {
         throw err;
       });
     },
-    requestWebsite: function requestWebsite(_ref19) {
-      var team_id = _ref19.team_id,
-          url = _ref19.url,
-          is_public = _ref19.is_public,
-          login = _ref19.login,
-          password = _ref19.password;
+    requestWebsite: function requestWebsite(_ref22) {
+      var team_id = _ref22.team_id,
+          url = _ref22.url,
+          is_public = _ref22.is_public,
+          login = _ref22.login,
+          password = _ref22.password;
 
       return axios.post('/api/v1/teams/AskWebsite', {
         team_id: team_id,
@@ -10853,13 +11018,19 @@ function newNotification(notification) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PasswordChangeManagerLabel = exports.PasswordChangeHolder = exports.TeamAppActionButton = exports.PinAppButton = exports.SharingRequestButton = exports.PasswordChangeDropdown = exports.renderSimpleAppUserLabel = exports.setUserDropdownText = undefined;
+exports.CopyPasswordButton = exports.PasswordChangeManagerLabel = exports.PasswordChangeHolder = exports.TeamAppActionButton = exports.PinAppButton = exports.SharingRequestButton = exports.ExtendFillSwitch = exports.PasswordChangeDropdown = exports.renderSimpleAppUserLabel = exports.setUserDropdownText = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _semanticUiReact = __webpack_require__(14);
 
 var _classnames = __webpack_require__(2);
 
 var _classnames2 = _interopRequireDefault(_classnames);
+
+var _api = __webpack_require__(18);
+
+var _api2 = _interopRequireDefault(_api);
 
 var _utils = __webpack_require__(17);
 
@@ -10868,6 +11039,12 @@ var _react = __webpack_require__(0);
 var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -10907,8 +11084,24 @@ var PasswordChangeDropdown = exports.PasswordChangeDropdown = function PasswordC
     content: "Password update reminder" });
 };
 
-var SharingRequestButton = exports.SharingRequestButton = function SharingRequestButton(_ref2) {
-  var onClick = _ref2.onClick;
+var ExtendFillSwitch = exports.ExtendFillSwitch = function ExtendFillSwitch(_ref2) {
+  var value = _ref2.value,
+      onClick = _ref2.onClick;
+
+  return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
+    position: "top center",
+    inverted: true,
+    trigger: _react2.default.createElement(
+      "div",
+      { className: "enterprise-extend-switch" },
+      "I fill user\u2019s credentials myslef",
+      _react2.default.createElement(_semanticUiReact.Checkbox, { toggle: true, className: "enterprise-app-switch", name: "fill_in_switch", checked: value, onClick: onClick })
+    ),
+    content: "You can fill logins and passwords for each of your users (enabled only on Pro plan), or let them do it." });
+};
+
+var SharingRequestButton = exports.SharingRequestButton = function SharingRequestButton(_ref3) {
+  var onClick = _ref3.onClick;
 
   return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
     position: "top center",
@@ -10918,9 +11111,9 @@ var SharingRequestButton = exports.SharingRequestButton = function SharingReques
     content: "User(s) would like to acces this App" });
 };
 
-var PinAppButton = exports.PinAppButton = function PinAppButton(_ref3) {
-  var is_pinned = _ref3.is_pinned,
-      onClick = _ref3.onClick;
+var PinAppButton = exports.PinAppButton = function PinAppButton(_ref4) {
+  var is_pinned = _ref4.is_pinned,
+      onClick = _ref4.onClick;
 
   return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
     position: "top center",
@@ -10929,13 +11122,13 @@ var PinAppButton = exports.PinAppButton = function PinAppButton(_ref3) {
     content: "Pin to your Personnal Space" });
 };
 
-var TeamAppActionButton = exports.TeamAppActionButton = function TeamAppActionButton(_ref4) {
+var TeamAppActionButton = exports.TeamAppActionButton = function TeamAppActionButton(_ref5) {
   var _React$createElement;
 
-  var onClick = _ref4.onClick,
-      icon = _ref4.icon,
-      text = _ref4.text,
-      disabled = _ref4.disabled;
+  var onClick = _ref5.onClick,
+      icon = _ref5.icon,
+      text = _ref5.text,
+      disabled = _ref5.disabled;
 
   return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
     position: "top center",
@@ -10949,8 +11142,8 @@ var TeamAppActionButton = exports.TeamAppActionButton = function TeamAppActionBu
     content: text });
 };
 
-var PasswordChangeHolder = exports.PasswordChangeHolder = function PasswordChangeHolder(_ref5) {
-  var value = _ref5.value;
+var PasswordChangeHolder = exports.PasswordChangeHolder = function PasswordChangeHolder(_ref6) {
+  var value = _ref6.value;
 
   return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
     position: "top center",
@@ -10959,8 +11152,8 @@ var PasswordChangeHolder = exports.PasswordChangeHolder = function PasswordChang
     content: "Password update reminder" });
 };
 
-var PasswordChangeManagerLabel = exports.PasswordChangeManagerLabel = function PasswordChangeManagerLabel(_ref6) {
-  var username = _ref6.username;
+var PasswordChangeManagerLabel = exports.PasswordChangeManagerLabel = function PasswordChangeManagerLabel(_ref7) {
+  var username = _ref7.username;
 
   return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
     position: "top center",
@@ -10972,8 +11165,71 @@ var PasswordChangeManagerLabel = exports.PasswordChangeManagerLabel = function P
       "\xA0\xA0",
       _react2.default.createElement(_semanticUiReact.Icon, { name: "eye" })
     ),
-    content: username + " updates the password" });
+    content: username + " can see the password and will update it" });
 };
+
+var CopyPasswordButton = exports.CopyPasswordButton = function (_Component) {
+  _inherits(CopyPasswordButton, _Component);
+
+  function CopyPasswordButton(props) {
+    _classCallCheck(this, CopyPasswordButton);
+
+    var _this = _possibleConstructorReturn(this, (CopyPasswordButton.__proto__ || Object.getPrototypeOf(CopyPasswordButton)).call(this, props));
+
+    _this.copyPassword = function () {
+      (0, _utils.copyTextToClipboard)(_this.state.pwd);
+      _this.setState({ state: 3, open: true });
+      setTimeout(function () {
+        _this.setState({ state: 0, open: false });
+      }, 2000);
+    };
+
+    _this.fetchPassword = function () {
+      _this.setState({ state: 1, open: true });
+      _api2.default.teamApps.getSharedAppPassword({ team_id: _this.props.team_id, shared_app_id: _this.props.shared_app_id }).then(function (pwd) {
+        _this.setState({ pwd: pwd, state: 2, open: true });
+      }).catch(function (err) {
+        _this.setState({ state: 4, open: true });
+        setTimeout(function () {
+          _this.setState({ state: 0, open: false });
+        }, 2000);
+      });
+    };
+
+    _this.state = {
+      state: 0,
+      open: false,
+      pwd: ''
+    };
+    return _this;
+  }
+
+  _createClass(CopyPasswordButton, [{
+    key: "render",
+    value: function render() {
+      var content = _react2.default.createElement(
+        "div",
+        null,
+        this.state.state === 0 && 'Copy password',
+        this.state.state === 1 && _react2.default.createElement(_semanticUiReact.Icon, { name: "asterisk", loading: true }),
+        this.state.state === 2 && _react2.default.createElement(_semanticUiReact.Button, { size: "mini", positive: true, onClick: this.copyPassword, content: 'Click to copy' }),
+        this.state.state === 3 && 'Copied!',
+        this.state.state === 4 && 'Error'
+      );
+      return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
+        position: "top center",
+        open: this.state.state > 0 ? true : undefined,
+        inverted: true,
+        hoverable: true,
+        trigger: _react2.default.createElement(_semanticUiReact.Icon, { name: "copy", className: "copy_pwd_button", link: true, onClick: this.fetchPassword }),
+        content: content });
+    }
+  }]);
+
+  return CopyPasswordButton;
+}(_react.Component);
+
+;
 
 /***/ }),
 /* 137 */
@@ -22214,7 +22470,7 @@ var TeamsList = function (_React$Component) {
                                 React.createElement(_semanticUiReact.Icon, { name: 'users' }),
                                 item.name
                             ),
-                            content: 'You need to wait until an admin accept you.' });
+                            content: 'You need to wait until an admin accepts you.' });
                         return React.createElement(
                             _semanticUiReact.Dropdown.Item,
                             { key: item.id, as: _reactRouterDom.NavLink, to: '/teams/' + item.id, activeClassName: 'active' },
@@ -49178,6 +49434,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _class;
 
+var _AskJoinEnterpriseAppModal = __webpack_require__(627);
+
+var _AskJoinEnterpriseAppModal2 = _interopRequireDefault(_AskJoinEnterpriseAppModal);
+
 var _queryString = __webpack_require__(260);
 
 var _queryString2 = _interopRequireDefault(_queryString);
@@ -49201,6 +49461,18 @@ var _TeamBrowsePeopleModal2 = _interopRequireDefault(_TeamBrowsePeopleModal);
 var _TeamBrowseRoomsModal = __webpack_require__(638);
 
 var _TeamBrowseRoomsModal2 = _interopRequireDefault(_TeamBrowseRoomsModal);
+
+var _JoinEnterpriseAppModal = __webpack_require__(629);
+
+var _JoinEnterpriseAppModal2 = _interopRequireDefault(_JoinEnterpriseAppModal);
+
+var _AcceptEnterpriseAppModal = __webpack_require__(626);
+
+var _AcceptEnterpriseAppModal2 = _interopRequireDefault(_AcceptEnterpriseAppModal);
+
+var _EditEnterpriseAppModal = __webpack_require__(628);
+
+var _EditEnterpriseAppModal2 = _interopRequireDefault(_EditEnterpriseAppModal);
 
 var _teamActions = __webpack_require__(95);
 
@@ -49289,9 +49561,11 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
     teamDeleteAppModal: store.teamModals.teamDeleteAppModal,
     pinTeamAppToDashboardModal: store.teamModals.pinTeamAppToDashboardModal,
     teamLeaveAppModal: store.teamModals.teamLeaveAppModal,
+    teamEditEnterpriseAppModal: store.teamModals.teamEditEnterpriseAppModal,
     teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
     teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
     teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
+    teamAskJoinEnterpriseAppModal: store.teamModals.teamAskJoinEnterpriseAppModal,
     teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
     verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
     teamAddMultipleUsersModal: store.teamModals.teamAddMultipleUsersModal,
@@ -49470,9 +49744,11 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
           this.props.teamDeleteAppModal.active && React.createElement(TeamDeleteAppModal, null),
           this.props.pinTeamAppToDashboardModal.active && React.createElement(PinTeamAppToDashboardModal, null),
           this.props.teamLeaveAppModal.active && React.createElement(TeamLeaveAppModal, null),
+          this.props.teamEditEnterpriseAppModal.active && React.createElement(_EditEnterpriseAppModal2.default, null),
           this.props.teamManageAppRequestModal.active && React.createElement(TeamManageAppRequestModal, null),
-          this.props.teamAcceptMultiAppModal.active && React.createElement(TeamAcceptMultiAppModal, null),
-          this.props.teamJoinMultiAppModal.active && React.createElement(TeamJoinMultiAppModal, null),
+          this.props.teamAcceptMultiAppModal.active && React.createElement(_AcceptEnterpriseAppModal2.default, null),
+          this.props.teamJoinMultiAppModal.active && React.createElement(_JoinEnterpriseAppModal2.default, null),
+          this.props.teamAskJoinEnterpriseAppModal.active && React.createElement(_AskJoinEnterpriseAppModal2.default, null),
           this.props.teamSettingsModalActive && React.createElement(TeamSettingsModal, null),
           this.props.verifyTeamUserModal.active && React.createElement(_VerifyTeamUserModal2.default, null),
           this.props.reactivateTeamUserModal.active && React.createElement(_ReactivateTeamUserModal2.default, null),
@@ -53860,45 +54136,39 @@ var TeamAddAppsButton = (_dec = (0, _reactRedux.connect)(), _dec(_class = functi
               "Help us build this feature!"
             )
           ),
-          targetType === 1 && React.createElement(
-            _semanticUiReact.Dropdown.Item,
-            { onClick: this.selectItem.bind(null, 'Simple') },
-            React.createElement(_semanticUiReact.Icon, { name: "square" }),
-            "Single app",
-            React.createElement(_semanticUiReact.Popup, {
-              size: "mini",
-              style: { fontWeight: 'bold', textAlign: 'center' },
-              inverted: true,
-              position: "right center",
-              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
-              content: "Let multiple people have access to one account. Like your Twitter, Wordpress etc." })
-          ),
-          targetType === 1 && React.createElement(
-            _semanticUiReact.Dropdown.Item,
-            { onClick: this.selectItem.bind(null, 'Multi') },
-            React.createElement(_semanticUiReact.Icon, { name: "sitemap" }),
-            "Enterprise app",
-            React.createElement(_semanticUiReact.Popup, {
-              size: "mini",
-              style: { fontWeight: 'bold', textAlign: 'center' },
-              inverted: true,
-              position: "right center",
-              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
-              content: "Share an account where each member uses his/her own ID and password to login to one website. Like Gmail, Trello, Slack... You can fill the credentials for your team members or let them do it." })
-          ),
-          targetType === 1 && React.createElement(
-            _semanticUiReact.Dropdown.Item,
-            { onClick: this.selectItem.bind(null, 'Link') },
-            React.createElement(_semanticUiReact.Icon, { name: "linkify" }),
-            "Link app",
-            React.createElement(_semanticUiReact.Popup, {
-              size: "mini",
-              style: { fontWeight: 'bold', textAlign: 'center' },
-              inverted: true,
-              position: "right center",
-              trigger: React.createElement(_semanticUiReact.Icon, { name: "info", link: true, className: "right floated" }),
-              content: "Are you using tools without accounts? Need to share a blog or a source your team frequently uses? Here it is!" })
-          ),
+          targetType === 1 && React.createElement(_semanticUiReact.Popup, {
+            size: "mini",
+            style: { fontWeight: 'bold', textAlign: 'center' },
+            position: "right center",
+            trigger: React.createElement(
+              _semanticUiReact.Dropdown.Item,
+              { onClick: this.selectItem.bind(null, 'Simple') },
+              React.createElement(_semanticUiReact.Icon, { name: "square" }),
+              "Single app"
+            ),
+            content: "Multiple people have access to one account (ex: twitter)." }),
+          targetType === 1 && React.createElement(_semanticUiReact.Popup, {
+            size: "mini",
+            style: { fontWeight: 'bold', textAlign: 'center' },
+            position: "right center",
+            trigger: React.createElement(
+              _semanticUiReact.Dropdown.Item,
+              { onClick: this.selectItem.bind(null, 'Multi') },
+              React.createElement(_semanticUiReact.Icon, { name: "sitemap" }),
+              "Enterprise app"
+            ),
+            content: "Each person has a different account on one website (ex: Gmail, Trello)." }),
+          targetType === 1 && React.createElement(_semanticUiReact.Popup, {
+            size: "mini",
+            style: { fontWeight: 'bold', textAlign: 'center' },
+            position: "right center",
+            trigger: React.createElement(
+              _semanticUiReact.Dropdown.Item,
+              { onClick: this.selectItem.bind(null, 'Link') },
+              React.createElement(_semanticUiReact.Icon, { name: "linkify" }),
+              "Link app"
+            ),
+            content: "Using tools without accounts? Need to share a blog or a source?" }),
           targetType === 1 && React.createElement(
             _semanticUiReact.Dropdown.Item,
             { disabled: true, className: "align_items_center", style: { display: 'flex' } },
@@ -53960,6 +54230,10 @@ var _teamAppsAddUIActions = __webpack_require__(96);
 var _SimpleTeamAppAdder = __webpack_require__(621);
 
 var _SimpleTeamAppAdder2 = _interopRequireDefault(_SimpleTeamAppAdder);
+
+var _EnterpriseTeamAppAdder = __webpack_require__(619);
+
+var _EnterpriseTeamAppAdder2 = _interopRequireDefault(_EnterpriseTeamAppAdder);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -54781,14 +55055,7 @@ var TeamAppAddingUi = (_dec = (0, _reactRedux.connect)(function (store) {
       return React.createElement(
         'div',
         { className: 'add_actions_container', id: 'app_add_actions' },
-        this.props.addAppUI.TeamSimpleAppAddActive && React.createElement(_SimpleTeamAppAdder2.default, { item: item })
-        /*<SimpleTeamAppAdd
-          team_id={this.props.team_id}
-          selectedItem={this.props.selectedItem}
-          item={item}
-          my_id={this.props.my_id}
-          userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
-          dispatch={this.props.dispatch}/>*/,
+        this.props.addAppUI.TeamSimpleAppAddActive && React.createElement(_SimpleTeamAppAdder2.default, { item: item }),
         this.props.addAppUI.TeamLinkAppAddActive && React.createElement(LinkTeamAppAdd, {
           team_id: this.props.team_id,
           selectedItem: this.props.selectedItem,
@@ -54796,13 +55063,7 @@ var TeamAppAddingUi = (_dec = (0, _reactRedux.connect)(function (store) {
           my_id: this.props.my_id,
           userSelectFunc: _helperFunctions.selectUserFromListById.bind(null, this.props.users),
           dispatch: this.props.dispatch }),
-        this.props.addAppUI.TeamMultiAppAddActive && React.createElement(MultiTeamAppAdd, {
-          team_id: this.props.team_id,
-          selectedItem: this.props.selectedItem,
-          item: item,
-          my_id: this.props.my_id,
-          userSelectFunc: _helperFunctions.selectUserFromListById.bind(null, this.props.users),
-          dispatch: this.props.dispatch })
+        this.props.addAppUI.TeamMultiAppAddActive && React.createElement(_EnterpriseTeamAppAdder2.default, { item: item })
       );
     }
   }]);
@@ -54827,6 +55088,10 @@ var _dec, _class;
 var _SimpleTeamApp = __webpack_require__(620);
 
 var _SimpleTeamApp2 = _interopRequireDefault(_SimpleTeamApp);
+
+var _EnterpriseTeamApp = __webpack_require__(618);
+
+var _EnterpriseTeamApp2 = _interopRequireDefault(_EnterpriseTeamApp);
 
 var _reactRedux = __webpack_require__(6);
 
@@ -54888,17 +55153,15 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
                                       me={this.props.me}
                                       key={item.id}
                                       dispatch={this.props.dispatch}/>
-                              );
-                            if (item.type === 'multi')
-                              return (
-                                  <TeamMultiApp
-                                      app={item}
-                                      users={this.props.users}
-                                      channels={this.props.channels}
-                                      me={this.props.me}
-                                      key={item.id}
-                                      dispatch={this.props.dispatch}/>
                               );*/
+            if (item.type === 'multi') return React.createElement(_EnterpriseTeamApp2.default, {
+              app: item,
+              users: this.props.users,
+              channels: this.props.channels,
+              me: this.props.me,
+              key: item.id,
+              team_id: this.props.team_id,
+              dispatch: this.props.dispatch });
           }, this)
         )
       );
@@ -56073,7 +56336,7 @@ function TeamHeader(props) {
             React.createElement(
               'div',
               { className: 'channel_header_info_item', id: 'apps_number' },
-              React.createElement('i', { className: 'icon_left fa fa-share-alt-square' }),
+              React.createElement('i', { className: 'icon_left fa fa-square' }),
               React.createElement(
                 'span',
                 { className: 'value' },
@@ -56606,7 +56869,7 @@ var TeamsList = function (_React$Component) {
                 React.createElement(_semanticUiReact.Icon, { name: 'users' }),
                 item.name
               ),
-              content: 'You need to wait until an admin accept you.' });
+              content: 'You need to wait until an admin accepts you.' });
             return React.createElement(
               _semanticUiReact.Dropdown.Item,
               { key: item.id, as: 'a', href: '/teams#/teams/' + item.id },
@@ -57078,8 +57341,1098 @@ var MyStoreCheckout = function (_React$Component2) {
 module.exports = MyStoreCheckout;
 
 /***/ }),
-/* 618 */,
-/* 619 */,
+/* 618 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _classnames = __webpack_require__(2);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _api = __webpack_require__(18);
+
+var _api2 = _interopRequireDefault(_api);
+
+var _semanticUiReact = __webpack_require__(14);
+
+var _common = __webpack_require__(136);
+
+var _teamModalActions = __webpack_require__(9);
+
+var modalActions = _interopRequireWildcard(_teamModalActions);
+
+var _appsActions = __webpack_require__(26);
+
+var _utils = __webpack_require__(17);
+
+var _helperFunctions = __webpack_require__(15);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TeamEnterpriseAppButtonSet = function TeamEnterpriseAppButtonSet(_ref) {
+  var app = _ref.app,
+      me = _ref.me,
+      dispatch = _ref.dispatch,
+      editMode = _ref.editMode,
+      selfJoin = _ref.selfJoin,
+      requestApp = _ref.requestApp;
+
+  var meReceiver = (0, _helperFunctions.findMeInReceivers)(app.receivers, me.id);
+  var asked = app.sharing_requests.indexOf(me.id) !== -1;
+  return _react2.default.createElement(
+    "div",
+    { className: "team_app_actions_holder" },
+    meReceiver === null && _react2.default.createElement(_common.TeamAppActionButton, { text: (0, _helperFunctions.isAdmin)(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join',
+      onClick: (0, _helperFunctions.isAdmin)(me.role) ? selfJoin : asked ? null : requestApp,
+      icon: "pointing up",
+      disabled: asked }),
+    meReceiver !== null && meReceiver.accepted && _react2.default.createElement(_common.TeamAppActionButton, { text: "Leave App", icon: "sign out", onClick: function onClick(e) {
+        dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id));
+      } }),
+    ((0, _helperFunctions.isAdmin)(me.role) || meReceiver !== null) && _react2.default.createElement(_common.TeamAppActionButton, { text: "Edit App",
+      icon: "pencil",
+      onClick: editMode }),
+    (0, _helperFunctions.isAdmin)(me.role) && _react2.default.createElement(_common.TeamAppActionButton, { text: "Delete App", icon: "trash outline", onClick: function onClick(e) {
+        dispatch(modalActions.showTeamDeleteAppModal(true, app));
+      } })
+  );
+};
+
+var TeamAppCredentialInput = function TeamAppCredentialInput(_ref2) {
+  var item = _ref2.item,
+      onChange = _ref2.onChange,
+      receiver_id = _ref2.receiver_id,
+      readOnly = _ref2.readOnly;
+
+  return _react2.default.createElement(_semanticUiReact.Input, { size: "mini",
+    className: "team-app-input",
+    readOnly: readOnly,
+    name: item.name,
+    onChange: onChange !== undefined ? function (e, data) {
+      onChange(receiver_id, data);
+    } : null,
+    label: _react2.default.createElement(
+      _semanticUiReact.Label,
+      null,
+      _react2.default.createElement(_semanticUiReact.Icon, { name: _utils.credentialIconType[item.name] })
+    ),
+    labelPosition: "left",
+    placeholder: item.placeholder,
+    value: item.value,
+    type: item.type });
+};
+
+var ReadOnlyTeamAppCredentialInput = function ReadOnlyTeamAppCredentialInput(_ref3) {
+  var item = _ref3.item,
+      onChange = _ref3.onChange,
+      receiver_id = _ref3.receiver_id,
+      readOnly = _ref3.readOnly,
+      pwd_filled = _ref3.pwd_filled;
+
+  return _react2.default.createElement(_semanticUiReact.Input, { size: "mini",
+    className: "team-app-input",
+    readOnly: readOnly,
+    name: item.name,
+    label: _react2.default.createElement(
+      _semanticUiReact.Label,
+      null,
+      _react2.default.createElement(_semanticUiReact.Icon, { name: _utils.credentialIconType[item.name] })
+    ),
+    labelPosition: "left",
+    placeholder: item.placeholder,
+    value: item.name === 'password' && pwd_filled ? 'abcdabcd' : item.value,
+    type: item.type });
+};
+
+var ReceiverCredentialsInput = function ReceiverCredentialsInput(_ref4) {
+  var receiver = _ref4.receiver,
+      onChange = _ref4.onChange,
+      onDelete = _ref4.onDelete;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receiver" },
+    _react2.default.createElement(
+      _semanticUiReact.Label,
+      { className: "receiver-label", color: "blue" },
+      _react2.default.createElement(
+        "span",
+        null,
+        receiver.username
+      ),
+      _react2.default.createElement(_semanticUiReact.Icon, { name: "delete", link: true, onClick: onDelete.bind(null, receiver.id) })
+    )
+  );
+};
+
+var ExtendedReceiverCredentialsInput = function ExtendedReceiverCredentialsInput(_ref5) {
+  var receiver = _ref5.receiver,
+      onChange = _ref5.onChange,
+      onDelete = _ref5.onDelete,
+      readOnly = _ref5.readOnly;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receiver" },
+    _react2.default.createElement(
+      _semanticUiReact.Label,
+      { className: "receiver-label", color: "blue" },
+      _react2.default.createElement(
+        "span",
+        null,
+        receiver.username
+      ),
+      " ",
+      _react2.default.createElement(_semanticUiReact.Icon, { name: "delete", link: true, onClick: onDelete.bind(null, receiver.id) })
+    ),
+    receiver.credentials.map(function (item) {
+      return _react2.default.createElement(TeamAppCredentialInput, { readOnly: readOnly, receiver_id: receiver.id, key: item.priority, onChange: onChange, item: item });
+    })
+  );
+};
+
+var EnterpriseAppReceiverLabel = function EnterpriseAppReceiverLabel(_ref6) {
+  var username = _ref6.username,
+      up_to_date = _ref6.up_to_date,
+      accepted = _ref6.accepted;
+
+  return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
+    position: "bottom center",
+    inverted: true,
+    flowing: true,
+    hideOnScroll: true,
+    trigger: _react2.default.createElement(
+      _semanticUiReact.Label,
+      { className: (0, _classnames2.default)('receiver-label', accepted ? 'accepted' : null) },
+      _react2.default.createElement(
+        "span",
+        null,
+        username
+      ),
+      _react2.default.createElement(_semanticUiReact.Icon, { name: "refresh" })
+    ),
+    header: _react2.default.createElement(
+      "h5",
+      { className: "mrgn0 text-center" },
+      "User informations"
+    ),
+    content: _react2.default.createElement(
+      "div",
+      null,
+      up_to_date && _react2.default.createElement(
+        "span",
+        null,
+        _react2.default.createElement(_semanticUiReact.Icon, { name: "refresh" }),
+        " Password is up to date"
+      ),
+      !up_to_date && _react2.default.createElement(
+        "span",
+        null,
+        _react2.default.createElement(_semanticUiReact.Icon, { name: "refresh", color: "red" }),
+        " Password is not up to date"
+      ),
+      _react2.default.createElement("br", null),
+      accepted && _react2.default.createElement(
+        "span",
+        null,
+        _react2.default.createElement(_semanticUiReact.Icon, { name: "circle", style: { color: '#949EB7' } }),
+        " User accepted the app"
+      ),
+      !accepted && _react2.default.createElement(
+        "span",
+        null,
+        _react2.default.createElement(_semanticUiReact.Icon, { name: "circle", style: { color: '#D2DAE4' } }),
+        " User didn't accept the app"
+      )
+    ) });
+};
+
+var SimpleCredentialsInput = function SimpleCredentialsInput(_ref7) {
+  var receiver = _ref7.receiver,
+      me = _ref7.me,
+      team_id = _ref7.team_id;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receiver align_items_center" },
+    _react2.default.createElement(EnterpriseAppReceiverLabel, { username: receiver.username, up_to_date: !receiver.password_must_be_updated, accepted: receiver.accepted }),
+    receiver.credentials.map(function (item) {
+      return _react2.default.createElement(ReadOnlyTeamAppCredentialInput, { pwd_filled: receiver.password_filled, readOnly: true, receiver_id: receiver.id, key: item.priority, onChange: null, item: item });
+    }),
+    ((0, _helperFunctions.isAdmin)(me.role) || receiver.team_user_id === me.id) && _react2.default.createElement(_common.CopyPasswordButton, { team_id: team_id, shared_app_id: receiver.shared_app_id })
+  );
+};
+
+var StaticReceivers = function StaticReceivers(_ref8) {
+  var receivers = _ref8.receivers,
+      me = _ref8.me,
+      team_id = _ref8.team_id,
+      expanded = _ref8.expanded;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receivers" },
+    receivers.map(function (item, idx) {
+      if (idx > 3 && !expanded) return null;
+      return _react2.default.createElement(SimpleCredentialsInput, { key: item.id, receiver: item, me: me, team_id: team_id });
+    })
+  );
+};
+
+var Receivers = function Receivers(_ref9) {
+  var receivers = _ref9.receivers,
+      onChange = _ref9.onChange,
+      onDelete = _ref9.onDelete,
+      extended = _ref9.extended,
+      myId = _ref9.myId;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receivers" },
+    receivers.map(function (item) {
+      if (extended || item.id === myId) return _react2.default.createElement(ExtendedReceiverCredentialsInput, { key: item.id,
+        receiver: item,
+        onChange: onChange,
+        onDelete: onDelete });
+      return _react2.default.createElement(ReceiverCredentialsInput, { key: item.id,
+        receiver: item,
+        onChange: onChange,
+        onDelete: onDelete });
+    })
+  );
+};
+
+var AcceptRefuseAppHeader = function AcceptRefuseAppHeader(_ref10) {
+  var onAccept = _ref10.onAccept,
+      onRefuse = _ref10.onRefuse;
+
+  return _react2.default.createElement(
+    "span",
+    { style: { lineHeight: '1.7' } },
+    "You received in an Enterprise App, \xA0",
+    _react2.default.createElement(
+      "button",
+      { className: "button-unstyle inline-text-button primary", type: "button", onClick: onAccept },
+      "Accept"
+    ),
+    "\xA0or\xA0",
+    _react2.default.createElement(
+      "button",
+      { className: "button-unstyle inline-text-button primary", type: "button", onClick: onRefuse },
+      "Refuse"
+    ),
+    "\xA0it?"
+  );
+};
+
+var ButtonShowMore = function ButtonShowMore(_ref11) {
+  var show_more = _ref11.show_more,
+      showMore = _ref11.showMore;
+
+  if (show_more) return _react2.default.createElement(
+    _semanticUiReact.Button,
+    { size: "mini", type: "button", className: "fw-normal", onClick: showMore.bind(null, false) },
+    _react2.default.createElement(_semanticUiReact.Icon, { name: "remove user" }),
+    "Show less"
+  );
+  return _react2.default.createElement(
+    _semanticUiReact.Button,
+    { size: "mini", type: "button", className: "fw-normal", onClick: showMore.bind(null, true) },
+    _react2.default.createElement(_semanticUiReact.Icon, { name: "add user" }),
+    "Show more"
+  );
+};
+
+var isDifferentCredentials = function isDifferentCredentials(first, second) {
+  var different = false;
+
+  Object.keys(first).map(function (item) {
+    if (first[item] !== second[item]) different = true;
+  });
+  return different;
+};
+
+var EnterpriseTeamApp = function (_Component) {
+  _inherits(EnterpriseTeamApp, _Component);
+
+  function EnterpriseTeamApp(props) {
+    _classCallCheck(this, EnterpriseTeamApp);
+
+    var _this = _possibleConstructorReturn(this, (EnterpriseTeamApp.__proto__ || Object.getPrototypeOf(EnterpriseTeamApp)).call(this, props));
+
+    _this.handleInput = _utils.handleSemanticInput.bind(_this);
+
+    _this.changeFillInSwitch = function (e, _ref12) {
+      var checked = _ref12.checked;
+
+      if (_this.props.app.fill_in_switch && checked) return;
+      _this.setState({ fill_in_switch: !checked });
+    };
+
+    _this.setShowMore = function (state) {
+      _this.setState({ show_more: state });
+    };
+
+    _this.deleteReceiver = function (id) {
+      var selected_users = _this.state.selected_users.filter(function (item) {
+        return item !== id;
+      });
+      _this.setState({ selected_users: selected_users });
+    };
+
+    _this.handleReceiverInput = function (id, _ref13) {
+      var name = _ref13.name,
+          value = _ref13.value;
+
+      var users = _this.state.users.map(function (user) {
+        if (user.id === id) {
+          user.credentials.map(function (item) {
+            if (item.name === name) item.value = value;
+            return item;
+          });
+        }
+        return user;
+      });
+      _this.setState({ users: users });
+    };
+
+    _this.acceptRequest = function (state) {
+      var meReceiver = (0, _helperFunctions.findMeInReceivers)(_this.props.app.receivers, _this.props.me.id);
+      if (state) {
+        _this.props.dispatch(modalActions.showTeamAcceptMultiAppModal(true, _this.props.me, _this.props.app));
+      } else {
+        _this.props.dispatch((0, _appsActions.teamAppDeleteReceiver)({
+          team_id: _this.props.team_id,
+          app_id: _this.props.app.id,
+          shared_app_id: meReceiver.shared_app_id,
+          team_user_id: meReceiver.team_user_id
+        }));
+      }
+    };
+
+    _this.selfJoinApp = function () {
+      _this.props.dispatch(modalActions.showTeamJoinMultiAppModal(true, _this.props.me, _this.props.app));
+    };
+
+    _this.requestApp = function () {
+      _this.props.dispatch(modalActions.showTeamAskJoinMultiAppModal(true, _this.props.me, _this.props.app));
+    };
+
+    _this.setupUsers = function () {
+      var channel = (0, _helperFunctions.selectItemFromListById)(_this.props.channels, _this.props.app.origin.id);
+      var app = _this.props.app;
+      var selected_users = [];
+
+      var users = channel.userIds.map(function (item) {
+        var user = (0, _helperFunctions.selectItemFromListById)(_this.props.users, item);
+        return {
+          key: item,
+          text: (0, _common.setUserDropdownText)(user),
+          value: item,
+          id: item,
+          username: user.username,
+          user: user
+        };
+      }).sort(function (a, b) {
+        if (a.id === _this.props.me.id) return -1000;
+        return a.username.localeCompare(b.username);
+      }).map(function (item) {
+        var receiver = (0, _helperFunctions.getReceiverInList)(_this.props.app.receivers, item.id);
+        var credentials = void 0;
+        if (receiver !== null) {
+          credentials = (0, _utils.transformWebsiteInfoIntoListAndSetValues)(app.website.information, receiver.account_information);
+          selected_users.push(item.id);
+        } else credentials = (0, _utils.transformWebsiteInfoIntoList)(app.website.information);
+        return _extends({}, item, {
+          credentials: credentials
+        });
+      });
+      _this.setState({ users: users, selected_users: selected_users });
+    };
+
+    _this.setEdit = function (state) {
+      if (state) {
+        if (!(0, _helperFunctions.isAdmin)(_this.props.me.role)) {
+          _this.props.dispatch(modalActions.showTeamEditEnterpriseAppModal(true, _this.props.me, _this.props.app));
+          return;
+        }
+        var app = _this.props.app;
+        _this.setupUsers();
+        _this.setState({ password_change_interval: app.password_change_interval, description: app.description, fill_in_switch: app.fill_in_switch });
+      }
+      _this.setState({ edit: state, loading: false, show_more: false });
+    };
+
+    _this.modify = function (e) {
+      e.preventDefault();
+      _this.setState({ loading: true });
+      _this.props.dispatch((0, _appsActions.teamEditEnterpriseApp)({
+        team_id: _this.props.team_id,
+        app_id: _this.props.app.id,
+        description: _this.state.description,
+        password_change_interval: _this.state.password_change_interval,
+        fill_in_switch: _this.state.fill_in_switch
+      })).then(function (response) {
+        var app = response;
+        var receivers = app.receivers;
+        var deleting = [];
+        var edit = [];
+        var sharing = [];
+        _this.state.users.map(function (item) {
+          var selected = _this.state.selected_users.indexOf(item.id) !== -1;
+          var receiver = (0, _helperFunctions.getReceiverInList)(receivers, item.id);
+          if (!selected && receiver !== null) deleting.push(_this.props.dispatch((0, _appsActions.teamAppDeleteReceiver)({
+            team_id: _this.props.team_id,
+            shared_app_id: receiver.shared_app_id,
+            team_user_id: item.id,
+            app_id: app.id })));
+          if (receiver === null && selected) sharing.push(_this.props.dispatch((0, _appsActions.teamShareEnterpriseApp)({
+            team_id: _this.props.team_id,
+            app_id: app.id,
+            team_user_id: item.id,
+            account_information: (0, _utils.transformCredentialsListIntoObject)(item.credentials) })));
+          if (selected && receiver !== null && isDifferentCredentials((0, _utils.transformCredentialsListIntoObject)(item.credentials), receiver.account_information)) edit.push(_this.props.dispatch((0, _appsActions.teamEditEnterpriseAppReceiver)({
+            team_id: _this.props.team_id,
+            shared_app_id: receiver.shared_app_id,
+            account_information: (0, _utils.transformCredentialsListIntoObject)(item.credentials),
+            app_id: app.id })));
+        });
+        var calls = deleting.concat(sharing, edit);
+        Promise.all(calls.map(_utils.reflect)).then(function (response) {
+          _this.setEdit(false);
+        });
+      }).catch(function (err) {
+        console.log(err);
+      });
+    };
+
+    _this.getUsers = function () {
+      var app = _this.props.app;
+      if (_this.state.edit) {
+        return _this.state.selected_users.map(function (item) {
+          return (0, _helperFunctions.selectItemFromListById)(_this.state.users, item);
+        });
+      }
+      return app.receivers.map(function (item) {
+        var user = (0, _helperFunctions.selectItemFromListById)(_this.props.users, item.team_user_id);
+        return {
+          password_must_be_updated: item.password_must_be_updated,
+          accepted: item.accepted,
+          id: item.team_user_id,
+          password_filled: item.password_filled,
+          shared_app_id: item.shared_app_id,
+          credentials: (0, _utils.transformWebsiteInfoIntoListAndSetValues)(app.website.information, item.account_information),
+          username: user.username
+        };
+      }).sort(function (a, b) {
+        if (a.id === _this.props.me.id) return -1000;
+        return a.username.localeCompare(b.username);
+      });
+    };
+
+    _this.state = {
+      loading: false,
+      edit: false,
+      password_change_interval: 0,
+      description: '',
+      users: [],
+      selected_users: [],
+      fill_in_switch: _this.props.app.fill_in_switch,
+      expanded: false,
+      show_more: false
+    };
+    return _this;
+  }
+
+  _createClass(EnterpriseTeamApp, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var app = this.props.app;
+      var me = this.props.me;
+      var meReceiver = (0, _helperFunctions.getReceiverInList)(app.receivers, me.id);
+      var website = app.website;
+      var users = this.getUsers();
+
+      return _react2.default.createElement(
+        _semanticUiReact.Container,
+        { fluid: true, className: "team-app mrgn0 enterprise-team-app", as: "form", onSubmit: this.modify },
+        meReceiver !== null && !meReceiver.accepted && _react2.default.createElement(AcceptRefuseAppHeader, { onAccept: this.acceptRequest.bind(null, true), onRefuse: this.acceptRequest.bind(null, false) }),
+        _react2.default.createElement(
+          _semanticUiReact.Segment,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Header,
+            { as: "h4" },
+            website.website_name,
+            meReceiver !== null && meReceiver.accepted && _react2.default.createElement(_common.PinAppButton, { is_pinned: meReceiver.profile_id !== -1, onClick: function onClick(e) {
+                _this2.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
+              } }),
+            app.sharing_requests.length > 0 && (0, _helperFunctions.isAdmin)(me.role) && _react2.default.createElement(_common.SharingRequestButton, { onClick: function onClick(e) {
+                _this2.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app));
+              } })
+          ),
+          meReceiver !== null && !meReceiver.accepted && _react2.default.createElement("div", { className: "overlay" }),
+          !this.state.edit && _react2.default.createElement(TeamEnterpriseAppButtonSet, { app: app,
+            me: me,
+            selfJoin: this.selfJoinApp,
+            requestApp: this.requestApp,
+            dispatch: this.props.dispatch,
+            editMode: this.setEdit.bind(null, true) }),
+          _react2.default.createElement(
+            "div",
+            { className: "display_flex" },
+            _react2.default.createElement(
+              "div",
+              { className: "logo_column" },
+              _react2.default.createElement(
+                "div",
+                { className: "logo" },
+                _react2.default.createElement("img", { src: website.logo })
+              )
+            ),
+            _react2.default.createElement(
+              "div",
+              { className: "main_column" },
+              _react2.default.createElement(
+                "div",
+                { className: "credentials" },
+                _react2.default.createElement(
+                  "div",
+                  { className: "display-inline-flex" },
+                  !this.state.edit ? _react2.default.createElement(_common.PasswordChangeHolder, { value: app.password_change_interval }) : _react2.default.createElement(_common.PasswordChangeDropdown, { value: this.state.password_change_interval, onChange: this.handleInput }),
+                  this.state.edit && _react2.default.createElement(_common.ExtendFillSwitch, { value: this.state.fill_in_switch, onClick: this.changeFillInSwitch }),
+                  !this.state.edit && users.length > 4 && _react2.default.createElement(ButtonShowMore, { show_more: this.state.show_more, showMore: this.setShowMore })
+                )
+              ),
+              !this.state.edit && _react2.default.createElement(StaticReceivers, { receivers: users,
+                extended: this.state.extended,
+                expanded: this.state.show_more,
+                me: me,
+                team_id: this.props.team_id }),
+              this.state.edit && _react2.default.createElement(Receivers, { receivers: users,
+                onChange: this.handleReceiverInput,
+                onDelete: this.deleteReceiver,
+                extended: this.state.fill_in_switch,
+                myId: me.id }),
+              this.state.edit && _react2.default.createElement(_semanticUiReact.Dropdown, {
+                className: "mini users-dropdown",
+                search: true,
+                fluid: true,
+                name: "selected_users",
+                options: this.state.users,
+                onChange: this.handleInput,
+                value: this.state.selected_users,
+                selection: true,
+                multiple: true,
+                placeholder: "Tag your team members here..." }),
+              _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(_semanticUiReact.Input, { size: "mini",
+                  fluid: true,
+                  className: "team-app-input",
+                  onChange: this.handleInput,
+                  name: "description",
+                  readOnly: !this.state.edit,
+                  value: this.state.edit ? this.state.description : app.description,
+                  placeholder: "You can add a comment here",
+                  type: "text",
+                  label: _react2.default.createElement(
+                    _semanticUiReact.Label,
+                    null,
+                    _react2.default.createElement(_semanticUiReact.Icon, { name: "sticky note" })
+                  ),
+                  labelPosition: "left" })
+              )
+            )
+          )
+        ),
+        this.state.edit && _react2.default.createElement(
+          "div",
+          null,
+          _react2.default.createElement(_semanticUiReact.Button, { content: "Save", floated: "right", positive: true, size: "mini", loading: this.state.loading, disabled: this.state.loading }),
+          _react2.default.createElement(_semanticUiReact.Button, { content: "Cancel", type: "button", floated: "right", onClick: this.setEdit.bind(null, false), size: "mini" })
+        )
+      );
+    }
+  }]);
+
+  return EnterpriseTeamApp;
+}(_react.Component);
+
+module.exports = EnterpriseTeamApp;
+
+/***/ }),
+/* 619 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _dec, _class;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _api = __webpack_require__(18);
+
+var _utils = __webpack_require__(17);
+
+var _helperFunctions = __webpack_require__(15);
+
+var _teamModalActions = __webpack_require__(9);
+
+var _appsActions = __webpack_require__(26);
+
+var _teamAppsAddUIActions = __webpack_require__(96);
+
+var _reactRedux = __webpack_require__(6);
+
+var _common = __webpack_require__(136);
+
+var _semanticUiReact = __webpack_require__(14);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AppResultRenderer = function AppResultRenderer(_ref) {
+  var website_name = _ref.website_name,
+      logo = _ref.logo,
+      request = _ref.request;
+
+  if (request) return _react2.default.createElement(
+    "div",
+    null,
+    _react2.default.createElement(_semanticUiReact.Icon, { name: "gift", color: "red" }),
+    _react2.default.createElement(
+      "strong",
+      null,
+      "Didn't found your website? Request it!"
+    )
+  );
+  return _react2.default.createElement(
+    "div",
+    null,
+    _react2.default.createElement("img", { src: logo, className: "logo" }),
+    website_name
+  );
+};
+
+var TeamAppSearch = function (_Component) {
+  _inherits(TeamAppSearch, _Component);
+
+  function TeamAppSearch(props) {
+    _classCallCheck(this, TeamAppSearch);
+
+    var _this = _possibleConstructorReturn(this, (TeamAppSearch.__proto__ || Object.getPrototypeOf(TeamAppSearch)).call(this, props));
+
+    _this.handleInput = function (e, _ref2) {
+      var value = _ref2.value;
+
+      _this.setState({ value: value });
+      var apps = _this.state.allApps.filter(function (item) {
+        return item.website_name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null;
+      });
+      apps.push({ request: true, key: -1 });
+      _this.setState({ apps: apps });
+    };
+
+    _this.state = {
+      allApps: [],
+      apps: [],
+      loading: true,
+      value: ''
+    };
+    return _this;
+  }
+
+  _createClass(TeamAppSearch, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      (0, _api.teamAppSearch)(this.props.team_id, '').then(function (response) {
+        var apps = response.map(function (item) {
+          item.key = item.id;
+          return item;
+        }).sort(function (a, b) {
+          if (a.website_name < b.website_name) return -1;
+          if (a.website_name > b.website_name) return 1;
+          return 0;
+        });
+        _this2.setState({ allApps: apps, apps: apps, loading: false });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+
+      return _react2.default.createElement(_semanticUiReact.Search, {
+        fluid: true,
+        minCharacters: 0,
+        autoFocus: true,
+        showNoResults: false,
+        loading: this.state.loading,
+        placeholder: "Search websites here...",
+        value: this.state.value,
+        className: "inverted full_flex bordered_scrollbar",
+        onResultSelect: function onResultSelect(e, data) {
+          _this3.props.select_app_func(data.result);
+        },
+        resultRenderer: AppResultRenderer,
+        onSearchChange: this.handleInput,
+        size: "mini",
+        results: this.state.apps });
+    }
+  }]);
+
+  return TeamAppSearch;
+}(_react.Component);
+
+var TeamAppCredentialInput = function TeamAppCredentialInput(_ref3) {
+  var item = _ref3.item,
+      _onChange = _ref3.onChange,
+      receiver_id = _ref3.receiver_id,
+      readOnly = _ref3.readOnly,
+      isMe = _ref3.isMe;
+
+  return _react2.default.createElement(_semanticUiReact.Input, { size: "mini",
+    className: "team-app-input",
+    readOnly: readOnly,
+    name: item.name,
+    required: isMe,
+    onChange: function onChange(e, data) {
+      _onChange(receiver_id, data);
+    },
+    label: _react2.default.createElement(
+      _semanticUiReact.Label,
+      null,
+      _react2.default.createElement(_semanticUiReact.Icon, { name: _utils.credentialIconType[item.name] })
+    ),
+    labelPosition: "left",
+    placeholder: isMe ? item.placeholder : item.placeholder + " (Optional)",
+    value: item.value,
+    type: item.type });
+};
+
+var ReceiverCredentialsInput = function ReceiverCredentialsInput(_ref4) {
+  var receiver = _ref4.receiver,
+      onChange = _ref4.onChange,
+      onDelete = _ref4.onDelete;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receiver" },
+    _react2.default.createElement(
+      _semanticUiReact.Label,
+      { className: "receiver-label", color: "blue" },
+      _react2.default.createElement(
+        "span",
+        null,
+        receiver.username
+      ),
+      " ",
+      _react2.default.createElement(_semanticUiReact.Icon, { name: "delete", link: true, onClick: onDelete.bind(null, receiver.id) })
+    )
+  );
+};
+
+var ExtendedReceiverCredentialsInput = function ExtendedReceiverCredentialsInput(_ref5) {
+  var receiver = _ref5.receiver,
+      onChange = _ref5.onChange,
+      onDelete = _ref5.onDelete,
+      readOnly = _ref5.readOnly,
+      isMe = _ref5.isMe;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receiver" },
+    _react2.default.createElement(
+      _semanticUiReact.Label,
+      { className: "receiver-label", color: "blue" },
+      _react2.default.createElement(
+        "span",
+        null,
+        receiver.username
+      ),
+      " ",
+      _react2.default.createElement(_semanticUiReact.Icon, { name: "delete", link: true, onClick: onDelete.bind(null, receiver.id) })
+    ),
+    receiver.credentials.map(function (item) {
+      return _react2.default.createElement(TeamAppCredentialInput, { readOnly: readOnly, receiver_id: receiver.id, isMe: isMe, key: item.priority, onChange: onChange, item: item });
+    })
+  );
+};
+
+var Receivers = function Receivers(_ref6) {
+  var receivers = _ref6.receivers,
+      onChange = _ref6.onChange,
+      onDelete = _ref6.onDelete,
+      extended = _ref6.extended,
+      myId = _ref6.myId;
+
+  return _react2.default.createElement(
+    "div",
+    { className: "receivers" },
+    receivers.map(function (item) {
+      if (extended || item.id === myId) return _react2.default.createElement(ExtendedReceiverCredentialsInput, { key: item.id, isMe: item.id === myId, extended: extended, receiver: item, onChange: onChange, onDelete: onDelete });
+      return _react2.default.createElement(ReceiverCredentialsInput, { key: item.id, extended: extended, receiver: item, onChange: onChange, onDelete: onDelete });
+    })
+  );
+};
+
+var EnterpriseTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    team_id: store.team.id,
+    users: store.users.users,
+    myId: store.team.myTeamUserId
+  };
+}), _dec(_class = function (_Component2) {
+  _inherits(EnterpriseTeamAppAdder, _Component2);
+
+  function EnterpriseTeamAppAdder(props) {
+    _classCallCheck(this, EnterpriseTeamAppAdder);
+
+    var _this4 = _possibleConstructorReturn(this, (EnterpriseTeamAppAdder.__proto__ || Object.getPrototypeOf(EnterpriseTeamAppAdder)).call(this, props));
+
+    _this4.handleInput = _utils.handleSemanticInput.bind(_this4);
+
+    _this4.onDeleteReceiver = function (id) {
+      var selected_users = _this4.state.selected_users.filter(function (item) {
+        return item !== id;
+      });
+      _this4.setState({ selected_users: selected_users });
+    };
+
+    _this4.handleReceiverInput = function (id, _ref7) {
+      var name = _ref7.name,
+          value = _ref7.value;
+
+      var users = _this4.state.users.map(function (user) {
+        if (user.id === id) {
+          user.credentials.map(function (item) {
+            if (item.name === name) item.value = value;
+            return item;
+          });
+        }
+        return user;
+      });
+      _this4.setState({ users: users });
+    };
+
+    _this4.setApp = function (app) {
+      if (app.request) {
+        (0, _teamModalActions.requestWebsite)(_this4.props.dispatch).then(function (app) {
+          _this4.setUsers(app);
+          _this4.setState({ app: app });
+        }).catch(function (err) {
+          return {};
+        });
+        return;
+      }
+      (0, _api.fetchWebsiteInfo)(app.id).then(function (app) {
+        _this4.setUsers(app);
+        _this4.setState({ app: app });
+      });
+    };
+
+    _this4.setUsers = function (app) {
+      var users = _this4.props.item.userIds.map(function (item) {
+        var user = (0, _helperFunctions.selectUserFromListById)(_this4.props.users, item);
+        return {
+          key: item,
+          text: (0, _common.setUserDropdownText)(user),
+          value: item,
+          id: item,
+          credentials: (0, _utils.transformWebsiteInfoIntoList)(app.information),
+          username: user.username
+        };
+      });
+      _this4.setState({ users: users });
+    };
+
+    _this4.send = function (e) {
+      e.preventDefault();
+      _this4.setState({ loading: true });
+      var receivers = _this4.state.users.filter(function (item) {
+        return _this4.state.selected_users.indexOf(item.id) !== -1;
+      }).map(function (item) {
+        return {
+          team_user_id: item.id,
+          account_information: (0, _utils.transformCredentialsListIntoObject)(item.credentials)
+        };
+      });
+      _this4.props.dispatch((0, _appsActions.teamCreateEnterpriseApp)({
+        team_id: _this4.props.team_id,
+        channel_id: _this4.props.item.id,
+        website_id: _this4.state.app.id,
+        description: _this4.state.description,
+        password_change_interval: _this4.state.password_change_interval,
+        fill_in_switch: _this4.state.fill_in_switch,
+        receivers: receivers
+      })).then(function (response) {
+        _this4.setState({ loading: false });
+        _this4.close();
+      });
+    };
+
+    _this4.close = function () {
+      _this4.props.dispatch((0, _teamAppsAddUIActions.closeAppAddUI)());
+    };
+
+    _this4.state = {
+      loading: false,
+      app: null,
+      password_change_interval: 0,
+      description: '',
+      users: [],
+      selected_users: [],
+      fill_in_switch: false
+    };
+    return _this4;
+  }
+
+  _createClass(EnterpriseTeamAppAdder, [{
+    key: "render",
+    value: function render() {
+      var _this5 = this;
+
+      var app = this.state.app;
+      var selected_users = this.state.users.filter(function (item) {
+        return _this5.state.selected_users.indexOf(item.id) !== -1;
+      });
+
+      return _react2.default.createElement(
+        _semanticUiReact.Container,
+        { fluid: true, id: "enterprise-app-adder", className: "team-app team-app-adder mrgn0", as: "form", onSubmit: this.send },
+        this.state.app === null && _react2.default.createElement(
+          "div",
+          { className: "display-flex align_items_center" },
+          _react2.default.createElement(TeamAppSearch, { team_id: this.props.team_id, select_app_func: this.setApp }),
+          _react2.default.createElement(_semanticUiReact.Button, { type: "button", icon: "delete", style: { margin: '0 0 0 .6rem' }, size: "mini", className: "close", onClick: this.close, color: "grey" })
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Transition,
+          { visible: this.state.app !== null, unmountOnHide: true, mountOnShow: true, animation: "scale", duration: 300 },
+          this.state.app !== null && _react2.default.createElement(
+            "div",
+            null,
+            _react2.default.createElement(
+              _semanticUiReact.Segment,
+              null,
+              _react2.default.createElement(
+                _semanticUiReact.Header,
+                { as: "h4" },
+                app.website_name
+              ),
+              _react2.default.createElement(_semanticUiReact.Button, { icon: "delete", size: "mini", className: "close", onClick: this.close }),
+              _react2.default.createElement(
+                "div",
+                { className: "display_flex" },
+                _react2.default.createElement(
+                  "div",
+                  { className: "logo_column" },
+                  _react2.default.createElement(
+                    "div",
+                    { className: "logo" },
+                    _react2.default.createElement("img", { src: app.logo })
+                  )
+                ),
+                _react2.default.createElement(
+                  "div",
+                  { className: "main_column" },
+                  _react2.default.createElement(
+                    "div",
+                    { className: "credentials" },
+                    _react2.default.createElement(
+                      "div",
+                      { className: "display-inline-flex" },
+                      _react2.default.createElement(_common.PasswordChangeDropdown, { value: this.state.password_change_interval, onChange: this.handleInput }),
+                      _react2.default.createElement(_common.ExtendFillSwitch, { value: this.state.fill_in_switch, onClick: this.handleInput })
+                    )
+                  ),
+                  _react2.default.createElement(Receivers, { extended: this.state.fill_in_switch, myId: this.props.myId, receivers: selected_users, onDelete: this.onDeleteReceiver, onChange: this.handleReceiverInput }),
+                  _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(_semanticUiReact.Dropdown, {
+                      className: "mini users-dropdown",
+                      search: true,
+                      fluid: true,
+                      name: "selected_users",
+                      options: this.state.users,
+                      onChange: this.handleInput,
+                      value: this.state.selected_users,
+                      selection: true,
+                      multiple: true,
+                      placeholder: "Tag your team members here..." })
+                  ),
+                  _react2.default.createElement(
+                    "div",
+                    null,
+                    _react2.default.createElement(_semanticUiReact.Input, { size: "mini",
+                      fluid: true,
+                      className: "team-app-input",
+                      onChange: this.handleInput,
+                      name: "description",
+                      value: this.state.description,
+                      placeholder: "You can add a comment here",
+                      type: "text",
+                      label: _react2.default.createElement(
+                        _semanticUiReact.Label,
+                        null,
+                        _react2.default.createElement(_semanticUiReact.Icon, { name: "sticky note" })
+                      ),
+                      labelPosition: "left" })
+                  )
+                )
+              )
+            ),
+            _react2.default.createElement(_semanticUiReact.Button, { icon: "send", content: "Send", loading: this.state.loading, disabled: this.state.loading, floated: "right", className: "mrgn0", positive: true, size: "mini" })
+          )
+        )
+      );
+    }
+  }]);
+
+  return EnterpriseTeamAppAdder;
+}(_react.Component)) || _class);
+
+
+module.exports = EnterpriseTeamAppAdder;
+
+/***/ }),
 /* 620 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -57148,72 +58501,9 @@ var TeamAppCredentialInput = function TeamAppCredentialInput(_ref) {
     ),
     labelPosition: "left",
     placeholder: item.placeholder,
-    value: item.value,
+    value: item.name === 'password' && readOnly ? 'abcdabcd' : item.value,
     type: item.type });
 };
-
-var CopyPasswordButton = function (_Component) {
-  _inherits(CopyPasswordButton, _Component);
-
-  function CopyPasswordButton(props) {
-    _classCallCheck(this, CopyPasswordButton);
-
-    var _this = _possibleConstructorReturn(this, (CopyPasswordButton.__proto__ || Object.getPrototypeOf(CopyPasswordButton)).call(this, props));
-
-    _this.copyPassword = function () {
-      (0, _utils.copyTextToClipboard)(_this.state.pwd);
-      _this.setState({ state: 3, open: true });
-      setTimeout(function () {
-        _this.setState({ state: 0, open: false });
-      }, 2000);
-    };
-
-    _this.fetchPassword = function () {
-      _this.setState({ state: 1, open: true });
-      _api2.default.teamApps.getSharedAppPassword({ team_id: _this.props.team_id, shared_app_id: _this.props.shared_app_id }).then(function (pwd) {
-        _this.setState({ pwd: pwd, state: 2, open: true });
-      }).catch(function (err) {
-        _this.setState({ state: 4, open: true });
-        setTimeout(function () {
-          _this.setState({ state: 0, open: false });
-        }, 2000);
-      });
-    };
-
-    _this.state = {
-      state: 0,
-      open: false,
-      pwd: ''
-    };
-    return _this;
-  }
-
-  _createClass(CopyPasswordButton, [{
-    key: "render",
-    value: function render() {
-      var content = _react2.default.createElement(
-        "div",
-        null,
-        this.state.state === 0 && 'Copy password',
-        this.state.state === 1 && _react2.default.createElement(_semanticUiReact.Icon, { name: "asterisk", loading: true }),
-        this.state.state === 2 && _react2.default.createElement(_semanticUiReact.Button, { size: "mini", positive: true, onClick: this.copyPassword, content: 'Click to copy' }),
-        this.state.state === 3 && 'Copied!',
-        this.state.state === 4 && 'Error'
-      );
-      return _react2.default.createElement(_semanticUiReact.Popup, { size: "mini",
-        position: "top center",
-        open: this.state.state > 0 ? true : undefined,
-        inverted: true,
-        hoverable: true,
-        trigger: _react2.default.createElement(_semanticUiReact.Icon, { name: "copy", className: "copy_pwd_button", link: true, onClick: this.fetchPassword }),
-        content: content });
-    }
-  }]);
-
-  return CopyPasswordButton;
-}(_react.Component);
-
-;
 
 var TeamSimpleAppButtonSet = function TeamSimpleAppButtonSet(_ref2) {
   var app = _ref2.app,
@@ -57228,7 +58518,7 @@ var TeamSimpleAppButtonSet = function TeamSimpleAppButtonSet(_ref2) {
   return _react2.default.createElement(
     "div",
     { className: "team_app_actions_holder" },
-    meReceiver === null && _react2.default.createElement(_common.TeamAppActionButton, { text: (0, _helperFunctions.isAdmin)(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Request App',
+    meReceiver === null && _react2.default.createElement(_common.TeamAppActionButton, { text: (0, _helperFunctions.isAdmin)(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join',
       onClick: (0, _helperFunctions.isAdmin)(me.role) ? selfJoin : asked ? null : requestApp,
       icon: "pointing up",
       disabled: asked }),
@@ -57282,47 +58572,47 @@ var TeamAppReceiverLabel = function TeamAppReceiverLabel(_ref3) {
       accepted && _react2.default.createElement(
         "span",
         null,
-        _react2.default.createElement(_semanticUiReact.Icon, { name: "circle", color: "green" }),
+        _react2.default.createElement(_semanticUiReact.Icon, { name: "circle", style: { color: '#949EB7' } }),
         " User accepted the app"
       ),
       !accepted && _react2.default.createElement(
         "span",
         null,
-        _react2.default.createElement(_semanticUiReact.Icon, { name: "circle", color: "grey" }),
-        " User accepted the app"
+        _react2.default.createElement(_semanticUiReact.Icon, { name: "circle", style: { color: '#D2DAE4' } }),
+        " User didn't accept the app"
       )
     ) });
 };
 
-var ReceiversLabelGroup = function (_Component2) {
-  _inherits(ReceiversLabelGroup, _Component2);
+var ReceiversLabelGroup = function (_Component) {
+  _inherits(ReceiversLabelGroup, _Component);
 
   function ReceiversLabelGroup(props) {
     _classCallCheck(this, ReceiversLabelGroup);
 
-    var _this2 = _possibleConstructorReturn(this, (ReceiversLabelGroup.__proto__ || Object.getPrototypeOf(ReceiversLabelGroup)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (ReceiversLabelGroup.__proto__ || Object.getPrototypeOf(ReceiversLabelGroup)).call(this, props));
 
-    _this2.showAll = function (state) {
-      _this2.setState({ show_all: state });
+    _this.showAll = function (state) {
+      _this.setState({ show_all: state });
     };
 
-    _this2.state = {
+    _this.state = {
       show_all: false
     };
-    return _this2;
+    return _this;
   }
 
   _createClass(ReceiversLabelGroup, [{
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var receivers = this.props.receivers;
       return _react2.default.createElement(
         _semanticUiReact.Label.Group,
         null,
         this.props.receivers.map(function (item, idx) {
-          if (!_this3.state.show_all && idx > 15) return null;
+          if (!_this2.state.show_all && idx > 15) return null;
           var user = item.user;
           var receiver = item.receiver;
           return _react2.default.createElement(TeamAppReceiverLabel, { key: receiver.team_user_id,
@@ -57340,8 +58630,8 @@ var ReceiversLabelGroup = function (_Component2) {
         receivers.length > 15 && this.state.show_all && _react2.default.createElement(
           _semanticUiReact.Button,
           { size: "mini", type: "button", className: "label fw-normal", onClick: this.showAll.bind(null, false) },
-          _react2.default.createElement(_semanticUiReact.Icon, { name: "hide" }),
-          "Hide"
+          _react2.default.createElement(_semanticUiReact.Icon, { name: "remove user" }),
+          "Show less"
         )
       );
     }
@@ -57359,7 +58649,7 @@ var AcceptRefuseAppHeader = function AcceptRefuseAppHeader(_ref4) {
   return _react2.default.createElement(
     "span",
     { style: { lineHeight: '1.7' } },
-    "You was tagged in a Single App, \xA0",
+    "You received in a Single App, \xA0",
     _react2.default.createElement(
       "button",
       { className: "button-unstyle inline-text-button primary", type: "button", onClick: onAccept },
@@ -57371,87 +58661,87 @@ var AcceptRefuseAppHeader = function AcceptRefuseAppHeader(_ref4) {
       { className: "button-unstyle inline-text-button primary", type: "button", onClick: onRefuse },
       "Refuse"
     ),
-    "\xA0 it?"
+    "\xA0it?"
   );
 };
 
-var SimpleTeamApp = function (_Component3) {
-  _inherits(SimpleTeamApp, _Component3);
+var SimpleTeamApp = function (_Component2) {
+  _inherits(SimpleTeamApp, _Component2);
 
   function SimpleTeamApp(props) {
     _classCallCheck(this, SimpleTeamApp);
 
-    var _this4 = _possibleConstructorReturn(this, (SimpleTeamApp.__proto__ || Object.getPrototypeOf(SimpleTeamApp)).call(this, props));
+    var _this3 = _possibleConstructorReturn(this, (SimpleTeamApp.__proto__ || Object.getPrototypeOf(SimpleTeamApp)).call(this, props));
 
-    _this4.handleInput = _utils.handleSemanticInput.bind(_this4);
+    _this3.handleInput = _utils.handleSemanticInput.bind(_this3);
 
-    _this4.toggleCanSeeInformation = function (id) {
-      var users = _this4.state.users.map(function (item) {
+    _this3.toggleCanSeeInformation = function (id) {
+      var users = _this3.state.users.map(function (item) {
         return _extends({}, item, {
           can_see_information: item.id === id ? !item.can_see_information : item.can_see_information
         });
       });
-      _this4.setState({ users: users });
+      _this3.setState({ users: users });
     };
 
-    _this4.handleCredentialInput = function (e, _ref5) {
+    _this3.handleCredentialInput = function (e, _ref5) {
       var name = _ref5.name,
           value = _ref5.value;
 
-      var credentials = _this4.state.credentials.map(function (item) {
+      var credentials = _this3.state.credentials.map(function (item) {
         if (name === item.name) item.value = value;
         return item;
       });
-      _this4.setState({ credentials: credentials });
+      _this3.setState({ credentials: credentials });
     };
 
-    _this4.modify = function (e) {
+    _this3.modify = function (e) {
       e.preventDefault();
-      _this4.setState({ loading: true });
-      _this4.props.dispatch((0, _appsActions.teamEditSingleApp)({
-        app_id: _this4.props.app.id,
-        description: _this4.state.description,
-        password_change_interval: _this4.state.password_change_interval,
-        account_information: (0, _utils.transformCredentialsListIntoObject)(_this4.state.credentials)
+      _this3.setState({ loading: true });
+      _this3.props.dispatch((0, _appsActions.teamEditSingleApp)({
+        app_id: _this3.props.app.id,
+        description: _this3.state.description,
+        password_change_interval: _this3.state.password_change_interval,
+        account_information: (0, _utils.transformCredentialsListIntoObject)(_this3.state.credentials)
       })).then(function (response) {
         var app = response;
         var receivers = app.receivers;
         var deleting = [];
         var edit = [];
         var sharing = [];
-        _this4.state.users.map(function (item) {
-          var selected = _this4.state.selected_users.indexOf(item.id) !== -1;
+        _this3.state.users.map(function (item) {
+          var selected = _this3.state.selected_users.indexOf(item.id) !== -1;
           var receiver = (0, _helperFunctions.getReceiverInList)(receivers, item.id);
-          if (!selected && receiver !== null) deleting.push(_this4.props.dispatch((0, _appsActions.teamAppDeleteReceiver)({
-            team_id: _this4.props.team_id,
+          if (!selected && receiver !== null) deleting.push(_this3.props.dispatch((0, _appsActions.teamAppDeleteReceiver)({
+            team_id: _this3.props.team_id,
             shared_app_id: receiver.shared_app_id,
             team_user_id: item.id,
             app_id: app.id })));
-          if (receiver === null && selected) sharing.push(_this4.props.dispatch((0, _appsActions.teamShareSingleApp)({
-            team_id: _this4.props.team_id,
+          if (receiver === null && selected) sharing.push(_this3.props.dispatch((0, _appsActions.teamShareSingleApp)({
+            team_id: _this3.props.team_id,
             app_id: app.id,
             team_user_id: item.id,
             can_see_information: item.can_see_information })));
-          if (selected && receiver !== null && item.can_see_information !== receiver.can_see_information) edit.push(_this4.props.dispatch((0, _appsActions.teamEditSingleAppReceiver)({
-            team_id: _this4.props.team_id,
+          if (selected && receiver !== null && item.can_see_information !== receiver.can_see_information) edit.push(_this3.props.dispatch((0, _appsActions.teamEditSingleAppReceiver)({
+            team_id: _this3.props.team_id,
             shared_app_id: receiver.shared_app_id,
             can_see_information: item.can_see_information,
             app_id: app.id })));
         });
         var calls = deleting.concat(sharing, edit);
         Promise.all(calls.map(_utils.reflect)).then(function (response) {
-          _this4.setEdit(false);
+          _this3.setEdit(false);
         });
       }).catch(function (err) {
         console.log(err);
       });
     };
 
-    _this4.setupUsers = function () {
-      var channel = (0, _helperFunctions.selectItemFromListById)(_this4.props.channels, _this4.props.app.origin.id);
+    _this3.setupUsers = function () {
+      var channel = (0, _helperFunctions.selectItemFromListById)(_this3.props.channels, _this3.props.app.origin.id);
       var selected_users = [];
       var users = channel.userIds.map(function (item) {
-        var user = (0, _helperFunctions.selectItemFromListById)(_this4.props.users, item);
+        var user = (0, _helperFunctions.selectItemFromListById)(_this3.props.users, item);
         return {
           key: item,
           text: (0, _common.setUserDropdownText)(user),
@@ -57459,64 +58749,64 @@ var SimpleTeamApp = function (_Component3) {
           id: item,
           username: user.username,
           user: user,
-          toggleCanSeeInformation: _this4.toggleCanSeeInformation.bind(null, item)
+          toggleCanSeeInformation: _this3.toggleCanSeeInformation.bind(null, item)
         };
       }).sort(function (a, b) {
-        if (a.id === _this4.props.me.id) return -1000;
+        if (a.id === _this3.props.me.id) return -1000;
         return a.username.localeCompare(b.username);
       }).map(function (item) {
-        var receiver = (0, _helperFunctions.getReceiverInList)(_this4.props.app.receivers, item.id);
+        var receiver = (0, _helperFunctions.getReceiverInList)(_this3.props.app.receivers, item.id);
         var can_see_information = receiver !== null ? receiver.can_see_information : false;
         if (receiver !== null) selected_users.push(item.id);
         return _extends({}, item, {
           can_see_information: can_see_information
         });
       });
-      _this4.setState({ users: users, selected_users: selected_users });
+      _this3.setState({ users: users, selected_users: selected_users });
     };
 
-    _this4.setEdit = function (state) {
+    _this3.setEdit = function (state) {
       if (state) {
-        var app = _this4.props.app;
+        var app = _this3.props.app;
         var credentials = (0, _utils.transformWebsiteInfoIntoListAndSetValues)(app.website.information, app.account_information);
-        _this4.setupUsers();
-        _this4.setState({ credentials: credentials, password_change_interval: app.password_change_interval, description: app.description });
+        _this3.setupUsers();
+        _this3.setState({ credentials: credentials, password_change_interval: app.password_change_interval, description: app.description });
       }
-      _this4.setState({ edit: state, loading: false });
+      _this3.setState({ edit: state, loading: false });
     };
 
-    _this4.selfJoinApp = function () {
-      _this4.props.dispatch((0, _appsActions.teamShareSingleApp)({
-        team_id: _this4.props.team_id,
-        app_id: _this4.props.app.id,
-        team_user_id: _this4.props.me.id,
+    _this3.selfJoinApp = function () {
+      _this3.props.dispatch((0, _appsActions.teamShareSingleApp)({
+        team_id: _this3.props.team_id,
+        app_id: _this3.props.app.id,
+        team_user_id: _this3.props.me.id,
         can_see_information: true
       })).then(function () {
-        _this4.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, _this4.props.app));
+        _this3.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, _this3.props.app));
       });
     };
 
-    _this4.acceptRequest = function (state) {
-      var app = _this4.props.app;
-      var me = _this4.props.me;
+    _this3.acceptRequest = function (state) {
+      var app = _this3.props.app;
+      var me = _this3.props.me;
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(app.receivers, me.id);
       if (state) {
-        _this4.props.dispatch((0, _appsActions.teamAcceptSharedApp)({
-          team_id: _this4.props.team_id,
+        _this3.props.dispatch((0, _appsActions.teamAcceptSharedApp)({
+          team_id: _this3.props.team_id,
           app_id: app.id,
           shared_app_id: meReceiver.shared_app_id
         })).then(function () {
-          _this4.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
+          _this3.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
         });
-      } else _this4.props.dispatch((0, _appsActions.teamAppDeleteReceiver)({
-        team_id: _this4.props.team_id,
+      } else _this3.props.dispatch((0, _appsActions.teamAppDeleteReceiver)({
+        team_id: _this3.props.team_id,
         app_id: app.id,
         shared_app_id: meReceiver.shared_app_id,
         team_user_id: meReceiver.team_user_id
       }));
     };
 
-    _this4.state = {
+    _this3.state = {
       loading: false,
       edit: false,
       credentials: [],
@@ -57525,13 +58815,13 @@ var SimpleTeamApp = function (_Component3) {
       users: [],
       selected_users: []
     };
-    return _this4;
+    return _this3;
   }
 
   _createClass(SimpleTeamApp, [{
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this4 = this;
 
       var app = this.props.app;
       var me = this.props.me;
@@ -57545,109 +58835,105 @@ var SimpleTeamApp = function (_Component3) {
           item: item });
       }) : this.state.credentials.map(function (item) {
         return _react2.default.createElement(TeamAppCredentialInput, { key: item.priority,
-          onChange: _this5.handleCredentialInput,
+          onChange: _this4.handleCredentialInput,
           item: item });
       });
       return _react2.default.createElement(
         _semanticUiReact.Container,
         { fluid: true, className: "team-app mrgn0 simple-team-app", as: "form", onSubmit: this.modify },
+        meReceiver !== null && !meReceiver.accepted && _react2.default.createElement(AcceptRefuseAppHeader, { onAccept: this.acceptRequest.bind(null, true), onRefuse: this.acceptRequest.bind(null, false) }),
         _react2.default.createElement(
-          "div",
+          _semanticUiReact.Segment,
           null,
-          meReceiver !== null && !meReceiver.accepted && _react2.default.createElement(AcceptRefuseAppHeader, { onAccept: this.acceptRequest.bind(null, true), onRefuse: this.acceptRequest.bind(null, false) }),
           _react2.default.createElement(
-            _semanticUiReact.Segment,
-            null,
-            meReceiver !== null && !meReceiver.accepted && _react2.default.createElement("div", { className: "overlay" }),
-            _react2.default.createElement(
-              _semanticUiReact.Header,
-              { as: "h4" },
-              website.website_name,
-              meReceiver !== null && meReceiver.accepted && _react2.default.createElement(_common.PinAppButton, { is_pinned: meReceiver.profile_id !== -1, onClick: function onClick(e) {
-                  _this5.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
-                } }),
-              app.sharing_requests.length > 0 && (0, _helperFunctions.isAdmin)(me.role) && _react2.default.createElement(_common.SharingRequestButton, { onClick: function onClick(e) {
-                  _this5.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app));
-                } })
-            ),
-            !this.state.edit && _react2.default.createElement(TeamSimpleAppButtonSet, { app: app,
-              me: me,
-              selfJoin: this.selfJoinApp,
-              requestApp: function requestApp(e) {
-                _this5.props.dispatch((0, _appsActions.askJoinTeamApp)(app.id));
-              },
-              dispatch: this.props.dispatch, editMode: this.setEdit.bind(null, true) }),
+            _semanticUiReact.Header,
+            { as: "h4" },
+            website.website_name,
+            meReceiver !== null && meReceiver.accepted && _react2.default.createElement(_common.PinAppButton, { is_pinned: meReceiver.profile_id !== -1, onClick: function onClick(e) {
+                _this4.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
+              } }),
+            app.sharing_requests.length > 0 && (0, _helperFunctions.isAdmin)(me.role) && _react2.default.createElement(_common.SharingRequestButton, { onClick: function onClick(e) {
+                _this4.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app));
+              } })
+          ),
+          meReceiver !== null && !meReceiver.accepted && _react2.default.createElement("div", { className: "overlay" }),
+          !this.state.edit && _react2.default.createElement(TeamSimpleAppButtonSet, { app: app,
+            me: me,
+            selfJoin: this.selfJoinApp,
+            requestApp: function requestApp(e) {
+              _this4.props.dispatch((0, _appsActions.askJoinTeamApp)(app.id));
+            },
+            dispatch: this.props.dispatch, editMode: this.setEdit.bind(null, true) }),
+          _react2.default.createElement(
+            "div",
+            { className: "display_flex" },
             _react2.default.createElement(
               "div",
-              { className: "display_flex" },
+              { className: "logo_column" },
               _react2.default.createElement(
                 "div",
-                { className: "logo_column" },
+                { className: "logo" },
+                _react2.default.createElement("img", { src: website.logo })
+              )
+            ),
+            _react2.default.createElement(
+              "div",
+              { className: "main_column" },
+              _react2.default.createElement(
+                "div",
+                { className: "credentials" },
+                credentials,
+                meReceiver !== null && meReceiver.can_see_information && _react2.default.createElement(_common.CopyPasswordButton, { team_id: this.props.team_id, shared_app_id: meReceiver.shared_app_id }),
                 _react2.default.createElement(
                   "div",
-                  { className: "logo" },
-                  _react2.default.createElement("img", { src: website.logo })
+                  { className: "display-inline-flex" },
+                  !this.state.edit ? _react2.default.createElement(_common.PasswordChangeHolder, { value: app.password_change_interval }) : _react2.default.createElement(_common.PasswordChangeDropdown, { value: this.state.password_change_interval, onChange: this.handleInput }),
+                  (!this.state.edit && app.password_change_interval !== 0 || this.state.edit && this.state.password_change_interval !== 0) && _react2.default.createElement(_common.PasswordChangeManagerLabel, { username: room_manager_name })
                 )
               ),
               _react2.default.createElement(
                 "div",
-                { className: "main_column" },
-                _react2.default.createElement(
-                  "div",
-                  { className: "credentials" },
-                  credentials,
-                  meReceiver !== null && meReceiver.can_see_information && _react2.default.createElement(CopyPasswordButton, { team_id: this.props.team_id, shared_app_id: meReceiver.shared_app_id }),
-                  _react2.default.createElement(
-                    "div",
-                    { className: "display-inline-flex" },
-                    !this.state.edit ? _react2.default.createElement(_common.PasswordChangeHolder, { value: app.password_change_interval }) : _react2.default.createElement(_common.PasswordChangeDropdown, { value: this.state.password_change_interval, onChange: this.handleInput }),
-                    (!this.state.edit && app.password_change_interval !== 0 || this.state.edit && this.state.password_change_interval !== 0) && _react2.default.createElement(_common.PasswordChangeManagerLabel, { username: room_manager_name })
-                  )
-                ),
-                _react2.default.createElement(
-                  "div",
-                  null,
-                  !this.state.edit ? _react2.default.createElement(ReceiversLabelGroup, { receivers: userReceiversMap }) : _react2.default.createElement(_semanticUiReact.Dropdown, {
-                    className: "mini",
-                    search: true,
-                    fluid: true,
-                    name: "selected_users",
-                    options: this.state.users,
-                    onChange: this.handleInput,
-                    value: this.state.selected_users,
-                    selection: true,
-                    renderLabel: _common.renderSimpleAppUserLabel,
-                    multiple: true,
-                    placeholder: "Tag your team members here..." })
-                ),
-                _react2.default.createElement(
-                  "div",
-                  null,
-                  _react2.default.createElement(_semanticUiReact.Input, { size: "mini",
-                    fluid: true,
-                    className: "team-app-input",
-                    onChange: this.handleInput,
-                    name: "description",
-                    readOnly: !this.state.edit,
-                    value: this.state.edit ? this.state.description : app.description,
-                    placeholder: "What is this about? Any comment?",
-                    type: "text",
-                    label: _react2.default.createElement(
-                      _semanticUiReact.Label,
-                      null,
-                      _react2.default.createElement(_semanticUiReact.Icon, { name: "sticky note" })
-                    ),
-                    labelPosition: "left" })
-                )
+                null,
+                !this.state.edit ? _react2.default.createElement(ReceiversLabelGroup, { receivers: userReceiversMap }) : _react2.default.createElement(_semanticUiReact.Dropdown, {
+                  className: "mini",
+                  search: true,
+                  fluid: true,
+                  name: "selected_users",
+                  options: this.state.users,
+                  onChange: this.handleInput,
+                  value: this.state.selected_users,
+                  selection: true,
+                  renderLabel: _common.renderSimpleAppUserLabel,
+                  multiple: true,
+                  placeholder: "Tag your team members here..." })
+              ),
+              _react2.default.createElement(
+                "div",
+                null,
+                _react2.default.createElement(_semanticUiReact.Input, { size: "mini",
+                  fluid: true,
+                  className: "team-app-input",
+                  onChange: this.handleInput,
+                  name: "description",
+                  readOnly: !this.state.edit,
+                  value: this.state.edit ? this.state.description : app.description,
+                  placeholder: "You can add a comment here",
+                  type: "text",
+                  label: _react2.default.createElement(
+                    _semanticUiReact.Label,
+                    null,
+                    _react2.default.createElement(_semanticUiReact.Icon, { name: "sticky note" })
+                  ),
+                  labelPosition: "left" })
               )
             )
-          ),
-          this.state.edit && _react2.default.createElement(
-            "div",
-            null,
-            _react2.default.createElement(_semanticUiReact.Button, { content: "Save", floated: "right", positive: true, size: "mini", loading: this.state.loading, disabled: this.state.loading }),
-            _react2.default.createElement(_semanticUiReact.Button, { content: "Cancel", type: "button", floated: "right", onClick: this.setEdit.bind(null, false), size: "mini" })
           )
+        ),
+        this.state.edit && _react2.default.createElement(
+          "div",
+          null,
+          _react2.default.createElement(_semanticUiReact.Button, { content: "Save", floated: "right", positive: true, size: "mini", loading: this.state.loading, disabled: this.state.loading }),
+          _react2.default.createElement(_semanticUiReact.Button, { content: "Cancel", type: "button", floated: "right", onClick: this.setEdit.bind(null, false), size: "mini" })
         )
       );
     }
@@ -57749,7 +59035,6 @@ var SimpleTeamAppSearch = function (_Component) {
       var apps = _this.state.allApps.filter(function (item) {
         return item.website_name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null;
       });
-      console.log(apps);
       apps.push({ request: true, key: -1 });
       _this.setState({ apps: apps });
     };
@@ -57967,12 +59252,12 @@ var SimpleTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
 
       return _react2.default.createElement(
         _semanticUiReact.Container,
-        { fluid: true, id: "simple_team_app_add", className: "team-app mrgn0", as: "form", onSubmit: this.send },
+        { fluid: true, className: "team-app team-app-adder mrgn0", as: "form", onSubmit: this.send },
         this.state.app === null && _react2.default.createElement(
           "div",
           { className: "display-flex align_items_center" },
           _react2.default.createElement(SimpleTeamAppSearch, { team_id: this.props.team_id, select_app_func: this.setApp }),
-          _react2.default.createElement(_semanticUiReact.Button, { icon: "delete", style: { margin: '0 0 0 .6rem' }, size: "mini", className: "close", onClick: this.close, color: "grey" })
+          _react2.default.createElement(_semanticUiReact.Button, { type: "button", icon: "delete", style: { margin: '0 0 0 .6rem' }, size: "mini", className: "close", onClick: this.close, color: "grey" })
         ),
         _react2.default.createElement(
           _semanticUiReact.Transition,
@@ -58040,7 +59325,7 @@ var SimpleTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
                       onChange: this.handleInput,
                       name: "description",
                       value: this.state.description,
-                      placeholder: "What is this about? Any comment?",
+                      placeholder: "You can add a comment here",
                       type: "text",
                       label: _react2.default.createElement(
                         _semanticUiReact.Label,
@@ -60000,10 +61285,706 @@ var TeamSimpleApp = function (_React$Component2) {
 module.exports = TeamSimpleApp;
 
 /***/ }),
-/* 626 */,
-/* 627 */,
-/* 628 */,
-/* 629 */,
+/* 626 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _teamModalActions = __webpack_require__(9);
+
+var _appsActions = __webpack_require__(26);
+
+var _api = __webpack_require__(18);
+
+var _api2 = _interopRequireDefault(_api);
+
+var _SimpleModalTemplate = __webpack_require__(75);
+
+var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
+
+var _helperFunctions = __webpack_require__(15);
+
+var _semanticUiReact = __webpack_require__(14);
+
+var _utils = __webpack_require__(17);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CredentialInput = function CredentialInput(_ref) {
+  var item = _ref.item,
+      onChange = _ref.onChange;
+
+  return _react2.default.createElement(_semanticUiReact.Input, {
+    className: "team-app-input",
+    name: item.name,
+    autoFocus: item.autoFocus,
+    onChange: onChange,
+    required: true,
+    placeholder: item.placeholder,
+    value: item.value,
+    type: item.type });
+};
+
+var AcceptEnterpriseAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    app: store.teamModals.teamAcceptMultiAppModal.app,
+    user: store.teamModals.teamAcceptMultiAppModal.user,
+    team_id: store.team.id
+  };
+}), _dec(_class = function (_Component) {
+  _inherits(AcceptEnterpriseAppModal, _Component);
+
+  function AcceptEnterpriseAppModal(props) {
+    _classCallCheck(this, AcceptEnterpriseAppModal);
+
+    var _this = _possibleConstructorReturn(this, (AcceptEnterpriseAppModal.__proto__ || Object.getPrototypeOf(AcceptEnterpriseAppModal)).call(this, props));
+
+    _this.checkInputs = function () {
+      for (var i = 0; i < _this.state.credentials.length; i++) {
+        if (_this.state.credentials[i].value.length === 0) return true;
+      }
+      return false;
+    };
+
+    _this.handleCredentialInput = function (e, _ref2) {
+      var name = _ref2.name,
+          value = _ref2.value;
+
+      var credentials = _this.state.credentials.map(function (item) {
+        if (name === item.name) item.value = value;
+        return item;
+      });
+      _this.setState({ credentials: credentials });
+    };
+
+    _this.confirm = function (e) {
+      e.preventDefault();
+      _this.setState({ loading: true });
+      var meReceiver = (0, _helperFunctions.findMeInReceivers)(_this.props.app.receivers, _this.props.user.id);
+      _this.props.dispatch((0, _appsActions.teamAcceptEnterpriseApp)({
+        team_id: _this.props.team_id,
+        app_id: _this.props.app.id,
+        shared_app_id: meReceiver.shared_app_id,
+        account_information: (0, _utils.transformCredentialsListIntoObject)(_this.state.credentials)
+      })).then(function () {
+        _this.props.dispatch((0, _teamModalActions.showTeamAcceptMultiAppModal)(false));
+        _this.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, _this.props.app));
+      }).catch(function (err) {
+        _this.setState({ loading: false, errorMessage: err });
+      });
+    };
+
+    _this.state = {
+      loading: false,
+      errorMessage: '',
+      credentials: (0, _utils.transformWebsiteInfoIntoList)(_this.props.app.website.information)
+    };
+    return _this;
+  }
+
+  _createClass(AcceptEnterpriseAppModal, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var meReceiver = (0, _helperFunctions.findMeInReceivers)(this.props.app.receivers, this.props.user.id);
+
+      _api2.default.teamApps.getSharedAppPassword({ team_id: this.props.team_id, shared_app_id: meReceiver.shared_app_id }).then(function (password) {
+        var credentials = _this2.state.credentials.map(function (item) {
+          if (item.name === 'password') item.value = password;else item.value = meReceiver.account_information[item.name];
+          return item;
+        });
+        _this2.setState({ credentials: credentials });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+
+      var app = this.props.app;
+      return _react2.default.createElement(
+        _SimpleModalTemplate2.default,
+        {
+          onClose: function onClose(e) {
+            _this3.props.dispatch((0, _teamModalActions.showTeamAcceptMultiAppModal)(false));
+          },
+          headerContent: 'Enter your info, last time ever' },
+        _react2.default.createElement(
+          _semanticUiReact.Form,
+          { className: "container", onSubmit: this.confirm, error: this.state.errorMessage.length > 0 },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { className: "display-flex align_items_center", style: { marginBottom: '35px' } },
+            _react2.default.createElement(
+              "div",
+              { className: "squared_image_handler" },
+              _react2.default.createElement("img", { src: app.website.logo, alt: "Website logo" })
+            ),
+            _react2.default.createElement(
+              "span",
+              { style: { fontSize: "1.3rem" } },
+              app.name
+            )
+          ),
+          this.state.credentials.map(function (item) {
+            return _react2.default.createElement(
+              _semanticUiReact.Form.Field,
+              { key: item.priority },
+              _react2.default.createElement(
+                "label",
+                null,
+                item.placeholder
+              ),
+              _react2.default.createElement(CredentialInput, { item: item, onChange: _this3.handleCredentialInput })
+            );
+          }),
+          _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+          _react2.default.createElement(_semanticUiReact.Button, {
+            attached: "bottom",
+            type: "submit",
+            loading: this.state.loading,
+            disabled: this.checkInputs(),
+            positive: true,
+            onClick: this.confirm,
+            className: "modal-button",
+            content: "CONFIRM" })
+        )
+      );
+    }
+  }]);
+
+  return AcceptEnterpriseAppModal;
+}(_react.Component)) || _class);
+
+
+module.exports = AcceptEnterpriseAppModal;
+
+/***/ }),
+/* 627 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _teamModalActions = __webpack_require__(9);
+
+var _appsActions = __webpack_require__(26);
+
+var _SimpleModalTemplate = __webpack_require__(75);
+
+var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
+
+var _semanticUiReact = __webpack_require__(14);
+
+var _utils = __webpack_require__(17);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CredentialInput = function CredentialInput(_ref) {
+  var item = _ref.item,
+      onChange = _ref.onChange;
+
+  return _react2.default.createElement(_semanticUiReact.Input, {
+    className: "team-app-input",
+    name: item.name,
+    autoFocus: item.autoFocus,
+    onChange: onChange,
+    placeholder: item.placeholder,
+    value: item.value,
+    type: item.type });
+};
+
+var AskJoinEnterpriseAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    app: store.teamModals.teamAskJoinEnterpriseAppModal.app,
+    user: store.teamModals.teamAskJoinEnterpriseAppModal.user,
+    team_id: store.team.id
+  };
+}), _dec(_class = function (_Component) {
+  _inherits(AskJoinEnterpriseAppModal, _Component);
+
+  function AskJoinEnterpriseAppModal(props) {
+    _classCallCheck(this, AskJoinEnterpriseAppModal);
+
+    var _this = _possibleConstructorReturn(this, (AskJoinEnterpriseAppModal.__proto__ || Object.getPrototypeOf(AskJoinEnterpriseAppModal)).call(this, props));
+
+    _this.handleCredentialInput = function (e, _ref2) {
+      var name = _ref2.name,
+          value = _ref2.value;
+
+      var credentials = _this.state.credentials.map(function (item) {
+        if (name === item.name) item.value = value;
+        return item;
+      });
+      _this.setState({ credentials: credentials });
+    };
+
+    _this.confirm = function (e) {
+      e.preventDefault();
+      _this.setState({ loading: true });
+      _this.props.dispatch((0, _appsActions.teamJoinEnterpriseApp)({
+        team_id: _this.props.team_id,
+        app_id: _this.props.app.id,
+        account_information: (0, _utils.transformCredentialsListIntoObject)(_this.state.credentials)
+      })).then(function () {
+        _this.props.dispatch((0, _teamModalActions.showTeamAskJoinMultiAppModal)(false));
+      }).catch(function (err) {
+        _this.setState({ loading: false, errorMessage: err });
+      });
+    };
+
+    _this.state = {
+      loading: false,
+      errorMessage: '',
+      credentials: (0, _utils.transformWebsiteInfoIntoList)(_this.props.app.website.information)
+    };
+    return _this;
+  }
+
+  _createClass(AskJoinEnterpriseAppModal, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var app = this.props.app;
+      return _react2.default.createElement(
+        _SimpleModalTemplate2.default,
+        {
+          onClose: function onClose(e) {
+            _this2.props.dispatch((0, _teamModalActions.showTeamAskJoinMultiAppModal)(false));
+          },
+          headerContent: 'Enter your info, last time ever' },
+        _react2.default.createElement(
+          _semanticUiReact.Form,
+          { className: "container", onSubmit: this.confirm, error: this.state.errorMessage.length > 0 },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { className: "display-flex align_items_center", style: { marginBottom: '35px' } },
+            _react2.default.createElement(
+              "div",
+              { className: "squared_image_handler" },
+              _react2.default.createElement("img", { src: app.website.logo, alt: "Website logo" })
+            ),
+            _react2.default.createElement(
+              "span",
+              { style: { fontSize: "1.3rem" } },
+              app.name
+            )
+          ),
+          this.state.credentials.map(function (item) {
+            return _react2.default.createElement(
+              _semanticUiReact.Form.Field,
+              { key: item.priority },
+              _react2.default.createElement(
+                "label",
+                null,
+                item.placeholder
+              ),
+              _react2.default.createElement(CredentialInput, { item: item, onChange: _this2.handleCredentialInput })
+            );
+          }),
+          _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+          _react2.default.createElement(_semanticUiReact.Button, {
+            attached: "bottom",
+            type: "submit",
+            loading: this.state.loading,
+            positive: true,
+            onClick: this.confirm,
+            className: "modal-button",
+            content: "CONFIRM" })
+        )
+      );
+    }
+  }]);
+
+  return AskJoinEnterpriseAppModal;
+}(_react.Component)) || _class);
+
+
+module.exports = AskJoinEnterpriseAppModal;
+
+/***/ }),
+/* 628 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _teamModalActions = __webpack_require__(9);
+
+var _appsActions = __webpack_require__(26);
+
+var _api = __webpack_require__(18);
+
+var _api2 = _interopRequireDefault(_api);
+
+var _SimpleModalTemplate = __webpack_require__(75);
+
+var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
+
+var _helperFunctions = __webpack_require__(15);
+
+var _semanticUiReact = __webpack_require__(14);
+
+var _utils = __webpack_require__(17);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CredentialInput = function CredentialInput(_ref) {
+  var item = _ref.item,
+      onChange = _ref.onChange;
+
+  return _react2.default.createElement(_semanticUiReact.Input, {
+    className: "team-app-input",
+    name: item.name,
+    autoFocus: item.autoFocus,
+    onChange: onChange,
+    required: true,
+    placeholder: item.placeholder,
+    value: item.value,
+    type: item.type });
+};
+
+var EditEnterpriseAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    app: store.teamModals.teamEditEnterpriseAppModal.app,
+    user: store.teamModals.teamEditEnterpriseAppModal.user,
+    team_id: store.team.id
+  };
+}), _dec(_class = function (_Component) {
+  _inherits(EditEnterpriseAppModal, _Component);
+
+  function EditEnterpriseAppModal(props) {
+    _classCallCheck(this, EditEnterpriseAppModal);
+
+    var _this = _possibleConstructorReturn(this, (EditEnterpriseAppModal.__proto__ || Object.getPrototypeOf(EditEnterpriseAppModal)).call(this, props));
+
+    _this.handleCredentialInput = function (e, _ref2) {
+      var name = _ref2.name,
+          value = _ref2.value;
+
+      var credentials = _this.state.credentials.map(function (item) {
+        if (name === item.name) item.value = value;
+        return item;
+      });
+      _this.setState({ credentials: credentials });
+    };
+
+    _this.confirm = function (e) {
+      e.preventDefault();
+      _this.setState({ loading: true });
+      var meReceiver = (0, _helperFunctions.findMeInReceivers)(_this.props.app.receivers, _this.props.user.id);
+
+      _this.props.dispatch((0, _appsActions.teamEditEnterpriseAppReceiver)({
+        team_id: _this.props.team_id,
+        app_id: _this.props.app.id,
+        shared_app_id: meReceiver.shared_app_id,
+        account_information: (0, _utils.transformCredentialsListIntoObject)(_this.state.credentials)
+      })).then(function () {
+        _this.props.dispatch((0, _teamModalActions.showTeamEditEnterpriseAppModal)(false));
+      }).catch(function (err) {
+        _this.setState({ loading: false, errorMessage: err });
+      });
+    };
+
+    _this.state = {
+      loading: false,
+      errorMessage: '',
+      credentials: (0, _utils.transformWebsiteInfoIntoList)(_this.props.app.website.information)
+    };
+    return _this;
+  }
+
+  _createClass(EditEnterpriseAppModal, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var meReceiver = (0, _helperFunctions.findMeInReceivers)(this.props.app.receivers, this.props.user.id);
+
+      _api2.default.teamApps.getSharedAppPassword({ team_id: this.props.team_id, shared_app_id: meReceiver.shared_app_id }).then(function (password) {
+        var credentials = _this2.state.credentials.map(function (item) {
+          if (item.name === 'password') item.value = password;else item.value = meReceiver.account_information[item.name];
+          return item;
+        });
+        _this2.setState({ credentials: credentials });
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this3 = this;
+
+      var app = this.props.app;
+      return _react2.default.createElement(
+        _SimpleModalTemplate2.default,
+        {
+          onClose: function onClose(e) {
+            _this3.props.dispatch((0, _teamModalActions.showTeamEditEnterpriseAppModal)(false));
+          },
+          headerContent: 'Enter your info, last time ever' },
+        _react2.default.createElement(
+          _semanticUiReact.Form,
+          { className: "container", onSubmit: this.confirm, error: this.state.errorMessage.length > 0 },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { className: "display-flex align_items_center", style: { marginBottom: '35px' } },
+            _react2.default.createElement(
+              "div",
+              { className: "squared_image_handler" },
+              _react2.default.createElement("img", { src: app.website.logo, alt: "Website logo" })
+            ),
+            _react2.default.createElement(
+              "span",
+              { style: { fontSize: "1.3rem" } },
+              app.name
+            )
+          ),
+          this.state.credentials.map(function (item) {
+            return _react2.default.createElement(
+              _semanticUiReact.Form.Field,
+              { key: item.priority },
+              _react2.default.createElement(
+                "label",
+                null,
+                item.placeholder
+              ),
+              _react2.default.createElement(CredentialInput, { item: item, onChange: _this3.handleCredentialInput })
+            );
+          }),
+          _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+          _react2.default.createElement(_semanticUiReact.Button, {
+            attached: "bottom",
+            type: "submit",
+            loading: this.state.loading,
+            positive: true,
+            onClick: this.confirm,
+            className: "modal-button",
+            content: "CONFIRM" })
+        )
+      );
+    }
+  }]);
+
+  return EditEnterpriseAppModal;
+}(_react.Component)) || _class);
+
+
+module.exports = EditEnterpriseAppModal;
+
+/***/ }),
+/* 629 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _teamModalActions = __webpack_require__(9);
+
+var _appsActions = __webpack_require__(26);
+
+var _SimpleModalTemplate = __webpack_require__(75);
+
+var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
+
+var _semanticUiReact = __webpack_require__(14);
+
+var _utils = __webpack_require__(17);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CredentialInput = function CredentialInput(_ref) {
+  var item = _ref.item,
+      onChange = _ref.onChange;
+
+  return _react2.default.createElement(_semanticUiReact.Input, {
+    className: "team-app-input",
+    name: item.name,
+    autoFocus: item.autoFocus,
+    onChange: onChange,
+    placeholder: item.placeholder,
+    value: item.value,
+    type: item.type });
+};
+
+var JoinEnterpriseAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    app: store.teamModals.teamJoinMultiAppModal.app,
+    user: store.teamModals.teamJoinMultiAppModal.user,
+    team_id: store.team.id
+  };
+}), _dec(_class = function (_Component) {
+  _inherits(JoinEnterpriseAppModal, _Component);
+
+  function JoinEnterpriseAppModal(props) {
+    _classCallCheck(this, JoinEnterpriseAppModal);
+
+    var _this = _possibleConstructorReturn(this, (JoinEnterpriseAppModal.__proto__ || Object.getPrototypeOf(JoinEnterpriseAppModal)).call(this, props));
+
+    _this.handleCredentialInput = function (e, _ref2) {
+      var name = _ref2.name,
+          value = _ref2.value;
+
+      var credentials = _this.state.credentials.map(function (item) {
+        if (name === item.name) item.value = value;
+        return item;
+      });
+      _this.setState({ credentials: credentials });
+    };
+
+    _this.confirm = function (e) {
+      e.preventDefault();
+      _this.setState({ loading: true });
+      _this.props.dispatch((0, _appsActions.teamShareEnterpriseApp)({
+        team_id: _this.props.team_id,
+        app_id: _this.props.app.id,
+        team_user_id: _this.props.user.id,
+        account_information: (0, _utils.transformCredentialsListIntoObject)(_this.state.credentials)
+      })).then(function () {
+        _this.props.dispatch((0, _teamModalActions.showTeamJoinMultiAppModal)(false));
+        _this.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, _this.props.app));
+      }).catch(function (err) {
+        _this.setState({ loading: false, errorMessage: err });
+      });
+    };
+
+    _this.state = {
+      loading: false,
+      errorMessage: '',
+      credentials: (0, _utils.transformWebsiteInfoIntoList)(_this.props.app.website.information)
+    };
+    return _this;
+  }
+
+  _createClass(JoinEnterpriseAppModal, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var app = this.props.app;
+      return _react2.default.createElement(
+        _SimpleModalTemplate2.default,
+        {
+          onClose: function onClose(e) {
+            _this2.props.dispatch((0, _teamModalActions.showTeamJoinMultiAppModal)(false));
+          },
+          headerContent: 'Enter your info, last time ever' },
+        _react2.default.createElement(
+          _semanticUiReact.Form,
+          { className: "container", onSubmit: this.confirm, error: this.state.errorMessage.length > 0 },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { className: "display-flex align_items_center", style: { marginBottom: '35px' } },
+            _react2.default.createElement(
+              "div",
+              { className: "squared_image_handler" },
+              _react2.default.createElement("img", { src: app.website.logo, alt: "Website logo" })
+            ),
+            _react2.default.createElement(
+              "span",
+              { style: { fontSize: "1.3rem" } },
+              app.name
+            )
+          ),
+          this.state.credentials.map(function (item) {
+            return _react2.default.createElement(
+              _semanticUiReact.Form.Field,
+              { key: item.priority },
+              _react2.default.createElement(
+                "label",
+                null,
+                item.placeholder
+              ),
+              _react2.default.createElement(CredentialInput, { item: item, onChange: _this2.handleCredentialInput })
+            );
+          }),
+          _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+          _react2.default.createElement(_semanticUiReact.Button, {
+            attached: "bottom",
+            type: "submit",
+            loading: this.state.loading,
+            positive: true,
+            onClick: this.confirm,
+            className: "modal-button",
+            content: "CONFIRM" })
+        )
+      );
+    }
+  }]);
+
+  return JoinEnterpriseAppModal;
+}(_react.Component)) || _class);
+
+
+module.exports = JoinEnterpriseAppModal;
+
+/***/ }),
 /* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -60038,7 +62019,8 @@ var api = __webpack_require__(18);
 var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     modal: store.teamModals.pinTeamAppToDashboardModal,
-    me: store.users.me
+    me: store.users.me,
+    team_id: store.team.id
   };
 }), _dec(_class = function (_React$Component) {
   _inherits(PinTeamAppToDashboardModal, _React$Component);
@@ -60082,6 +62064,17 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
       var meReceiver = (0, _helperFunctions.findMeInReceivers)(this.props.modal.app.receivers, this.props.me.id);
       if (meReceiver.profile_id === -1 && this.state.selectedProfile === -1) {
         this.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
+        return;
+      }
+      if (this.props.modal.app.type === 'link') {
+        this.props.dispatch((0, _appsActions.teamPinLinkApp)({
+          team_id: this.props.team_id,
+          app_id: this.props.modal.app.id,
+          app_name: this.state.name,
+          profile_id: this.state.selectedProfile
+        })).then(function () {
+          _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(false));
+        });
         return;
       }
       this.props.dispatch((0, _appsActions.teamAppPinToDashboard)(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name, this.props.modal.app.id)).then(function (response) {
@@ -62664,7 +64657,7 @@ var TeamDeleteUserModal = (_dec = (0, _reactRedux.connect)(function (store) {
           _react2.default.createElement(
             _semanticUiReact.Form.Field,
             null,
-            _react2.default.createElement(_semanticUiReact.Checkbox, { label: 'I\'m sure to remove this member', name: 'confirm', checked: this.state.confirm, onChange: this.handleInput })
+            _react2.default.createElement(_semanticUiReact.Checkbox, { label: 'I\'m sure to remove this member', name: 'confirm', checked: this.state.confirm, onClick: this.handleInput })
           ),
           _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
           _react2.default.createElement(_semanticUiReact.Button, {
@@ -62775,10 +64768,8 @@ var TeamJoinMultiAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
       var user = this.state.user;
 
       this.props.dispatch(appActions.teamShareApp(app.id, { account_information: credentials, team_user_id: user.id })).then(function (response) {
-        _this2.props.dispatch(appActions.teamAcceptSharedApp(app.id, response.shared_app_id)).then(function (response) {
-          _this2.props.dispatch((0, _teamModalActions.showTeamJoinMultiAppModal)(false));
-          _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, _extends({}, app)));
-        });
+        _this2.props.dispatch((0, _teamModalActions.showTeamJoinMultiAppModal)(false));
+        _this2.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, _extends({}, app)));
       });
     }
   }, {
@@ -63109,6 +65100,21 @@ var TeamManageAppRequestModal = (_dec = (0, _reactRedux.connect)(function (store
           app_id: app.id,
           team_user_id: id,
           can_see_information: false
+        })).then(function () {
+          var users = _this2.state.users.map(function (item) {
+            if (item.user.id === id) {
+              item.checked = true;
+              item.accepted = true;
+            }
+            return item;
+          });
+          _this2.setState({ users: users });
+        });
+      } else if (app.type === 'multi') {
+        this.props.dispatch((0, _appsActions.teamShareEnterpriseApp)({
+          team_id: this.props.team_id,
+          app_id: app.id,
+          team_user_id: id
         })).then(function () {
           var users = _this2.state.users.map(function (item) {
             if (item.user.id === id) {
@@ -67040,42 +69046,43 @@ function reducer() {
       }
     case 'TEAM_APP_CHANGED':
       {
-        var apps = state.apps;
+        var _apps4 = state.apps;
 
-        for (var i = 0; i < apps.length; i++) {
-          if (apps[i].id === action.payload.app.id) {
-            apps[i] = action.payload.app;
+        for (var _i = 0; _i < _apps4.length; _i++) {
+          if (_apps4[_i].id === action.payload.app.id) {
+            _apps4[_i] = action.payload.app;
             return _extends({}, state, {
-              apps: apps
+              apps: _apps4
             });
           }
         }
+        break;
       }
     case 'TEAM_APP_ADDED':
       {
-        var _apps4 = state.apps;
+        var _apps5 = state.apps;
         var _app = action.payload.app;
         if (state.type === _app.origin.type && state.id === _app.origin.id) {
-          _apps4.unshift(_app);
+          _apps5.unshift(_app);
           return _extends({}, state, {
-            apps: _apps4
+            apps: _apps5
           });
         }
       }
     case 'TEAM_APP_REMOVED':
       {
-        var _apps5 = state.apps.filter(function (app) {
+        var _apps6 = state.apps.filter(function (app) {
           return app.id !== action.payload.app_id;
         });
         return _extends({}, state, {
-          apps: _apps5
+          apps: _apps6
         });
       }
     case 'TEAM_APP_RECEIVER_CHANGED':
       {
         var app_id = action.payload.app_id;
         var receiver = action.payload.receiver;
-        var _apps6 = state.apps.map(function (app) {
+        var _apps7 = state.apps.map(function (app) {
           if (app.id === app_id) app.receivers = app.receivers.map(function (item) {
             if (item.team_user_id === receiver.team_user_id) return receiver;
             return item;
@@ -67083,14 +69090,14 @@ function reducer() {
           return app;
         });
         return _extends({}, state, {
-          apps: _apps6
+          apps: _apps7
         });
       }
     case 'TEAM_APP_RECEIVER_ADDED':
       {
         var _app_id = action.payload.app_id;
         var _receiver = action.payload.receiver;
-        var _apps7 = state.apps.map(function (app) {
+        var _apps8 = state.apps.map(function (app) {
           if (app.id === _app_id) {
             app.sharing_requests = app.sharing_requests.filter(function (req) {
               return req !== _receiver.team_user_id;
@@ -67100,21 +69107,44 @@ function reducer() {
           return app;
         });
         return _extends({}, state, {
-          apps: _apps7
+          apps: _apps8
         });
       }
     case 'TEAM_APP_RECEIVER_REMOVED':
       {
         var _app_id2 = action.payload.app_id;
         var team_user_id = action.payload.team_user_id;
-        var _apps8 = state.apps.map(function (app) {
+        var _apps9 = state.apps.map(function (app) {
           if (app.id === _app_id2) app.receivers = app.receivers.filter(function (item) {
             return item.team_user_id !== team_user_id;
           });
           return app;
         });
         return _extends({}, state, {
-          apps: _apps8
+          apps: _apps9
+        });
+      }
+    case 'TEAM_LINK_APP_RECEIVER_ADDED':
+      {
+        var _app_id3 = action.payload.app_id;
+        var _receiver2 = action.payload.receiver;
+        var changed = false;
+
+        var _apps10 = state.apps.map(function (app) {
+          if (app.id === _app_id3) {
+            app.receivers = app.receivers.map(function (item) {
+              if (item.team_user_id === _receiver2.team_user_id) {
+                changed = true;
+                return _receiver2;
+              }
+              return item;
+            });
+            if (!changed) app.receivers.push(_receiver2);
+          }
+          return app;
+        });
+        return _extends({}, state, {
+          apps: _apps10
         });
       }
   }
@@ -67211,6 +69241,16 @@ var initialState = {
     active: false,
     app: null
   },
+  teamEditEnterpriseAppModal: {
+    active: false,
+    user: null,
+    app: null
+  },
+  teamAskJoinEnterpriseAppModal: {
+    active: false,
+    user: null,
+    app: null
+  },
   teamAcceptMultiAppModal: {
     active: false,
     user: null,
@@ -67240,10 +69280,6 @@ var initialState = {
     active: false,
     resolve: null,
     reject: null
-  },
-  upgradeTeamPlanModal: {
-    active: false,
-    featureDescription: ''
   }
 };
 function reducer() {
@@ -67317,6 +69353,18 @@ function reducer() {
           teamAcceptMultiAppModal: action.payload
         });
       }
+    case 'SHOW_TEAM_ASK_JOIN_ENTERPRISE_APP_MODAL':
+      {
+        return _extends({}, state, {
+          teamAskJoinEnterpriseAppModal: action.payload
+        });
+      }
+    case 'SHOW_TEAM_EDIT_ENTERPRISE_APP_MODAL':
+      {
+        return _extends({}, state, {
+          teamEditEnterpriseAppModal: action.payload
+        });
+      }
     case 'SHOW_TEAM_JOIN_MULTI_APP_MODAL':
       {
         return _extends({}, state, {
@@ -67363,12 +69411,6 @@ function reducer() {
       {
         return _extends({}, state, {
           teamAddMultipleUsersModal: action.payload
-        });
-      }
-    case 'SHOW_UPGRADE_TEAM_PLAN_MODAL':
-      {
-        return _extends({}, state, {
-          upgradeTeamPlanModal: action.payload
         });
       }
   }
@@ -67687,6 +69729,19 @@ function reducer() {
           users: users
         });
       }
+    case 'EDIT_TEAM_USER_DEPARTUREDATE_FULFILLED':
+      {
+        var date = action.payload.departure_date;
+        var user_id = action.payload.id;
+
+        var _users3 = state.users.map(function (item) {
+          if (item.id === user_id) item.departure_date = date;
+          return item;
+        });
+        return _extends({}, state, {
+          users: _users3
+        });
+      }
     case 'TEAM_USER_CHANGED':
       {
         var users = state.users.map(function (item) {
@@ -67708,13 +69763,13 @@ function reducer() {
       }
     case 'TEAM_USER_REMOVED':
       {
-        var _users3 = state.users;
+        var _users4 = state.users;
 
-        for (var i = 0; i < _users3.length; i++) {
-          if (_users3[i].id === action.payload.user.id) {
-            _users3.splice(i, 1);
+        for (var i = 0; i < _users4.length; i++) {
+          if (_users4[i].id === action.payload.user.id) {
+            _users4.splice(i, 1);
             return _extends({}, state, {
-              users: _users3
+              users: _users4
             });
           }
         }
@@ -67722,24 +69777,24 @@ function reducer() {
     case 'TEAM_ROOM_REMOVED':
       {
         var room_id = action.payload.channel.id;
-        var _users4 = state.users.map(function (item) {
+        var _users5 = state.users.map(function (item) {
           var idx = item.channel_ids.indexOf(room_id);
           if (idx !== -1) item.channel_ids.splice(idx, 1);
           return item;
         });
         return _extends({}, state, {
-          users: _users4
+          users: _users5
         });
       }
     case 'DELETE_TEAM_CHANNEL_FULFILLED':
       {
-        var _users5 = state.users.map(function (item) {
+        var _users6 = state.users.map(function (item) {
           var idx = item.channel_ids.indexOf(action.payload.channel_id);
           if (idx !== -1) item.channel_ids.splice(idx, 1);
           return item;
         });
         return _extends({}, state, {
-          users: _users5
+          users: _users6
         });
       }
   }
