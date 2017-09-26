@@ -362,6 +362,30 @@ export default function reducer(state={
         apps:apps
       }
     }
+    case 'TEAM_LINK_APP_RECEIVER_ADDED' : {
+      const app_id = action.payload.app_id;
+      const receiver = action.payload.receiver;
+      let changed = false;
+
+      const apps = state.apps.map(app => {
+        if (app.id === app_id){
+          app.receivers = app.receivers.map(item => {
+            if (item.team_user_id === receiver.team_user_id){
+              changed = true;
+              return receiver;
+            }
+            return item;
+          });
+          if (!changed)
+            app.receivers.push(receiver);
+        }
+        return app;
+      });
+      return {
+        ...state,
+        apps:apps
+      }
+    }
   }
   return state;
 }

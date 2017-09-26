@@ -229,6 +229,23 @@ export function teamEditLinkAppNew({team_id, app_id, name, description, url, img
   }
 }
 
+export function teamPinLinkApp({team_id, app_id, app_name, profile_id})  {
+  return (dispatch, getState) => {
+    return post_api.teamApps.pinLinkApp({
+      team_id: team_id,
+      app_id: app_id,
+      app_name:app_name,
+      profile_id: profile_id,
+      ws_id: getState().common.ws_id,
+    }).then(receiver => {
+      dispatch({type: 'TEAM_LINK_APP_RECEIVER_ADDED', payload: {app_id: app_id, receiver: receiver}});
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function teamCreateLinkApp(app){
   return function (dispatch, getState){
     dispatch({type: 'TEAM_CREATE_LINK_APP_PENDING'});

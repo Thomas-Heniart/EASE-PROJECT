@@ -457,6 +457,20 @@ module.exports = {
         return err.response.data;
       });
     },
+    pinLinkApp : ({team_id, app_id, app_name, profile_id, ws_id}) => {
+      return axios.post('/api/v1/team/PinLinkApp', {
+        team_id: team_id,
+        app_id: app_id,
+        app_name:app_name,
+        profile_id: profile_id,
+        ws_id: ws_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        return err.response.data;
+      });
+    },
     createMultiApp: function(ws_id, team_id, app){
       return axios.post('/api/v1/teams/CreateShareableMultiApp', {
         ws_id: ws_id,

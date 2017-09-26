@@ -22,7 +22,7 @@ function TeamHeader(props){
               </div>
               <div className="channel_header_info">
                 <div className="channel_header_info_item" id="apps_number">
-                  <i className="icon_left fa fa-share-alt-square"/>
+                  <i className="icon_left fa fa-square"/>
                   <span className="value">{props.appsLength}</span>
                 </div>
                 {props.item.userIds &&

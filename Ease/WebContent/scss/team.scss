@@ -55,6 +55,18 @@ button.team_app_requests {
     &:focus {
       border: 1px solid rgba(34,36,38,.15);
       border-left-color: transparent !important;
+      &::-webkit-input-placeholder {
+        color: #ededed;
+      }
+      &:-moz-placeholder {
+        color: #ededed;
+      }
+      &::-moz-placeholder {
+        color: #ededed;
+      }
+      &:-ms-input-placeholder {
+        color: #ededed;
+      }
     }
   }
   & > .ui.label {
@@ -216,11 +228,11 @@ i.icon.pin_button {
 }
 
 .ui.toggle.checkbox .box, .ui.toggle.checkbox label {
-  min-height: 1.3rem;
+  min-height: 1rem;
 }
 
 .ui.toggle.checkbox {
-  min-height: 1.3rem;
+  min-height: 1rem;
 }
 
 .ui.enterprise-app-switch.toggle.checkbox .box::before, .ui.enterprise-app-switch.toggle.checkbox label::before {
@@ -231,17 +243,17 @@ i.icon.pin_button {
   background-color: #45C997 !important;
 }
 .ui.enterprise-app-switch.toggle.checkbox input~.box:after, .ui.enterprise-app-switch.toggle.checkbox input~label:after {
-  left:0.05rem;
+  left:1px;
   top:1px;
 }
 
 .ui.enterprise-app-switch.toggle.checkbox input:checked~.box:after, .ui.enterprise-app-switch.toggle.checkbox input:checked~label:after {
   top: 1px;
-  left:1.65rem;
+  left:15px;
 }
 
 .ui.enterprise-app-switch.toggle.checkbox .box:before, .ui.enterprise-app-switch.toggle.checkbox label:before {
-  width:50px;
+  width:35px;
   height: 21px;
 }
 
@@ -249,6 +261,7 @@ i.icon.pin_button {
   .receiver-label {
     color: white;
     font-weight:normal;
+    height: 37.19px;
   }
   .credentials .display-inline-flex {
     & > * {

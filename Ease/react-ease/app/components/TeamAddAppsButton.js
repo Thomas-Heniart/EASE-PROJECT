@@ -63,7 +63,7 @@ class TeamAddAppsButton extends React.Component {
                       Link app
                     </Dropdown.Item>
                   }
-                  content="Are you using tools without accounts? Need to share a blog or a source your team frequently uses? Here it is!"/>
+                  content="Using tools without accounts? Need to share a blog or a source?"/>
             }
             {targetType === 1 &&
             <Dropdown.Item disabled className="align_items_center" style={{display:'flex'}}>
