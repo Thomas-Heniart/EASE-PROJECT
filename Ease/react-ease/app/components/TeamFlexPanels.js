@@ -8,13 +8,15 @@ import {showTeamDeleteUserModal,
   showTeamDeleteUserFromChannelModal,
   showTeamTransferOwnershipModal}
   from "../actions/teamModalActions";
-import {selectChannelFromListById,
+import {
+  selectChannelFromListById,
   selectUserFromListById,
   selectItemFromListById,
   isAdmin,
   isAdminOrMe,
   isSuperior,
-  isSuperiorOrMe} from "../utils/helperFunctions";
+  isSuperiorOrMe, isOwner
+} from "../utils/helperFunctions";
 import {renderUserLabel} from "../utils/renderHelpers";
 import {teamUserRoleValues, userNameRuleString, handleSemanticInput, teamUserRoles, reflect} from "../utils/utils";
 import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, TextArea, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
@@ -171,7 +173,7 @@ class RoomManagerSection extends React.Component {
           <h5>Room Manager</h5>
           <div>
             <Label class="display-inline-block" style={{margin: '0 .5em .5em 0'}}><Icon name="user" link class="mrgnRight5"/>{manager.username}</Label>
-            {isAdmin(me.role) &&
+            {(isOwner(me.role) || me.id === manager.id) &&
             <AdminsDropdown style={{marginBottom: '.5em'}} value={manager.id} users={this.props.users} onSelect={this.editRoomManager} loading={this.state.loading}/>}
           </div>
           {this.state.errorMessage.length > 0 &&

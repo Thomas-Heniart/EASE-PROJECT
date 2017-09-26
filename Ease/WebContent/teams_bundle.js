@@ -55345,7 +55345,7 @@ var RoomManagerSection = (_dec2 = (0, _reactRedux.connect)(function (store) {
             React.createElement(_semanticUiReact.Icon, { name: 'user', link: true, className: 'mrgnRight5' }),
             manager.username
           ),
-          (0, _helperFunctions.isAdmin)(me.role) && React.createElement(AdminsDropdown, { style: { marginBottom: '.5em' }, value: manager.id, users: this.props.users, onSelect: this.editRoomManager, loading: this.state.loading })
+          ((0, _helperFunctions.isOwner)(me.role) || me.id === manager.id) && React.createElement(AdminsDropdown, { style: { marginBottom: '.5em' }, value: manager.id, users: this.props.users, onSelect: this.editRoomManager, loading: this.state.loading })
         ),
         this.state.errorMessage.length > 0 && React.createElement(_semanticUiReact.Message, { color: 'red', content: this.state.errorMessage }),
         React.createElement(
@@ -57638,7 +57638,7 @@ var AcceptRefuseAppHeader = function AcceptRefuseAppHeader(_ref10) {
   return _react2.default.createElement(
     "span",
     { style: { lineHeight: '1.7' } },
-    "You received in an Enterprise App, \xA0",
+    "You received an Enterprise App, \xA0",
     _react2.default.createElement(
       "button",
       { className: "button-unstyle inline-text-button primary", type: "button", onClick: onAccept },
@@ -59328,7 +59328,7 @@ var AcceptRefuseAppHeader = function AcceptRefuseAppHeader(_ref4) {
   return _react2.default.createElement(
     "span",
     { style: { lineHeight: '1.7' } },
-    "You received in a Single App, \xA0",
+    "You received a Single App, \xA0",
     _react2.default.createElement(
       "button",
       { className: "button-unstyle inline-text-button primary", type: "button", onClick: onAccept },
