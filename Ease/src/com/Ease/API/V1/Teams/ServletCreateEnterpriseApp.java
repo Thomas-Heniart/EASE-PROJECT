@@ -46,6 +46,8 @@ public class ServletCreateEnterpriseApp extends HttpServlet {
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer password_change_interval = sm.getIntParam("password_change_interval", true, false);
             String description = sm.getStringParam("description", false, false);
+            if (description.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             Boolean fill_in_switch = sm.getBooleanParam("fill_in_switch", true, false);
             Channel channel = team.getChannelWithId(channel_id);

@@ -46,6 +46,8 @@ public class ServletCreateSingleApp extends HttpServlet {
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             String description = sm.getStringParam("description", true, true);
+            if (description.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
             Integer password_change_interval = sm.getIntParam("password_change_interval", true, false);
             if (description == null)
                 description = "";

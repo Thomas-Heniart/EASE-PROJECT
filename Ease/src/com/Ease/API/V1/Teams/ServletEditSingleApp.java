@@ -43,7 +43,10 @@ public class ServletEditSingleApp extends HttpServlet {
                 account_information.put(key_value.getKey(), RSA.Decrypt(key_value.getValue(), privateKey));
             }
             JSONObject params = new JSONObject();
-            params.put("description", sm.getStringParam("description", false, false));
+            String description = sm.getStringParam("description", false, false);
+            if (description.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
+            params.put("description", description);
             params.put("account_information", account_information);
             params.put("password_change_interval", sm.getIntParam("password_change_interval", true, false));
             params.put("description", sm.getStringParam("description", true, false));
