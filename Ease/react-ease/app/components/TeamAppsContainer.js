@@ -2,7 +2,8 @@ var React = require('react');
 var classnames = require('classnames');
 var TeamSimpleApp = require('./teamApps/TeamSimpleApp');
 import SimpleTeamApp from "./teamAppAdders/SimpleTeamApp";
-var TeamLinkApp = require('./teamApps/TeamLinkApp');
+// var TeamLinkApp = require('./teamApps/TeamLinkApp');
+import TeamLinkApp from "./teamAppAdders/LinkTeamApp";
 var TeamMultiApp = require('./teamApps/TeamMultiApp');
 import  EnterpriseTeamApp from "./teamAppAdders/EnterpriseTeamApp";
 import {connect} from "react-redux"
@@ -36,7 +37,7 @@ class TeamAppsContainer extends React.Component{
                           team_id={this.props.team_id}
                           dispatch={this.props.dispatch}/>
                   );
-/*                if (item.type === 'link')
+                if (item.type === 'link')
                   return (
                       <TeamLinkApp
                           app={item}
@@ -44,8 +45,9 @@ class TeamAppsContainer extends React.Component{
                           channels={this.props.channels}
                           me={this.props.me}
                           key={item.id}
+                          team_id={this.props.team_id}
                           dispatch={this.props.dispatch}/>
-                  );*/
+                  );
                 if (item.type === 'multi')
                   return (
                       <EnterpriseTeamApp

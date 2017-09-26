@@ -458,7 +458,7 @@ module.exports = {
       });
     },
     pinLinkApp : ({team_id, app_id, app_name, profile_id, ws_id}) => {
-      return axios.post('/api/v1/team/PinLinkApp', {
+      return axios.post('/api/v1/teams/PinLinkApp', {
         team_id: team_id,
         app_id: app_id,
         app_name:app_name,
