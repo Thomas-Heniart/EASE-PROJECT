@@ -46,7 +46,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
                     channelList.add(channel);
             }
             if (!channelList.isEmpty()) {
-                String message = "This user can’t be deleted as long as he/she remains Room Manager for ";
+                String message = "This cannot become member as long as he/she remains Room Manager for ";
                 for (Channel channel : channelList) {
                     message += ("#" + channel.getName());
                     if (channelList.indexOf(channel) == channelList.size() - 1)
