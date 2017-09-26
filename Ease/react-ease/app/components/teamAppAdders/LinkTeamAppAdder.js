@@ -9,7 +9,7 @@ import {selectUserFromListById} from "../../utils/helperFunctions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import * as appActions from "../../actions/appsActions";
 import {teamCreateLinkAppNew} from "../../actions/appsActions";
-import {requestWebsite} from "../../actions/teamModalActions";
+import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
 import {connect} from "react-redux";
 import { Header, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
@@ -73,6 +73,7 @@ class LinkTeamAppAdder extends React.Component {
             url: this.state.url,
             img_url: this.state.img_url
         })).then(response => {
+            this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
             this.setState({loading: false});
             this.close();
         });

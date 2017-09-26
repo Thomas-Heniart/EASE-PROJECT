@@ -5,7 +5,7 @@ import {handleSemanticInput,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
 import {selectUserFromListById} from "../../utils/helperFunctions";
-import {requestWebsite} from "../../actions/teamModalActions";
+import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
@@ -91,6 +91,7 @@ const TeamAppCredentialInput = ({item, onChange}) => {
 
 @connect(store => ({
   team_id: store.team.id,
+  myId: store.team.myTeamUserId,
   users: store.users.users
 }))
 class SimpleTeamAppAdder extends Component {
@@ -175,6 +176,7 @@ class SimpleTeamAppAdder extends Component {
   send = (e) => {
     e.preventDefault();
     this.setState({loading: true});
+    const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
     const receivers = this.state.users
         .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
         .map(item => ({
@@ -190,6 +192,8 @@ class SimpleTeamAppAdder extends Component {
       account_information: transformCredentialsListIntoObject(this.state.credentials),
       receivers: receivers
     })).then(response => {
+      if (meReceiver)
+        this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
       this.setState({loading: false});
       this.close();
     });

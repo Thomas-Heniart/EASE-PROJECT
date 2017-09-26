@@ -172,10 +172,10 @@ class RoomManagerSection extends React.Component {
           <div>
             <Label class="display-inline-block" style={{margin: '0 .5em .5em 0'}}><Icon name="user" link class="mrgnRight5"/>{manager.username}</Label>
             {isAdmin(me.role) &&
-                <AdminsDropdown style={{marginBottom: '.5em'}} value={manager.id} users={this.props.users} onSelect={this.editRoomManager} loading={this.state.loading}/>}
+            <AdminsDropdown style={{marginBottom: '.5em'}} value={manager.id} users={this.props.users} onSelect={this.editRoomManager} loading={this.state.loading}/>}
           </div>
           {this.state.errorMessage.length > 0 &&
-            <Message  color="red" content={this.state.errorMessage}/>}
+          <Message  color="red" content={this.state.errorMessage}/>}
           <p>Room Managers are responsible for administer rooms and apps in it. <RoomManagerInfoIcon/></p>
         </Grid.Column>
     )
@@ -206,6 +206,64 @@ const AdminsDropdown = ({value, users, onSelect, loading, style}) => {
                 options={admins}/>
   )
 };
+
+class RoomNameSection extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false,
+      errorMessage: '',
+      name: '',
+      modifying: false
+    }
+  }
+  setModifying = (state) => {
+    this.setState({modifying: state, loading: false, name:this.props.room.name, errorMessage: ''})
+  };
+  confirm = (e) => {
+    e.preventDefault();
+    this.setState({loading: true});
+    this.props.dispatch(channelActions.editTeamChannelName(this.props.room.id, this.state.name)).then(response => {
+      this.setModifying(false);
+    }).catch(err => {
+      this.setState({errorMessage: err, loading: false});
+    });
+  };
+  handleInput = handleSemanticInput.bind(this);
+  render(){
+    const room = this.props.room;
+    const me = this.props.me;
+    return (
+        <Grid.Column>
+          {!this.state.modifying ?
+              <h4>{room.name}
+                {isAdmin(me.role) && !room.default &&
+                <button class="button-unstyle mrgnLeft5 action_button"
+                        onClick={this.setModifying.bind(null, true)}>
+                  <i class="fa fa-pencil mrgnLeft5"/>
+                </button>}
+              </h4>
+              :
+              <Form as="div" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
+                <Form.Field>
+                  <Input  label="Name"
+                          size="mini"
+                          type="text" name="name"
+                          fluid
+                          value={this.state.name}
+                          onChange={this.handleInput}/>
+                </Form.Field>
+                <Message error size="mini" content={this.state.errorMessage}/>
+                <Form.Field>
+                  <Button basic size="mini" type="button" onClick={this.setModifying.bind(null, false)}>Cancel</Button>
+                  <Button primary size="mini" onClick={this.confirm} loading={this.state.loading} disabled={this.state.loading}>Save</Button>
+                </Form.Field>
+              </Form>
+          }
+        </Grid.Column>
+    )
+  }
+}
 
 class TeamChannelFlexTab extends React.Component{
   constructor(props){
@@ -288,32 +346,7 @@ class TeamChannelFlexTab extends React.Component{
           <div className="tab_content_body">
             <Grid container celled="internally" columns={1} padded>
               <Grid.Row>
-                <Grid.Column>
-                  {!this.state.nameModifying ?
-                      <h4>{channel.name}
-                        {isAdmin(me.role) && !channel.default &&
-                        <button class="button-unstyle mrgnLeft5 action_button"
-                                onClick={this.setNameModifying.bind(null, true)}>
-                          <i class="fa fa-pencil mrgnLeft5"/>
-                        </button>}
-                      </h4>
-                      :
-                      <Form as="div">
-                        <Form.Field>
-                          <Input  label="Name"
-                                  size="mini"
-                                  type="text" name="name"
-                                  fluid
-                                  value={this.state.modifiedName}
-                                  onChange={this.handleNameInput}/>
-                        </Form.Field>
-                        <Form.Field>
-                          <Button basic size="mini" onClick={this.setNameModifying.bind(null, false)}>Cancel</Button>
-                          <Button primary size="mini" onClick={this.confirmNameChange}>Save</Button>
-                        </Form.Field>
-                      </Form>
-                  }
-                </Grid.Column>
+                <RoomNameSection dispatch={this.props.dispatch} room={channel} me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
@@ -358,7 +391,7 @@ class TeamChannelFlexTab extends React.Component{
                         <Label size="mini" key={user.id}>
                           <Icon name="user"/>
                           {user.username}
-                          {(isSuperior(user, me) || user.id === me.id) && !channel.default &&
+                          {isAdmin(me.role) && !channel.default &&
                           <Icon name="delete" link
                                 onClick={e => {
                                   this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))
