@@ -3448,6 +3448,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(function (response) {
         return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
       });
     },
     editDepartureDate: function editDepartureDate(ws_id, team_id, user_id, departure_date) {
@@ -55814,15 +55816,90 @@ var UsernameModifier = function (_React$Component5) {
   return UsernameModifier;
 }(React.Component);
 
-var TeamUserFlexTab = function (_React$Component6) {
-  _inherits(TeamUserFlexTab, _React$Component6);
+var TeamUserRole = function (_React$Component6) {
+  _inherits(TeamUserRole, _React$Component6);
+
+  function TeamUserRole(props) {
+    _classCallCheck(this, TeamUserRole);
+
+    var _this9 = _possibleConstructorReturn(this, (TeamUserRole.__proto__ || Object.getPrototypeOf(TeamUserRole)).call(this, props));
+
+    _this9.handleInput = _utils.handleSemanticInput.bind(_this9);
+
+    _this9.setEdit = function (state) {
+      _this9.setState({ edit: state, role: _this9.props.user.role, errorMessage: '' });
+    };
+
+    _this9.confirm = function (e) {
+      e.preventDefault();
+      _this9.setState({ errorMessage: '' });
+      if (_this9.state.role === 3) {
+        _this9.props.dispatch((0, _teamModalActions.showTeamTransferOwnershipModal)(true, _this9.props.item));
+        _this9.setState({ edit: false });
+        return;
+      }
+      if (_this9.state.role !== _this9.props.user.role) {
+        _this9.props.dispatch(userActions.editTeamUserRole(_this9.props.user.id, _this9.state.role)).then(function (response) {
+          _this9.setEdit(false);
+        }).catch(function (err) {
+          _this9.setState({ errorMessage: err });
+        });
+      } else _this9.setEdit(false);
+    };
+
+    _this9.state = {
+      errorMessage: '',
+      edit: false,
+      role: 1
+    };
+    return _this9;
+  }
+
+  _createClass(TeamUserRole, [{
+    key: 'render',
+    value: function render() {
+      var user = this.props.user;
+      var me = this.props.me;
+      var userRoles = _utils.teamUserRoleValues.filter(function (item) {
+        return item.value <= me.role;
+      });
+      return React.createElement(
+        _semanticUiReact.Grid.Column,
+        null,
+        React.createElement(
+          'strong',
+          null,
+          'Role: '
+        ),
+        !this.state.edit ? React.createElement(
+          'span',
+          null,
+          _utils.teamUserRoles[user.role],
+          (0, _helperFunctions.isSuperior)(user, me) && user.id !== me.id && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setEdit.bind(null, true) })
+        ) : React.createElement(
+          'span',
+          null,
+          React.createElement(_semanticUiReact.Dropdown, { floating: true, inline: true, name: 'role', options: userRoles, defaultValue: this.state.role, onChange: this.handleInput }),
+          React.createElement(_semanticUiReact.Icon, { link: true, name: 'delete', onClick: this.setEdit.bind(null, false) }),
+          React.createElement(_semanticUiReact.Icon, { link: true, name: 'checkmark', onClick: this.confirm }),
+          this.state.errorMessage.length > 0 && React.createElement(_semanticUiReact.Message, { color: 'red', content: this.state.errorMessage })
+        )
+      );
+    }
+  }]);
+
+  return TeamUserRole;
+}(React.Component);
+
+var TeamUserFlexTab = function (_React$Component7) {
+  _inherits(TeamUserFlexTab, _React$Component7);
 
   function TeamUserFlexTab(props) {
     _classCallCheck(this, TeamUserFlexTab);
 
-    var _this9 = _possibleConstructorReturn(this, (TeamUserFlexTab.__proto__ || Object.getPrototypeOf(TeamUserFlexTab)).call(this, props));
+    var _this10 = _possibleConstructorReturn(this, (TeamUserFlexTab.__proto__ || Object.getPrototypeOf(TeamUserFlexTab)).call(this, props));
 
-    _this9.state = {
+    _this10.state = {
       first_name: null,
       last_name: null,
       firstNameLastNameModifying: false,
@@ -55833,16 +55910,16 @@ var TeamUserFlexTab = function (_React$Component6) {
       departureDate: '',
       departureDateModifying: false
     };
-    _this9.setFirstLastNameModifying = _this9.setFirstLastNameModifying.bind(_this9);
-    _this9.setUsernameModifying = _this9.setUsernameModifying.bind(_this9);
-    _this9.setRoleModifying = _this9.setRoleModifying.bind(_this9);
-    _this9.setDepartureDateModifying = _this9.setDepartureDateModifying.bind(_this9);
-    _this9.handleInput = _this9.handleInput.bind(_this9);
-    _this9.confirmUsernameChange = _this9.confirmUsernameChange.bind(_this9);
-    _this9.confirmUserLastFirstNameChange = _this9.confirmUserLastFirstNameChange.bind(_this9);
-    _this9.confirmUserRoleChange = _this9.confirmUserRoleChange.bind(_this9);
-    _this9.confirmUserDepartureDateChange = _this9.confirmUserDepartureDateChange.bind(_this9);
-    return _this9;
+    _this10.setFirstLastNameModifying = _this10.setFirstLastNameModifying.bind(_this10);
+    _this10.setUsernameModifying = _this10.setUsernameModifying.bind(_this10);
+    _this10.setRoleModifying = _this10.setRoleModifying.bind(_this10);
+    _this10.setDepartureDateModifying = _this10.setDepartureDateModifying.bind(_this10);
+    _this10.handleInput = _this10.handleInput.bind(_this10);
+    _this10.confirmUsernameChange = _this10.confirmUsernameChange.bind(_this10);
+    _this10.confirmUserLastFirstNameChange = _this10.confirmUserLastFirstNameChange.bind(_this10);
+    _this10.confirmUserRoleChange = _this10.confirmUserRoleChange.bind(_this10);
+    _this10.confirmUserDepartureDateChange = _this10.confirmUserDepartureDateChange.bind(_this10);
+    return _this10;
   }
 
   _createClass(TeamUserFlexTab, [{
@@ -55913,30 +55990,30 @@ var TeamUserFlexTab = function (_React$Component6) {
   }, {
     key: 'confirmUsernameChange',
     value: function confirmUsernameChange() {
-      var _this10 = this;
+      var _this11 = this;
 
       if (this.state.username !== this.props.item.username) {
         this.props.dispatch(userActions.editTeamUserUsername(this.props.item.id, this.state.username)).then(function (response) {
-          _this10.setState({ usernameModifying: false });
+          _this11.setState({ usernameModifying: false });
         });
       }
     }
   }, {
     key: 'confirmUserLastFirstNameChange',
     value: function confirmUserLastFirstNameChange() {
-      var _this11 = this;
+      var _this12 = this;
 
       this.props.dispatch(userActions.editTeamUserFirstName(this.props.item.id, this.state.first_name)).then(function (response) {
-        _this11.setState({ firstNameLastNameModifying: false });
+        _this12.setState({ firstNameLastNameModifying: false });
       });
       this.props.dispatch(userActions.editTeamUserLastName(this.props.item.id, this.state.last_name)).then(function (response) {
-        _this11.setState({ firstNameLastNameModifying: false });
+        _this12.setState({ firstNameLastNameModifying: false });
       });
     }
   }, {
     key: 'confirmUserRoleChange',
     value: function confirmUserRoleChange() {
-      var _this12 = this;
+      var _this13 = this;
 
       if (this.state.role === 3) {
         this.props.dispatch((0, _teamModalActions.showTeamTransferOwnershipModal)(true, this.props.item));
@@ -55945,25 +56022,25 @@ var TeamUserFlexTab = function (_React$Component6) {
       }
       if (this.state.role !== this.props.item.role) {
         this.props.dispatch(userActions.editTeamUserRole(this.props.item.id, this.state.role)).then(function (response) {
-          _this12.setState({ roleModifying: false });
+          _this13.setState({ roleModifying: false });
         });
       } else this.setState({ roleModifying: false });
     }
   }, {
     key: 'confirmUserDepartureDateChange',
     value: function confirmUserDepartureDateChange() {
-      var _this13 = this;
+      var _this14 = this;
 
       if (this.state.departureDate !== this.props.item.departureDate) {
         this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate)).then(function (response) {
-          _this13.setState({ departureDateModifying: false });
+          _this14.setState({ departureDateModifying: false });
         });
       }
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this14 = this;
+      var _this15 = this;
 
       var user = this.props.item;
       var me = this.props.me;
@@ -56064,27 +56141,7 @@ var TeamUserFlexTab = function (_React$Component6) {
             React.createElement(
               _semanticUiReact.Grid.Row,
               null,
-              React.createElement(
-                _semanticUiReact.Grid.Column,
-                null,
-                React.createElement(
-                  'strong',
-                  null,
-                  'Role: '
-                ),
-                !this.state.roleModifying ? React.createElement(
-                  'span',
-                  null,
-                  _utils.teamUserRoles[user.role],
-                  (0, _helperFunctions.isSuperior)(user, me) && user.id !== me.id && React.createElement(_semanticUiReact.Icon, { link: true, name: 'pencil', className: 'mrgnLeft5', onClick: this.setRoleModifying.bind(null, true) })
-                ) : React.createElement(
-                  'span',
-                  null,
-                  React.createElement(_semanticUiReact.Dropdown, { floating: true, inline: true, name: 'role', options: userRoles, defaultValue: user.role, onChange: this.handleInput }),
-                  React.createElement(_semanticUiReact.Icon, { link: true, name: 'delete', onClick: this.setRoleModifying.bind(null, false) }),
-                  React.createElement(_semanticUiReact.Icon, { link: true, name: 'checkmark', onClick: this.confirmUserRoleChange })
-                )
-              )
+              React.createElement(TeamUserRole, { dispatch: this.props.dispatch, user: user, me: me })
             ),
             React.createElement(
               _semanticUiReact.Grid.Row,
@@ -56140,7 +56197,7 @@ var TeamUserFlexTab = function (_React$Component6) {
                   'Rooms:'
                 ),
                 user.channel_ids.map(function (item) {
-                  var channel = (0, _helperFunctions.selectChannelFromListById)(_this14.props.channels, item);
+                  var channel = (0, _helperFunctions.selectChannelFromListById)(_this15.props.channels, item);
                   return React.createElement(
                     _semanticUiReact.Label,
                     { size: 'mini', key: item },
@@ -56148,7 +56205,7 @@ var TeamUserFlexTab = function (_React$Component6) {
                     channel.name,
                     (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
                       onClick: function onClick(e) {
-                        _this14.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, channel.id, _this14.props.item.id));
+                        _this15.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, channel.id, _this15.props.item.id));
                       } })
                   );
                 }, this)
@@ -56164,7 +56221,7 @@ var TeamUserFlexTab = function (_React$Component6) {
                   _semanticUiReact.Button,
                   { basic: true, color: 'red', size: 'mini',
                     onClick: function onClick(e) {
-                      _this14.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(true, _this14.props.item.id));
+                      _this15.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(true, _this15.props.item.id));
                     } },
                   'Delete this user'
                 )
@@ -56185,16 +56242,16 @@ var FlexPanels = (_dec3 = (0, _reactRedux.connect)(function (store) {
     users: store.users.users,
     selectionProps: store.selection
   };
-}), _dec3(_class3 = function (_React$Component7) {
-  _inherits(FlexPanels, _React$Component7);
+}), _dec3(_class3 = function (_React$Component8) {
+  _inherits(FlexPanels, _React$Component8);
 
   function FlexPanels(props) {
     _classCallCheck(this, FlexPanels);
 
-    var _this15 = _possibleConstructorReturn(this, (FlexPanels.__proto__ || Object.getPrototypeOf(FlexPanels)).call(this, props));
+    var _this16 = _possibleConstructorReturn(this, (FlexPanels.__proto__ || Object.getPrototypeOf(FlexPanels)).call(this, props));
 
-    _this15.closePanel = _this15.closePanel.bind(_this15);
-    return _this15;
+    _this16.closePanel = _this16.closePanel.bind(_this16);
+    return _this16;
   }
 
   _createClass(FlexPanels, [{
@@ -62470,7 +62527,7 @@ var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (stor
             React.createElement(
               'div',
               { className: 'squared_image_handler' },
-              React.createElement('img', { src: app.website !== undefined ? app.website.logo : '/resources/icons/app_icon.svg', alt: 'Website logo' })
+              React.createElement('img', { src: app.website !== undefined ? app.website.logo : app.logo, alt: 'Website logo' })
             ),
             !this.state.nameModifying ? React.createElement(
               'div',
@@ -64494,7 +64551,7 @@ var TeamDeleteAppModal = (_dec = (0, _reactRedux.connect)(function (store) {
             React.createElement(
               'div',
               { className: 'squared_image_handler' },
-              React.createElement('img', { src: app.website !== undefined ? app.website.logo : '/resources/icons/app_icon.svg', alt: 'Website logo' })
+              React.createElement('img', { src: app.website !== undefined ? app.website.logo : app.logo, alt: 'Website logo' })
             ),
             React.createElement(
               'span',

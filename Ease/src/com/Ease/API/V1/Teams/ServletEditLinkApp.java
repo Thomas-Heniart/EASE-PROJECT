@@ -43,6 +43,7 @@ public class ServletEditLinkApp extends HttpServlet {
             String description = sm.getStringParam("description", false, false);
             if (description.length() >= 250)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
+            params.put("description", description);
             String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
             if (!Regex.isValidLink(url))
