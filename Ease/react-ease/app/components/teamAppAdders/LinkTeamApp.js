@@ -225,7 +225,7 @@ class LinkTeamApp extends Component {
                                        required/>
                             }
                             {!this.state.edit &&
-                            <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
+                            <PinAppButton is_pinned={meReceiver !== null && meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
                         </Header>
                         {!this.state.edit &&
                         <TeamLinkAppButtonSet app={app}

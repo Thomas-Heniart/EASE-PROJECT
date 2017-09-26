@@ -19,6 +19,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     editPurpose: function(ws_id, team_id, channel_id, purpose){

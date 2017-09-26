@@ -1843,7 +1843,7 @@ var teamUserRoles = exports.teamUserRoles = {
 };
 
 var passwordChangeValues = exports.passwordChangeValues = {
-  0: 'never',
+  0: 'No reminder',
   1: "1 month",
   3: "3 months",
   6: "6 months",
@@ -1858,7 +1858,7 @@ var credentialIconType = exports.credentialIconType = {
   subdomain: 'link'
 };
 
-var passwordChangeOptions = exports.passwordChangeOptions = [{ key: 0, text: 'never', value: 0 }, { key: 1, text: '1 month', value: 1 }, { key: 3, text: '3 months', value: 3 }, { key: 6, text: '6 months', value: 6 }, { key: 12, text: '12 months', value: 12 }];
+var passwordChangeOptions = exports.passwordChangeOptions = [{ key: 0, text: 'No reminder', value: 0 }, { key: 1, text: '1 month', value: 1 }, { key: 3, text: '3 months', value: 3 }, { key: 6, text: '6 months', value: 6 }, { key: 12, text: '12 months', value: 12 }];
 
 var teamUserRoleValues = exports.teamUserRoleValues = [{ key: '1', text: 'member', value: 1 }, { key: '2', text: 'admin', value: 2 }, { key: '3', text: 'owner', value: 3 }];
 
@@ -3275,6 +3275,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(function (response) {
         return response.data;
+      }).catch(function (err) {
+        throw err.response.data;
       });
     },
     editPurpose: function editPurpose(ws_id, team_id, channel_id, purpose) {
@@ -5736,6 +5738,7 @@ function editTeamChannelName(channel_id, name) {
       dispatch({ type: 'EDIT_TEAM_CHANNEL_NAME_FULFILLED', payload: { id: channel_id, name: name } });
     }).catch(function (err) {
       dispatch({ type: "EDIT_TEAM_CHANNEL_NAME_REJECTED", payload: err });
+      throw err;
     });
   };
 }
@@ -55391,36 +55394,123 @@ var AdminsDropdown = function AdminsDropdown(_ref) {
     options: admins });
 };
 
-var TeamChannelFlexTab = function (_React$Component3) {
-  _inherits(TeamChannelFlexTab, _React$Component3);
+var RoomNameSection = function (_React$Component3) {
+  _inherits(RoomNameSection, _React$Component3);
+
+  function RoomNameSection(props) {
+    _classCallCheck(this, RoomNameSection);
+
+    var _this3 = _possibleConstructorReturn(this, (RoomNameSection.__proto__ || Object.getPrototypeOf(RoomNameSection)).call(this, props));
+
+    _this3.setModifying = function (state) {
+      _this3.setState({ modifying: state, loading: false, name: _this3.props.room.name, errorMessage: '' });
+    };
+
+    _this3.confirm = function (e) {
+      e.preventDefault();
+      _this3.setState({ loading: true });
+      _this3.props.dispatch(channelActions.editTeamChannelName(_this3.props.room.id, _this3.state.name)).then(function (response) {
+        _this3.setModifying(false);
+      }).catch(function (err) {
+        _this3.setState({ errorMessage: err, loading: false });
+      });
+    };
+
+    _this3.handleInput = _utils.handleSemanticInput.bind(_this3);
+
+    _this3.state = {
+      loading: false,
+      errorMessage: '',
+      name: '',
+      modifying: false
+    };
+    return _this3;
+  }
+
+  _createClass(RoomNameSection, [{
+    key: 'render',
+    value: function render() {
+      var room = this.props.room;
+      var me = this.props.me;
+      return React.createElement(
+        _semanticUiReact.Grid.Column,
+        null,
+        !this.state.modifying ? React.createElement(
+          'h4',
+          null,
+          room.name,
+          (0, _helperFunctions.isAdmin)(me.role) && !room.default && React.createElement(
+            'button',
+            { className: 'button-unstyle mrgnLeft5 action_button',
+              onClick: this.setModifying.bind(null, true) },
+            React.createElement('i', { className: 'fa fa-pencil mrgnLeft5' })
+          )
+        ) : React.createElement(
+          _semanticUiReact.Form,
+          { as: 'div', onSubmit: this.confirm, error: this.state.errorMessage.length > 0 },
+          React.createElement(
+            _semanticUiReact.Form.Field,
+            null,
+            React.createElement(_semanticUiReact.Input, { label: 'Name',
+              size: 'mini',
+              type: 'text', name: 'name',
+              fluid: true,
+              value: this.state.name,
+              onChange: this.handleInput })
+          ),
+          React.createElement(_semanticUiReact.Message, { error: true, size: 'mini', content: this.state.errorMessage }),
+          React.createElement(
+            _semanticUiReact.Form.Field,
+            null,
+            React.createElement(
+              _semanticUiReact.Button,
+              { basic: true, size: 'mini', type: 'button', onClick: this.setModifying.bind(null, false) },
+              'Cancel'
+            ),
+            React.createElement(
+              _semanticUiReact.Button,
+              { primary: true, size: 'mini', onClick: this.confirm, loading: this.state.loading, disabled: this.state.loading },
+              'Save'
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return RoomNameSection;
+}(React.Component);
+
+var TeamChannelFlexTab = function (_React$Component4) {
+  _inherits(TeamChannelFlexTab, _React$Component4);
 
   function TeamChannelFlexTab(props) {
     _classCallCheck(this, TeamChannelFlexTab);
 
-    var _this3 = _possibleConstructorReturn(this, (TeamChannelFlexTab.__proto__ || Object.getPrototypeOf(TeamChannelFlexTab)).call(this, props));
+    var _this4 = _possibleConstructorReturn(this, (TeamChannelFlexTab.__proto__ || Object.getPrototypeOf(TeamChannelFlexTab)).call(this, props));
 
-    _this3.state = {
+    _this4.state = {
       purposeModifying: false,
       modifiedPurpose: null,
       nameModifying: false,
       modifiedName: null
     };
-    _this3.handlePurposeInput = _this3.handlePurposeInput.bind(_this3);
-    _this3.setPurposeModifying = _this3.setPurposeModifying.bind(_this3);
-    _this3.handleNameInput = _this3.handleNameInput.bind(_this3);
-    _this3.setNameModifying = _this3.setNameModifying.bind(_this3);
-    _this3.confirmNameChange = _this3.confirmNameChange.bind(_this3);
-    _this3.confirmPurposeChange = _this3.confirmPurposeChange.bind(_this3);
-    return _this3;
+    _this4.handlePurposeInput = _this4.handlePurposeInput.bind(_this4);
+    _this4.setPurposeModifying = _this4.setPurposeModifying.bind(_this4);
+    _this4.handleNameInput = _this4.handleNameInput.bind(_this4);
+    _this4.setNameModifying = _this4.setNameModifying.bind(_this4);
+    _this4.confirmNameChange = _this4.confirmNameChange.bind(_this4);
+    _this4.confirmPurposeChange = _this4.confirmPurposeChange.bind(_this4);
+    return _this4;
   }
 
   _createClass(TeamChannelFlexTab, [{
     key: 'confirmNameChange',
     value: function confirmNameChange() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.props.dispatch(channelActions.editTeamChannelName(this.props.item.id, this.state.modifiedName)).then(function (response) {
-        _this4.setState({
+        _this5.setState({
           nameModifying: false
         });
       });
@@ -55447,10 +55537,10 @@ var TeamChannelFlexTab = function (_React$Component3) {
   }, {
     key: 'confirmPurposeChange',
     value: function confirmPurposeChange() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.props.dispatch(channelActions.editTeamChannelPurpose(this.props.item.id, this.state.modifiedPurpose)).then(function (response) {
-        _this5.setState({
+        _this6.setState({
           purposeModifying: false
         });
       });
@@ -55477,12 +55567,12 @@ var TeamChannelFlexTab = function (_React$Component3) {
   }, {
     key: 'render',
     value: function render() {
-      var _this6 = this;
+      var _this7 = this;
 
       var me = this.props.me;
       var channel = this.props.item;
       var channel_users = channel.userIds.map(function (id) {
-        return (0, _helperFunctions.selectItemFromListById)(_this6.props.users, id);
+        return (0, _helperFunctions.selectItemFromListById)(_this7.props.users, id);
       });
       return React.createElement(
         'div',
@@ -55514,48 +55604,7 @@ var TeamChannelFlexTab = function (_React$Component3) {
             React.createElement(
               _semanticUiReact.Grid.Row,
               null,
-              React.createElement(
-                _semanticUiReact.Grid.Column,
-                null,
-                !this.state.nameModifying ? React.createElement(
-                  'h4',
-                  null,
-                  channel.name,
-                  (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(
-                    'button',
-                    { className: 'button-unstyle mrgnLeft5 action_button',
-                      onClick: this.setNameModifying.bind(null, true) },
-                    React.createElement('i', { className: 'fa fa-pencil mrgnLeft5' })
-                  )
-                ) : React.createElement(
-                  _semanticUiReact.Form,
-                  { as: 'div' },
-                  React.createElement(
-                    _semanticUiReact.Form.Field,
-                    null,
-                    React.createElement(_semanticUiReact.Input, { label: 'Name',
-                      size: 'mini',
-                      type: 'text', name: 'name',
-                      fluid: true,
-                      value: this.state.modifiedName,
-                      onChange: this.handleNameInput })
-                  ),
-                  React.createElement(
-                    _semanticUiReact.Form.Field,
-                    null,
-                    React.createElement(
-                      _semanticUiReact.Button,
-                      { basic: true, size: 'mini', onClick: this.setNameModifying.bind(null, false) },
-                      'Cancel'
-                    ),
-                    React.createElement(
-                      _semanticUiReact.Button,
-                      { primary: true, size: 'mini', onClick: this.confirmNameChange },
-                      'Save'
-                    )
-                  )
-                )
-              )
+              React.createElement(RoomNameSection, { dispatch: this.props.dispatch, room: channel, me: me })
             ),
             React.createElement(
               _semanticUiReact.Grid.Row,
@@ -55634,9 +55683,9 @@ var TeamChannelFlexTab = function (_React$Component3) {
                     { size: 'mini', key: user.id },
                     React.createElement(_semanticUiReact.Icon, { name: 'user' }),
                     user.username,
-                    ((0, _helperFunctions.isSuperior)(user, me) || user.id === me.id) && !channel.default && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
+                    (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
                       onClick: function onClick(e) {
-                        _this6.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, _this6.props.item.id, user.id));
+                        _this7.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, _this7.props.item.id, user.id));
                       } })
                   );
                 }, this),
@@ -55662,7 +55711,7 @@ var TeamChannelFlexTab = function (_React$Component3) {
                   _semanticUiReact.Button,
                   { basic: true, color: 'red', size: 'mini',
                     onClick: function onClick(e) {
-                      _this6.props.dispatch((0, _teamModalActions.showTeamDeleteChannelModal)(true, _this6.props.item.id));
+                      _this7.props.dispatch((0, _teamModalActions.showTeamDeleteChannelModal)(true, _this7.props.item.id));
                     } },
                   'Delete this room'
                 )
@@ -55677,38 +55726,38 @@ var TeamChannelFlexTab = function (_React$Component3) {
   return TeamChannelFlexTab;
 }(React.Component);
 
-var UsernameModifier = function (_React$Component4) {
-  _inherits(UsernameModifier, _React$Component4);
+var UsernameModifier = function (_React$Component5) {
+  _inherits(UsernameModifier, _React$Component5);
 
   function UsernameModifier(props) {
     _classCallCheck(this, UsernameModifier);
 
-    var _this7 = _possibleConstructorReturn(this, (UsernameModifier.__proto__ || Object.getPrototypeOf(UsernameModifier)).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (UsernameModifier.__proto__ || Object.getPrototypeOf(UsernameModifier)).call(this, props));
 
-    _this7.handleInput = _utils.handleSemanticInput.bind(_this7);
+    _this8.handleInput = _utils.handleSemanticInput.bind(_this8);
 
-    _this7.setModifying = function (state) {
-      _this7.setState({ username: _this7.props.user.username, modifying: state, error: false, loading: false });
+    _this8.setModifying = function (state) {
+      _this8.setState({ username: _this8.props.user.username, modifying: state, error: false, loading: false });
     };
 
-    _this7.validate = function (e) {
+    _this8.validate = function (e) {
       e.preventDefault();
-      var user = _this7.props.user;
-      _this7.setState({ loading: true, error: false });
-      _this7.props.dispatch(userActions.editTeamUserUsername(user.id, _this7.state.username)).then(function (response) {
-        _this7.setModifying(false);
+      var user = _this8.props.user;
+      _this8.setState({ loading: true, error: false });
+      _this8.props.dispatch(userActions.editTeamUserUsername(user.id, _this8.state.username)).then(function (response) {
+        _this8.setModifying(false);
       }).catch(function (err) {
-        _this7.setState({ error: true, loading: false });
+        _this8.setState({ error: true, loading: false });
       });
     };
 
-    _this7.state = {
+    _this8.state = {
       username: '',
       modifying: false,
       loading: false,
       error: false
     };
-    return _this7;
+    return _this8;
   }
 
   _createClass(UsernameModifier, [{
@@ -55765,15 +55814,15 @@ var UsernameModifier = function (_React$Component4) {
   return UsernameModifier;
 }(React.Component);
 
-var TeamUserFlexTab = function (_React$Component5) {
-  _inherits(TeamUserFlexTab, _React$Component5);
+var TeamUserFlexTab = function (_React$Component6) {
+  _inherits(TeamUserFlexTab, _React$Component6);
 
   function TeamUserFlexTab(props) {
     _classCallCheck(this, TeamUserFlexTab);
 
-    var _this8 = _possibleConstructorReturn(this, (TeamUserFlexTab.__proto__ || Object.getPrototypeOf(TeamUserFlexTab)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (TeamUserFlexTab.__proto__ || Object.getPrototypeOf(TeamUserFlexTab)).call(this, props));
 
-    _this8.state = {
+    _this9.state = {
       first_name: null,
       last_name: null,
       firstNameLastNameModifying: false,
@@ -55784,16 +55833,16 @@ var TeamUserFlexTab = function (_React$Component5) {
       departureDate: '',
       departureDateModifying: false
     };
-    _this8.setFirstLastNameModifying = _this8.setFirstLastNameModifying.bind(_this8);
-    _this8.setUsernameModifying = _this8.setUsernameModifying.bind(_this8);
-    _this8.setRoleModifying = _this8.setRoleModifying.bind(_this8);
-    _this8.setDepartureDateModifying = _this8.setDepartureDateModifying.bind(_this8);
-    _this8.handleInput = _this8.handleInput.bind(_this8);
-    _this8.confirmUsernameChange = _this8.confirmUsernameChange.bind(_this8);
-    _this8.confirmUserLastFirstNameChange = _this8.confirmUserLastFirstNameChange.bind(_this8);
-    _this8.confirmUserRoleChange = _this8.confirmUserRoleChange.bind(_this8);
-    _this8.confirmUserDepartureDateChange = _this8.confirmUserDepartureDateChange.bind(_this8);
-    return _this8;
+    _this9.setFirstLastNameModifying = _this9.setFirstLastNameModifying.bind(_this9);
+    _this9.setUsernameModifying = _this9.setUsernameModifying.bind(_this9);
+    _this9.setRoleModifying = _this9.setRoleModifying.bind(_this9);
+    _this9.setDepartureDateModifying = _this9.setDepartureDateModifying.bind(_this9);
+    _this9.handleInput = _this9.handleInput.bind(_this9);
+    _this9.confirmUsernameChange = _this9.confirmUsernameChange.bind(_this9);
+    _this9.confirmUserLastFirstNameChange = _this9.confirmUserLastFirstNameChange.bind(_this9);
+    _this9.confirmUserRoleChange = _this9.confirmUserRoleChange.bind(_this9);
+    _this9.confirmUserDepartureDateChange = _this9.confirmUserDepartureDateChange.bind(_this9);
+    return _this9;
   }
 
   _createClass(TeamUserFlexTab, [{
@@ -55864,30 +55913,30 @@ var TeamUserFlexTab = function (_React$Component5) {
   }, {
     key: 'confirmUsernameChange',
     value: function confirmUsernameChange() {
-      var _this9 = this;
+      var _this10 = this;
 
       if (this.state.username !== this.props.item.username) {
         this.props.dispatch(userActions.editTeamUserUsername(this.props.item.id, this.state.username)).then(function (response) {
-          _this9.setState({ usernameModifying: false });
+          _this10.setState({ usernameModifying: false });
         });
       }
     }
   }, {
     key: 'confirmUserLastFirstNameChange',
     value: function confirmUserLastFirstNameChange() {
-      var _this10 = this;
+      var _this11 = this;
 
       this.props.dispatch(userActions.editTeamUserFirstName(this.props.item.id, this.state.first_name)).then(function (response) {
-        _this10.setState({ firstNameLastNameModifying: false });
+        _this11.setState({ firstNameLastNameModifying: false });
       });
       this.props.dispatch(userActions.editTeamUserLastName(this.props.item.id, this.state.last_name)).then(function (response) {
-        _this10.setState({ firstNameLastNameModifying: false });
+        _this11.setState({ firstNameLastNameModifying: false });
       });
     }
   }, {
     key: 'confirmUserRoleChange',
     value: function confirmUserRoleChange() {
-      var _this11 = this;
+      var _this12 = this;
 
       if (this.state.role === 3) {
         this.props.dispatch((0, _teamModalActions.showTeamTransferOwnershipModal)(true, this.props.item));
@@ -55896,25 +55945,25 @@ var TeamUserFlexTab = function (_React$Component5) {
       }
       if (this.state.role !== this.props.item.role) {
         this.props.dispatch(userActions.editTeamUserRole(this.props.item.id, this.state.role)).then(function (response) {
-          _this11.setState({ roleModifying: false });
+          _this12.setState({ roleModifying: false });
         });
       } else this.setState({ roleModifying: false });
     }
   }, {
     key: 'confirmUserDepartureDateChange',
     value: function confirmUserDepartureDateChange() {
-      var _this12 = this;
+      var _this13 = this;
 
       if (this.state.departureDate !== this.props.item.departureDate) {
         this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate)).then(function (response) {
-          _this12.setState({ departureDateModifying: false });
+          _this13.setState({ departureDateModifying: false });
         });
       }
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this13 = this;
+      var _this14 = this;
 
       var user = this.props.item;
       var me = this.props.me;
@@ -56091,7 +56140,7 @@ var TeamUserFlexTab = function (_React$Component5) {
                   'Rooms:'
                 ),
                 user.channel_ids.map(function (item) {
-                  var channel = (0, _helperFunctions.selectChannelFromListById)(_this13.props.channels, item);
+                  var channel = (0, _helperFunctions.selectChannelFromListById)(_this14.props.channels, item);
                   return React.createElement(
                     _semanticUiReact.Label,
                     { size: 'mini', key: item },
@@ -56099,7 +56148,7 @@ var TeamUserFlexTab = function (_React$Component5) {
                     channel.name,
                     (0, _helperFunctions.isAdmin)(me.role) && !channel.default && React.createElement(_semanticUiReact.Icon, { name: 'delete', link: true,
                       onClick: function onClick(e) {
-                        _this13.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, channel.id, _this13.props.item.id));
+                        _this14.props.dispatch((0, _teamModalActions.showTeamDeleteUserFromChannelModal)(true, channel.id, _this14.props.item.id));
                       } })
                   );
                 }, this)
@@ -56115,7 +56164,7 @@ var TeamUserFlexTab = function (_React$Component5) {
                   _semanticUiReact.Button,
                   { basic: true, color: 'red', size: 'mini',
                     onClick: function onClick(e) {
-                      _this13.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(true, _this13.props.item.id));
+                      _this14.props.dispatch((0, _teamModalActions.showTeamDeleteUserModal)(true, _this14.props.item.id));
                     } },
                   'Delete this user'
                 )
@@ -56136,16 +56185,16 @@ var FlexPanels = (_dec3 = (0, _reactRedux.connect)(function (store) {
     users: store.users.users,
     selectionProps: store.selection
   };
-}), _dec3(_class3 = function (_React$Component6) {
-  _inherits(FlexPanels, _React$Component6);
+}), _dec3(_class3 = function (_React$Component7) {
+  _inherits(FlexPanels, _React$Component7);
 
   function FlexPanels(props) {
     _classCallCheck(this, FlexPanels);
 
-    var _this14 = _possibleConstructorReturn(this, (FlexPanels.__proto__ || Object.getPrototypeOf(FlexPanels)).call(this, props));
+    var _this15 = _possibleConstructorReturn(this, (FlexPanels.__proto__ || Object.getPrototypeOf(FlexPanels)).call(this, props));
 
-    _this14.closePanel = _this14.closePanel.bind(_this14);
-    return _this14;
+    _this15.closePanel = _this15.closePanel.bind(_this15);
+    return _this15;
   }
 
   _createClass(FlexPanels, [{
@@ -58188,6 +58237,7 @@ var EnterpriseTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
     _this4.send = function (e) {
       e.preventDefault();
       _this4.setState({ loading: true });
+      var meReceiver = _this4.state.selected_users.indexOf(_this4.props.myId) !== -1;
       var receivers = _this4.state.users.filter(function (item) {
         return _this4.state.selected_users.indexOf(item.id) !== -1;
       }).map(function (item) {
@@ -58205,6 +58255,7 @@ var EnterpriseTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
         fill_in_switch: _this4.state.fill_in_switch,
         receivers: receivers
       })).then(function (response) {
+        if (meReceiver) _this4.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, response));
         _this4.setState({ loading: false });
         _this4.close();
       });
@@ -58635,7 +58686,7 @@ var LinkTeamApp = function (_Component2) {
                             ),
                             labelPosition: "left",
                             required: true }),
-                        !this.state.edit && _react2.default.createElement(_common.PinAppButton, { is_pinned: meReceiver.profile_id !== -1, onClick: function onClick(e) {
+                        !this.state.edit && _react2.default.createElement(_common.PinAppButton, { is_pinned: meReceiver !== null && meReceiver.profile_id !== -1, onClick: function onClick(e) {
                                 _this4.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
                             } })
                     ),
@@ -58799,6 +58850,7 @@ var LinkTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
                 url: _this.state.url,
                 img_url: _this.state.img_url
             })).then(function (response) {
+                _this.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, response));
                 _this.setState({ loading: false });
                 _this.close();
             });
@@ -59682,6 +59734,7 @@ var TeamAppCredentialInput = function TeamAppCredentialInput(_ref3) {
 var SimpleTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     team_id: store.team.id,
+    myId: store.team.myTeamUserId,
     users: store.users.users
   };
 }), _dec(_class = function (_Component2) {
@@ -59751,6 +59804,7 @@ var SimpleTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
     _this4.send = function (e) {
       e.preventDefault();
       _this4.setState({ loading: true });
+      var meReceiver = _this4.state.selected_users.indexOf(_this4.props.myId) !== -1;
       var receivers = _this4.state.users.filter(function (item) {
         return _this4.state.selected_users.indexOf(item.id) !== -1;
       }).map(function (item) {
@@ -59768,6 +59822,7 @@ var SimpleTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
         account_information: (0, _utils.transformCredentialsListIntoObject)(_this4.state.credentials),
         receivers: receivers
       })).then(function (response) {
+        if (meReceiver) _this4.props.dispatch((0, _teamModalActions.showPinTeamAppToDashboardModal)(true, response));
         _this4.setState({ loading: false });
         _this4.close();
       });
@@ -62713,12 +62768,21 @@ function Step1(props) {
   return React.createElement(
     _semanticUiReact.Form,
     { className: 'container' },
-    React.createElement(_semanticUiReact.Form.Input, {
-      name: 'url',
-      value: props.url,
-      onChange: props.handleInput,
-      label: 'Website URL',
-      placeholder: 'Paste website URL' }),
+    React.createElement(
+      _semanticUiReact.Form.Field,
+      null,
+      React.createElement(
+        'label',
+        null,
+        'Website URL'
+      ),
+      React.createElement(_semanticUiReact.Input, {
+        name: 'url',
+        value: props.url,
+        onChange: props.handleInput,
+        placeholder: 'Paste website URL' }),
+      React.createElement(_semanticUiReact.Label, { pointing: true, className: 'fluid text-center', content: 'You must paste a website URL.' })
+    ),
     React.createElement(_semanticUiReact.Form.Checkbox, {
       toggle: true,
       checked: props.private,
@@ -64777,6 +64841,19 @@ var TeamDeleteUserFromRoomModal = (_dec = (0, _reactRedux.connect)(function (sto
               '#',
               channel.name
             ),
+            ' and all Apps it includes.'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { className: 'first_word_capitalize' },
+            username,
+            ' will lose access to ',
+            _react2.default.createElement(
+              'strong',
+              null,
+              '#',
+              channel.name
+            ),
             ', and to all Apps included in ',
             _react2.default.createElement(
               'strong',
@@ -65593,7 +65670,7 @@ var TeamPhoneNumberModal = (_dec = (0, _reactRedux.connect)(function (store) {
           React.createElement(
             'div',
             { className: 'row title-row text-center' },
-            'You are Team Owner!'
+            'You are the team owner'
           ),
           React.createElement(
             'div',
@@ -65601,12 +65678,12 @@ var TeamPhoneNumberModal = (_dec = (0, _reactRedux.connect)(function (store) {
             React.createElement(
               'span',
               null,
-              'As you are the one creating team, you are the team owner. It is an important role that you will be able to give to another team member later.'
+              'As owner, if you lose your password, we will contact you to make sure your password renewal is legitimate.'
             ),
             React.createElement(
               'span',
               null,
-              'For safety reasons, we need your phone number in case you lose you Ease.space password.'
+              'If you want, you can transfer the ownership to someone else in your team.'
             ),
             React.createElement(_reactPhoneNumberInput2.default, {
               placeholder: 'Enter phone number',
@@ -66902,7 +66979,7 @@ var TeamTransferOwnershipModal = (_dec = (0, _reactRedux.connect)(function (stor
           React.createElement(
             _semanticUiReact.Header,
             { as: 'h3', attached: 'top' },
-            'Transfer Team ownership'
+            'Transfer team Ownership'
           ),
           React.createElement(
             _semanticUiReact.Form,
@@ -66913,33 +66990,12 @@ var TeamTransferOwnershipModal = (_dec = (0, _reactRedux.connect)(function (stor
               React.createElement(
                 'p',
                 null,
-                'For safety reasons, we need know the phone number of the team owner.'
+                'Transferring the ownership of a team in a one-way street. You won\u2019t be able to undo this action.'
               ),
               React.createElement(
                 'p',
                 null,
-                'Before transfering the ownership to ',
-                user.username,
-                ', we need his/her phone number.'
-              ),
-              React.createElement(
-                'p',
-                null,
-                'Don\'t worry, you will receive a notification once ownership transfer is completed.'
-              ),
-              React.createElement(
-                'p',
-                null,
-                React.createElement(
-                  'strong',
-                  null,
-                  'Transfering ownership is one-way street. You won\'t be able to undo this action.'
-                )
-              ),
-              React.createElement(
-                'p',
-                null,
-                'Enter your Ease.space password to confirm the trasfer.'
+                'Enter your Ease.space password to confirm the transfer.'
               )
             ),
             React.createElement(_semanticUiReact.Form.Input, {
@@ -66956,7 +67012,7 @@ var TeamTransferOwnershipModal = (_dec = (0, _reactRedux.connect)(function (stor
               disabled: this.state.password.length === 0,
               attached: 'bottom', negative: true,
               className: 'modal-button',
-              content: 'CONFIRM ACCESS' })
+              content: 'CONFIRM TRANSFER' })
           )
         )
       );
