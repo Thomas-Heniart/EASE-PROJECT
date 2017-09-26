@@ -1689,7 +1689,11 @@ button.action_text_button {
           }
         }
         #col_flex {
-          position: relative;
+          position: absolute;
+          right: 0;
+          z-index: 4;
+          height: 100%;
+          background: white;
           @include display-flex();
           max-width: 315px;
           border-left:1px solid #E8E8E8;

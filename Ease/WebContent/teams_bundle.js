@@ -57629,7 +57629,7 @@ var AcceptRefuseAppHeader = function AcceptRefuseAppHeader(_ref10) {
   return _react2.default.createElement(
     "span",
     { style: { lineHeight: '1.7' } },
-    "You was tagged in an Enterprise App, \xA0",
+    "You received in an Enterprise App, \xA0",
     _react2.default.createElement(
       "button",
       { className: "button-unstyle inline-text-button primary", type: "button", onClick: onAccept },
@@ -58649,7 +58649,7 @@ var AcceptRefuseAppHeader = function AcceptRefuseAppHeader(_ref4) {
   return _react2.default.createElement(
     "span",
     { style: { lineHeight: '1.7' } },
-    "You was tagged in a Single App, \xA0",
+    "You received in a Single App, \xA0",
     _react2.default.createElement(
       "button",
       { className: "button-unstyle inline-text-button primary", type: "button", onClick: onAccept },

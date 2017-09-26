@@ -177,7 +177,7 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
 const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
   return (
       <span style={{lineHeight: '1.7'}}>
-        You was tagged in an Enterprise App,
+        You received in an Enterprise App,
         &nbsp;
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
         &nbsp;or&nbsp;
