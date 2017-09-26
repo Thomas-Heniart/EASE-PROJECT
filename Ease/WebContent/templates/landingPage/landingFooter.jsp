@@ -30,7 +30,7 @@
 						<a href="contact">
 							<fmt:message key="landing.header.contact-link"/>
 						</a>
-						<a href="privacy" target="_blank">
+						<a href="/resources/CGU_Ease.pdf" target="_blank">
 							<fmt:message key="landing.footer.link.terms"/>
 						</a>
 						<div style="display: none;"><%@ include file="../../templates/LanguageChooser.jsp" %></div>
