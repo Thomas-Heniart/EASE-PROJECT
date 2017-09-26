@@ -45,8 +45,6 @@ public class ServletCreateLinkApp extends HttpServlet {
             String description = sm.getStringParam("description", false, true);
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
-            if (!Regex.isValidLink(url))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
             if (!img_url.equals("") && !Regex.isValidLink(img_url) && !img_url.startsWith("https://logo.clearbit.com/"))
                 throw new HttpServletException(HttpStatus.BadRequest, "Url entered for icon is invalid.");
             if (description == null)
