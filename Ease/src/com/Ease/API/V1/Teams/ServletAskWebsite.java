@@ -31,7 +31,7 @@ public class ServletAskWebsite extends HttpServlet {
             String login = sm.getStringParam("login", false, false);
             String password = sm.getStringParam("password", false, false);
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team_id);
             if (url == null || url.equals("") || !Regex.isValidLink(url))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
             if (is_public == null)

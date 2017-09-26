@@ -1,9 +1,6 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Team.TeamUserRole;
+import com.Ease.Team.*;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -18,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by thomas on 02/06/2017.
@@ -41,6 +40,22 @@ public class ServletEditTeamUserRole extends HttpServlet {
             Integer roleValue = sm.getIntParam("role", true, false);
             if (!TeamUserRole.isInferiorToOwner(roleValue))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership from here.");
+            List<Channel> channelList = new LinkedList<>();
+            for (Channel channel : team.getChannelsForTeamUser(teamUserToModify)) {
+                if (channel.getRoom_manager() == teamUserToModify)
+                    channelList.add(channel);
+            }
+            if (!channelList.isEmpty()) {
+                String message = "This user can’t be deleted as long as he/she remains Room Manager for ";
+                for (Channel channel : channelList) {
+                    message += ("#" + channel.getName());
+                    if (channelList.indexOf(channel) == channelList.size() - 1)
+                        message += ".";
+                    else
+                        message += ", ";
+                }
+                throw new HttpServletException(HttpStatus.Forbidden, message);
+            }
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
             if (teamUser != teamUserToModify)
                 teamUserToModify.addNotification(teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "@" + teamUserToModify.getDb_id(), "/resources/notifications/user_role_changed.png", sm.getTimestamp(), sm.getDB());
