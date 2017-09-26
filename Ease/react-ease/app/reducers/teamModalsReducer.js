@@ -64,6 +64,10 @@ const initialState = {
     active: false,
     resolve: null,
     reject: null
+  },
+  upgradeTeamPlanModal: {
+    active: false,
+    featureDescription: ''
   }
 };
 export default function reducer(state=initialState, action){
@@ -180,6 +184,12 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         teamAddMultipleUsersModal: action.payload
+      }
+    }
+    case 'SHOW_UPGRADE_TEAM_PLAN_MODAL' : {
+      return {
+          ...state,
+        upgradeTeamPlanModal: action.payload
       }
     }
   }

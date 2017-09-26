@@ -179,3 +179,13 @@ export function showTeamAddMultipleUsersModal(state){
     }
   }
 }
+
+export function showUpgradeTeamPlanModal(state, desc) {
+  return {
+    type: 'SHOW_UPGRADE_TEAM_PLAN_MODAL',
+    payload: {
+      active: state,
+      featureDescription: desc
+    }
+  }
+}
