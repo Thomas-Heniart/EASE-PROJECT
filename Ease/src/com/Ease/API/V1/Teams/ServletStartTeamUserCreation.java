@@ -40,10 +40,14 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
+            if (team.getTeamUsers().size() >= 30 && !team.isValidFreemium())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 30 members.");
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
             String email = sm.getStringParam("email", true, false);
             String username = sm.getStringParam("username", true, false);
             Integer role = sm.getIntParam("role", true, false);
+            if (!team.isValidFreemium() && role != TeamUserRole.Role.MEMBER.getValue())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have multiple admins.");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             checkUsernameIntegrity(username);
@@ -99,8 +103,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             mailJetBuilder.addVariable("email", adminTeamUser.getEmail());
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teamJoin/" + code);
             mailJetBuilder.sendEmail();
-            /* SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
-            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), adminTeamUser.getEmail(), email, code); */
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.ADDED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

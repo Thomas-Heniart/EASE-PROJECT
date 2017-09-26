@@ -418,7 +418,10 @@ public class TeamUser {
 
     public void transferOwnershipTo(TeamUser new_teamUser_owner) throws HttpServletException {
         new_teamUser_owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
-        this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
+        if (!team.isValidFreemium())
+            this.getTeamUserRole().setRole(TeamUserRole.Role.MEMBER);
+        else
+            this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
     }
 
     public void delete(DataBaseConnection db) throws HttpServletException {

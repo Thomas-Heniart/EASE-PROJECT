@@ -3,6 +3,7 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Context.Variables;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -43,6 +44,12 @@ public class ServletTransferOwnership extends HttpServlet {
             if (!new_teamUser_owner.isVerified() || new_teamUser_owner.isDisabled())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership to this user.");
             teamUser.transferOwnershipTo(new_teamUser_owner);
+            if (!team.isValidFreemium()) {
+                for (Channel channel : team.getChannels().values()) {
+                    channel.setRoom_manager(new_teamUser_owner);
+                    sm.saveOrUpdate(channel);
+                }
+            }
             new_teamUser_owner.addNotification(teamUser.getUsername() + " changed your role to Owner", "@" + new_teamUser_owner.getDb_id(), "/resources/notifications/user_role_changed.png", sm.getTimestamp(), sm.getDB());
             sm.saveOrUpdate(new_teamUser_owner);
             sm.saveOrUpdate(teamUser);

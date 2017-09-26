@@ -39,6 +39,8 @@ public class ServletEditTeamUserRole extends HttpServlet {
             if (teamUserToModify.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You are the owner, you can only transfer your ownership to someone else.");
             Integer roleValue = sm.getIntParam("role", true, false);
+            if (!team.isValidFreemium() && roleValue != TeamUserRole.Role.MEMBER.getValue())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have multiple admins.");
             if (!TeamUserRole.isInferiorToOwner(roleValue))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership from here.");
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
