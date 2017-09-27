@@ -97,7 +97,7 @@ public class LogwithApp extends WebsiteApp {
         request.setInt(logwithAppDBid);
         request.set();
         super.removeFromDB(db);
-        this.website.decrementRatio(db);
+        //this.website.decrementRatio(db);
         db.commitTransaction(transaction);
     }
 	

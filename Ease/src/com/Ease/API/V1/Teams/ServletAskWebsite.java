@@ -33,8 +33,8 @@ public class ServletAskWebsite extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team_id);
             if (url.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
-            if (url.length() >= 2000)
-                throw new HttpServletException(HttpStatus.BadRequest, "Url cannot exceed 2000 characters.");
+            if (url.length() >= 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Url cannot exceed 255 characters.");
             if (is_public == null)
                 is_public = true;
             if (login == null || login.equals(""))
@@ -49,16 +49,7 @@ public class ServletAskWebsite extends HttpServlet {
             WebsiteAttributes websiteAttributes = WebsiteAttributes.createWebsiteAttributes(is_public, false, db);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             String[] urlParsed = url.split("\\.");
-            String host;
-            if (urlParsed.length != 2)
-                host = urlParsed[1];
-            else {
-                host = urlParsed[0];
-                if (host.startsWith("http")) {
-                    host = host.split("//")[1];
-                }
-            }
-            Website website = Website.createWebsite(team_id, url, host, websiteAttributes, sm.getServletContext(), db);
+            Website website = Website.createWebsite(team_id, url, url, websiteAttributes, sm.getServletContext(), db);
             catalog.addWebsite(website);
             db.commitTransaction(transaction);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();

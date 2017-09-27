@@ -74,7 +74,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         request.setInt(appDBid);
         request.setString(type);
         Integer websiteAppDBid = request.set();
-        site.incrementRatio(db);
+        //site.incrementRatio(db);
         if (site.getRatio() == 100) {
             SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
             mail.sendAwesomeUserEmail(site, db);
