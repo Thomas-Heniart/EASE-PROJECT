@@ -58557,6 +58557,10 @@ var ReceiversLabelGroup = function (_Component) {
             _this.setState({ show_all: state });
         };
 
+        _this.filterReceivers = function (obj) {
+            if (obj.receiver.profile_id !== -1) return true;else return false;
+        };
+
         _this.state = {
             show_all: false
         };
@@ -58568,15 +58572,16 @@ var ReceiversLabelGroup = function (_Component) {
         value: function render() {
             var _this2 = this;
 
-            var receivers = this.props.receivers;
+            var receivers = this.props.receivers.filter(this.filterReceivers);
             return _react2.default.createElement(
                 _semanticUiReact.Label.Group,
                 null,
-                this.props.receivers.map(function (item, idx) {
+                receivers.map(function (item, idx) {
                     if (!_this2.state.show_all && idx > 15) return null;
                     var user = item.user;
                     var receiver = item.receiver;
-                    if (item.receiver.profile_id !== -1) return _react2.default.createElement(TeamAppReceiverLabel, { username: user.username, key: receiver.team_user_id });
+                    // if (item.receiver.profile_id !== -1)
+                    return _react2.default.createElement(TeamAppReceiverLabel, { username: user.username, key: receiver.team_user_id });
                 }),
                 receivers.length > 15 && !this.state.show_all && _react2.default.createElement(
                     _semanticUiReact.Button,
@@ -58880,8 +58885,6 @@ var LinkTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
         };
         _this.handleAppNameChange = _this.handleAppNameChange.bind(_this);
         _this.handleUrlInput = _this.handleUrlInput.bind(_this);
-        _this.handleUserSelect = _this.handleUserSelect.bind(_this);
-        _this.handleUserDeselect = _this.handleUserDeselect.bind(_this);
         _this.handleComment = _this.handleComment.bind(_this);
         return _this;
     }
@@ -58918,38 +58921,6 @@ var LinkTeamAppAdder = (_dec = (0, _reactRedux.connect)(function (store) {
         key: "handleUrlInput",
         value: function handleUrlInput(event) {
             this.setState({ url: event.target.value });
-        }
-    }, {
-        key: "handleUserDeselect",
-        value: function handleUserDeselect(id) {
-            var users = this.state.users;
-            var selectedUsers = this.state.selectedUsers;
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].id === id) {
-                    if (users[i].selected) {
-                        users[i].selected = false;
-                        selectedUsers.splice(selectedUsers.indexOf(users[i]), 1);
-                    }
-                    break;
-                }
-            }
-            this.setState({ users: users, selectedUsers: selectedUsers });
-        }
-    }, {
-        key: "handleUserSelect",
-        value: function handleUserSelect(id) {
-            var users = this.state.users;
-            var selectedUsers = this.state.selectedUsers;
-            for (var i = 0; i < users.length; i++) {
-                if (users[i].id === id) {
-                    if (!users[i].selected) {
-                        users[i].selected = true;
-                        selectedUsers.push(users[i]);
-                    }
-                    break;
-                }
-            }
-            this.setState({ users: users, selectedUsers: selectedUsers });
         }
     }, {
         key: "render",

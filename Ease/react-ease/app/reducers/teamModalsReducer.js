@@ -78,9 +78,6 @@ const initialState = {
   upgradeTeamPlanModal: {
     active: false,
     featureDescription: ''
-  },
-  freeTrialEndModal: {
-    active: false
   }
 };
 export default function reducer(state=initialState, action){
@@ -215,12 +212,6 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         upgradeTeamPlanModal: action.payload
-      }
-    }
-    case 'SHOW_FREE_TRIAL_END_MODAL': {
-      return {
-          ...state,
-        freeTrialEndModal: action.payload
       }
     }
   }
