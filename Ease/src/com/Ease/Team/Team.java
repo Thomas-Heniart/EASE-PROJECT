@@ -190,6 +190,10 @@ public class Team {
         return this.getSubscription().getPlan().getId().equals("EaseFreemium");
     }
 
+    public boolean isValidFreemium() throws HttpServletException {
+        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 < new Date().getTime()));
+    }
+
     public Map<Integer, TeamUser> getTeamUsers() {
         if (teamUsers == null)
             teamUsers = new ConcurrentHashMap<>();
@@ -301,6 +305,8 @@ public class Team {
         res.put("name", this.name);
         res.put("valid_subscription", !this.isBlocked());
         res.put("freemium", this.isFreemium());
+        res.put("card_entered", this.isCard_entered());
+        res.put("free_trial_ended", (this.getSubscription().getTrialEnd() != null || this.getSubscription().getTrialEnd() * 1000 >= new Date().getTime()));
         return res;
     }
 

@@ -31,6 +31,8 @@ public class ServletCreateChannel extends HttpServlet {
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
+            if (team.getChannels().size() >= 4 && !team.isValidFreemium())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 4 rooms.");
             String name = sm.getStringParam("name", true, false);
             String purpose = sm.getStringParam("purpose", true, true);
             if (name == null || name.equals("") || !Regex.isValidRoomName(name))
