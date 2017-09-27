@@ -36,12 +36,12 @@
     <link rel="stylesheet" href="/cssMinified.v00015/team.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00020/jsencrypt.js"></script>
+    <script src="/jsMinified.v00020/moment.js"></script>
 </head>
 <BODY>
 <div id="app">
 </div>
 <script src="teams_bundle.js?00000005"></script>
-<script src="/jsMinified.v00020/moment.js"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];

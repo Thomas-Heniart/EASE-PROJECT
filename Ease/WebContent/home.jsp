@@ -96,7 +96,7 @@
     <link rel="stylesheet" href="/cssMinified.v00015/default_style.css"/>
     <link rel="stylesheet" href="/cssMinified.v00015/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
-
+    <script src="/jsMinified.v00020/moment.js"></script>
     <link rel="manifest" href="manifest.json">
 
 </head>
@@ -147,7 +147,6 @@
     <link rel="stylesheet" href="/cssMinified.v00015/lib/niftyPopupWindow/component.css">
 </noscript>
 <script src="/jsMinified.v00020/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00020/moment.js"></script>
 <script src="/jsMinified.v00020/jquery-ui-1.12.0.js" defer></script>
 <script src="/jsMinified.v00020/Sortable.js" defer></script>
 <script src="/jsMinified.v00020/app.js" defer></script>
