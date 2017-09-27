@@ -33,8 +33,6 @@ class LinkTeamAppAdder extends React.Component {
         };
         this.handleAppNameChange = this.handleAppNameChange.bind(this);
         this.handleUrlInput= this.handleUrlInput.bind(this);
-        this.handleUserSelect = this.handleUserSelect.bind(this);
-        this.handleUserDeselect = this.handleUserDeselect.bind(this);
         this.handleComment = this.handleComment.bind(this);
     }
     componentDidMount(){
@@ -89,34 +87,6 @@ class LinkTeamAppAdder extends React.Component {
     }
     handleUrlInput(event){
         this.setState({url: event.target.value});
-    }
-    handleUserDeselect(id){
-        var users = this.state.users;
-        var selectedUsers = this.state.selectedUsers;
-        for (var i = 0; i < users.length; i++){
-            if (users[i].id === id){
-                if (users[i].selected){
-                    users[i].selected = false;
-                    selectedUsers.splice(selectedUsers.indexOf(users[i]), 1);
-                }
-                break;
-            }
-        }
-        this.setState({users: users, selectedUsers: selectedUsers});
-    }
-    handleUserSelect(id){
-        var users = this.state.users;
-        var selectedUsers = this.state.selectedUsers;
-        for (var i = 0; i < users.length; i++){
-            if (users[i].id === id){
-                if (!users[i].selected){
-                    users[i].selected = true;
-                    selectedUsers.push(users[i]);
-                }
-                break;
-            }
-        }
-        this.setState({users: users, selectedUsers: selectedUsers});
     }
     render(){
         return (
