@@ -49,9 +49,11 @@ public class ServletPinLinkApp extends HttpServlet {
                 shareableApp.addSharedApp(sharedApp);
                 team.getAppManager().addSharedApp(sharedApp);
             }
-            if (profile_id == -1)
-                sharedApp.unpin(db);
-            else {
+            if (profile_id == -1) {
+                team.getAppManager().removeSharedApp(sharedApp);
+                sharedApp.deleteShared(db);
+                shareableApp.removeSharedApp(sharedApp);
+            } else {
                 String name = sm.getStringParam("app_name", true, false);
                 if (name == null || name.equals(""))
                     throw new HttpServletException(HttpStatus.BadRequest, "You cannot leave name empty.");

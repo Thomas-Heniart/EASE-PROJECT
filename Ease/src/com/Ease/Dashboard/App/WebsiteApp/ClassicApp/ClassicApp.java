@@ -155,7 +155,7 @@ public class ClassicApp extends WebsiteApp {
         request.set();
         account.removeFromDB(db);
         super.removeFromDB(db);
-        this.website.decrementRatio(db);
+        //this.website.decrementRatio(db);
         db.commitTransaction(transaction);
     }
 
