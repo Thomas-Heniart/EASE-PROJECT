@@ -12,6 +12,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 
@@ -62,6 +63,8 @@ public class ServletCreateTeam extends HttpServlet {
             String email = sm.getStringParam("email", true, false);
             String username = sm.getStringParam("username", true, false);
             Integer job_index = sm.getIntParam("job_index", true, false);
+            //Boolean free_plan = sm.getBooleanParam("free_plan", true, false);
+            Boolean free_plan = true;
             if (teamName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
             if (firstName.equals(""))
@@ -108,20 +111,22 @@ public class ServletCreateTeam extends HttpServlet {
             team.addTeamUser(owner);
 
             /* ===== Stripe START ===== */
-
             Map<String, Object> customerParams = new HashMap<>();
             customerParams.put("email", email);
             team.setCustomer_id(Customer.create(customerParams).getId());
             Map<String, Object> item = new HashMap<>();
-            //item.put("plan", "FreePlan");
-            item.put("plan", "EaseFreemium");
+            Map<String, Object> params = new HashMap<>();
+            if (free_plan)
+                item.put("plan", "FreePlan");
+            else {
+                item.put("plan", "EaseFreemium");
+                params.put("trial_period_days", 30);
+                params.put("tax_percent", 20.0);
+            }
             Map<String, Object> items = new HashMap<>();
             items.put("0", item);
-            Map<String, Object> params = new HashMap<>();
             params.put("customer", team.getCustomer_id());
             params.put("items", items);
-            params.put("trial_period_days", 30);
-            params.put("tax_percent", 20.0);
             team.setSubscription_id(Subscription.create(params).getId());
             team.setSubscription_date(new Date());
 
@@ -140,6 +145,8 @@ public class ServletCreateTeam extends HttpServlet {
             else if (!userEmail.isVerified())
                 userEmail.beVerified(sm.getDB());
             sm.setSuccess(team.getJson());
+        } catch (StripeException e) {
+            sm.setError(e);
         } catch (Exception e) {
             sm.setError(e);
         }
