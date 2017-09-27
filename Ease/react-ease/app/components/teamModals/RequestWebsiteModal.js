@@ -29,12 +29,17 @@ function Informations(props){
 function Step1(props){
   return (
       <Form className="container">
-        <Form.Input
-            name="url"
-            value={props.url}
-            onChange={props.handleInput}
-            label="Website URL"
-            placeholder="Paste website URL"/>
+        <Form.Field>
+          <label>
+            Website URL
+          </label>
+          <Input
+              name="url"
+              value={props.url}
+              onChange={props.handleInput}
+              placeholder="Paste website URL"/>
+          <Label pointing class="fluid text-center" content={'You must paste a website URL.'}/>
+        </Form.Field>
         <Form.Checkbox
             toggle
             checked={props.private}
@@ -51,7 +56,7 @@ function Step1(props){
             onChange={props.handleCheckbox}
             label="Yes, I give my authorization"/>
         <Button
-            disabled={!props.authorization || !isUrl(props.url)}
+            disabled={!props.authorization || props.url.length === 0}
             onClick={props.validate}
             attached='bottom' positive className="modal-button" type="submit" content="NEXT"/>
       </Form>

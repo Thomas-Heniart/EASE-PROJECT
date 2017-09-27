@@ -1,3 +1,5 @@
+import {selectItemFromListById} from "../utils/helperFunctions";
+
 export default function reducer(state={
   channels: []
 }, action){
@@ -159,9 +161,9 @@ export default function reducer(state={
     }
     case 'TEAM_ROOM_ADDED': {
       var channels = state.channels;
-      if (selectUserFromListById(state.channels, action.payload.channel.id) !== null)
+      if (selectItemFromListById(channels, action.payload.channel.id) !== null)
         break;
-      users.push(action.payload.channel);
+      channels.push(action.payload.channel);
       return {
         ...state,
         channels: channels

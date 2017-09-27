@@ -221,42 +221,6 @@ i.icon.pin_button {
   }
 }
 
-
-.ui.enterprise-app-switch.toggle.checkbox .box:after, .ui.enterprise-app-switch.toggle.checkbox label:after {
-  width: 19px;
-  height: 19px;
-}
-
-.ui.toggle.checkbox .box, .ui.toggle.checkbox label {
-  min-height: 1rem;
-}
-
-.ui.toggle.checkbox {
-  min-height: 1rem;
-}
-
-.ui.enterprise-app-switch.toggle.checkbox .box::before, .ui.enterprise-app-switch.toggle.checkbox label::before {
-  background-color: #aeafaf;
-}
-
-.ui.enterprise-app-switch.toggle.checkbox input:checked~.box:before, .ui.enterprise-app-switch.toggle.checkbox input:checked~label:before {
-  background-color: #45C997 !important;
-}
-.ui.enterprise-app-switch.toggle.checkbox input~.box:after, .ui.enterprise-app-switch.toggle.checkbox input~label:after {
-  left:1px;
-  top:1px;
-}
-
-.ui.enterprise-app-switch.toggle.checkbox input:checked~.box:after, .ui.enterprise-app-switch.toggle.checkbox input:checked~label:after {
-  top: 1px;
-  left:15px;
-}
-
-.ui.enterprise-app-switch.toggle.checkbox .box:before, .ui.enterprise-app-switch.toggle.checkbox label:before {
-  width:35px;
-  height: 21px;
-}
-
 .team-app.enterprise-team-app {
   .receiver-label {
     color: white;
@@ -1635,7 +1599,7 @@ button.action_text_button {
             @include display-flex();
             @include flex-shrink(0);
             @include flex-direction(column);
-            z-index: 2;
+            z-index: 3;
             .add_buttons_wrapper {
               @include display-flex();
               @include flex(1);
@@ -2368,6 +2332,16 @@ button.action_text_button {
       }
     }
   }
+}
+
+.margin_b5rem {
+  margin-bottom: .5rem;
+}
+.width48 {
+  width: 48%;
+}
+.width100 {
+  width: 100%;
 }
 
 .menu {

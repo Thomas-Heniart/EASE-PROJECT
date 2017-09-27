@@ -8,7 +8,6 @@ import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -31,9 +30,11 @@ public class ServletAskWebsite extends HttpServlet {
             String login = sm.getStringParam("login", false, false);
             String password = sm.getStringParam("password", false, false);
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            if (url == null || url.equals("") || !Regex.isValidLink(url))
+            sm.needToBeTeamUserOfTeam(team_id);
+            if (url.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
+            if (url.length() >= 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Url cannot exceed 255 characters.");
             if (is_public == null)
                 is_public = true;
             if (login == null || login.equals(""))
@@ -48,21 +49,9 @@ public class ServletAskWebsite extends HttpServlet {
             WebsiteAttributes websiteAttributes = WebsiteAttributes.createWebsiteAttributes(is_public, false, db);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             String[] urlParsed = url.split("\\.");
-            String host;
-            if (urlParsed.length != 2)
-                host = urlParsed[1];
-            else {
-                host = urlParsed[0];
-                if (host.startsWith("http")) {
-                    host = host.split("//")[1];
-                }
-            }
-            if (catalog.getWebsiteWithHost(host) != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "This website already exists");
-            Website website = Website.createWebsite(team_id, url, host, websiteAttributes, sm.getServletContext(), db);
+            Website website = Website.createWebsite(team_id, url, url, websiteAttributes, sm.getServletContext(), db);
             catalog.addWebsite(website);
             db.commitTransaction(transaction);
-            /* @TODO Decipher login and password */
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT id, publicKey FROM serverPublicKeys LIMIT 1");
             Object[] idAndPublicKey = (Object[]) hibernateQuery.getSingleResult();

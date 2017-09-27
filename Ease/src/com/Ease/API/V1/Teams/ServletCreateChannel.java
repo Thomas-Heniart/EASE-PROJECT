@@ -39,6 +39,8 @@ public class ServletCreateChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Room names can't contain spaces, periods or most punctuation and must be shorter than 22 characters.");
             if (purpose == null)
                 purpose = "";
+            if (purpose.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Purpose of room cannot be greater than 250 characters");
             if (team.getChannelNamed(name) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another room");
             Channel channel = new Channel(team, name, purpose, sm.getTeamUserForTeamId(team_id));

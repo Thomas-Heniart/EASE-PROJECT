@@ -128,6 +128,7 @@ export function editTeamChannelName(channel_id, name){
       dispatch({type:'EDIT_TEAM_CHANNEL_NAME_FULFILLED', payload: {id:channel_id, name: name}});
     }).catch(err => {
       dispatch({type:"EDIT_TEAM_CHANNEL_NAME_REJECTED", payload:err});
+      throw err;
     });
   }
 }

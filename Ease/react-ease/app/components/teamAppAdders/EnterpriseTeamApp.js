@@ -53,7 +53,7 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
   )
 };
 
-const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly}) => {
+const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, pwd_filled}) => {
   return <Input size="mini"
                 class="team-app-input"
                 readOnly={readOnly}
@@ -61,7 +61,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly}) => {
                 onChange={onChange !== undefined ?(e, data) => {onChange(receiver_id, data)} : null}
                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                 labelPosition="left"
-                placeholder={item.placeholder}
+                placeholder={item.name === 'password' && pwd_filled ? '••••••••' : item.placeholder}
                 value={item.value}
                 type={item.type}/>;
 };
@@ -95,7 +95,7 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnl
         <Label class="receiver-label" color="blue"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
         {
           receiver.credentials.map(item => {
-            return <TeamAppCredentialInput readOnly={readOnly} receiver_id={receiver.id} key={item.priority} onChange={onChange} item={item}/>
+            return <TeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={readOnly} receiver_id={receiver.id} key={item.priority} onChange={onChange} item={item}/>
           })
         }
       </div>
@@ -177,7 +177,7 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
 const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
   return (
       <span style={{lineHeight: '1.7'}}>
-        You received in an Enterprise App,
+        You received an Enterprise App,
         &nbsp;
         <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
         &nbsp;or&nbsp;
@@ -290,7 +290,9 @@ class EnterpriseTeamApp extends Component {
       }
     }).sort((a, b) => {
       if (a.id === this.props.me.id)
-        return -1000;
+        return -10000;
+      if (b.id === this.props.me.id)
+        return 1000;
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
@@ -302,7 +304,8 @@ class EnterpriseTeamApp extends Component {
         credentials = transformWebsiteInfoIntoList(app.website.information);
       return {
         ...item,
-        credentials: credentials
+        credentials: credentials,
+        password_filled: receiver !== null && receiver.password_filled
       }
     });
     this.setState({users: users, selected_users: selected_users});

@@ -241,7 +241,7 @@ html {
 }
 
 .text-center {
-  text-align: center;
+  text-align: center !important;
 }
 
 .text-right {
@@ -275,6 +275,41 @@ button, input, optgroup, select, textarea {
 
 .ui.form:last-child {
   margin-bottom: 0;
+}
+
+.ui.toggle.checkbox .box:after, .ui.toggle.checkbox label:after {
+  width: 18px;
+  height: 18px;
+}
+
+.ui.toggle.checkbox .box, .ui.toggle.checkbox label {
+  min-height: 1rem;
+}
+
+.ui.toggle.checkbox {
+  min-height: 1rem;
+}
+
+.ui.toggle.checkbox .box::before, .ui.toggle.checkbox label::before {
+  background-color: #aeafaf;
+}
+
+.ui.toggle.checkbox input:checked~.box:before, .ui.toggle.checkbox input:checked~label:before {
+  background-color: #45C997 !important;
+}
+.ui.toggle.checkbox input~.box:after, .ui.toggle.checkbox input~label:after {
+  left:2px;
+  top:2px;
+}
+
+.ui.toggle.checkbox input:checked~.box:after, .ui.toggle.checkbox input:checked~label:after {
+  top: 2px;
+  left:15px;
+}
+
+.ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
+  width:35px;
+  height: 22px;
 }
 
 #app-root {

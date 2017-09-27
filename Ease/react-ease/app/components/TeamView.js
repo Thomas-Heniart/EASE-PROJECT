@@ -149,13 +149,10 @@ class TeamView extends React.Component {
     return false;
   }
   autoSelectItem(){
-    const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
     const teamId = this.props.match.params.teamId;
 
-    if (me.channel_ids.length > 0)
-      this.props.history.push(`/teams/${teamId}/${me.channel_ids[0]}`);
-    else
-      this.props.history.push(`/teams/${teamId}/@${me.id}`);
+    const defaultRoom = this.props.channels.find(item => (item.default));
+    this.props.history.push(`/teams/${teamId}/${defaultRoom.id}`);
   }
   getSelectedItem(){
     const itemId = this.props.match.params.itemId;

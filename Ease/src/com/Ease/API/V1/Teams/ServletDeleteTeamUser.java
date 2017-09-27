@@ -50,7 +50,7 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     channelList.add(channel);
             }
             if (!channelList.isEmpty()) {
-                String message = "This user can’t be deleted as long as he/she remains Room Manager for ";
+                String message = "This user cannot be deleted as long as he/she remains Room Manager of ";
                 for (Channel channel : channelList) {
                     message += ("#" + channel.getName());
                     if (channelList.indexOf(channel) == channelList.size() - 1)
@@ -97,8 +97,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
             }
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete))
-                channel.removeTeamUser(teamUser_to_delete, db);
             teamUser_to_delete.delete(db);
             db.commitTransaction(transaction);
             team.removeTeamUser(teamUser_to_delete);

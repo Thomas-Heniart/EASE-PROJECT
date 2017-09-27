@@ -1,6 +1,18 @@
 var axios = require('axios');
 
 module.exports = {
+  getClearbitLogo : function (url) {
+    const l = document.createElement("a");
+    l.href = url;
+    const img_url = "https://logo.clearbit.com/" + l.hostname;
+    return axios.get("https://logo.clearbit.com/" + l.hostname).then(response => {
+      if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1)
+        return "";
+      return img_url;
+    }).catch(err => {
+      return "";
+    })
+  },
   fetchTeams : function(){
     return axios.get('/api/v1/teams/GetTeams',{
       params: {
@@ -26,8 +38,13 @@ module.exports = {
         team_id: team_id,
         timestamp: new Date().getTime()
       }
-    }).then((response) => {
-      return response.data;
+    }).then(response => {
+      const channels = response.data.sort((a,b) => {
+        if (a.default)
+          return -1;
+        return 1;
+      });
+      return channels;
     });
   },
   fetchTeamUsers: function (team_id) {

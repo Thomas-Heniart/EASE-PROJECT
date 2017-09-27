@@ -36,12 +36,20 @@ public class ServletEditLinkApp extends HttpServlet {
             if (!app.isLinkApp())
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject params = new JSONObject();
-            params.put("name", sm.getStringParam("name", true, false));
-            params.put("description", sm.getStringParam("description", true, false));
+            String name = sm.getStringParam("name", false, false);
+            if (name.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Name of an app cannot be greater than 250 characters");
+            params.put("name", name);
+            String description = sm.getStringParam("description", false, true);
+            if (description == null)
+                description = "";
+            if (description.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
+            params.put("description", description);
             String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
-            if (!Regex.isValidLink(url))
-                throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid url.");
+            if (url.length() >= 2000)
+                throw new HttpServletException(HttpStatus.BadRequest, "Url length must be fewer than 2000 characters");
             params.put("url", url);
             if (!img_url.equals("") && !Regex.isValidLink(img_url))
                 throw new HttpServletException(HttpStatus.BadRequest, "Url entered for icon is invalid.");

@@ -19,6 +19,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     editPurpose: function(ws_id, team_id, channel_id, purpose){
@@ -181,6 +183,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     editDepartureDate : function(ws_id, team_id, user_id, departure_date){
@@ -458,7 +462,7 @@ module.exports = {
       });
     },
     pinLinkApp : ({team_id, app_id, app_name, profile_id, ws_id}) => {
-      return axios.post('/api/v1/team/PinLinkApp', {
+      return axios.post('/api/v1/teams/PinLinkApp', {
         team_id: team_id,
         app_id: app_id,
         app_name:app_name,
