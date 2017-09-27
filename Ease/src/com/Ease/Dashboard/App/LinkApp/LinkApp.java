@@ -185,6 +185,10 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
             int transaction = db.startTransaction();
             super.modifyShareable(db, editJson);
             this.getLinkAppInformations().edit(editJson, db);
+            for (SharedApp sharedApp : this.getSharedApps()) {
+                LinkApp linkApp = (LinkApp) sharedApp;
+                linkApp.getLinkAppInformations().edit(editJson);
+            }
             db.commitTransaction(transaction);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);

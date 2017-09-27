@@ -36,7 +36,10 @@ public class ServletEditEnterpriseApp extends HttpServlet {
             if (!app.isEmpty())
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject params = new JSONObject();
-            params.put("description", sm.getStringParam("description", false, false));
+            String description = sm.getStringParam("description", false, false);
+            if (description.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
+            params.put("description", description);
             params.put("password_change_interval", sm.getIntParam("password_change_interval", true, false));
             Boolean fill_in_switch = sm.getBooleanParam("fill_in_switch", true, false);
             WebsiteApp websiteApp = (WebsiteApp) app;

@@ -47,15 +47,12 @@ class TeamTransferOwnershipModal extends React.Component {
               <i class="fa fa-times"/>
             </button>
             <Header as="h3" attached="top">
-              Transfer Team ownership
+              Transfer team Ownership
             </Header>
             <Form className="container" onSubmit={this.confirmModal} error={this.state.errorMessage.length > 0}>
               <Form.Field>
-                <p>For safety reasons, we need know the phone number of the team owner.</p>
-                <p>Before transfering the ownership to {user.username}, we need his/her phone number.</p>
-                <p>Don't worry, you will receive a notification once ownership transfer is completed.</p>
-                <p><strong>Transfering ownership is one-way street. You won't be able to undo this action.</strong></p>
-                <p>Enter your Ease.space password to confirm the trasfer.</p>
+                <p>Transferring the ownership of a team in a one-way street. You won’t be able to undo this action.</p>
+                <p>Enter your Ease.space password to confirm the transfer.</p>
               </Form.Field>
               <Form.Input
                   type="password"
@@ -71,7 +68,7 @@ class TeamTransferOwnershipModal extends React.Component {
                       disabled={this.state.password.length === 0}
                       attached='bottom' negative
                       className="modal-button"
-                      content="CONFIRM ACCESS"/>
+                      content="CONFIRM TRANSFER"/>
             </Form>
           </div>
         </div>

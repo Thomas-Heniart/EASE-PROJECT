@@ -11,7 +11,9 @@ import {
     getReceiverInList,
     isUserInList,
     isAdmin
-} from "../../utils/helperFunctions"
+} from "../../utils/helperFunctions";
+import { Header, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+
 
 function TeamLinkAppButtonSet(props) {
   const app = props.app;
@@ -27,12 +29,11 @@ function TeamLinkAppButtonSet(props) {
                 onClick={e => {props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}>
           <i class="fa fa-user"/>
         </button>}
-        {meReceiver !== null &&
         <button class="button-unstyle team_app_pin"
                 data-tip="Pin App in your Personal space"
                 onClick={e => {props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}>
           <i class="fa fa-thumb-tack"/>
-        </button>}
+        </button>
         {meReceiver !== null &&
         <button class="button-unstyle team_app_leave"
                 data-tip="Leave App"
@@ -197,7 +198,160 @@ class TeamLinkApp extends React.Component {
     const asked = app.sharing_requests.indexOf(me.id) !== -1;
 
     return(
-        <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
+        <Container fluid id="simple_team_app_add" class="team-app" as="form">
+          <div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
+              {!this.state.modifying &&
+              <TeamLinkAppButtonSet
+                  app={app}
+                  me={me}
+                  setupModifying={this.setupModifying}
+                  dispatch={this.props.dispatch}/>}
+            <div class="display-flex team_app_indicators">
+                {!this.state.modifying && meReceiver !== null && meReceiver.profile_id !== -1 &&
+                <span>
+              <i class="fa fa-thumb-tack"/>
+            </span>}
+                {!this.state.modifying && app.sharing_requests.length > 0 && (me.id === app.sender_id || isAdmin(me.role)) &&
+                <span>
+              <i class="fa fa-user"/>
+            </span>}
+            </div>
+            <div class="team_app_sender_info">
+            <span class="team_app_sender_name">
+              <i class="fa fa-user mrgnRight5"/>
+                {senderUser.username}
+                {me.id === senderUser.id}
+            </span>
+              <span>&nbsp;sent a Link App</span>
+            </div>
+          </div>
+          <Segment>
+            <div className="app_name_input_handler display_flex locked margin_b5rem">
+              <div className="team-app-input">
+                  {!this.state.modifying ?
+                      app.name :
+                      <Input
+                          className="team-app-input"
+                          placeholder="Name your link"
+                          name="app_name"
+                          value={this.state.modifiedAppName}
+                          autoComplete="off"
+                          onChange={this.handleAppNameInput}
+                          size="mini"
+                          transparent />
+                  }
+              </div>
+            </div>
+            <div class="display_flex">
+              <div class="logo_column">
+                <div class="logo">
+                  <img src="/resources/icons/link_app.png" alt="logo"/>
+                </div>
+              </div>
+              <div class="main_column">
+                  {!this.state.modifying &&
+                  <div class="display-inline-flex width42">
+                    <Input placeholder="Paste or type url"
+                           disabled
+                           className="team-app-input width100"
+                           autoComplete="off"
+                           type="text"
+                           name="url"
+                           value={app.url}
+                           onChange={this.handleUrlInput}
+                           size="mini"
+                           label={<Label><Icon name="linkify"/></Label>}
+                           labelPosition="left" />
+                  </div>}
+                  {this.state.modifying &&
+                  <div class="display-inline-flex width42">
+                    <Input placeholder="Paste or type url"
+                         className="team-app-input width100"
+                         autoComplete="off"
+                         type="text"
+                         name="url"
+                         value={this.state.modifiedUrl}
+                         onChange={this.handleUrlInput}
+                         size="mini"
+                         label={<Label><Icon name="linkify"/></Label>}
+                         labelPosition="left" />
+                </div>}
+                <div class="full_flex">
+                  <div class="full_flex">
+                      {!this.state.modifying ?
+                          app.receivers.map(function (item) {
+                              const user = selectUserFromListById(this.props.users, item.team_user_id);
+                              return (
+                                  <div class={classnames("receiver", item.accepted ? "accepted": null)} key={item.team_user_id}>
+                              <Button class="receiver_name" size="mini">
+                              {user.username}
+                                  {me.id === user.id}
+                              </Button>
+                                  </div>
+                              )
+                          }, this)
+                          :
+                          <TeamAppUserSelectDropdown
+                              receivers={this.state.receivers}
+                              selectedReceivers={this.state.selectedReceivers}
+                              myId={me.id}
+                              selectFunc={this.selectReceiver}
+                              deselectFunc={this.deselectReceiver}
+                          />
+                      }
+                  </div>
+                </div>
+                  {!this.state.modifying &&
+                  <div>
+                  <Input size="mini"
+                         fluid
+                         class="team-app-input"
+                         onChange={this.handleCommentInput}
+                         name="comment"
+                         value={app.description}
+                         placeholder="What is this about? Any comment?"
+                         type="text"
+                         label={<Label><Icon name="sticky note"/></Label>}
+                         labelPosition="left"
+                          disabled />
+                </div>}
+                  {this.state.modifying &&
+                  <div>
+                    <Input size="mini"
+                           fluid
+                           class="team-app-input"
+                           onChange={this.handleCommentInput}
+                           name="comment"
+                           value={this.state.modifiedComment}
+                           placeholder="What is this about? Any comment?"
+                           type="text"
+                           label={<Label><Icon name="sticky note"/></Label>}
+                           labelPosition="left" />
+                  </div>}
+              </div>
+            </div>
+          </Segment>
+            {this.state.modifying &&
+            <div>
+
+              <Button positive
+                      size="mini"
+                      onClick={this.validateModifying}
+                      floated="right">
+                Save
+              </Button>
+              <Button
+                  size="mini"
+                  onClick={this.setupModifying.bind(null, false)}
+                  floated="right">
+                Cancel
+              </Button>
+            </div>
+            }
+        </Container>
+
+
+        /*<div class={classnames('team_app_holder', this.state.modifying ? "active":null)}>
           {!this.state.modifying &&
           <TeamLinkAppButtonSet
               app={app}
@@ -333,7 +487,7 @@ class TeamLinkApp extends React.Component {
             </div>
             }
           </div>
-        </div>
+        </div>*/
     )
   }
 }

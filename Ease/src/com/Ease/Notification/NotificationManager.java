@@ -5,12 +5,16 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONArray;
 
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NotificationManager {
     private final static Integer OFFSET = 5;
     protected List<Notification> notifications = new LinkedList<>();
-    protected Map<Integer, Notification> idNotificationMap = new HashMap<>();
+    protected Map<Integer, Notification> idNotificationMap = new ConcurrentHashMap<>();
     protected Integer last_index = 1;
     protected String user_id;
 

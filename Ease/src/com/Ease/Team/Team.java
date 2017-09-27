@@ -359,7 +359,15 @@ public class Team {
         for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
             if (!shareableApp.getTeamUser_tenants().contains(teamUser))
                 continue;
-            jsonArray.add(shareableApp.getShareableJson());
+            App app = (App) shareableApp;
+            if (app.isLinkApp()) {
+                SharedApp sharedApp = shareableApp.getSharedAppForTeamUser(teamUser);
+                if (sharedApp == null)
+                    continue;
+                if (sharedApp.isPinned())
+                    jsonArray.add(shareableApp.getShareableJson());
+            } else
+                jsonArray.add(shareableApp.getShareableJson());
         }
         return jsonArray;
     }

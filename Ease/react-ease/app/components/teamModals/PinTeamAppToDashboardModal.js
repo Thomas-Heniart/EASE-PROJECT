@@ -108,7 +108,7 @@ class PinTeamAppToDashboardModal extends React.Component {
             </div>
             <div class="row display-flex align_items_center" style={{paddingTop: '20px'}}>
               <div class="squared_image_handler">
-                  <img src={app.website !== undefined ? app.website.logo : '/resources/icons/app_icon.svg'} alt="Website logo"/>
+                  <img src={app.website !== undefined ? app.website.logo : app.logo} alt="Website logo"/>
               </div>
               {!this.state.nameModifying ?
                 <div>

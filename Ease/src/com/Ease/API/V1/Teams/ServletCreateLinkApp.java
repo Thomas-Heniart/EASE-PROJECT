@@ -43,8 +43,14 @@ public class ServletCreateLinkApp extends HttpServlet {
             String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
             String description = sm.getStringParam("description", false, true);
+            if (description == null)
+                description = "";
+            if (description.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
             if (app_name == null || app_name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty app name");
+            if (app_name.length() >= 250)
+                throw new HttpServletException(HttpStatus.BadRequest, "Name of an app cannot be greater than 250 characters");
             if (url.length() >= 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Url length must be fewer than 2000 characters");
             if (!img_url.equals("") && !Regex.isValidLink(img_url) && !img_url.startsWith("https://logo.clearbit.com/"))
@@ -61,6 +67,7 @@ public class ServletCreateLinkApp extends HttpServlet {
             for (TeamUser teamUser_tenant : channel.getTeamUsers()) {
                 SharedApp sharedApp = linkApp.share(teamUser_tenant, team, new JSONObject(), sm);
                 linkApp.addSharedApp(sharedApp);
+                team.getAppManager().addSharedApp(sharedApp);
                 if (teamUser_tenant != teamUser_owner) {
                     String notif_url = channel.getDb_id() + "?app_id=" + linkApp.getDBid();
                     teamUser_tenant.addNotification(teamUser_owner.getUsername() + " sent you " + linkApp.getName() + " in #" + channel.getName(), notif_url, linkApp.getLogo(), sm.getTimestamp(), db);

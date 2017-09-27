@@ -5,7 +5,7 @@ import {handleSemanticInput,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
 import {selectUserFromListById} from "../../utils/helperFunctions";
-import {requestWebsite} from "../../actions/teamModalActions";
+import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
 import {teamCreateSingleApp, teamCreateEnterpriseApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
@@ -191,6 +191,7 @@ class EnterpriseTeamAppAdder extends Component {
   send = (e) => {
     e.preventDefault();
     this.setState({loading: true});
+    const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
     const receivers = this.state.users
         .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
         .map(item => ({
@@ -206,6 +207,8 @@ class EnterpriseTeamAppAdder extends Component {
       fill_in_switch: this.state.fill_in_switch,
       receivers: receivers
     })).then(response => {
+      if (meReceiver)
+        this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
       this.setState({loading: false});
       this.close();
     });
@@ -231,7 +234,7 @@ class EnterpriseTeamAppAdder extends Component {
                 <Header as="h4">
                   {app.website_name}
                 </Header>
-                <Button icon="delete" size="mini" class="close" onClick={this.close}/>
+                <Button icon="delete" type="button" size="mini" class="close" onClick={this.close}/>
                 <div class="display_flex">
                   <div class="logo_column">
                     <div class="logo">
