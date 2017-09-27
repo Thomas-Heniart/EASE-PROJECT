@@ -6,13 +6,13 @@ import {connect} from "react-redux";
 import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
 
 const features = [
-    'Unlimited Rooms',
-    'Accesses sharing with showing or hiding passwords',
-    'SaaS tools sharing with customization of credentials for each user',
-    'Automatic accesses revocation set up',
-    'Unlimited Admins and 1 Owner',
-    'Prioritary website integration requests',
-    'Prioritary customer support'
+  'Unlimited Rooms',
+  'Accesses sharing with showing or hiding passwords',
+  'SaaS tools sharing with customization of credentials for each user',
+  'Automatic accesses revocation set up',
+  'Unlimited Admins and 1 Owner',
+  'Prioritary website integration requests',
+  'Prioritary customer support'
 ];
 
 @connect(store => ({
@@ -26,6 +26,7 @@ class UpgradeTeamPlanModal extends Component {
   }
   confirm = (e) => {
     e.preventDefault();
+
   };
   render(){
     const featureDesc = this.props.featureDesc;
@@ -37,34 +38,34 @@ class UpgradeTeamPlanModal extends Component {
     });
     return (
         <SimpleModalTemplate
-        onClose={showUpgradeTeamPlanModal(false)}
-        headerContent={'Upgrade to Pro!'}>
-        <Form class="container" onSubmit={this.confirm}>
-          <Form.Field>
-            Your current plan (Basic) doesn’t enable {featureDesc}.
-          </Form.Field>
-          <Form.Field>
-            <Header as="h5">
-              Pro includes your current features and:
-            </Header>
-            <List>
-              {featuresList}
-            </List>
-          </Form.Field>
-          <Form.Field>
-            {isOwner ?
-            'After trial Pro is billed 3,99€ per month per active user, but for now it’s free 1 month and no credit required' :
-            `After trial Pro is billed 3,99€ per month per active user. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade.Want to send a request ?`
-            }
-          </Form.Field>
-          <Button
-              attached='bottom'
-              type="submit"
-              positive
-              onClick={this.confirm}
-              className="modal-button"
-              content={isOwner ? 'try PRO 30 days for free' : `Ask ${teamOwner.username} to upgrade`}/>
-        </Form>
+            onClose={showUpgradeTeamPlanModal(false)}
+            headerContent={'Upgrade to Pro!'}>
+          <Form class="container" onSubmit={this.confirm}>
+            <Form.Field>
+              Your current plan (Basic) doesn’t enable {featureDesc}.
+            </Form.Field>
+            <Form.Field>
+              <Header as="h5">
+                Pro includes your current features and:
+              </Header>
+              <List>
+                {featuresList}
+              </List>
+            </Form.Field>
+            <Form.Field>
+              {isOwner ?
+                  'After trial Pro is billed 3,99€ per month per active user, but for now it’s free 1 month and no credit required' :
+                  `After trial Pro is billed 3,99€ per month per active user. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade.Want to send a request ?`
+              }
+            </Form.Field>
+            <Button
+                attached='bottom'
+                type="submit"
+                positive
+                onClick={this.confirm}
+                className="modal-button"
+                content={isOwner ? 'try PRO 30 days for free' : `Ask ${teamOwner.username} to upgrade`}/>
+          </Form>
         </SimpleModalTemplate>
     )
   }

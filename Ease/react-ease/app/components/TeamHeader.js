@@ -2,6 +2,7 @@ var React = require('react');
 var classnames = require('classnames');
 var TeamAddAppsButton = require('./TeamAddAppsButton');
 var EaseMainNavbar = require('./common/EaseMainNavbar');
+import {showUpgradeTeamPlanModal} from "../actions/teamModalActions";
 import { NavLink } from 'react-router-dom';
 
 function TeamHeader(props){
@@ -9,6 +10,7 @@ function TeamHeader(props){
       <header id="client_header">
         <div className="channel_header">
           <div className="tab_header">
+            <button onClick={showUpgradeTeamPlanModal(true, 'bite')}>click me!</button>
             <TeamAddAppsButton target={props.item}/>
             <div className="channel_title">
               <div id="channel_name_container" className="channel_name_container">

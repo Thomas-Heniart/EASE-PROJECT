@@ -668,7 +668,6 @@ exports.requestWebsite = requestWebsite;
 exports.showRequestWebsiteModal = showRequestWebsiteModal;
 exports.showTeamAddMultipleUsersModal = showTeamAddMultipleUsersModal;
 exports.showUpgradeTeamPlanModal = showUpgradeTeamPlanModal;
-exports.showFreeTrialEndModal = showFreeTrialEndModal;
 function showAddTeamUserModal(state) {
   return {
     type: 'SHOW_ADD_TEAM_USER_MODAL',
@@ -879,15 +878,6 @@ function showUpgradeTeamPlanModal(state, desc) {
     payload: {
       active: state,
       featureDescription: desc
-    }
-  };
-}
-
-function showFreeTrialEndModal(state) {
-  return {
-    type: 'SHOW_FREE_TRIAL_END_MODAL',
-    payload: {
-      active: state
     }
   };
 }
@@ -56308,6 +56298,8 @@ module.exports = (0, _reactRouterDom.withRouter)(FlexPanels);
 "use strict";
 
 
+var _teamModalActions = __webpack_require__(9);
+
 var _reactRouterDom = __webpack_require__(29);
 
 var React = __webpack_require__(0);
@@ -56326,6 +56318,11 @@ function TeamHeader(props) {
       React.createElement(
         'div',
         { className: 'tab_header' },
+        React.createElement(
+          'button',
+          { onClick: (0, _teamModalActions.showUpgradeTeamPlanModal)(true, 'bite') },
+          'click me!'
+        ),
         React.createElement(TeamAddAppsButton, { target: props.item }),
         React.createElement(
           'div',
@@ -69576,9 +69573,6 @@ var initialState = {
   upgradeTeamPlanModal: {
     active: false,
     featureDescription: ''
-  },
-  freeTrialEndModal: {
-    active: false
   }
 };
 function reducer() {
@@ -69716,12 +69710,6 @@ function reducer() {
       {
         return _extends({}, state, {
           upgradeTeamPlanModal: action.payload
-        });
-      }
-    case 'SHOW_FREE_TRIAL_END_MODAL':
-      {
-        return _extends({}, state, {
-          freeTrialEndModal: action.payload
         });
       }
   }
