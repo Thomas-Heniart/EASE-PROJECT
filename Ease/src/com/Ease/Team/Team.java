@@ -306,7 +306,7 @@ public class Team {
         res.put("valid_subscription", !this.isBlocked());
         res.put("pro_plan", this.isFreemium());
         res.put("card_entered", this.isCard_entered());
-        res.put("free_trial_ended", false/* (this.getSubscription().getTrialEnd() != null || this.getSubscription().getTrialEnd() * 1000 >= new Date().getTime()) */);
+        res.put("free_trial_ended", !(this.getSubscription().getTrialEnd() == null || this.getSubscription().getTrialEnd() * 1000 >= new Date().getTime()));
         return res;
     }
 
