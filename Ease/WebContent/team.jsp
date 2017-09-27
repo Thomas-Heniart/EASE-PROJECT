@@ -40,7 +40,7 @@
 <BODY>
 <div id="app">
 </div>
-<script src="teams_bundle.js?00000005"></script>
+<script src="teams_bundle.js?00000006"></script>
 <script src="/jsMinified.v00020/moment.js"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
