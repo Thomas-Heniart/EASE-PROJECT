@@ -68,7 +68,6 @@ class ReceiversLabelGroup extends Component {
     render() {
 
         const receivers = this.props.receivers.filter(this.filterReceivers);
-        console.log(receivers);
         return (
             <Label.Group>
                 {receivers.map((item, idx) => {
