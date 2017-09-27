@@ -31,29 +31,36 @@ class UpgradeTeamPlanModal extends Component {
   render(){
     const featureDesc = this.props.featureDesc;
     const me = selectItemFromListById(this.props.users, this.props.myId);
-    const isOwner = isOwner(me.role);
+    const meOwner = isOwner(me.role);
     const teamOwner = this.props.users.find(item => (isOwner(item.role)));
     const featuresList = features.map((item, idx) => {
-      return <List.Item icon="checkmark" content={item} key={idx}/>
+      return (
+          <List.Item key={idx}>
+            <List.Icon name="checkmark" color="green"/>
+            <List.Content>
+              {item}
+            </List.Content>
+          </List.Item>
+      )
     });
     return (
         <SimpleModalTemplate
-            onClose={showUpgradeTeamPlanModal(false)}
+            onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal(false))}}
             headerContent={'Upgrade to Pro!'}>
-          <Form class="container" onSubmit={this.confirm}>
+          <Form class="container" onSubmit={this.confirm} id="upgrade_team_plan_modal">
             <Form.Field>
               Your current plan (Basic) doesn’t enable {featureDesc}.
             </Form.Field>
             <Form.Field>
-              <Header as="h5">
+              <h5>
                 Pro includes your current features and:
-              </Header>
+              </h5>
               <List>
                 {featuresList}
               </List>
             </Form.Field>
             <Form.Field>
-              {isOwner ?
+              {meOwner ?
                   'After trial Pro is billed 3,99€ per month per active user, but for now it’s free 1 month and no credit required' :
                   `After trial Pro is billed 3,99€ per month per active user. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade.Want to send a request ?`
               }
@@ -63,8 +70,8 @@ class UpgradeTeamPlanModal extends Component {
                 type="submit"
                 positive
                 onClick={this.confirm}
-                className="modal-button"
-                content={isOwner ? 'try PRO 30 days for free' : `Ask ${teamOwner.username} to upgrade`}/>
+                class="modal-button capitalize"
+                content={meOwner ? 'try PRO 30 days for free' : `Ask ${teamOwner.username} to upgrade`}/>
           </Form>
         </SimpleModalTemplate>
     )

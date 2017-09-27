@@ -211,3 +211,12 @@ export function showUpgradeTeamPlanModal(state, desc) {
     }
   }
 }
+
+export function showFreeTrialEndModal(state){
+  return {
+    type: 'SHOW_FREE_TRIAL_END_MODAL',
+    payload: {
+      active: state
+    }
+  }
+}

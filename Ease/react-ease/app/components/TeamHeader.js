@@ -10,7 +10,7 @@ function TeamHeader(props){
       <header id="client_header">
         <div className="channel_header">
           <div className="tab_header">
-            <button onClick={showUpgradeTeamPlanModal(true, 'bite')}>click me!</button>
+            <button onClick={e => {props.dispatch(showUpgradeTeamPlanModal(true, 'bite'))}}>click me!</button>
             <TeamAddAppsButton target={props.item}/>
             <div className="channel_title">
               <div id="channel_name_container" className="channel_name_container">
