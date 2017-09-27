@@ -35,6 +35,8 @@ import TeamBrowseRoomsModal from "./teamModals/TeamBrowseRoomsModal";
 import JoinEnterpriseAppModal from "./teamModals/JoinEnterpriseAppModal";
 import AcceptEnterpriseAppModal from "./teamModals/AcceptEnterpriseAppModal";
 import EditEnterpriseAppModal from "./teamModals/EditEnterpriseAppModal";
+import FreeTrialEndModal from "./teamModals/FreeTrialEndModal";
+import UpgradeTeamPlanModal from "./teamModals/UpgradeTeamPlanModal";
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
@@ -46,8 +48,7 @@ import {withRouter, Switch, Route} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
 import {findDOMNode} from 'react-dom';
 var api = require('../utils/api');
-
-import {connect} from "react-redux"
+import {connect} from "react-redux";
 
 @connect((store)=>{
   return {
@@ -75,7 +76,9 @@ import {connect} from "react-redux"
     reactivateTeamUserModal: store.teamModals.reactivateTeamUserModal,
     teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
-    requestWebsiteModal: store.teamModals.requestWebsiteModal
+    requestWebsiteModal: store.teamModals.requestWebsiteModal,
+    freeTrialEndModal: store.teamModals.freeTrialEndModal,
+    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal
   };
 })
 class TeamView extends React.Component {
@@ -183,6 +186,7 @@ class TeamView extends React.Component {
               <TeamHeader
                   item={selectedItem}
                   match={this.props.match}
+                  dispatch={this.props.dispatch}
                   appsLength={this.props.selectedItem.apps.length}/>
               <div className="team_client_body bordered_scrollbar">
                 <OpacityTransition appear={true}>
@@ -251,6 +255,12 @@ class TeamView extends React.Component {
             <TeamAddMultipleUsersModal/>}
             {this.props.requestWebsiteModal.active &&
             <RequestWebsiteModal/>}
+            {this.props.freeTrialEndModal.active &&
+            <FreeTrialEndModal/>}
+            {this.props.freeTrialEndModal.active &&
+            <FreeTrialEndModal/>}
+            {this.props.upgradeTeamPlanModal.active &&
+            <UpgradeTeamPlanModal/>}
           </div>
         </div>
     )

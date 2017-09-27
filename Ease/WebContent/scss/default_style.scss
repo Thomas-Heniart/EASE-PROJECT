@@ -582,6 +582,10 @@ input.checkbox_unstyle[type=checkbox] {
   border-radius:5px;
 }
 
+.capitalize {
+  text-transform: capitalize !important;
+}
+
 .first_word_capitalize {
   &:first-letter {
     text-transform: capitalize;

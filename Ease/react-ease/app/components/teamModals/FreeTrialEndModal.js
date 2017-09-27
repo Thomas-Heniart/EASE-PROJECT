@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
+import {showFreeTrialEndModal} from "../../actions/teamModalActions";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import {connect} from "react-redux";
 
