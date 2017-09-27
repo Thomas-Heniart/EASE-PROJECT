@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
@@ -41,6 +42,12 @@ public class ServletPinAppToDashboard extends HttpServlet {
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
+            App app = (App) sharedApp.getHolder();
+            if (app.isLinkApp())
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot pin link app like this.");
+            WebsiteApp websiteApp = (WebsiteApp) app;
+            if (!websiteApp.getSite().isIntegrated())
+                throw new HttpServletException(HttpStatus.Forbidden, "You cannot until this app becomes integrated.");
             if (profile_id == -1)
                 sharedApp.unpin(db);
             else {
@@ -48,7 +55,7 @@ public class ServletPinAppToDashboard extends HttpServlet {
                 if (name == null || name.equals(""))
                     throw new HttpServletException(HttpStatus.BadRequest, "You cannot leave name empty.");
                 Profile profile = user.getDashboardManager().getProfile(profile_id);
-                App app = (App) sharedApp;
+                app = (App) sharedApp;
                 app.setName(name, db);
                 sharedApp.pinToDashboard(profile, db);
             }
