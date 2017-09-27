@@ -38,8 +38,13 @@ module.exports = {
         team_id: team_id,
         timestamp: new Date().getTime()
       }
-    }).then((response) => {
-      return response.data;
+    }).then(response => {
+      const channels = response.data.sort((a,b) => {
+        if (a.default)
+          return -1;
+        return 1;
+      });
+      return channels;
     });
   },
   fetchTeamUsers: function (team_id) {
