@@ -59,16 +59,24 @@ class ReceiversLabelGroup extends Component {
     showAll = (state) => {
         this.setState({show_all: state});
     };
+    filterReceivers = (obj) => {
+        if (obj.receiver.profile_id !== -1)
+            return true;
+        else
+            return false;
+    };
     render() {
-        const receivers = this.props.receivers;
+
+        const receivers = this.props.receivers.filter(this.filterReceivers);
+        console.log(receivers);
         return (
             <Label.Group>
-                {this.props.receivers.map((item, idx) => {
+                {receivers.map((item, idx) => {
                     if (!this.state.show_all && idx > 15)
                         return null;
                     const user = item.user;
                     const receiver = item.receiver;
-                    if (item.receiver.profile_id !== -1)
+                    // if (item.receiver.profile_id !== -1)
                         return (
                             <TeamAppReceiverLabel username={user.username} key={receiver.team_user_id}/>
                         );
