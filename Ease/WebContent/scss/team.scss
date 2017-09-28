@@ -592,7 +592,15 @@ button.action_text_button {
 }
 
 #upgrade_team_plan_modal {
-
+  color: $themeBlue2Color;
+  h5 {
+    color: $themeDarkGrayTextColor;
+  }
+  .features {
+    & > .item {
+      margin-bottom: 15px;
+    }
+  }
 }
 
 #team_settings_modal .credit-card-preview {

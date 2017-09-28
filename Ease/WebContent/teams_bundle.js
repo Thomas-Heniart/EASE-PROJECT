@@ -67168,10 +67168,17 @@ var UpgradeTeamPlanModal = (_dec = (0, _reactRedux.connect)(function (store) {
 
     var _this = _possibleConstructorReturn(this, (UpgradeTeamPlanModal.__proto__ || Object.getPrototypeOf(UpgradeTeamPlanModal)).call(this, props));
 
+    _this.showMore = function (state) {
+      _this.setState({ show_more: state });
+    };
+
     _this.confirm = function (e) {
       e.preventDefault();
     };
 
+    _this.state = {
+      show_more: false
+    };
     return _this;
   }
 
@@ -67187,6 +67194,7 @@ var UpgradeTeamPlanModal = (_dec = (0, _reactRedux.connect)(function (store) {
         return (0, _helperFunctions.isOwner)(item.role);
       });
       var featuresList = features.map(function (item, idx) {
+        if (!_this2.state.show_more && idx > 2) return null;
         return _react2.default.createElement(
           _semanticUiReact.List.Item,
           { key: idx },
@@ -67225,8 +67233,13 @@ var UpgradeTeamPlanModal = (_dec = (0, _reactRedux.connect)(function (store) {
             ),
             _react2.default.createElement(
               _semanticUiReact.List,
-              null,
+              { className: "features" },
               featuresList
+            ),
+            !this.state.show_more && _react2.default.createElement(
+              "button",
+              { onClick: this.showMore.bind(null, true), className: "button-unstyle inline-text-button", type: "button" },
+              "Show all features"
             )
           ),
           _react2.default.createElement(
@@ -67239,7 +67252,7 @@ var UpgradeTeamPlanModal = (_dec = (0, _reactRedux.connect)(function (store) {
             type: "submit",
             positive: true,
             onClick: this.confirm,
-            className: "modal-button capitalize",
+            className: "modal-button uppercase",
             content: meOwner ? 'try PRO 30 days for free' : "Ask " + teamOwner.username + " to upgrade" })
         )
       );

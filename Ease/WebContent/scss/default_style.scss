@@ -269,6 +269,10 @@ button, input, optgroup, select, textarea {
   }
 }
 
+.uppercase {
+  text-transform: uppercase !important;
+}
+
 .ui.dropdown .menu {
   z-index: 100;
 }
@@ -580,10 +584,6 @@ input.checkbox_unstyle[type=checkbox] {
   background: none;
   outline: none;
   border-radius:5px;
-}
-
-.capitalize {
-  text-transform: capitalize !important;
 }
 
 .first_word_capitalize {
