@@ -31,6 +31,16 @@ public class Team {
 
     private static final String DEFAULT_CHANNEL_NAME = "openspace";
 
+    public static final Map<Integer, String> plansMap = new HashMap<>();
+    private static final Map<String, Integer> inverse_plansMap = new HashMap<>();
+
+    static {
+        plansMap.put(0, "FreePlan");
+        inverse_plansMap.put("FreePlan", 0);
+        plansMap.put(1, "EaseFreemium");
+        inverse_plansMap.put("EaseFreemium", 1);
+    }
+
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
         //query.querySQLString("SELECT id FROM teams");
@@ -299,14 +309,18 @@ public class Team {
         return res;
     }
 
+    public Integer getPlan_id() throws HttpServletException {
+        return inverse_plansMap.get(this.getSubscription().getPlan().getId());
+    }
+
     public JSONObject getSimpleJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
-        res.put("valid_subscription", !this.isBlocked());
-        res.put("pro_plan", this.isFreemium());
-        res.put("card_entered", this.isCard_entered());
-        res.put("free_trial_ended", !(this.getSubscription().getTrialEnd() == null || this.getSubscription().getTrialEnd() * 1000 >= new Date().getTime()));
+        //res.put("valid_subscription", !this.isBlocked());
+        Integer plan_id = this.getPlan_id();
+        res.put("plan_id", plan_id);
+        res.put("payment_required", plan_id == 1 && !this.isCard_entered() && (this.getSubscription().getTrialEnd() * 1000 >= new Date().getTime()));
         return res;
     }
 

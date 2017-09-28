@@ -27,20 +27,28 @@ public class ServletUpgradePlan extends HttpServlet {
             sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            if (team.isFreemium())
-                throw new HttpServletException(HttpStatus.BadRequest, "You already have the freemium plan");
+            Integer plan_id = sm.getIntParam("plan_id", true, false);
+            if (team.getPlan_id() <= plan_id)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot downgrade your plan");
             int qte = team.getActiveTeamUserNumber();
             team.getSubscription().cancel(new HashMap<>());
             Map<String, Object> item = new HashMap<>();
-            item.put("plan", "EaseFreemium");
+            Map<String, Object> params = new HashMap<>();
+            switch (plan_id) {
+                case 1:
+                    item.put("plan", Team.plansMap.get(plan_id));
+                    params.put("trial_period_days", 30);
+                    params.put("tax_percent", 20.0);
+                    break;
+
+                default:
+                    throw new HttpServletException(HttpStatus.BadRequest, "No such plan for the moment");
+            }
             item.put("quantity", qte);
             Map<String, Object> items = new HashMap<>();
             items.put("0", item);
-            Map<String, Object> params = new HashMap<>();
             params.put("customer", team.getCustomer_id());
             params.put("items", items);
-            params.put("trial_period_days", 30);
-            params.put("tax_percent", 20.0);
             Subscription subscription = Subscription.create(params);
             team.setSubscription_id(subscription.getId());
             team.setSubscription(subscription);
