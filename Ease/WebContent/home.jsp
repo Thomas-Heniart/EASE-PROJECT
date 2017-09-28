@@ -124,7 +124,7 @@
             </div>--%>
             <div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
             </div>
-            <c:if test='${user.appsImported() && (user.getStatus().tutoIsDone() eq false)}'>
+            <c:if test='${user.getStatus().tutoIsDone() eq false}'>
                 <%@ include file="/templates/Tips.jsp" %>
             </c:if>
         </div>
@@ -133,14 +133,6 @@
     </div>
     <div class="popupHandler" id="easePopupsHandler">
     </div>
-    <c:if test='${(user.appsImported() eq false) || (param.importAccounts)}'>
-        <%@ include file="/templates/TutorialView.jsp" %>
-        <script type="text/javascript">
-            window.addEventListener('load', function () {
-                asyncLoading.loadScriptsOneByOne(["/jsMinified.v00020/tutorialSteps.js"]);
-            });
-        </script>
-    </c:if>
     <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">

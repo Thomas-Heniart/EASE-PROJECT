@@ -16,6 +16,7 @@
         data-type="${app.getType()}">
         <div class="linkImage">
             <div class="emptyAppIndicator">
+                <span></span>
                 <img src="resources/other/raise-your-hand-to-ask.svg"/>
             </div>
             <div class="showAppActionsButton">
