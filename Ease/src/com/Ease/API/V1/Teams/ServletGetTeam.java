@@ -26,7 +26,6 @@ public class ServletGetTeam extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true);
             if (team_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "No team id");
-            sm.needToBeTeamUserOfTeam(team_id);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             Team team = teamUser.getTeam();
             //team.decipherApps(teamUser.getDeciphered_teamKey());

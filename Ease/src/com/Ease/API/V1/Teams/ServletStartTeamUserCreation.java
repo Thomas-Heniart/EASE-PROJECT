@@ -53,6 +53,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             checkUsernameIntegrity(username);
             if (role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
+            if (!team.isValidFreemium() && TeamUserRole.Role.MEMBER.getValue() != role)
+                throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to add other admins.");
             String first_name = sm.getStringParam("first_name", true, false);
             String last_name = sm.getStringParam("last_name", true, false);
             HibernateQuery query = sm.getHibernateQuery();
