@@ -23,7 +23,13 @@ const features = [
 class UpgradeTeamPlanModal extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      show_more : false
+    }
   }
+  showMore = (state) => {
+    this.setState({show_more: state});
+  };
   confirm = (e) => {
     e.preventDefault();
 
@@ -34,6 +40,8 @@ class UpgradeTeamPlanModal extends Component {
     const meOwner = isOwner(me.role);
     const teamOwner = this.props.users.find(item => (isOwner(item.role)));
     const featuresList = features.map((item, idx) => {
+      if (!this.state.show_more && idx > 2)
+        return null;
       return (
           <List.Item key={idx}>
             <List.Icon name="checkmark" color="green"/>
@@ -55,9 +63,11 @@ class UpgradeTeamPlanModal extends Component {
               <h5>
                 Pro includes your current features and:
               </h5>
-              <List>
+              <List class="features">
                 {featuresList}
               </List>
+              {!this.state.show_more &&
+              <button onClick={this.showMore.bind(null, true)} class="button-unstyle inline-text-button" type="button">Show all features</button>}
             </Form.Field>
             <Form.Field>
               {meOwner ?
@@ -70,7 +80,7 @@ class UpgradeTeamPlanModal extends Component {
                 type="submit"
                 positive
                 onClick={this.confirm}
-                class="modal-button capitalize"
+                class="modal-button uppercase"
                 content={meOwner ? 'try PRO 30 days for free' : `Ask ${teamOwner.username} to upgrade`}/>
           </Form>
         </SimpleModalTemplate>
