@@ -39,9 +39,9 @@ public class ServletAskOwnerForBilling extends HttpServlet {
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
-            mailJetBuilder.addVariable("url", Variables.URL_PATH + "todo");
+            mailJetBuilder.addVariable("url", Variables.URL_PATH + team.getDefaultChannel().getDb_id() + "/settings/payment");
             mailJetBuilder.sendEmail();
-            team.getTeamUserOwner().addNotification(teamUser.getUsername() + " would like to access agains your team " + team.getName(), team.getDefaultChannel().getDb_id() + "/settings/payment", "/resources/notifications/hand_shake.png", sm.getTimestamp(), sm.getDB());
+            team.getTeamUserOwner().addNotification(teamUser.getUsername() + " would like to access agains your team " + team.getName(), team.getDefaultChannel().getDb_id().toString() + "/settings/payment", "/resources/notifications/hand_shake.png", sm.getTimestamp(), sm.getDB());
             sm.setSuccess("Message sent");
         } catch (Exception e) {
             sm.setError(e);
