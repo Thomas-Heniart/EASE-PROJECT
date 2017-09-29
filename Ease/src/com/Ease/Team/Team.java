@@ -320,7 +320,7 @@ public class Team {
         //res.put("valid_subscription", !this.isBlocked());
         Integer plan_id = this.getPlan_id();
         res.put("plan_id", plan_id);
-        res.put("payment_required", plan_id == 1 && !this.isCard_entered() && (this.getSubscription().getTrialEnd() * 1000 >= new Date().getTime()));
+        res.put("payment_required", !(plan_id >= 1 && !this.isCard_entered() && (this.getSubscription().getTrialEnd() * 1000 >= new Date().getTime())));
         return res;
     }
 
