@@ -60,7 +60,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
             }
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
             if (teamUser != teamUserToModify)
-                teamUserToModify.addNotification(teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "@" + teamUserToModify.getDb_id(), "/resources/notifications/user_role_changed.png", sm.getTimestamp(), sm.getDB());
+                teamUserToModify.addNotification(teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "@" + teamUserToModify.getDb_id() + "/flexPanel", "/resources/notifications/user_role_changed.png", sm.getTimestamp(), sm.getDB());
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
             sm.setSuccess("TeamUser role edited.");

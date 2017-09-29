@@ -11,7 +11,18 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"click", "search":"#signout-button"},
+          {
+            "action": "trueClick",
+            "search": "#user-dropdown-toggle"
+          },
+          {
+            "action": "waitfor",
+            "search": "#signout-button button"
+          },
+          {
+            "action": "trueClick",
+            "search": "#signout-button button"
+          },
 			{"action":"waitload"},
 			{"action":"goto", "url":"https://twitter.com/login"}
 		]

@@ -42,6 +42,8 @@ public class ServletEditEnterpriseApp extends HttpServlet {
             params.put("description", description);
             params.put("password_change_interval", sm.getIntParam("password_change_interval", true, false));
             Boolean fill_in_switch = sm.getBooleanParam("fill_in_switch", true, false);
+            if (!team.isValidFreemium() && fill_in_switch)
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade your plan");
             WebsiteApp websiteApp = (WebsiteApp) app;
             if (websiteApp.getEnterpriseAppAttributes().getFill_in_switch() && !fill_in_switch)
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot disable this switch.");

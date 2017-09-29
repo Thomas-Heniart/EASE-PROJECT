@@ -238,6 +238,12 @@
 								content: "";
 							}
 						}
+                      .app_disabled {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        background-color: rgba(#373B60, 0.8);
+                      }
 					}
 					.linkImage.waitingLinkImage {
 						opacity: 0.5;
@@ -617,7 +623,22 @@
 				font-size: 1vw;
 				position: relative;
 				border: none;
+              display: none;
 			}
+          span {
+            background-color: #DF5454;
+            border-radius: 100%;
+            display: inline-block;
+            width: 35%;
+            height: 35%;
+            left: 45%;
+            bottom: 12%;
+            line-height: 90%;
+            font-size: 1vw;
+            position: relative;
+            border: none;
+
+          }
 			&:hover {
 				background-color: $themeColor;
 				border: 1px solid #efefef;
@@ -629,7 +650,11 @@
 				left:0%;
 				top:15%;
 				border-radius: 5px;
+              display: inline-block;
 			}
+          &:hover > span {
+            display: none;
+          }
 		}
 		.showAppActionsButton {
 			position: absolute;

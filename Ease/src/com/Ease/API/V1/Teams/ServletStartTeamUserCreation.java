@@ -53,6 +53,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             checkUsernameIntegrity(username);
             if (role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
+            if (!team.isValidFreemium() && TeamUserRole.Role.MEMBER.getValue() != role)
+                throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to add other admins.");
             String first_name = sm.getStringParam("first_name", true, false);
             String last_name = sm.getStringParam("last_name", true, false);
             HibernateQuery query = sm.getHibernateQuery();
@@ -68,6 +70,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
             String departure_date_string = sm.getStringParam("departure_date", true, true);
+            if (!team.isValidFreemium())
+                departure_date_string = null;
             Date departure_date = null;
             if (departure_date_string != null && !departure_date_string.equals("")) {
                 departure_date = departure_format.parse(departure_date_string);

@@ -64,7 +64,7 @@ public class ServletCreateTeam extends HttpServlet {
             String username = sm.getStringParam("username", true, false);
             Integer job_index = sm.getIntParam("job_index", true, false);
             //Boolean free_plan = sm.getBooleanParam("free_plan", true, false);
-            Boolean free_plan = true;
+            Integer plan_id = sm.getIntParam("plan_id", true, false);
             if (teamName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
             if (firstName.equals(""))
@@ -116,12 +116,19 @@ public class ServletCreateTeam extends HttpServlet {
             team.setCustomer_id(Customer.create(customerParams).getId());
             Map<String, Object> item = new HashMap<>();
             Map<String, Object> params = new HashMap<>();
-            if (free_plan)
-                item.put("plan", "FreePlan");
-            else {
-                item.put("plan", "EaseFreemium");
-                params.put("trial_period_days", 30);
-                params.put("tax_percent", 20.0);
+            switch (plan_id) {
+                case 0:
+                    item.put("plan", Team.plansMap.get(plan_id));
+                    break;
+
+                case 1:
+                    item.put("plan", Team.plansMap.get(plan_id));
+                    params.put("trial_period_days", 30);
+                    params.put("tax_percent", 20.0);
+                    break;
+
+                default:
+                    throw new HttpServletException(HttpStatus.BadRequest, "This plan does not exist");
             }
             Map<String, Object> items = new HashMap<>();
             items.put("0", item);
