@@ -28,7 +28,7 @@ public class ServletUpgradePlan extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             Integer plan_id = sm.getIntParam("plan_id", true, false);
-            if (team.getPlan_id() <= plan_id)
+            if (plan_id <= team.getPlan_id())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot downgrade your plan");
             int qte = team.getActiveTeamUserNumber();
             team.getSubscription().cancel(new HashMap<>());
