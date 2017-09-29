@@ -72,7 +72,7 @@ function checkFacebook(msg, callback) {
 }
 
 function waitfor(target, callback) {
-    var interval = setInterval(function() {
+    var interval = setInterval(function () {
         if ($(target).length > 0) {
             clearInterval(interval);
             callback();
@@ -93,19 +93,12 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                 var tmpUrl = (home.http + msg.detail[0].user[home.subdomain] + "." + home.domain);
                 msg.detail[msg.bigStep].website.home = tmpUrl;
             }
-            /* extension.tabs.createOrUpdate(currentWindow, senderTab, "chrome://settings", msg.highlight, function(tab) {
-                extension.tabs.onUpdated(tab, function(newTab) {
-                    tab = newTab;
-                    extension.tabs.inject(tab, ["tools/extensionLight.js", "overlay/overlay.css", "overlay/injectOverlay.js"], function() {
-                    });
-                });
-                extension.tabs.onMessage(tab, "reloaded", function(event, sendResponse1) {
-                    console.log("Je suis peut être là ?");
-                    extension.tabs.sendMessage(tab, "checkChromeSettings", {}, function(response) {
-
-                    });
-                });
-            }); */
+            var url = document.createElement("a");
+            url.href = msg.detail[msg.bigStep].website.home;
+            chrome.contentSettings.popups.set({
+                primaryPattern: url.protocol + "//" + url.hostname + "/*",
+                setting: chrome.contentSettings.PopupsContentSetting.ALLOW
+            });
             extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[msg.bigStep].website.home, msg.highlight, function (tab) {
                 extension.tabs.onUpdated(tab, function (newTab) {
                     tab = newTab;
