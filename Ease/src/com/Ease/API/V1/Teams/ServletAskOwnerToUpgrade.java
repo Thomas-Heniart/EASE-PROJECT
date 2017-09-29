@@ -39,9 +39,9 @@ public class ServletAskOwnerToUpgrade extends HttpServlet {
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
-            mailJetBuilder.addVariable("url", Variables.URL_PATH + "todo");
+            mailJetBuilder.addVariable("url", Variables.URL_PATH + team.getDefaultChannel().getDb_id() + "/upgrade");
             mailJetBuilder.sendEmail();
-            team.getTeamUserOwner().addNotification(teamUser.getUsername() + " suggests to upgrade your Ease.space team!", team.getDefaultChannel().getDb_id() + "/settings/information", "/resources/notifications/hand_shake.png", sm.getTimestamp(), sm.getDB());
+            team.getTeamUserOwner().addNotification(teamUser.getUsername() + " suggests to upgrade your Ease.space team!", team.getDefaultChannel().getDb_id().toString() + "/upgrade", "/resources/notifications/hand_shake.png", sm.getTimestamp(), sm.getDB());
             sm.setSuccess("Message sent");
         } catch (Exception e) {
             sm.setError(e);
