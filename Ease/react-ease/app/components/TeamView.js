@@ -37,6 +37,7 @@ import AcceptEnterpriseAppModal from "./teamModals/AcceptEnterpriseAppModal";
 import EditEnterpriseAppModal from "./teamModals/EditEnterpriseAppModal";
 import FreeTrialEndModal from "./teamModals/FreeTrialEndModal";
 import UpgradeTeamPlanModal from "./teamModals/UpgradeTeamPlanModal";
+import StaticUpgradeTeamPlanModal from "./teamModals/StaticUpgradeTeamPlanModal";
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
@@ -170,10 +171,11 @@ class TeamView extends React.Component {
   render(){
     const selectedItem = this.getSelectedItem();
     const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
-
     return (
         <div id="teamsHandler">
           <div className="team_view" id="team_view">
+            {!this.state.loadingInfo && this.props.team.payment_required &&
+            <FreeTrialEndModal/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             {!this.state.loadingInfo && <TeamSideBar me={me}/>}
             {this.props.team.teamMenuActive &&
@@ -214,6 +216,8 @@ class TeamView extends React.Component {
                      component={TeamBrowsePeopleModal}/>
               <Route path={`${this.props.match.path}/rooms`}
                      component={TeamBrowseRoomsModal}/>
+              <Route path={`${this.props.match.path}/upgrade`}
+                     component={StaticUpgradeTeamPlanModal}/>
             </Switch>}
             {this.props.addUserModalActive &&
             <TeamAddUserModal key="1"/>}
@@ -255,8 +259,6 @@ class TeamView extends React.Component {
             <TeamAddMultipleUsersModal/>}
             {this.props.requestWebsiteModal.active &&
             <RequestWebsiteModal/>}
-            {this.props.freeTrialEndModal.active &&
-            <FreeTrialEndModal/>}
             {this.props.freeTrialEndModal.active &&
             <FreeTrialEndModal/>}
             {this.props.upgradeTeamPlanModal.active &&

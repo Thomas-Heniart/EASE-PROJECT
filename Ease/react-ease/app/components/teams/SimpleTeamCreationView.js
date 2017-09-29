@@ -1,7 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 var post_api = require('../../utils/post_api');
-
+import queryString from "query-string";
 import InvitePeopleStep from "./InvitePeopleStep";
 import {passwordRegexp, emailRegexp, checkTeamUsernameErrors, jobRoles} from "../../utils/utils";
 import {connect} from "react-redux";
@@ -226,7 +226,17 @@ class Step6 extends React.Component{
   onSubmit(e){
     e.preventDefault();
     this.setState({errorMessage: '', loading: true});
-    post_api.teams.createTeam(this.props.teamName, this.props.email,this.props.first_name, this.props.last_name, this.props.username, this.props.jobRole, this.props.jobDetails, this.props.digits).then(response => {
+    post_api.teams.createTeam({
+      name: this.props.teamName,
+      email: this.props.email,
+      first_name: this.props.first_name,
+      last_name: this.props.last_name,
+      username: this.props.username,
+      jobRole: this.props.jobRole,
+      jobDetails: this.props.jobDetails,
+      digits: this.props.digits,
+      plan_id: 0
+    }).then(response => {
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
@@ -289,6 +299,7 @@ class SimpleTeamCreationView extends React.Component {
       jobDetails: '',
       teamName: '',
       teamId: -1,
+      plan_id: 0,
       invitations: [{email: '', username: ''},{email: '', username: ''},{email: '', username: ''}]
     };
     this.incrementStep = this.incrementStep.bind(this);
@@ -307,6 +318,9 @@ class SimpleTeamCreationView extends React.Component {
     this.setState({currentStep: this.state.currentStep + value});
   }
   componentDidMount(){
+    const query = queryString.parse(this.props.location.search);
+    if (query.plan_id !== undefined && query.plan_id.length !== 0)
+      this.setState(() => ({plan_id: Number(query.plan_id)}));
     if (this.props.user !== null){
       this.setState({email: this.props.user.email, username: this.props.user.first_name});
     }

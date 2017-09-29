@@ -3,9 +3,11 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import {passwordRegexp, emailRegexp, jobRoles, checkTeamUsernameErrors, handleSemanticInput, userNameRuleString} from "../../utils/utils";
 import queryString from "query-string";
 import SingleEaseLogo from "../common/SingleEaseLogo";
+import {withRouter} from "react-router-dom";
 import { Header, Container, Segment, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 var api = require('../../utils/api');
 var post_api = require('../../utils/post_api');
+import {connect} from "react-redux";
 
 class Step1 extends React.Component {
   constructor(props){
@@ -235,6 +237,12 @@ class StepCGU extends React.Component{
   }
 }
 
+@connect((store)=>{
+  return {
+    ws_id: store.common.ws_id,
+    authenticated: store.common.authenticated
+  };
+})
 class Registration extends React.Component {
   constructor(props){
     super(props);
@@ -256,6 +264,8 @@ class Registration extends React.Component {
     window.location.href = "/";
   };
   componentDidMount(){
+    if (this.props.authenticated)
+      this.props.history.replace(`/main/simpleTeamCreation?plan_id=0`);
     const query = queryString.parse(this.props.location.search);
     if (query.email !== undefined){
       this.setState({email: query.email});
@@ -310,4 +320,4 @@ class Registration extends React.Component {
   }
 }
 
-module.exports = Registration;
+module.exports = withRouter(Registration);

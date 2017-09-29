@@ -1,6 +1,6 @@
 var React = require('react');
 import {connect} from "react-redux";
-import {showAddTeamChannelModal} from "../../actions/teamModalActions";
+import {showAddTeamChannelModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import * as channelActions from "../../actions/channelActions";
 import {renderUserLabel} from "../../utils/renderHelpers";
 import {reflect} from "../../utils/utils";
@@ -10,7 +10,9 @@ import { Header, Container, Segment, Checkbox, Form, Input, Select, Dropdown, Bu
 @connect((store)=>{
   return {
     users: store.users.users,
-    myId: store.team.myTeamUserId
+    myId: store.team.myTeamUserId,
+    channels: store.channels.channels,
+    plan_id: store.team.plan_id
   };
 })
 class TeamAddChannelModal extends React.Component {
@@ -39,6 +41,10 @@ class TeamAddChannelModal extends React.Component {
   }
   validateChannelCreation(e){
     e.preventDefault();
+    if (this.props.channels.length > 3 && this.props.plan_id === 0){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 0));
+      return;
+    }
     const name = this.state.name;
     const purpose = this.state.purpose;
     const selectedUsers = this.state.value;

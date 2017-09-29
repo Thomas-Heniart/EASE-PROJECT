@@ -9,6 +9,7 @@ import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/team
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
+import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
@@ -92,7 +93,8 @@ const TeamAppCredentialInput = ({item, onChange}) => {
 @connect(store => ({
   team_id: store.team.id,
   myId: store.team.myTeamUserId,
-  users: store.users.users
+  users: store.users.users,
+  plan_id: store.team.plan_id
 }))
 class SimpleTeamAppAdder extends Component {
   constructor(props){
@@ -110,6 +112,10 @@ class SimpleTeamAppAdder extends Component {
   };
   handleInput = handleSemanticInput.bind(this);
   toggleCanSeeInformation = (id) => {
+    if (this.props.plan_id === 0){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 1));
+      return;
+    }
     let users = this.state.users.map(item => {
       return {
         ...item,

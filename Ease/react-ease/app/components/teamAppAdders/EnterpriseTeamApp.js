@@ -28,6 +28,7 @@ import {selectItemFromListById,
   findMeInReceivers,
   getReceiverInList,
   isAdmin} from "../../utils/helperFunctions";
+import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {teamShareEnterpriseApp, teamEditEnterpriseAppReceiver, teamEditEnterpriseApp} from "../../actions/appsActions";
 import {connect} from "react-redux";
 
@@ -230,6 +231,10 @@ class EnterpriseTeamApp extends Component {
   }
   handleInput = handleSemanticInput.bind(this);
   changeFillInSwitch = (e, {checked}) => {
+    if (this.props.plan_id === 0 && !checked){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 2));
+      return;
+    }
     if (this.props.app.fill_in_switch && checked)
       return;
     this.setState({fill_in_switch: !checked});

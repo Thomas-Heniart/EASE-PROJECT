@@ -77,7 +77,7 @@ const initialState = {
   },
   upgradeTeamPlanModal: {
     active: false,
-    featureDescription: ''
+    feature_id: null
   },
   freeTrialEndModal: {
     active: false

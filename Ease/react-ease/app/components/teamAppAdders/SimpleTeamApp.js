@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import api from '../../utils/api';
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
+import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {setUserDropdownText,
   PasswordChangeHolder,
   renderSimpleAppUserLabel,
@@ -41,7 +41,7 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
                 onChange={onChange}
                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                 labelPosition="left"
-                placeholder={item.placeholder}
+                placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
                 value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
                 type={item.type}>
   </Input>
@@ -165,6 +165,10 @@ class SimpleTeamApp extends Component {
   }
   handleInput = handleSemanticInput.bind(this);
   toggleCanSeeInformation = (id) => {
+    if (this.props.plan_id === 0){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 1));
+      return;
+    }
     let users = this.state.users.map(item => {
       return {
         ...item,

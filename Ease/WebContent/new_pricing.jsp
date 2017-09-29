@@ -107,7 +107,7 @@
                     <span class="text-center price" style="margin-bottom: 33px">3,99 <span class="symbol">€HT</span></span>
                     <div class="text-center">
                         <button class="button-unstyle big-button button">
-                            <a href="/teams#/teamCreation" class="link-unstyle" style="font-size: 18px;">
+                            <a href="/teams#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
                                 Essayez 1 mois gratuit
                             </a>
                         </button>
@@ -156,7 +156,7 @@
                     </div>
                     <div class="text-center" style="margin: 60px 0 10px 0">
                         <button class="button-unstyle big-button button">
-                            <a href="/teams#/teamCreation" class="link-unstyle" style="font-size: 18px;">
+                            <a href="/teams#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
                                 Essayez 1 mois gratuit
                             </a>
                         </button>

@@ -202,12 +202,12 @@ export function showTeamAddMultipleUsersModal(state){
   }
 }
 
-export function showUpgradeTeamPlanModal(state, desc) {
+export function showUpgradeTeamPlanModal(state, feature_id) {
   return {
     type: 'SHOW_UPGRADE_TEAM_PLAN_MODAL',
     payload: {
       active: state,
-      featureDescription: desc
+      feature_id: feature_id
     }
   }
 }

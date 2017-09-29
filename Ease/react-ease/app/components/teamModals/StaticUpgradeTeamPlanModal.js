@@ -6,6 +6,7 @@ import {upgradePlan} from "../../actions/teamActions";
 import {connect} from "react-redux";
 import post_api from "../../utils/post_api";
 import {proFeaturesDesc, proFeatures} from "../../utils/teamPlans";
+import {withRouter} from "react-router-dom";
 import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
 
 @connect(store => ({
@@ -14,7 +15,7 @@ import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
   myId: store.team.myTeamUserId,
   users: store.users.users
 }))
-class UpgradeTeamPlanModal extends Component {
+class StaticUpgradeTeamPlanModal extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -25,6 +26,9 @@ class UpgradeTeamPlanModal extends Component {
   }
   showMore = (state) => {
     this.setState({show_more: state});
+  };
+  close = () => {
+    this.props.history.push(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}`);
   };
   confirm = (e) => {
     e.preventDefault();
@@ -49,7 +53,7 @@ class UpgradeTeamPlanModal extends Component {
     }
   };
   render(){
-    const feature_id = this.props.feature_id;
+//    const feature_id = this.props.feature_id;
     const me = selectItemFromListById(this.props.users, this.props.myId);
     const meOwner = isOwner(me.role);
     const teamOwner = this.props.users.find(item => (isOwner(item.role)));
@@ -67,12 +71,9 @@ class UpgradeTeamPlanModal extends Component {
     });
     return (
         <SimpleModalTemplate
-            onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal(false))}}
+            onClose={this.close}
             headerContent={'Upgrade to Pro!'}>
           <Form class="container" error={this.state.errorMesage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
-            <Form.Field>
-              Your current plan (Basic) doesn’t enable {proFeaturesDesc[feature_id]}.
-            </Form.Field>
             <Form.Field>
               <h5>
                 Pro includes your current features and:
@@ -104,4 +105,4 @@ class UpgradeTeamPlanModal extends Component {
   }
 }
 
-module.exports = UpgradeTeamPlanModal;
+module.exports = withRouter(StaticUpgradeTeamPlanModal);

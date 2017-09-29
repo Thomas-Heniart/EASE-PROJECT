@@ -3,6 +3,7 @@ var classnames = require('classnames');
 var post_api = require('../../utils/post_api');
 var api = require('../../utils/api');
 var axios = require('axios');
+import queryString from "query-string";
 import InvitePeopleStep from "./InvitePeopleStep";
 import {passwordRegexp, emailRegexp, checkTeamUsernameErrors, jobRoles} from "../../utils/utils";
 import {withRouter} from "react-router-dom";
@@ -52,7 +53,7 @@ class Step1 extends React.Component{
                        type="email"
                        name="email"
                        placeholder="name@company.com"
-                        required/>
+                       required/>
                 <a onClick={this.login} style={{float:'right', marginTop:'5px'}}>I already have an account</a>
               </Form.Field>
               <Form.Checkbox label="It’s ok to send me very occasional emails about security and Ease.space"
@@ -165,29 +166,29 @@ class Step3 extends React.Component{
                 Choose a strong password for sign in to Ease.space
               </Header.Subheader>
             </Header>
-          <Divider hidden clearing/>
-          <Form onSubmit={this.onSubmit} error={this.state.errorMessage.length > 0}>
-                <Form.Field required error={this.state.passwordError}>
-                  <label>Password</label>
-                  <Input
-                      onChange={this.props.handleInput}
-                      type="password"
-                      name="password"
-                      placeholder="Password"
-                      required/>
-                  <Label pointing color={this.state.passwordError ? 'red': null} basic={this.state.passwordError}>Your password must contain at least 8 characters, 1 uppercase, 1 lowercase and 1 number</Label>
-                </Form.Field>
-                <Form.Input
-                    label="Confirm password"
+            <Divider hidden clearing/>
+            <Form onSubmit={this.onSubmit} error={this.state.errorMessage.length > 0}>
+              <Form.Field required error={this.state.passwordError}>
+                <label>Password</label>
+                <Input
                     onChange={this.props.handleInput}
                     type="password"
-                    name="confirmPassword"
-                    placeholder="Confirmation"
+                    name="password"
+                    placeholder="Password"
                     required/>
-                <Message error content={this.state.errorMessage}/>
-                <Form.Button positive fluid type="submit">Next</Form.Button>
-              </Form>
-            </Segment>
+                <Label pointing color={this.state.passwordError ? 'red': null} basic={this.state.passwordError}>Your password must contain at least 8 characters, 1 uppercase, 1 lowercase and 1 number</Label>
+              </Form.Field>
+              <Form.Input
+                  label="Confirm password"
+                  onChange={this.props.handleInput}
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirmation"
+                  required/>
+              <Message error content={this.state.errorMessage}/>
+              <Form.Button positive fluid type="submit">Next</Form.Button>
+            </Form>
+          </Segment>
         </div>
     )
   }
@@ -335,7 +336,17 @@ class Step6 extends React.Component{
   onSubmit(e){
     e.preventDefault();
     this.setState({errorMessage: '', loading: true});
-    post_api.teams.createTeam(this.props.teamName, this.props.email,this.props.first_name, this.props.last_name, this.props.username, this.props.jobRole, this.props.jobDetails, this.props.digits).then(response => {
+    post_api.teams.createTeam({
+      name: this.props.teamName,
+      email: this.props.email,
+      first_name: this.props.first_name,
+      last_name: this.props.last_name,
+      username: this.props.username,
+      jobRole: this.props.jobRole,
+      jobDetails: this.props.jobDetails,
+      digits: this.props.digits,
+      plan_id: 0
+    }).then(response => {
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
@@ -397,6 +408,7 @@ class TeamCreationView extends React.Component {
       jobDetails: '',
       teamName: '',
       teamId: -1,
+      plan_id: 0,
       invitations: [{email: '', username: ''},{email: '', username: ''},{email: '', username: ''}]
     };
     this.incrementStep = this.incrementStep.bind(this);
@@ -464,9 +476,13 @@ class TeamCreationView extends React.Component {
     this.setState({currentStep: this.state.currentStep + 1});
   }
   componentDidMount() {
-    if (this.props.authenticated){
-      this.props.history.push('/main/simpleTeamCreation');
-    }
+    const query = queryString.parse(this.props.location.search);
+    let plan_id = 0;
+    if (query.plan_id !== undefined && query.plan_id.length !== 0)
+      plan_id = query.plan_id;
+    if (this.props.authenticated)
+      this.props.history.replace(`/main/simpleTeamCreation?plan_id=${plan_id}`);
+    this.setState({plan_id: plan_id});
   }
   render(){
     var steps = [];

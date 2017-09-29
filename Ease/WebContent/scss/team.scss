@@ -591,6 +591,12 @@ button.action_text_button {
   }
 }
 
+#add_user_modal {
+  label {
+    line-height: 1.8;
+  }
+}
+
 #upgrade_team_plan_modal {
   color: $themeBlue2Color;
   h5 {

@@ -1,5 +1,5 @@
 var React = require('react');
-var classnames = require('classnames');
+import {showUpgradeTeamPlanModal} from "../actions/teamModalActions";
 import * as teamModalActions from "../actions/teamModalActions"
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
@@ -494,7 +494,13 @@ class TeamUserRole extends React.Component {
       role: 1
     }
   }
-  handleInput = handleSemanticInput.bind(this);
+  handleInput = (e,{name, value}) =>{
+    if (this.props.plan_id === 0 && value === 2){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 3));
+      return;
+    }
+    this.setState({[name]: value});
+  };
   setEdit = (state) => {
     this.setState({edit: state, role: this.props.user.role, errorMessage: ''});
   };
@@ -521,6 +527,11 @@ class TeamUserRole extends React.Component {
     const userRoles = teamUserRoleValues.filter(item => {
       return item.value <= me.role;
     });
+    let adminRole = userRoles.find(item => (item.value === 2));
+
+    if (adminRole !== undefined){
+      adminRole.content = <span>Admin{this.props.plan_id === 0 && <img style={{height: '14px', paddingLeft: '2px'}} src="/resources/images/upgrade.png"/>}</span>;
+    }
     return (
         <Grid.Column>
           <strong>Role: </strong>
@@ -531,7 +542,7 @@ class TeamUserRole extends React.Component {
                 <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
                    </span> :
               <span>
-                      <Dropdown floating inline name="role" options={userRoles} defaultValue={this.state.role} onChange={this.handleInput}/>
+                      <Dropdown floating inline name="role" options={userRoles} value={this.state.edit ? this.state.role : this.props.user.role} onChange={this.handleInput}/>
                        <Icon link name="delete" onClick={this.setEdit.bind(null, false)}/>
                        <Icon link name="checkmark" onClick={this.confirm}/>
                 {this.state.errorMessage.length > 0 &&
@@ -570,6 +581,10 @@ class TeamUserFlexTab extends React.Component{
     this.setState({[name]: value});
   }
   setDepartureDateModifying(state){
+    if (this.props.plan_id === 0){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 5));
+      return;
+    }
     if (state){
       this.setState({
         departureDateModifying: true,
@@ -656,9 +671,7 @@ class TeamUserFlexTab extends React.Component{
   render() {
     const user = this.props.item;
     const me = this.props.me;
-    const userRoles = teamUserRoleValues.filter(item => {
-      return item.value <= me.role;
-    });
+
     return (
         <div className="flex_contents_panel active" id="team_user_tab">
           <div className="tab_heading">
@@ -711,7 +724,7 @@ class TeamUserFlexTab extends React.Component{
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <TeamUserRole dispatch={this.props.dispatch} user={user} me={me}/>
+                <TeamUserRole plan_id={this.props.plan_id} dispatch={this.props.dispatch} user={user} me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
@@ -727,6 +740,8 @@ class TeamUserFlexTab extends React.Component{
                       {user.departure_date.length > 0 ? user.departure_date : 'not planned'}
                         {isSuperior(user, me) && me.id !== user.id &&
                         <Icon link name="pencil" className="mrgnLeft5" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
+                        {isSuperior(user, me) && me.id !== user.id && this.props.plan_id === 0 &&
+                            <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
                         </span> :
                       <Input type="date" size="mini"
                              fluid action name="departureDate"
@@ -775,7 +790,8 @@ class TeamUserFlexTab extends React.Component{
   return {
     channels: store.channels.channels,
     users: store.users.users,
-    selectionProps: store.selection
+    selectionProps: store.selection,
+    plan_id: store.team.plan_id
   };
 })
 class FlexPanels extends React.Component {
@@ -800,6 +816,7 @@ class FlexPanels extends React.Component {
               apps={selectionProps.apps}
               flexActive={this.props.flexActive}
               toggleFlexFunc={this.closePanel}
+              plan_id={this.props.plan_id}
               users={this.props.users}
               dispatch={this.props.dispatch}/>}
           {item.username !== undefined &&
@@ -809,6 +826,7 @@ class FlexPanels extends React.Component {
               apps={selectionProps.apps}
               flexActive={this.props.flexActive}
               toggleFlexFunc={this.closePanel}
+              plan_id={this.props.plan_id}
               channels={this.props.channels}
               dispatch={this.props.dispatch}/>}
         </div>
