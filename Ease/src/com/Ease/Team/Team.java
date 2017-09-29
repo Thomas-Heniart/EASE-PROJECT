@@ -201,7 +201,7 @@ public class Team {
     }
 
     public boolean isValidFreemium() throws HttpServletException {
-        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 < new Date().getTime()));
+        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()));
     }
 
     public Map<Integer, TeamUser> getTeamUsers() {
