@@ -317,7 +317,7 @@ class SimpleTeamApp extends Component {
                                          item={item}/>
         });
     return (
-        <Container fluid class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
+        <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
           <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>

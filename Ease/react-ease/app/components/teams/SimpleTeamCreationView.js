@@ -264,7 +264,7 @@ class Step6 extends React.Component{
       jobRole: this.props.jobRole,
       jobDetails: this.props.jobDetails,
       digits: this.props.digits,
-      plan_id: 0
+      plan_id: this.props.plan_id
     }).then(response => {
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
@@ -447,6 +447,7 @@ class SimpleTeamCreationView extends React.Component {
                       teamName={this.state.teamName}
                       jobRole={this.state.jobRole}
                       jobDetails={this.state.jobDetails}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       key="6"/>);
     steps.push(<InvitePeopleStep
