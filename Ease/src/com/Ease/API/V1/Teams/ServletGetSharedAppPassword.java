@@ -31,9 +31,9 @@ public class ServletGetSharedAppPassword extends HttpServlet {
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            if (!team.isValidFreemium() && !teamUser.isTeamAdmin())
-                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade your plan");
             SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
+            if (!team.isValidFreemium() && !teamUser.isTeamAdmin() && teamUser != sharedApp.getTeamUser_tenant())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade your plan");
             if (sharedApp.getTeamUser_tenant() != teamUser && !teamUser.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot retrieve account information for this app.");
             App app = (App) sharedApp;

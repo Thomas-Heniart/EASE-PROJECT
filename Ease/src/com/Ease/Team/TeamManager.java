@@ -77,9 +77,9 @@ public class TeamManager {
             team.updateSubscription();
     }
 
-    public void checkFreeTrialEnd() {
+    public void checkFreeTrialEnd(DataBaseConnection db) {
         for (Team team : this.getTeams())
-            team.checkFreeTrialEnd();
+            team.checkFreeTrialEnd(db);
     }
 
     public void reminderThreeDays() throws HttpServletException {
