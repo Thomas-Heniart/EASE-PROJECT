@@ -38,6 +38,7 @@ import EditEnterpriseAppModal from "./teamModals/EditEnterpriseAppModal";
 import FreeTrialEndModal from "./teamModals/FreeTrialEndModal";
 import UpgradeTeamPlanModal from "./teamModals/UpgradeTeamPlanModal";
 import StaticUpgradeTeamPlanModal from "./teamModals/StaticUpgradeTeamPlanModal";
+import DepartureDateEndModal from "./teamModals/DepartureDateEndModal";
 var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
 import * as channelActions from "../actions/channelActions"
@@ -79,7 +80,8 @@ import {connect} from "react-redux";
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
     requestWebsiteModal: store.teamModals.requestWebsiteModal,
     freeTrialEndModal: store.teamModals.freeTrialEndModal,
-    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal
+    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
+    departureDateEndModal: store.teamModals.departureDateEndModal
   };
 })
 class TeamView extends React.Component {
@@ -263,6 +265,8 @@ class TeamView extends React.Component {
             <FreeTrialEndModal/>}
             {this.props.upgradeTeamPlanModal.active &&
             <UpgradeTeamPlanModal/>}
+            {this.props.departureDateEndModal.active &&
+            <DepartureDateEndModal/>}
           </div>
         </div>
     )

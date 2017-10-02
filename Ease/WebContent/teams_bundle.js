@@ -669,6 +669,7 @@ exports.showRequestWebsiteModal = showRequestWebsiteModal;
 exports.showTeamAddMultipleUsersModal = showTeamAddMultipleUsersModal;
 exports.showUpgradeTeamPlanModal = showUpgradeTeamPlanModal;
 exports.showFreeTrialEndModal = showFreeTrialEndModal;
+exports.showDepartureDateEndModal = showDepartureDateEndModal;
 function showAddTeamUserModal(state) {
   return {
     type: 'SHOW_ADD_TEAM_USER_MODAL',
@@ -888,6 +889,16 @@ function showFreeTrialEndModal(state) {
     type: 'SHOW_FREE_TRIAL_END_MODAL',
     payload: {
       active: state
+    }
+  };
+}
+
+function showDepartureDateEndModal(state, user) {
+  return {
+    type: 'DEPARTURE_DATE_END_MODAL',
+    payload: {
+      active: state,
+      user: user
     }
   };
 }
@@ -49375,6 +49386,10 @@ var _StaticUpgradeTeamPlanModal = __webpack_require__(630);
 
 var _StaticUpgradeTeamPlanModal2 = _interopRequireDefault(_StaticUpgradeTeamPlanModal);
 
+var _DepartureDateEndModal = __webpack_require__(1253);
+
+var _DepartureDateEndModal2 = _interopRequireDefault(_DepartureDateEndModal);
+
 var _teamActions = __webpack_require__(63);
 
 var teamActions = _interopRequireWildcard(_teamActions);
@@ -49474,7 +49489,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
     requestWebsiteModal: store.teamModals.requestWebsiteModal,
     freeTrialEndModal: store.teamModals.freeTrialEndModal,
-    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal
+    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
+    departureDateEndModal: store.teamModals.departureDateEndModal
   };
 }), _dec(_class = function (_React$Component) {
   _inherits(TeamView, _React$Component);
@@ -49664,7 +49680,8 @@ var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
           this.props.teamAddMultipleUsersModal.active && React.createElement(_TeamAddMultipleUsersModal2.default, null),
           this.props.requestWebsiteModal.active && React.createElement(RequestWebsiteModal, null),
           this.props.freeTrialEndModal.active && React.createElement(_FreeTrialEndModal2.default, null),
-          this.props.upgradeTeamPlanModal.active && React.createElement(_UpgradeTeamPlanModal2.default, null)
+          this.props.upgradeTeamPlanModal.active && React.createElement(_UpgradeTeamPlanModal2.default, null),
+          this.props.departureDateEndModal.active && React.createElement(_DepartureDateEndModal2.default, null)
         )
       );
     }
@@ -51761,7 +51778,7 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
       var plan_id = 0;
       if (query.plan_id !== undefined && query.plan_id.length !== 0) plan_id = query.plan_id;
       if (this.props.authenticated) this.props.history.replace('/main/simpleTeamCreation?plan_id=' + plan_id);
-      this.setState({ plan_id: plan_id });
+      this.setState({ plan_id: Number(plan_id) });
     }
   }, {
     key: 'render',
@@ -68820,6 +68837,10 @@ var initialState = {
   },
   freeTrialEndModal: {
     active: false
+  },
+  departureDateEndModal: {
+    active: false,
+    user: null
   }
 };
 function reducer() {
@@ -68963,6 +68984,12 @@ function reducer() {
       {
         return _extends({}, state, {
           freeTrialEndModal: action.payload
+        });
+      }
+    case 'DEPARTURE_DATE_END_MODAL':
+      {
+        return _extends({}, state, {
+          departureDateEndModal: action.payload
         });
       }
   }
@@ -116827,6 +116854,129 @@ var valueEqual = function valueEqual(a, b) {
 };
 
 exports.default = valueEqual;
+
+/***/ }),
+/* 1253 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _dec, _class;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _SimpleModalTemplate = __webpack_require__(52);
+
+var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
+
+var _semanticUiReact = __webpack_require__(10);
+
+var _teamModalActions = __webpack_require__(9);
+
+var _userActions = __webpack_require__(39);
+
+var _reactRedux = __webpack_require__(6);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DepartureDateEndModal = (_dec = (0, _reactRedux.connect)(function (store) {
+  return {
+    user: store.teamModals.departureDateEndModal.user
+  };
+}), _dec(_class = function (_Component) {
+  _inherits(DepartureDateEndModal, _Component);
+
+  function DepartureDateEndModal(props) {
+    _classCallCheck(this, DepartureDateEndModal);
+
+    var _this = _possibleConstructorReturn(this, (DepartureDateEndModal.__proto__ || Object.getPrototypeOf(DepartureDateEndModal)).call(this, props));
+
+    _this.unfreeze = function () {};
+
+    _this.confirm = function (e) {
+      e.preventDefault();
+      _this.setState({ loading: true, errorMessage: '' });
+      _this.props.dispatch((0, _userActions.deleteTeamUser)(_this.props.user.id)).then(function () {
+        _this.setState({ loading: false });
+      }).catch(function (err) {
+        _this.setState({ loading: false, errorMessage: err });
+      });
+    };
+
+    _this.state = {
+      loading: false,
+      errorMessage: ''
+    };
+    return _this;
+  }
+
+  _createClass(DepartureDateEndModal, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var user = this.props.user;
+      return _react2.default.createElement(
+        _SimpleModalTemplate2.default,
+        {
+          onClose: function onClose(e) {
+            _this2.props.dispatch((0, _teamModalActions.showDepartureDateEndModal)(false));
+          },
+          headerContent: user.username + "'s account is frozen" },
+        _react2.default.createElement(
+          _semanticUiReact.Form,
+          { className: "container", error: this.state.errorMessage.length > 0, onSubmit: this.confirm },
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            null,
+            _react2.default.createElement(
+              "strong",
+              { className: "capitalize" },
+              user.username
+            ),
+            "\u2019s account has been frozen because the departure date was set on ",
+            user.departure_date,
+            ". You can now decide to unfreeze the account or confirm the departure."
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Form.Field,
+            { style: { textAlign: 'right' } },
+            _react2.default.createElement(
+              "button",
+              { className: "button-unstyle inline-text-button", type: "button" },
+              "Unfreeze Account"
+            )
+          ),
+          _react2.default.createElement(_semanticUiReact.Message, { error: true, content: this.state.errorMessage }),
+          _react2.default.createElement(_semanticUiReact.Button, {
+            attached: "bottom",
+            type: "submit",
+            positive: true,
+            loading: this.state.loading,
+            onClick: this.confirm,
+            className: "modal-button uppercase",
+            content: 'CONFIRM DEPARTURE' })
+        )
+      );
+    }
+  }]);
+
+  return DepartureDateEndModal;
+}(_react.Component)) || _class);
+
+
+module.exports = DepartureDateEndModal;
 
 /***/ })
 /******/ ]);
