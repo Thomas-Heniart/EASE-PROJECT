@@ -55118,6 +55118,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = __webpack_require__(0);
 var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
+<<<<<<< HEAD
     return {
         selectedItem: store.selection,
         users: store.users.users,
@@ -55126,6 +55127,17 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
         team_id: store.team.id,
         plan_id: store.team.plan_id
     };
+=======
+  return {
+    selectedItem: store.selection,
+    loading: store.selection.loading,
+    users: store.users.users,
+    channels: store.channels.channels,
+    me: store.users.me,
+    team_id: store.team.id,
+    plan_id: store.team.plan_id
+  };
+>>>>>>> 03e7b59eb65d5e63b1326fd1e33cc70ec0bcac6c
 }), _dec(_class = function (_React$Component) {
     _inherits(TeamAppsContainer, _React$Component);
 
@@ -55135,6 +55147,7 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
         return _possibleConstructorReturn(this, (TeamAppsContainer.__proto__ || Object.getPrototypeOf(TeamAppsContainer)).call(this, props));
     }
 
+<<<<<<< HEAD
     _createClass(TeamAppsContainer, [{
         key: "componentWillReceiveProps",
         value: function componentWillReceiveProps(nextProps) {
@@ -55202,6 +55215,68 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
             );
         }
     }]);
+=======
+  _createClass(TeamAppsContainer, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps !== this.props) {
+        if (!this.props.loading && prevProps.loading !== this.props.loading || this.props.location.search !== prevProps.location.search) {
+          var query = _queryString2.default.parse(this.props.location.search);
+          if (query.app_id !== undefined && query.app_id.length !== 0) {
+            var el = document.getElementById("app_" + query.app_id);
+            if (el) {
+              el.scrollIntoView(true);
+              el.classList.add('blink');
+              window.setTimeout(function () {
+                el.classList.remove('blink');
+              }, 3000);
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "div",
+        { className: "apps_container" },
+        React.createElement(
+          "div",
+          { className: "apps_scroller_div", id: "team_apps_container" },
+          this.props.selectedItem.apps.map(function (item) {
+            if (item.type === 'simple') return React.createElement(_SimpleTeamApp2.default, {
+              app: item,
+              users: this.props.users,
+              channels: this.props.channels,
+              me: this.props.me,
+              key: item.id,
+              plan_id: this.props.plan_id,
+              team_id: this.props.team_id,
+              dispatch: this.props.dispatch });
+            if (item.type === 'link') return React.createElement(_LinkTeamApp2.default, {
+              app: item,
+              users: this.props.users,
+              channels: this.props.channels,
+              me: this.props.me,
+              key: item.id,
+              team_id: this.props.team_id,
+              dispatch: this.props.dispatch });
+            if (item.type === 'multi') return React.createElement(_EnterpriseTeamApp2.default, {
+              app: item,
+              plan_id: this.props.plan_id,
+              users: this.props.users,
+              channels: this.props.channels,
+              me: this.props.me,
+              key: item.id,
+              team_id: this.props.team_id,
+              dispatch: this.props.dispatch });
+          }, this)
+        )
+      );
+    }
+  }]);
+>>>>>>> 03e7b59eb65d5e63b1326fd1e33cc70ec0bcac6c
 
     return TeamAppsContainer;
 }(React.Component)) || _class);
@@ -68395,7 +68470,8 @@ function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
     type: null,
     id: null,
-    apps: []
+    apps: [],
+    loading: false
   };
   var action = arguments[1];
 
@@ -68405,7 +68481,8 @@ function reducer() {
         return _extends({}, state, {
           type: 'user',
           id: action.payload.user.id,
-          apps: action.payload.apps.reverse()
+          apps: action.payload.apps.reverse(),
+          loading: false
         });
       }
     case "FETCH_TEAM_FULFILLED":
@@ -68421,7 +68498,8 @@ function reducer() {
         return _extends({}, state, {
           apps: action.payload.apps.reverse(),
           type: action.payload.type,
-          id: action.payload.id
+          id: action.payload.id,
+          loading: false
         });
       }
     case 'FETCH_TEAM_CHANNELS_APPS_FULFILLED':
@@ -68429,7 +68507,20 @@ function reducer() {
         return _extends({}, state, {
           apps: action.payload.apps.reverse(),
           type: action.payload.type,
-          id: action.payload.id
+          id: action.payload.id,
+          loading: false
+        });
+      }
+    case 'FETCH_TEAM_USER_APPS_PENDING':
+      {
+        return _extends({}, state, {
+          loading: true
+        });
+      }
+    case 'FETCH_TEAM_CHANNEL_APPS_PENDING':
+      {
+        return _extends({}, state, {
+          loading: true
         });
       }
     case 'SELECT_TEAM_CHANNEL_FULFILLED':
@@ -68437,7 +68528,8 @@ function reducer() {
         return _extends({}, state, {
           type: 'channel',
           id: action.payload.channel.id,
-          apps: action.payload.apps.reverse()
+          apps: action.payload.apps.reverse(),
+          loading: false
         });
       }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED":
