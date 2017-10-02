@@ -28,7 +28,7 @@ class Step1 extends React.Component{
       else
         this.props.incrementStep(2);
         easeTracker.trackEvent("TeamCreationEnterEmail", {
-            "plan_id": 0
+            "plan_id": this.props.plan_id
         });
     }).catch(err => {
       this.setState({processing: false, error: true, errorMessage: err});
@@ -79,7 +79,7 @@ class Step2 extends React.Component{
       this.setState({loading: false});
       this.props.onStepValidated();
         easeTracker.trackEvent("TeamCreationEnterDigits", {
-            "plan_id": 0
+            "plan_id": this.props.plan_id
         });
     }).catch(err => {
       this.setState({loading: false, errorMesage: err});
@@ -144,7 +144,7 @@ class Step4 extends React.Component{
     }
     this.props.onStepValidated();
       easeTracker.trackEvent("TeamCreationEnterUsername", {
-          "plan_id": 0
+          "plan_id": this.props.plan_id
       });
   }
   render() {
@@ -185,7 +185,6 @@ class Step4 extends React.Component{
 }
 
 class Step5 extends React.Component {
-
     constructor(props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
@@ -199,17 +198,15 @@ class Step5 extends React.Component {
         this.jobRole = props.jobRole;
         this.jobDetails = props.jobDetails;
     }
-
     onSubmit(e) {
         e.preventDefault();
         this.props.incStep();
         easeTracker.trackEvent("TeamCreationEnterJob", {
             "job": this.roles[this.props.jobRole],
             "detail": this.props.jobDetails,
-            "plan_id": 0
+            "plan_id": this.props.plan_id
         });
     }
-
     render() {
         return (
             <div class="contents" id="step5">
@@ -264,14 +261,14 @@ class Step6 extends React.Component{
       jobRole: this.props.jobRole,
       jobDetails: this.props.jobDetails,
       digits: this.props.digits,
-      plan_id: this.props.plan_id
+        plan_id: this.props.plan_id
     }).then(response => {
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
       this.props.onStepValidated();
         easeTracker.trackEvent("TeamCreationFinished", {
-            "plan_id": 0
+            "plan_id": this.props.plan_id
         });
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
@@ -413,17 +410,20 @@ class SimpleTeamCreationView extends React.Component {
   render(){
     var steps = [];
     steps.push(<Step1 incrementStep={this.incrementStepByValue}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       email={this.state.email}
                       switchNewsletter={this.switchNewsletter}
                       newsletter={this.state.newsletter}
                       key="1"/>);
     steps.push(<Step2 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       digits={this.state.digits}
                       email={this.state.email}
                       handleInput={this.handleInput}
                       key="2"/>);
     steps.push(<Step4 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       email={this.state.email}
                       password={this.state.password}
                       newsletter={this.state.newsletter}
@@ -434,6 +434,7 @@ class SimpleTeamCreationView extends React.Component {
                       handleInput={this.handleInput}
                       key="4"/>);
     steps.push(<Step5 incStep={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       jobRole={this.state.jobRole}
                       jobDetails={this.state.jobDetails}

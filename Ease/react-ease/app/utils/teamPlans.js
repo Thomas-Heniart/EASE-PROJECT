@@ -9,13 +9,13 @@ export const proFeaturesDesc = {
 
 export const proFeatures = [
   'Unlimited Rooms',
-  'Unlimited team members',
-  'Unlimited admins and 1 owner',
-  'Enterprise App custom logins',
-  'Room Managers set up',
-  'Access sharing with showing or hiding passwords',
-  'Automatic access removal',
-  'Priority customer support'
+    'Unlimited team members',
+    'Unlimited admins and 1 owner',
+    'Enterprise App custom logins',
+    'Room Managers set up',
+    'Access sharing with showing or hiding passwords',
+    'Automatic access removal',
+    'Priority customer support'
 ];
 
 export const planNames = {

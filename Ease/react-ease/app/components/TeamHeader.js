@@ -2,15 +2,14 @@ var React = require('react');
 var classnames = require('classnames');
 var TeamAddAppsButton = require('./TeamAddAppsButton');
 var EaseMainNavbar = require('./common/EaseMainNavbar');
-import {withRouter} from "react-router-dom";
-import { NavLink } from 'react-router-dom';
+import {NavLink, withRouter} from "react-router-dom";
 
 const FlexPanelButton = ({location, match}) => {
     const isActive = location.pathname === `${match.url}/flexPanel`;
     const path = isActive ? match.url : `${match.url}/flexPanel`;
     return (
         <NavLink class="mrgnLeft5" to={path} id="open_card_button">
-          <i className="fa fa-cog"/>
+            <i className="fa fa-cog"/>
         </NavLink>
     )
 };
@@ -29,7 +28,7 @@ function TeamHeader(props){
                               <i className={classnames("fa icon_wrapper", props.item.username !== undefined ? 'fa-user' : 'fa-hashtag')}/>
                               {props.item.name ? props.item.name : props.item.username}
                             </span>
-                <FlexPanelButtonWithRouter/>
+                  <FlexPanelButtonWithRouter/>
               </div>
               <div className="channel_header_info">
                 <div className="channel_header_info_item" id="apps_number">

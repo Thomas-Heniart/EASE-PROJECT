@@ -1699,487 +1699,523 @@ module.exports = reactProdInvariant;
 "use strict";
 
 
-var axios = __webpack_require__(136);
+        Object.defineProperty(exports, "__esModule", {
+            value: true
+        });
+        exports.teamUserRoleValues = exports.passwordChangeOptions = exports.credentialIconType = exports.passwordChangeValues = exports.teamUserRoles = exports.teamUserState = exports.jobRoles = exports.userNameRuleString = exports.roomNameRegexp = exports.usernameRegexp = exports.urlRegexp = exports.emailRegexp = exports.passwordRegexp = undefined;
 
-module.exports = {
-  getClearbitLogo: function getClearbitLogo(url) {
-    var l = document.createElement("a");
-    l.href = url;
-    var img_url = "https://logo.clearbit.com/" + l.hostname;
-    return axios.get("https://logo.clearbit.com/" + l.hostname).then(function (response) {
-      if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1) return "";
-      return img_url;
-    }).catch(function (err) {
-      return "";
-    });
-  },
-  fetchTeams: function fetchTeams() {
-    return axios.get('/api/v1/teams/GetTeams', {
-      params: {
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeam: function fetchTeam(team_id) {
-    return axios.get('/api/v1/teams/GetTeam', {
-      params: {
-        'team_id': team_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeamChannels: function fetchTeamChannels(team_id) {
-    return axios.get('/api/v1/teams/GetChannels', {
-      params: {
-        team_id: team_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      var channels = response.data.sort(function (a, b) {
-        if (a.default) return -1;
-        return 1;
-      });
-      return channels;
-    });
-  },
-  fetchTeamUsers: function fetchTeamUsers(team_id) {
-    return axios.get('/api/v1/teams/GetTeamUsers', {
-      params: {
-        team_id: team_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeamChannel: function fetchTeamChannel(team_id, channel_id) {
-    return axios.get('/api/v1/teams/GetChannel', {
-      params: {
-        'team_id': team_id,
-        'channel_id': channel_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeamChannelApps: function fetchTeamChannelApps(team_id, channel_id) {
-    return axios.get('/api/v1/teams/GetChannelApps', {
-      params: {
-        'team_id': team_id,
-        'channel_id': channel_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeamUser: function fetchTeamUser(team_id, team_user_id) {
-    return axios.get('/api/v1/teams/GetTeamUser', {
-      params: {
-        'team_id': team_id,
-        'team_user_id': team_user_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeamUserShareableAppsInChannel: function fetchTeamUserShareableAppsInChannel(team_id, channel_id, team_user_id) {
-    return axios.get('/api/v1/teams/GetUserShareableAppsInChannel', {
-      params: {
-        team_id: team_id,
-        channel_id: channel_id,
-        team_user_id: team_user_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeamUserShareableApps: function fetchTeamUserShareableApps(team_id, team_user_id) {
-    return axios.get('/api/v1/teams/GetUserShareableApps', {
-      params: {
-        team_id: team_id,
-        team_user_id: team_user_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  fetchTeamUserApps: function fetchTeamUserApps(team_id, team_user_id) {
-    return axios.get('/api/v1/teams/GetTeamUserApps', {
-      params: {
-        'team_id': team_id,
-        'team_user_id': team_user_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  getDashboardApp: function getDashboardApp(id) {
-    return axios.get('/api/v1/dashboard/GetDashboardApp', {
-      params: {
-        'id': id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  dashboardAppSearch: function dashboardAppSearch(query) {
-    return axios.get('/api/v1/dashboard/SearchDashboardApps', {
-      params: {
-        'q': query,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  teamAppSearch: function teamAppSearch(team_id, query) {
-    return axios.get('/api/v1/catalog/SearchTeamCatalogApps', {
-      params: {
-        'q': query,
-        'team_id': team_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  dashboardAndTeamAppSearch: function dashboardAndTeamAppSearch(team_id, query) {
-    return axios.all([module.exports.dashboardAppSearch(query), module.exports.teamAppSearch(team_id, query)]).then(axios.spread(function (dashboard, teams) {
-      var apps = dashboard.concat(teams);
-      apps.sort(function (a, b) {
-        if (a.website_name < b.website_name) return -1;
-        if (a.website_name > b.website_name) return 1;
-        return 0;
-      });
-      return apps;
-    }));
-  },
-  fetchWebsiteInfo: function fetchWebsiteInfo(website_id) {
-    return axios.get('/api/v1/catalog/GetWebsiteInformation', {
-      params: {
-        id: website_id,
-        timestamp: new Date().getTime()
-      }
-    }).then(function (response) {
-      return response.data;
-    });
-  },
-  dashboard: {
-    fetchProfiles: function fetchProfiles() {
-      return axios.get('/api/v1/dashboard/GetProfiles').then(function (response) {
-        return response.data;
-      });
-    }
-  },
-  teamApps: {
-    getSharedAppPassword: function getSharedAppPassword(_ref) {
-      var team_id = _ref.team_id,
-          shared_app_id = _ref.shared_app_id;
+        var _extends = Object.assign || function (target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) {
+                    if (Object.prototype.hasOwnProperty.call(source, key)) {
+                        target[key] = source[key];
+                    }
+                }
+            }
+            return target;
+        };
 
-      return axios.get('/api/v1/teams/GetSharedAppPassword', {
-        params: {
-          team_id: team_id,
-          shared_app_id: shared_app_id,
-          timestamp: new Date().getTime()
-        }
-      }).then(function (response) {
-        return decipher(response.data.password);
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    }
-  },
-  teams: {
-    getInvitationInformation: function getInvitationInformation(_ref2) {
-      var code = _ref2.code;
+        exports.isUrl = isUrl;
+        exports.reflect = reflect;
+        exports.handleSemanticInput = handleSemanticInput;
+        exports.transformCredentialsListIntoObject = transformCredentialsListIntoObject;
+        exports.transformWebsiteInfoIntoList = transformWebsiteInfoIntoList;
+        exports.transformWebsiteInfoIntoListAndSetValues = transformWebsiteInfoIntoListAndSetValues;
+        exports.getTeamAppPasswordAndCopyToClipboard = getTeamAppPasswordAndCopyToClipboard;
+        exports.copyTextToClipboard = copyTextToClipboard;
+        exports.checkTeamUsernameErrors = checkTeamUsernameErrors;
 
-      return axios.get('/api/v1/teams/GetInvitationInformation', {
-        params: {
-          code: code
-        }
-      }).then(function (response) {
-        return response.data;
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    },
-    finalizeRegistration: function finalizeRegistration(code) {
-      return axios.get('/api/v1/teams/FinalizeRegistration', {
-        params: {
-          code: code,
-          timestamp: new Date().getTime()
-        }
-      }).then(function (response) {
-        return response.data;
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    },
-    getTeamPaymentInformation: function getTeamPaymentInformation(_ref3) {
-      var team_id = _ref3.team_id;
+        var _api = __webpack_require__(19);
 
-      return axios.get('/api/v1/teams/GetTeamPaymentInformation', {
-        params: {
-          team_id: team_id
+        var _api2 = _interopRequireDefault(_api);
+
+        function _interopRequireDefault(obj) {
+            return obj && obj.__esModule ? obj : {default: obj};
         }
-      }).then(function (response) {
-        return response.data;
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    }
-  },
-  common: {
-    bz: function bz() {
-      return axios.post('/bz').then(function (response) {
-        return response.data.connected;
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    },
-    checkAuthentication: function checkAuthentication() {
-      return axios.get('/api/v1/common/checkAuthentication').then(function (response) {
-        return response.data;
-      });
-    },
-    logout: function logout() {
-      return axios.get('/api/v1/common/Logout').then(function (response) {
-        return response.data;
-      });
-    },
-    fetchMyInformation: function fetchMyInformation() {
-      return axios.get('/api/v1/common/GetMyInformation').then(function (response) {
-        return response.data;
-      });
-    },
-    getNotifications: function getNotifications(offset) {
-      return axios.get('/api/v1/common/GetNotifications', {
-        params: {
-          offset: offset
+
+        function _defineProperty(obj, key, value) {
+            if (key in obj) {
+                Object.defineProperty(obj, key, {value: value, enumerable: true, configurable: true, writable: true});
+            } else {
+                obj[key] = value;
+            }
+            return obj;
         }
-      }).then(function (r) {
-        return r.data;
-      }).catch(function (err) {
-        throw err.response.data;
-      });
-    }
-  }
+
+        var passwordRegexp = exports.passwordRegexp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/;
+        var emailRegexp = exports.emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var urlRegexp = exports.urlRegexp = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+        var usernameRegexp = exports.usernameRegexp = /^[a-z0-9_\-]{3,21}$/;
+        var roomNameRegexp = exports.roomNameRegexp = /^[a-z0-9_\-]{1,21}$/;
+
+        var userNameRuleString = exports.userNameRuleString = 'Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.';
+
+        function isUrl(url) {
+            return url.match(urlRegexp) !== null;
+        }
+
+        function reflect(promise) {
+            return promise.then(function (v) {
+                return {data: v, error: false};
+            }, function (e) {
+                return {data: e, error: true};
+            });
+        }
+
+        function handleSemanticInput(e, _ref) {
+            var name = _ref.name,
+                value = _ref.value,
+                checked = _ref.checked;
+
+            if (checked !== undefined) {
+                this.setState(_defineProperty({}, name, !checked));
+                return;
+            }
+            this.setState(_defineProperty({}, name, value));
+        }
+
+        function transformCredentialsListIntoObject(credentials) {
+            return credentials.reduce(function (prev, curr) {
+                return _extends({}, prev, _defineProperty({}, curr.name, curr.value));
+            }, {});
+        }
+
+        function transformWebsiteInfoIntoList(informations) {
+            return Object.keys(informations).sort(function (a, b) {
+                return informations[a].priority - informations[b].priority;
+            }).map(function (item, idx) {
+                return _extends({}, informations[item], {
+                    value: '',
+                    name: item,
+                    autoFocus: idx === 0
+                });
+            });
+        }
+
+        function transformWebsiteInfoIntoListAndSetValues(information, values) {
+            return transformWebsiteInfoIntoList(information).map(function (item) {
+                item.value = values[item.name];
+                return item;
+            });
+        }
+
+        function getTeamAppPasswordAndCopyToClipboard(_ref2) {
+            var team_id = _ref2.team_id,
+                shared_app_id = _ref2.shared_app_id;
+
+            var loading = true;
+            var password = '';
+            var interval = null;
+            return new Promise(function (resolve, reject) {
+                _api2.default.teamApps.getSharedAppPassword({
+                    team_id: team_id,
+                    shared_app_id: shared_app_id
+                }).then(function (response) {
+                    loading = false;
+                    password = response;
+                }).catch(function (err) {
+                    if (interval !== null) window.clearInterval(interval);
+                    reject(err);
+                });
+                interval = window.setInterval(function () {
+                    if (!loading) {
+                        var worked = copyTextToClipboard(password);
+                        worked ? resolve(password) : reject();
+                        window.clearInterval(interval);
+                    }
+                }, 10);
+            });
+        }
+
+        function copyTextToClipboard(str) {
+            var dummy = document.createElement("input");
+            dummy.setAttribute('id', 'copy-password');
+            dummy.style.position = 'absolute';
+            dummy.style.left = '-150000px';
+            document.body.appendChild(dummy);
+            dummy.value = str;
+            dummy.select();
+            var worked = document.execCommand('copy');
+            document.body.removeChild(dummy);
+            return worked;
+        }
+
+        function checkTeamUsernameErrors(username) {
+            var value = {
+                error: false,
+                message: ''
+            };
+            if (username.length < 3 || username.length > 21) value.message = "Sorry, usernames must be greater than 2 characters and fewer than 22 characters."; else if (username.match(usernameRegexp) === null) value.message = "Sorry, usernames must contain only lowercase characters.";
+            if (value.message.length > 0) value.error = true;
+            return value;
+        }
+
+        var jobRoles = exports.jobRoles = ['Administrative/Facilities', 'Accounting/Finance', 'Business Development', 'Business Owner', 'Customer Support', 'Data/Analytics/Business Intelligence', 'Design', 'Engineering (Software)', 'Marketing', 'Media/Communications', 'Operations', 'Product Management', 'Program/Project Management', 'Research', 'Sales', 'Other'];
+        var teamUserState = exports.teamUserState = {
+            invited: 0,
+            registered: 1,
+            accepted: 2
+        };
+
+        var teamUserRoles = exports.teamUserRoles = {
+            1: 'Member',
+            2: 'Admin',
+            3: 'Owner'
+        };
+
+        var passwordChangeValues = exports.passwordChangeValues = {
+            0: 'No reminder',
+            1: "1 month",
+            3: "3 months",
+            6: "6 months",
+            12: "12 months"
+        };
+
+        var credentialIconType = exports.credentialIconType = {
+            password: 'lock',
+            login: 'user',
+            team: 'slack',
+            storeName: 'shopping bag',
+            subdomain: 'link'
+        };
+
+        var passwordChangeOptions = exports.passwordChangeOptions = [{key: 0, text: 'No reminder', value: 0}, {
+            key: 1,
+            text: '1 month',
+            value: 1
+        }, {key: 3, text: '3 months', value: 3}, {key: 6, text: '6 months', value: 6}, {
+            key: 12,
+            text: '12 months',
+            value: 12
+        }];
+
+        var teamUserRoleValues = exports.teamUserRoleValues = [{key: '1', text: 'member', value: 1}, {
+            key: '2',
+            text: 'admin',
+            value: 2
+        }, {key: '3', text: 'owner', value: 3}];
+
+        /***/
+    }),
+    /* 18 */
+    /***/ (function (module, exports) {
+
+        /**
+         * Checks if `value` is classified as an `Array` object.
+         *
+         * @static
+         * @memberOf _
+         * @since 0.1.0
+         * @category Lang
+         * @param {*} value The value to check.
+         * @returns {boolean} Returns `true` if `value` is an array, else `false`.
+         * @example
+         *
+         * _.isArray([1, 2, 3]);
+         * // => true
+         *
+         * _.isArray(document.body.children);
+         * // => false
+         *
+         * _.isArray('abc');
+         * // => false
+         *
+         * _.isArray(_.noop);
+         * // => false
+         */
+        var isArray = Array.isArray;
+
+        module.exports = isArray;
+
+
+        /***/
+    }),
+    /* 19 */
+    /***/ (function (module, exports, __webpack_require__) {
+
+        "use strict";
+
+
+        var axios = __webpack_require__(136);
+
+        module.exports = {
+            getClearbitLogo: function getClearbitLogo(url) {
+                var l = document.createElement("a");
+                l.href = url;
+                var img_url = "https://logo.clearbit.com/" + l.hostname;
+                return axios.get("https://logo.clearbit.com/" + l.hostname).then(function (response) {
+                    if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1) return "";
+                    return img_url;
+                }).catch(function (err) {
+                    return "";
+                });
+            },
+            fetchTeams: function fetchTeams() {
+                return axios.get('/api/v1/teams/GetTeams', {
+                    params: {
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeam: function fetchTeam(team_id) {
+                return axios.get('/api/v1/teams/GetTeam', {
+                    params: {
+                        'team_id': team_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeamChannels: function fetchTeamChannels(team_id) {
+                return axios.get('/api/v1/teams/GetChannels', {
+                    params: {
+                        team_id: team_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    var channels = response.data.sort(function (a, b) {
+                        if (a.default) return -1;
+                        return 1;
+                    });
+                    return channels;
+                });
+            },
+            fetchTeamUsers: function fetchTeamUsers(team_id) {
+                return axios.get('/api/v1/teams/GetTeamUsers', {
+                    params: {
+                        team_id: team_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeamChannel: function fetchTeamChannel(team_id, channel_id) {
+                return axios.get('/api/v1/teams/GetChannel', {
+                    params: {
+                        'team_id': team_id,
+                        'channel_id': channel_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeamChannelApps: function fetchTeamChannelApps(team_id, channel_id) {
+                return axios.get('/api/v1/teams/GetChannelApps', {
+                    params: {
+                        'team_id': team_id,
+                        'channel_id': channel_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeamUser: function fetchTeamUser(team_id, team_user_id) {
+                return axios.get('/api/v1/teams/GetTeamUser', {
+                    params: {
+                        'team_id': team_id,
+                        'team_user_id': team_user_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeamUserShareableAppsInChannel: function fetchTeamUserShareableAppsInChannel(team_id, channel_id, team_user_id) {
+                return axios.get('/api/v1/teams/GetUserShareableAppsInChannel', {
+                    params: {
+                        team_id: team_id,
+                        channel_id: channel_id,
+                        team_user_id: team_user_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeamUserShareableApps: function fetchTeamUserShareableApps(team_id, team_user_id) {
+                return axios.get('/api/v1/teams/GetUserShareableApps', {
+                    params: {
+                        team_id: team_id,
+                        team_user_id: team_user_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            fetchTeamUserApps: function fetchTeamUserApps(team_id, team_user_id) {
+                return axios.get('/api/v1/teams/GetTeamUserApps', {
+                    params: {
+                        'team_id': team_id,
+                        'team_user_id': team_user_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            getDashboardApp: function getDashboardApp(id) {
+                return axios.get('/api/v1/dashboard/GetDashboardApp', {
+                    params: {
+                        'id': id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            dashboardAppSearch: function dashboardAppSearch(query) {
+                return axios.get('/api/v1/dashboard/SearchDashboardApps', {
+                    params: {
+                        'q': query,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            teamAppSearch: function teamAppSearch(team_id, query) {
+                return axios.get('/api/v1/catalog/SearchTeamCatalogApps', {
+                    params: {
+                        'q': query,
+                        'team_id': team_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            dashboardAndTeamAppSearch: function dashboardAndTeamAppSearch(team_id, query) {
+                return axios.all([module.exports.dashboardAppSearch(query), module.exports.teamAppSearch(team_id, query)]).then(axios.spread(function (dashboard, teams) {
+                    var apps = dashboard.concat(teams);
+                    apps.sort(function (a, b) {
+                        if (a.website_name < b.website_name) return -1;
+                        if (a.website_name > b.website_name) return 1;
+                        return 0;
+                    });
+                    return apps;
+                }));
+            },
+            fetchWebsiteInfo: function fetchWebsiteInfo(website_id) {
+                return axios.get('/api/v1/catalog/GetWebsiteInformation', {
+                    params: {
+                        id: website_id,
+                        timestamp: new Date().getTime()
+                    }
+                }).then(function (response) {
+                    return response.data;
+                });
+            },
+            dashboard: {
+                fetchProfiles: function fetchProfiles() {
+                    return axios.get('/api/v1/dashboard/GetProfiles').then(function (response) {
+                        return response.data;
+                    });
+                }
+            },
+            teamApps: {
+                getSharedAppPassword: function getSharedAppPassword(_ref) {
+                    var team_id = _ref.team_id,
+                        shared_app_id = _ref.shared_app_id;
+
+                    return axios.get('/api/v1/teams/GetSharedAppPassword', {
+                        params: {
+                            team_id: team_id,
+                            shared_app_id: shared_app_id,
+                            timestamp: new Date().getTime()
+                        }
+                    }).then(function (response) {
+                        return decipher(response.data.password);
+                    }).catch(function (err) {
+                        throw err.response.data;
+                    });
+                }
+            },
+            teams: {
+                getInvitationInformation: function getInvitationInformation(_ref2) {
+                    var code = _ref2.code;
+
+                    return axios.get('/api/v1/teams/GetInvitationInformation', {
+                        params: {
+                            code: code
+                        }
+                    }).then(function (response) {
+                        return response.data;
+                    }).catch(function (err) {
+                        throw err.response.data;
+                    });
+                },
+                finalizeRegistration: function finalizeRegistration(code) {
+                    return axios.get('/api/v1/teams/FinalizeRegistration', {
+                        params: {
+                            code: code,
+                            timestamp: new Date().getTime()
+                        }
+                    }).then(function (response) {
+                        return response.data;
+                    }).catch(function (err) {
+                        throw err.response.data;
+                    });
+                },
+                getTeamPaymentInformation: function getTeamPaymentInformation(_ref3) {
+                    var team_id = _ref3.team_id;
+
+                    return axios.get('/api/v1/teams/GetTeamPaymentInformation', {
+                        params: {
+                            team_id: team_id
+                        }
+                    }).then(function (response) {
+                        return response.data;
+                    }).catch(function (err) {
+                        throw err.response.data;
+                    });
+                }
+            },
+            common: {
+                bz: function bz() {
+                    return axios.post('/bz').then(function (response) {
+                        return response.data.connected;
+                    }).catch(function (err) {
+                        throw err.response.data;
+                    });
+                },
+                checkAuthentication: function checkAuthentication() {
+                    return axios.get('/api/v1/common/checkAuthentication').then(function (response) {
+                        return response.data;
+                    });
+                },
+                logout: function logout() {
+                    return axios.get('/api/v1/common/Logout').then(function (response) {
+                        return response.data;
+                    });
+                },
+                fetchMyInformation: function fetchMyInformation() {
+                    return axios.get('/api/v1/common/GetMyInformation').then(function (response) {
+                        return response.data;
+                    });
+                },
+                getNotifications: function getNotifications(offset) {
+                    return axios.get('/api/v1/common/GetNotifications', {
+                        params: {
+                            offset: offset
+                        }
+                    }).then(function (r) {
+                        return r.data;
+                    }).catch(function (err) {
+                        throw err.response.data;
+                    });
+                }
+            }
 };
 
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.teamUserRoleValues = exports.passwordChangeOptions = exports.credentialIconType = exports.passwordChangeValues = exports.teamUserRoles = exports.teamUserState = exports.jobRoles = exports.userNameRuleString = exports.roomNameRegexp = exports.usernameRegexp = exports.urlRegexp = exports.emailRegexp = exports.passwordRegexp = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-exports.isUrl = isUrl;
-exports.reflect = reflect;
-exports.handleSemanticInput = handleSemanticInput;
-exports.transformCredentialsListIntoObject = transformCredentialsListIntoObject;
-exports.transformWebsiteInfoIntoList = transformWebsiteInfoIntoList;
-exports.transformWebsiteInfoIntoListAndSetValues = transformWebsiteInfoIntoListAndSetValues;
-exports.getTeamAppPasswordAndCopyToClipboard = getTeamAppPasswordAndCopyToClipboard;
-exports.copyTextToClipboard = copyTextToClipboard;
-exports.checkTeamUsernameErrors = checkTeamUsernameErrors;
-
-var _api = __webpack_require__(17);
-
-var _api2 = _interopRequireDefault(_api);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var passwordRegexp = exports.passwordRegexp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/;
-var emailRegexp = exports.emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-var urlRegexp = exports.urlRegexp = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-var usernameRegexp = exports.usernameRegexp = /^[a-z0-9_\-]{3,21}$/;
-var roomNameRegexp = exports.roomNameRegexp = /^[a-z0-9_\-]{1,21}$/;
-
-var userNameRuleString = exports.userNameRuleString = 'Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.';
-
-function isUrl(url) {
-  return url.match(urlRegexp) !== null;
-}
-
-function reflect(promise) {
-  return promise.then(function (v) {
-    return { data: v, error: false };
-  }, function (e) {
-    return { data: e, error: true };
-  });
-}
-
-function handleSemanticInput(e, _ref) {
-  var name = _ref.name,
-      value = _ref.value,
-      checked = _ref.checked;
-
-  if (checked !== undefined) {
-    this.setState(_defineProperty({}, name, !checked));
-    return;
-  }
-  this.setState(_defineProperty({}, name, value));
-}
-
-function transformCredentialsListIntoObject(credentials) {
-  return credentials.reduce(function (prev, curr) {
-    return _extends({}, prev, _defineProperty({}, curr.name, curr.value));
-  }, {});
-}
-
-function transformWebsiteInfoIntoList(informations) {
-  return Object.keys(informations).sort(function (a, b) {
-    return informations[a].priority - informations[b].priority;
-  }).map(function (item, idx) {
-    return _extends({}, informations[item], {
-      value: '',
-      name: item,
-      autoFocus: idx === 0
-    });
-  });
-}
-
-function transformWebsiteInfoIntoListAndSetValues(information, values) {
-  return transformWebsiteInfoIntoList(information).map(function (item) {
-    item.value = values[item.name];
-    return item;
-  });
-}
-
-function getTeamAppPasswordAndCopyToClipboard(_ref2) {
-  var team_id = _ref2.team_id,
-      shared_app_id = _ref2.shared_app_id;
-
-  var loading = true;
-  var password = '';
-  var interval = null;
-  return new Promise(function (resolve, reject) {
-    _api2.default.teamApps.getSharedAppPassword({ team_id: team_id, shared_app_id: shared_app_id }).then(function (response) {
-      loading = false;
-      password = response;
-    }).catch(function (err) {
-      if (interval !== null) window.clearInterval(interval);
-      reject(err);
-    });
-    interval = window.setInterval(function () {
-      if (!loading) {
-        var worked = copyTextToClipboard(password);
-        worked ? resolve(password) : reject();
-        window.clearInterval(interval);
-      }
-    }, 10);
-  });
-}
-
-function copyTextToClipboard(str) {
-  var dummy = document.createElement("input");
-  dummy.setAttribute('id', 'copy-password');
-  dummy.style.position = 'absolute';
-  dummy.style.left = '-150000px';
-  document.body.appendChild(dummy);
-  dummy.value = str;
-  dummy.select();
-  var worked = document.execCommand('copy');
-  document.body.removeChild(dummy);
-  return worked;
-}
-
-function checkTeamUsernameErrors(username) {
-  var value = {
-    error: false,
-    message: ''
-  };
-  if (username.length < 3 || username.length > 21) value.message = "Sorry, usernames must be greater than 2 characters and fewer than 22 characters.";else if (username.match(usernameRegexp) === null) value.message = "Sorry, usernames must contain only lowercase characters.";
-  if (value.message.length > 0) value.error = true;
-  return value;
-}
-
-var jobRoles = exports.jobRoles = ['Administrative/Facilities', 'Accounting/Finance', 'Business Development', 'Business Owner', 'Customer Support', 'Data/Analytics/Business Intelligence', 'Design', 'Engineering (Software)', 'Marketing', 'Media/Communications', 'Operations', 'Product Management', 'Program/Project Management', 'Research', 'Sales', 'Other'];
-var teamUserState = exports.teamUserState = {
-  invited: 0,
-  registered: 1,
-  accepted: 2
-};
-
-var teamUserRoles = exports.teamUserRoles = {
-  1: 'Member',
-  2: 'Admin',
-  3: 'Owner'
-};
-
-var passwordChangeValues = exports.passwordChangeValues = {
-  0: 'No reminder',
-  1: "1 month",
-  3: "3 months",
-  6: "6 months",
-  12: "12 months"
-};
-
-var credentialIconType = exports.credentialIconType = {
-  password: 'lock',
-  login: 'user',
-  team: 'slack',
-  storeName: 'shopping bag',
-  subdomain: 'link'
-};
-
-var passwordChangeOptions = exports.passwordChangeOptions = [{ key: 0, text: 'No reminder', value: 0 }, { key: 1, text: '1 month', value: 1 }, { key: 3, text: '3 months', value: 3 }, { key: 6, text: '6 months', value: 6 }, { key: 12, text: '12 months', value: 12 }];
-
-var teamUserRoleValues = exports.teamUserRoleValues = [{ key: '1', text: 'member', value: 1 }, { key: '2', text: 'admin', value: 2 }, { key: '3', text: 'owner', value: 3 }];
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an array, else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(document.body.children);
- * // => false
- *
- * _.isArray('abc');
- * // => false
- *
- * _.isArray(_.noop);
- * // => false
- */
-var isArray = Array.isArray;
-
-module.exports = isArray;
-
-
-/***/ }),
+        /***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2674,7 +2710,7 @@ exports.teamAppTransferOwnership = teamAppTransferOwnership;
 exports.teamAppPinToDashboard = teamAppPinToDashboard;
 exports.askJoinTeamApp = askJoinTeamApp;
 exports.deleteJoinAppRequest = deleteJoinAppRequest;
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var post_api = __webpack_require__(28);
 
 function teamCreateMultiApp(app) {
@@ -4248,7 +4284,7 @@ module.exports = ExecutionEnvironment;
 var arrayMap = __webpack_require__(56),
     baseIteratee = __webpack_require__(41),
     baseMap = __webpack_require__(376),
-    isArray = __webpack_require__(19);
+    isArray = __webpack_require__(18);
 
 /**
  * Creates an array of values by running each element in `collection` thru
@@ -5108,11 +5144,11 @@ exports.editTeamUserPhone = editTeamUserPhone;
 
 var _teamModalActions = __webpack_require__(9);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var post_api = __webpack_require__(28);
 function selectTeamUser(id) {
   return function (dispatch, getState) {
@@ -5362,7 +5398,7 @@ module.exports = emptyFunction;
 var baseMatches = __webpack_require__(794),
     baseMatchesProperty = __webpack_require__(795),
     identity = __webpack_require__(68),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     property = __webpack_require__(933);
 
 /**
@@ -5662,7 +5698,7 @@ var _helperFunctions = __webpack_require__(15);
 
 var _commonActions = __webpack_require__(51);
 
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var post_api = __webpack_require__(28);
 function selectTeamChannel(id) {
   return function (dispatch, getState) {
@@ -5846,7 +5882,7 @@ var _userActions = __webpack_require__(39);
 
 var _reactRouterRedux = __webpack_require__(1053);
 
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var post_api = __webpack_require__(28);
 
 
@@ -6941,7 +6977,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var post_api = __webpack_require__(28);
 function fetchTeam(id) {
   return function (dispatch) {
@@ -7897,7 +7933,7 @@ module.exports = baseEach;
 /* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isArray = __webpack_require__(19),
+        var isArray = __webpack_require__(18),
     isKey = __webpack_require__(249),
     stringToPath = __webpack_require__(407),
     toString = __webpack_require__(60);
@@ -10296,11 +10332,11 @@ var _classnames = __webpack_require__(2);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _api2 = _interopRequireDefault(_api);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _react = __webpack_require__(0);
 
@@ -10818,7 +10854,7 @@ module.exports = eq;
 var arrayEach = __webpack_require__(122),
     baseEach = __webpack_require__(84),
     castFunction = __webpack_require__(381),
-    isArray = __webpack_require__(19);
+    isArray = __webpack_require__(18);
 
 /**
  * Iterates over elements of `collection` and invokes `iteratee` for each element.
@@ -11515,7 +11551,7 @@ exports.fetchNotifications = fetchNotifications;
 exports.validateNotification = validateNotification;
 exports.newNotification = newNotification;
 var post_api = __webpack_require__(28);
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 
 var sound = new Audio('/resources/notification_sound.mp3');
 
@@ -16782,7 +16818,7 @@ var Stack = __webpack_require__(236),
     initCloneArray = __webpack_require__(852),
     initCloneByTag = __webpack_require__(853),
     initCloneObject = __webpack_require__(854),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isBuffer = __webpack_require__(128),
     isObject = __webpack_require__(35),
     keys = __webpack_require__(36);
@@ -17000,7 +17036,7 @@ module.exports = baseLodash;
 
 var Symbol = __webpack_require__(104),
     arrayMap = __webpack_require__(56),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isSymbol = __webpack_require__(87);
 
 /** Used as references for various `Number` constants. */
@@ -17171,7 +17207,7 @@ module.exports = hasUnicode;
 /* 249 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isArray = __webpack_require__(19),
+        var isArray = __webpack_require__(18),
     isSymbol = __webpack_require__(87);
 
 /** Used to match property names within property paths. */
@@ -17236,7 +17272,7 @@ module.exports = __webpack_require__(127);
 var arrayFilter = __webpack_require__(368),
     baseFilter = __webpack_require__(779),
     baseIteratee = __webpack_require__(41),
-    isArray = __webpack_require__(19);
+    isArray = __webpack_require__(18);
 
 /**
  * Iterates over elements of `collection`, returning an array of all elements
@@ -17290,7 +17326,7 @@ module.exports = filter;
 var baseKeys = __webpack_require__(157),
     getTag = __webpack_require__(167),
     isArguments = __webpack_require__(172),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isArrayLike = __webpack_require__(46),
     isBuffer = __webpack_require__(128),
     isPrototype = __webpack_require__(125),
@@ -17453,7 +17489,7 @@ module.exports = isLength;
 /***/ (function(module, exports, __webpack_require__) {
 
 var baseGetTag = __webpack_require__(57),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isObjectLike = __webpack_require__(47);
 
 /** `Object#toString` result references. */
@@ -22761,7 +22797,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _semanticUiReact = __webpack_require__(10);
 
@@ -33698,7 +33734,7 @@ module.exports = arrayFilter;
 
 var baseTimes = __webpack_require__(379),
     isArguments = __webpack_require__(172),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isBuffer = __webpack_require__(128),
     isIndex = __webpack_require__(124),
     isTypedArray = __webpack_require__(175);
@@ -33935,7 +33971,7 @@ module.exports = baseFindIndex;
 /***/ (function(module, exports, __webpack_require__) {
 
 var arrayPush = __webpack_require__(238),
-    isArray = __webpack_require__(19);
+    isArray = __webpack_require__(18);
 
 /**
  * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
@@ -34663,7 +34699,7 @@ module.exports = getSymbolsIn;
 
 var castPath = __webpack_require__(85),
     isArguments = __webpack_require__(172),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isIndex = __webpack_require__(124),
     isLength = __webpack_require__(255),
     toKey = __webpack_require__(66);
@@ -35588,7 +35624,7 @@ var arrayReduce = __webpack_require__(150),
     baseEach = __webpack_require__(84),
     baseIteratee = __webpack_require__(41),
     baseReduce = __webpack_require__(801),
-    isArray = __webpack_require__(19);
+    isArray = __webpack_require__(18);
 
 /**
  * Reduces `collection` to a value which is the accumulated result of running
@@ -35644,7 +35680,7 @@ module.exports = reduce;
 var arraySome = __webpack_require__(370),
     baseIteratee = __webpack_require__(41),
     baseSome = __webpack_require__(804),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isIterateeCall = __webpack_require__(168);
 
 /**
@@ -49445,7 +49481,7 @@ var RequestWebsiteModal = __webpack_require__(629);
 
 var EaseHeader = __webpack_require__(332);
 
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var TeamView = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     team: store.team,
@@ -49695,7 +49731,7 @@ var _notificationsActions = __webpack_require__(137);
 
 var _commonActions = __webpack_require__(51);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -50456,7 +50492,7 @@ var _reactAddonsCssTransitionGroup = __webpack_require__(71);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _queryString = __webpack_require__(106);
 
@@ -50480,7 +50516,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var post_api = __webpack_require__(28);
 
 var Step1 = function (_React$Component) {
@@ -50986,7 +51022,7 @@ var _InvitePeopleStep = __webpack_require__(334);
 
 var _InvitePeopleStep2 = _interopRequireDefault(_InvitePeopleStep);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _reactRouterDom = __webpack_require__(25);
 
@@ -51017,7 +51053,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var React = __webpack_require__(0);
 var classnames = __webpack_require__(2);
 var post_api = __webpack_require__(28);
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var axios = __webpack_require__(136);
 
 var Step1 = function (_React$Component) {
@@ -51826,6 +51862,7 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function render() {
       var steps = [];
       steps.push(React.createElement(Step1, { onStepValidated: this.incrementStep,
+          plan_id: this.state.plan_id,
         handleInput: this.handleInput,
         email: this.state.email,
         switchNewsletter: this.switchNewsletter,
@@ -51834,22 +51871,26 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         history: this.props.history,
         key: '1' }));
       steps.push(React.createElement(Step2, { onStepValidated: this.incrementStep,
+          plan_id: this.state.plan_id,
         digits: this.state.digits,
         email: this.state.email,
         handleInput: this.handleInput,
         key: '2' }));
       steps.push(React.createElement(Step3, { onStepValidated: this.incrementStep,
+          plan_id: this.state.plan_id,
         password: this.state.password,
         confirmPassword: this.state.confirmPassword,
         handleInput: this.handleInput,
         key: '3' }));
       steps.push(React.createElement(Step4, { onStepValidated: this.incrementStep,
+          plan_id: this.state.plan_id,
         lname: this.state.lname,
         fname: this.state.fname,
         username: this.state.username,
         handleInput: this.handleInput,
         key: '4' }));
       steps.push(React.createElement(StepCGU, { key: 'cgu',
+          plan_id: this.state.plan_id,
         email: this.state.email,
         password: this.state.password,
         newsletter: this.state.newsletter,
@@ -51859,6 +51900,7 @@ var TeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         username: this.state.username,
         onStepValidated: this.incrementStep }));
       steps.push(React.createElement(Step5, { incStep: this.incrementStep,
+          plan_id: this.state.plan_id,
         handleInput: this.handleInput,
         jobRole: this.state.jobRole,
         jobDetails: this.state.jobDetails,
@@ -51927,7 +51969,7 @@ var _reactAddonsCssTransitionGroup = __webpack_require__(71);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _queryString = __webpack_require__(106);
 
@@ -51961,7 +52003,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var post_api = __webpack_require__(28);
 
 var Step1 = function (_React$Component) {
@@ -53584,7 +53626,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var React = __webpack_require__(0);
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var classnames = __webpack_require__(2);
 
 var TeamAppSearch = function (_React$Component) {
@@ -54249,7 +54291,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = __webpack_require__(0);
 var classnames = __webpack_require__(2);
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var TeamAppAdderButtons = __webpack_require__(331);
 var MultiTeamAppAdd = __webpack_require__(604);
 
@@ -55118,16 +55160,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = __webpack_require__(0);
 var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
-<<<<<<< HEAD
-    return {
-        selectedItem: store.selection,
-        users: store.users.users,
-        channels: store.channels.channels,
-        me: store.users.me,
-        team_id: store.team.id,
-        plan_id: store.team.plan_id
-    };
-=======
   return {
     selectedItem: store.selection,
     loading: store.selection.loading,
@@ -55137,7 +55169,6 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
     team_id: store.team.id,
     plan_id: store.team.plan_id
   };
->>>>>>> 03e7b59eb65d5e63b1326fd1e33cc70ec0bcac6c
 }), _dec(_class = function (_React$Component) {
     _inherits(TeamAppsContainer, _React$Component);
 
@@ -55147,75 +55178,6 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
         return _possibleConstructorReturn(this, (TeamAppsContainer.__proto__ || Object.getPrototypeOf(TeamAppsContainer)).call(this, props));
     }
 
-<<<<<<< HEAD
-    _createClass(TeamAppsContainer, [{
-        key: "componentWillReceiveProps",
-        value: function componentWillReceiveProps(nextProps) {
-            if (nextProps !== this.props) {
-                if (nextProps.location.search !== this.props.location.search) {
-                    var query = _queryString2.default.parse(nextProps.location.search);
-                    if (query.app_id !== undefined && query.app_id.length !== 0) {
-                        console.log("app_" + query.app_id);
-                        var el = document.getElementById("app_" + query.app_id);
-                        if (el) el.scrollIntoView(true);
-                    }
-                }
-            }
-        }
-    }, {
-        key: "componentDidMount",
-        value: function componentDidMount() {
-            var query = _queryString2.default.parse(this.props.location.search);
-
-            if (query.app_id !== undefined && query.app_id.length !== 0) {
-                var el = document.getElementById("app_" + query.app_id);
-                console.log("app_" + query.app_id);
-                console.log(el);
-                if (el) el.scrollIntoView(true);
-            }
-        }
-    }, {
-        key: "render",
-        value: function render() {
-            return React.createElement(
-                "div",
-                { className: "apps_container" },
-                React.createElement(
-                    "div",
-                    { className: "apps_scroller_div", id: "team_apps_container" },
-                    this.props.selectedItem.apps.map(function (item) {
-                        if (item.type === 'simple') return React.createElement(_SimpleTeamApp2.default, {
-                            app: item,
-                            users: this.props.users,
-                            channels: this.props.channels,
-                            me: this.props.me,
-                            key: item.id,
-                            plan_id: this.props.plan_id,
-                            team_id: this.props.team_id,
-                            dispatch: this.props.dispatch });
-                        if (item.type === 'link') return React.createElement(_LinkTeamApp2.default, {
-                            app: item,
-                            users: this.props.users,
-                            channels: this.props.channels,
-                            me: this.props.me,
-                            key: item.id,
-                            team_id: this.props.team_id,
-                            dispatch: this.props.dispatch });
-                        if (item.type === 'multi') return React.createElement(_EnterpriseTeamApp2.default, {
-                            app: item,
-                            plan_id: this.props.plan_id,
-                            users: this.props.users,
-                            channels: this.props.channels,
-                            me: this.props.me,
-                            key: item.id,
-                            team_id: this.props.team_id,
-                            dispatch: this.props.dispatch });
-                    }, this)
-                )
-            );
-        }
-    }]);
-=======
   _createClass(TeamAppsContainer, [{
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
@@ -55276,7 +55238,6 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
       );
     }
   }]);
->>>>>>> 03e7b59eb65d5e63b1326fd1e33cc70ec0bcac6c
 
     return TeamAppsContainer;
 }(React.Component)) || _class);
@@ -55309,7 +55270,7 @@ var _helperFunctions = __webpack_require__(15);
 
 var _renderHelpers = __webpack_require__(207);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _semanticUiReact = __webpack_require__(10);
 
@@ -57617,7 +57578,7 @@ var modalActions = _interopRequireWildcard(_teamModalActions);
 
 var _appsActions = __webpack_require__(27);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
@@ -58249,9 +58210,9 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
@@ -58712,7 +58673,7 @@ var _classnames = __webpack_require__(2);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _semanticUiReact = __webpack_require__(10);
 
@@ -58724,7 +58685,7 @@ var modalActions = _interopRequireWildcard(_teamModalActions);
 
 var _appsActions = __webpack_require__(27);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
@@ -59038,9 +58999,9 @@ var _classnames = __webpack_require__(2);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
@@ -59302,7 +59263,7 @@ var _common = __webpack_require__(115);
 
 var _appsActions = __webpack_require__(27);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
@@ -59800,9 +59761,9 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
@@ -60216,7 +60177,7 @@ var _teamModalActions = __webpack_require__(9);
 
 var _appsActions = __webpack_require__(27);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -60228,7 +60189,7 @@ var _helperFunctions = __webpack_require__(15);
 
 var _semanticUiReact = __webpack_require__(10);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _reactRedux = __webpack_require__(6);
 
@@ -60419,7 +60380,7 @@ var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
 
 var _semanticUiReact = __webpack_require__(10);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _reactRedux = __webpack_require__(6);
 
@@ -60573,7 +60534,7 @@ var _teamModalActions = __webpack_require__(9);
 
 var _appsActions = __webpack_require__(27);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -60585,7 +60546,7 @@ var _helperFunctions = __webpack_require__(15);
 
 var _semanticUiReact = __webpack_require__(10);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _reactRedux = __webpack_require__(6);
 
@@ -60764,7 +60725,7 @@ var _semanticUiReact = __webpack_require__(10);
 
 var _helperFunctions = __webpack_require__(15);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -60924,7 +60885,7 @@ var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
 
 var _semanticUiReact = __webpack_require__(10);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _reactRedux = __webpack_require__(6);
 
@@ -61092,7 +61053,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var React = __webpack_require__(0);
 var classnames = __webpack_require__(2);
-var api = __webpack_require__(17);
+        var api = __webpack_require__(19);
 var PinTeamAppToDashboardModal = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     modal: store.teamModals.pinTeamAppToDashboardModal,
@@ -61491,7 +61452,7 @@ var _teamModalActions = __webpack_require__(9);
 
 var _reactRedux = __webpack_require__(6);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _semanticUiReact = __webpack_require__(10);
 
@@ -61928,7 +61889,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _class;
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -62127,7 +62088,7 @@ var channelActions = _interopRequireWildcard(_channelActions);
 
 var _renderHelpers = __webpack_require__(207);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _reactRouterDom = __webpack_require__(25);
 
@@ -62333,7 +62294,7 @@ var _reactRedux = __webpack_require__(6);
 
 var _userActions = __webpack_require__(39);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _teamModalActions = __webpack_require__(9);
 
@@ -62696,7 +62657,7 @@ var _teamModalActions = __webpack_require__(9);
 
 var _renderHelpers = __webpack_require__(207);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _semanticUiReact = __webpack_require__(10);
 
@@ -62971,7 +62932,7 @@ var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTran
 
 var _reactRouterDom = __webpack_require__(25);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _semanticUiReact = __webpack_require__(10);
 
@@ -63143,7 +63104,7 @@ var _classnames = __webpack_require__(2);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _teamModalActions = __webpack_require__(9);
 
@@ -63541,7 +63502,7 @@ var _SimpleModalTemplate = __webpack_require__(52);
 
 var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _channelActions = __webpack_require__(50);
 
@@ -63862,7 +63823,7 @@ var _SimpleModalTemplate2 = _interopRequireDefault(_SimpleModalTemplate);
 
 var _teamModalActions = __webpack_require__(9);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _userActions = __webpack_require__(39);
 
@@ -66399,7 +66360,7 @@ var _InvitePeopleStep = __webpack_require__(334);
 
 var _InvitePeopleStep2 = _interopRequireDefault(_InvitePeopleStep);
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _reactRedux = __webpack_require__(6);
 
@@ -67037,17 +66998,20 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function render() {
       var steps = [];
       steps.push(React.createElement(Step1, { incrementStep: this.incrementStepByValue,
+          plan_id: this.state.plan_id,
         handleInput: this.handleInput,
         email: this.state.email,
         switchNewsletter: this.switchNewsletter,
         newsletter: this.state.newsletter,
         key: '1' }));
       steps.push(React.createElement(Step2, { onStepValidated: this.incrementStep,
+          plan_id: this.state.plan_id,
         digits: this.state.digits,
         email: this.state.email,
         handleInput: this.handleInput,
         key: '2' }));
       steps.push(React.createElement(Step4, { onStepValidated: this.incrementStep,
+          plan_id: this.state.plan_id,
         email: this.state.email,
         password: this.state.password,
         newsletter: this.state.newsletter,
@@ -67058,6 +67022,7 @@ var SimpleTeamCreationView = (_dec = (0, _reactRedux.connect)(function (store) {
         handleInput: this.handleInput,
         key: '4' }));
       steps.push(React.createElement(Step5, { incStep: this.incrementStep,
+          plan_id: this.state.plan_id,
         handleInput: this.handleInput,
         jobRole: this.state.jobRole,
         jobDetails: this.state.jobDetails,
@@ -67942,7 +67907,7 @@ var _store = __webpack_require__(585);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _api = __webpack_require__(17);
+        var _api = __webpack_require__(19);
 
 var _Registration = __webpack_require__(582);
 
@@ -69316,7 +69281,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = reducer;
 
-var _utils = __webpack_require__(18);
+        var _utils = __webpack_require__(17);
 
 var _helperFunctions = __webpack_require__(15);
 
@@ -76294,7 +76259,7 @@ var Stack = __webpack_require__(236),
     equalByTag = __webpack_require__(840),
     equalObjects = __webpack_require__(841),
     getTag = __webpack_require__(167),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isBuffer = __webpack_require__(128),
     isTypedArray = __webpack_require__(175);
 
@@ -77541,7 +77506,7 @@ module.exports = countHolders;
 var arrayAggregator = __webpack_require__(770),
     baseAggregator = __webpack_require__(775),
     baseIteratee = __webpack_require__(41),
-    isArray = __webpack_require__(19);
+    isArray = __webpack_require__(18);
 
 /**
  * Creates a function like `_.groupBy`.
@@ -77869,7 +77834,7 @@ var LodashWrapper = __webpack_require__(233),
     flatRest = __webpack_require__(164),
     getData = __webpack_require__(245),
     getFuncName = __webpack_require__(392),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isLaziable = __webpack_require__(395);
 
 /** Error message constants. */
@@ -78830,7 +78795,7 @@ module.exports = insertWrapDetails;
 
 var Symbol = __webpack_require__(104),
     isArguments = __webpack_require__(172),
-    isArray = __webpack_require__(19);
+    isArray = __webpack_require__(18);
 
 /** Built-in value references. */
 var spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;
@@ -80261,7 +80226,7 @@ module.exports = escapeRegExp;
 var arrayEvery = __webpack_require__(771),
     baseEvery = __webpack_require__(777),
     baseIteratee = __webpack_require__(41),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isIterateeCall = __webpack_require__(168);
 
 /**
@@ -81335,7 +81300,7 @@ module.exports = {
   'clone': __webpack_require__(894),
   'curry': __webpack_require__(410),
   'forEach': __webpack_require__(122),
-  'isArray': __webpack_require__(19),
+    'isArray': __webpack_require__(18),
   'isFunction': __webpack_require__(70),
   'iteratee': __webpack_require__(928),
   'keys': __webpack_require__(157),
@@ -82290,7 +82255,7 @@ module.exports = take;
 
 var arrayMap = __webpack_require__(56),
     copyArray = __webpack_require__(161),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isSymbol = __webpack_require__(87),
     stringToPath = __webpack_require__(407),
     toKey = __webpack_require__(66),
@@ -82332,7 +82297,7 @@ var arrayEach = __webpack_require__(122),
     baseForOwn = __webpack_require__(240),
     baseIteratee = __webpack_require__(41),
     getPrototype = __webpack_require__(166),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isBuffer = __webpack_require__(128),
     isFunction = __webpack_require__(70),
     isObject = __webpack_require__(35),
@@ -82588,7 +82553,7 @@ module.exports = words;
 var LazyWrapper = __webpack_require__(232),
     LodashWrapper = __webpack_require__(233),
     baseLodash = __webpack_require__(242),
-    isArray = __webpack_require__(19),
+    isArray = __webpack_require__(18),
     isObjectLike = __webpack_require__(47),
     wrapperClone = __webpack_require__(890);
 
@@ -108943,7 +108908,8 @@ var debug = makeDebugger('log');
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lodash_uniq___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_lodash_uniq__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_lodash_isFunction__ = __webpack_require__(70);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_lodash_isFunction___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_lodash_isFunction__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash_isArray__ = __webpack_require__(19);
+            /* harmony import */
+            var __WEBPACK_IMPORTED_MODULE_4_lodash_isArray__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash_isArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_lodash_isArray__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash_isPlainObject__ = __webpack_require__(174);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash_isPlainObject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_lodash_isPlainObject__);
@@ -112426,7 +112392,8 @@ Modal.propTypes = process.env.NODE_ENV !== "production" ? {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_lodash_omit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_lodash_omit__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_lodash_assign__ = __webpack_require__(892);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_lodash_assign___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_lodash_assign__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_lodash_isArray__ = __webpack_require__(19);
+            /* harmony import */
+            var __WEBPACK_IMPORTED_MODULE_8_lodash_isArray__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_lodash_isArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_lodash_isArray__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_lodash_mapValues__ = __webpack_require__(420);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_lodash_mapValues___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_lodash_mapValues__);
