@@ -5,14 +5,14 @@ var api = require('../../utils/api');
 var axios = require('axios');
 import queryString from "query-string";
 import InvitePeopleStep from "./InvitePeopleStep";
-import {passwordRegexp, emailRegexp, checkTeamUsernameErrors, jobRoles} from "../../utils/utils";
+import {checkTeamUsernameErrors, jobRoles, passwordRegexp} from "../../utils/utils";
 import {withRouter} from "react-router-dom";
 import {setLoginRedirectUrl} from "../../actions/commonActions";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import SingleEaseLogo from "../common/SingleEaseLogo";
 import {connect} from "react-redux";
 
-import { Header, Container, Segment, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import {Button, Container, Divider, Form, Header, Input, Label, Message, Segment, Select} from 'semantic-ui-react';
 
 class Step1 extends React.Component{
   constructor(props){
@@ -34,6 +34,9 @@ class Step1 extends React.Component{
     post_api.common.askRegistration(this.props.email).then(response => {
       this.setState({processing: false});
       this.props.onStepValidated();
+        easeTracker.trackEvent("TeamCreationEnterEmail", {
+            "plan_id": 0
+        });
     }).catch(err => {
       this.setState({errorMessage: err,processing: false});
     });
