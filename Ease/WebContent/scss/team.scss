@@ -422,6 +422,50 @@ button.action_text_button {
   }
 }
 
+#team_plan_popup {
+  background-color: #80db96;
+  &:first-letter {
+    text-transform: uppercase;
+  }
+  &:before {
+    background-color: #80db96;
+  }
+}
+
+#starter_plan {
+  background-image: url(/resources/other/Spaceship.svg);
+  position: relative;
+  background-size: 350px 535px;
+  background-repeat: no-repeat;
+  background-position-x: left;
+  background-position-y: top;
+  padding-bottom: 40px;
+  .button {
+    background-color: transparent;
+    color: #414141;
+    border: solid 1px #414141;
+    &:hover{
+      font-weight: bold;
+    }
+  }
+}
+
+#starter_plan, #pro_team_plan {
+  padding-top: 31px;
+  h1 {
+    margin: 0 0 15px 0;
+  }
+  .price {
+    margin-top: 10px;
+  }
+  .price_divider {
+    font-size: .8rem;
+    margin: 10px 0 15px 0;
+    text-align: center;
+    color: $themeBlue2Color;
+  }
+}
+
 #pro_team_plan {
   .price, .title {
     color: $DarkGreen;
@@ -430,19 +474,18 @@ button.action_text_button {
 
 #enterprise_team_plan {
   padding-bottom: 40px;
+  h1 {
+    margin: 0;
+  }
   .styleImage {
     z-index: 0;
   }
-  .info {
-    margin: 32px 0 19px 0;
-    font-size: 0.9rem;
-    color: $DarkGreen;
-    text-transform: uppercase;
-  }
   .plan_header {
     background-color: $LightGreen;
-    padding-top: 12px;
+    height: 245px;
+    padding-top: 31px;
     margin: -12px -30px 0;
+    margin-bottom: 35px;
     color: white;
   }
 }
@@ -503,12 +546,12 @@ button.action_text_button {
 .team_plan {
   @include display-flex();
   @include flex-direction(column);
-  @include flex-basis(430px);
+  @include flex-basis(370px);
   @include flex-shrink(0);
   overflow: hidden;
   height: 920px;
   position: relative;
-  width: 430px;
+  width: 370px;
   padding: 12px 30px;
   border: 1px solid $themeGreyDarkColor;
   border-radius: 5px;
@@ -518,6 +561,13 @@ button.action_text_button {
     top: 0;
     z-index: -1;
     width: 150px;
+  }
+  .info {
+    margin: 0 0 19px 0;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: $DarkGreen;
+    text-transform: uppercase;
   }
   .tip {
     font-size: 0.8rem;
@@ -531,7 +581,7 @@ button.action_text_button {
     }
   }
   .button {
-    width: 370px;
+    width: 100%;
     height:60px;
     font-weight: normal;
     text-transform: uppercase;
@@ -576,9 +626,6 @@ button.action_text_button {
   overflow: auto;
   @include flex-grow(1);
   padding: 25px 0 90px 0;
-  .content {
-    width:900px;
-  }
   .plan {
     flex-basis: 430px;
     flex-shrink: 0;

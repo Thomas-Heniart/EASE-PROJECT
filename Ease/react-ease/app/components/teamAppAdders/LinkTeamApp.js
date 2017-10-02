@@ -145,7 +145,7 @@ class LinkTeamApp extends Component {
         const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
 
         return (
-            <Container fluid class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
+            <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
 
                     <Segment>
                         <Header as="h4">

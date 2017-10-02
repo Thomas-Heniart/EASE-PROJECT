@@ -542,7 +542,7 @@ class TeamUserRole extends React.Component {
                 <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
                    </span> :
               <span>
-                      <Dropdown floating inline name="role" options={userRoles} value={this.state.edit ? this.state.role : this.props.user.role} onChange={this.handleInput}/>
+                      <Dropdown floating inline class="mini" name="role" options={userRoles} value={this.state.edit ? this.state.role : this.props.user.role} onChange={this.handleInput}/>
                        <Icon link name="delete" onClick={this.setEdit.bind(null, false)}/>
                        <Icon link name="checkmark" onClick={this.confirm}/>
                 {this.state.errorMessage.length > 0 &&

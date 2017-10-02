@@ -139,7 +139,7 @@ const SimpleCredentialsInput = ({receiver, me, team_id}) => {
         {receiver.credentials.map(item => {
           return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true} receiver_id={receiver.id} key={item.priority} onChange={null} item={item}/>
         })}
-        {(isAdmin(me.role) || receiver.team_user_id === me.id) &&
+        {(isAdmin(me.role) || receiver.id === me.id) &&
         <CopyPasswordButton team_id={team_id} shared_app_id={receiver.shared_app_id}/>}
       </div>
   )
@@ -404,7 +404,7 @@ class EnterpriseTeamApp extends Component {
     const users = this.getUsers();
 
     return (
-        <Container fluid class="team-app mrgn0 enterprise-team-app" as="form" onSubmit={this.modify}>
+        <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form" onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
           <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>

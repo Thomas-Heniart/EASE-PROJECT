@@ -406,6 +406,14 @@ a.link-unstyle {
   margin-left: 0;
 }
 
+.ui.dropdown.mini {
+  .menu {
+    .item {
+      font-size: .78571429rem ;
+    }
+  }
+}
+
 .ui.label {
   i.icon:last-child {
     margin-right: 0;

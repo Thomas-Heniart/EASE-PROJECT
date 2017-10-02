@@ -41,14 +41,14 @@ class StaticUpgradeTeamPlanModal extends Component {
         plan_id: 1
       })).then(response => {
         this.setState({loading: false});
-        this.props.dispatch(showUpgradeTeamPlanModal(false));
+        this.close();
       }).catch(err => {
         this.setState({loading: false, errorMesage: err});
       });
     } else {
       post_api.teams.askOwnerToUpgrade({team_id: this.props.team_id}).then(response => {
         this.setState({loading: false});
-        this.props.dispatch(showUpgradeTeamPlanModal(false));
+        this.close();
       });
     }
   };
@@ -74,6 +74,9 @@ class StaticUpgradeTeamPlanModal extends Component {
             onClose={this.close}
             headerContent={'Upgrade to Pro!'}>
           <Form class="container" error={this.state.errorMesage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
+            <Form.Field>
+              One of your team members would like to access paying features.
+            </Form.Field>
             <Form.Field>
               <h5>
                 Pro includes your current features and:
