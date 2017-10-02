@@ -43,7 +43,6 @@ public class Team {
 
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
-        //query.querySQLString("SELECT id FROM teams");
         query.queryString("SELECT t FROM Team t WHERE t.active = true");
         List<Team> teams = query.list();
         for (Team team : teams) {
@@ -89,7 +88,7 @@ public class Team {
     @MapKey(name = "db_id")
     protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
@@ -237,7 +236,7 @@ public class Team {
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
-        Channel channel = this.channels.get(channel_id);
+        Channel channel = this.getChannels().get(channel_id);
         if (channel == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This channel does not exist");
         return channel;
@@ -267,7 +266,7 @@ public class Team {
     }
 
     public void addChannel(Channel channel) {
-        this.channels.put(channel.getDb_id(), channel);
+        this.getChannels().put(channel.getDb_id(), channel);
     }
 
     public Channel getDefaultChannel() throws HttpServletException {
@@ -286,7 +285,7 @@ public class Team {
     }
 
     public void removeChannel(Channel channel) {
-        this.channels.remove(channel.getDb_id());
+        this.getChannels().remove(channel.getDb_id());
     }
 
     public void edit(JSONObject editJson) {
