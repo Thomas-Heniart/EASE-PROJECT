@@ -27,11 +27,11 @@ public class RemindersScheduledTask extends TimerTask {
             /* teamManager.reminderThreeDays();
             reminderEmailManager.lunchReminders(); */
             teamManager.passwordReminder();
-            teamManager.checkFreeTrialEnd();
             DataBaseConnection db;
             try {
                 db = new DataBaseConnection(DataBase.getConnection());
                 teamManager.checkDepartureDates(db);
+                teamManager.checkFreeTrialEnd(db);
                 db.close();
             } catch (SQLException e) {
                 e.printStackTrace();

@@ -317,10 +317,9 @@ public class Team {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
-        //res.put("valid_subscription", !this.isBlocked());
         Integer plan_id = this.getPlan_id();
         res.put("plan_id", plan_id);
-        res.put("payment_required", plan_id > 0 && !(!this.isCard_entered() && ((this.getSubscription().getTrialEnd() * 1000) >= new Date().getTime())));
+        res.put("payment_required", this.isBlocked());
         return res;
     }
 
@@ -460,7 +459,7 @@ public class Team {
 
     public boolean isBlocked() {
         try {
-            return (this.subscription_date == null) || (!card_entered && this.getSubscription().getTrialEnd() != null && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+            return (this.isFreemium() && !card_entered && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
         } catch (HttpServletException e) {
             e.printStackTrace();
             return true;
@@ -531,16 +530,14 @@ public class Team {
         return null;
     }
 
-    public void checkFreeTrialEnd() {
+    public void checkFreeTrialEnd(DataBaseConnection db) {
         MailJetBuilder mailJetBuilder;
         if (this.card_entered)
             return;
         try {
-            if (this.getSubscription().getTrialEnd() == null)
-                return;
-            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             if (!this.isFreemium())
                 return;
+            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
@@ -560,6 +557,11 @@ public class Team {
                 mailJetBuilder.addTo(this.getTeamUserOwner().getEmail());
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
+            }
+            for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+                ((App) shareableApp).setDisabled(this.isBlocked(), db);
+                for (SharedApp sharedApp : shareableApp.getSharedApps())
+                    ((App) sharedApp).setDisabled(this.isBlocked(), db);
             }
         } catch (Exception e) {
             e.printStackTrace();
