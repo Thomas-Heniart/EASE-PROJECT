@@ -173,7 +173,7 @@
             function () {
                 button.hide();
                 $(".message.positive").show();
-                easeTracker.trackEvent("HomepageContactSubmit");
+                easeTracker.trackEvent("PricingContactSubmit");
             }, function (msg) {
                 $(".message.negative p").text(msg);
                 $(".message.negative").show();

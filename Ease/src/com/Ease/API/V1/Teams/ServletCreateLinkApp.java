@@ -38,7 +38,6 @@ public class ServletCreateLinkApp extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser_owner = sm.getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            //JSONArray receivers = sm.getArrayParam("receivers", false, false);
             String app_name = sm.getStringParam("name", true, false);
             String url = sm.getStringParam("url", false, false);
             String img_url = sm.getStringParam("img_url", false, false);
@@ -55,11 +54,9 @@ public class ServletCreateLinkApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Url length must be fewer than 2000 characters");
             if (!img_url.equals("") && !Regex.isValidLink(img_url) && !img_url.startsWith("https://logo.clearbit.com/"))
                 throw new HttpServletException(HttpStatus.BadRequest, "Url entered for icon is invalid.");
-            if (description == null)
-                description = "";
             Channel channel = team.getChannelWithId(channel_id);
-                if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
-                    throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
+            if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
+                throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             LinkApp linkApp = LinkApp.createShareableLinkApp(app_name, url, img_url, sm);
