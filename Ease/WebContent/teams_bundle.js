@@ -55062,6 +55062,7 @@ var React = __webpack_require__(0);
 var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     selectedItem: store.selection,
+    loading: store.selection.loading,
     users: store.users.users,
     channels: store.channels.channels,
     me: store.users.me,
@@ -55078,29 +55079,22 @@ var TeamAppsContainer = (_dec = (0, _reactRedux.connect)(function (store) {
   }
 
   _createClass(TeamAppsContainer, [{
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      if (nextProps !== this.props) {
-        if (nextProps.location.search !== this.props.location.search) {
-          var query = _queryString2.default.parse(nextProps.location.search);
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps !== this.props) {
+        if (!this.props.loading && prevProps.loading !== this.props.loading || this.props.location.search !== prevProps.location.search) {
+          var query = _queryString2.default.parse(this.props.location.search);
           if (query.app_id !== undefined && query.app_id.length !== 0) {
-            console.log("app_" + query.app_id);
             var el = document.getElementById("app_" + query.app_id);
-            if (el) el.scrollIntoView(true);
+            if (el) {
+              el.scrollIntoView(true);
+              el.classList.add('blink');
+              window.setTimeout(function () {
+                el.classList.remove('blink');
+              }, 3000);
+            }
           }
         }
-      }
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var query = _queryString2.default.parse(this.props.location.search);
-
-      if (query.app_id !== undefined && query.app_id.length !== 0) {
-        var el = document.getElementById("app_" + query.app_id);
-        console.log("app_" + query.app_id);
-        console.log(el);
-        if (el) el.scrollIntoView(true);
       }
     }
   }, {
@@ -68290,7 +68284,8 @@ function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
     type: null,
     id: null,
-    apps: []
+    apps: [],
+    loading: false
   };
   var action = arguments[1];
 
@@ -68300,7 +68295,8 @@ function reducer() {
         return _extends({}, state, {
           type: 'user',
           id: action.payload.user.id,
-          apps: action.payload.apps.reverse()
+          apps: action.payload.apps.reverse(),
+          loading: false
         });
       }
     case "FETCH_TEAM_FULFILLED":
@@ -68316,7 +68312,8 @@ function reducer() {
         return _extends({}, state, {
           apps: action.payload.apps.reverse(),
           type: action.payload.type,
-          id: action.payload.id
+          id: action.payload.id,
+          loading: false
         });
       }
     case 'FETCH_TEAM_CHANNELS_APPS_FULFILLED':
@@ -68324,7 +68321,20 @@ function reducer() {
         return _extends({}, state, {
           apps: action.payload.apps.reverse(),
           type: action.payload.type,
-          id: action.payload.id
+          id: action.payload.id,
+          loading: false
+        });
+      }
+    case 'FETCH_TEAM_USER_APPS_PENDING':
+      {
+        return _extends({}, state, {
+          loading: true
+        });
+      }
+    case 'FETCH_TEAM_CHANNEL_APPS_PENDING':
+      {
+        return _extends({}, state, {
+          loading: true
         });
       }
     case 'SELECT_TEAM_CHANNEL_FULFILLED':
@@ -68332,7 +68342,8 @@ function reducer() {
         return _extends({}, state, {
           type: 'channel',
           id: action.payload.channel.id,
-          apps: action.payload.apps.reverse()
+          apps: action.payload.apps.reverse(),
+          loading: false
         });
       }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED":

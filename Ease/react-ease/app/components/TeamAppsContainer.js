@@ -9,6 +9,7 @@ import {withRouter} from "react-router-dom";
 @connect((store)=>{
   return {
     selectedItem: store.selection,
+    loading: store.selection.loading,
     users: store.users.users,
     channels: store.channels.channels,
     me: store.users.me,
@@ -20,28 +21,19 @@ class TeamAppsContainer extends React.Component{
   constructor(props){
     super(props);
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps !== this.props){
-      if (nextProps.location.search !== this.props.location.search){
-        const query = queryString.parse(nextProps.location.search);
+  componentDidUpdate(prevProps, prevState){
+    if (prevProps !== this.props){
+      if ((!this.props.loading && prevProps.loading !== this.props.loading) || this.props.location.search !== prevProps.location.search){
+        const query = queryString.parse(this.props.location.search);
         if (query.app_id !== undefined && query.app_id.length !== 0){
-          console.log(`app_${query.app_id}`);
           const el = document.getElementById(`app_${query.app_id}`);
-          if (el)
+          if (el) {
             el.scrollIntoView(true);
+            el.classList.add('blink');
+            window.setTimeout(() => {el.classList.remove('blink')}, 3000);
+          }
         }
       }
-    }
-  }
-  componentDidMount(){
-    const query = queryString.parse(this.props.location.search);
-
-    if (query.app_id !== undefined && query.app_id.length !== 0){
-      const el = document.getElementById(`app_${query.app_id}`);
-      console.log(`app_${query.app_id}`);
-      console.log(el);
-      if (el)
-        el.scrollIntoView(true);
     }
   }
   render() {
