@@ -62,11 +62,10 @@ pageEncoding="UTF-8"%>
 					if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]};e.amplitude=n;
 				})(window,document);
 
-				/* Prod */
-	//amplitude.getInstance().init("74f6ebfba0c7743a0c63012dc3a9fef0");
-
-	/* Test */
-	amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
+        if (location.hostname === "ease.space")
+            amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
+        else
+            amplitude.getInstance().init("5f012a5e604acb0283ed11ed8da5414f");
 	easeTracker.trackEvent("HomepageTeam");
 </script>
 </head>
