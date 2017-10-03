@@ -70,7 +70,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
             Long departure_date = sm.getLongParam("departure_date", true, true);
-            if (!team.isValidFreemium() && departure_date == null)
+            if (!team.isValidFreemium() || departure_date == null)
                 departure_date = null;
             else {
                 if (departure_date <= sm.getTimestamp().getTime())
