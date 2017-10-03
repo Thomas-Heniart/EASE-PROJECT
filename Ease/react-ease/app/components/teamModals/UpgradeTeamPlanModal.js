@@ -68,7 +68,7 @@ class UpgradeTeamPlanModal extends Component {
     return (
         <SimpleModalTemplate
             onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal(false))}}
-            headerContent={'Upgrade to Pro!'}>
+            headerContent={'Try Pro now!'}>
           <Form class="container" error={this.state.errorMesage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
             <Form.Field>
               Your current plan (Basic) doesn’t enable {proFeaturesDesc[feature_id]}.
