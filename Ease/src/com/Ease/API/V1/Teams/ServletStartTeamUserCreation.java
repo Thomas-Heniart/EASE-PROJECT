@@ -8,6 +8,7 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
+import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -69,19 +70,17 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (!query.list().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
-            String departure_date_string = sm.getStringParam("departure_date", true, true);
+            Long departure_date = sm.getLongParam("departure_date", true, false);
             if (!team.isValidFreemium())
-                departure_date_string = null;
-            Date departure_date = null;
-            if (departure_date_string != null && !departure_date_string.equals("")) {
-                departure_date = departure_format.parse(departure_date_string);
-                if (departure_date.getTime() < sm.getTimestamp().getTime())
+                departure_date = null;
+            else {
+                if (departure_date <= (sm.getTimestamp().getTime() + DateComparator.millisecondsInDay))
                     throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");
             }
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date != null)
-                teamUser.setDepartureDate(departure_date);
+                teamUser.setDepartureDate(new Date(departure_date));
             query.saveOrUpdateObject(teamUser);
             team.addTeamUser(teamUser);
             String code;
