@@ -68,12 +68,13 @@ class TeamAddUserModal extends React.Component {
   };
   confirm = (e) =>{
     e.preventDefault();
+    const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : 0;
     if (this.props.users.length > 29 && this.props.plan_id === 0){
       this.props.dispatch(showUpgradeTeamPlanModal(true, 4));
       return;
     }
     this.setState({errorMessage: '', loading: true});
-    this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username,this.state.departure_date, this.state.role)).then(response => {
+    this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username,departureDate, this.state.role)).then(response => {
       const user = response;
       const calls = this.state.value.map(item => {
         return this.props.dispatch(addTeamUserToChannel(item, user.id));
