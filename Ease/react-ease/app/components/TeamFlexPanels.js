@@ -604,7 +604,7 @@ class TeamUserFlexTab extends React.Component{
     if (state){
       this.setState({
         departureDateModifying: true,
-        departureDate: moment(this.props.item.departure_date).format('YYYY-MM-DD')
+        departureDate: this.props.item.departureDate !== null ? moment(this.props.item.departure_date).format('YYYY-MM-DD') : ''
       });
     }else {
       this.setState({
