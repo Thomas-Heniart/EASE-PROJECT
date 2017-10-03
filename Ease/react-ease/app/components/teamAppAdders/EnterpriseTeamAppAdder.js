@@ -5,7 +5,7 @@ import {handleSemanticInput,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
 import {selectUserFromListById} from "../../utils/helperFunctions";
-import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
+import {requestWebsite, showPinTeamAppToDashboardModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {teamCreateSingleApp, teamCreateEnterpriseApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
@@ -128,7 +128,8 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
 @connect(store => ({
   team_id: store.team.id,
   users: store.users.users,
-  myId: store.team.myTeamUserId
+  myId: store.team.myTeamUserId,
+  plan_id: store.team.plan_id
 }))
 class EnterpriseTeamAppAdder extends Component {
   constructor(props){
@@ -144,6 +145,13 @@ class EnterpriseTeamAppAdder extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  changeFillInSwitch = (e, {checked}) => {
+    if (this.props.plan_id === 0 && !checked){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 2));
+      return;
+    }
+    this.setState({fill_in_switch: !checked});
+  };
   onDeleteReceiver = (id) => {
     const selected_users = this.state.selected_users.filter(item => (item !== id));
     this.setState({selected_users: selected_users});
@@ -243,9 +251,11 @@ class EnterpriseTeamAppAdder extends Component {
                   </div>
                   <div class="main_column">
                     <div class="credentials">
-                      <div class="display-inline-flex">
+                      <div class="display-inline-flex align_items_center">
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>
-                        <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.handleInput}/>
+                        <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>
+                        {this.props.plan_id === 0 &&
+                        <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
                       </div>
                     </div>
                     <Receivers extended={this.state.fill_in_switch} myId={this.props.myId} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>

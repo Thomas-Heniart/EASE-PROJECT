@@ -1,25 +1,43 @@
 var React = require('react');
-var classnames = require('classnames');
-var TeamSimpleApp = require('./teamApps/TeamSimpleApp');
 import SimpleTeamApp from "./teamAppAdders/SimpleTeamApp";
-// var TeamLinkApp = require('./teamApps/TeamLinkApp');
 import TeamLinkApp from "./teamAppAdders/LinkTeamApp";
-var TeamMultiApp = require('./teamApps/TeamMultiApp');
-import  EnterpriseTeamApp from "./teamAppAdders/EnterpriseTeamApp";
-import {connect} from "react-redux"
+import EnterpriseTeamApp from "./teamAppAdders/EnterpriseTeamApp";
+import queryString from "query-string";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 
 @connect((store)=>{
   return {
     selectedItem: store.selection,
+    loading: store.selection.loading,
     users: store.users.users,
     channels: store.channels.channels,
     me: store.users.me,
-    team_id: store.team.id
+    team_id: store.team.id,
+    plan_id: store.team.plan_id
   };
 })
 class TeamAppsContainer extends React.Component{
   constructor(props){
     super(props);
+  }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps !== this.props) {
+            if ((!this.props.loading && prevProps.loading !== this.props.loading) || this.props.location.search !== prevProps.location.search) {
+                const query = queryString.parse(this.props.location.search);
+                if (query.app_id !== undefined && query.app_id.length !== 0) {
+                    const el = document.getElementById(`app_${query.app_id}`);
+                    if (el) {
+                        el.scrollIntoView(true);
+                        el.classList.add('blink');
+                        window.setTimeout(() => {
+                            el.classList.remove('blink')
+                        }, 3000);
+                    }
+                }
+            }
+    }
   }
   render() {
     return (
@@ -34,6 +52,7 @@ class TeamAppsContainer extends React.Component{
                           channels={this.props.channels}
                           me={this.props.me}
                           key={item.id}
+                          plan_id={this.props.plan_id}
                           team_id={this.props.team_id}
                           dispatch={this.props.dispatch}/>
                   );
@@ -52,6 +71,7 @@ class TeamAppsContainer extends React.Component{
                   return (
                       <EnterpriseTeamApp
                           app={item}
+                          plan_id={this.props.plan_id}
                           users={this.props.users}
                           channels={this.props.channels}
                           me={this.props.me}
@@ -67,4 +87,4 @@ class TeamAppsContainer extends React.Component{
   }
 }
 
-module.exports = TeamAppsContainer;
+module.exports = withRouter(TeamAppsContainer);

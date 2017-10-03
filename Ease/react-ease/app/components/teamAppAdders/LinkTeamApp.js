@@ -1,22 +1,12 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import api from '../../utils/api';
-import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {getClearbitLogo} from "../../utils/api";
-import {setUserDropdownText,
-    PinAppButton,
-    TeamAppActionButton} from "./common";
+import {getClearbitLogo} from '../../utils/api';
+import {Button, Container, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
+import {PinAppButton, TeamAppActionButton} from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {teamEditLinkAppNew} from "../../actions/appsActions";
-import {handleSemanticInput,
-    reflect
-} from "../../utils/utils";
-import {selectItemFromListById,
-    findMeInReceivers,
-    getReceiverInList,
-    sortReceiversAndMap,
-    isAdmin} from "../../utils/helperFunctions";
-import {connect} from "react-redux";
+import {handleSemanticInput} from "../../utils/utils";
+import {getReceiverInList, isAdmin, sortReceiversAndMap} from "../../utils/helperFunctions";
 
 const TeamLinkAppButtonSet = ({app, me, dispatch, editMode}) => {
     return (
@@ -145,7 +135,8 @@ class LinkTeamApp extends Component {
         const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
 
         return (
-            <Container fluid class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
+            <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form"
+                       onSubmit={this.modify}>
 
                     <Segment>
                         <Header as="h4">

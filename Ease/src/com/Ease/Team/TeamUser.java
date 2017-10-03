@@ -7,8 +7,6 @@ import com.Ease.Notification.Notification;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketMessageFactory;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -418,7 +416,10 @@ public class TeamUser {
 
     public void transferOwnershipTo(TeamUser new_teamUser_owner) throws HttpServletException {
         new_teamUser_owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
-        this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
+        if (!team.isValidFreemium())
+            this.getTeamUserRole().setRole(TeamUserRole.Role.MEMBER);
+        else
+            this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
     }
 
     public void delete(DataBaseConnection db) throws HttpServletException {
@@ -450,7 +451,7 @@ public class TeamUser {
         }
     }
 
-    @Override
+    /* @Override
     public int hashCode() {
         HashCodeBuilder hcb = new HashCodeBuilder();
         hcb.append(this.db_id);
@@ -467,7 +468,7 @@ public class TeamUser {
         EqualsBuilder eb = new EqualsBuilder();
         eb.append(this.db_id, teamUser.db_id);
         return eb.isEquals();
-    }
+    } */
 
     public List<SharedApp> getSharedApps() {
         return this.getTeam().getAppManager().getSharedAppsForTeamUser(this);

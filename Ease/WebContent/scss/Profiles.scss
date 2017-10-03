@@ -192,6 +192,7 @@
 					.linkImage.settingsShow {
 						&:before {
 							box-shadow: inset 0px 0px 0px 5px $themeColor;
+                          z-index: 1;
 						}
 					}
 					.linkImage {
@@ -223,11 +224,15 @@
 						}
 						position: relative;
 						width: 65%;
+                      padding-bottom: 65%;
 						cursor: pointer;
 						opacity: 0.8;
 						margin-left: auto;
 						margin-right: auto;
 						.logo {
+                          position: absolute;
+                          left: 0;
+                          top: 0;
 							border: 1px solid #efefef;
 							border-radius: 5px;
 							width: 100%;
@@ -238,6 +243,12 @@
 								content: "";
 							}
 						}
+                      .app_disabled {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        background-color: rgba(#373B60, 0.8);
+                      }
 					}
 					.linkImage.waitingLinkImage {
 						opacity: 0.5;
@@ -598,6 +609,7 @@
 .ProfileBox .ProfileContent .content .SitesContainer .siteLinkBox {
 	.linkImage {
 		.emptyAppIndicator {
+          z-index: 1;
 			position: absolute;
 			width: 100%;
 			height: 100%;
@@ -617,7 +629,22 @@
 				font-size: 1vw;
 				position: relative;
 				border: none;
+              display: none;
 			}
+          span {
+            background-color: #DF5454;
+            border-radius: 100%;
+            display: inline-block;
+            width: 35%;
+            height: 35%;
+            left: 45%;
+            bottom: 12%;
+            line-height: 90%;
+            font-size: 1vw;
+            position: relative;
+            border: none;
+
+          }
 			&:hover {
 				background-color: $themeColor;
 				border: 1px solid #efefef;
@@ -629,7 +656,11 @@
 				left:0%;
 				top:15%;
 				border-radius: 5px;
+              display: inline-block;
 			}
+          &:hover > span {
+            display: none;
+          }
 		}
 		.showAppActionsButton {
 			position: absolute;

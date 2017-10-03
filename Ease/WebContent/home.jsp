@@ -87,16 +87,16 @@
     <link rel="chrome-webstore-item"
           href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00015/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00016/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00015/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00015/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00016/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00016/bootstrap.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00015/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00015/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00016/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00016/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="/jsMinified.v00020/moment.js"></script>
+    <script src="/jsMinified.v00021/moment.js"></script>
     <link rel="manifest" href="manifest.json">
 
 </head>
@@ -112,7 +112,7 @@
     <div class="ease-header" id="app">
         <%--@ include file="/templates/Header.jsp"--%>
     </div>
-    <script src="teams_bundle.js?00000006"></script>
+    <script src="teams_bundle.js?00000007"></script>
     <div id="loggedBody">
         <div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
             <%@ include file="/templates/ProfileView.jsp" %>
@@ -124,7 +124,7 @@
             </div>--%>
             <div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
             </div>
-            <c:if test='${user.appsImported() && (user.getStatus().tutoIsDone() eq false)}'>
+            <c:if test='${user.getStatus().tutoIsDone() eq false}'>
                 <%@ include file="/templates/Tips.jsp" %>
             </c:if>
         </div>
@@ -133,39 +133,31 @@
     </div>
     <div class="popupHandler" id="easePopupsHandler">
     </div>
-    <c:if test='${(user.appsImported() eq false) || (param.importAccounts)}'>
-        <%@ include file="/templates/TutorialView.jsp" %>
-        <script type="text/javascript">
-            window.addEventListener('load', function () {
-                asyncLoading.loadScriptsOneByOne(["/jsMinified.v00020/tutorialSteps.js"]);
-            });
-        </script>
-    </c:if>
     <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">
-    <link rel="stylesheet" href="/cssMinified.v00015/lib/niftyPopupWindow/component.css">
+    <link rel="stylesheet" href="/cssMinified.v00016/lib/niftyPopupWindow/component.css">
 </noscript>
-<script src="/jsMinified.v00020/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00020/jquery-ui-1.12.0.js" defer></script>
-<script src="/jsMinified.v00020/Sortable.js" defer></script>
-<script src="/jsMinified.v00020/app.js" defer></script>
-<script src="/jsMinified.v00020/profiles.js" defer></script>
-<script src="/jsMinified.v00020/dashboard.js" defer></script>
-<script src="/jsMinified.v00020/websocket.js" async></script>
-<script src="/jsMinified.v00020/tracker.js" async></script>
-<script src="/jsMinified.v00020/asyncContentLoading.js" async></script>
-<script src="/jsMinified.v00020/postHandler.js" async></script>
-<script src="/jsMinified.v00020/basic-utils.js" async></script>
-<script src="/jsMinified.v00020/extension.js" async></script>
-<script src="/jsMinified.v00020/header.js" async></script>
-<script src="/jsMinified.v00020/selectFx.js" async></script>
-<script src="/jsMinified.v00020/isMobile.js" async></script>
-<script src="/jsMinified.v00020/shortcut.js" async></script>
-<script src="/jsMinified.v00020/logout.js" async></script>
-<script src="/jsMinified.v00020/checkConnection.js" async></script>
-<script src="/jsMinified.v00020/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00020/jsencrypt.js" async></script>
+<script src="/jsMinified.v00021/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00021/jquery-ui-1.12.0.js" defer></script>
+<script src="/jsMinified.v00021/Sortable.js" defer></script>
+<script src="/jsMinified.v00021/app.js" defer></script>
+<script src="/jsMinified.v00021/profiles.js" defer></script>
+<script src="/jsMinified.v00021/dashboard.js" defer></script>
+<script src="/jsMinified.v00021/websocket.js" async></script>
+<script src="/jsMinified.v00021/tracker.js" async></script>
+<script src="/jsMinified.v00021/asyncContentLoading.js" async></script>
+<script src="/jsMinified.v00021/postHandler.js" async></script>
+<script src="/jsMinified.v00021/basic-utils.js" async></script>
+<script src="/jsMinified.v00021/extension.js" async></script>
+<script src="/jsMinified.v00021/header.js" async></script>
+<script src="/jsMinified.v00021/selectFx.js" async></script>
+<script src="/jsMinified.v00021/isMobile.js" async></script>
+<script src="/jsMinified.v00021/shortcut.js" async></script>
+<script src="/jsMinified.v00021/logout.js" async></script>
+<script src="/jsMinified.v00021/checkConnection.js" async></script>
+<script src="/jsMinified.v00021/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00021/jsencrypt.js" async></script>
 <script>
     var images = document.getElementsByClassName('logo');
     Array.prototype.forEach.call(images, function (element) {
@@ -209,12 +201,12 @@
             callback: function () {
                 asyncLoading.loadScriptsOneByOne(
                     [
-                        "/jsMinified.v00020/modifyAppPopup.js",
-                        "/jsMinified.v00020/addAppPopup.js",
-                        "/jsMinified.v00020/deleteAccountPopup.js",
-                        "/jsMinified.v00020/deleteProfilePopup.js",
-                        "/jsMinified.v00020/addBookmarkPopup.js",
-                        "/jsMinified.v00020/popupHandler.js"
+                        "/jsMinified.v00021/modifyAppPopup.js",
+                        "/jsMinified.v00021/addAppPopup.js",
+                        "/jsMinified.v00021/deleteAccountPopup.js",
+                        "/jsMinified.v00021/deleteProfilePopup.js",
+                        "/jsMinified.v00021/addBookmarkPopup.js",
+                        "/jsMinified.v00021/popupHandler.js"
                     ]
                 );
             }
@@ -228,10 +220,10 @@
             appendTo: '.col-left .CatalogViewTab',
             callback: function () {
                 asyncLoading.loadScriptsOneByOne(
-                    ['/jsMinified.v00020/catalogApp.js',
-                        '/jsMinified.v00020/catalog.js',
-                        '/jsMinified.v00020/update.js',
-                        '/jsMinified.v00020/updatesManager.js'
+                    ['/jsMinified.v00021/catalogApp.js',
+                        '/jsMinified.v00021/catalog.js',
+                        '/jsMinified.v00021/update.js',
+                        '/jsMinified.v00021/updatesManager.js'
                     ],
                     function () {
                         $('.MenuButtonSet.waiting-load').removeClass('waiting-load');
@@ -242,7 +234,7 @@
             urls: ['/templates/Footer.html'],
             appendTo: '#onComputer',
             callback: function () {
-                asyncLoading.loadSingleScript("/jsMinified.v00020/footer.js");
+                asyncLoading.loadSingleScript("/jsMinified.v00021/footer.js");
             }
         });
     });
@@ -254,7 +246,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00020/amplitude-analytics.js";
+            r.src = "/jsMinified.v00021/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };
@@ -334,7 +326,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00020/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00021/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();

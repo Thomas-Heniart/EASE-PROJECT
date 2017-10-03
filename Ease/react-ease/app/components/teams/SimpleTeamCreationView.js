@@ -1,12 +1,12 @@
 var React = require('react');
 var classnames = require('classnames');
 var post_api = require('../../utils/post_api');
-
+import queryString from "query-string";
 import InvitePeopleStep from "./InvitePeopleStep";
-import {passwordRegexp, emailRegexp, checkTeamUsernameErrors, jobRoles} from "../../utils/utils";
+import {checkTeamUsernameErrors, jobRoles} from "../../utils/utils";
 import {connect} from "react-redux";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { Header, Container, Segment, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import {Button, Divider, Form, Header, Input, Label, Message, Segment, Select} from 'semantic-ui-react';
 
 class Step1 extends React.Component{
   constructor(props){
@@ -27,6 +27,9 @@ class Step1 extends React.Component{
         this.props.incrementStep(1);
       else
         this.props.incrementStep(2);
+        easeTracker.trackEvent("TeamCreationEnterEmail", {
+            "plan_id": this.props.plan_id
+        });
     }).catch(err => {
       this.setState({processing: false, error: true, errorMessage: err});
     });
@@ -75,6 +78,9 @@ class Step2 extends React.Component{
     post_api.teams.checkTeamCreationDigits(this.props.email, this.props.digits).then(response => {
       this.setState({loading: false});
       this.props.onStepValidated();
+        easeTracker.trackEvent("TeamCreationEnterDigits", {
+            "plan_id": this.props.plan_id
+        });
     }).catch(err => {
       this.setState({loading: false, errorMesage: err});
     })
@@ -137,6 +143,9 @@ class Step4 extends React.Component{
       return;
     }
     this.props.onStepValidated();
+      easeTracker.trackEvent("TeamCreationEnterUsername", {
+          "plan_id": this.props.plan_id
+      });
   }
   render() {
     return (
@@ -175,43 +184,60 @@ class Step4 extends React.Component{
   }
 }
 
-function Step5(props){
-  const roles = jobRoles.map((item, idx) => {
-    return {
-      key: idx,
-      value: idx,
-      text: item
+class Step5 extends React.Component {
+    constructor(props) {
+        super(props);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.roles = jobRoles.map((item, idx) => {
+            return {
+                key: idx,
+                value: idx,
+                text: item
+            }
+        });
+        this.jobRole = props.jobRole;
+        this.jobDetails = props.jobDetails;
     }
-  });
-  const jobRole = props.jobRole;
-  const jobDetails = props.jobDetails;
-  return (
-      <div class="contents" id="step5">
-        <Segment>
-          <Header as="h1">
-            Tell us about your role
-          </Header>
-          <Divider hidden clearing/>
-          <Form onSubmit={props.incStep}>
-            <Form.Field>
-              <label>What type of work do you do?</label>
-              <Select placeholder="Select your role" name="jobRole" options={roles} onChange={props.handleInput}/>
-            </Form.Field>
-            {props.jobRole === 15 &&
-            <Form.Input
-                label="Could you please elaborate? (More info will help us improve Ease.space!)"
-                placeholder="Details..."
-                type="text"
-                name="jobDetails"
-                required
-                onChange={props.handleInput}/>}
-            <Form.Field>
-              <Button positive fluid type="submit" disabled={jobRole === null || (jobRole == 15 && jobDetails.length == 0)}>Next</Button>
-            </Form.Field>
-          </Form>
-        </Segment>
-      </div>
-  )
+    onSubmit(e) {
+        e.preventDefault();
+        this.props.incStep();
+        easeTracker.trackEvent("TeamCreationEnterJob", {
+            "job": this.roles[this.props.jobRole],
+            "detail": this.props.jobDetails,
+            "plan_id": this.props.plan_id
+        });
+    }
+    render() {
+        return (
+            <div class="contents" id="step5">
+              <Segment>
+                <Header as="h1">
+                  Tell us about your role
+                </Header>
+                <Divider hidden clearing/>
+                <Form onSubmit={this.onSubmit}>
+                  <Form.Field>
+                    <label>What type of work do you do?</label>
+                    <Select placeholder="Select your role" name="jobRole" options={this.roles}
+                            onChange={this.props.handleInput}/>
+                  </Form.Field>
+                    {this.props.jobRole === 15 &&
+                    <Form.Input
+                        label="Could you please elaborate? (More info will help us improve Ease.space!)"
+                        placeholder="Details..."
+                        type="text"
+                        name="jobDetails"
+                        required
+                        onChange={this.props.handleInput}/>}
+                  <Form.Field>
+                    <Button positive fluid type="submit"
+                            disabled={this.props.jobRole === null || (this.props.jobRole == 15 && this.props.jobDetails.length == 0)}>Next</Button>
+                  </Form.Field>
+                </Form>
+              </Segment>
+            </div>
+        )
+    }
 }
 
 class Step6 extends React.Component{
@@ -226,11 +252,24 @@ class Step6 extends React.Component{
   onSubmit(e){
     e.preventDefault();
     this.setState({errorMessage: '', loading: true});
-    post_api.teams.createTeam(this.props.teamName, this.props.email,this.props.first_name, this.props.last_name, this.props.username, this.props.jobRole, this.props.jobDetails, this.props.digits).then(response => {
+    post_api.teams.createTeam({
+      name: this.props.teamName,
+      email: this.props.email,
+      first_name: this.props.first_name,
+      last_name: this.props.last_name,
+      username: this.props.username,
+      jobRole: this.props.jobRole,
+      jobDetails: this.props.jobDetails,
+      digits: this.props.digits,
+        plan_id: this.props.plan_id
+    }).then(response => {
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
       this.props.onStepValidated();
+        easeTracker.trackEvent("TeamCreationFinished", {
+            "plan_id": this.props.plan_id
+        });
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
     });
@@ -289,6 +328,7 @@ class SimpleTeamCreationView extends React.Component {
       jobDetails: '',
       teamName: '',
       teamId: -1,
+      plan_id: 0,
       invitations: [{email: '', username: ''},{email: '', username: ''},{email: '', username: ''}]
     };
     this.incrementStep = this.incrementStep.bind(this);
@@ -307,6 +347,9 @@ class SimpleTeamCreationView extends React.Component {
     this.setState({currentStep: this.state.currentStep + value});
   }
   componentDidMount(){
+    const query = queryString.parse(this.props.location.search);
+    if (query.plan_id !== undefined && query.plan_id.length !== 0)
+      this.setState(() => ({plan_id: Number(query.plan_id)}));
     if (this.props.user !== null){
       this.setState({email: this.props.user.email, username: this.props.user.first_name});
     }
@@ -367,17 +410,20 @@ class SimpleTeamCreationView extends React.Component {
   render(){
     var steps = [];
     steps.push(<Step1 incrementStep={this.incrementStepByValue}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       email={this.state.email}
                       switchNewsletter={this.switchNewsletter}
                       newsletter={this.state.newsletter}
                       key="1"/>);
     steps.push(<Step2 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       digits={this.state.digits}
                       email={this.state.email}
                       handleInput={this.handleInput}
                       key="2"/>);
     steps.push(<Step4 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       email={this.state.email}
                       password={this.state.password}
                       newsletter={this.state.newsletter}
@@ -388,6 +434,7 @@ class SimpleTeamCreationView extends React.Component {
                       handleInput={this.handleInput}
                       key="4"/>);
     steps.push(<Step5 incStep={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       jobRole={this.state.jobRole}
                       jobDetails={this.state.jobDetails}
@@ -401,6 +448,7 @@ class SimpleTeamCreationView extends React.Component {
                       teamName={this.state.teamName}
                       jobRole={this.state.jobRole}
                       jobDetails={this.state.jobDetails}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       key="6"/>);
     steps.push(<InvitePeopleStep

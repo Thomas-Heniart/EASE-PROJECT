@@ -1,1 +1,0 @@
-function refresh(){postHandler.post("CheckConnection",{email:$("#userEmail").data("content")},function(){},function(n){},function(n){window.location="/"},"text"),setTimeout(refresh,15e3)}$(document).ready(function(){refresh()});

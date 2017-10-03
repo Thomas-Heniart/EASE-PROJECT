@@ -50,6 +50,8 @@ public class ServletCreateEnterpriseApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Description of an app cannot be greater than 250 characters");
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             Boolean fill_in_switch = sm.getBooleanParam("fill_in_switch", true, false);
+            if (!team.isValidFreemium() && fill_in_switch)
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade your plan");
             Channel channel = team.getChannelWithId(channel_id);
             if (!channel.getTeamUsers().contains(teamUser_owner) && !teamUser_owner.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");

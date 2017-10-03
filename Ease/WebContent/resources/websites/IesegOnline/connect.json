@@ -5,19 +5,19 @@
 	"connect":{
 		"todo":[
 			{"action":"goto", "url":"https://www.ieseg-online.com/login/index.php"},
-			{"action":"waitfor", "search":"#username"},
-			{"action":"fill", "what":"login", "search":"#username"},
-			{"action":"fill", "what":"password", "search":"#password", "grave":true},
-			{"action":"click", "search":"#loginbtn"}
+			{"action":"waitfor", "search":"#txtUserName"},
+			{"action":"fill", "what":"login", "search":"#txtUserName"},
+			{"action":"fill", "what":"password", "search":"#txtPassword", "grave":true},
+			{"action":"click", "search":"#SubmitButton"}
 			]
 	},
 	"logout":{
 		"todo":[
-			{"action":"goto", "url":"http://www.ieseg-online.com/login/logout.php"},
-			{"action":"click", "search":"form[action='http://www.ieseg-online.com/login/logout.php'] input[type='submit']"}
+			{"action":"aclick", "search":"a[href*='logout.php']"},
+			{"action" : "waitload"}
 			]
 	},
 	"checkAlreadyLogged":[
-		{"search":"#usermenu"}
+		{"search":".userbutton"}
 	]
 }
