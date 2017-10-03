@@ -559,8 +559,11 @@ public class Team {
             }
             for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
                 ((App) shareableApp).setDisabled(this.isBlocked(), db);
-                for (SharedApp sharedApp : shareableApp.getSharedApps().values())
+                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
+                    if (!this.isBlocked() && sharedApp.getTeamUser_tenant().isDisabled())
+                        continue;
                     ((App) sharedApp).setDisabled(this.isBlocked(), db);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -575,8 +578,13 @@ public class Team {
                 if (teamUser.getDepartureDate() == null)
                     continue;
                 if (teamUser.isDisabled()) {
-                    for (SharedApp sharedApp : teamUser.getSharedApps())
+                    System.out.println("Disable appp");
+                    System.out.println(this.getAppManager().getSharedAppsForTeamUser(teamUser).size());
+                    for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
+                        System.out.println("App id: " + ((App) sharedApp).getDBid());
                         ((App) sharedApp).setDisabled(true, db);
+                        System.out.println(((App) sharedApp).isDisabled());
+                    }
                 }
                 if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
                     calendar.setTime(teamUser.getDepartureDate());
