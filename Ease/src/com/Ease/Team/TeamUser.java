@@ -256,7 +256,7 @@ public class TeamUser {
     }
 
     public boolean isDisabled() {
-        return disabled;
+        return disabled || (this.getDepartureDate() != null && this.getDepartureDate().getTime() <= new Date().getTime());
     }
 
     public void setDisabled(boolean disabled) {
