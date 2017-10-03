@@ -8,7 +8,6 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
-import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -74,7 +73,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (!team.isValidFreemium())
                 departure_date = null;
             else {
-                if (departure_date <= (sm.getTimestamp().getTime() + DateComparator.millisecondsInDay))
+                if (departure_date <= sm.getTimestamp().getTime())
                     throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");
             }
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
