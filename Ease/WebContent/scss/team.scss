@@ -228,16 +228,19 @@ i.icon.pin_button {
   }
 }
 
+.team-app.enterprise-team-app, .team-app#enterprise-app-adder {
+  .credentials .display-inline-flex {
+    & > * {
+      margin-right: .5rem;
+    }
+  }
+}
+
 .team-app.enterprise-team-app {
   .receiver-label {
     color: white;
     font-weight:normal;
     height: 37.19px;
-  }
-  .credentials .display-inline-flex {
-    & > * {
-      margin-right: .5rem;
-    }
   }
   .receiver {
     & > .ui.label {
