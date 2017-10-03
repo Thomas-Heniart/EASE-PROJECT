@@ -125,6 +125,7 @@ class AddMemberToRoomDiv extends React.Component {
                       class="mini"
                       onChange={this.handleInput}
                       fluid
+                      noResultsMessage="All users selected"
                       selection={true}
                       multiple
                       renderLabel={renderUserLabel}

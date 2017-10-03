@@ -71,7 +71,7 @@ class StaticUpgradeTeamPlanModal extends Component {
     return (
         <SimpleModalTemplate
             onClose={this.close}
-            headerContent={'Upgrade to Pro!'}>
+            headerContent={'Try Pro now!'}>
           <Form class="container" error={this.state.errorMesage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
               <Form.Field>
                   One of your team members would like to access paying features.
