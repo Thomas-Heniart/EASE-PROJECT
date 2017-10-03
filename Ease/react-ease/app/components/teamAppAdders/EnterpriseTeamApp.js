@@ -113,7 +113,7 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
              trigger={
                <Label class={classnames('receiver-label', accepted ? 'accepted': null)}>
                  <span>{username}</span>
-                 <Icon name="refresh"/>
+                 <Icon name="refresh" color={!up_to_date ? 'red' : null}/>
                </Label>
              }
              header={<h5 class="mrgn0 text-center">User informations</h5>}
@@ -122,7 +122,7 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
                  {up_to_date &&
                  <span><Icon name='refresh'/> Password is up to date</span>}
                  {!up_to_date &&
-                 <span><Icon name='refresh' color="red"/> Password is not up to date</span>}
+                 <span><Icon name='refresh' color="red"/> Password must be changed</span>}
                  <br/>
                  {accepted &&
                  <span><Icon name='circle' style={{color: '#949EB7'}}/> User accepted the app</span>}
@@ -432,12 +432,14 @@ class EnterpriseTeamApp extends Component {
               </div>
               <div class="main_column">
                 <div class="credentials">
-                  <div class="display-inline-flex">
+                  <div class="display-inline-flex align_items_center">
                     {!this.state.edit ?
                         <PasswordChangeHolder value={app.password_change_interval}/> :
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
                     {this.state.edit &&
                     <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}
+                    {this.state.edit && this.props.plan_id === 0 &&
+                    <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
                     {!this.state.edit && users.length > 4 &&
                     <ButtonShowMore show_more={this.state.show_more} showMore={this.setShowMore}/>}
                   </div>

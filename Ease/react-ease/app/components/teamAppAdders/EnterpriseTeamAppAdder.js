@@ -251,9 +251,11 @@ class EnterpriseTeamAppAdder extends Component {
                   </div>
                   <div class="main_column">
                     <div class="credentials">
-                      <div class="display-inline-flex">
+                      <div class="display-inline-flex align_items_center">
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>
                         <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>
+                        {this.props.plan_id === 0 &&
+                        <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
                       </div>
                     </div>
                     <Receivers extended={this.state.fill_in_switch} myId={this.props.myId} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
