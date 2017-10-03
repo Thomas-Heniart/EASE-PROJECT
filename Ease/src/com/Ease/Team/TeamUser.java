@@ -316,9 +316,9 @@ public class TeamUser {
         res.put("disabled", this.disabled);
         res.put("role", this.teamUserRole.getRoleValue());
         res.put("arrival_date", this.dateFormat.format(arrivalDate));
-        res.put("departure_date", "");
+        res.put("departure_date", 0);
         if (departureDate != null)
-            res.put("departure_date", this.dateFormat.format(this.departureDate));
+            res.put("departure_date", this.departureDate.getTime());
         res.put("state", this.state);
         res.put("phone_number", this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
