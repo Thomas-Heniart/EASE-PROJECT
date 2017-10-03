@@ -568,35 +568,40 @@ public class Team {
     }
 
     public void checkDepartureDates(Date date, DataBaseConnection db) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
-        for (TeamUser teamUser : this.getTeamUsers().values()) {
-            if (teamUser.getDepartureDate() == null)
-                continue;
-            if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
-                calendar.setTime(teamUser.getDepartureDate());
-                String suffixe = "th";
-                switch (calendar.get(Calendar.DAY_OF_MONTH)) {
-                    case 1: {
-                        suffixe = "st";
-                        break;
-                    }
-                    case 2: {
-                        suffixe = "nd";
-                        break;
-                    }
-                    case 3: {
-                        suffixe = "rd";
-                        break;
-                    }
+        try {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
+            for (TeamUser teamUser : this.getTeamUsers().values()) {
+                if (teamUser.getDepartureDate() == null)
+                    continue;
+                if (teamUser.isDisabled()) {
+                    for (SharedApp sharedApp : teamUser.getSharedApps())
+                        ((App) sharedApp).setDisabled(true, db);
                 }
-                String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
-                try {
+                if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
+                    calendar.setTime(teamUser.getDepartureDate());
+                    String suffixe = "th";
+                    switch (calendar.get(Calendar.DAY_OF_MONTH)) {
+                        case 1: {
+                            suffixe = "st";
+                            break;
+                        }
+                        case 2: {
+                            suffixe = "nd";
+                            break;
+                        }
+                        case 3: {
+                            suffixe = "rd";
+                            break;
+                        }
+                    }
+                    String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
                     this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
-                } catch (HttpServletException e) {
-                    e.printStackTrace();
+
                 }
             }
+        } catch (HttpServletException e) {
+            e.printStackTrace();
         }
     }
 }
