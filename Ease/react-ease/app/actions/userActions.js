@@ -31,7 +31,7 @@ export function fetchTeamUserApps(id){
         dispatch(showVerifyTeamUserModal(true, teamUser));
       else if (teamUser.disabled && isAdmin(me.role) && teamUser.id !== me.id)
         dispatch(showReactivateTeamUserModal(true, teamUser));
-      else if (new Date().getTime() - teamUser.departure_date < 0 && isAdmin(me.role) && teamUser.id !== me.id)
+      else if (new Date().getTime() - teamUser.departure_date > 0 && isAdmin(me.role) && teamUser.id !== me.id)
         dispatch(showDepartureDateEndModal(true, teamUser));
       return response;
     }).catch(err => {
