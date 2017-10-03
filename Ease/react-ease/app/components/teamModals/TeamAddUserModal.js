@@ -5,6 +5,7 @@ import * as userActions from "../../actions/userActions";
 import {addTeamUserToChannel} from "../../actions/channelActions";
 import {showAddTeamUserModal, showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions"
 import {renderRoomLabel} from "../../utils/renderHelpers";
+import {selectItemFromListById} from "../../utils/helperFunctions";
 import {reflect, handleSemanticInput} from "../../utils/utils";
 import { Header, Container, Divider, Icon, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
@@ -77,8 +78,11 @@ class TeamAddUserModal extends React.Component {
     this.props.dispatch(userActions.createTeamUser(this.state.fname, this.state.lname, this.state.email, this.state.username,departureDate, this.state.role)).then(response => {
       const user = response;
       const calls = this.state.value.map(item => {
+        const channel  = selectItemFromListById(this.props.channels, item);
+        if (channel.default)
+          return null;
         return this.props.dispatch(addTeamUserToChannel(item, user.id));
-      });
+      }).filter(item => (item !== null));
       Promise.all(calls.map(reflect)).then(values => {
         this.props.dispatch(showAddTeamUserModal(false));
       });
@@ -162,7 +166,7 @@ class TeamAddUserModal extends React.Component {
                     type="submit">
                   Next
                 </Button>
-                <Button floated='right' type="button" onClick={e => {props.dispatch(showAddTeamUserModal(false))}}>Cancel</Button>
+                <Button floated='right' type="button" onClick={e => {this.props.dispatch(showAddTeamUserModal(false))}}>Cancel</Button>
               </Form.Field>
               <Divider horizontal>Or</Divider>
               <Form.Group class="justify_content_center">

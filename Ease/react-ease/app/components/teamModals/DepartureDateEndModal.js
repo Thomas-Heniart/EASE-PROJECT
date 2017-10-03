@@ -21,6 +21,7 @@ class DepartureDateEndModal extends Component {
     this.setState({loading: true, errorMessage: ''});
     this.props.dispatch(editTeamUserDepartureDate(this.props.user.id, 0)).then(() => {
       this.setState({loading: false});
+      this.props.dispatch(showDepartureDateEndModal(false));
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     });
@@ -30,6 +31,7 @@ class DepartureDateEndModal extends Component {
     this.setState({loading: true, errorMessage: ''});
     this.props.dispatch(deleteTeamUser(this.props.user.id)).then(() => {
       this.setState({loading: false});
+      this.props.dispatch(showDepartureDateEndModal(false));
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     });
