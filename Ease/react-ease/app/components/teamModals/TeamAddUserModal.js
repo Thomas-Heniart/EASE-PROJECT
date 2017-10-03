@@ -68,7 +68,7 @@ class TeamAddUserModal extends React.Component {
   };
   confirm = (e) =>{
     e.preventDefault();
-    if (this.props.users.length > 29){
+    if (this.props.users.length > 29 && this.props.plan_id === 0){
       this.props.dispatch(showUpgradeTeamPlanModal(true, 4));
       return;
     }

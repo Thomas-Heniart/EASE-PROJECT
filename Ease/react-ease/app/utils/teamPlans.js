@@ -8,7 +8,7 @@ export const proFeaturesDesc = {
 };
 
 export const proFeatures = [
-  'Unlimited Rooms',
+    'Unlimited Rooms',
     'Unlimited team members',
     'Unlimited admins and 1 owner',
     'Enterprise App custom logins',

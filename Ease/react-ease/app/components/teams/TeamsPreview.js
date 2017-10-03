@@ -38,7 +38,7 @@ function Step1(props){
 function TeamBasicPlan(props) {
     return (
         <div class="team_plan" id="starter_plan" style={{marginRight: '40px'}}>
-            <h1 class="text-center title">Starter</h1>
+            <h1 class="text-center title">Basic</h1>
             <span class="text-center price">0 <span class="symbol">€</span></span>
             <span class="price_divider">per month, per active user</span>
             <div class="text-center" style={{marginBottom: '35px'}}>
@@ -49,10 +49,10 @@ function TeamBasicPlan(props) {
                     </NavLink>
                 </button>
             </div>
-            <span class="info">INCLUDED IN THE <TeamPlanPopup text={'to handle passwords accessible by team members'}
+            <span class="info">INCLUDED IN THE <TeamPlanPopup text={'Collaborative interface to handle passwords accessible by team members'}
                                                               trigger={<span
                                                                   class="text-underlined">TEAM SPACE</span>}/> <TeamPlanPopup
-                text={'to handle passwords accessible by team members'}
+                text={'Collaborative interface to handle passwords accessible by team members'}
                 trigger={<Icon link name="help circle outline"/>}/></span>
             <div class="display-flex flex_direction_column full_flex">
                 <div class="feature">
@@ -72,6 +72,10 @@ function TeamBasicPlan(props) {
                     <span>Up to 4 <TeamPlanPopup
                         text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
                         trigger={<span class="text-underlined">rooms</span>}/></span>
+                </div>
+                <div class="feature">
+                  <i class="fa fa-check tic"/>
+                  <span>Password modification policy</span>
                 </div>
                 <div class="feature">
                     <i class="fa fa-check tic"/>
@@ -113,7 +117,7 @@ function TeamProPlan(props){
         </div>
           <span class="tip" style={{margin: '5px 0 13px 0'}}>No credit card required</span>
           <span class="info">ALL FEATURES FROM STARTER PLAN, AND:</span>
-        <div class="display-flex flex_direction_column">
+        <div class="display-flex flex_direction_column full_flex">
           <div class="feature">
             <i class="fa fa-check tic"/>
               <span>Unlimited <TeamPlanPopup
@@ -142,23 +146,22 @@ function TeamProPlan(props){
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Retrait automatique des accès à date paramétrée</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
               <span>Priority customer support</span>
           </div>
-          <div class="feature">
+          <div class="feature align_items_center">
             <i class="fa fa-check tic"/>
-              <span>Temporary password sharing</span>
+              <span class="full_flex">Temporary password sharing</span>
+            <img src="/resources/icons/Soon.png" style={{width: '56px', height: '20px'}}/>
           </div>
-          <div class="feature">
+          <div class="feature align_items_center">
             <i class="fa fa-check tic"/>
-              <span>Software credential sharing</span>
+              <span class="full_flex">Software credential sharing</span>
+            <img src="/resources/icons/Soon.png" style={{width: '56px', height: '20px'}}/>
           </div>
-            <div class="feature">
+            <div class="feature align_items_center">
                 <i class="fa fa-check tic"/>
-                <span>2FA login</span>
+                <span class="full_flex">2FA login</span>
+              <img src="/resources/icons/Soon.png" style={{width: '56px', height: '20px'}}/>
           </div>
         </div>
         <div class="text-center" style={{margin: '60px 0 10px 0'}}>
