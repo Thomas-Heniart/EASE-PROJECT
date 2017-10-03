@@ -113,7 +113,7 @@ class InvitePeopleStep extends React.Component {
 
     invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
     let calls = invitations.map(item => {
-      return post_api.teamUser.createTeamUser(this.props.ws_id, this.props.team_id, '', '', item.email, item.username, 0, 1);
+      return post_api.teamUser.createTeamUser(this.props.ws_id, this.props.team_id, '', '', item.email, item.username, null, 1);
     });
     this.setState({loading: true});
     Promise.all(calls.map(reflect)).then(results => {

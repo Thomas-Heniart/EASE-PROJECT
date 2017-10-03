@@ -19,7 +19,7 @@ class DepartureDateEndModal extends Component {
   }
   unfreeze = () => {
     this.setState({loading: true, errorMessage: ''});
-    this.props.dispatch(editTeamUserDepartureDate(this.props.user.id, 0)).then(() => {
+    this.props.dispatch(editTeamUserDepartureDate(this.props.user.id, null)).then(() => {
       this.setState({loading: false});
       this.props.dispatch(showDepartureDateEndModal(false));
     }).catch(err => {

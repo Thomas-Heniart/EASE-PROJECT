@@ -69,7 +69,7 @@ class TeamAddUserModal extends React.Component {
   };
   confirm = (e) =>{
     e.preventDefault();
-    const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : 0;
+    const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : null;
     if (this.props.users.length > 29 && this.props.plan_id === 0){
       this.props.dispatch(showUpgradeTeamPlanModal(true, 4));
       return;

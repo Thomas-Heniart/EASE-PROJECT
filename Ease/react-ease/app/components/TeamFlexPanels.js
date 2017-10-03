@@ -679,7 +679,7 @@ class TeamUserFlexTab extends React.Component{
   }
   confirmUserDepartureDateChange(){
     if (this.state.departureDate !== this.props.item.departureDate){
-      this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate.length > 0 ? new Date(this.state.departureDate).getTime() : 0)).then(response => {
+      this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate.length > 0 ? new Date(this.state.departureDate).getTime() : null)).then(response => {
         this.setState({departureDateModifying: false});
       });
     }
