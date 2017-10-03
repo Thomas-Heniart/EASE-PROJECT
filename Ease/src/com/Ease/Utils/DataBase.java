@@ -28,7 +28,7 @@ public final class DataBase {
     private DataBase() {
     }
 
-    public static Connection getConnection() throws SQLException {
+    public static synchronized Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 }

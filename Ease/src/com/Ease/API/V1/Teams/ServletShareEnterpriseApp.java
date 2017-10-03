@@ -52,7 +52,7 @@ public class ServletShareEnterpriseApp extends HttpServlet {
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
-            if (account_information == null && shareableApp.getPendingTeamUsers().contains(teamUser_tenant)) {
+            if (account_information == null && shareableApp.getPendingTeamUsers().containsKey(teamUser_tenant.getDb_id())) {
                 DatabaseRequest databaseRequest = db.prepareRequest("SELECT information_name, information_value FROM enterpriseAppRequests JOIN pendingJoinAppRequests ON enterpriseAppRequests.request_id = pendingJoinAppRequests.id WHERE shareable_app_id = ? AND team_user_id = ?;");
                 databaseRequest.setInt(app.getDBid());
                 databaseRequest.setInt(teamUser_tenant.getDb_id());
@@ -76,7 +76,7 @@ public class ServletShareEnterpriseApp extends HttpServlet {
                 }
                 params.put("account_information", account_information);
                 sharedApp = shareableApp.share(teamUser_tenant, team, params, sm);
-                if (shareableApp.getPendingTeamUsers().contains(teamUser_tenant))
+                if (shareableApp.getPendingTeamUsers().containsKey(teamUser_tenant.getDb_id()))
                     shareableApp.removePendingTeamUser(teamUser_tenant, db);
                 if (teamUser_tenant == teamUser_connected)
                     sharedApp.accept(db);

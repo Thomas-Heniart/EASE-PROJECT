@@ -60,7 +60,7 @@ public class ServletEditWebsite extends HttpServlet {
                 TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
                 for (Team team : teamManager.getTeams()) {
                     int transaction2 = db.startTransaction();
-                    for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                    for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                         App app = (App) shareableApp;
                         if (!app.isClassicApp() && !app.isEmpty())
                             continue;

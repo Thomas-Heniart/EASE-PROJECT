@@ -688,7 +688,7 @@ public class App implements ShareableApp, SharedApp {
         try {
             int transaction = db.startTransaction();
             List<SharedApp> sharedAppsToDelete = new LinkedList<>();
-            for (SharedApp sharedApp : this.getSharedApps()) {
+            for (SharedApp sharedApp : this.getSharedApps().values()) {
                 sharedApp.deleteShared(db);
                 sharedAppsToDelete.add(sharedApp);
             }
@@ -713,16 +713,16 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public List<TeamUser> getTeamUser_tenants() {
         List<TeamUser> teamUsers = new LinkedList<>();
-        for (SharedApp sharedApp : this.getSharedApps())
+        for (SharedApp sharedApp : this.getSharedApps().values())
             teamUsers.add(sharedApp.getTeamUser_tenant());
         return teamUsers;
     }
 
     @Override
-    public Collection<SharedApp> getSharedApps() {
+    public synchronized Map<Integer, SharedApp> getSharedApps() {
         if (this.sharedApps == null)
             this.sharedApps = new ConcurrentHashMap<>();
-        return this.sharedApps.values();
+        return this.sharedApps;
     }
 
     @Override
@@ -767,11 +767,11 @@ public class App implements ShareableApp, SharedApp {
             DateFormat dateFormat1 = new SimpleDateFormat("MMMM dd, HH:mm", Locale.US);
             res.put("shared_date", dateFormat1.format(shared_date));
             JSONArray receivers = new JSONArray();
-            for (SharedApp sharedApp : this.sharedApps.values())
+            for (SharedApp sharedApp : this.getSharedApps().values())
                 receivers.add(sharedApp.getSharedJSON());
             res.put("receivers", receivers);
             JSONArray waitingTeamUsers = new JSONArray();
-            for (TeamUser teamUser : this.getPendingTeamUsers())
+            for (TeamUser teamUser : this.getPendingTeamUsers().values())
                 waitingTeamUsers.add(teamUser.getDb_id());
             res.put("sharing_requests", waitingTeamUsers);
             res.put("origin", this.getOrigin());
@@ -828,12 +828,12 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public void removeSharedApp(SharedApp sharedApp) {
-        this.sharedApps.remove(((App) sharedApp).getDBid());
+        this.getSharedApps().remove(((App) sharedApp).getDBid());
     }
 
     @Override
     public void addPendingTeamUser(TeamUser teamUser) {
-        this.pending_teamUsers.put(teamUser.getDb_id(), teamUser);
+        this.getPendingTeamUsers().put(teamUser.getDb_id(), teamUser);
     }
 
     @Override
@@ -867,7 +867,7 @@ public class App implements ShareableApp, SharedApp {
 
     @Override
     public SharedApp getSharedAppForTeamUser(TeamUser teamUser) {
-        for (SharedApp sharedApp : this.getSharedApps()) {
+        for (SharedApp sharedApp : this.getSharedApps().values()) {
             if (sharedApp.getTeamUser_tenant() == teamUser)
                 return sharedApp;
         }
@@ -875,15 +875,15 @@ public class App implements ShareableApp, SharedApp {
     }
 
     @Override
-    public Collection<TeamUser> getPendingTeamUsers() {
+    public synchronized Map<Integer, TeamUser> getPendingTeamUsers() {
         if (pending_teamUsers == null)
             pending_teamUsers = new ConcurrentHashMap<>();
-        return this.pending_teamUsers.values();
+        return this.pending_teamUsers;
     }
 
     @Override
     public void removePendingTeamUser(TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
-        if (!this.getPendingTeamUsers().contains(teamUser))
+        if (!this.getPendingTeamUsers().containsKey(teamUser.getDb_id()))
             return;
         try {
             DatabaseRequest request;
@@ -897,7 +897,7 @@ public class App implements ShareableApp, SharedApp {
             request.setInt(this.getDBid());
             request.setInt(teamUser.getDb_id());
             request.set();
-            this.pending_teamUsers.remove(teamUser.getDb_id());
+            this.getPendingTeamUsers().remove(teamUser.getDb_id());
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

@@ -44,7 +44,7 @@ public class ServletDeleteTeam extends HttpServlet {
                 Team team = (Team) hibernateQuery.getSingleResult();
                 DataBaseConnection db = sm.getDB();
                 int transaction = db.startTransaction();
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps())
+                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values())
                     shareableApp.deleteShareable(db);
                 db.commitTransaction(transaction);
                 for (TeamUser teamUser : team.getTeamUsers().values())
