@@ -231,7 +231,7 @@ class Step5 extends React.Component {
                         onChange={this.props.handleInput}/>}
                   <Form.Field>
                     <Button positive fluid type="submit"
-                            disabled={this.props.jobRole === null || (this.props.jobRole == 15 && this.props.jobDetails.length == 0)}>Next</Button>
+                            disabled={this.props.jobRole === null || (this.props.jobRole === 15 && this.props.jobDetails.length === 0)}>Next</Button>
                   </Form.Field>
                 </Form>
               </Segment>
