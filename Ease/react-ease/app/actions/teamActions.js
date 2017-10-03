@@ -127,3 +127,17 @@ export function editTeamName(name){
     });
   }
 }
+
+export function upgradePlan({team_id, plan_id}){
+  return (dispatch, getState) => {
+    return post_api.teams.upgradePlan({
+      team_id: team_id,
+      plan_id: plan_id
+    }).then(team => {
+      dispatch({type: 'UPGRADE_TEAM_PLAN_FULFILLED', payload: {team: team}});
+      return team;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}

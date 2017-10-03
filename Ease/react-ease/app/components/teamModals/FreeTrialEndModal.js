@@ -1,10 +1,18 @@
 import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
+import {showFreeTrialEndModal} from "../../actions/teamModalActions";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
+import post_api from "../../utils/api";
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 
+
 @connect(store => ({
-  team_id: store.team.id
+  team_id: store.team.id,
+  team_name: store.team.name,
+  myId: store.team.myTeamUserId,
+  users: store.users.users
 }))
 class FreeTrialEndModal extends Component {
   constructor(props){
@@ -16,13 +24,43 @@ class FreeTrialEndModal extends Component {
   }
   confirm = (e) => {
     e.preventDefault();
+    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const meOwner = isOwner(me.role);
+
+    if (meOwner)
+      this.props.history.push(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/settings/payment`);
+    else {
+      post_api.teams.askOwnerForBilling({team_id: this.props.team_id}).then(response => {
+        window.location.href= '/';
+      });
+    }
   };
   render(){
+    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const meOwner = isOwner(me.role);
+    const teamOwner = this.props.users.find(item => (isOwner(item.role)));
+
     return (
-        <SimpleModalTemplate
-            onClose={e => {this.props.dispatch(showTeamJoinMultiAppModal(false))}}
-            headerContent={'Free trial ended'}>
-          <Form class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
+        <div class="popupHandler myshow" style={{zIndex: '10'}}>
+          <div class="popover_mask"/>
+          <div class="ease_popup ease_team_popup">
+            <button class="button-unstyle action_button close_button" onClick={e => {window.location.href= '/'}}>
+              <i class="fa fa-times"/>
+            </button>
+            <Header as="h3" attached="top">
+              Free trial ended
+            </Header>
+          <Form style={{color: "#96a1b9"}} class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
+            <Form.Field>
+              {meOwner ?
+                  <p>Your free trial on Pro is over! Now you can choose to update your billing info or leave it like this. Not updating your billing info will remain access blocked, for you and your team members, to {this.props.team_name}.</p> :
+                  <p>Your free trial on Pro is over! You can let your Team Owner {teamOwner.username} know you would like to access your team, we will pass the message along.</p>}
+              {meOwner &&
+              <p>Pro is billed 3,99€ per month per active user.</p>}
+              <p>
+                Want to see all Pro features? <a style={{textDecoration: 'underline'}} href="/pricing" target="_blank">Visit our website</a>.
+              </p>
+            </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button
                 attached='bottom'
@@ -30,12 +68,13 @@ class FreeTrialEndModal extends Component {
                 loading={this.state.loading}
                 positive
                 onClick={this.confirm}
-                className="modal-button"
-                content="CONFIRM"/>
+                class="modal-button uppercase"
+                content={meOwner ? 'Update billing information' : 'Ask team update'}/>
           </Form>
-        </SimpleModalTemplate>
+          </div>
+        </div>
     )
   }
 }
 
-module.exports = FreeTrialEndModal;
+module.exports = withRouter(FreeTrialEndModal);

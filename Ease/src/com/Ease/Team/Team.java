@@ -31,9 +31,18 @@ public class Team {
 
     private static final String DEFAULT_CHANNEL_NAME = "openspace";
 
+    public static final Map<Integer, String> plansMap = new HashMap<>();
+    private static final Map<String, Integer> inverse_plansMap = new HashMap<>();
+
+    static {
+        plansMap.put(0, "FreePlan");
+        inverse_plansMap.put("FreePlan", 0);
+        plansMap.put(1, "EaseFreemium");
+        inverse_plansMap.put("EaseFreemium", 1);
+    }
+
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
-        //query.querySQLString("SELECT id FROM teams");
         query.queryString("SELECT t FROM Team t WHERE t.active = true");
         List<Team> teams = query.list();
         for (Team team : teams) {
@@ -79,7 +88,7 @@ public class Team {
     @MapKey(name = "db_id")
     protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
@@ -190,6 +199,10 @@ public class Team {
         return this.getSubscription().getPlan().getId().equals("EaseFreemium");
     }
 
+    public boolean isValidFreemium() throws HttpServletException {
+        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()));
+    }
+
     public Map<Integer, TeamUser> getTeamUsers() {
         if (teamUsers == null)
             teamUsers = new ConcurrentHashMap<>();
@@ -223,7 +236,7 @@ public class Team {
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
-        Channel channel = this.channels.get(channel_id);
+        Channel channel = this.getChannels().get(channel_id);
         if (channel == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This channel does not exist");
         return channel;
@@ -253,7 +266,7 @@ public class Team {
     }
 
     public void addChannel(Channel channel) {
-        this.channels.put(channel.getDb_id(), channel);
+        this.getChannels().put(channel.getDb_id(), channel);
     }
 
     public Channel getDefaultChannel() throws HttpServletException {
@@ -272,7 +285,7 @@ public class Team {
     }
 
     public void removeChannel(Channel channel) {
-        this.channels.remove(channel.getDb_id());
+        this.getChannels().remove(channel.getDb_id());
     }
 
     public void edit(JSONObject editJson) {
@@ -295,12 +308,17 @@ public class Team {
         return res;
     }
 
+    public Integer getPlan_id() throws HttpServletException {
+        return inverse_plansMap.get(this.getSubscription().getPlan().getId());
+    }
+
     public JSONObject getSimpleJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
-        res.put("valid_subscription", !this.isBlocked());
-        res.put("freemium", this.isFreemium());
+        Integer plan_id = this.getPlan_id();
+        res.put("plan_id", plan_id);
+        res.put("payment_required", this.isBlocked());
         return res;
     }
 
@@ -440,7 +458,7 @@ public class Team {
 
     public boolean isBlocked() {
         try {
-            return (this.subscription_date == null) || (!card_entered && this.getSubscription().getTrialEnd() != null && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+            return (this.isFreemium() && !card_entered && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
         } catch (HttpServletException e) {
             e.printStackTrace();
             return true;
@@ -511,16 +529,14 @@ public class Team {
         return null;
     }
 
-    public void checkFreeTrialEnd() {
+    public void checkFreeTrialEnd(DataBaseConnection db) {
         MailJetBuilder mailJetBuilder;
         if (this.card_entered)
             return;
         try {
-            if (this.getSubscription().getTrialEnd() == null)
-                return;
-            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             if (!this.isFreemium())
                 return;
+            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
@@ -540,6 +556,11 @@ public class Team {
                 mailJetBuilder.addTo(this.getTeamUserOwner().getEmail());
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
+            }
+            for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+                ((App) shareableApp).setDisabled(this.isBlocked(), db);
+                for (SharedApp sharedApp : shareableApp.getSharedApps())
+                    ((App) sharedApp).setDisabled(this.isBlocked(), db);
             }
         } catch (Exception e) {
             e.printStackTrace();

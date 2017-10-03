@@ -35,6 +35,8 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
+            if (!team.isValidFreemium())
+                throw new HttpServletException(HttpStatus.Forbidden, "This is a feature from pro plan.");
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_modify = team.getTeamUserWithId(teamUser_id);

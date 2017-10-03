@@ -384,6 +384,8 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public void setDisabled(boolean disabled, DataBaseConnection db) throws HttpServletException {
+        if (disabled == this.isDisabled())
+            return;
         try {
             DatabaseRequest request = db.prepareRequest("UPDATE apps SET disabled = ? WHERE id = ?;");
             request.setBoolean(disabled);

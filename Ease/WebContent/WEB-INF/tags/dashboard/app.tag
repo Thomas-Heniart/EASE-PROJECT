@@ -16,6 +16,7 @@
         data-type="${app.getType()}">
         <div class="linkImage">
             <div class="emptyAppIndicator">
+                <span></span>
                 <img src="resources/other/raise-your-hand-to-ask.svg"/>
             </div>
             <div class="showAppActionsButton">
@@ -26,7 +27,7 @@
         </div>
     </c:when>
     <c:when test="${app.getType() eq 'LinkApp'}">
-        <div class="siteLinkBox"
+        <div class="siteLinkBox <c:if test='${app.isDisabled()}'>app_disabled</c:if>"
         name="${app.getName()}"
         id="${app.getDBid()}"
         url="${app.getLinkAppInformations().getLink()}"
@@ -74,6 +75,9 @@
                 <div class="showAppActionsButton">
                     <i class="fa fa-cog"></i>
                 </div>
+            </c:if>
+            <c:if test='${app.isDisabled()}'>
+                <img class="logo app_disabled" src="/resources/icons/app_disabled.png"/>
             </c:if>
             <img class="logo" src="/resources/helpers/1x1_grey_square.jpg"
                  lazy-src="<c:out value='${app.getSite().getFolder()}logo.png'/>"/>

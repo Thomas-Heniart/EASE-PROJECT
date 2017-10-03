@@ -1,1 +1,0 @@
-extension.storage.get("settings",function(e){e&&void 0!=e.homepage||extension.storage.set("settings",{homepage:!0},function(){})}),extension.onNewWindow(function(e){extension.storage.get("settings",function(n){1==n.homepage&&(setTimeout(function(){extension.tabs.create(e,"https://ease.space",!0,function(){})},10),console.log("-- Ease opened in new window --"))})});

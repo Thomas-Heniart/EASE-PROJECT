@@ -1,21 +1,21 @@
 import React, {Component} from "react";
-import {showTeamAcceptMultiAppModal, showPinTeamAppToDashboardModal} from '../../actions/teamModalActions';
+import {showPinTeamAppToDashboardModal, showTeamAcceptMultiAppModal} from '../../actions/teamModalActions';
 import {teamAcceptEnterpriseApp} from "../../actions/appsActions";
 import api from "../../utils/api";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {findMeInReceivers} from "../../utils/helperFunctions";
-import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {transformWebsiteInfoIntoList, transformCredentialsListIntoObject} from "../../utils/utils";
+import {Button, Form, Input, Message} from 'semantic-ui-react';
+import {transformCredentialsListIntoObject, transformWebsiteInfoIntoList} from "../../utils/utils";
 import {connect} from "react-redux";
 
-const CredentialInput = ({item, onChange}) => {
+const CredentialInput = ({item, onChange, required}) => {
   return <Input
       class="team-app-input"
       name={item.name}
       autoFocus={item.autoFocus}
       onChange={onChange}
-      required
-      placeholder={item.placeholder}
+      required={required}
+      placeholder={required ? item.placeholder : `${item.placeholder} (Optional)`}
       value={item.value}
       type={item.type}/>;
 };
@@ -23,7 +23,8 @@ const CredentialInput = ({item, onChange}) => {
 @connect(store => ({
   app: store.teamModals.teamAcceptMultiAppModal.app,
   user: store.teamModals.teamAcceptMultiAppModal.user,
-  team_id: store.team.id
+    team_id: store.team.id,
+    plan_id: store.team.plan_id
 }))
 class AcceptEnterpriseAppModal extends Component {
   constructor(props){
@@ -35,6 +36,8 @@ class AcceptEnterpriseAppModal extends Component {
     }
   };
   checkInputs = () => {
+      if (this.props.plan_id > 0)
+          return false;
     for (let i = 0; i < this.state.credentials.length; i++){
       if (this.state.credentials[i].value.length === 0)
         return true;
@@ -98,7 +101,8 @@ class AcceptEnterpriseAppModal extends Component {
                     <label>
                       {item.placeholder}
                     </label>
-                    <CredentialInput item={item} onChange={this.handleCredentialInput}/>
+                      <CredentialInput required={this.props.plan_id === 0} item={item}
+                                       onChange={this.handleCredentialInput}/>
                   </Form.Field>
               )
             })}

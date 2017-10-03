@@ -1,35 +1,33 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import api from '../../utils/api';
-import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
-import {setUserDropdownText,
-  PasswordChangeHolder,
-  renderSimpleAppUserLabel,
-  PasswordChangeDropdown,
-  PasswordChangeManagerLabel,
-  PinAppButton,
-  TeamAppActionButton,
-  CopyPasswordButton,
-  ExtendFillSwitch,
-  SharingRequestButton} from "./common";
+import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
+import {
+    CopyPasswordButton,
+    ExtendFillSwitch,
+    PasswordChangeDropdown,
+    PasswordChangeHolder,
+    PinAppButton,
+    setUserDropdownText,
+    SharingRequestButton,
+    TeamAppActionButton
+} from "./common";
 import * as modalActions from "../../actions/teamModalActions";
-import {teamEditSingleApp, teamShareSingleApp, teamAppDeleteReceiver, teamEditSingleAppReceiver, askJoinTeamApp} from "../../actions/appsActions";
-import {handleSemanticInput,
-  transformWebsiteInfoIntoList,
-  transformCredentialsListIntoObject,
-  transformWebsiteInfoIntoListAndSetValues,
-  passwordChangeOptions,
-  credentialIconType,
-  passwordChangeValues,
-  reflect
+import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
+import {
+    teamAppDeleteReceiver,
+    teamEditEnterpriseApp,
+    teamEditEnterpriseAppReceiver,
+    teamShareEnterpriseApp
+} from "../../actions/appsActions";
+import {
+    credentialIconType,
+    handleSemanticInput,
+    reflect,
+    transformCredentialsListIntoObject,
+    transformWebsiteInfoIntoList,
+    transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
-import {selectItemFromListById,
-  findMeInReceivers,
-  getReceiverInList,
-  isAdmin} from "../../utils/helperFunctions";
-import {teamShareEnterpriseApp, teamEditEnterpriseAppReceiver, teamEditEnterpriseApp} from "../../actions/appsActions";
-import {connect} from "react-redux";
+import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = findMeInReceivers(app.receivers, me.id);
@@ -112,7 +110,7 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
              trigger={
                <Label class={classnames('receiver-label', accepted ? 'accepted': null)}>
                  <span>{username}</span>
-                 <Icon name="refresh"/>
+                 <Icon name="refresh" color={!up_to_date ? 'red' : null}/>
                </Label>
              }
              header={<h5 class="mrgn0 text-center">User informations</h5>}
@@ -121,7 +119,7 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
                  {up_to_date &&
                  <span><Icon name='refresh'/> Password is up to date</span>}
                  {!up_to_date &&
-                 <span><Icon name='refresh' color="red"/> Password is not up to date</span>}
+                 <span><Icon name='refresh' color="red"/> Password must be changed</span>}
                  <br/>
                  {accepted &&
                  <span><Icon name='circle' style={{color: '#949EB7'}}/> User accepted the app</span>}
@@ -138,7 +136,7 @@ const SimpleCredentialsInput = ({receiver, me, team_id}) => {
         {receiver.credentials.map(item => {
           return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true} receiver_id={receiver.id} key={item.priority} onChange={null} item={item}/>
         })}
-        {(isAdmin(me.role) || receiver.team_user_id === me.id) &&
+          {(isAdmin(me.role) || receiver.id === me.id) &&
         <CopyPasswordButton team_id={team_id} shared_app_id={receiver.shared_app_id}/>}
       </div>
   )
@@ -230,6 +228,10 @@ class EnterpriseTeamApp extends Component {
   }
   handleInput = handleSemanticInput.bind(this);
   changeFillInSwitch = (e, {checked}) => {
+    if (this.props.plan_id === 0 && !checked){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 2));
+      return;
+    }
     if (this.props.app.fill_in_switch && checked)
       return;
     this.setState({fill_in_switch: !checked});
@@ -399,7 +401,8 @@ class EnterpriseTeamApp extends Component {
     const users = this.getUsers();
 
     return (
-        <Container fluid class="team-app mrgn0 enterprise-team-app" as="form" onSubmit={this.modify}>
+        <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
+                   onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
           <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
@@ -427,12 +430,14 @@ class EnterpriseTeamApp extends Component {
               </div>
               <div class="main_column">
                 <div class="credentials">
-                  <div class="display-inline-flex">
+                  <div class="display-inline-flex align_items_center">
                     {!this.state.edit ?
                         <PasswordChangeHolder value={app.password_change_interval}/> :
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
                     {this.state.edit &&
                     <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}
+                    {this.state.edit && this.props.plan_id === 0 &&
+                    <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
                     {!this.state.edit && users.length > 4 &&
                     <ButtonShowMore show_more={this.state.show_more} showMore={this.setShowMore}/>}
                   </div>

@@ -202,12 +202,12 @@ export function showTeamAddMultipleUsersModal(state){
   }
 }
 
-export function showUpgradeTeamPlanModal(state, desc) {
+export function showUpgradeTeamPlanModal(state, feature_id) {
   return {
     type: 'SHOW_UPGRADE_TEAM_PLAN_MODAL',
     payload: {
       active: state,
-      featureDescription: desc
+      feature_id: feature_id
     }
   }
 }
@@ -219,4 +219,14 @@ export function showFreeTrialEndModal(state){
       active: state
     }
   }
+}
+
+export function showDepartureDateEndModal(state, user) {
+    return {
+        type: 'DEPARTURE_DATE_END_MODAL',
+        payload: {
+            active: state,
+            user: user
+        }
+    }
 }

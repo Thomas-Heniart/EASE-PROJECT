@@ -24,12 +24,12 @@ public class ServletGetChannelApps extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            sm.needToBeTeamUserOfTeam(team_id);
+            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
             if (!channel.getTeamUsers().contains(teamUser) && !teamUser.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access to this channel.");

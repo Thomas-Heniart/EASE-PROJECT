@@ -269,6 +269,10 @@ button, input, optgroup, select, textarea {
   }
 }
 
+.uppercase {
+  text-transform: uppercase !important;
+}
+
 .ui.dropdown .menu {
   z-index: 100;
 }
@@ -277,6 +281,7 @@ button, input, optgroup, select, textarea {
   margin-bottom: 0;
 }
 
+//checkbox semantic style change
 .ui.toggle.checkbox .box:after, .ui.toggle.checkbox label:after {
   width: 18px;
   height: 18px;
@@ -288,6 +293,10 @@ button, input, optgroup, select, textarea {
 
 .ui.toggle.checkbox {
   min-height: 1rem;
+}
+
+.ui.fitted.toggle.checkbox {
+  width:2rem;
 }
 
 .ui.toggle.checkbox .box::before, .ui.toggle.checkbox label::before {
@@ -311,6 +320,7 @@ button, input, optgroup, select, textarea {
   width:35px;
   height: 22px;
 }
+//checkbox semantic style change end
 
 #app-root {
   @include display-flex();
@@ -400,6 +410,14 @@ a.link-unstyle {
 
 .ui.header .ui.label {
   margin-left: 0;
+}
+
+.ui.dropdown.mini {
+  .menu {
+    .item {
+      font-size: .78571429rem;
+    }
+  }
 }
 
 .ui.label {
@@ -580,6 +598,10 @@ input.checkbox_unstyle[type=checkbox] {
   background: none;
   outline: none;
   border-radius:5px;
+}
+
+.capitalize {
+  text-transform: capitalize !important;
 }
 
 .first_word_capitalize {

@@ -124,17 +124,8 @@ public abstract class ServletManager {
     }
 
     public void needToBeConnected() throws HttpServletException {
-        if (user == null) {
+        if (user == null)
             throw new HttpServletException(HttpStatus.AccessDenied);
-        } else {
-            /*socketId = request.getParameter("socketId");
-            if (!debug && socketId == null) {
-				throw new GeneralException(Code.ClientError, "No socketId.");
-			} else if (user.getWebsockets().containsKey(socketId) == false) {
-				System.out.println(user.getWebsockets().size());
-				throw new GeneralException(Code.ClientError, "Wrong socketId.");
-			}*/
-        }
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
@@ -144,10 +135,6 @@ public abstract class ServletManager {
         this.timestamp = this.getCurrentTime();
         if (this.getUser().getTeamUsers().isEmpty())
             throw new HttpServletException(HttpStatus.Forbidden);
-    }
-
-    public void needToBeTeamUserOfTeam(String team_id) throws HttpServletException {
-        this.needToBeAdminOfTeam(Integer.parseInt(team_id));
     }
 
     public void needToBeTeamUserOfTeam(Integer team_id) throws HttpServletException {

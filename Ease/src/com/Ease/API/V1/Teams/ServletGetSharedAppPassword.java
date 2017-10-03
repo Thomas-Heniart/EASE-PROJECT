@@ -3,6 +3,8 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
@@ -27,7 +29,11 @@ public class ServletGetSharedAppPassword extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team_id);
             Integer app_id = sm.getIntParam("shared_app_id", true);
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
-            SharedApp sharedApp = teamUser.getTeam().getAppManager().getSharedApp(app_id);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(team_id);
+            SharedApp sharedApp = team.getAppManager().getSharedApp(app_id);
+            if (!team.isValidFreemium() && !teamUser.isTeamAdmin() && teamUser != sharedApp.getTeamUser_tenant())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade your plan");
             if (sharedApp.getTeamUser_tenant() != teamUser && !teamUser.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot retrieve account information for this app.");
             App app = (App) sharedApp;
