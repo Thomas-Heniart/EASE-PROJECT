@@ -42,8 +42,8 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
             TeamUser teamUser_to_modify = team.getTeamUserWithId(teamUser_id);
             if (!teamUser.isSuperior(teamUser_to_modify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
-            Long departureDate = sm.getLongParam("departure_date", true, false);
-            if (departureDate == 0)
+            Long departureDate = sm.getLongParam("departure_date", true, true);
+            if (departureDate == null)
                 teamUser_to_modify.setDepartureDate(null);
             else {
                 if (departureDate <= sm.getTimestamp().getTime())
