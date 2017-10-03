@@ -524,7 +524,7 @@ class TeamCreationView extends React.Component {
       plan_id = query.plan_id;
     if (this.props.authenticated)
       this.props.history.replace(`/main/simpleTeamCreation?plan_id=${plan_id}`);
-    this.setState({plan_id: plan_id});
+      this.setState({plan_id: Number(plan_id)});
   }
   render(){
     var steps = [];

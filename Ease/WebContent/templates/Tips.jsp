@@ -2,7 +2,7 @@
 <div id="tipsHandler">
     <div class="tip display-flex flex_direction_column" id="0" step="1">
         <h3>This is your Space and your Apps</h3>
-        <span class="content">You'll be able to add more later. Apps are the quick & easy way to connect to websites. Just click on one and let us take care of everything.</span>
+        <span class="content">We selected a few Apps for you, feel free to add more or delete some. Apps are the quickest way to connect to websites. Set them up once so you will never see a password again.</span>
         <div class="buttonHandler">
             <div class="skip">
                 <span>Already know how Ease.space works?</span>
