@@ -51,6 +51,7 @@ public class ServletTransferOwnership extends HttpServlet {
                 }
             }
             new_teamUser_owner.addNotification(teamUser.getUsername() + " changed your role to Owner", "@" + new_teamUser_owner.getDb_id(), "/resources/notifications/user_role_changed.png", sm.getTimestamp(), sm.getDB());
+            new_teamUser_owner.setDepartureDate(null);
             sm.saveOrUpdate(new_teamUser_owner);
             sm.saveOrUpdate(teamUser);
             MailJetBuilder mailJetBuilder = new MailJetBuilder();

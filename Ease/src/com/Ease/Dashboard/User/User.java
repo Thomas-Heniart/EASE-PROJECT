@@ -648,7 +648,7 @@ public class User {
         JSONArray teams = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers()) {
             JSONObject teamObject = teamUser.getTeam().getSimpleJson();
-            teamObject.put("disabled", teamUser.isDisabled() || teamUser.getState() == 1);
+            teamObject.put("disabled", teamUser.isDisabled() || teamUser.getState() == 1 || (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() <= new Date().getTime()));
             teamObject.put("state", teamUser.getState());
             teams.add(teamObject);
         }
