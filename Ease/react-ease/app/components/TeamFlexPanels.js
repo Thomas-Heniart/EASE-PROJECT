@@ -1,26 +1,39 @@
 var React = require('react');
-import {showUpgradeTeamPlanModal} from "../actions/teamModalActions";
-import * as teamModalActions from "../actions/teamModalActions"
+import {
+    showTeamDeleteChannelModal,
+    showTeamDeleteUserFromChannelModal,
+    showTeamDeleteUserModal,
+    showTeamTransferOwnershipModal,
+    showUpgradeTeamPlanModal
+} from "../actions/teamModalActions";
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
-import {showTeamDeleteUserModal,
-  showTeamDeleteChannelModal,
-  showTeamDeleteUserFromChannelModal,
-  showTeamTransferOwnershipModal}
-  from "../actions/teamModalActions";
 import {
-  selectChannelFromListById,
-  selectUserFromListById,
-  selectItemFromListById,
-  isAdmin,
-  isAdminOrMe,
-  isSuperior,
-  isSuperiorOrMe, isOwner
+    isAdmin,
+    isOwner,
+    isSuperior,
+    isSuperiorOrMe,
+    selectChannelFromListById,
+    selectItemFromListById,
+    selectUserFromListById
 } from "../utils/helperFunctions";
 import {renderUserLabel} from "../utils/renderHelpers";
-import {teamUserRoleValues, userNameRuleString, handleSemanticInput, teamUserRoles, reflect} from "../utils/utils";
-import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, TextArea, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
-import {withRouter, Switch, Route} from "react-router-dom";
+import {handleSemanticInput, reflect, teamUserRoles, teamUserRoleValues, userNameRuleString} from "../utils/utils";
+import {
+    Button,
+    Dropdown,
+    Form,
+    Grid,
+    Header,
+    Icon,
+    Input,
+    Label,
+    List,
+    Message,
+    Popup,
+    TextArea
+} from 'semantic-ui-react';
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 
 function ChannelJoinRequestList(props){
@@ -543,7 +556,9 @@ class TeamUserRole extends React.Component {
                 <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
                    </span> :
               <span>
-                      <Dropdown floating inline class="mini" name="role" options={userRoles} value={this.state.edit ? this.state.role : this.props.user.role} onChange={this.handleInput}/>
+                      <Dropdown floating inline class="mini" name="role" options={userRoles}
+                                value={this.state.edit ? this.state.role : this.props.user.role}
+                                onChange={this.handleInput}/>
                        <Icon link name="delete" onClick={this.setEdit.bind(null, false)}/>
                        <Icon link name="checkmark" onClick={this.confirm}/>
                 {this.state.errorMessage.length > 0 &&

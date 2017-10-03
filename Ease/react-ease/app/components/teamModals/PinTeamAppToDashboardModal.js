@@ -25,7 +25,7 @@ class PinTeamAppToDashboardModal extends React.Component {
       selectedProfile: -2
     };
     const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
-    if (meReceiver !== null && meReceiver.profile_id > -1)
+      if (meReceiver !== null && meReceiver.profile_id > -1)
       this.state.selectedProfile = meReceiver.profile_id;
     this.handleInput = this.handleInput.bind(this);
     this.selectProfile = this.selectProfile.bind(this);

@@ -1,36 +1,33 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import api from '../../utils/api';
-import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
-import {setUserDropdownText,
-  PasswordChangeHolder,
-  renderSimpleAppUserLabel,
-  PasswordChangeDropdown,
-  PasswordChangeManagerLabel,
-  PinAppButton,
-  TeamAppActionButton,
-  CopyPasswordButton,
-  ExtendFillSwitch,
-  SharingRequestButton} from "./common";
+import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
+import {
+    CopyPasswordButton,
+    ExtendFillSwitch,
+    PasswordChangeDropdown,
+    PasswordChangeHolder,
+    PinAppButton,
+    setUserDropdownText,
+    SharingRequestButton,
+    TeamAppActionButton
+} from "./common";
 import * as modalActions from "../../actions/teamModalActions";
-import {teamEditSingleApp, teamShareSingleApp, teamAppDeleteReceiver, teamEditSingleAppReceiver, askJoinTeamApp} from "../../actions/appsActions";
-import {handleSemanticInput,
-  transformWebsiteInfoIntoList,
-  transformCredentialsListIntoObject,
-  transformWebsiteInfoIntoListAndSetValues,
-  passwordChangeOptions,
-  credentialIconType,
-  passwordChangeValues,
-  reflect
-} from "../../utils/utils";
-import {selectItemFromListById,
-  findMeInReceivers,
-  getReceiverInList,
-  isAdmin} from "../../utils/helperFunctions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import {teamShareEnterpriseApp, teamEditEnterpriseAppReceiver, teamEditEnterpriseApp} from "../../actions/appsActions";
-import {connect} from "react-redux";
+import {
+    teamAppDeleteReceiver,
+    teamEditEnterpriseApp,
+    teamEditEnterpriseAppReceiver,
+    teamShareEnterpriseApp
+} from "../../actions/appsActions";
+import {
+    credentialIconType,
+    handleSemanticInput,
+    reflect,
+    transformCredentialsListIntoObject,
+    transformWebsiteInfoIntoList,
+    transformWebsiteInfoIntoListAndSetValues
+} from "../../utils/utils";
+import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = findMeInReceivers(app.receivers, me.id);
@@ -139,7 +136,7 @@ const SimpleCredentialsInput = ({receiver, me, team_id}) => {
         {receiver.credentials.map(item => {
           return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true} receiver_id={receiver.id} key={item.priority} onChange={null} item={item}/>
         })}
-        {(isAdmin(me.role) || receiver.id === me.id) &&
+          {(isAdmin(me.role) || receiver.id === me.id) &&
         <CopyPasswordButton team_id={team_id} shared_app_id={receiver.shared_app_id}/>}
       </div>
   )
@@ -404,7 +401,8 @@ class EnterpriseTeamApp extends Component {
     const users = this.getUsers();
 
     return (
-        <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form" onSubmit={this.modify}>
+        <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
+                   onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
           <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>

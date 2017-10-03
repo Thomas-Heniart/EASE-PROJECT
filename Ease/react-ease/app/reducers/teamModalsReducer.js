@@ -82,10 +82,10 @@ const initialState = {
   freeTrialEndModal: {
     active: false
   },
-  departureDateEndModal: {
-    active: false,
-    user: null
-  }
+    departureDateEndModal: {
+        active: false,
+        user: null
+    }
 };
 export default function reducer(state=initialState, action){
   switch (action.type){
@@ -227,12 +227,12 @@ export default function reducer(state=initialState, action){
         freeTrialEndModal: action.payload
       }
     }
-    case 'DEPARTURE_DATE_END_MODAL': {
-      return {
-          ...state,
-        departureDateEndModal: action.payload
+      case 'DEPARTURE_DATE_END_MODAL': {
+          return {
+              ...state,
+              departureDateEndModal: action.payload
+          }
       }
-    }
   }
   return state;
 }

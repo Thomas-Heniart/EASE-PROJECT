@@ -26,7 +26,6 @@ var TeamTransferOwnershipModal = require('./teamModals/TeamTransferOwnershipModa
 var TeamPhoneNumberModal = require('./teamModals/TeamPhoneNumberModal');
 var RequestWebsiteModal = require('./teamModals/RequestWebsiteModal');
 import AskJoinEnterpriseAppModal from "./teamModals/AskJoinEnterpriseAppModal";
-import queryString from "query-string";
 import VerifyTeamUserModal from './teamModals/VerifyTeamUserModal';
 import ReactivateTeamUserModal from './teamModals/ReactivateTeamUserModal';
 import TeamAddMultipleUsersModal from './teamModals/TeamAddMultipleUsersModal';
@@ -39,18 +38,16 @@ import FreeTrialEndModal from "./teamModals/FreeTrialEndModal";
 import UpgradeTeamPlanModal from "./teamModals/UpgradeTeamPlanModal";
 import StaticUpgradeTeamPlanModal from "./teamModals/StaticUpgradeTeamPlanModal";
 import DepartureDateEndModal from "./teamModals/DepartureDateEndModal";
-var EaseHeader = require('./common/EaseHeader');
 import * as teamActions from "../actions/teamActions"
-import * as channelActions from "../actions/channelActions"
-import * as userActions from "../actions/userActions"
 import * as modalActions from "../actions/teamModalActions"
-import  {LeftRightTransition, OpacityTransition} from "../utils/transitions";
-import {selectUserFromListById, selectChannelFromListById} from "../utils/helperFunctions";
-import {withRouter, Switch, Route} from "react-router-dom";
+import {OpacityTransition} from "../utils/transitions";
+import {selectChannelFromListById, selectUserFromListById} from "../utils/helperFunctions";
+import {Route, Switch, withRouter} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
-import {findDOMNode} from 'react-dom';
-var api = require('../utils/api');
 import {connect} from "react-redux";
+
+var EaseHeader = require('./common/EaseHeader');
+var api = require('../utils/api');
 
 @connect((store)=>{
   return {
@@ -80,8 +77,8 @@ import {connect} from "react-redux";
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
     requestWebsiteModal: store.teamModals.requestWebsiteModal,
     freeTrialEndModal: store.teamModals.freeTrialEndModal,
-    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
-    departureDateEndModal: store.teamModals.departureDateEndModal
+      upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
+      departureDateEndModal: store.teamModals.departureDateEndModal
   };
 })
 class TeamView extends React.Component {
@@ -265,8 +262,8 @@ class TeamView extends React.Component {
             <FreeTrialEndModal/>}
             {this.props.upgradeTeamPlanModal.active &&
             <UpgradeTeamPlanModal/>}
-            {this.props.departureDateEndModal.active &&
-            <DepartureDateEndModal/>}
+              {this.props.departureDateEndModal.active &&
+              <DepartureDateEndModal/>}
           </div>
         </div>
     )

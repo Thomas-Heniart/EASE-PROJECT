@@ -99,6 +99,18 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                 primaryPattern: url.protocol + "//" + url.hostname + "/*",
                 setting: chrome.contentSettings.PopupsContentSetting.ALLOW
             });
+            var autfill_on;
+            var passwordSave_on;
+            chrome.privacy.services.autofillEnabled.get({}, function (details) {
+                autfill_on = details.value;
+                if (autfill_on)
+                    chrome.privacy.services.autofillEnabled.set({value: false});
+            });
+            chrome.privacy.services.passwordSavingEnabled.get({}, function (details) {
+                passwordSave_on = details.value;
+                if (passwordSave_on)
+                    chrome.privacy.services.passwordSavingEnabled.set({value: false});
+            });
             extension.tabs.createOrUpdate(currentWindow, senderTab, msg.detail[msg.bigStep].website.home, msg.highlight, function (tab) {
                 extension.tabs.onUpdated(tab, function (newTab) {
                     tab = newTab;
@@ -133,28 +145,15 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                                             msg.todo = msg.detail[msg.bigStep].logWith;
                                                         }
                                                         msg.actionStep = 0;
-                                                        /*} else if(msg.todo == "end"){
-                                                         rememberWebsite(msg.detail[msg.bigStep].website);
-                                                         msg.todo = "checkAlreadyConnected";
-                                                         msg.actionStep = 0;
-                                                         msg.bigStep++;
-                                                         if (msg.bigStep < msg.detail.length){
-                                                         setTimeout(function () {
-                                                         extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function() {});
-                                                         }, 1000);
-                                                         } else {
-                                                         msg.result = "Success";
-                                                         extension.tabs.onUpdatedRemoveListener(tab);
-                                                         extension.tabs.onMessageRemoveListener(tab);
-                                                         endConnection(currentWindow, tab, msg, sendResponse);
-                                                         }
-                                                         } else {
-                                                         msg.todo = "end";
-                                                         console.log("Check already log to end connection");
-                                                         }*/
                                                     } else if (msg.todo == "nextBigStep") {
                                                         msg.todo = "checkAlreadyConnected";
                                                         extension.tabs.update(tab, msg.detail[msg.bigStep].website.home, function () {
+                                                            var url = document.createElement("a");
+                                                            url.href = msg.detail[msg.bigStep].website.home;
+                                                            chrome.contentSettings.popups.set({
+                                                                primaryPattern: url.protocol + "//" + url.hostname + "/*",
+                                                                setting: chrome.contentSettings.PopupsContentSetting.ALLOW
+                                                            });
                                                         });
                                                     } else {
                                                         msg.detail[msg.bigStep].website.lastLogin = getNewLogin(msg, msg.bigStep);
@@ -173,6 +172,12 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                                         } else {
                                                             msg.todo = "checkAlreadyConnected";
                                                             msg.result = "Success";
+                                                            setTimeout(function() {
+                                                                if (autfill_on)
+                                                                    chrome.privacy.services.autofillEnabled.set({value: true});
+                                                                if (passwordSave_on)
+                                                                    chrome.privacy.services.passwordSavingEnabled.set({value: true});
+                                                            }, 1000);
                                                             endConnection(currentWindow, tab, msg, sendResponse);
                                                             extension.tabs.onUpdatedRemoveListener(tab);
                                                             extension.tabs.onMessageRemoveListener(tab);
@@ -181,6 +186,12 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                                 }
                                             } else if (response != undefined) {
                                                 msg.result = "Fail";
+                                                setTimeout(function() {
+                                                    if (autfill_on)
+                                                        chrome.privacy.services.autofillEnabled.set({value: true});
+                                                    if (passwordSave_on)
+                                                        chrome.privacy.services.passwordSavingEnabled.set({value: true});
+                                                }, 1000);
                                                 endConnection(currentWindow, tab, msg, sendResponse);
                                                 extension.tabs.onUpdatedRemoveListener(tab);
                                                 extension.tabs.onMessageRemoveListener(tab);
@@ -191,6 +202,12 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                             });
                         });
                     } else {
+                        setTimeout(function() {
+                            if (autfill_on)
+                                chrome.privacy.services.autofillEnabled.set({value: true});
+                            if (passwordSave_on)
+                                chrome.privacy.services.passwordSavingEnabled.set({value: true});
+                        }, 1000);
                         endConnection(currentWindow, tab, msg, sendResponse);
                     }
                 });

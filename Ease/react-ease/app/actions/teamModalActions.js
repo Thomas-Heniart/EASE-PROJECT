@@ -221,12 +221,12 @@ export function showFreeTrialEndModal(state){
   }
 }
 
-export function showDepartureDateEndModal(state, user){
-  return {
-    type: 'DEPARTURE_DATE_END_MODAL',
-    payload: {
-      active: state,
-      user: user
+export function showDepartureDateEndModal(state, user) {
+    return {
+        type: 'DEPARTURE_DATE_END_MODAL',
+        payload: {
+            active: state,
+            user: user
+        }
     }
-  }
 }

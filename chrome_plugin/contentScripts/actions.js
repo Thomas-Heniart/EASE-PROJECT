@@ -183,18 +183,6 @@ var actions = {
             input[0].value = msg.detail[0].user[actionStep.what];
             fire_onchange(input[0]);
             input[0].blur();
-            jInput.prop("readonly", true);
-            jInput.focus(function () {
-                $(this).prop("readonly", false)
-            });
-            if (jInput.attr("type") === "password") {
-                var fakePwd = $("<input type=\"password\" " +
-                    "style=\"position: absolute; border:none;width:0px;height:0px;background-color:white;overflow: hidden; opacity: 0;\" />");
-                fakePwd.insertBefore(jInput);
-                fakePwd.focus(function() {
-                    $(this).next().focus();
-                });
-            }
             msg.actionStep++;
             callback(msg, sendResponse);
         }

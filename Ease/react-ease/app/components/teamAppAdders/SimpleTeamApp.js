@@ -1,35 +1,41 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import api from '../../utils/api';
-import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import {setUserDropdownText,
-  PasswordChangeHolder,
-  renderSimpleAppUserLabel,
-  PasswordChangeDropdown,
-  PasswordChangeManagerLabel,
-  PinAppButton,
-  TeamAppActionButton,
-  CopyPasswordButton,
-  SharingRequestButton} from "./common";
+import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
-import {teamEditSingleApp, teamShareSingleApp, teamAppDeleteReceiver, teamEditSingleAppReceiver, askJoinTeamApp} from "../../actions/appsActions";
-import {handleSemanticInput,
-  transformWebsiteInfoIntoList,
-  transformCredentialsListIntoObject,
-  transformWebsiteInfoIntoListAndSetValues,
-  passwordChangeOptions,
-  credentialIconType,
-  passwordChangeValues,
-  reflect
+import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
+import {
+    CopyPasswordButton,
+    PasswordChangeDropdown,
+    PasswordChangeHolder,
+    PasswordChangeManagerLabel,
+    PinAppButton,
+    renderSimpleAppUserLabel,
+    setUserDropdownText,
+    SharingRequestButton,
+    TeamAppActionButton
+} from "./common";
+import {
+    askJoinTeamApp,
+    teamAcceptSharedApp,
+    teamAppDeleteReceiver,
+    teamEditSingleApp,
+    teamEditSingleAppReceiver,
+    teamShareSingleApp
+} from "../../actions/appsActions";
+import {
+    credentialIconType,
+    handleSemanticInput,
+    reflect,
+    transformCredentialsListIntoObject,
+    transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
-import {selectItemFromListById,
-  findMeInReceivers,
-  getReceiverInList,
-  sortReceiversAndMap,
-  isAdmin} from "../../utils/helperFunctions";
-import {teamCreateSingleApp, teamAcceptSharedApp} from "../../actions/appsActions";
-import {connect} from "react-redux";
+import {
+    findMeInReceivers,
+    getReceiverInList,
+    isAdmin,
+    selectItemFromListById,
+    sortReceiversAndMap
+} from "../../utils/helperFunctions";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
   return <Input size="mini"

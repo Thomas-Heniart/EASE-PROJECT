@@ -1,13 +1,12 @@
 import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
+import {Button, Form, List, Message} from 'semantic-ui-react';
 import {upgradePlan} from "../../actions/teamActions";
 import {connect} from "react-redux";
 import post_api from "../../utils/post_api";
-import {proFeaturesDesc, proFeatures} from "../../utils/teamPlans";
+import {proFeatures} from "../../utils/teamPlans";
 import {withRouter} from "react-router-dom";
-import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
+import {isOwner, selectItemFromListById} from "../../utils/helperFunctions";
 
 @connect(store => ({
   team_id: store.team.id,
@@ -41,14 +40,14 @@ class StaticUpgradeTeamPlanModal extends Component {
         plan_id: 1
       })).then(response => {
         this.setState({loading: false});
-        this.close();
+          this.close();
       }).catch(err => {
         this.setState({loading: false, errorMesage: err});
       });
     } else {
       post_api.teams.askOwnerToUpgrade({team_id: this.props.team_id}).then(response => {
         this.setState({loading: false});
-        this.close();
+          this.close();
       });
     }
   };
@@ -74,9 +73,9 @@ class StaticUpgradeTeamPlanModal extends Component {
             onClose={this.close}
             headerContent={'Try Pro now!'}>
           <Form class="container" error={this.state.errorMesage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
-            <Form.Field>
-              One of your team members would like to access paying features.
-            </Form.Field>
+              <Form.Field>
+                  One of your team members would like to access paying features.
+              </Form.Field>
             <Form.Field>
               <h5>
                 Pro includes your current features and:

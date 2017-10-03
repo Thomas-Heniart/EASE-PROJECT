@@ -35,8 +35,9 @@ class Step1 extends React.Component{
       this.setState({processing: false});
       this.props.onStepValidated();
         easeTracker.trackEvent("TeamCreationEnterEmail", {
-            "plan_id": 0
+            "plan_id": this.props.plan_id
         });
+        easeTracker.trackEvent("RegistrationEnterEmail");
     }).catch(err => {
       this.setState({errorMessage: err,processing: false});
     });
@@ -89,6 +90,10 @@ class Step2 extends React.Component{
     post_api.common.checkRegistrationDigits(this.props.email, this.props.digits).then(response => {
       this.setState({loading: false});
       this.props.onStepValidated();
+        easeTracker.trackEvent("TeamCreationEnterDigits", {
+            "plan_id": this.props.plan_id
+        });
+        easeTracker.trackEvent("RegistrationEnterDigits");
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     })
@@ -157,6 +162,10 @@ class Step3 extends React.Component{
       return;
     }
     this.setState({errorMessage: '', passwordError: false});
+      easeTracker.trackEvent("TeamCreationEnterPassword", {
+          "plan_id": this.props.plan_id
+      });
+      easeTracker.trackEvent("RegistrationEnterPassword");
     this.props.onStepValidated();
   }
   render() {
@@ -213,6 +222,9 @@ class Step4 extends React.Component{
       this.setState({usernameError: true});
       return;
     }
+      easeTracker.trackEvent("TeamCreationEnterUsername", {
+          "plan_id": this.props.plan_id
+      });
     this.props.onStepValidated();
   }
   render() {
@@ -262,6 +274,10 @@ class StepCGU extends React.Component{
     this.setState({loading: true});
     post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(response => {
       this.setState({loading: false});
+        easeTracker.trackEvent("TeamCreationAcceptCGU", {
+            "plan_id": this.props.plan_id
+        });
+        easeTracker.trackEvent("RegistrationAcceptCGU");
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({loading: false});
@@ -288,43 +304,62 @@ class StepCGU extends React.Component{
   }
 }
 
-function Step5(props){
-  const roles = jobRoles.map((item, idx) => {
-    return {
-      key: idx,
-      value: idx,
-      text: item
+class Step5 extends React.Component {
+    constructor(props) {
+        super(props);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.roles = jobRoles.map((item, idx) => {
+            return {
+                key: idx,
+                value: idx,
+                text: item
+            }
+        });
+        this.jobRole = props.jobRole;
+        this.jobDetails = props.jobDetails;
     }
-  });
-  const jobRole = props.jobRole;
-  const jobDetails = props.jobDetails;
-  return (
-      <div class="contents" id="step5">
-        <Segment>
-          <Header as="h1">
-            Tell us about your role
-          </Header>
-          <Divider hidden clearing/>
-          <Form onSubmit={props.incStep}>
-            <Form.Field>
-              <label>What type of work do you do?</label>
-              <Select placeholder="Select your role" name="jobRole" options={roles} onChange={props.handleInput}/>
-            </Form.Field>
-            {props.jobRole === 15 &&
-            <Form.Input
-                label="Could you please elaborate? (More info will help us improve Ease.space!)"
-                placeholder="Details..."
-                type="text"
-                name="jobDetails"
-                required
-                onChange={props.handleInput}/>}
-            <Form.Field>
-              <Button positive fluid type="submit" disabled={jobRole === null || (jobRole == 15 && jobDetails.length == 0)}>Next</Button>
-            </Form.Field>
-          </Form>
-        </Segment>
-      </div>
-  )
+
+    onSubmit(e) {
+        e.preventDefault();
+        this.props.incStep();
+        easeTracker.trackEvent("TeamCreationEnterJob", {
+            "job": this.roles[this.props.jobRole],
+            "detail": this.props.jobDetails,
+            "plan_id": this.props.plan_id
+        });
+    }
+
+    render() {
+        return (
+            <div class="contents" id="step5">
+                <Segment>
+                    <Header as="h1">
+                        Tell us about your role
+                    </Header>
+                    <Divider hidden clearing/>
+                    <Form onSubmit={this.onSubmit}>
+                        <Form.Field>
+                            <label>What type of work do you do?</label>
+                            <Select placeholder="Select your role" name="jobRole" options={this.roles}
+                                    onChange={this.props.handleInput}/>
+                        </Form.Field>
+                        {this.props.jobRole === 15 &&
+                        <Form.Input
+                            label="Could you please elaborate? (More info will help us improve Ease.space!)"
+                            placeholder="Details..."
+                            type="text"
+                            name="jobDetails"
+                            required
+                            onChange={props.handleInput}/>}
+                        <Form.Field>
+                            <Button positive fluid type="submit"
+                                    disabled={this.props.jobRole === null || (this.props.jobRole == 15 && this.props.jobDetails.length == 0)}>Next</Button>
+                        </Form.Field>
+                    </Form>
+                </Segment>
+            </div>
+        )
+    }
 }
 
 class Step6 extends React.Component{
@@ -348,11 +383,15 @@ class Step6 extends React.Component{
       jobRole: this.props.jobRole,
       jobDetails: this.props.jobDetails,
       digits: this.props.digits,
-      plan_id: this.props.plan_id
+        plan_id: this.props.plan_id
     }).then(response => {
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
+        easeTracker.trackEvent("TeamCreationFinished", {
+            "plan_id": this.props.plan_id
+        });
+        easeTracker.trackEvent("RegistrationDone");
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
@@ -485,11 +524,12 @@ class TeamCreationView extends React.Component {
       plan_id = query.plan_id;
     if (this.props.authenticated)
       this.props.history.replace(`/main/simpleTeamCreation?plan_id=${plan_id}`);
-    this.setState({plan_id: Number(plan_id)});
+      this.setState({plan_id: Number(plan_id)});
   }
   render(){
     var steps = [];
     steps.push(<Step1 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       email={this.state.email}
                       switchNewsletter={this.switchNewsletter}
@@ -498,22 +538,26 @@ class TeamCreationView extends React.Component {
                       history={this.props.history}
                       key="1"/>);
     steps.push(<Step2 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       digits={this.state.digits}
                       email={this.state.email}
                       handleInput={this.handleInput}
                       key="2"/>);
     steps.push(<Step3 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       password={this.state.password}
                       confirmPassword={this.state.confirmPassword}
                       handleInput={this.handleInput}
                       key="3"/>);
     steps.push(<Step4 onStepValidated={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       lname={this.state.lname}
                       fname={this.state.fname}
                       username={this.state.username}
                       handleInput={this.handleInput}
                       key="4"/>);
     steps.push(<StepCGU key="cgu"
+                        plan_id={this.state.plan_id}
                         email={this.state.email}
                         password={this.state.password}
                         newsletter={this.state.newsletter}
@@ -523,6 +567,7 @@ class TeamCreationView extends React.Component {
                         username={this.state.username}
                         onStepValidated={this.incrementStep}/>);
     steps.push(<Step5 incStep={this.incrementStep}
+                      plan_id={this.state.plan_id}
                       handleInput={this.handleInput}
                       jobRole={this.state.jobRole}
                       jobDetails={this.state.jobDetails}
