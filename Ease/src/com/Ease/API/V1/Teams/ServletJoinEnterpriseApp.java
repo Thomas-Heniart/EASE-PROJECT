@@ -44,7 +44,7 @@ public class ServletJoinEnterpriseApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not of channel of this app.");
             if (shareableApp.getTeamUser_tenants().contains(teamUser_connected))
                 throw new HttpServletException(HttpStatus.BadRequest, "You already have this app.");
-            if (shareableApp.getPendingTeamUsers().contains(teamUser_connected))
+            if (shareableApp.getPendingTeamUsers().containsKey(teamUser_connected.getDb_id()))
                 throw new HttpServletException(HttpStatus.BadRequest, "You already ask to join this app.");
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             String privateKey = (String) sm.getContextAttr("privateKey");

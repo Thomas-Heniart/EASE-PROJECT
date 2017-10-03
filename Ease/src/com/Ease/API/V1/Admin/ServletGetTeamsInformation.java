@@ -57,7 +57,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 int single_number = 0;
                 int enterprise_number = 0;
                 int card_with_password_reminder = 0;
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                     App app = (App) shareableApp;
                     card_number++;
                     if (app.isClassicApp()) {

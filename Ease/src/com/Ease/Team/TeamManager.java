@@ -132,7 +132,7 @@ public class TeamManager {
         try {
             int transaction = db.startTransaction();
             for (Team team : this.getTeams()) {
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                     App app = (App) shareableApp;
                     if (!app.isClassicApp())
                         continue;
@@ -151,7 +151,7 @@ public class TeamManager {
                         }
                     }
                 }
-                for (SharedApp sharedApp : team.getAppManager().getSharedApps()) {
+                for (SharedApp sharedApp : team.getAppManager().getSharedApps().values()) {
                     App holder = (App) sharedApp.getHolder();
                     if (!holder.isEmpty())
                         continue;

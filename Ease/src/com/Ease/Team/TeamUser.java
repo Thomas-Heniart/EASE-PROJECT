@@ -439,8 +439,8 @@ public class TeamUser {
             request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                if (shareableApp.getPendingTeamUsers().contains(this))
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
+                if (shareableApp.getPendingTeamUsers().containsKey(this.getDb_id()))
                     shareableApp.removePendingTeamUser(this, db);
             }
             db.commitTransaction(transaction);
@@ -450,25 +450,6 @@ public class TeamUser {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
-
-    /* @Override
-    public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder();
-        hcb.append(this.db_id);
-        return hcb.toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof TeamUser))
-            return false;
-        TeamUser teamUser = (TeamUser) obj;
-        EqualsBuilder eb = new EqualsBuilder();
-        eb.append(this.db_id, teamUser.db_id);
-        return eb.isEquals();
-    } */
 
     public List<SharedApp> getSharedApps() {
         return this.getTeam().getAppManager().getSharedAppsForTeamUser(this);

@@ -185,7 +185,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
             int transaction = db.startTransaction();
             super.modifyShareable(db, editJson);
             this.getLinkAppInformations().edit(editJson, db);
-            for (SharedApp sharedApp : this.getSharedApps()) {
+            for (SharedApp sharedApp : this.getSharedApps().values()) {
                 LinkApp linkApp = (LinkApp) sharedApp;
                 linkApp.getLinkAppInformations().edit(editJson);
             }

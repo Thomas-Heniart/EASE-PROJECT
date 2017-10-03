@@ -48,7 +48,7 @@ public class Team {
         for (Team team : teams) {
             team.lazyInitialize();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                 List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, context, db);
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);
@@ -203,7 +203,7 @@ public class Team {
         return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()));
     }
 
-    public Map<Integer, TeamUser> getTeamUsers() {
+    public synchronized Map<Integer, TeamUser> getTeamUsers() {
         if (teamUsers == null)
             teamUsers = new ConcurrentHashMap<>();
         return teamUsers;
@@ -213,7 +213,7 @@ public class Team {
         this.teamUsers = teamUsers;
     }
 
-    public Map<Integer, Channel> getChannels() {
+    public synchronized Map<Integer, Channel> getChannels() {
         if (channels == null)
             channels = new ConcurrentHashMap<>();
         return channels;
@@ -242,7 +242,7 @@ public class Team {
         return channel;
     }
 
-    public List<Channel> getChannelsForTeamUser(TeamUser teamUser) {
+    public synchronized List<Channel> getChannelsForTeamUser(TeamUser teamUser) {
         List<Channel> channels = new LinkedList<>();
         for (Map.Entry<Integer, Channel> entry : this.getChannels().entrySet()) {
             Channel channel = entry.getValue();
@@ -260,7 +260,7 @@ public class Team {
     }
 
     public void addTeamUser(TeamUser teamUser) {
-        this.teamUsers.put(teamUser.getDb_id(), teamUser);
+        this.getTeamUsers().put(teamUser.getDb_id(), teamUser);
         if (!teamUser.isVerified())
             this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
     }
@@ -281,7 +281,7 @@ public class Team {
     }
 
     public void removeTeamUser(TeamUser teamUser) {
-        this.teamUsers.remove(teamUser.getDb_id());
+        this.getTeamUsers().remove(teamUser.getDb_id());
     }
 
     public void removeChannel(Channel channel) {
@@ -357,7 +357,7 @@ public class Team {
     public JSONArray getShareableAppsForChannel(Integer channel_id) throws HttpServletException {
         Channel channel = this.getChannelWithId(channel_id);
         JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
             if (channel != shareableApp.getChannel())
                 continue;
             jsonArray.add(shareableApp.getShareableJson());
@@ -368,7 +368,7 @@ public class Team {
     public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws HttpServletException {
         TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
         JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
             if (!shareableApp.getTeamUser_tenants().contains(teamUser))
                 continue;
             App app = (App) shareableApp;
@@ -386,11 +386,11 @@ public class Team {
 
     public void decipherApps(String deciphered_teamKey) throws HttpServletException {
         try {
-            for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
                 App app = (App) shareableApp;
                 if (app.isClassicApp())
                     ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-                for (SharedApp sharedApp : shareableApp.getSharedApps()) {
+                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
                     App app1 = (App) sharedApp;
                     if (app1.isClassicApp())
                         ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
@@ -557,9 +557,9 @@ public class Team {
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
             }
-            for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
                 ((App) shareableApp).setDisabled(this.isBlocked(), db);
-                for (SharedApp sharedApp : shareableApp.getSharedApps())
+                for (SharedApp sharedApp : shareableApp.getSharedApps().values())
                     ((App) sharedApp).setDisabled(this.isBlocked(), db);
             }
         } catch (Exception e) {

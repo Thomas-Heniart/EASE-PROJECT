@@ -8,7 +8,6 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,10 @@ public class AppManager {
     /* ======= Part about shared apps ======== */
     /* ======================================= */
 
-    public Collection<SharedApp> getSharedApps() {
-        return sharedApps.values();
+    public Map<Integer, SharedApp> getSharedApps() {
+        if (this.sharedApps == null)
+            sharedApps = new ConcurrentHashMap<>();
+        return sharedApps;
     }
 
     public void addSharedApp(SharedApp sharedApp) {
@@ -72,7 +73,7 @@ public class AppManager {
 
     public List<SharedApp> getSharedAppsForTeamUser(TeamUser teamUser) {
         List<SharedApp> sharedApps = new LinkedList<>();
-        for (SharedApp sharedApp : this.getSharedApps()) {
+        for (SharedApp sharedApp : this.getSharedApps().values()) {
             if (sharedApp.getTeamUser_tenant() == teamUser)
                 sharedApps.add(sharedApp);
         }
@@ -88,10 +89,10 @@ public class AppManager {
     /* ===== Part about shareable apps ======= */
     /* ======================================= */
 
-    public Collection<ShareableApp> getShareableApps() {
+    public synchronized Map<Integer, ShareableApp> getShareableApps() {
         if (shareableApps == null)
             shareableApps = new ConcurrentHashMap<>();
-        return shareableApps.values();
+        return shareableApps;
     }
 
     public void setShareableApps(List<ShareableApp> shareableApps) {

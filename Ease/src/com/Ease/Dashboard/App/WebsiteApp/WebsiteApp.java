@@ -390,7 +390,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
                     request.setInt(this.websiteAppDBid);
                     request.set();
                     this.reminderIntervalValue = password_change_interval;
-                    for (SharedApp sharedApp : this.getSharedApps())
+                    for (SharedApp sharedApp : this.getSharedApps().values())
                         ((ClassicApp) sharedApp).getAccount().setReminderInterval(password_change_interval, db);
                 }
                 Boolean fill_in_switch = (Boolean) editJson.get("fill_in_switch");
@@ -437,7 +437,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
             request.setInt(this.getDBid());
             request.set();
             this.website = website;
-            for (SharedApp sharedApp : this.getSharedApps())
+            for (SharedApp sharedApp : this.getSharedApps().values())
                 ((WebsiteApp) sharedApp).setWebsite(website, db);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
