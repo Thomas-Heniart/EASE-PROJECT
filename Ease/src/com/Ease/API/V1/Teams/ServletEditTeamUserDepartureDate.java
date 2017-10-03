@@ -3,6 +3,7 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -17,9 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -42,24 +40,17 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
             TeamUser teamUser_to_modify = team.getTeamUserWithId(teamUser_id);
             if (!teamUser.isSuperior(teamUser_to_modify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this dude.");
-            String departureDateString = sm.getStringParam("departure_date", true, false);
-            if (departureDateString == null || departureDateString.equals(""))
+            Long departureDate = sm.getLongParam("departure_date", true, false);
+            if (departureDate == 0)
                 teamUser_to_modify.setDepartureDate(null);
             else {
-                try {
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    Date departure_date = dateFormat.parse(departureDateString);
-                    if (departure_date.getTime() <= sm.getTimestamp().getTime())
-                        throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid departure date.");
-                    teamUser_to_modify.setDepartureDate(departure_date);
-                } catch (ParseException e) {
-                    throw new HttpServletException(HttpStatus.BadRequest, "Wrong date format.");
-                }
-
+                if (departureDate <= (sm.getTimestamp().getTime() + DateComparator.millisecondsInDay))
+                    throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid departure date.");
+                teamUser_to_modify.setDepartureDate(new Date(departureDate));
             }
             sm.saveOrUpdate(teamUser_to_modify);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_modify.getJson(), teamUser_to_modify.getOrigin()));
-            sm.setSuccess("Departure date edited.");
+            sm.setSuccess(teamUser_to_modify.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

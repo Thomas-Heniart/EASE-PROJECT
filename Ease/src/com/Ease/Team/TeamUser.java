@@ -23,21 +23,20 @@ import java.util.Locale;
 @Entity
 @Table(name = "teamUsers")
 public class TeamUser {
+
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
     @Id
     @GeneratedValue
     @Column(name = "id")
     protected Integer db_id;
 
-    /* @ManyToOne
-    @JoinColumn(name = "user_id") */
     @Transient
     protected User user;
 
-    /* To remove when we we migrate on hibernate */
     @Transient
     protected com.Ease.Dashboard.User.User dashboard_user;
 
-    /* To remove when we we migrate on hibernate */
     @Column(name = "user_id")
     protected String user_id;
 
@@ -84,9 +83,6 @@ public class TeamUser {
 
     @Column(name = "jobTitle")
     protected String jobTitle;
-
-    @Transient
-    protected DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
     @Column(name = "disabled")
     private boolean disabled;
@@ -315,7 +311,7 @@ public class TeamUser {
         res.put("username", this.username);
         res.put("disabled", this.disabled);
         res.put("role", this.teamUserRole.getRoleValue());
-        res.put("arrival_date", this.dateFormat.format(arrivalDate));
+        res.put("arrival_date", arrivalDate.getTime());
         res.put("departure_date", 0);
         if (departureDate != null)
             res.put("departure_date", this.departureDate.getTime());
