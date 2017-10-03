@@ -45,7 +45,6 @@ import {selectChannelFromListById, selectUserFromListById} from "../utils/helper
 import {Route, Switch, withRouter} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
 import {connect} from "react-redux";
-
 var EaseHeader = require('./common/EaseHeader');
 var api = require('../utils/api');
 
@@ -77,8 +76,8 @@ var api = require('../utils/api');
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
     requestWebsiteModal: store.teamModals.requestWebsiteModal,
     freeTrialEndModal: store.teamModals.freeTrialEndModal,
-      upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
-      departureDateEndModal: store.teamModals.departureDateEndModal
+    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
+    departureDateEndModal: store.teamModals.departureDateEndModal
   };
 })
 class TeamView extends React.Component {
@@ -262,8 +261,8 @@ class TeamView extends React.Component {
             <FreeTrialEndModal/>}
             {this.props.upgradeTeamPlanModal.active &&
             <UpgradeTeamPlanModal/>}
-              {this.props.departureDateEndModal.active &&
-              <DepartureDateEndModal/>}
+            {this.props.departureDateEndModal.active &&
+            <DepartureDateEndModal/>}
           </div>
         </div>
     )

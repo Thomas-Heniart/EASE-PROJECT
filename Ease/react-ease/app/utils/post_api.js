@@ -196,6 +196,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     editFirstName : function(ws_id, team_id, user_id, first_name){
