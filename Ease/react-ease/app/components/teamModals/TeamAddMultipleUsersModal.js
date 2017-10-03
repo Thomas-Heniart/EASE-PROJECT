@@ -139,7 +139,7 @@ class TeamAddMultipleUsersModal extends React.Component {
       return;
     }
     let calls = invitations.map(item => {
-      return this.props.dispatch(createTeamUser('','',item.email, item.username, null, 1));
+      return this.props.dispatch(createTeamUser('','',item.email, item.username, 0, 1));
     });
     this.setState({loading: true, errorMessage: null});
     Promise.all(calls.map(reflect)).then(results => {
