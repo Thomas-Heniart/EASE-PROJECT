@@ -316,7 +316,10 @@
             e.amplitude = n;
         })(window, document);
 
-        amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
+        if (location.hostname === "ease.space")
+            amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
+        else
+            amplitude.getInstance().init("5f012a5e604acb0283ed11ed8da5414f");
         easeTracker.trackEvent("HomepageVisit", {"SchoolName": schoolToTrack});
     });
     var schoolToTrack = '${param.schoolName}';
