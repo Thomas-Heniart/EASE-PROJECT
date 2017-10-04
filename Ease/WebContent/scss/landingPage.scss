@@ -1326,6 +1326,9 @@ header {
 }
 }
 @media screen and (max-width: 768px) {
+    .digit {
+        display: table-cell;
+    }
     .contactSegment {
         margin: 1rem 0 !important;
         padding: 16px !important;
@@ -1344,6 +1347,10 @@ header {
     .inTheMac {
         margin:0;
         padding:0;
+        #discoverButton {
+            margin-left: 90px;
+            margin-top: -110px;
+        }
     }
     #footer {
         padding: 10% 20%;
@@ -1574,7 +1581,7 @@ header {
                 .progress {
                     height: 0.25vw;
                     margin-top: 0.15vw;
-                    margin-bottom: 0px;
+                    margin-bottom: 0;
                 }
             }
         }
