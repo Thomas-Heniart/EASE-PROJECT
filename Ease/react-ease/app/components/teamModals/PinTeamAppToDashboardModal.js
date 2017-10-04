@@ -25,7 +25,7 @@ class PinTeamAppToDashboardModal extends React.Component {
       selectedProfile: -2
     };
     const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
-      if (meReceiver !== null && meReceiver.profile_id > -1)
+    if (meReceiver !== null && meReceiver.profile_id > -1)
       this.state.selectedProfile = meReceiver.profile_id;
     this.handleInput = this.handleInput.bind(this);
     this.selectProfile = this.selectProfile.bind(this);
@@ -43,7 +43,11 @@ class PinTeamAppToDashboardModal extends React.Component {
   };
   confirmModal(){
     const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
-    if (meReceiver.profile_id === -1 && this.state.selectedProfile === -1){
+    if (meReceiver === null && this.state.selectedProfile === -1){
+      this.props.dispatch(showPinTeamAppToDashboardModal(false));
+      return;
+    }
+    if (meReceiver !== null && meReceiver.profile_id === -1 && this.state.selectedProfile === -1){
       this.props.dispatch(showPinTeamAppToDashboardModal(false));
       return;
     }
@@ -108,22 +112,22 @@ class PinTeamAppToDashboardModal extends React.Component {
             </div>
             <div class="row display-flex align_items_center" style={{paddingTop: '20px'}}>
               <div class="squared_image_handler">
-                  <img src={app.website !== undefined ? app.website.logo : app.logo} alt="Website logo"/>
+                <img src={app.website !== undefined ? app.website.logo : app.logo} alt="Website logo"/>
               </div>
               {!this.state.nameModifying ?
-                <div>
-                  <span style={{fontSize: "1.3rem"}}>{app.name}</span>
-                  <button class="button-unstyle action_button mrgnLeft5"
-                          onClick={this.setNameModifying}>
-                    <i class="fa fa-pencil"/>
-                  </button>
-                </div>
+                  <div>
+                    <span style={{fontSize: "1.3rem"}}>{app.name}</span>
+                    <button class="button-unstyle action_button mrgnLeft5"
+                            onClick={this.setNameModifying}>
+                      <i class="fa fa-pencil"/>
+                    </button>
+                  </div>
                   :
-                <input type="text" placeholder="App name..." name="name"
-                       class="input_unstyle modal_input name_input"
-                       autoFocus={true}
-                      value={this.state.name}
-                      onChange={this.handleInput}/>
+                  <input type="text" placeholder="App name..." name="name"
+                         class="input_unstyle modal_input name_input"
+                         autoFocus={true}
+                         value={this.state.name}
+                         onChange={this.handleInput}/>
               }
             </div>
             <div class="row" style={{padding: '20px 30px 30px 30px'}}>
