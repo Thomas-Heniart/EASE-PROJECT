@@ -60,12 +60,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    Contactez notre équipe commerciale
+                <h2 class="section-heading" style="margin-top:55px;font-size:36px">
+                    <fmt:message key="companyContact.title"/>
                 </h2>
                 <h3 class="section-subheading text-muted"
                     style="font-size:24px;font-weight:300;line-height: 1.25;color: #373b60!important;">
-                    Nous nous tenons à votre disposition pour discuter de notre collaboration
+                    <fmt:message key="companyContact.sub-title"/>
                 </h3>
             </div>
         </div>
@@ -74,7 +74,7 @@
                 <div class="field">
                     <div class="two fields">
                         <div class="field">
-                            <label class="contactLabel">Prénom et Nom*</label>
+                            <label class="contactLabel"><fmt:message key="contact.onInput.name"/>*</label>
                             <input required type="text" name="name" placeholder="Richard Hendricks">
                         </div>
                         <div class="field">
@@ -86,46 +86,48 @@
                 <div class="field">
                     <div class="two fields">
                         <div class="field">
-                            <label class="contactLabel">Intitulé du poste</label>
+                            <label class="contactLabel"><fmt:message key="contact.onInput.job"/></label>
                             <input type="text" name="role" placeholder="CEO">
                         </div>
                         <div class="field">
-                            <label class="contactLabel">Société</label>
+                            <label class="contactLabel"><fmt:message key="contact.onInput.company"/></label>
                             <input type="text" name="enterprise" placeholder="Piedpiper">
                         </div>
                     </div>
                 </div>
                 <div class="two fields">
                     <div class="field">
-                        <label class="contactLabel">Téléphone</label>
-                        <input type="text" name="phoneNumber" placeholder="06">
+                        <label class="contactLabel"><fmt:message key="contact.onInput.phone"/></label>
+                        <input type="text" name="phoneNumber" placeholder="<fmt:message key="contact.input.phone"/>">
                     </div>
                     <div class="ui field">
-                        <label class="contactLabel">Nombre de collaborateurs</label>
+                        <label class="contactLabel"><fmt:message key="companyContact.onInput.employees"/></label>
                         <input type="text" name="collaborators" placeholder="">
                     </div>
                 </div>
                 <div class="field">
                     <label class="contactLabel">Message*</label>
-                    <textarea required name="message" placeholder="Votre message."></textarea>
+                    <textarea required name="message" placeholder="<fmt:message key="contact.input.message"/>"></textarea>
                 </div>
-                <button class="sendContactButton fluid ui button">Envoyer</button>
-                <div class="ui positive message" style="display: none">
-                    <p>Message envoyé</p>
+                <button class="sendContactButton fluid ui button"><fmt:message key="contact.button"/></button>
+                <div class="ui positive message" style="display:none">
+                    <p><fmt:message key="contact.sent"/></p>
                 </div>
-                <div class="ui negative message" style="display: none">
+                <div class="ui negative message" style="display:none">
                     <p></p>
                 </div>
             </form>
         </div>
     </div>
-    <div style="text-align: center;margin-bottom: 65px;">
+    <div style="text-align:center;margin-bottom:65px;">
         <strong>
-            <fmt:message key="companyContact.help1.title"/>
+            <fmt:message key="contact.assistance.title"/>
         </strong>
         <p>
-            <fmt:message key="companyContact.help1.text"/> <a href="mailto:victor@ease.space"><fmt:message
-                key="companyContact.help1.link-text"/></a>
+            <fmt:message key="contact.assistance.text"/>
+            <a href="mailto:victor@ease.space">
+                <fmt:message key="contact.assistance.link"/>
+            </a>
         </p>
     </div>
 </section>
