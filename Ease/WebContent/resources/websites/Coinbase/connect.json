@@ -1,0 +1,60 @@
+{
+  "name": "Coinbase",
+  "lastLogin": "",
+  "home": "https://www.coinbase.com",
+  "folder": "Coinbase",
+  "connect": {
+    "todo": [
+      {
+        "action": "goto",
+        "url": "https://www.coinbase.com/signin"
+      },
+      {
+        "action": "waitfor",
+        "search": "#email"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#email",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "#password"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "#signin_button"
+      },
+      {
+        "action": "click",
+        "search": "#signin_button",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "click",
+        "search": ".DropdownMenu__Dropdown-kuxaaY .DropdownMenu__DropdownLink-kJecXv:last-child",
+        "grave": true
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "search": "body.signed-in"
+    }
+  ]
+}

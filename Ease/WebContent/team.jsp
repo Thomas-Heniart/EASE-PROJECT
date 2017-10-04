@@ -5,7 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
-    <title>Team space</title>
+    <title>Team Space</title>
     <!-- Description shown in Google -->
     <!-- Facebook metadata -->
     <meta name="description"
