@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <div id="tipsHandler">
     <div class="tip display-flex flex_direction_column" id="0" step="1">
-        <h3>This is your Space and your Apps</h3>
-        <span class="content">We selected a few Apps for you, feel free to add more or delete some. Apps are the quickest way to connect to websites. Set them up once so you will never see a password again.</span>
+        <h3>This is your Space</h3>
+        <span class="content">Open it for the day with your Ease.space password. Then, just click on apps to access accounts.<br/>We pre-selected apps, you can delete or add more.<br/>To activate an app: click on it and enter your info one last time, ever.<br/></span>
         <div class="buttonHandler">
             <div class="skip">
                 <span>Already know how Ease.space works?</span>
