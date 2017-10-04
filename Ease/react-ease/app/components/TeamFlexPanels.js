@@ -1,26 +1,39 @@
 var React = require('react');
-var classnames = require('classnames');
-import * as teamModalActions from "../actions/teamModalActions"
+import {
+    showTeamDeleteChannelModal,
+    showTeamDeleteUserFromChannelModal,
+    showTeamDeleteUserModal,
+    showTeamTransferOwnershipModal,
+    showUpgradeTeamPlanModal
+} from "../actions/teamModalActions";
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
-import {showTeamDeleteUserModal,
-  showTeamDeleteChannelModal,
-  showTeamDeleteUserFromChannelModal,
-  showTeamTransferOwnershipModal}
-  from "../actions/teamModalActions";
 import {
-  selectChannelFromListById,
-  selectUserFromListById,
-  selectItemFromListById,
-  isAdmin,
-  isAdminOrMe,
-  isSuperior,
-  isSuperiorOrMe, isOwner
+    isAdmin,
+    isOwner,
+    isSuperior,
+    isSuperiorOrMe,
+    selectChannelFromListById,
+    selectItemFromListById,
+    selectUserFromListById
 } from "../utils/helperFunctions";
 import {renderUserLabel} from "../utils/renderHelpers";
-import {teamUserRoleValues, userNameRuleString, handleSemanticInput, teamUserRoles, reflect} from "../utils/utils";
-import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, TextArea, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
-import {withRouter, Switch, Route} from "react-router-dom";
+import {basicDateFormat, handleSemanticInput, reflect, teamUserRoles, teamUserRoleValues, userNameRuleString} from "../utils/utils";
+import {
+    Button,
+    Dropdown,
+    Form,
+    Grid,
+    Header,
+    Icon,
+    Input,
+    Label,
+    List,
+    Message,
+    Popup,
+    TextArea
+} from 'semantic-ui-react';
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 
 function ChannelJoinRequestList(props){
@@ -112,6 +125,7 @@ class AddMemberToRoomDiv extends React.Component {
                       class="mini"
                       onChange={this.handleInput}
                       fluid
+                      noResultsMessage="All users selected"
                       selection={true}
                       multiple
                       renderLabel={renderUserLabel}
@@ -494,7 +508,13 @@ class TeamUserRole extends React.Component {
       role: 1
     }
   }
-  handleInput = handleSemanticInput.bind(this);
+  handleInput = (e,{name, value}) =>{
+    if (this.props.plan_id === 0 && value === 2){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 3));
+      return;
+    }
+    this.setState({[name]: value});
+  };
   setEdit = (state) => {
     this.setState({edit: state, role: this.props.user.role, errorMessage: ''});
   };
@@ -521,6 +541,11 @@ class TeamUserRole extends React.Component {
     const userRoles = teamUserRoleValues.filter(item => {
       return item.value <= me.role;
     });
+    let adminRole = userRoles.find(item => (item.value === 2));
+
+    if (adminRole !== undefined){
+      adminRole.content = <span>Admin{this.props.plan_id === 0 && <img style={{height: '14px', paddingLeft: '2px'}} src="/resources/images/upgrade.png"/>}</span>;
+    }
     return (
         <Grid.Column>
           <strong>Role: </strong>
@@ -531,7 +556,9 @@ class TeamUserRole extends React.Component {
                 <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
                    </span> :
               <span>
-                      <Dropdown floating inline name="role" options={userRoles} defaultValue={this.state.role} onChange={this.handleInput}/>
+                      <Dropdown floating inline class="mini" name="role" options={userRoles}
+                                value={this.state.edit ? this.state.role : this.props.user.role}
+                                onChange={this.handleInput}/>
                        <Icon link name="delete" onClick={this.setEdit.bind(null, false)}/>
                        <Icon link name="checkmark" onClick={this.confirm}/>
                 {this.state.errorMessage.length > 0 &&
@@ -570,10 +597,14 @@ class TeamUserFlexTab extends React.Component{
     this.setState({[name]: value});
   }
   setDepartureDateModifying(state){
+    if (this.props.plan_id === 0){
+      this.props.dispatch(showUpgradeTeamPlanModal(true, 5));
+      return;
+    }
     if (state){
       this.setState({
         departureDateModifying: true,
-        role: this.props.item.departureDate
+        departureDate: this.props.item.departureDate !== null ? moment(this.props.item.departure_date).format('YYYY-MM-DD') : ''
       });
     }else {
       this.setState({
@@ -648,7 +679,7 @@ class TeamUserFlexTab extends React.Component{
   }
   confirmUserDepartureDateChange(){
     if (this.state.departureDate !== this.props.item.departureDate){
-      this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate)).then(response => {
+      this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate.length > 0 ? new Date(this.state.departureDate).getTime() : null)).then(response => {
         this.setState({departureDateModifying: false});
       });
     }
@@ -656,9 +687,7 @@ class TeamUserFlexTab extends React.Component{
   render() {
     const user = this.props.item;
     const me = this.props.me;
-    const userRoles = teamUserRoleValues.filter(item => {
-      return item.value <= me.role;
-    });
+
     return (
         <div className="flex_contents_panel active" id="team_user_tab">
           <div className="tab_heading">
@@ -711,12 +740,12 @@ class TeamUserFlexTab extends React.Component{
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <TeamUserRole dispatch={this.props.dispatch} user={user} me={me}/>
+                <TeamUserRole plan_id={this.props.plan_id} dispatch={this.props.dispatch} user={user} me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
                   <strong>First connection: </strong>
-                  {user.arrival_date}
+                  {basicDateFormat(user.arrival_date)}
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
@@ -724,9 +753,11 @@ class TeamUserFlexTab extends React.Component{
                   <strong>Departure date: </strong>
                   {!this.state.departureDateModifying ?
                       <span>
-                      {user.departure_date.length > 0 ? user.departure_date : 'not planned'}
+                      {user.departure_date !== 0 ? basicDateFormat(user.departure_date) : 'not planned'}
                         {isSuperior(user, me) && me.id !== user.id &&
                         <Icon link name="pencil" className="mrgnLeft5" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
+                        {isSuperior(user, me) && me.id !== user.id && this.props.plan_id === 0 &&
+                            <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
                         </span> :
                       <Input type="date" size="mini"
                              fluid action name="departureDate"
@@ -775,7 +806,8 @@ class TeamUserFlexTab extends React.Component{
   return {
     channels: store.channels.channels,
     users: store.users.users,
-    selectionProps: store.selection
+    selectionProps: store.selection,
+    plan_id: store.team.plan_id
   };
 })
 class FlexPanels extends React.Component {
@@ -800,6 +832,7 @@ class FlexPanels extends React.Component {
               apps={selectionProps.apps}
               flexActive={this.props.flexActive}
               toggleFlexFunc={this.closePanel}
+              plan_id={this.props.plan_id}
               users={this.props.users}
               dispatch={this.props.dispatch}/>}
           {item.username !== undefined &&
@@ -809,6 +842,7 @@ class FlexPanels extends React.Component {
               apps={selectionProps.apps}
               flexActive={this.props.flexActive}
               toggleFlexFunc={this.closePanel}
+              plan_id={this.props.plan_id}
               channels={this.props.channels}
               dispatch={this.props.dispatch}/>}
         </div>

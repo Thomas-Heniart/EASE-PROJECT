@@ -39,7 +39,6 @@ pageEncoding="UTF-8"%>
 	<script src="js/snap.svg-min.js"></script>
 	<script src="js/modalEffects.js"></script>
 	<script src="js/selectFx.js"></script>
-	<link rel="stylesheet" type="text/css" href="component.css" />
 </head>
 <body id="reloadPage">
 	<div class="logo">

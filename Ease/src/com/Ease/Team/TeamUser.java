@@ -7,8 +7,6 @@ import com.Ease.Notification.Notification;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketMessageFactory;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -25,21 +23,20 @@ import java.util.Locale;
 @Entity
 @Table(name = "teamUsers")
 public class TeamUser {
+
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
     @Id
     @GeneratedValue
     @Column(name = "id")
     protected Integer db_id;
 
-    /* @ManyToOne
-    @JoinColumn(name = "user_id") */
     @Transient
     protected User user;
 
-    /* To remove when we we migrate on hibernate */
     @Transient
     protected com.Ease.Dashboard.User.User dashboard_user;
 
-    /* To remove when we we migrate on hibernate */
     @Column(name = "user_id")
     protected String user_id;
 
@@ -86,9 +83,6 @@ public class TeamUser {
 
     @Column(name = "jobTitle")
     protected String jobTitle;
-
-    @Transient
-    protected DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
     @Column(name = "disabled")
     private boolean disabled;
@@ -262,7 +256,7 @@ public class TeamUser {
     }
 
     public boolean isDisabled() {
-        return disabled;
+        return disabled || (this.getDepartureDate() != null && this.getDepartureDate().getTime() <= new Date().getTime());
     }
 
     public void setDisabled(boolean disabled) {
@@ -317,10 +311,8 @@ public class TeamUser {
         res.put("username", this.username);
         res.put("disabled", this.disabled);
         res.put("role", this.teamUserRole.getRoleValue());
-        res.put("arrival_date", this.dateFormat.format(arrivalDate));
-        res.put("departure_date", "");
-        if (departureDate != null)
-            res.put("departure_date", this.dateFormat.format(this.departureDate));
+        res.put("arrival_date", arrivalDate.getTime());
+        res.put("departure_date", (departureDate == null) ? null : departureDate.getTime());
         res.put("state", this.state);
         res.put("phone_number", this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
@@ -418,7 +410,10 @@ public class TeamUser {
 
     public void transferOwnershipTo(TeamUser new_teamUser_owner) throws HttpServletException {
         new_teamUser_owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
-        this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
+        if (!team.isValidFreemium())
+            this.getTeamUserRole().setRole(TeamUserRole.Role.MEMBER);
+        else
+            this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
     }
 
     public void delete(DataBaseConnection db) throws HttpServletException {
@@ -438,8 +433,8 @@ public class TeamUser {
             request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
-                if (shareableApp.getPendingTeamUsers().contains(this))
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
+                if (shareableApp.getPendingTeamUsers().containsKey(this.getDb_id()))
                     shareableApp.removePendingTeamUser(this, db);
             }
             db.commitTransaction(transaction);
@@ -448,25 +443,6 @@ public class TeamUser {
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
-    }
-
-    @Override
-    public int hashCode() {
-        HashCodeBuilder hcb = new HashCodeBuilder();
-        hcb.append(this.db_id);
-        return hcb.toHashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!(obj instanceof TeamUser))
-            return false;
-        TeamUser teamUser = (TeamUser) obj;
-        EqualsBuilder eb = new EqualsBuilder();
-        eb.append(this.db_id, teamUser.db_id);
-        return eb.isEquals();
     }
 
     public List<SharedApp> getSharedApps() {

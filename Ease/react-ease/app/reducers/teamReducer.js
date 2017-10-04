@@ -4,17 +4,18 @@ export default function reducer(state={
   id: null,
   name: null,
   myTeamUserId: null,
+  plan_id: 0,
+  payment_required: false,
   teamMenuActive: false,
   payment: {
     data: {
-      card : null,
+      card: null,
       credit: 0,
       people_invited: false,
       business_vat_id: ""
     },
     loading: true
-  },
-  paymentDataLoading: false
+  }
 }, action){
   switch (action.type){
     case "FETCH_TEAM_FULFILLED": {
@@ -22,7 +23,9 @@ export default function reducer(state={
         ...state,
         name: action.payload.name,
         id: action.payload.id,
-        myTeamUserId:action.payload.myTeamUserId
+        myTeamUserId:action.payload.myTeamUserId,
+        plan_id: action.payload.plan_id,
+        payment_required: action.payload.payment_required
       }
     }
     case "FETCH_TEAM_PAYMENT_INFORMATION_PENDING": {
@@ -56,6 +59,7 @@ export default function reducer(state={
     }
     case 'TEAM_ADD_CREDIT_CARD_FULFILLED': {
       const new_state = update(state, {
+        payment_required: {$set: false},
         payment: {
           data: {
             card: {$set: action.payload.card}
@@ -85,6 +89,26 @@ export default function reducer(state={
       return {
         ...state,
         name: action.payload.name
+      }
+    }
+    case 'UPGRADE_TEAM_PLAN_FULFILLED': {
+      const team = action.payload.team;
+
+      const new_state = update(state, {
+        plan_id: {$set: team.plan_id},
+        payment_required: {$set: team.payment_required}
+      });
+      return new_state;
+    }
+    case 'TEAM_CHANGED' : {
+      const team = action.payload;
+      return {
+        ...state,
+        name: team.name,
+        id: team.id,
+        myTeamUserId:team.myTeamUserId,
+        plan_id: team.plan_id,
+        payment_required: team.payment_required
       }
     }
   }

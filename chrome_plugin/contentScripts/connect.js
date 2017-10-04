@@ -108,13 +108,8 @@ function alreadyVisited(msg) {
 }
 
 if (window.top === window) {
-
     extension.runtime.onMessage("goooo", function (msg, sendResponse) {
         console.log("goooo");
-        /* $("<input type=\"password\" " +
-            "style=\"position: absolute; border:none;width:0px;height:0px;background-color:white;overflow: hidden; opacity: 0;\" " +
-            "onfocus=\"$(this).next().focus()\" " +
-            "/>").insertBefore($("input[type='password']")); */
         if (msg.todo == "checkAlreadyConnected") {
             checkConnectionOverlay(msg);
             checkIsConnected(msg, function () {

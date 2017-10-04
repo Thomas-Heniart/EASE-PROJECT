@@ -43,7 +43,7 @@ public class ServletDeleteChannel extends HttpServlet {
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                 if (shareableApp.getChannel() == channel) {
                     shareableAppsToRemove.add(shareableApp);
                 }

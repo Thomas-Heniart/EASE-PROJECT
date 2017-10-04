@@ -40,15 +40,21 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
+            if (team.getTeamUsers().size() >= 30 && !team.isValidFreemium())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 30 members.");
             TeamUser adminTeamUser = sm.getTeamUserForTeam(team);
             String email = sm.getStringParam("email", true, false);
             String username = sm.getStringParam("username", true, false);
             Integer role = sm.getIntParam("role", true, false);
+            if (!team.isValidFreemium() && role != TeamUserRole.Role.MEMBER.getValue())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have multiple admins.");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             checkUsernameIntegrity(username);
             if (role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
+            if (!team.isValidFreemium() && TeamUserRole.Role.MEMBER.getValue() != role)
+                throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to add other admins.");
             String first_name = sm.getStringParam("first_name", true, false);
             String last_name = sm.getStringParam("last_name", true, false);
             HibernateQuery query = sm.getHibernateQuery();
@@ -63,17 +69,17 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (!query.list().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
-            String departure_date_string = sm.getStringParam("departure_date", true, true);
-            Date departure_date = null;
-            if (departure_date_string != null && !departure_date_string.equals("")) {
-                departure_date = departure_format.parse(departure_date_string);
-                if (departure_date.getTime() < sm.getTimestamp().getTime())
+            Long departure_date = sm.getLongParam("departure_date", true, true);
+            if (!team.isValidFreemium() || departure_date == null)
+                departure_date = null;
+            else {
+                if (departure_date <= sm.getTimestamp().getTime())
                     throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");
             }
             TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date != null)
-                teamUser.setDepartureDate(departure_date);
+                teamUser.setDepartureDate(new Date(departure_date));
             query.saveOrUpdateObject(teamUser);
             team.addTeamUser(teamUser);
             String code;
@@ -99,8 +105,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             mailJetBuilder.addVariable("email", adminTeamUser.getEmail());
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teamJoin/" + code);
             mailJetBuilder.sendEmail();
-            /* SendGridMail sendGridMail = new SendGridMail("Benjamin @EaseSpace", "benjamin@ease.space");
-            sendGridMail.sendInvitationToJoinTeamEmail(team.getName(), adminTeamUser.getFirstName(), adminTeamUser.getEmail(), email, code); */
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.ADDED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

@@ -26,7 +26,6 @@ var TeamTransferOwnershipModal = require('./teamModals/TeamTransferOwnershipModa
 var TeamPhoneNumberModal = require('./teamModals/TeamPhoneNumberModal');
 var RequestWebsiteModal = require('./teamModals/RequestWebsiteModal');
 import AskJoinEnterpriseAppModal from "./teamModals/AskJoinEnterpriseAppModal";
-import queryString from "query-string";
 import VerifyTeamUserModal from './teamModals/VerifyTeamUserModal';
 import ReactivateTeamUserModal from './teamModals/ReactivateTeamUserModal';
 import TeamAddMultipleUsersModal from './teamModals/TeamAddMultipleUsersModal';
@@ -35,19 +34,19 @@ import TeamBrowseRoomsModal from "./teamModals/TeamBrowseRoomsModal";
 import JoinEnterpriseAppModal from "./teamModals/JoinEnterpriseAppModal";
 import AcceptEnterpriseAppModal from "./teamModals/AcceptEnterpriseAppModal";
 import EditEnterpriseAppModal from "./teamModals/EditEnterpriseAppModal";
-var EaseHeader = require('./common/EaseHeader');
+import FreeTrialEndModal from "./teamModals/FreeTrialEndModal";
+import UpgradeTeamPlanModal from "./teamModals/UpgradeTeamPlanModal";
+import StaticUpgradeTeamPlanModal from "./teamModals/StaticUpgradeTeamPlanModal";
+import DepartureDateEndModal from "./teamModals/DepartureDateEndModal";
 import * as teamActions from "../actions/teamActions"
-import * as channelActions from "../actions/channelActions"
-import * as userActions from "../actions/userActions"
 import * as modalActions from "../actions/teamModalActions"
-import  {LeftRightTransition, OpacityTransition} from "../utils/transitions";
-import {selectUserFromListById, selectChannelFromListById} from "../utils/helperFunctions";
-import {withRouter, Switch, Route} from "react-router-dom";
+import {OpacityTransition} from "../utils/transitions";
+import {selectChannelFromListById, selectUserFromListById} from "../utils/helperFunctions";
+import {Route, Switch, withRouter} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
-import {findDOMNode} from 'react-dom';
+import {connect} from "react-redux";
+var EaseHeader = require('./common/EaseHeader');
 var api = require('../utils/api');
-
-import {connect} from "react-redux"
 
 @connect((store)=>{
   return {
@@ -75,7 +74,10 @@ import {connect} from "react-redux"
     reactivateTeamUserModal: store.teamModals.reactivateTeamUserModal,
     teamTransferOwnershipModal: store.teamModals.teamTransferOwnershipModal,
     teamPhoneNumberModal: store.teamModals.teamPhoneNumberModal,
-    requestWebsiteModal: store.teamModals.requestWebsiteModal
+    requestWebsiteModal: store.teamModals.requestWebsiteModal,
+    freeTrialEndModal: store.teamModals.freeTrialEndModal,
+    upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
+    departureDateEndModal: store.teamModals.departureDateEndModal
   };
 })
 class TeamView extends React.Component {
@@ -167,10 +169,11 @@ class TeamView extends React.Component {
   render(){
     const selectedItem = this.getSelectedItem();
     const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
-
     return (
         <div id="teamsHandler">
           <div className="team_view" id="team_view">
+            {!this.state.loadingInfo && this.props.team.payment_required &&
+            <FreeTrialEndModal/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             {!this.state.loadingInfo && <TeamSideBar me={me}/>}
             {this.props.team.teamMenuActive &&
@@ -183,6 +186,7 @@ class TeamView extends React.Component {
               <TeamHeader
                   item={selectedItem}
                   match={this.props.match}
+                  dispatch={this.props.dispatch}
                   appsLength={this.props.selectedItem.apps.length}/>
               <div className="team_client_body bordered_scrollbar">
                 <OpacityTransition appear={true}>
@@ -210,6 +214,8 @@ class TeamView extends React.Component {
                      component={TeamBrowsePeopleModal}/>
               <Route path={`${this.props.match.path}/rooms`}
                      component={TeamBrowseRoomsModal}/>
+              <Route path={`${this.props.match.path}/upgrade`}
+                     component={StaticUpgradeTeamPlanModal}/>
             </Switch>}
             {this.props.addUserModalActive &&
             <TeamAddUserModal key="1"/>}
@@ -251,6 +257,12 @@ class TeamView extends React.Component {
             <TeamAddMultipleUsersModal/>}
             {this.props.requestWebsiteModal.active &&
             <RequestWebsiteModal/>}
+            {this.props.freeTrialEndModal.active &&
+            <FreeTrialEndModal/>}
+            {this.props.upgradeTeamPlanModal.active &&
+            <UpgradeTeamPlanModal/>}
+            {this.props.departureDateEndModal.active &&
+            <DepartureDateEndModal/>}
           </div>
         </div>
     )

@@ -31,15 +31,24 @@ public class Team {
 
     private static final String DEFAULT_CHANNEL_NAME = "openspace";
 
+    public static final Map<Integer, String> plansMap = new HashMap<>();
+    private static final Map<String, Integer> inverse_plansMap = new HashMap<>();
+
+    static {
+        plansMap.put(0, "FreePlan");
+        inverse_plansMap.put("FreePlan", 0);
+        plansMap.put(1, "EaseFreemium");
+        inverse_plansMap.put("EaseFreemium", 1);
+    }
+
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
-        //query.querySQLString("SELECT id FROM teams");
         query.queryString("SELECT t FROM Team t WHERE t.active = true");
         List<Team> teams = query.list();
         for (Team team : teams) {
             team.lazyInitialize();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                 List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, context, db);
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);
@@ -79,7 +88,7 @@ public class Team {
     @MapKey(name = "db_id")
     protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
@@ -88,9 +97,6 @@ public class Team {
 
     @Transient
     protected AppManager appManager = new AppManager();
-
-    @Transient
-    private Subscription subscription;
 
     @Transient
     private int activeSubscriptions;
@@ -141,17 +147,11 @@ public class Team {
     }
 
     public Subscription getSubscription() throws HttpServletException {
-        if (subscription == null)
-            try {
-                subscription = Subscription.retrieve(this.getSubscription_id());
-            } catch (Exception e) {
-                throw new HttpServletException(HttpStatus.InternError, e);
-            }
-        return subscription;
-    }
-
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
+        try {
+            return Subscription.retrieve(this.getSubscription_id());
+        } catch (Exception e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public boolean isCard_entered() {
@@ -190,7 +190,11 @@ public class Team {
         return this.getSubscription().getPlan().getId().equals("EaseFreemium");
     }
 
-    public Map<Integer, TeamUser> getTeamUsers() {
+    public boolean isValidFreemium() throws HttpServletException {
+        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()));
+    }
+
+    public synchronized Map<Integer, TeamUser> getTeamUsers() {
         if (teamUsers == null)
             teamUsers = new ConcurrentHashMap<>();
         return teamUsers;
@@ -200,7 +204,7 @@ public class Team {
         this.teamUsers = teamUsers;
     }
 
-    public Map<Integer, Channel> getChannels() {
+    public synchronized Map<Integer, Channel> getChannels() {
         if (channels == null)
             channels = new ConcurrentHashMap<>();
         return channels;
@@ -223,13 +227,13 @@ public class Team {
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
-        Channel channel = this.channels.get(channel_id);
+        Channel channel = this.getChannels().get(channel_id);
         if (channel == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This channel does not exist");
         return channel;
     }
 
-    public List<Channel> getChannelsForTeamUser(TeamUser teamUser) {
+    public synchronized List<Channel> getChannelsForTeamUser(TeamUser teamUser) {
         List<Channel> channels = new LinkedList<>();
         for (Map.Entry<Integer, Channel> entry : this.getChannels().entrySet()) {
             Channel channel = entry.getValue();
@@ -247,13 +251,13 @@ public class Team {
     }
 
     public void addTeamUser(TeamUser teamUser) {
-        this.teamUsers.put(teamUser.getDb_id(), teamUser);
+        this.getTeamUsers().put(teamUser.getDb_id(), teamUser);
         if (!teamUser.isVerified())
             this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
     }
 
     public void addChannel(Channel channel) {
-        this.channels.put(channel.getDb_id(), channel);
+        this.getChannels().put(channel.getDb_id(), channel);
     }
 
     public Channel getDefaultChannel() throws HttpServletException {
@@ -268,11 +272,11 @@ public class Team {
     }
 
     public void removeTeamUser(TeamUser teamUser) {
-        this.teamUsers.remove(teamUser.getDb_id());
+        this.getTeamUsers().remove(teamUser.getDb_id());
     }
 
     public void removeChannel(Channel channel) {
-        this.channels.remove(channel.getDb_id());
+        this.getChannels().remove(channel.getDb_id());
     }
 
     public void edit(JSONObject editJson) {
@@ -295,12 +299,17 @@ public class Team {
         return res;
     }
 
+    public Integer getPlan_id() throws HttpServletException {
+        return inverse_plansMap.get(this.getSubscription().getPlan().getId());
+    }
+
     public JSONObject getSimpleJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
         res.put("name", this.name);
-        res.put("valid_subscription", !this.isBlocked());
-        res.put("freemium", this.isFreemium());
+        Integer plan_id = this.getPlan_id();
+        res.put("plan_id", plan_id);
+        res.put("payment_required", this.isBlocked());
         return res;
     }
 
@@ -339,7 +348,7 @@ public class Team {
     public JSONArray getShareableAppsForChannel(Integer channel_id) throws HttpServletException {
         Channel channel = this.getChannelWithId(channel_id);
         JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
             if (channel != shareableApp.getChannel())
                 continue;
             jsonArray.add(shareableApp.getShareableJson());
@@ -350,7 +359,7 @@ public class Team {
     public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws HttpServletException {
         TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
         JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
             if (!shareableApp.getTeamUser_tenants().contains(teamUser))
                 continue;
             App app = (App) shareableApp;
@@ -368,11 +377,11 @@ public class Team {
 
     public void decipherApps(String deciphered_teamKey) throws HttpServletException {
         try {
-            for (ShareableApp shareableApp : this.getAppManager().getShareableApps()) {
+            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
                 App app = (App) shareableApp;
                 if (app.isClassicApp())
                     ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-                for (SharedApp sharedApp : shareableApp.getSharedApps()) {
+                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
                     App app1 = (App) sharedApp;
                     if (app1.isClassicApp())
                         ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
@@ -440,7 +449,7 @@ public class Team {
 
     public boolean isBlocked() {
         try {
-            return (this.subscription_date == null) || (!card_entered && this.getSubscription().getTrialEnd() != null && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+            return (this.isFreemium() && !card_entered && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
         } catch (HttpServletException e) {
             e.printStackTrace();
             return true;
@@ -511,16 +520,14 @@ public class Team {
         return null;
     }
 
-    public void checkFreeTrialEnd() {
+    public void checkFreeTrialEnd(DataBaseConnection db) {
         MailJetBuilder mailJetBuilder;
         if (this.card_entered)
             return;
         try {
-            if (this.getSubscription().getTrialEnd() == null)
-                return;
-            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             if (!this.isFreemium())
                 return;
+            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
@@ -541,41 +548,55 @@ public class Team {
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
             }
+            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
+                ((App) shareableApp).setDisabled(this.isBlocked(), db);
+                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
+                    if (!this.isBlocked() && sharedApp.getTeamUser_tenant().isDisabled())
+                        continue;
+                    ((App) sharedApp).setDisabled(this.isBlocked(), db);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void checkDepartureDates(Date date, DataBaseConnection db) {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
-        for (TeamUser teamUser : this.getTeamUsers().values()) {
-            if (teamUser.getDepartureDate() == null)
-                continue;
-            if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
-                calendar.setTime(teamUser.getDepartureDate());
-                String suffixe = "th";
-                switch (calendar.get(Calendar.DAY_OF_MONTH)) {
-                    case 1: {
-                        suffixe = "st";
-                        break;
-                    }
-                    case 2: {
-                        suffixe = "nd";
-                        break;
-                    }
-                    case 3: {
-                        suffixe = "rd";
-                        break;
-                    }
+        try {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
+            for (TeamUser teamUser : this.getTeamUsers().values()) {
+                if (teamUser.getDepartureDate() == null)
+                    continue;
+                if (teamUser.isDisabled()) {
+                    System.out.println(this.getAppManager().getSharedAppsForTeamUser(teamUser).size());
+                    for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser))
+                        ((App) sharedApp).setDisabled(true, db);
                 }
-                String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
-                try {
+                if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
+                    calendar.setTime(teamUser.getDepartureDate());
+                    String suffixe = "th";
+                    switch (calendar.get(Calendar.DAY_OF_MONTH)) {
+                        case 1: {
+                            suffixe = "st";
+                            break;
+                        }
+                        case 2: {
+                            suffixe = "nd";
+                            break;
+                        }
+                        case 3: {
+                            suffixe = "rd";
+                            break;
+                        }
+                    }
+                    String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
                     this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
-                } catch (HttpServletException e) {
-                    e.printStackTrace();
+
                 }
             }
+        } catch (HttpServletException e) {
+            e.printStackTrace();
         }
     }
 }

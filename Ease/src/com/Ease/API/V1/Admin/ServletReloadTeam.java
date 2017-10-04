@@ -40,7 +40,7 @@ public class ServletReloadTeam extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, sm.getServletContext(), db));
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps()) {
+            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                 List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, sm.getServletContext(), db);
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);

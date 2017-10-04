@@ -3,7 +3,8 @@ import {selectAppFromListById} from '../utils/helperFunctions';
 export default function reducer(state={
   type:null,
   id:null,
-  apps: []
+  apps: [],
+  loading: false
 }, action){
   switch (action.type) {
     case 'SELECT_USER_FULFILLED': {
@@ -11,7 +12,8 @@ export default function reducer(state={
         ...state,
         type: 'user',
         id:action.payload.user.id,
-        apps:action.payload.apps.reverse()
+        apps:action.payload.apps.reverse(),
+        loading: false
       }
     }
     case "FETCH_TEAM_FULFILLED": {
@@ -27,7 +29,8 @@ export default function reducer(state={
         ...state,
         apps: action.payload.apps.reverse(),
         type: action.payload.type,
-        id: action.payload.id
+        id: action.payload.id,
+        loading: false
       }
     }
     case 'FETCH_TEAM_CHANNELS_APPS_FULFILLED' : {
@@ -35,7 +38,20 @@ export default function reducer(state={
         ...state,
         apps: action.payload.apps.reverse(),
         type: action.payload.type,
-        id: action.payload.id
+        id: action.payload.id,
+        loading: false
+      }
+    }
+    case 'FETCH_TEAM_USER_APPS_PENDING': {
+      return {
+          ...state,
+        loading: true
+      }
+    }
+    case 'FETCH_TEAM_CHANNEL_APPS_PENDING': {
+      return {
+          ...state,
+        loading: true
       }
     }
     case 'SELECT_TEAM_CHANNEL_FULFILLED': {
@@ -43,7 +59,8 @@ export default function reducer(state={
         ...state,
         type:'channel',
         id: action.payload.channel.id,
-        apps: action.payload.apps.reverse()
+        apps: action.payload.apps.reverse(),
+        loading: false
       }
     }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED": {

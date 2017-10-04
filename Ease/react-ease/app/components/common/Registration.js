@@ -1,9 +1,12 @@
 import React from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import {passwordRegexp, emailRegexp, jobRoles, checkTeamUsernameErrors, handleSemanticInput, userNameRuleString} from "../../utils/utils";
+import {checkTeamUsernameErrors, handleSemanticInput, passwordRegexp, userNameRuleString} from "../../utils/utils";
 import queryString from "query-string";
 import SingleEaseLogo from "../common/SingleEaseLogo";
-import { Header, Container, Segment, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import {withRouter} from "react-router-dom";
+import {Button, Container, Divider, Form, Header, Input, Label, Message, Segment} from 'semantic-ui-react';
+import {connect} from "react-redux";
+
 var api = require('../../utils/api');
 var post_api = require('../../utils/post_api');
 
@@ -26,6 +29,7 @@ class Step1 extends React.Component {
     this.setState({errorMessage: '', loading: true, usernameError: false});
     post_api.common.askRegistration(this.props.email).then(response => {
       this.setState({loading: false});
+        easeTracker.trackEvent("RegistrationEnterEmail");
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
@@ -83,6 +87,7 @@ class Step2 extends React.Component{
       sendingEmail: false,
       sendEmailButtonText: 'Resend email'
     };
+      easeTracker.trackEvent("RegistrationEnterDigits");
     this.onSubmit = this.onSubmit.bind(this);
     this.resendDigits = this.resendDigits.bind(this);
   }
@@ -148,7 +153,6 @@ class Step3 extends React.Component{
   }
   onSubmit = (e) => {
     e.preventDefault();
-
     this.setState({errorMessage: '', passwordError: false});
     if (this.props.password.match(passwordRegexp) === null){
       this.setState({passwordError: true});
@@ -159,6 +163,7 @@ class Step3 extends React.Component{
       return;
     }
     this.setState({errorMessage: '', passwordError: false});
+      easeTracker.trackEvent("RegistrationEnterPassword");
     this.props.onStepValidated();
   };
   render() {
@@ -210,6 +215,8 @@ class StepCGU extends React.Component{
     this.setState({loading: true});
     post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(response => {
       this.setState({loading: false});
+        easeTracker.trackEvent("RegistrationAcceptCGU");
+        easeTracker.trackEvent("RegistrationDone");
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({loading: false});
@@ -235,6 +242,12 @@ class StepCGU extends React.Component{
   }
 }
 
+@connect((store)=>{
+  return {
+    ws_id: store.common.ws_id,
+    authenticated: store.common.authenticated
+  };
+})
 class Registration extends React.Component {
   constructor(props){
     super(props);
@@ -256,6 +269,8 @@ class Registration extends React.Component {
     window.location.href = "/";
   };
   componentDidMount(){
+    if (this.props.authenticated)
+      this.props.history.replace(`/main/simpleTeamCreation?plan_id=0`);
     const query = queryString.parse(this.props.location.search);
     if (query.email !== undefined){
       this.setState({email: query.email});
@@ -310,4 +325,4 @@ class Registration extends React.Component {
   }
 }
 
-module.exports = Registration;
+module.exports = withRouter(Registration);

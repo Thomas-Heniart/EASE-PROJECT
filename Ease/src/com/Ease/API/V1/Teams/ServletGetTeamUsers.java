@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -22,10 +23,11 @@ public class ServletGetTeamUsers extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true);
-            sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(team_id);
+            sm.getUser().getTeamUserForTeam(team);
             JSONArray jsonArray = new JSONArray();
-            for (TeamUser teamUser : teamManager.getTeamWithId(team_id).getTeamUsers().values())
+            for (TeamUser teamUser : team.getTeamUsers().values())
                 jsonArray.add(teamUser.getJson());
             sm.setSuccess(jsonArray);
         } catch (Exception e) {

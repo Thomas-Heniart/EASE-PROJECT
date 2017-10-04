@@ -50,8 +50,7 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
                 TeamManager teamManager = new TeamManager(context, db);
                 context.setAttribute("teamManager", teamManager);
-                Stripe.apiKey = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T"; //Test api key
-                //Stripe.apiKey = "sk_live_P9qlj7iut6cpNkb8hfY4S43M"; // Prod api key
+                Stripe.apiKey = Variables.STRIPE_API_KEY;
                 Stripe.apiVersion = "2017-08-15";
 
                 Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();

@@ -196,6 +196,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      }).catch(err => {
+        throw err.response.data;
       });
     },
     editFirstName : function(ws_id, team_id, user_id, first_name){
@@ -652,7 +654,7 @@ module.exports = {
         throw err.response.data;
       })
     },
-    createTeam: function(name, email, first_name, last_name, username, jobRole, jobDetails, digits){
+    createTeam: function({name, email, first_name, last_name, username, jobRole, jobDetails, digits,plan_id}){
       return axios.post('/api/v1/teams/CreateTeam', {
         team_name: name,
         email: email,
@@ -662,6 +664,7 @@ module.exports = {
         job_index: jobRole,
         job_details: jobDetails,
         digits: digits,
+        plan_id: plan_id,
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
@@ -776,6 +779,37 @@ module.exports = {
       return axios.post('/api/v1/teams/Unsubscribe', {
         team_id: team_id,
         password: password
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    upgradePlan: ({team_id, plan_id}) => {
+      return axios.post('/api/v1/teams/UpgradePlan', {
+        team_id: team_id,
+        plan_id: plan_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    askOwnerForBilling: ({team_id}) => {
+      return axios.post('/api/v1/teams/AskOwnerForBilling', {
+        team_id: team_id,
+        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    askOwnerToUpgrade: ({team_id}) => {
+      return axios.post('/api/v1/teams/AskOwnerToUpgrade', {
+        team_id: team_id,
+        timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
       }).catch(err => {

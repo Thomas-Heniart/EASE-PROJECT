@@ -38,7 +38,7 @@ public class ServletJoinSingleApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not of channel of this app.");
             if (shareableApp.getTeamUser_tenants().contains(teamUser_connected))
                 throw new HttpServletException(HttpStatus.BadRequest, "You already have this app.");
-            if (shareableApp.getPendingTeamUsers().contains(teamUser_connected))
+            if (shareableApp.getPendingTeamUsers().containsKey(teamUser_connected.getDb_id()))
                 throw new HttpServletException(HttpStatus.BadRequest, "You already ask to join this app.");
             shareableApp.addPendingTeamUser(teamUser_connected, sm.getDB());
             channel.getRoom_manager().addNotification(teamUser_connected.getUsername() + " would like to have access to " + app.getName(), channel.getDb_id().toString() + "?app_id=" + app.getDBid(), app.getLogo(), sm.getTimestamp(), sm.getDB());

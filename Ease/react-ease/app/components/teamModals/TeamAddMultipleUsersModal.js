@@ -2,7 +2,7 @@ var React = require('react');
 import {connect} from "react-redux";
 import {createTeamUser} from "../../actions/userActions";
 import {handleSemanticInput, reflect} from "../../utils/utils";
-import {showTeamAddMultipleUsersModal} from "../../actions/teamModalActions";
+import {showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import { Header, Label, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
 class PreviewStep extends React.Component {
@@ -53,8 +53,12 @@ class PreviewStep extends React.Component {
             &nbsp;or&nbsp;
             <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.changeStep}>add a list of users</button>
           </Form.Field>
+          {this.props.errorMessage !== null &&
+              <Message color="red">
+                {this.props.errorMessage}
+              </Message>}
           <Form.Field class="overflow-hidden">
-            <Button floated="right" positive loading={this.props.loading}>{this.props.validateButtonText}</Button>
+            <Button floated="right" positive disabled={!this.props.invitationsReady()} loading={this.props.loading}>{this.props.validateButtonText}</Button>
             <Button floated="right" onClick={e => {this.props.dispatch(showTeamAddMultipleUsersModal(false))}}>
               {this.props.cancelButtonText}
             </Button>
@@ -96,7 +100,10 @@ class EmailListStep extends React.Component {
   }
 }
 
-@connect()
+@connect(store => ({
+  users: store.users.users,
+  plan_id: store.team.plan_id
+}))
 class TeamAddMultipleUsersModal extends React.Component {
   constructor(props){
     super(props);
@@ -108,17 +115,33 @@ class TeamAddMultipleUsersModal extends React.Component {
         {email: '', username: '', error: ''}],
       loading: false,
       validateButtonText: 'Send invitations',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
+      errorMessage: null
     }
   }
+  showUpgradeModal = () => {
+    this.props.dispatch(showUpgradeTeamPlanModal(true, 4));
+  };
+  invitationsReady = () => {
+    return this.state.invitations.filter(item => (item.email.length > 0 && item.username.length > 0)).length > 0;
+  };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();
 
     invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
+    if (invitations.length + this.props.users.length > 30 && this.props.plan_id === 0){
+      this.setState({
+        errorMessage:
+            <span>
+              You are adding {invitations.length} people to your team but unfortunately you only have {30 - this.props.users.length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
+            </span>
+      });
+      return;
+    }
     let calls = invitations.map(item => {
       return this.props.dispatch(createTeamUser('','',item.email, item.username, null, 1));
     });
-    this.setState({loading: true});
+    this.setState({loading: true, errorMessage: null});
     Promise.all(calls.map(reflect)).then(results => {
       results.map((item, idx) => {
         if (item.error)
@@ -186,8 +209,10 @@ class TeamAddMultipleUsersModal extends React.Component {
                     editField={this.editField}
                     loading={this.state.loading}
                     validate={this.sendInvitations}
+                    errorMessage={this.state.errorMessage}
                     cancelButtonText={this.state.cancelButtonText}
                     validateButtonText={this.state.validateButtonText}
+                    invitationsReady={this.invitationsReady}
                     addField={this.addField}/>}
                 {this.state.view === 'emailList' &&
                 <EmailListStep
