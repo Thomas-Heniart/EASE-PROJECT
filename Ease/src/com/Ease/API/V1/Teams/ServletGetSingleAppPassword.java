@@ -36,7 +36,7 @@ public class ServletGetSingleAppPassword extends HttpServlet {
             App app = (App) shareableApp;
             if (!app.isClassicApp())
                 throw new HttpServletException(HttpStatus.Forbidden);
-            if (!shareableApp.getTeamUser_tenants().contains(teamUser_connected) && teamUser_connected.isTeamAdmin())
+            if (!shareableApp.getTeamUser_tenants().contains(teamUser_connected) && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot copy password.");
             ClassicApp classicApp = (ClassicApp) app;
             String password;
