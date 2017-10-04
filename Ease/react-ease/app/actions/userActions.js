@@ -1,6 +1,6 @@
 var api =require('../utils/api');
 var post_api = require('../utils/post_api');
-import {showVerifyTeamUserModal, showReactivateTeamUserModal} from "./teamModalActions";
+import {showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateEndModal} from "./teamModalActions";
 import {teamUserState} from "../utils/utils";
 import {selectUserFromListById,  isAdmin} from "../utils/helperFunctions";
 
@@ -31,6 +31,8 @@ export function fetchTeamUserApps(id){
         dispatch(showVerifyTeamUserModal(true, teamUser));
       else if (teamUser.disabled && isAdmin(me.role) && teamUser.id !== me.id)
         dispatch(showReactivateTeamUserModal(true, teamUser));
+      else if (teamUser.departure_date !== null && new Date().getTime() > teamUser.departure_date && isAdmin(me.role) && teamUser.id !== me.id)
+        dispatch(showDepartureDateEndModal(true, teamUser));
       return response;
     }).catch(err => {
       dispatch({type:'FETCH_TEAM_USER_APPS_REJECTED', payload:err});

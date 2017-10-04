@@ -256,7 +256,11 @@ module.exports = {
       });
     },
     fetchMyInformation : function () {
-      return axios.get('/api/v1/common/GetMyInformation').then(response => {
+      return axios.get('/api/v1/common/GetMyInformation', {
+        params: {
+          timestamp:new Date().getTime()
+        }
+      }).then(response => {
         return response.data;
       });
     },
