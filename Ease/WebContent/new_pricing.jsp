@@ -194,7 +194,7 @@
                 </div>
                 <div class="team_plan" id="enterprise_team_plan" style="margin: 15px 10px;">>
                     <img src="/resources/other/Saturn.svg" alt="icon" class="styleImage"/>
-                    <div class="plan_header display-flex flex_direction_column text-center" style="height:242px;margin-top:-30px;margin-bottom:26px">
+                    <div class="plan_header display-flex flex_direction_column text-center" style="height:261px;margin-top:-30px;margin-bottom:26px">
                         <h1 class="text-center title"><fmt:message key="pricing.premium.title"/></h1>
                         <span class="text-center price">7,89 <span class="symbol">€HT</span></span>
                         <span class="tip" style="margin:0 0 15px 0;color:white;"><fmt:message key="pricing.sub-tip"/></span>
