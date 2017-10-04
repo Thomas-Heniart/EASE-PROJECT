@@ -30,6 +30,9 @@
 						<a href="contact">
 							<fmt:message key="landing.header.contact-link"/>
 						</a>
+						<a href="legalNotice">
+							<fmt:message key="landing.footer.legal-notice"/>
+						</a>
 						<a href="/resources/CGU_Ease.pdf" target="_blank">
 							<fmt:message key="landing.footer.link.terms"/>
 						</a>
