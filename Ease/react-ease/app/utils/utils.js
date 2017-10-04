@@ -86,6 +86,9 @@ export function copyTextToClipboard(str){
   return worked;
 }
 
+export function basicDateFormat(timestamp) {
+  return moment(timestamp).format('MMMM Do YYYY');
+}
 
 export function checkTeamUsernameErrors(username){
   let value = {

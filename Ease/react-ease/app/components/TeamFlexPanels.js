@@ -18,7 +18,7 @@ import {
     selectUserFromListById
 } from "../utils/helperFunctions";
 import {renderUserLabel} from "../utils/renderHelpers";
-import {handleSemanticInput, reflect, teamUserRoles, teamUserRoleValues, userNameRuleString} from "../utils/utils";
+import {basicDateFormat, handleSemanticInput, reflect, teamUserRoles, teamUserRoleValues, userNameRuleString} from "../utils/utils";
 import {
     Button,
     Dropdown,
@@ -604,7 +604,7 @@ class TeamUserFlexTab extends React.Component{
     if (state){
       this.setState({
         departureDateModifying: true,
-        role: this.props.item.departureDate
+        departureDate: this.props.item.departureDate !== null ? moment(this.props.item.departure_date).format('YYYY-MM-DD') : ''
       });
     }else {
       this.setState({
@@ -679,7 +679,7 @@ class TeamUserFlexTab extends React.Component{
   }
   confirmUserDepartureDateChange(){
     if (this.state.departureDate !== this.props.item.departureDate){
-      this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate)).then(response => {
+      this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate.length > 0 ? new Date(this.state.departureDate).getTime() : null)).then(response => {
         this.setState({departureDateModifying: false});
       });
     }
@@ -745,7 +745,7 @@ class TeamUserFlexTab extends React.Component{
               <Grid.Row>
                 <Grid.Column>
                   <strong>First connection: </strong>
-                  {user.arrival_date}
+                  {basicDateFormat(user.arrival_date)}
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
@@ -753,7 +753,7 @@ class TeamUserFlexTab extends React.Component{
                   <strong>Departure date: </strong>
                   {!this.state.departureDateModifying ?
                       <span>
-                      {user.departure_date.length > 0 ? user.departure_date : 'not planned'}
+                      {user.departure_date !== 0 ? basicDateFormat(user.departure_date) : 'not planned'}
                         {isSuperior(user, me) && me.id !== user.id &&
                         <Icon link name="pencil" className="mrgnLeft5" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
                         {isSuperior(user, me) && me.id !== user.id && this.props.plan_id === 0 &&
