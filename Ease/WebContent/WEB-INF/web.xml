@@ -70,6 +70,14 @@
         <location>/500page.jsp</location>
     </error-page>
     <servlet>
+        <servlet-name>legalNotice.jsp</servlet-name>
+        <jsp-file>/legalNotice.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>legalNotice.jsp</servlet-name>
+        <url-pattern>/legalNotice/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>security.jsp</servlet-name>
         <jsp-file>/new_security.jsp</jsp-file>
     </servlet>
