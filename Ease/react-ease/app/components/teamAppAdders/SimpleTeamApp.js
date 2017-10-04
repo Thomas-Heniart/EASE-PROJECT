@@ -308,7 +308,7 @@ class SimpleTeamApp extends Component {
   render(){
     const app = this.props.app;
     const me = this.props.me;
-    const room_manager_name = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.origin.id).room_manager_id).username;
+    const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.origin.id).room_manager_id);
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
@@ -351,14 +351,14 @@ class SimpleTeamApp extends Component {
               <div class="main_column">
                 <div class="credentials">
                   {credentials}
-                  {(meReceiver !== null && meReceiver.can_see_information) &&
+                  {((meReceiver !== null && meReceiver.can_see_information) || me.id === room_manager.id) &&
                   <CopyPasswordButton team_id={this.props.team_id} shared_app_id={meReceiver.shared_app_id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
                         <PasswordChangeHolder value={app.password_change_interval}/> :
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
                     {((!this.state.edit && app.password_change_interval !== 0) || (this.state.edit && this.state.password_change_interval !== 0)) &&
-                    <PasswordChangeManagerLabel username={room_manager_name}/>}
+                    <PasswordChangeManagerLabel username={room_manager.username}/>}
                   </div>
                 </div>
                 <div>
