@@ -1,10 +1,14 @@
 {
-  "name": "Facebook",
+  "name": "Coinbase",
   "lastLogin": "",
-  "home": "http://www.facebook.com",
-  "folder": "Facebook",
+  "home": "https://www.coinbase.com",
+  "folder": "Coinbase",
   "connect": {
     "todo": [
+      {
+        "action": "goto",
+        "url": "https://www.coinbase.com/signin"
+      },
       {
         "action": "waitfor",
         "search": "#email"
@@ -17,21 +21,21 @@
       },
       {
         "action": "waitfor",
-        "search": "#pass"
+        "search": "#password"
       },
       {
         "action": "fill",
         "what": "password",
-        "search": "#pass",
+        "search": "#password",
         "grave": true
       },
       {
         "action": "waitfor",
-        "search": "#loginbutton"
+        "search": "#signin_button"
       },
       {
         "action": "click",
-        "search": "#loginbutton",
+        "search": "#signin_button",
         "grave": true
       }
     ]
@@ -39,24 +43,18 @@
   "logout": {
     "todo": [
       {
-        "action": "erasecookies",
-        "name": "c_user"
+        "action": "click",
+        "search": ".DropdownMenu__Dropdown-kuxaaY .DropdownMenu__DropdownLink-kJecXv:last-child",
+        "grave": true
       },
       {
-        "action": "goto",
-        "url": "http://www.facebook.com"
+        "action": "waitload"
       }
     ]
   },
   "checkAlreadyLogged": [
     {
-      "search": "body.home"
-    }
-  ],
-  "checkChangeLogin": [
-    {
-      "action": "click",
-      "search": "#loginbutton"
+      "search": "body.signed-in"
     }
   ]
 }

@@ -42,7 +42,6 @@
     <link rel="stylesheet" href="/cssMinified.v00016/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/cssMinified.v00016/team.css"/>
     <link rel="stylesheet" href="/cssMinified.v00016/pricingPage.css"/>
-
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
