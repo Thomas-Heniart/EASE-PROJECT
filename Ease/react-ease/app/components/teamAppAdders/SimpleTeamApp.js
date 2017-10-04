@@ -4,7 +4,7 @@ import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment}
 import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {
-    CopyPasswordButton,
+    SingleAppCopyPasswordButton,
     PasswordChangeDropdown,
     PasswordChangeHolder,
     PasswordChangeManagerLabel,
@@ -352,7 +352,7 @@ class SimpleTeamApp extends Component {
                 <div class="credentials">
                   {credentials}
                   {((meReceiver !== null && meReceiver.can_see_information) || me.id === room_manager.id) &&
-                  <CopyPasswordButton team_id={this.props.team_id} shared_app_id={meReceiver.shared_app_id}/>}
+                  <SingleAppCopyPasswordButton team_id={this.props.team_id} app_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
                         <PasswordChangeHolder value={app.password_change_interval}/> :

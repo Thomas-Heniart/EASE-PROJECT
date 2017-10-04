@@ -199,6 +199,19 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       });
+    },
+    getSingleAppPassword: function ({team_id, app_id}) {
+      return axios.get('/api/v1/teams/GetSingleAppPassword', {
+        params: {
+          team_id: team_id,
+          app_id: app_id,
+          timestamp: new Date().getTime()
+        }
+      }).then(response => {
+        return decipher(response.data.password);
+      }).catch(err => {
+        throw err.response.data;
+      });
     }
   },
   teams: {

@@ -172,3 +172,57 @@ export class CopyPasswordButton extends Component {
     )
   }
 };
+
+export class SingleAppCopyPasswordButton extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      state: 0,
+      open: false,
+      pwd: ''
+    }
+  }
+  copyPassword = () => {
+    copyTextToClipboard(this.state.pwd);
+    this.setState({state: 3, open: true});
+    setTimeout(() => {
+      this.setState({state: 0, open: false});
+    }, 2000);
+  };
+  fetchPassword = () => {
+    this.setState({state: 1, open: true});
+    api.teamApps.getSingleAppPassword({team_id: this.props.team_id, app_id: this.props.app_id}).then(pwd => {
+      this.setState({pwd: pwd, state: 2, open: true});
+    }).catch(err => {
+      this.setState({state: 4, open: true});
+      setTimeout(() => {
+        this.setState({state: 0, open: false});
+      }, 2000);
+    });
+  };
+  render(){
+    const content = <div>
+      {this.state.state === 0 &&
+      'Copy password'}
+      {this.state.state === 1 &&
+      <Icon name="asterisk" loading/>}
+      {this.state.state === 2 &&
+      <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
+      {this.state.state === 3 &&
+      'Copied!'}
+      {this.state.state === 4 &&
+      'Error'}
+    </div>;
+    return (
+        <Popup size="mini"
+               position="top center"
+               open={this.state.state > 0 ? true : undefined}
+               inverted
+               hoverable
+               trigger={
+                 <Icon name="copy" class="copy_pwd_button" link onClick={this.fetchPassword}/>
+               }
+               content={content}/>
+    )
+  }
+};
