@@ -23,10 +23,10 @@ public class ServletAskOwnerForBilling extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
+            sm.needToBeConnected();
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
             if (teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden);
             if (!team.isFreemium())
