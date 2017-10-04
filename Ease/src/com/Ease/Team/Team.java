@@ -99,9 +99,6 @@ public class Team {
     protected AppManager appManager = new AppManager();
 
     @Transient
-    private Subscription subscription;
-
-    @Transient
     private int activeSubscriptions;
 
     @Transient
@@ -150,17 +147,11 @@ public class Team {
     }
 
     public Subscription getSubscription() throws HttpServletException {
-        if (subscription == null)
-            try {
-                subscription = Subscription.retrieve(this.getSubscription_id());
-            } catch (Exception e) {
-                throw new HttpServletException(HttpStatus.InternError, e);
-            }
-        return subscription;
-    }
-
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
+        try {
+            return Subscription.retrieve(this.getSubscription_id());
+        } catch (Exception e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public boolean isCard_entered() {
@@ -578,13 +569,9 @@ public class Team {
                 if (teamUser.getDepartureDate() == null)
                     continue;
                 if (teamUser.isDisabled()) {
-                    System.out.println("Disable appp");
                     System.out.println(this.getAppManager().getSharedAppsForTeamUser(teamUser).size());
-                    for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
-                        System.out.println("App id: " + ((App) sharedApp).getDBid());
+                    for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser))
                         ((App) sharedApp).setDisabled(true, db);
-                        System.out.println(((App) sharedApp).isDisabled());
-                    }
                 }
                 if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
                     calendar.setTime(teamUser.getDepartureDate());

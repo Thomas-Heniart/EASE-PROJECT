@@ -20,10 +20,6 @@ public class ServletGetMyInformation extends HttpServlet {
             User user = sm.getUser();
             JSONObject res = new JSONObject();
             res.put("user", (user == null) ? null : user.getJson());
-            String session_public_key = (String) sm.getSession().getAttribute("public_key");
-            if (session_public_key == null)
-                session_public_key = "";
-            res.put("session_public_key", session_public_key);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
