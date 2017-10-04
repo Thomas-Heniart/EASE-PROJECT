@@ -55,7 +55,7 @@
                 <div class="team_plan" id="starter_plan" style="margin:15px 10px;overflow:unset;">
                     <%--<img src="/resources/other/Spaceship.svg" alt="icon" class="styleImage" style="background-size:400px 400px;width:400px;height:400px;" />--%>
                     <h1 class="text-center title"><fmt:message key="pricing.free.title"/></h1>
-                        <span class="text-center price" style="font-size:36px;">0 <span class="symbol">€</span></span>
+                        <span class="text-center price" style="font-size:36px;">0 <span class="symbol">€HT</span></span>
                         <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
                         <div class="text-center" style="margin-bottom:26px">
                             <button class="button-unstyle big-button button">
