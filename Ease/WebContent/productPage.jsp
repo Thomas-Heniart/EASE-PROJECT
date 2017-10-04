@@ -213,10 +213,13 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="ui divider" style="margin:0;"></div>
+    <div class="container">
         <div class="comparativeTable">
             <h2><fmt:message key="product.table.title"/></h2>
-        <table class="ui unstackable celled table" style="color:#949eb7">
-            <thead>
+            <table class="ui unstackable celled table" style="color:#949eb7">
+                <thead>
                 <tr style="background-color:#f8f8f8;">
                     <th class="center aligned" style="color:#949eb7;font-weight:bold;text-align:left;"><fmt:message key="product.table.feature"/></th>
                     <th class="center aligned" style="color:#4fcb6c;font-weight:bold;">EASE.SPACE</th>
@@ -224,133 +227,130 @@
                     <th class="center aligned" style="color:#949eb7;font-weight:bold;">LASTPASS</th>
                     <th class="center aligned" style="color:#949eb7;font-weight:bold;">1PASSWORD</th>
                 </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><fmt:message key="product.table.feature.1"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.2"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.3"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.4"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.5"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.6"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.7"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.8"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.9"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.10"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.11"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.12"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.13"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.14"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.15"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-            </tr>
-            <tr style="background-color: #f8f8f8;">
-                <td><fmt:message key="product.table.feature.16"/></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
-            </tr>
-            <tr>
-                <td><fmt:message key="product.table.feature.17"/></td>
-                <td class="center aligned">AES 256</td>
-                <td class="center aligned">AES 256</td>
-                <td class="center aligned">AES-CGM</td>
-                <td class="center aligned">AES 256</td>
-            </tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><fmt:message key="product.table.feature.1"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.2"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.3"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.4"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.5"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.6"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.7"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.8"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.9"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.10"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.11"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.12"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.13"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.14"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.15"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                    <td><fmt:message key="product.table.feature.16"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.17"/></td>
+                    <td class="center aligned">AES 256</td>
+                    <td class="center aligned">AES 256</td>
+                    <td class="center aligned">AES-CGM</td>
+                    <td class="center aligned">AES 256</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div class="ui divider" style="margin: 80px 0;"></div>
-    <div class="container">
         <div class="ui stackable two column grid textPlace">
             <div class="ui row" style="display:inline-block;float:left">
                 <div class="nine wide column" style="display:inline-block;float:left">
