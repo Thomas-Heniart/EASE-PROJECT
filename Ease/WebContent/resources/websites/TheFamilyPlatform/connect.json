@@ -1,0 +1,58 @@
+{
+  "name": "The Family Platform",
+  "lastLogin": "",
+  "home": "https://platform.tech/",
+  "connect": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "form[name='signinForm'] .btn-signin button"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "form[name='signinForm'] #email",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "form[name='signinForm'] #password"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "form[name='signinForm'] #password",
+        "grave": true
+      },
+      {
+        "action": "click",
+        "search": "form[name='signinForm'] .btn-signin button"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#sidebar .nav-item > button.mu-icon-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "form[name='signinForm'] .btn-signin button"
+      },
+      {
+        "action": "goto",
+        "url": "https://platform.tech"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#sidebar .nav-item > button.mu-icon-button, form[name='signinForm'] #email"
+    },
+    {
+      "search": "#sidebar .nav-item > button.mu-icon-button"
+    }
+  ]
+}

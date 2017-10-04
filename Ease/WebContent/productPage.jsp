@@ -85,8 +85,11 @@
     <div class="container" style="margin:0;padding-left:0;padding-right:0;width:100%;">
         <div class="intro-text">
             <div class="intro-heading">
-                Le gestionnaire de mots de passe</br>sécurisé et intuitif
+                <fmt:message key="product.title"/>
             </div>
+            <button class="button-product big centered ui button" onclick="location.href='/teams#/registration'">
+                <fmt:message key="product.button"/>
+            </button>
         </div>
     </div>
 </header>
@@ -96,13 +99,13 @@
             <div class="table">
                 <div class="goodbye">
                     <h2 style="font-size:40px;margin-bottom:20px;">Goodbye</h2>
-                    Les envois de mots de passe par email, les fichiers partagés, les post-its...
+                    <fmt:message key="product.goodbye"/>
                 </div>
             </div>
             <div class="tab-nav">
                 <div class="hello">
                     <h2 style="font-size:40px;color:#373b60;margin-bottom:20px;">Hello!</h2>
-                    Les apps, un clic suffit pour accéder au compte connecté.
+                    <fmt:message key="product.hello"/>
                 </div>
             </div>
         </div>
@@ -114,52 +117,52 @@
                 <div class="ui three column stackable row" style="display:inline-block;float:left">
                     <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/appsIllimitees.png" height="150px" />
-                        <h3>Apps illimitées</h3>
-                        <p>Que vous ayez beaucoup de comptes ou nous. Nous intégrons tout, même les sites connectés avec Facebook, Linkedin…</p>
+                        <h3><fmt:message key="product.dropDown.title.1"/></h3>
+                        <p><fmt:message key="product.dropDown.text.1"/></p>
                     </div>
                     <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/groupes.png" height="150px" />
-                        <h3>Groupes illimités</h3>
-                        <p>Ranger vos apps dans des groupes pour vous organiser en fonction de vos besoins.</p>
+                        <h3><fmt:message key="product.dropDown.title.2"/></h3>
+                        <p><fmt:message key="product.dropDown.text.2"/></p>
                     </div>
                     <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/multiComptes.png" height="150px" />
-                        <h3>Multi-comptes</h3>
-                        <p>Vous avez plusieurs compte sur un même site ? Ease vous permet de passer de l’un à l’autre en un clic.</p>
+                        <h3><fmt:message key="product.dropDown.title.3"/></h3>
+                        <p><fmt:message key="product.dropDown.text.3"/></p>
                     </div>
                 </div>
                 <div class="ui three column stackable row" style="display:inline-block;float:left">
                     <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/favoris.png" height="90px" />
-                        <h3>Gérez vos favoris</h3>
-                        <p>Intégrez vos favoris parmis votre dashboard d’Apps, pour y accéder facilement.</p>
+                        <h3><fmt:message key="product.dropDown.title.4"/></h3>
+                        <p><fmt:message key="product.dropDown.text.4"/></p>
                     </div>
                     <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/updates.png" height="90px" />
-                        <h3>Détection de vos identifiants</h3>
-                        <p>Vous pouvez intégrer facilement les derniers comptes que vous avez créé par un simple Oui (ou Non).</p>
+                        <h3><fmt:message key="product.dropDown.title.5"/></h3>
+                        <p><fmt:message key="product.dropDown.text.5"/></p>
                     </div>
                     <div class="column" style="display:inline-block;float:left">
                         <img src="/resources/images/logout.png" height="90px" />
-                        <h3>Log out général</h3>
-                        <p>La porte d’entrée devient aussi la porte de sortie. En 1 clic déconnectez-vous de toutes les applications utilisées pendant la session.</p>
+                        <h3><fmt:message key="product.dropDown.title.6"/></h3>
+                        <p><fmt:message key="product.dropDown.text.6"/></p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="ui top attached tabular menu">
-            <a class="item right" data-tab="second" style="font-size:20px;font-weight:300;line-height:1.35;color:#4990e2;"><u>Réduire</u></a>
+            <a class="item right" data-tab="second" style="font-size:20px;font-weight:300;line-height:1.35;color:#4990e2;"><u><fmt:message key="product.showLess"/></u></a>
         </div>
     </div>
     <div id="more" class="ui top attached tabular menu">
-        <a class="item right" data-tab="first" style="font-size:20px;font-weight:300;line-height:1.35;color:#4990e2;"><u>En savoir plus</u></a>
+        <a class="item centered" data-tab="first" style="font-size:20px;font-weight:bold;line-height:1.35;color:#4990e2;"><u><fmt:message key="product.showMore"/></u></a>
     </div>
     <div class="container">
         <div class="ui two column stackable grid textDistrib">
             <div class="ui row" style="display:inline-block;float:left">
                 <div class="four wide column" style="display:inline-block;float:left">
-                    <h2>Team Space</h2>
-                    <p>En entreprise : organisez qui a accès à quels outils et visualisez facilement qui peut accéder aux différents comptes.</p>
+                    <h2><fmt:message key="product.teamSpace.title"/></h2>
+                    <p><fmt:message key="product.teamSpace.text"/></p>
                 </div>
                 <div class="twelve wide column" style="display:inline-block;float:left">
                     <img class="ui huge image" src="/resources/images/teamSpace.png">
@@ -173,9 +176,9 @@
                 </div>
                 <div class="eleven wide column" style="display:inline-block;float:left">
                     <h2>Organisation</h2>
-                    <p>Créez des Rooms pour regrouper des membres par équipe, projet, client, en fonction de votre organisation.</p>
-                    <p>Envoyez des Apps dans des Rooms et taggez les membres ayant besoin de l’outil, il recevront l’accès automatiquement.</p>
-                     <p style="margin-top:-16px;">Choisissez d’envoyer des comptes a certaines personnes, lorsque d’autres n’ont pas besoin d’y accéder.</p>
+                    <p><fmt:message key="product.organisation.text.1"/></p>
+                    <p><fmt:message key="product.organisation.text.2"/></p>
+                     <p style="margin-top:-16px;"><fmt:message key="product.organisation.text.3"/></p>
                 </div>
                 <div class="five wide mobile only column" style="display:inline-block;float:left">
                     <img class="ui small image" src="/resources/images/organisationApps.png">
@@ -185,10 +188,9 @@
         <div class="ui stackable two column grid textControl">
             <div class="ui row" style="display:inline-block;float:left">
                 <div class="eleven wide column" style="display:inline-block;float:left">
-                    <h2>Contrôle</h2>
-                    <p>Donnez l’accès sans que le collaborateur ait besoin de connaître le mot de passe.</p>
-                    <p>Programmez les départs des collaborateurs et révoquez leurs accès en un clic.</p>
-                    <p>Visualisez qui accède à quels outils.</p>
+                    <h2><fmt:message key="product.control.title"/></h2>
+                    <p><fmt:message key="product.control.text.1"/></p>
+                    <fmt:message key="product.control.text.2"/>
                 </div>
                 <div class="five wide column" style="display:inline-block;float:left">
                     <img class="ui small right floated image" src="/resources/images/controlTagLouise.png">
@@ -201,15 +203,150 @@
                     <img class="ui small left floated image" src="/resources/images/partageApps.png">
                 </div>
                 <div class="eleven wide column" style="display:inline-block;float:left">
-                    <h2>Partage</h2>
-                    <p>Que les identifiants soient partagés entre plusieurs membres de l’équipe ou que chaque collaborateur ait ses propres identifiants...</p>
-                    <p>Que ce soit un site sans identifiants, un intranet, un SSO, un blog...</p>
-                    <p style="margin-top:0;">Vous pouvez les partager à votre équipe sur Ease.space.</p>
+                    <h2><fmt:message key="product.share.title"/></h2>
+                    <p><fmt:message key="product.share.text.1"/></p>
+                    <p><fmt:message key="product.share.text.2"/></p>
+                    <p style="margin-top:0;"><fmt:message key="product.share.text.3"/></p>
                 </div>
                 <div class="five wide mobile only column" style="display:inline-block;float:left">
                     <img class="ui small left floated image" src="/resources/images/partageApps.png">
                 </div>
             </div>
+        </div>
+        <div class="comparativeTable">
+            <h2><fmt:message key="product.table.title"/></h2>
+        <table class="ui unstackable celled table" style="color:#949eb7">
+            <thead>
+                <tr style="background-color:#f8f8f8;">
+                    <th class="center aligned" style="color:#949eb7;font-weight:bold;text-align:left;"><fmt:message key="product.table.feature"/></th>
+                    <th class="center aligned" style="color:#4fcb6c;font-weight:bold;">EASE.SPACE</th>
+                    <th class="center aligned" style="color:#949eb7;font-weight:bold;">DASHLANE</th>
+                    <th class="center aligned" style="color:#949eb7;font-weight:bold;">LASTPASS</th>
+                    <th class="center aligned" style="color:#949eb7;font-weight:bold;">1PASSWORD</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><fmt:message key="product.table.feature.1"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.2"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.3"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.4"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.5"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.6"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.7"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.8"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.9"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.10"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.11"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.12"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.13"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.14"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.15"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+            </tr>
+            <tr style="background-color: #f8f8f8;">
+                <td><fmt:message key="product.table.feature.16"/></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+            </tr>
+            <tr>
+                <td><fmt:message key="product.table.feature.17"/></td>
+                <td class="center aligned">AES 256</td>
+                <td class="center aligned">AES 256</td>
+                <td class="center aligned">AES-CGM</td>
+                <td class="center aligned">AES 256</td>
+            </tr>
+            </tbody>
+        </table>
         </div>
     </div>
     <div class="ui divider" style="margin: 80px 0;"></div>
@@ -217,14 +354,14 @@
         <div class="ui stackable two column grid textPlace">
             <div class="ui row" style="display:inline-block;float:left">
                 <div class="nine wide column" style="display:inline-block;float:left">
-                    <h2>Mise en place</h2>
-                    <p>Invitez les membres de votre équipe.</p>
-                    <p>Ajoutez les comptes web dont vous avez besoin.</p>
-                    <p>Laissez vos collaborateurs ajouter des comptes eux même.</p>
+                    <h2><fmt:message key="product.setUp.title"/></h2>
+                    <p><fmt:message key="product.setUp.text.1"/></p>
+                    <p><fmt:message key="product.setUp.text.2"/></p>
+                    <p><fmt:message key="product.setUp.text.3"/></p>
                 </div>
                 <div class="seven wide column" style="display:inline-block;float:left">
-                    <a class="ui right floated blue button" href="/pricing" style="margin-top:60px;color:#ffffff;font-size: 20px;font-weight: bold;">Découvrez nos plans</a>
-                    <a class="ui right floated button" href="/companyContact" style="margin-top: 30px;font-size: 20px;font-weight: bold;">Contactez l'équipe commerciale</a>
+                    <a class="ui right floated blue button" href="/pricing" style="margin-top:60px;color:#ffffff;font-size: 20px;font-weight: bold;"><fmt:message key="product.setUp.button.1"/></a>
+                    <a class="ui right floated button" href="/companyContact" style="margin-top: 30px;font-size: 20px;font-weight: bold;"><fmt:message key="product.setUp.button.2"/></a>
                 </div>
             </div>
         </div>
@@ -239,6 +376,7 @@
 <script src="/jsMinified.v00021/basic-utils.js" async></script>
 <script src="/jsMinified.v00021/languageChooser.js" async></script>
 <script src="/jsMinified.v00021/tracker.js" async></script>
+<script src="semantic/dist/semantic.min.js"></script>
 <script>
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#tableHello').removeClass('product-tab');
@@ -250,6 +388,22 @@
             $('#more').toggleClass('hidden');
             $('.ui.tab').toggleClass('active');
             return false;
+        });
+        $('#table-general').popup({
+            on        : 'hover',
+            position  : 'bottom center',
+        });
+        $('#table-switch').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#table-notification').popup({
+            on        : 'hover',
+            position  : 'bottom center',
+        });
+        $('#table-activeUser').popup({
+            on        : 'hover',
+            position  : 'bottom center'
         });
     });
 </script>

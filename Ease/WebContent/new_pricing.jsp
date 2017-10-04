@@ -47,170 +47,200 @@
 <body>
 <%@ include file="templates/landingPage/landingHeader.jsp"%>
 <section id="pricing" style="background-color: white">
-    <div class="container" id="teamsPreview">
+    <div class="container" id="teamsPreview" style="overflow:unset;">
         <div class="content display-flex flex_direction_column step2">
-            <h1 class="text-center" style="margin:0 0 10px 0">Un prix juste et transparent</h1>
-            <span class="sub-title">Offre <u>sans engagement</u>, facturée <u>mensuellement</u> par utilisateur <u>actif</u>*</span>
+            <h1 class="text-center" style="margin:0 0 10px 0"><fmt:message key="pricing.title"/></h1>
+            <span class="sub-title"><fmt:message key="pricing.sub-title"/></span>
             <div class="ui grid display-flex" style="margin:55px 0 37px 0">
-                <div class="team_plan" id="starter_plan" style="margin: 15px 10px;">
+                <div class="team_plan" id="starter_plan" style="margin:15px 10px;overflow:unset;">
                     <%--<img src="/resources/other/Spaceship.svg" alt="icon" class="styleImage" style="background-size:400px 400px;width:400px;height:400px;" />--%>
-                    <h1 class="text-center title">Starter</h1>
-                    <span class="text-center price" style="margin-bottom: 33px">Gratuit</span>
-                    <span class="tip" style="margin: 15px 0 35px 0">Pour les utilisateurs solo souhaitant essayer Ease.space pour une période de temps illimitée</span>
+                    <h1 class="text-center title"><fmt:message key="pricing.free.title"/></h1>
+                        <span class="text-center price" style="font-size:36px;">0 <span class="symbol">€</span></span>
+                        <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
+                        <div class="text-center" style="margin-bottom:26px">
+                            <button class="button-unstyle big-button button">
+                                <a href="/teams#/registration" class="link-unstyle" style="font-size: 18px;">
+                                    <fmt:message key="pricing.free.button"/>
+                                </a>
+                            </button>
+                        </div>
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span>Accès au Personal Space</span>
+                            <fmt:message key="pricing.free.features.title.1"/>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Apps illimitées</span>
+                            <span><fmt:message key="pricing.free.features.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Groupes illimités</span>
+                            <span><fmt:message key="pricing.free.features.2"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Mutli-comptes illimités</span>
+                            <span><fmt:message key="pricing.free.features.3"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Gestion de Favoris</span>
+                            <fmt:message key="pricing.free.features.4"/>
+                        </div>
+                        <div class="feature">
+                            <fmt:message key="pricing.free.features.title.2"/>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Intégration d’Apps, connectées avec Facebook et Linkedin</span>
+                            <span><fmt:message key="pricing.free.features.5"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Intégration automatique de nouveaux mots de passe</span>
-                            <img src="/resources/icons/Soon.png" style="width:50px;height:17px;margin-top:15px;"/>
+                            <span><fmt:message key="pricing.free.features.6"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Déconnexion de tous vos comptes en 1 clic</span>
+                            <span><fmt:message key="pricing.free.features.7"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.free.features.8"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.free.features.9"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.free.features.10"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.free.features.11"/></span>
                         </div>
                     </div>
                     <div class="text-center" style="margin: 60px 0 0 0">
                         <button class="button-unstyle big-button button signUpButton" style="font-size: 18px;">
                             <a href="/teams#/registration" class="link-unstyle" style="font-size: 18px;">
-                                Utiliser gratuitement
+                                <fmt:message key="pricing.free.button"/>
                             </a>
                         </button>
                     </div>
                 </div>
-                <div class="team_plan" id="pro_team_plan" style="margin: 15px 10px;">
+                <div class="team_plan" id="pro_team_plan" style="margin: 15px 10px;overflow:unset">
                     <img src="/resources/other/illu.svg" alt="icon" class="styleImage"/>
-                    <h1 class="text-center title greenText">Team</h1>
-                    <span class="text-center price" style="margin-bottom: 33px">3,99 <span class="symbol">€HT</span></span>
+                    <h1 class="text-center title greenText"><fmt:message key="pricing.pro.title"/></h1>
+                    <span class="text-center price">3,99 <span class="symbol">€HT</span></span>
+                    <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
                     <div class="text-center">
                         <button class="button-unstyle big-button button">
                             <a href="/teams#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
-                                Essayez 1 mois gratuit
+                                <fmt:message key="pricing.pro.button-text"/>
                             </a>
                         </button>
                     </div>
-                    <span class="tip" style="margin: 10px 0 0 0;font-size:14px;">Pas de CB requise</span>
-                    <span class="info">L'integralité de Starter, et</span>
+                    <span class="tip" style="margin: 10px 0 0 0;"><fmt:message key="pricing.pro.sub-button"/></span>
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span>Rooms illimitées</span>
+                            <span class="info"><fmt:message key="pricing.pro.features.title"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Partage d'accès web avec affichage ou obstruction des mots de passe</span>
+                            <span><fmt:message key="pricing.pro.features.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Partage d'outils SaaS avec personnalisation des accès pour chaque utilisateur</span>
+                            <span><fmt:message key="pricing.pro.features.2"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Partage d'identifiants pour softwares locaux</span>
-                            <img src="/resources/icons/Soon.png" style="width:50px;height:17px;margin-top:15px;"/>
+                            <span><fmt:message key="pricing.pro.features.3"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Partage temporaire d'identifiants</span>
-                            <img src="/resources/icons/Soon.png" style="width:50px;height:17px;margin-left:50px;margin-top:15px;"/>
+                            <span><fmt:message key="pricing.pro.features.4"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Retrait automatique des accès à date paramétrée</span>
+                            <span><fmt:message key="pricing.pro.features.5"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Plusieurs Admins et 1 Owner</span>
+                            <span><fmt:message key="pricing.pro.features.6"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Demandes d’intégrations de sites prioritaires</span>
+                            <span><fmt:message key="pricing.pro.features.7"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Service client prioritaire</span>
+                            <fmt:message key="pricing.pro.features.8"/>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <fmt:message key="pricing.pro.features.9"/>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <fmt:message key="pricing.pro.features.10"/>
                         </div>
                     </div>
                     <div class="text-center" style="margin: 60px 0 10px 0">
                         <button class="button-unstyle big-button button">
                             <a href="/teams#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
-                                Essayez 1 mois gratuit
+                                <fmt:message key="pricing.pro.button-text"/>
                             </a>
                         </button>
                     </div>
-                    <span class="tip" style="font-size:14px;margin-bottom:1px;">Pas de CB requise</span>
+                    <span class="tip" style="font-size:14px;margin-bottom:1px;"><fmt:message key="pricing.pro.sub-button"/></span>
                 </div>
                 <div class="team_plan" id="enterprise_team_plan" style="margin: 15px 10px;">>
                     <img src="/resources/other/Saturn.svg" alt="icon" class="styleImage"/>
-                    <div class="plan_header display-flex flex_direction_column text-center" style="height: 240px;margin-top:-30px;">
-                        <h1 class="text-center title">Entreprise</h1>
-                        <span style="font-size: 0.9rem">à partir de</span>
-                        <span class="text-center price" style="margin-bottom: 33px">7,89 <span class="symbol">€HT</span></span>
+                    <div class="plan_header display-flex flex_direction_column text-center" style="height:261px;margin-top:-30px;margin-bottom:26px">
+                        <h1 class="text-center title"><fmt:message key="pricing.premium.title"/></h1>
+                        <span class="text-center price">7,89 <span class="symbol">€HT</span></span>
+                        <span class="tip" style="margin:0 0 15px 0;color:white;"><fmt:message key="pricing.sub-tip"/></span>
                     </div>
-                    <span class="info" style="margin-top:40px;">L'integralité de team<br/>et des fonctionnalités à la demande</span>
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span>Intégration Single Sign-on (SSO)</span>
+                            <span class="info"><fmt:message key="pricing.premium.features.tilte"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Authentification à double facteur</span>
+                            <span><fmt:message key="pricing.premium.features.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Déploiment applicatif et base de données en interne</span>
+                            <span><fmt:message key="pricing.premium.features.2"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Synchronisation temps-réel avec votre Active Directory</span>
+                            <span><fmt:message key="pricing.premium.features.3"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Conservation et gestion d'archives</span>
+                            <span><fmt:message key="pricing.premium.features.4"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span>Temps de fonctionnement disponible (SLA): 99%</span>
+                            <span><fmt:message key="pricing.premium.features.5"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.premium.features.6"/></span>
                         </div>
                     </div>
                     <div class="text-center">
                         <button class="button-unstyle big-button button">
                             <a href="/companyContact" class="link-unstyle" style="font-size: 18px;">
-                                Contactez-nous
+                                <fmt:message key="pricing.premium.button"/>
                             </a>
                         </button>
                     </div>
                 </div>
             </div>
-            <span class="sub-title" style="font-size: 1rem">* un utilisateur est actif à partir du moment où il a reçu ou envoyé au moins une App dans votre Team Space.</span>
+            <span class="sub-title" style="font-size: 1rem"><fmt:message key="pricing.endsentence"/></span>
         </div>
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-
 <script src="/jsMinified.v00021/jquery1.12.4.js"></script>
 <script src="/jsMinified.v00021/jquery.complexify.js"></script>
 <script src="/jsMinified.v00021/bootstrap.js" async></script>
@@ -218,6 +248,73 @@
 <script src="/jsMinified.v00021/basic-utils.js" async></script>
 <script src="/jsMinified.v00021/languageChooser.js" async></script>
 <script src="/jsMinified.v00021/tracker.js" async></script>
+<script src="semantic/dist/semantic.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#starter-title-1').popup({
+            on        : 'hover',
+            position  : 'bottom center',
+            target    : '#starter-title-1-icon'
+        });
+        $('#starter-title-1-icon').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#starter-title-2').popup({
+            on        : 'hover',
+            position  : 'bottom center',
+            target    : '#starter-title-2-icon'
+        });
+        $('#starter-title-2-icon').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#free-feature-1').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#free-feature-2').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#free-feature-3').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#free-feature-4').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#free-feature-8').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#free-feature-10').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#free-feature-11').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#pro-feature-1').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#pro-feature-4').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#pro-feature-6').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+        $('#premium-feature-1').popup({
+            on        : 'hover',
+            position  : 'bottom center'
+        });
+    });
+</script>
 <script type="text/javascript">
     window.addEventListener('load',function(){
         $crisp = [];

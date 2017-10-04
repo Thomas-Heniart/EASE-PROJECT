@@ -753,7 +753,7 @@ class TeamUserFlexTab extends React.Component{
                   <strong>Departure date: </strong>
                   {!this.state.departureDateModifying ?
                       <span>
-                      {user.departure_date !== 0 ? basicDateFormat(user.departure_date) : 'not planned'}
+                      {user.departure_date !== null ? basicDateFormat(user.departure_date) : 'not planned'}
                         {isSuperior(user, me) && me.id !== user.id &&
                         <Icon link name="pencil" className="mrgnLeft5" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
                         {isSuperior(user, me) && me.id !== user.id && this.props.plan_id === 0 &&

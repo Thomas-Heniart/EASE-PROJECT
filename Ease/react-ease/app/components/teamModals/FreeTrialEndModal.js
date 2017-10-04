@@ -1,12 +1,9 @@
 import React, {Component} from "react";
-import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import {showFreeTrialEndModal} from "../../actions/teamModalActions";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
-import post_api from "../../utils/api";
+import post_api from "../../utils/post_api";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-
 
 @connect(store => ({
   team_id: store.team.id,

@@ -33,7 +33,7 @@
 						<a href="/resources/CGU_Ease.pdf" target="_blank">
 							<fmt:message key="landing.footer.link.terms"/>
 						</a>
-						<div style="display: none;"><%@ include file="../../templates/LanguageChooser.jsp" %></div>
+						<div><%@ include file="../../templates/LanguageChooser.jsp" %></div>
 					</div>
 				</div>
 			</div>
