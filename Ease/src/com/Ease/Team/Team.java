@@ -107,6 +107,9 @@ public class Team {
     @Transient
     private Channel default_channel;
 
+    @Transient
+    private Subscription subscription;
+
     public Team(String name) {
         this.name = name;
     }
@@ -148,10 +151,16 @@ public class Team {
 
     public Subscription getSubscription() throws HttpServletException {
         try {
-            return Subscription.retrieve(this.getSubscription_id());
-        } catch (Exception e) {
+            if (subscription == null)
+                subscription = Subscription.retrieve(this.getSubscription_id());
+            return subscription;
+        } catch (StripeException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
     }
 
     public boolean isCard_entered() {
