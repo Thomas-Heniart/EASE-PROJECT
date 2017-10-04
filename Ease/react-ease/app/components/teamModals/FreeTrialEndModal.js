@@ -1,12 +1,9 @@
 import React, {Component} from "react";
-import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import {showFreeTrialEndModal} from "../../actions/teamModalActions";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
-import post_api from "../../utils/api";
+import post_api from "../../utils/post_api";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-
 
 @connect(store => ({
   team_id: store.team.id,
@@ -30,8 +27,11 @@ class FreeTrialEndModal extends Component {
     if (meOwner)
       this.props.history.push(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/settings/payment`);
     else {
+      this.setState({loading: true, errorMessage: ''});
       post_api.teams.askOwnerForBilling({team_id: this.props.team_id}).then(response => {
         window.location.href= '/';
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
       });
     }
   };

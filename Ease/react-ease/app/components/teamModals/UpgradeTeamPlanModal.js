@@ -20,7 +20,7 @@ class UpgradeTeamPlanModal extends Component {
     this.state = {
       show_more : false,
       loading: false,
-      errorMesage: ''
+      errorMessage: ''
     }
   }
   showMore = (state) => {
@@ -30,7 +30,7 @@ class UpgradeTeamPlanModal extends Component {
     e.preventDefault();
     const me = selectItemFromListById(this.props.users, this.props.myId);
     const meOwner = isOwner(me.role);
-    this.setState({loading: true, errorMesage: ''});
+    this.setState({loading: true, errorMessage: ''});
     if (meOwner) {
       this.props.dispatch(upgradePlan({
         team_id: this.props.team_id,
@@ -39,12 +39,14 @@ class UpgradeTeamPlanModal extends Component {
         this.setState({loading: false});
         this.props.dispatch(showUpgradeTeamPlanModal(false));
       }).catch(err => {
-        this.setState({loading: false, errorMesage: err});
+        this.setState({loading: false, errorMessage: err});
       });
     } else {
       post_api.teams.askOwnerToUpgrade({team_id: this.props.team_id}).then(response => {
         this.setState({loading: false});
         this.props.dispatch(showUpgradeTeamPlanModal(false));
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
       });
     }
   };
@@ -69,7 +71,7 @@ class UpgradeTeamPlanModal extends Component {
         <SimpleModalTemplate
             onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal(false))}}
             headerContent={'Try Pro now!'}>
-          <Form class="container" error={this.state.errorMesage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
+          <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
             <Form.Field>
               Your current plan (Basic) doesn’t enable {proFeaturesDesc[feature_id]}.
             </Form.Field>
@@ -89,7 +91,7 @@ class UpgradeTeamPlanModal extends Component {
                   `After trial Pro is billed 3,99€ per month per active user. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade.Want to send a request ?`
               }
             </Form.Field>
-            <Message error content={this.state.errorMesage}/>
+            <Message error content={this.state.errorMessage}/>
             <Button
                 attached='bottom'
                 type="submit"
