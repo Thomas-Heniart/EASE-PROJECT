@@ -27,8 +27,11 @@ class FreeTrialEndModal extends Component {
     if (meOwner)
       this.props.history.push(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/settings/payment`);
     else {
+      this.setState({loading: true, errorMessage: ''});
       post_api.teams.askOwnerForBilling({team_id: this.props.team_id}).then(response => {
         window.location.href= '/';
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
       });
     }
   };
