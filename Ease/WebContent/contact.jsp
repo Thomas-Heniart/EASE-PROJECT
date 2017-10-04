@@ -128,12 +128,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class="section-heading">
-                    Contact
+                <h2 class="section-heading" style="margin-top:55px;font-size:36px">
+                    <fmt:message key="contact.title"/>
                 </h2>
                 <h3 class="section-subheading text-muted"
                     style="font-size:24px;font-weight:300;line-height: 1.25;color: #373b60!important;">
-                    Nous nous tenons à votre disposition pour discuter de notre collaboration
+                    <fmt:message key="contact.underTitle"/>
                 </h3>
             </div>
         </div>
@@ -142,7 +142,7 @@
                 <div class="field">
                     <div class="two fields">
                         <div class="field">
-                            <label class="contactLabel">Prénom et Nom*</label>
+                            <label class="contactLabel"><fmt:message key="contact.onInput.name"/>*</label>
                             <input required type="text" name="name" placeholder="Richard Hendricks">
                         </div>
                         <div class="field">
@@ -154,40 +154,40 @@
                 <div class="field">
                     <div class="two fields">
                         <div class="field">
-                            <label class="contactLabel">Intitulé du poste</label>
+                            <label class="contactLabel"><fmt:message key="contact.onInput.job"/></label>
                             <input type="text" name="role" placeholder="CEO">
                         </div>
                         <div class="field">
-                            <label class="contactLabel">Société</label>
+                            <label class="contactLabel"><fmt:message key="contact.onInput.company"/></label>
                             <input type="text" name="enterprise" placeholder="Piedpiper">
                         </div>
                     </div>
                 </div>
                 <div class="two fields">
                     <div class="field">
-                        <label class="contactLabel">Téléphone</label>
-                        <input type="text" name="phoneNumber" placeholder="06">
+                        <label class="contactLabel"><fmt:message key="contact.onInput.phone"/></label>
+                        <input type="text" name="phoneNumber" placeholder="<fmt:message key="contact.input.phone"/>">
                     </div>
                     <div class="ui field">
-                        <label class="contactLabel">Type de demande*</label>
+                        <label class="contactLabel"><fmt:message key="contact.onInput.typeOfDemand"/>*</label>
                         <select required class="ui fluid dropdown" name="demand_type"
                                 placeholder="Pouvons-nous vous aider ?"
                                 style="height:59%;">
-                            <option class="item" value="1">À propos du produit</option>
-                            <option class="item" value="2">À propos de la sécurité</option>
-                            <option class="item" value="3">Jobs</option>
-                            <option class="item" value="4">Presse</option>
-                            <option class="item" value="5">Autre demande</option>
+                            <option class="item" value="1"><fmt:message key="contact.input.typeOfDemand.1"/></option>
+                            <option class="item" value="2"><fmt:message key="contact.input.typeOfDemand.2"/></option>
+                            <option class="item" value="3"><fmt:message key="contact.input.typeOfDemand.3"/></option>
+                            <option class="item" value="4"><fmt:message key="contact.input.typeOfDemand.4"/></option>
+                            <option class="item" value="5"><fmt:message key="contact.input.typeOfDemand.5"/></option>
                         </select>
                     </div>
                 </div>
                 <div class="field">
                     <label class="contactLabel">Message*</label>
-                    <textarea required name="message" placeholder="Votre message."></textarea>
+                    <textarea required name="message" placeholder="<fmt:message key="contact.input.message"/>"></textarea>
                 </div>
-                <button class="sendContactButton fluid ui button">Envoyer</button>
+                <button class="sendContactButton fluid ui button"><fmt:message key="contact.button"/></button>
                 <div class="ui positive message" style="display: none">
-                    <p>Message envoyé</p>
+                    <p><fmt:message key="contact.sent"/></p>
                 </div>
                 <div class="ui negative message" style="display: none">
                     <p></p>
@@ -197,11 +197,13 @@
     </div>
     <div style="text-align: center">
         <strong>
-            <fmt:message key="companyContact.help1.title"/>
+            <fmt:message key="contact.assistance.title"/>
         </strong>
         <p>
-            <fmt:message key="companyContact.help1.text"/> <a href="mailto:victor@ease.space"><fmt:message
-                key="companyContact.help1.link-text"/></a>
+            <fmt:message key="contact.assistance.text"/>
+            <a href="mailto:victor@ease.space">
+                <fmt:message key="contact.assistance.link"/>
+            </a>
         </p>
     </div>
 </section>

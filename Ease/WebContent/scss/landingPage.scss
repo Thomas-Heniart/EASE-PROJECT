@@ -146,6 +146,21 @@ a.active, a:active, a:focus, a:hover {
     color: #fff;
     background-color: #fec503;
 }
+#popupBefore {
+    width: 675px !important;
+    background-color: #80DB96;
+    color:white;
+    font-size:15px;
+    text-align:left;
+    box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.15);
+    border:none;
+    &:before {
+        background-color: #80DB96;
+        border: none;
+        box-shadow: none;
+    }
+}
+
 @media (min-width:768px) {
     .navbar-custom {
         height: 63px;
@@ -946,8 +961,8 @@ header .intro-text .intro-heading {
         margin-top: -150px;
         position: absolute;
         z-index: 2;
-        color: transparent;
-        background-color: transparent;
+        color: #ffffff;
+        background-color: #373b60;
     }
 }
     #discoverButton:hover {

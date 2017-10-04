@@ -101,40 +101,47 @@
         </div>
     </div>
 </nav>
-<section style="margin-top: 20px;">
+<section style="margin-top: 60px;">
     <div class="container">
         <div class="ui stackable grid">
             <div class="one wide column"></div>
 
             <div class="six wide column">
-                <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;">mots de passe</span></br>hello apps</p>
+                <p style="font-size: 48px;font-weight: 300;line-height: 1.22;color: #373b60;margin-bottom:15px;">Goodbye</br><span id="changing" style="font-weight: 300;"></span></br>hello apps</p>
                 <p style="font-size: 15px;font-weight: 300;line-height: 1.5;color: #949eb7;margin-bottom: 20px;">
-                    Les apps permettent d’accéder à ses comptes intuitivement,
-                    de les partager en équipe rapidement et  appliquer
-                    de bonnes pratiques de sécurité devient facile.</p>
+                    <fmt:message key="landing.undervp"/>
+                </p>
                 <form id="formRedir" class="ui form" action="" method="post" onsubmit="return submitEmail()">
                     <div id="divInput" class="ui action fluid input" style="height: 50px;">
-                        <input type="email" name="email" placeholder="Entrez votre adresse email" required>
-                        <button type="submit" class="sendContactButton ui button" style="font-size: 15px!important;font-weight:300;">
-                            ESSAYER
+                        <input type="email" name="email" placeholder="<fmt:message key='landing.entermail'/>" style="font-size:14px;" required>
+                        <button type="submit" class="sendContactButton ui button" style="font-size: 12px!important;font-weight:300;">
+                            <fmt:message key="landing.entermail.button"/>
                         </button>
                     </div>
                 </form>
-                <p style="margin-top: 10px;font-size: 14px;font-weight: 300;color: #949eb7;">C’est gratuit, pas de CB requise</p>
+                <p style="margin-top:10px;font-size:15px;font-weight:300;"><a href="/companyContact" style="color:#4fcb6c;"><fmt:message key="landing.underemail"/></a></p>
             </div>
             <div class="rightLanding nine wide column">
                 <div class="inTheMac">
                     <img class="ui fluid large image" src="/resources/images/screen.png"/>
-                    <a href="/product"><button id="discoverButton" class="ui small button">
-                        Découvrir
-                    </button></a>
+                    <a href="/product">
+                        <button id="discoverButton" class="ui small button">
+                            <fmt:message key="landing.discover"/>
+                        </button>
+                    </a>
                 </div>
             </div>
+            <div id="counter"  class="sixteen wide column" style="text-align:center;"></div>
             <div class="sixteen wide column" style="text-align:center;">
-
-            </div>
-            <div id="counter"  class="sixteen wide column" style="text-align:center;">
-                <p style="font-size:30px;color: #949eb7;margin-top: 15px">Comptes web connectés via Ease.space en 2017</p>
+                <span id="popup2" style="font-size:30px;color: #949eb7;margin-top:15px;font-weight:300">
+                    <u id="pop"><fmt:message key="landing.undercounter"/></u>
+                    <div id="popupBefore" class="ui fluid popup top left transition">
+                        <fmt:message key="landing.undercounter.popup"/>
+                    </div>
+                </span>
+                <span style="font-size:30px;color: #949eb7;margin-top:15px;font-weight:300">
+                    <fmt:message key="landing.undercounter.2"/>
+                </span>
             </div>
         </div>
     </div>
@@ -143,17 +150,28 @@
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
 
 <script src="/jsMinified.v00020/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00020/jquery-ui-1.12.0.js"></script>
 <script src="/jsMinified.v00020/jquery.complexify.js"></script>
 <script src="/jsMinified.v00020/bootstrap.js" async></script>
 <script src="/jsMinified.v00020/ajaxHandler.js" async></script>
 <script src="/jsMinified.v00020/basic-utils.js" async></script>
 <script src="/jsMinified.v00020/languageChooser.js" async></script>
 <script src="/jsMinified.v00020/tracker.js" async></script>
+<script src="semantic/dist/semantic.min.js"></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('.inTheMac img').addClass('big');
         $('.inTheMac img').removeClass('large');
     }
+</script>
+<script>
+    $(document).ready(function() {
+            $('#pop').popup({
+                on        : 'hover',
+                position  : 'bottom center',
+                hoverable : true
+            });
+    });
 </script>
 <script type="text/javascript">
    function submitEmail() {
@@ -212,7 +230,7 @@
 <script>
     document.addEventListener('DOMContentLoaded',function(event){
         // array with texts to type in typewriter
-        var dataText = ['mots de passe,', 'comptes,', 'identifiants,', 'liens,', 'post-its,', 'fichiers excel,'];
+        var dataText = [<fmt:message key="landing.vp"/>];
 
         // type one text in the typwriter
         // keeps calling itself until the text is finished

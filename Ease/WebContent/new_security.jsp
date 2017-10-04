@@ -82,10 +82,10 @@
     <div class="container">
         <div class="intro-text">
             <div class="intro-heading">
-                La sécurité chez Ease.space
+                <fmt:message key="security.title"/>
             </div>
             <div class="intro-lead-in">
-                Nous prenons votre sécurité très au sérieux. Notre outil protège votre anonymat et met en place les meilleures pratiques de sécurité pour vous et votre entreprise.
+                <fmt:message key="security.sub-title"/>
             </div>
         </div>
     </div>
@@ -93,121 +93,116 @@
 <section style="background-color:white;padding:0 0 170px 0;">
     <div class="container">
         <ul class="docs-nav">
-            <li><a href="#1" class="cc-active">1. Anonymat</a></li>
-            <li><a href="#2" class="cc-active">2. Sécurité pour l'utilisateur</a></li>
-            <li><a href="#3" class="cc-active">3. Sécurité pour l'entreprise</a></li>
-            <li><a href="#4" class="cc-active">4. Nos technologies de sécurité</a></li>
-            <li><a href="#5" class="cc-active">5. Politique interne de sécurité</a></li>
-            <li><a href="#6" class="cc-active">6. F.A.Q.</a></li>
-            <li><a href="#7" class="cc-active">7. Notre Security White paper</a></li>
+            <li><a href="#1" class="cc-active">1. <fmt:message key="security.menu.title1"/></a></li>
+            <li><a href="#2" class="cc-active">2. <fmt:message key="security.menu.title2"/></a></li>
+            <li><a href="#3" class="cc-active"><p style="position: absolute;">3.</p><p style="margin-left: 18px;"><fmt:message key="security.menu.title3"/></p></a></li>
+            <li><a href="#4" class="cc-active">4. <fmt:message key="security.menu.title4"/></a></li>
+            <li><a href="#5" class="cc-active">5. <fmt:message key="security.menu.title5"/></a></li>
+            <li><a href="#6" class="cc-active">6. <fmt:message key="security.menu.title6"/></a></li>
+            <li><a href="#7" class="cc-active">7. <fmt:message key="security.menu.title7"/></a></li>
         </ul>
         <div id="docs-content" class="docs-content">
             <div class="doc_section" id="1" style="padding-top:70px;">
-                <h1 class="doc_header">1. Anonymat</h1>
-                <p>Nous vous facilitons la vie sans la connaître.</p>
-                <p><strong>Il y a seulement deux informations personnelles que nous connaissons sur vous</strong> : une
-                    adresse email et un pseudo.</p>
-                <p>Les autres données (identifiants de comptes, mots de passe, etc.) sont stockées chiffrées et 100% anonymes. Voir explications techniques sur le chiffrement plus bas.</p>
-                <p>Nous ne vendons pas vos données. D’abord car cela ne correspond pas à nos valeurs et ensuite car notre mode de revenu est la sécurisation des données pour les entreprises.</p>
+                <h1 class="doc_header">1. <fmt:message key="security.menu.title1"/></h1>
+                <p><fmt:message key="security.anonymity.text1"/></p>
+                <p><fmt:message key="security.anonymity.text2"/></p>
+                <p><fmt:message key="security.anonymity.text3"/></p>
+                <p><fmt:message key="security.anonymity.text4"/></p>
             </div>
             <div class="doc_section" id="2" style="padding-top:70px;">
-                <h1 class="doc_header">2. Sécurité pour l’utilisateur</h1>
-                <p>Augmentez le niveau de sécurité de vos mots de passe personnels.</p>
-                <p>Vos mots de passe ne sont plus stockés sur votre ordinateur mais dans les serveurs d’un leader du cloud. C’est un atout si votre ordinateur casse, et une protection supplémentaire s’il se fait pirater.</p>
-                <p>Vos mots de passe sont maintenant stockés chiffrés 24h/24 7J/7. Fini les fichiers excel et les post-its.</p>
-                <p>Grâce à Ease.space, vous restez à jour sur les dernières technologies de sécurité informatique.</p>
-                <p>Système de prévention à la fraude : au bout de 10 mots de passe erronés, votre compte est bloqué pendant 5 minutes.</p>
-                <p>Il existe la possibilité de bloquer la mémorisation des mots de passe sur navigateur pour ne plus laisser des mots de passe sensibles sur des ordinateurs dont vous n’êtes pas propriétaire.</p>
-                <p>Lorsque vous souhaitez choisir des mots de passe compliqués et différents pour chaque compte (majuscules, minuscules, chiffres etc), Ease.space s’en souvient pour vous.</p>
-                <p>Grâce à des procédés de chiffrement avancés (Cf. White paper), nous ne connaissons pas votre mot de passe maître. Si vous le perdez, votre compte sera renouvelé et vous devrez entrer à nouveau les mots de passe des comptes que vous aviez intégrés.</p>
+                <h1 class="doc_header">2. <fmt:message key="security.menu.title2"/></h1>
+                <p><fmt:message key="security.yoursecurity.text1"/></p>
+                <p><fmt:message key="security.yoursecurity.text2"/></p>
+                <p><fmt:message key="security.yoursecurity.text3"/></p>
+                <p><fmt:message key="security.yoursecurity.text4"/></p>
+                <p><fmt:message key="security.yoursecurity.text5"/></p>
+                <p><fmt:message key="security.yoursecurity.text6"/></p>
+                <p><fmt:message key="security.yoursecurity.text7"/></p>
+                <p style="margin-bottom:0;"><fmt:message key="security.yoursecurity.text8"/></p>
+                <p style="position: absolute;margin-top: 0;margin-left: 20px;">-</p>
+                <p style="margin-top:0;margin-left:50px;margin-bottom:0;"><fmt:message key="security.yoursecurity.text8.first"/></p>
+                <p style="position: absolute;margin-top: 0;margin-left: 20px;">-</p>
+                <p style="margin-top:0;margin-left:50px;"><fmt:message key="security.yoursecurity.text8.second"/></p>
+                <p><fmt:message key="security.yoursecurity.text9"/></p>
             </div>
             <div class="doc_section" id="3" style="padding-top:70px;">
-                <h1 class="doc_header">3. Sécurité pour l’entreprise</h1>
-                <p>Mettez en place des technologies de pointe et des bonnes pratiques.</p>
-                <p>Principe de base : grâce à notre système de sécurité, vos collaborateurs reçoivent des accès (sous la forme d’app). Ils n’ont plus besoin de connaître les mots de passe des comptes de l’entreprise. Un collaborateur qui n’a plus besoin de connaître de mots de passe ne peut plus les oublier et n’a plus besoin de les noter sur des post its.</p>
-                <p>Un meilleur contrôle : Grâce à une interface d’organisation simple et customisable, les accès ne sont distribués qu’aux personnes en ayant réellement besoin.</p>
-                <p>Pour empêcher que des mots de passe sensibles se retrouvent sur les ordinateurs personnels des collaborateurs, notre extension peut bloquer la mémorisation des mots de passe sur le navigateur. Les mots de passe ne peuvent donc pas se retrouver mémorisés sur des machines inconnues.</p>
-                <p>Vous pouvez contrôler la durée de partage des accès à un collaborateur, visualiser l’historique d'activité des outils de la société, programmer le départ d’un collaborateur et supprimer ses accès automatiquement.</p>
-                <p>Mettez facilement en place une politique de changement des mots de passe de vos outils sensibles.</p>
-                <p>Partage sécurisé de comptes entre collaborateurs : les envois de mots de passe sont 100% chiffrés de
-                    l’envoie à la réception. Ce n’est pas le mot de passe qui est transféré, c’est l’accès (l’app).<br/>Programmez
-                    qui, quand et pour combien de temps, chaque collaborateur aura accès à un compte.</p>
-                <p>Le renouvellement du mot de passe Ease.space en cas de perte. Le mot de passe Ease.space est la porte
-                    d’entrée aux outils de la société, son renouvellement par un collaborateur doit donc être vérifié.
-                    Pour prévenir les fraudes, il sera confirmé par l’administrateur. Dans le cas de la perte du mot de
-                    passe Ease.space de l’administrateur, notre équipe s’occupe de contacter personnellement ce dernier
-                    pour s’assurer de son identité.</p>
-                <p>Pour en savoir plus, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf" target="_blank">téléchargez notre Security White paper.</a></p>
+                <h1 class="doc_header">3. <fmt:message key="security.menu.title3"/></h1>
+                <p><fmt:message key="security.companysecurity.text1"/></p>
+                <p><fmt:message key="security.companysecurity.text2"/></p>
+                <p><fmt:message key="security.companysecurity.text3"/></p>
+                <p><fmt:message key="security.companysecurity.text4"/></p>
+                <p><fmt:message key="security.companysecurity.text5"/></p>
+                <p><fmt:message key="security.companysecurity.text6"/></p>
+                <p><fmt:message key="security.companysecurity.text7"/></p>
+                <p><fmt:message key="security.companysecurity.text8"/></p>
+                <p><fmt:message key="security.companysecurity.text9"/></p>
+                <p><fmt:message key="security.companysecurity.text10"/></p>
+                <p><fmt:message key="security.companysecurity.text11"/></p>
             </div>
             <div class="doc_section" id="4" style="padding-top:70px;">
-                <h1 class="doc_header">4. Nos technologies de securité</h1>
-                <p>Cette partie est expliquée plus en détail dans notre White paper.</p>
-                <p>Sécurité des mots de passe de vos différents comptes web.</p>
-                <p>Nous sécurisons vos mots de passe avec un chiffrement asymétrique, qui crée 2 clés, une privée et une publique. la clé publique nous permet de vous envoyer des données chiffrées que vous seul pouvez déchiffrer avec votre clé privée uniquement.</p>
-                <p>Nous protégeons chaque clé privée en la chiffrant une nouvelle fois (symétriquement). Le chiffrement symétrique crée une nouvelle clé unique qui sert autant à chiffrer que déchiffrer la clé privée (qui elle sert à déchiffrer vos mots de passe et vous connecter).</p>
-                <p>Cette clé symétrique est une nouvelle fois chiffrée (par votre mot de passe Ease.space et une variable inconnue appelée un “salt”).</p>
-                <p class="sub_header">Sécurité de votre mot de passe Ease.space.</p>
-                <p>Nous ne connaissons pas votre mot de passe maître. La méthode utilisée pour le stocker de manière anonyme et sécurisée est appelée “hashage”.</p>
-                <p>Hasher (différent de chiffrer) un mot de passe fonctionne dans un seul sens et ne crée pas de clé. C’est une fonction mathématique (comme le chiffrement) sauf qu’elle n’a pas d’inverse. Il n’y a pas de moyen (pas de clé) de retrouver la valeur initiale (le mot de passe).</p>
-                <p>Lorsque vous créez un compte Ease.Space, vous rentrez pour la première fois votre <strong>mot de
-                    passe maître</strong>, nous le hashons et le stockons hashé dans notre base de données. Le jour
-                    suivant, vous rentrez de nouveau votre mot de passe pour vous connecter. Nous le hashons à nouveau
-                    et comparons vos deux hashs (celui de la création de votre compte, et celui que vous venez de
-                    rentrer). Si ces deux hashs sont identiques, nous savons qu’il s’agit bien de vous sans connaître
-                    votre mots de passe.</p>
-                <p>Afin d’augmenter encore votre sécurité, nous ajoutons un <strong>«sel»</strong> à votre mot de passe Ease.Space avant de le hasher. La technique du <strong>sel</strong> consiste à ajouter une chaîne aléatoire de caractères derrière votre mot de passe afin de le rendre encore plus complexe et prévenir certains types d’attaques.</p>
+                <h1 class="doc_header">4. <fmt:message key="security.menu.title4"/></h1>
+                <p><fmt:message key="security.oursecurity.text1"/></p>
+                <p><fmt:message key="security.oursecurity.text2"/></p>
+                <p><fmt:message key="security.oursecurity.text3"/></p>
+                <p><fmt:message key="security.oursecurity.text4"/></p>
+                <p><fmt:message key="security.oursecurity.text5"/></p>
+                <p><fmt:message key="security.oursecurity.text6"/></p>
+                <p><fmt:message key="security.oursecurity.text7"/></p>
+                <p><fmt:message key="security.oursecurity.text8"/></p>
+                <p style="position:absolute;margin-left:20px;">1.</p>
+                <p style="margin-left:50px;"><fmt:message key="security.oursecurity.text9"/></p>
+                <p style="position:absolute;margin-left:20px;">2.</p>
+                <p style="margin-left:50px;"><fmt:message key="security.oursecurity.text10"/></p>
+                <p><fmt:message key="security.oursecurity.text11"/></p>
                 <p class="sub_header">HTTPS</p>
-                <p>Toutes les communications entre nos utilisateurs et nos serveurs sont sécurisées en HTTPS - SSL/TLS.
-                    Nous avons choisi le certificat Let’s Encrypt.</p>
-                <p>HTTPS permet 2 choses : la sécurité des données “pendant le voyage”, la vérification de
-                    l’authenticité de l’envoyeur et du receveur.</p>
-                <p>Chiffrement : Tous les transferts de data qui surviennent entre l’ordinateur de l’utilisateur et nos serveurs doivent être chiffrés, afin d’éviter que n’importe qui puisse accéder à vos informations sensibles pendant l’envoi des données.</p>
-                <p>Authentification : Cela signifie que le bon ordinateur communique avec le bon serveur, et que le serveur est “digne de confiance”. </p>
-                <p class="sub_header">Serveurs</p>
-                <p>L’ensemble du trafic vers nos serveurs passe par un firewall. C’est-à-dire que le trafic d’origine inconnu est filtré et bloqué.</p>
-                <p>Des tests automatiques de vulnérabilité sont réalisés quotidiennement. De plus un test de pénétration interne est réalisé 4 fois par an à l’aide de l’outil Qualys (Qualys est une entreprise de sécurité utilisée par la plupart des entreprise de Forbes 100). D’autres tests réalisés par des tiers sont faits de manière régulière et notre objectif est de constamment augmenter leur récurrence.</p>
-                <p>Enfin, nous récoltons de manière anonyme un ensemble de rapports d’erreurs provenant de l’activité de nos utilisateurs. Aucune information personnelle n'est collectée lors de ces rapports automatiques d'erreurs. Ils sont réalisés pour augmenter la qualité et la sécurité du produit.</p>
-                <p>Pour en savoir plus, <a href="/resources/documents/Ease.space_Security-Whitepaper.pdf"
-                                           target="_blank">téléchargez notre Security White paper.</a></p>
+                <p><fmt:message key="security.oursecurity.text12"/></p>
+                <p><fmt:message key="security.oursecurity.text13"/></p>
+                <p><fmt:message key="security.oursecurity.text14"/></p>
+                <p class="sub_header"><fmt:message key="security.oursecurity.text15"/></p>
+                <p><fmt:message key="security.oursecurity.text16"/></p>
+                <p><fmt:message key="security.oursecurity.text17"/></p>
+                <p><fmt:message key="security.oursecurity.text18"/></p>
+                <p><fmt:message key="security.oursecurity.text19"/></p>
             </div>
             <div class="doc_section" id="5" style="padding-top:70px;">
-                <h1 class="doc_header">5. Politique interne de sécurité</h1>
-                <p>En interne, nous utilisons Ease.space pour sécuriser, gérer et organiser les accès de la société.</p>
-                <p>Une charte de confidentialité est signée par les membres de l’équipe dont l’activité nécessite
-                    l’accès à des données sensibles.</p>
-                <p>Au départ d’un collaborateur, ses accès sont supprimés et les mots de passe partagés de la société
-                    auxquels il avait accès sont changés.</p>
-                <p>Une politique de modification récurrente des mots de passe est en place sur l’intégralité des outils de la société.</p>
-                <p>Nos serveurs sont chez un leader Européen du Cloud, et sont Infogérés.</p>
+                <h1 class="doc_header">5. <fmt:message key="security.menu.title5"/></h1>
+                <p><fmt:message key="security.ourpolicy.text1"/></p>
+                <p><fmt:message key="security.ourpolicy.text2"/></p>
+                <p><fmt:message key="security.ourpolicy.text3"/></p>
+                <p><fmt:message key="security.ourpolicy.text4"/></p>
+                <p><fmt:message key="security.ourpolicy.text5"/></p>
             </div>
             <div class="doc_section" id="6" style="padding-top:70px;">
-                <h1 class="doc_header">6. FAQ</h1>
-                <p class="sub_header">Si un hacker cherche à trouver mon mot de passe maître ?</p>
-                <p>Nous vous encourageons à utiliser un mot de passe «compliqué» pour sécuriser votre plateforme. Choisir un mot de passe avec 8 caractères (minuscules, majuscules et chiffres) implique 280
-                    000 milliards de possibilités de combinaisons. Des dizaines de milliers d’années seraient donc nécessaires si un pirate souhaitait réaliser des tests pour trouver votre mot de passe (à raison d’un milliard
-                    de tests par jour cela représenterait environ 750 années). Pour d’avantage de sécurité nous bloquons
-                    le compte pendant plusieurs minutes suite à 10 échecs de connexion.</p>
-                <p class="sub_header">Si je souhaite accéder à mes mots de passe sur un ordinateur qui n’est pas le mien ?</p>
-                <p>Ease.space est disponible depuis n’importe quel ordinateur. Il vous suffit de vous connecter avec vos identifiants sur https://ease.space pour retrouver vos comptes.</p>
-                <p class="sub_header">Si mon ordinateur se fait voler ?</p>
-                <p>Aucune donnée n’est stockée sur votre ordinateur. Seul vous, détenteur du mot de passe principal, pouvez accéder à votre compte Ease.space.</p>
-                <p class="sub_header">Si je perds mon mot de passe maître ?</p>
-                <p>Pour des raisons de sécurité, Ease.space ne stocke pas votre mot de passe maître, car c’est ce mot de
-                    passe maître qui sécurise l’ensemble de vos données. S’il est perdu, et que vous le réinitialisez,
-                    l’ensemble des données sensibles stockées sur Ease.space aura disparu, il vous faudra les entrer
-                    à nouveau comme le jour de votre inscription.</p>
-                <p class="sub_header">Si un hacker accède à la base de données d’Ease.space ?</p>
-                <p>Les données stockées sur Ease.space sont entièrement chiffrées. Personne d’autre que vous ne peut accéder à vos informations personnelles. Si un hacker accède à la base de données, il aura accès à des données illisibles.</p>
+                <h1 class="doc_header">6. <fmt:message key="security.menu.title6"/></h1>
+                <p><fmt:message key="security.faq.question1"/></p>
+                <p><fmt:message key="security.faq.text1"/></p>
+                <p><fmt:message key="security.faq.text2"/></p>
+                <p><fmt:message key="security.faq.text3"/></p>
+                <p style="position:absolute;margin-left:20px;">1.</p>
+                <p style="margin-left:50px;"><fmt:message key="security.faq.text4"/></p>
+                <p style="position:absolute;margin-left:20px;">2.</p>
+                <p style="margin-left:50px;"><fmt:message key="security.faq.text5"/></p>
+                <p style="margin-bottom:0;"><fmt:message key="security.faq.text6"/></p>
+                <p style="position:absolute;margin-top:0;margin-left:20px;">-</p>
+                <p style="margin-top:0;margin-left:50px;margin-bottom:0;"><fmt:message key="security.faq.text6.first"/></p>
+                <p style="position:absolute;margin-top:0;margin-left:20px;">-</p>
+                <p style="margin-top:0;margin-left:50px;"><fmt:message key="security.faq.text6.second"/></p>
+                <p><fmt:message key="security.faq.text7"/></p>
+                <p><fmt:message key="security.faq.question2"/></p>
+                <p><fmt:message key="security.faq.text8"/></p>
+                <p><fmt:message key="security.faq.question3"/></p>
+                <p><fmt:message key="security.faq.text9"/></p>
+                <p><fmt:message key="security.faq.question4"/></p>
+                <p><fmt:message key="security.faq.text10"/></p>
+                <p><fmt:message key="security.faq.text11"/></p>
             </div>
             <div class="doc_section" id="7" style="padding-top:70px;">
-                <h1 class="doc_header">7. Notre Whitepaper</h1>
-                <p>Pour obtenir toutes les informations relatives à la sécurité, <a
-                        href="/resources/documents/Ease.space_Security-Whitepaper.pdf" target="_blank">téléchargez notre
-                    Security Whitepaper.</a></p>
+                <h1 class="doc_header">7. <fmt:message key="security.menu.title7"/></h1>
+                <p><fmt:message key="security.whitepaper.text"/></p>
             </div>
             <div style="text-align: center">
                 <a href="/teams#/registration" class="btn btn-xl signUpButton">
-                    Essayez Ease.space gratuitement
+                    <fmt:message key="security.button.text"/>
                 </a>
             </div>
         </div>
