@@ -34,12 +34,12 @@ pageEncoding="UTF-8"%>
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00016/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00017/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/pricingPage.css"/>
 
 
 

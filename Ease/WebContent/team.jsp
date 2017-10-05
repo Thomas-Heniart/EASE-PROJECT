@@ -26,14 +26,14 @@
           content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
     <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00016/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00017/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/lib/fonts/untitled-font-4/styles.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00016/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/lib/fonts/untitled-font-4/styles.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00017/team.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00021/jsencrypt.js"></script>
     <script src="/jsMinified.v00021/moment.js"></script>
@@ -118,7 +118,7 @@
 <BODY>
 <div id="app">
 </div>
-<script src="teams_bundle.js?00000007"></script>
+<script src="teams_bundle.js?00000009"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];

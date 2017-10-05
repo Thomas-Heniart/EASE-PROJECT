@@ -1,6 +1,5 @@
 package com.Ease.Hibernate;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -29,7 +28,7 @@ public class HibernateDatabase {
         }
     }
 
-    public static SessionFactory getSessionFactory() {
+    public synchronized static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
