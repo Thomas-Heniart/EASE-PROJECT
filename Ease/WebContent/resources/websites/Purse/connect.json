@@ -1,0 +1,70 @@
+{
+  "name": "Purse",
+  "lastLogin": "",
+  "home": "https://purse.io",
+  "folder": "Purse",
+  "connect": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='/login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-password"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login-password",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-email",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "form#auth-login-form button[type='submit']"
+      },
+      {
+        "action": "click",
+        "search": "form#auth-login-form button[type='submit']",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "a[href*='/logout']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='/logout']",
+        "grave": true
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='/login'], .avatar-sm"
+    },
+    {
+      "search": ".avatar-sm"
+    }
+  ]
+}
