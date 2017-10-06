@@ -45,6 +45,69 @@
       }
     ]
   },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='/login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": ".btn-social-compact-fb"
+      },
+      {
+        "action": "click",
+        "search": ".btn-social-compact-fb"
+      }
+    ]
+  },
+  "Google": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='/login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": ".btn-social-compact-gplus"
+      },
+      {
+        "action": "click",
+        "search": ".btn-social-compact-gplus"
+      }
+    ]
+  },
+  "Coinbase": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='/login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": ".btn-social-compact-cb"
+      },
+      {
+        "action": "click",
+        "search": ".btn-social-compact-cb"
+      }
+    ]
+  },
   "logout": {
     "todo": [
       {
