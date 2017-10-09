@@ -1,0 +1,23 @@
+{
+  "name":"Bitstamp",
+  "lastLogin":"",
+  "home":"https://www.bitstamp.net/account/balance/",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url": "https://www.bitstamp.net/account/balance/"},
+      {"action": "waitfor", "search": "#id_username"},
+      {"action": "waitfor", "search": "#id_password"},
+      {"action":"fill", "what":"login", "search":"#id_username"},
+      {"action":"fill", "what":"password", "search":"#id_password"},
+      {"action":"click", "search":".signin"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action": "trueClick", "search": "#logout"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"#logout"}
+  ]
+}
