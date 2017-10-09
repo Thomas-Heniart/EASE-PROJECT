@@ -4,27 +4,19 @@
     "home":"https://www.name.com/",
     "connect":{
         "todo":[
+            {"action": "waitfor", "search": "form[id*='Login-header-form'] input[name*='acct_name']"},
+            {"action": "waitfor", "search": "form[id*='Login-header-form'] input[name*='password']"},
             {"action":"fill", "what":"login", "search":"form[id*='Login-header-form'] input[name*='acct_name']"},
             {"action":"fill", "what":"password", "search":"form[id*='Login-header-form'] input[name*='password']"},
-            {"action":"click", "search":"form[id*='Login-header-form'] button[type*='submit']"}
+            {"action":"click", "search":".login-button"}
             ]
     },
     "logout":{
         "todo":[
-            {"action":"clickona", "search":"a[href*='logout']"}
+            {"action":"trueClick", "search":"a[href*='logout']"}
         ]
     },
     "checkAlreadyLogged":[
         {"search":"a[href*='logout']"}
-    ],
-    "Facebook":{
-        "todo":[
-            {"action":"clickona", "search":"a.social-button__facebook"}
-        ]
-    },
-    "LinkedIn": {
-        "todo": [
-            {"action":"clickona", "search":"a.social-button__linkedin"}
-        ]
-    }
+    ]
 }
