@@ -8,6 +8,8 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
 import com.stripe.exception.StripeException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.Key;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -406,5 +409,23 @@ public abstract class ServletManager {
         if (this.timestamp == null)
             this.timestamp = this.getCurrentTime();
         return timestamp;
+    }
+
+    public User getUserWithToken() throws HttpServletException {
+        String token = this.request.getHeader("Authorization");
+        if (token == null || token.equals(""))
+            throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
+        Map<String, User> tokenUserMap = (Map<String, User>) this.getContextAttr("tokenUserMap");
+        Key key = (Key) this.getContextAttr("secret");
+        Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        String connection_token = (String) claimsJws.get("tok");
+        User user = tokenUserMap.get(connection_token);
+        if (user == null)
+            throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
+        user.getJwt().checkJwt(claimsJws);
+        if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
+            throw new HttpServletException(HttpStatus.AccessDenied);
+        this.user = user;
+        return this.user;
     }
 }

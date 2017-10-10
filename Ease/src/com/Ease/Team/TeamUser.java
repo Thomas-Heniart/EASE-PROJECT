@@ -472,4 +472,8 @@ public class TeamUser {
         }
 
     }
+
+    public List<Channel> getChannels() {
+        return this.getTeam().getChannelsForTeamUser(this);
+    }
 }

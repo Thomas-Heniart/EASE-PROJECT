@@ -10,7 +10,9 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
+import io.jsonwebtoken.SignatureAlgorithm;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OnStart implements ServletContextListener {
 
@@ -81,14 +84,18 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("colors", colors);
 
                 Infrastructure.loadInfrastructures(db, evt.getServletContext());
-                Map<String, User> usersMap = new HashMap<String, User>();
+                Map<String, User> usersMap = new ConcurrentHashMap<>();
                 context.setAttribute("users", usersMap);
-                Map<String, com.Ease.NewDashboard.User.User> userMap = new HashMap<String, com.Ease.NewDashboard.User.User>();
+                Map<String, com.Ease.NewDashboard.User.User> userMap = new ConcurrentHashMap<>();
                 context.setAttribute("userMap", userMap);
-                Map<String, User> sessionIdUserMap = new HashMap<String, User>();
+                Map<String, User> sessionIdUserMap = new ConcurrentHashMap<>();
                 context.setAttribute("sessionIdUserMap", sessionIdUserMap);
-                Map<String, User> sIdUserMap = new HashMap<String, User>();
+                Map<String, User> sIdUserMap = new ConcurrentHashMap<>();
                 context.setAttribute("sIdUserMap", sIdUserMap);
+                Map<String, User> tokenUserMap = new ConcurrentHashMap<>();
+                context.setAttribute("tokenUserMap", tokenUserMap);
+                byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
+                context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
                 System.out.println("done.");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date mydate = new Date();
