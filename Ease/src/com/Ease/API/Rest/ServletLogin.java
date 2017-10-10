@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @WebServlet("/api/rest/Connection")
-public class ServletLoginTest extends HttpServlet {
+public class ServletLogin extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
