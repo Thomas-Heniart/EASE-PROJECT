@@ -65,6 +65,32 @@ public class User {
         this.emails = UserEmail.loadEmails(db_id, this, db);
     }
 
+    public static User loadUserFromJWT(JWToken jwToken, ServletContext context, DataBaseConnection db) throws HttpServletException {
+        try {
+            String db_id = jwToken.getUser_id();
+            String keyUser = jwToken.getKeyUser();
+            DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE id = ?");
+            request.setInt(db_id);
+            DatabaseResult rs = request.get();
+            int transaction = db.startTransaction();
+            if (rs.next()) {
+                String email = rs.getString(Data.EMAIL.ordinal());
+                Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
+                User connectedUser = usersMap.get(email);
+                if (connectedUser != null)
+                    return connectedUser;
+                Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, db);
+                User newUser = loadUserWithKeys(rs, keys, context, db);
+                db.commitTransaction(transaction);
+                return newUser;
+            } else {
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid token");
+            }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public static User loadUserFromCookies(SessionSave sessionSave, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         String db_id = sessionSave.getUserId();
@@ -88,30 +114,6 @@ public class User {
             throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
         }
 
-    }
-
-    public static User loadUserWithToken(Integer token_id, String connection_token, ServletContext context, DataBaseConnection db) throws HttpServletException {
-        try {
-            JWToken jwToken = JWToken.loadJWToken(token_id, connection_token, (Key) context.getAttribute("secret"), db);
-            DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE id = ?");
-            request.setInt(jwToken.getUser_id());
-            DatabaseResult rs = request.get();
-            int transaction = db.startTransaction();
-            if (rs.next()) {
-                String email = rs.getString(Data.EMAIL.ordinal());
-                Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
-                User connectedUser = usersMap.get(email);
-                if (connectedUser != null)
-                    return connectedUser;
-                Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), jwToken.getKeyUser(), db);
-                User newUser = loadUserWithKeys(rs, keys, context, db);
-                db.commitTransaction(transaction);
-                return newUser;
-            } else
-                throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
     }
 
     private static User loadUserWithKeys(DatabaseResult rs, Keys keys, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
@@ -319,6 +321,10 @@ public class User {
 
     public JWToken getJwt() {
         return this.jwt;
+    }
+
+    public void setJwt(JWToken jwt) {
+        this.jwt = jwt;
     }
 
 	/*
@@ -697,8 +703,9 @@ public class User {
             request.setInt(this.getDBid());
             DatabaseResult rs = db.get();
             JWToken jwt;
-            if (rs.next())
+            if (rs.next()) {
                 jwt = JWToken.loadJWTokenWithKeyUser(rs.getInt(1), this.getEmail(), this.getFirstName(), this.getKeys().getKeyUser(), secret, db);
+            }
             else
                 jwt = JWToken.createJWTokenForUser(this, secret, db);
             this.jwt = jwt;

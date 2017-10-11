@@ -378,6 +378,13 @@ public class Account {
         return obj;
     }
 
+    public JSONObject getRestJson() {
+        JSONObject res = new JSONObject();
+        for (AccountInformation accountInformation : this.infos)
+            res.put(accountInformation.getInformationName(), accountInformation.getInformationValue());
+        return res;
+    }
+
     public JSONArray getInformationJson() {
         JSONArray jsonArray = new JSONArray();
         for (AccountInformation info : this.infos) {

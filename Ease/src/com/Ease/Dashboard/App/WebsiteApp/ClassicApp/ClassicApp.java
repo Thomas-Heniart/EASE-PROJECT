@@ -226,6 +226,12 @@ public class ClassicApp extends WebsiteApp {
         json.put("website_name", this.website.getName());
     }
 
+    public JSONObject getRestJson() {
+        JSONObject res = super.getRestJson();
+        res.put("account_information", this.getAccount().getRestJson());
+        return res;
+    }
+
     public void setPassword(String password, ServletManager sm) throws GeneralException {
         this.account.setPassword(password, this.getProfile().getUser(), sm);
     }

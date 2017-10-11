@@ -298,6 +298,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return res;
     }
 
+    public JSONObject getRestJson() {
+        JSONObject res = super.getRestJson();
+        res.put("logo", this.website.getFolder() + "logo.png");
+        return res;
+    }
+
     /* For sancho le robot */
     public boolean isEmpty() {
         return true;

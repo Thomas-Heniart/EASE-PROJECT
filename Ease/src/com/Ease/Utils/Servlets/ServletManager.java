@@ -1,5 +1,6 @@
 package com.Ease.Utils.Servlets;
 
+import com.Ease.Dashboard.User.JWToken;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -420,11 +421,18 @@ public abstract class ServletManager {
         Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
         String connection_token = (String) claimsJws.get("tok");
         User user = tokenUserMap.get(connection_token);
-        if (user == null)
-            throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
+        if (user == null) {
+            String user_name = (String) claimsJws.get("name");
+            String user_email = (String) claimsJws.get("email");
+            Long expiration_date = (Long) claimsJws.get("exp");
+            JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
+            jwToken.setJwt(token);
+            user = User.loadUserFromJWT(jwToken, this.getServletContext(), this.getDB());
+            tokenUserMap.put(jwToken.getConnection_token(), user);
+        }
         user.getJwt().checkJwt(claimsJws);
         if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
-            throw new HttpServletException(HttpStatus.AccessDenied);
+            throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired");
         this.user = user;
         return this.user;
     }

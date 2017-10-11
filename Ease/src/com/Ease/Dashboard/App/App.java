@@ -451,6 +451,13 @@ public class App implements ShareableApp, SharedApp {
         return jsonObject;
     }
 
+    public JSONObject getRestJson() {
+        JSONObject res = new JSONObject();
+        res.put("name", this.getAppInformation().getName());
+        res.put("id", this.getDBid());
+        return res;
+    }
+
     public JSONArray getAccountInformationsJson() {
         return new JSONArray();
     }
