@@ -574,6 +574,9 @@ public class User {
         DatabaseRequest request = db.prepareRequest("DELETE FROM admins WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
+        request = db.prepareRequest("DELETE FROM jsonWebTokens WHERE user_id = ?;");
+        request.setInt(db_id);
+        request.set();
         request = db.prepareRequest("DELETE FROM groupsAndUsersMap WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
