@@ -7,7 +7,6 @@ class EaseHeader extends React.Component {
     super(props);
   }
   render(){
-      console.log(location.hash);
     return (
         <header id="ease_header">
           <a class="logo_container" href="/home">
