@@ -3,8 +3,6 @@ package com.Ease.API.V1.Catalog;
 import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.Website;
 import com.Ease.Context.Catalog.WebsiteInformation;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,14 +21,10 @@ public class GetWebsites extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            Integer range = sm.getIntParam("range", true);
-            if (range == null || range < 1)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter range");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONObject res = new JSONObject();
             JSONArray websites = new JSONArray();
-            for (int i=0; i<range && i < catalog.getWebsites().size(); i++) {
-                Website website = catalog.getWebsites().get(i);
+            for (Website website : catalog.getWebsites()) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("id", website.getDb_id());
                 tmp.put("name", website.getName());
