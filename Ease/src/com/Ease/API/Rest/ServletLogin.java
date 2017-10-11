@@ -1,15 +1,12 @@
 package com.Ease.API.Rest;
 
 import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Team.Channel;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -61,33 +58,7 @@ public class ServletLogin extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
             user.getDashboardManager().decipherApps(sm);
             JSONObject res = new JSONObject();
-            JSONArray personnalSpace = new JSONArray();
-            for (Profile profile : user.getDashboardManager().getProfilesList()) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("name", profile.getName());
-                jsonObject.put("id", profile.getDBid());
-                personnalSpace.add(jsonObject);
-            }
-            res.put("personal_space", personnalSpace);
-            JSONArray teams = new JSONArray();
-            for (TeamUser teamUser : user.getTeamUsers()) {
-                if (teamUser.isDisabled() || (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() <= sm.getTimestamp().getTime()))
-                    continue;
-                JSONObject team = new JSONObject();
-                team.put("name", teamUser.getTeam().getName());
-                team.put("id", teamUser.getTeam().getDb_id());
-                JSONArray rooms = new JSONArray();
-                for (Channel channel : teamUser.getChannels()) {
-                    JSONObject room = new JSONObject();
-                    room.put("name", channel.getName());
-                    room.put("id", channel.getDb_id());
-                    rooms.add(room);
-                }
-                team.put("rooms", rooms);
-                teams.add(team);
-            }
-            res.put("teams", teams);
-            res.put("jwt", user.getJwt().getJwt());
+            res.put("JWT", user.getJwt().getJwt());
             ((Map<String, User>) sm.getContextAttr("tokenUserMap")).put(user.getJwt().getConnection_token(), user);
             sm.setSuccess(res);
         } catch (Exception e) {
