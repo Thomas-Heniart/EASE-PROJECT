@@ -44,9 +44,6 @@ public class GetRoomApps extends HttpServlet {
                 if (sharedApp.getHolder().getChannel() != channel)
                     continue;
                 App holder = (App) sharedApp.getHolder();
-                System.out.println(holder.getName());
-                System.out.println(sharedApp.isPinned());
-                System.out.println(sharedApp.canSeeInformation());
                 if (!sharedApp.canSeeInformation() && !holder.isEmpty() && !(holder.isLinkApp() && sharedApp.isPinned()))
                     continue;
                 apps.add(((App) sharedApp).getRestJson());

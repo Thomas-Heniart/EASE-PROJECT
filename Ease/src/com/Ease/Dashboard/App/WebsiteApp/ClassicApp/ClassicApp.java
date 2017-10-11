@@ -229,6 +229,7 @@ public class ClassicApp extends WebsiteApp {
     public JSONObject getRestJson() {
         JSONObject res = super.getRestJson();
         res.put("account_information", this.getAccount().getRestJson());
+        res.put("type", "classicApp");
         return res;
     }
 
