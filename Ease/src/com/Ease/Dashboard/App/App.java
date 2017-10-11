@@ -607,9 +607,10 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public void pinToDashboard(Profile profile, DataBaseConnection db) throws HttpServletException {
         try {
-            int transaction = db.startTransaction();
+
             if (this.getProfile() == profile)
                 return;
+            int transaction = db.startTransaction();
             this.unpin(db);
             DatabaseRequest request = db.prepareRequest("INSERT INTO profileAndAppMap values (null, ?, ?, ?);");
             request.setInt(profile.getDBid());
