@@ -8,6 +8,88 @@ button.only-text-button {
   }
 }
 
+#catalog {
+  position: absolute;
+  width: 100%;
+  header {
+    margin-bottom: 30px;
+    height: 184px;
+    background-image: radial-gradient(circle at 50% 0, #686d99, #636994 40%, #373b60);
+    box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
+    p {
+      font-size: 36px;
+      font-weight: 300;
+      color: white;
+      text-align: center;
+      margin-top: 70px;
+    }
+    .inputSearch {
+      margin-top: 25px;
+      width: 700px;
+    }
+  }
+  h3 {
+    font-size: 24px;
+    font-weight: 300;
+    color: #414141;
+    text-transform: uppercase;
+  }
+  .bookmarkButton {
+    display: flex;
+    margin-bottom: 45px;
+    font-size: 16px;
+    padding: 10px 17px 10px 15px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgba(89, 66, 173, 0.85);
+    i {
+      margin-top: -12px;
+      color: white;
+    }
+  }
+  .importButton {
+    display: none;
+    margin-bottom: 45px;
+    font-size: 16px;
+    padding: 10px 15px 10px 15px;
+    border-radius: 5px;
+    color: white;
+  }
+  .listCategory {
+    font-size: 18px;
+    font-weight: 300;
+  }
+  .logoCatalog {
+    img {
+      width: 60px;
+      height: 60px;
+      margin: 10px;
+      border-radius: 5px;
+      display: inline-flex;
+      box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97)
+    }
+    p {
+      font-size: 16px;
+      font-weight: bold;
+      color: #373b60;
+      display: inline-flex;
+    }
+    .showSegment {
+      padding: 0;
+      &:hover {
+        padding-left: 0;
+        padding-right: 0;
+        border-radius: 7px;
+        box-shadow: -3px 4px 4px 0 rgba(210, 218, 228, 0.77);
+        border: solid 1px #d2dae4;
+        img {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
 #teamsPreview {
   line-height: 1.3;
 }
