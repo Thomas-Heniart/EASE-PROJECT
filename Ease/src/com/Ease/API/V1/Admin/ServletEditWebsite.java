@@ -78,7 +78,7 @@ public class ServletEditWebsite extends HttpServlet {
                 }
             }
             db.commitTransaction(transaction);
-            sm.setSuccess("Website edited");
+            sm.setSuccess("Catalog edited");
         } catch (Exception e) {
             sm.setError(e);
         }

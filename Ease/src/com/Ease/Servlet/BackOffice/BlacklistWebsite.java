@@ -62,7 +62,7 @@ public class BlacklistWebsite extends HttpServlet {
 				Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 				catalog.blacklistWebsiteWithSingleId(Integer.parseInt(single_id), sm);
 			}
-			sm.setResponse(ServletManager.Code.Success, "Website added to blacklist");
+			sm.setResponse(ServletManager.Code.Success, "Catalog added to blacklist");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

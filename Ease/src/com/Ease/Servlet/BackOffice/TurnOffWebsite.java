@@ -53,7 +53,7 @@ public class TurnOffWebsite extends HttpServlet {
 				int id = Integer.parseInt(single_id);
 				Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 				catalog.turnOffWebsite(id, sm);
-				sm.setResponse(ServletManager.Code.Success, "Website turned off");
+				sm.setResponse(ServletManager.Code.Success, "Catalog turned off");
 			} catch (NumberFormatException e) {
 				throw new GeneralException(ServletManager.Code.ClientError, e);
 			}

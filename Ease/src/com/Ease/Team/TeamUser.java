@@ -2,7 +2,6 @@ package com.Ease.Team;
 
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.NewDashboard.User.User;
 import com.Ease.Notification.Notification;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
@@ -30,9 +29,6 @@ public class TeamUser {
     @GeneratedValue
     @Column(name = "id")
     protected Integer db_id;
-
-    @Transient
-    protected User user;
 
     @Transient
     protected com.Ease.Dashboard.User.User dashboard_user;
@@ -123,14 +119,6 @@ public class TeamUser {
 
     public void setDb_id(Integer db_id) {
         this.db_id = db_id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getUser_id() {

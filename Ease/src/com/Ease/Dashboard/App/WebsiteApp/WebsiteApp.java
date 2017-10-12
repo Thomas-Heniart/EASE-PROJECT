@@ -63,7 +63,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
                     return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, context, db);
             }
         }
-        throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
+        throw new GeneralException(ServletManager.Code.InternError, "Catalog app not complete in db.");
     }
 
     public static Integer createWebsiteApp(Profile profile, Integer position, String name, String type, Website site, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {

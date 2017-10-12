@@ -44,7 +44,7 @@ public class Website {
             throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
         int transaction = db.startTransaction();
         WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(is_public, db);
-        request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?);");
+        request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?, NULL);");
         request.setString(url);
         request.setString(name);
         request.setString(folder);
@@ -494,6 +494,7 @@ public class Website {
         res.put("id", this.getDb_id());
         res.put("logo", this.getLogo());
         JSONArray logWithWebsites = new JSONArray();
+
         for (Website logWithWebsite : this.loginWithWebsites)
             logWithWebsites.add(logWithWebsite.getDb_id());
         res.put("loginWith", logWithWebsites);

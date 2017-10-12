@@ -192,7 +192,7 @@ public class UpdateManager {
 		String type = (String) json.get("type");
 		String urlOrName = (String) json.get("website");
 >>>>>>> 1e32a96e93abdd2da8150620f3493690b4c5fc42
-		Website website;
+		Catalog website;
 		String login = (String) json.get("user");
 		switch (type) {
 		case "classic":
@@ -218,7 +218,7 @@ public class UpdateManager {
 
 		case "logwith":
 			String logWithAppName = (String) json.get("logwith");
-			Website logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
+			Catalog logwithAppWebsite = this.findWebsiteInCatalogWithName(logWithAppName, sm);
 			website = this.findWebsiteInCatalogWithLoginUrl(url, sm);
 			if (website == null)
 				return false;

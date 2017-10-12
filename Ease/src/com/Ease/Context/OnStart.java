@@ -86,8 +86,6 @@ public class OnStart implements ServletContextListener {
                 Infrastructure.loadInfrastructures(db, evt.getServletContext());
                 Map<String, User> usersMap = new ConcurrentHashMap<>();
                 context.setAttribute("users", usersMap);
-                Map<String, com.Ease.NewDashboard.User.User> userMap = new ConcurrentHashMap<>();
-                context.setAttribute("userMap", userMap);
                 Map<String, User> sessionIdUserMap = new ConcurrentHashMap<>();
                 context.setAttribute("sessionIdUserMap", sessionIdUserMap);
                 Map<String, User> sIdUserMap = new ConcurrentHashMap<>();

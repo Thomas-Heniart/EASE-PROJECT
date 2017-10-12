@@ -24,30 +24,11 @@
         <mapping class="com.Ease.Team.Channel"/>
         <mapping class="com.Ease.Team.TeamUser"/>
         <mapping class="com.Ease.Team.TeamUserRole"/>
-        <mapping class="com.Ease.NewDashboard.App.App"/>
-        <mapping class="com.Ease.NewDashboard.App.AppInformation"/>
-        <mapping class="com.Ease.NewDashboard.Profile.ProfileApp"/>
-        <mapping class="com.Ease.NewDashboard.Profile.Profile"/>
-        <mapping class="com.Ease.NewDashboard.Profile.ProfileInformation"/>
-        <mapping class="com.Ease.NewDashboard.App.LinkApp.LinkApp"/>
-        <mapping class="com.Ease.NewDashboard.App.LinkApp.LinkAppInformation"/>
-        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.WebsiteApp"/>
-        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.ClassicApp.ClassicApp"/>
-        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.ClassicApp.Account"/>
-        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.ClassicApp.AccountInformation"/>
-        <mapping class="com.Ease.NewDashboard.App.WebsiteApp.LogwithApp.LogwithApp"/>
-        <mapping class="com.Ease.NewDashboard.UserProfile"/>
-        <mapping class="com.Ease.NewDashboard.User.User"/>
-        <mapping class="com.Ease.NewDashboard.User.Keys"/>
-        <mapping class="com.Ease.NewDashboard.User.Options"/>
-        <mapping class="com.Ease.NewDashboard.User.Status"/>
-        <mapping class="com.Ease.NewDashboard.User.SessionSave"/>
-        <mapping class="com.Ease.NewDashboard.User.UserEmail"/>
-        <mapping class="com.Ease.Website.Website"/>
-        <mapping class="com.Ease.Website.WebsiteAttributes"/>
-        <mapping class="com.Ease.Website.WebsiteInformation"/>
-        <mapping class="com.Ease.Website.Sso"/>
-        <mapping class="com.Ease.Website.Tag"/>
+        <mapping class="com.Ease.Catalog.Website"/>
+        <mapping class="com.Ease.Catalog.WebsiteAttributes"/>
+        <mapping class="com.Ease.Catalog.WebsiteInformation"/>
+        <mapping class="com.Ease.Catalog.Sso"/>
+        <mapping class="com.Ease.Catalog.Category" />
         <mapping class="com.Ease.Team.TeamUserStatus"/>
     </session-factory>
 </hibernate-configuration>

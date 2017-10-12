@@ -150,7 +150,12 @@ public class ClassicApp extends WebsiteApp {
 
     public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
+        DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE logWith_website_app_id = ?;");
+        request.setInt(this.websiteAppDBid);
+        DatabaseResult rs = request.get();
+        if (rs.next())
+            throw new HttpServletException(HttpStatus.BadRequest, "You must delete apps using this before remove it");
+        request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
         request.setInt(classicDBid);
         request.set();
         account.removeFromDB(db);
