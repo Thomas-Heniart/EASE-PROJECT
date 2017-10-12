@@ -14,7 +14,6 @@ import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
@@ -211,7 +210,6 @@ public class User {
     protected boolean sawGroupProfile;
     protected Status status;
     protected ExtensionKeys extensionKeys;
-    protected UpdateManager updateManager;
 
     protected SessionSave sessionSave;
     private JWToken jwt;
@@ -234,10 +232,6 @@ public class User {
         this.sessionSave = sessionSave;
         this.status = status;
         this.sawGroupProfile = sawGroupProfile;
-    }
-
-    public void initializeUpdateManager(ServletContext context, DataBaseConnection db) throws GeneralException {
-        this.updateManager = new UpdateManager(context, db, this);
     }
 
     private void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
@@ -281,10 +275,6 @@ public class User {
 
     public Option getOptions() {
         return opt;
-    }
-
-    public UpdateManager getUpdateManager() {
-        return this.updateManager;
     }
 
     public DashboardManager getDashboardManager() {

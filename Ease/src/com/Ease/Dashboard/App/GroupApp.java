@@ -1,25 +1,18 @@
 package com.Ease.Dashboard.App;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import org.json.simple.JSONObject;
-
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.LinkApp.GroupLinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
+import org.json.simple.JSONObject;
+
+import javax.servlet.ServletContext;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class GroupApp {
 	public enum Data {
@@ -38,7 +31,7 @@ public class GroupApp {
 	 * 
 	 */
 	
-	public static List<GroupApp> loadGroupApps(Group group, DataBaseConnection db, ServletContext context) throws GeneralException {
+	public static List<GroupApp> loadGroupApps(Group group, DataBaseConnection db, ServletContext context) throws GeneralException, HttpServletException {
 		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 		List<GroupApp> groupApps = new LinkedList<GroupApp>();
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM groupApps WHERE group_id= ?;");

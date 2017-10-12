@@ -1,6 +1,20 @@
 package com.Ease.Catalog;
 
+import com.Ease.Context.Variables;
+import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import javax.persistence.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -127,4 +141,78 @@ public class Website {
         this.sso = sso;
     }
 
+    public String getLogo() {
+        return Variables.URL_PATH + "/" + this.getFolder() + "/logo.png";
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        JSONObject information = new JSONObject();
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList())
+            information.put(websiteInformation.getInformation_name(), websiteInformation.getJson());
+        res.put("information", information);
+        return res;
+    }
+
+    public JSONObject getSimpleJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getDb_id());
+        res.put("name", this.getName());
+        res.put("logo", this.getLogo());
+        res.put("pinneable", this.getWebsiteAttributes().isIntegrated());
+        return res;
+    }
+
+    public JSONObject getCatalogJson() {
+        JSONObject res = this.getJson();
+        res.put("landing_url", this.getWebsite_homepage());
+        /* loginWith part */
+
+        /* end loginWith part */
+        res.put("integration_date", this.getWebsiteAttributes().getAddedDate().getTime());
+        return res;
+    }
+
+    /* @TODO to be replaced ASAP do it with a JSON*/
+
+    public Map<String, String> getNeededInfos(ServletManager sm) throws HttpServletException {
+        try {
+            Map<String, String> res = new HashMap<>();
+            for (WebsiteInformation information : this.getWebsiteInformationList()) {
+                String info_name = information.getInformation_name();
+                String value = sm.getServletParam(info_name, false);
+                if (value == null || value.isEmpty())
+                    throw new HttpServletException(HttpStatus.BadRequest, "Wrong info: " + info_name + ".");
+                if (info_name.equals("password")) {
+                    //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
+                    String keyDate = sm.getServletParam("keyDate", true);
+                    if (keyDate != null && !keyDate.equals(""))
+                        value = RSA.Decrypt(value, Integer.parseInt(keyDate));
+                }
+                res.put(info_name, value);
+            }
+            return res;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, "Oops, please contact us at thomas@ease.space");
+        }
+    }
+
+    public Map<String,String> getNeededInfosForEdition(ServletManager sm) {
+        return null;
+    }
+
+    /* For current version of askInfo */
+    public JSONObject getConnectionJson() throws HttpServletException {
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.PROJECT_PATH + this.getFolder() + "/connect.json"));
+            a.put("loginUrl", this.getLogin_url());
+            a.put("website_name", this.getName());
+            a.put("siteSrc", this.getFolder());
+            a.put("img", this.getLogo());
+            return a;
+        } catch (IOException | ParseException e) {
+            throw new HttpServletException(HttpStatus.InternError, "Sorry, fuck you");
+        }
+    }
 }

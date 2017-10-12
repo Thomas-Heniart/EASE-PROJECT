@@ -1,11 +1,11 @@
 package com.Ease.Context;
 
-import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
@@ -47,11 +47,17 @@ public class OnStart implements ServletContextListener {
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
                 context.setAttribute("idGenerator", new IdGenerator());
-                Catalog catalog = new Catalog(db, context);
+                //Catalog catalog = new Catalog(db, context);
+                com.Ease.Catalog.Catalog catalog = new com.Ease.Catalog.Catalog();
+                catalog.populate();
                 context.setAttribute("catalog", catalog);
                 context.setAttribute("groupManager", new GroupManager());
                 context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
+
                 TeamManager teamManager = new TeamManager(context, db);
+                for (Team team : teamManager.getTeams()) {
+                    System.out.println(catalog.getWebsiteMap().values().containsAll(team.getTeamWebsites()));
+                }
                 context.setAttribute("teamManager", teamManager);
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
                 Stripe.apiVersion = "2017-08-15";
@@ -68,8 +74,8 @@ public class OnStart implements ServletContextListener {
                 Timer time = new Timer(); // Instantiate Timer Object
                 StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
                 time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
-                WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
-                time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
+                /* WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
+                time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000); */
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
                 time.schedule(reminders, 0, 24 * 60 * 60 * 1000);
                 List<String> colors = new ArrayList<String>();

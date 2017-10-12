@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;

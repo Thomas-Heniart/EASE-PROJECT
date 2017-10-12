@@ -409,7 +409,7 @@ public class App implements ShareableApp, SharedApp {
         return false;
     }
 
-    public JSONArray getJSON(ServletManager sm) throws GeneralException {
+    public JSONArray getJSON(ServletManager sm) throws GeneralException, HttpServletException {
         return new JSONArray();
     }
 

@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Catalog.Catalog;
 import com.Ease.Context.Variables;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.HttpServletException;
@@ -66,7 +66,7 @@ public class ServletUploadWebsite extends HttpServlet {
                     if (item.isFormField()) {
                         if (item.getFieldName().equals("website_id")) {
                             Catalog catalog = (Catalog) request.getServletContext().getAttribute("catalog");
-                            String folder = catalog.getWebsiteWithId(Integer.parseInt(item.getString())).getDbFolder();
+                            String folder = catalog.getWebsiteWithId(Integer.parseInt(item.getString())).getFolder();
                             uploadPath = Variables.PROJECT_PATH + Variables.WEBSITES_PATH + folder;
                             File uploadDir = new File(uploadPath);
                             if (!uploadDir.exists()) {

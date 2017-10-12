@@ -46,7 +46,7 @@ public class ServletPinAppToDashboard extends HttpServlet {
             if (app.isLinkApp())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot pin link app like this.");
             WebsiteApp websiteApp = (WebsiteApp) app;
-            if (!websiteApp.getSite().isIntegrated())
+            if (!websiteApp.getSite().getWebsiteAttributes().isIntegrated())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot until this app becomes integrated.");
             if (profile_id == -1)
                 sharedApp.unpin(db);

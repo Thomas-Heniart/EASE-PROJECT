@@ -1,5 +1,7 @@
 package com.Ease.Catalog;
 
+import org.json.simple.JSONObject;
+
 import javax.persistence.*;
 
 /**
@@ -106,5 +108,14 @@ public class WebsiteInformation {
 
     public void setWebsite(Website website) {
         this.website = website;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("type", this.getInformation_type());
+        res.put("placeholder", this.getPlaceholder());
+        res.put("placeholderIcon", this.getPlaceholder_icon());
+        res.put("priority", this.getPriority());
+        return res;
     }
 }

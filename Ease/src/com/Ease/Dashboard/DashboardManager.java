@@ -1,6 +1,6 @@
 package com.Ease.Dashboard;
 
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;

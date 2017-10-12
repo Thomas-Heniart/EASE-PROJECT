@@ -1,6 +1,6 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
@@ -207,7 +207,7 @@ public class ClassicApp extends WebsiteApp {
         return true;
     }
 
-    public JSONArray getJSON(ServletManager sm) throws GeneralException {
+    public JSONArray getJSON(ServletManager sm) throws GeneralException, HttpServletException {
         JSONArray infos = super.getJSON(sm);
         JSONObject websiteInfos = (JSONObject) infos.get(0);
         websiteInfos.put("user", this.account.getJSON(sm));

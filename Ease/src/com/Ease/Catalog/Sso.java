@@ -1,5 +1,7 @@
 package com.Ease.Catalog;
 
+import org.json.simple.JSONObject;
+
 import javax.persistence.*;
 
 /**
@@ -49,5 +51,13 @@ public class Sso {
 
     public void setImgPath(String imgPath) {
         this.imgPath = imgPath;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getDb_id());
+        res.put("name", this.getName());
+        res.put("logo", this.getImgPath());
+        return res;
     }
 }

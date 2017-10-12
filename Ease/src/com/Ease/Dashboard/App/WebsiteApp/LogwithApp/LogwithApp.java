@@ -1,6 +1,6 @@
 package com.Ease.Dashboard.App.WebsiteApp.LogwithApp;
 
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
@@ -136,7 +136,7 @@ public class LogwithApp extends WebsiteApp {
         json.put("website_name", this.website.getName());
     }
 
-    public JSONArray getJSON(ServletManager sm) throws GeneralException {
+    public JSONArray getJSON(ServletManager sm) throws GeneralException, HttpServletException {
         JSONArray infos = logwith.getJSON(sm);
         JSONObject websiteInfos = (JSONObject) super.getJSON(sm).get(0);
         websiteInfos.put("logWith", logwith.getSite().getName());
