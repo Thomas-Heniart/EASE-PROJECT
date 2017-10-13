@@ -23,44 +23,48 @@ public class ServletLogin extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String email = sm.getStringParam("email", true, false).toLowerCase();
-            String password = sm.getStringParam("password", true, false);
-            DataBaseConnection db = sm.getDB();
-            if (!Regex.isEmail(email) || password.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
+            try {
+                String email = sm.getStringParam("email", true, false).toLowerCase();
+                String password = sm.getStringParam("password", true, false);
+                DataBaseConnection db = sm.getDB();
+                if (!Regex.isEmail(email) || password.equals(""))
+                    throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
             /* String key = (String) sm.getContextAttr("privateKey");
             password = RSA.Decrypt(password, key); */
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?");
-            databaseRequest.setString(email);
-            if (!databaseRequest.get().next())
-                throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
-            User user = User.loadUser(email, password, sm.getServletContext(), db);
-            HibernateQuery hibernateQuery = new HibernateQuery();
-            for (TeamUser teamUser : user.getTeamUsers()) {
-                if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
-                    teamUser.finalizeRegistration();
-                    hibernateQuery.saveOrUpdateObject(teamUser);
-                }
-                if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
-                    String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), user.getKeys().getPrivateKey());
-                    teamUser.setTeamKey(user.encrypt(deciphered_teamKey));
-                    teamUser.setDeciphered_teamKey(deciphered_teamKey);
-                    teamUser.setDisabled(false);
-                    hibernateQuery.saveOrUpdateObject(teamUser);
-                    for (SharedApp sharedApp : teamUser.getSharedApps()) {
-                        sharedApp.setDisableShared(false, sm.getDB());
+                DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?");
+                databaseRequest.setString(email);
+                if (!databaseRequest.get().next())
+                    throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
+                User user = User.loadUser(email, password, sm.getServletContext(), db);
+                HibernateQuery hibernateQuery = new HibernateQuery();
+                for (TeamUser teamUser : user.getTeamUsers()) {
+                    if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
+                        teamUser.finalizeRegistration();
+                        hibernateQuery.saveOrUpdateObject(teamUser);
+                    }
+                    if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
+                        String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), user.getKeys().getPrivateKey());
+                        teamUser.setTeamKey(user.encrypt(deciphered_teamKey));
+                        teamUser.setDeciphered_teamKey(deciphered_teamKey);
+                        teamUser.setDisabled(false);
+                        hibernateQuery.saveOrUpdateObject(teamUser);
+                        for (SharedApp sharedApp : teamUser.getSharedApps()) {
+                            sharedApp.setDisableShared(false, sm.getDB());
+                        }
                     }
                 }
+                hibernateQuery.commit();
+                ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
+                ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
+                ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
+                user.getDashboardManager().decipherApps(sm);
+                JSONObject res = new JSONObject();
+                res.put("JWT", user.getJwt().getJwt());
+                ((Map<String, User>) sm.getContextAttr("tokenUserMap")).put(user.getJwt().getConnection_token(), user);
+                sm.setSuccess(res);
+            } catch (GeneralException e) {
+                throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
             }
-            hibernateQuery.commit();
-            ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
-            ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
-            ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
-            user.getDashboardManager().decipherApps(sm);
-            JSONObject res = new JSONObject();
-            res.put("JWT", user.getJwt().getJwt());
-            ((Map<String, User>) sm.getContextAttr("tokenUserMap")).put(user.getJwt().getConnection_token(), user);
-            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
