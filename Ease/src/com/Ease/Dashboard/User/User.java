@@ -188,7 +188,7 @@ public class User {
         newUser.initializeNotificationManager();
         UserEmail userEmail = UserEmail.createUserEmail(email, newUser, true, db);
         newUser.getUserEmails().put(email, userEmail);
-        //newUser.initializeUpdateManager(context, db);
+        newUser.loadJWT((Key) context.getAttribute("secret"), db);
         request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
         request.setString(email);
         request.set();
