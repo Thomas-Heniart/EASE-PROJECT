@@ -1,7 +1,8 @@
 import React from 'react';
 import ShowGrid from './ShowGrid';
 import ListCategory from './ListCategory';
-import { Input, List, Button, Icon, Grid, Image } from 'semantic-ui-react';
+import RequestForm from './RequestForm';
+import { Input, List, Button, Icon, Grid, Image, Segment, Checkbox, Form } from 'semantic-ui-react';
 import { render } from 'react-router-dom';
 import style from '../../../../WebContent/cssMinified.v00017/catalog.css';
 
@@ -11,6 +12,7 @@ class Catalog extends React.Component {
         super(props);
         this.state = {
             categorySelected: '',
+            searchInput: '',
             categories : [
                 {name: 'Chill'},
                 {name: 'Events'},
@@ -30,7 +32,8 @@ class Catalog extends React.Component {
                 {name: 'Sens Critique', logo: '/resources/websites/SensCritique/logo.png', category: 'Chill'},
                 {name: 'MailChimp', logo: '/resources/websites/Mailchimp/logo.png', category: 'Events'}
             ],
-            allApps: []
+            allApps: [],
+            loading: false
         };
     }
 
@@ -38,23 +41,35 @@ class Catalog extends React.Component {
         this.setState({allApps: this.state.apps});
     }
 
-    search = e => {
+    search = (e) => {
         let appsFiltered = this.state.apps.filter((item) => {
             return item.name.toString().toLowerCase().search(
-                e.target.value.toString().toLowerCase()) !== -1;
+                e.target.value.toString().toLowerCase().trim()) !== -1;
         });
-        this.setState({allApps: appsFiltered});
+        this.setState({ searchInput: e.target.value, allApps: appsFiltered });
     };
 
     sortList = (e, selected) => {
-        this.setState({categorySelected: selected});
+        let appsFiltered = this.state.apps.filter((item) => {
+            return item.name.toString().toLowerCase().search('') !== -1;
+        });
+        this.setState({ searchInput: '', categorySelected: selected, allApps: appsFiltered });
     };
 
     showAllApps = (e) => {
-      this.setState({categorySelected: ''});
+        let appsFiltered = this.state.apps.filter((item) => {
+            return item.name.toString().toLowerCase().search('') !== -1;
+        });
+        this.setState({ searchInput: '', categorySelected: '', allApps: appsFiltered });
     };
 
     render() {
+
+        let appsSorted = this.state.allApps.filter((item) => {
+            return item.category.toLowerCase().search(
+                this.state.categorySelected.toLowerCase()) !== -1;
+        });
+
         return (
             <div id="catalog">
                 <header>
@@ -64,27 +79,51 @@ class Catalog extends React.Component {
                             <Input
                                 className="inputSearch centered"
                                 placeholder='Search'
-                                onChange={e => this.search(e)} />
+                                onChange={e => this.search(e)}
+                                value={this.state.searchInput} />
                         </div>
                     </div>
                 </header>
                 <div className="container">
-                    <Button className="bookmarkButton">
-                        <Icon name="bookmark" />
-                        Add a Bookmark
-                    </Button>
-                    <Button className="importButton" color="facebook">
-                        <Icon name="facebook" />
-                        Import Accounts
-                    </Button>
                     <Grid>
                         <Grid.Column width={3}>
+                            <Button className="bookmarkButton">
+                                <Icon name="bookmark" />
+                                Add a Bookmark
+                            </Button>
+                            <Button className="importButton" color="facebook">
+                                <Icon name="facebook" />
+                                Import Accounts
+                            </Button>
                             <ListCategory categories={this.state.categories} sortList={this.sortList} showAllApps={this.showAllApps} />
                         </Grid.Column>
-                        <Grid.Column width={13}>
-                            <h3>{this.state.categorySelected}</h3>
-                                <ShowGrid apps={this.state.allApps} categorySelected={this.state.categorySelected} />
+                        <Grid.Column width={10}>
+                            {appsSorted.length ?
+                                <div>
+                                    <h3>{this.state.categorySelected}</h3>
+                                    <ShowGrid apps={this.state.allApps} categorySelected={this.state.categorySelected} />
+                                </div>
+                                :
+                                <div/>
+                            }
+                            {this.state.searchInput !== '' && this.state.categorySelected !== '' && this.state.allApps.length ?
+                                <div>
+                                    <h3>Others</h3>
+                                    <ShowGrid apps={this.state.allApps} categorySelected='' />
+                                </div>
+                                :
+                                <div/>
+                            }
+                            {!this.state.allApps.length ?
+                                <div>
+                                    <h3>Cannot find your App?</h3>
+                                    <RequestForm loading={this.state.loading} />
+                                </div>
+                                :
+                                <div/>
+                            }
                         </Grid.Column>
+                        <Grid.Column width={3} />
                     </Grid>
                 </div>
             </div>
