@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name":"Ease.space",
+    "icon": "./app/resources/images/ease-logo.png",
+    "sdkVersion": "21.0.0",
+    "version": "1.0.0",
+    "slug": "ease-app",
+    "orientation": "portrait",
+    "loading": {
+      "icon": "./app/resources/images/ease-white-logo-square.png",
+      "backgroundColor": "#373B60"
+    },
+    "ios": {
+      "bundleIdentifier": "com.ease.app"
+    },
+    "android": {
+      "package": "com.ease.app"
+    }
+  }
+}
