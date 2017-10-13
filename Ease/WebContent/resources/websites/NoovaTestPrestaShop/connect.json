@@ -1,0 +1,22 @@
+{
+  "name":"Noova test PrestaShop",
+  "lastLogin":"",
+  "home":"https://test.noova.co/admin0/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#login_form #email"},
+      {"action":"fill", "what":"password", "search":"#login_form #passwd"},
+      {"action":"click", "search":"#login_form button[name='submitLogin']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#header_logout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#login_form button[name='submitLogin'], #header_logout"},
+    {"search":"#header_logout"}
+  ]
+}
