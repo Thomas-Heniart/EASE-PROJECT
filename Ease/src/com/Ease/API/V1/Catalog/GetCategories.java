@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Catalog;
 
 import com.Ease.Utils.Servlets.GetServletManager;
-import org.json.simple.JSONArray;
+import com.Ease.Catalog.Catalog;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -18,17 +18,9 @@ public class GetCategories extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
+            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONObject res = new JSONObject();
-            JSONArray categories = new JSONArray();
-            JSONObject cat_one = new JSONObject();
-            cat_one.put("id", 1);
-            cat_one.put("name", "Category 1");
-            categories.add(cat_one);
-            JSONObject cat_two = new JSONObject();
-            cat_two.put("id", 2);
-            cat_two.put("name", "Category 2");
-            categories.add(cat_two);
-            res.put("categories", categories);
+            res.put("categories", catalog.getCategoriesJson());
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

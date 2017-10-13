@@ -1,15 +1,14 @@
 package com.Ease.Dashboard.App.WebsiteApp;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Context.Catalog.WebsiteInformation;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
+import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.EnterpriseApp.EnterpriseAppAttributes;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Mail.SendGridMail;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.AES;
@@ -41,7 +40,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 	 * 
 	 */
 
-    public static WebsiteApp loadWebsiteApp(Integer appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletContext context, DataBaseConnection db) throws GeneralException {
+    public static WebsiteApp loadWebsiteApp(Integer appDBid, Profile profile, Integer position, String insertDate, AppInformation appInfos, GroupApp groupApp, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         DatabaseRequest request = db.prepareRequest("SELECT * from websiteApps WHERE app_id= ?;");
         request.setInt(appDBid);
         DatabaseResult rs = request.get();
@@ -63,7 +62,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
                     return ClassicApp.loadClassicApp(appDBid, profile, position, appInfos, groupApp, insertDate, website, websiteAppDBid, context, db);
             }
         }
-        throw new GeneralException(ServletManager.Code.InternError, "Website app not complete in db.");
+        throw new GeneralException(ServletManager.Code.InternError, "Catalog app not complete in db.");
     }
 
     public static Integer createWebsiteApp(Profile profile, Integer position, String name, String type, Website site, Map<String, Object> elevator, DataBaseConnection db) throws GeneralException {
@@ -74,11 +73,6 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         request.setInt(appDBid);
         request.setString(type);
         Integer websiteAppDBid = request.set();
-        //site.incrementRatio(db);
-        if (site.getRatio() == 100) {
-            SendGridMail mail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-            mail.sendAwesomeUserEmail(site, db);
-        }
         elevator.put("appDBid", appDBid);
         db.commitTransaction(transaction);
         return websiteAppDBid;
@@ -271,15 +265,15 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public void fillJson(JSONObject json) {
         super.fillJson(json);
         json.put("websiteId", website.getDb_id());
-        json.put("ssoId", (website.getSso() == null) ? -1 : website.getSso().getDbid());
+        json.put("ssoId", (website.getSso() == null) ? -1 : website.getSso().getDb_id());
         json.put("imgSrc", this.website.getFolder() + "logo.png");
         json.put("type", "emptyApp");
     }
 
-    public JSONArray getJSON(ServletManager sm) throws GeneralException {
+    public JSONArray getJSON(ServletManager sm) throws GeneralException, HttpServletException {
         JSONArray infos = new JSONArray();
         JSONObject websiteInfos = new JSONObject();
-        websiteInfos.put("website", website.getJSON(sm));
+        websiteInfos.put("website", website.getConnectionJson());
         infos.add(websiteInfos);
         return infos;
     }
@@ -294,6 +288,12 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     public JSONObject getJson() {
         JSONObject res = super.getJson();
+        res.put("logo", this.website.getFolder() + "logo.png");
+        return res;
+    }
+
+    public JSONObject getRestJson() {
+        JSONObject res = super.getRestJson();
         res.put("logo", this.website.getFolder() + "logo.png");
         return res;
     }
@@ -321,8 +321,8 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         Integer websiteAppId;
         if (account_information.isEmpty()) {
             account_information = new JSONObject();
-            for (WebsiteInformation websiteInformation : this.getSite().getInformations())
-                account_information.put(websiteInformation.getInformationName(), "");
+            for (WebsiteInformation websiteInformation : this.getSite().getWebsiteInformationList())
+                account_information.put(websiteInformation.getInformation_name(), "");
         }
         websiteAppId = WebsiteApp.createSharedWebsiteApp(this, elevator, team.getDb_id(), teamUser_tenant.getDb_id(), sm);
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
@@ -345,7 +345,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
     public JSONObject getShareableJson() throws HttpServletException {
         JSONObject res = super.getShareableJson();
         res.put("type", "multi");
-        res.put("website", this.website.getInformationJson());
+        res.put("website", this.getSite().getJson());
         res.put("password_change_interval", this.getReminderIntervalValue());
         if (this.isEmpty())
             res.put("fill_in_switch", this.getEnterpriseAppAttributes().getFill_in_switch());

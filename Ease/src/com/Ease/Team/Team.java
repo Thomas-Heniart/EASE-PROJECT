@@ -1,5 +1,6 @@
 package com.Ease.Team;
 
+import com.Ease.Catalog.Website;
 import com.Ease.Context.Variables;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
@@ -91,6 +92,10 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
+    protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
     @Transient
     protected Map<Integer, TeamUser> teamUsersWaitingForVerification = new ConcurrentHashMap<>();
@@ -221,6 +226,14 @@ public class Team {
 
     public void setChannels(Map<Integer, Channel> channels) {
         this.channels = channels;
+    }
+
+    public Set<Website> getTeamWebsites() {
+        return teamWebsites;
+    }
+
+    public void setTeamWebsites(Set<Website> teamWebsites) {
+        this.teamWebsites = teamWebsites;
     }
 
     public AppManager getAppManager() {

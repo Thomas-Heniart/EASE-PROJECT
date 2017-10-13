@@ -1,16 +1,18 @@
 package com.Ease.Context;
 
-import com.Ease.Context.Catalog.Catalog;
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
+import io.jsonwebtoken.SignatureAlgorithm;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OnStart implements ServletContextListener {
 
@@ -44,11 +47,17 @@ public class OnStart implements ServletContextListener {
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
                 context.setAttribute("idGenerator", new IdGenerator());
-                Catalog catalog = new Catalog(db, context);
+                //Catalog catalog = new Catalog(db, context);
+                com.Ease.Catalog.Catalog catalog = new com.Ease.Catalog.Catalog();
+                catalog.populate();
                 context.setAttribute("catalog", catalog);
                 context.setAttribute("groupManager", new GroupManager());
                 context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
+
                 TeamManager teamManager = new TeamManager(context, db);
+                for (Team team : teamManager.getTeams()) {
+                    System.out.println(catalog.getWebsiteMap().values().containsAll(team.getTeamWebsites()));
+                }
                 context.setAttribute("teamManager", teamManager);
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
                 Stripe.apiVersion = "2017-08-15";
@@ -65,8 +74,8 @@ public class OnStart implements ServletContextListener {
                 Timer time = new Timer(); // Instantiate Timer Object
                 StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
                 time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
-                WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
-                time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
+                /* WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
+                time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000); */
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
                 time.schedule(reminders, 0, 24 * 60 * 60 * 1000);
                 List<String> colors = new ArrayList<String>();
@@ -81,14 +90,16 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("colors", colors);
 
                 Infrastructure.loadInfrastructures(db, evt.getServletContext());
-                Map<String, User> usersMap = new HashMap<String, User>();
+                Map<String, User> usersMap = new ConcurrentHashMap<>();
                 context.setAttribute("users", usersMap);
-                Map<String, com.Ease.NewDashboard.User.User> userMap = new HashMap<String, com.Ease.NewDashboard.User.User>();
-                context.setAttribute("userMap", userMap);
-                Map<String, User> sessionIdUserMap = new HashMap<String, User>();
+                Map<String, User> sessionIdUserMap = new ConcurrentHashMap<>();
                 context.setAttribute("sessionIdUserMap", sessionIdUserMap);
-                Map<String, User> sIdUserMap = new HashMap<String, User>();
+                Map<String, User> sIdUserMap = new ConcurrentHashMap<>();
                 context.setAttribute("sIdUserMap", sIdUserMap);
+                Map<String, User> tokenUserMap = new ConcurrentHashMap<>();
+                context.setAttribute("tokenUserMap", tokenUserMap);
+                byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
+                context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
                 System.out.println("done.");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date mydate = new Date();

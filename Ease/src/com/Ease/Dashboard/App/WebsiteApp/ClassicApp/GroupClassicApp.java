@@ -1,11 +1,6 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Website;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.AppInformation;
@@ -13,12 +8,9 @@ import com.Ease.Dashboard.App.AppPermissions;
 import com.Ease.Dashboard.App.WebsiteApp.GroupWebsiteApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.IdGenerator;
-import com.Ease.Utils.ServletManager;
+import com.Ease.Utils.*;
+
+import javax.servlet.ServletContext;
 
 public class GroupClassicApp extends GroupWebsiteApp{
 	public enum Data {

@@ -1,20 +1,20 @@
 {
     "name":"o2switch",
     "lastLogin":"",
-    "home":"https://clients.o2switch.fr/",
+    "home":"https://clients.o2switch.fr/client.php",
     "connect":{
         "todo":[
-            {"action":"fill", "what":"login", "search":"#id1"},
-            {"action":"fill", "what":"password", "search":"#mdp1"},
-            {"action":"click", "search":"input[type=submit]"}
+    		{"action":"fill", "what":"login", "search":"form input[name='login']", "grave":true},
+            {"action":"fill", "what":"password", "search":"form input[name='password']", "grave":true},
+            {"action":"click", "search":"form input[type='submit']"}
         ]
     },
     "logout":{
         "todo":[
-            {"action": "aclick", "search": "a[href*='delogin']"}
-            ]
+            {"action":"aclick", "search":"a[href*='delogin']"}
+       	]
     },
     "checkAlreadyLogged":[
-        {"search": "a[href*='delogin']"}
+        {"search":"a[href*='delogin']"}
     ]
 }

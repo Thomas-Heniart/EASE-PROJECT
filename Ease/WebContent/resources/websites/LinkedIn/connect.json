@@ -14,7 +14,7 @@
 			{"action":"click", "search":"#nav-settings__dropdown-trigger"},
 			{"action":"waitfor", "search":"a[href*='logout']"},
 			{"action":"aclick", "search":"a[href*='logout']"},
-			{"action":"waitfor", "search":"#login-email"}
+			{"action":"goto", "url":"https://www.linkedin.com/"}
 			]
 	},
 	"checkAlreadyLogged":[
