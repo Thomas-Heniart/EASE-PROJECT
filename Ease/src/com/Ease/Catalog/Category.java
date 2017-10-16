@@ -76,4 +76,10 @@ public class Category {
         res.put("position", this.getPosition());
         return res;
     }
+
+    public void addWebsite(Website website) {
+        if (this.getWebsiteMap().containsKey(website.getDb_id()))
+            return;
+        this.getWebsiteMap().put(website.getDb_id(), website);
+    }
 }

@@ -48,13 +48,39 @@ $(document).ready(function () {
                         target.removeClass("loading");
                     });
                     break;
+                case "category-segment":
+                    ajaxHandler.get("/api/v1/catalog/GetCategories", null, function () {
 
+                    }, function (data) {
+                        var categories = data.categories;
+                        categories.sort(function (c1, c2) {
+                            return c1.position - c2.position;
+                        });
+                        categories.forEach(function (category) {
+                            addCategoryRow(category).appendTo($("#category-manager-body"));
+                        });
+                    });
+                    break;
                 default:
                     break;
             }
         }
     });
 });
+
+function addCategoryRow(category) {
+    var elem = $("<tr>" +
+        "<td>" + category.id + "</td>" +
+        "<td class='name'>" + category.name + "</td>" +
+        "<td class='position'>" + category.position + "</td>" +
+        "<td><a href='#' class='edit'><i class='fa fa-cog'></i></a></td>" +
+        "<td><a href='#'><i class='fa fa-trash'></i></a></td>" +
+        "</tr>");
+    $("a.edit", elem).click(function () {
+        openCategoryEdit(category, elem);
+    })
+    return elem;
+}
 
 function addTeamRow(team) {
     var elem = $("<tr>" +
@@ -108,6 +134,43 @@ function addWebsiteRow(website) {
         openWebsiteMerging(website, elem);
     });
     return elem;
+}
+
+function openCategoryEdit(category, elem) {
+    var modal = $("#category-modal");
+    var edit_category = $("#category-edition", modal);
+    var name = $("input[name='name']", edit_category);
+    var position = $("input[name='position']", edit_category);
+    name.val(category.name);
+    position.val(category.position);
+    edit_category.submit(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var action = $(this).attr("action");
+        ajaxHandler.post(action, {
+            category_id: category.id,
+            name: name.val(),
+            position: parseInt(position.val())
+        }, function () {
+
+        }, function () {
+            category.name = name.val();
+            category.position = parseInt(position.val());
+            $(".name", elem).text(category.name);
+            $(".position", elem).text(category.position);
+            modal.modal("hide");
+        }, function() {
+            modal.modal("hide");
+        });
+        edit_category.off("submit");
+    });
+    modal
+        .modal({
+            onHide: function () {
+                edit_category.off("submit");
+            }
+        })
+        .modal("show");
 }
 
 function openWebsiteIntegration(website, websiteElem) {
