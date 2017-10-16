@@ -5,7 +5,6 @@ import {Provider} from "react-redux";
 import {StripeProvider} from 'react-stripe-elements';
 import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 import store from "./store";
-import {teamApps} from "./utils/api"
 var TeamView = require('./components/TeamView.js');
 var TeamCreationView = require('./components/teams/TeamCreationView');
 var MainView = require('./components/common/MainView');

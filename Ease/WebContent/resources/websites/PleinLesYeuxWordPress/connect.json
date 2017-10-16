@@ -1,0 +1,22 @@
+{
+  "name":"Plein les yeux Wordpress",
+  "lastLogin":"",
+  "home":"http://www.pleinlesyeux.co/wp-admin/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#loginform input#user_login"},
+      {"action":"fill", "what":"password", "search":"#loginform input#user_pass"},
+      {"action":"click", "search":"#loginform input#wp-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#wp-admin-bar-logout a"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#loginform input#wp-submit, #wp-admin-bar-logout a"},
+    {"search":"#wp-admin-bar-logout a"}
+  ]
+}

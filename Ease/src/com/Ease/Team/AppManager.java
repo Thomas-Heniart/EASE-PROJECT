@@ -120,7 +120,8 @@ public class AppManager {
     public void removeShareableApp(ShareableApp shareableApp, DataBaseConnection db) throws HttpServletException {
         try {
             int transaction = db.startTransaction();
-            //this.removeSharedApps(shareableApp.getSharedApps(), db);
+            for (Integer id : shareableApp.getSharedApps().keySet())
+                this.getSharedApps().remove(id);
             this.removeShareableApp(shareableApp);
             shareableApp.deleteShareable(db);
             db.commitTransaction(transaction);

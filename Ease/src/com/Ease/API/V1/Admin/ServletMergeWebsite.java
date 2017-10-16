@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -64,7 +64,8 @@ public class ServletMergeWebsite extends HttpServlet {
             databaseRequest.setInt(website.getDb_id());
             databaseRequest.setInt(website_to_merge.getDb_id());
             databaseRequest.set();
-            catalog.removeWebsite(website_to_merge.getDb_id(), db);
+            catalog.removeWebsite(website_to_merge.getDb_id());
+            sm.deleteObject(website_to_merge);
             db.commitTransaction(transaction2);
             sm.setSuccess("Websites merged");
         } catch (Exception e) {

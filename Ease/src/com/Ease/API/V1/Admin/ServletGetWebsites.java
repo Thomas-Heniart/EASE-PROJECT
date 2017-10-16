@@ -1,9 +1,8 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Sso;
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Team.Team;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Sso;
+import com.Ease.Catalog.Website;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
@@ -31,22 +30,22 @@ public class ServletGetWebsites extends HttpServlet {
                 tmp.put("id", website.getDb_id());
                 tmp.put("name", website.getName());
                 tmp.put("logo", website.getLogo());
-                tmp.put("folder", website.getDbFolder());
-                tmp.put("login_url", website.getUrl());
-                tmp.put("landing_url", website.getHomePageUrl());
-                tmp.put("public", website.isPublic());
-                tmp.put("integrated", website.isIntegrated());
+                tmp.put("folder", website.getFolder());
+                tmp.put("login_url", website.getLogin_url());
+                tmp.put("landing_url", website.getWebsite_homepage());
+                tmp.put("public", website.getWebsiteAttributes().isPublic_website());
+                tmp.put("integrated", website.getWebsiteAttributes().isIntegrated());
                 JSONArray teams = new JSONArray();
-                for (String team_id : website.getTeam_ids()) {
+                /* for (String team_id : website.getTeam_ids()) {
                     Team team = teamManager.getTeamWithId(Integer.valueOf(team_id));
                     JSONObject teamObj = new JSONObject();
                     teamObj.put("id", team.getDb_id());
                     teamObj.put("name", team.getName());
                     teams.add(teamObj);
-                }
+                } */
                 tmp.put("teams", teams);
                 Sso sso = website.getSso();
-                tmp.put("sso", (sso == null) ? -1 : sso.getDbid());
+                tmp.put("sso", (sso == null) ? -1 : sso.getDb_id());
                 res.add(tmp);
             }
             sm.setSuccess(res);

@@ -1,0 +1,23 @@
+{
+  "name":"LinkLead",
+  "lastLogin":"",
+  "home":"https://app.linklead.io/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#email"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"#login-btn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action": "waitfor", "search":"#email, a[href*='logout']"},
+    {"search":"a[href*='logout']"}
+
+  ]
+}

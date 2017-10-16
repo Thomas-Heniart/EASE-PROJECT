@@ -1,0 +1,24 @@
+{
+  "name":"Incwo",
+  "lastLogin":"",
+  "home":"https://www.incwo.com/site/compte",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url":"https://www.incwo.com/site/compte"},
+      {"action":"waitfor", "search":"#verify"},
+      {"action":"waitfor", "search":"#password"},
+      {"action":"fill", "what":"login", "search":"#verify"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":"#connext .submit a.button-clear"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"waitfor", "search":"a[href*='/account/logout']"},
+      {"action":"trueClick", "search":"a[href*='/account/logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"#app_menu_tw_div"}
+  ]
+}
