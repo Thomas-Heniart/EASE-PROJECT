@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import Expo from 'expo';
-import { StyleSheet, View, TextInput, Image } from 'react-native';
+import { StyleSheet, View, TextInput, Image, ScrollView } from 'react-native';
 import { Toast, Item, Input, Container, Header, Content, Button, Text, Left,Right, Icon, Body, Title, Root } from 'native-base';
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import {bindActionCreators} from "redux";
 import {ActionCreators} from "../actions/index";
 import {resetNavigation,alertToast} from "../utils/helpersFunctions";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 class LoginView extends Component {
   constructor(props){
@@ -43,30 +44,35 @@ class LoginView extends Component {
           <View style={{position:'absolute', width: '100%', height: '100%'}}>
             <Image style={{width:'100%', height:'100%'}} source={require('../resources/images/blue_background.png')}/>
           </View>
-          <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.container} scrollEnabled={false}>
             <View style={{flex:1}}/>
             <Image
                 style={{width:110, height:110, marginBottom:60}}
                 source={require('../resources/images/logo_hexagone_white.png')}/>
-            <Item regular style={styles.inputWrapper}>
-              <Input placeholder='Email'
-                     style={{color: "white"}}
-                     keyboardType="email-address"
-                     placeholderTextColor="#D2DAE4"
-                     onChangeText={(email) => this.setState({email: email})}/>
-            </Item>
-            <Item regular style={styles.inputWrapper}>
-              <Input placeholder='Password'
-                     placeholderTextColor="#D2DAE4"
-                     style={{color: "white"}}
-                     secureTextEntry={true}
-                     onChangeText={(password) => this.setState({password: password})}/>
-            </Item>
+            <View style={{width: '100%'}}>
+              <Item regular style={styles.inputWrapper}>
+                <Input placeholder='Email'
+                       style={{color: "white"}}
+                       keyboardType="email-address"
+                       placeholderTextColor="#D2DAE4"
+                       value={this.state.email}
+                       onChangeText={(email) => this.setState({email: email})}/>
+              </Item>
+              <Item regular style={styles.inputWrapper}>
+                <Input placeholder='Password'
+                       placeholderTextColor="#D2DAE4"
+                       style={{color: "white"}}
+                       secureTextEntry={true}
+                       value={this.state.password}
+                       onChangeText={(password) => this.setState({password: password})}/>
+              </Item>
+            </View>
             <View style={{flex:1}}/>
             <Button block onPress={this.connect} style={{backgroundColor:"#45C997", height:50, borderRadius:5}}>
               <Text style={{fontWeight:'bold'}}>Connection</Text>
             </Button>
-          </View>
+            <KeyboardSpacer/>
+          </ScrollView>
         </Container>
     )
   }
@@ -82,8 +88,9 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 30,
     paddingBottom: 40,
+    paddingTop: 20,
     alignItems:'center',
-    justifyContent:'center',
+    justifyContent: 'space-between',
     backgroundColor:'transparent'
   },
   inputWrapper: {

@@ -3,6 +3,7 @@ import Expo from 'expo';
 import { StyleSheet, View,TextInput, Image, TouchableHighlight, TouchableNativeFeedback, Clipboard, ScrollView   } from 'react-native';
 import { Text,Toast, ActionSheet, Card, CardItem, List,ListItem, Item, Input, Drawer, Container, Header, Content, Button, Left,Right, Icon, Body, Title } from 'native-base';
 import {BoldText } from "./common/text";
+import SideBarChooseButton from "./common/SideBarChooseButton";
 import {ActionCreators} from "../actions/index";
 import {bindActionCreators} from "redux";
 import {resetNavigation} from "../utils/helpersFunctions";
@@ -17,11 +18,14 @@ class PersonalSpaceProfileList extends Component {
           <BoldText style={styles.sectionHeader}>Personal space</BoldText>
           {profiles.map(item => {
             return (
-                <TouchableHighlight key={item.id} onPress={() => {select(-1, item.id, item.name)}}>
+                <SideBarChooseButton
+                    active={this.props.selectedItem.itemId === -1 && this.props.selectedItem.subItemId === item.id}
+                    key={item.id}
+                    onPress={() => {select(-1, item.id, item.name)}}>
                   <Text style={styles.subSection}>
                     {item.name}
                   </Text>
-                </TouchableHighlight>
+                </SideBarChooseButton>
             )
           })}
         </View>
@@ -40,11 +44,14 @@ class TeamRoomList extends Component {
           </BoldText>
           {rooms.map(item => {
             return (
-                <TouchableHighlight key={item.id} onPress={() => {select(team.id, item.id, `# ${item.name}`)}}>
+                <SideBarChooseButton
+                    active={this.props.selectedItem.itemId === team.id && this.props.selectedItem.subItemId === item.id}
+                    key={item.id}
+                    onPress={() => {select(team.id, item.id, `# ${item.name}`)}}>
                   <Text style={styles.subSection}>
                     # {item.name}
                   </Text>
-                </TouchableHighlight>
+                </SideBarChooseButton>
             )
           })}
         </View>
@@ -76,18 +83,30 @@ class HomeSideBar extends Component {
             </Text>
           </View>
           <ScrollView style={{flex:1, paddingLeft:20, paddingRight:20, marginBottom:20}}>
-            <PersonalSpaceProfileList select={this.selectItem} profiles={spaces.personal_space}/>
+            <PersonalSpaceProfileList
+                select={this.selectItem}
+                profiles={spaces.personal_space}
+                selectedItem={this.props.selectedItem}/>
             {spaces.teams.map(item => {
               return (
-                  <TeamRoomList team={item} key={item.id} select={this.selectItem}/>
+                  <TeamRoomList
+                      team={item}
+                      key={item.id}
+                      select={this.selectItem}
+                      selectedItem={this.props.selectedItem}/>
               )
             })}
           </ScrollView>
           <View style={{paddingLeft:20, paddingRight:20}}>
-            <BoldText style={{fontSize:22}}>
-              2 FA
-            </BoldText>
-            <TouchableHighlight onPress={this.logout}>
+            <TouchableHighlight style={styles.mainButtons}>
+              <View style={{flexDirection:'row', alignItems:'center'}}>
+                <BoldText style={{fontSize:22, color: "white"}}>
+                  2 FA
+                </BoldText>
+                <Image style={{height:17, width:60, marginLeft:20}} source={require('../resources/images/soon_image.png')}/>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight style={styles.mainButtons} onPress={this.logout}>
               <BoldText style={{color:'#df5454', fontSize:22}}>
                 LOGOUT
               </BoldText>
@@ -110,6 +129,10 @@ const styles = StyleSheet.create({
     paddingLeft:5,
     paddingTop:7.5,
     paddingBottom:7.5
+  },
+  mainButtons: {
+    paddingTop:5,
+    paddingBottom:5
   }
 });
 

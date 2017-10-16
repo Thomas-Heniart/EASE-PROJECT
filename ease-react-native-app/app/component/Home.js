@@ -47,7 +47,7 @@ class Home extends Component {
             <Header style={{backgroundColor:"#373B60", height:60, paddingTop:15}}>
               <Left>
                 <Button transparent onPress={this.openDrawer}>
-                  <Icon name='menu' />
+                  <Icon name='menu' color="#FFFFFF"/>
                 </Button>
               </Left>
               <Body>
