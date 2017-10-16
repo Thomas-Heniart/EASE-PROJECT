@@ -1,7 +1,7 @@
 package com.Ease.Dashboard.App.WebsiteApp;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
 import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
@@ -34,7 +34,7 @@ public enum Data {
 	 * 
 	 */
 	
-	public static GroupWebsiteApp loadGroupWebsiteApp(String db_id, Group group, GroupProfile groupProfile, AppPermissions perms, AppInformation info, boolean common, int single_id, DataBaseConnection db, ServletContext context) throws GeneralException {
+	public static GroupWebsiteApp loadGroupWebsiteApp(String db_id, Group group, GroupProfile groupProfile, AppPermissions perms, AppInformation info, boolean common, int single_id, DataBaseConnection db, ServletContext context) throws GeneralException, HttpServletException {
 		DatabaseRequest request = db.prepareRequest("SELECT * FROM groupWebsiteApps WHERE group_app_id= ?;");
 		request.setInt(db_id);
 		DatabaseResult rs = request.get();

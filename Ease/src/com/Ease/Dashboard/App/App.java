@@ -409,7 +409,7 @@ public class App implements ShareableApp, SharedApp {
         return false;
     }
 
-    public JSONArray getJSON(ServletManager sm) throws GeneralException {
+    public JSONArray getJSON(ServletManager sm) throws GeneralException, HttpServletException {
         return new JSONArray();
     }
 
@@ -449,6 +449,13 @@ public class App implements ShareableApp, SharedApp {
         jsonObject.put("name", this.getAppInformation().getName());
         jsonObject.put("id", this.getDBid());
         return jsonObject;
+    }
+
+    public JSONObject getRestJson() {
+        JSONObject res = new JSONObject();
+        res.put("name", this.getAppInformation().getName());
+        res.put("id", this.getDBid());
+        return res;
     }
 
     public JSONArray getAccountInformationsJson() {
@@ -600,9 +607,10 @@ public class App implements ShareableApp, SharedApp {
     @Override
     public void pinToDashboard(Profile profile, DataBaseConnection db) throws HttpServletException {
         try {
-            int transaction = db.startTransaction();
+
             if (this.getProfile() == profile)
                 return;
+            int transaction = db.startTransaction();
             this.unpin(db);
             DatabaseRequest request = db.prepareRequest("INSERT INTO profileAndAppMap values (null, ?, ?, ?);");
             request.setInt(profile.getDBid());

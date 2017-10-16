@@ -61,7 +61,7 @@ public class WhitelistWebsite extends HttpServlet {
 				Catalog catalog = (Catalog) sm.getContextAttr("catalog");
 				catalog.whitelistWebsiteWithSingleId(Integer.parseInt(single_id), sm);
 			}
-			sm.setResponse(ServletManager.Code.Success, "Website added to websites visited");
+			sm.setResponse(ServletManager.Code.Success, "Catalog added to websites visited");
 		} catch(GeneralException e) {
 			sm.setResponse(e);
 		}

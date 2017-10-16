@@ -1,0 +1,22 @@
+{
+  "name":"Advanced Cash",
+  "lastLogin":"",
+  "home":"https://wallet.advcash.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#j_username"},
+      {"action":"fill", "what":"password", "search":"#j_password"},
+      {"action":"click", "search":"form[action*='login'] input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], #j_username"},
+    {"search":"a[href*='logout']"}
+  ]
+}

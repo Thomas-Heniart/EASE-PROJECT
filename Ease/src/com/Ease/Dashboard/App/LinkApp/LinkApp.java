@@ -154,6 +154,14 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return res;
     }
 
+    public JSONObject getRestJson() {
+        JSONObject res = super.getRestJson();
+        res.put("logo", this.linkInfos.getImgUrl());
+        res.put("url", this.linkInfos.getLink());
+        res.put("type", "linkApp");
+        return res;
+    }
+
     public void fillJson(JSONObject json) {
         super.fillJson(json);
         json.put("url", this.linkInfos.getLink());
@@ -210,7 +218,7 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         sharedApp.setAdminHasAccess(true, sm.getDB());
         sharedApp.setTeamUser_tenant(teamUser_tenant);
         sharedApp.setReceived(true);
-        sharedApp.setCanSeeInformation(true);
+        sharedApp.setCanSeeInformation(false);
         return sharedApp;
     }
 

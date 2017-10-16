@@ -1,6 +1,5 @@
 package com.Ease.Context.Catalog;
 
-import com.Ease.Context.Group.Group;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
@@ -115,46 +114,6 @@ public class Catalog {
             }
         });
         res.addAll(newWebsites);
-        return res;
-    }
-
-    public List<Website> getPublicWebsitesForGroups(List<Group> groups) {
-        List<Website> res = new LinkedList<Website>();
-        boolean containsWebsite = false;
-        for (Website website : websites) {
-            containsWebsite = false;
-            for (Group group : groups) {
-                if (group.containsWebsite(website) && !website.isNew()) {
-                    res.add(website);
-                    containsWebsite = true;
-                    break;
-                }
-            }
-            if (containsWebsite)
-                continue;
-            if (website.isInPublicCatalog() && !website.isNew())
-                res.add(website);
-        }
-        return res;
-    }
-
-    public List<Website> getNewWebsitesForGroups(List<Group> groups) {
-        List<Website> res = new LinkedList<Website>();
-        boolean containsWebsite = false;
-        for (Website website : websites) {
-            containsWebsite = false;
-            for (Group group : groups) {
-                if (group.containsWebsite(website) && website.isNew()) {
-                    res.add(website);
-                    containsWebsite = true;
-                    break;
-                }
-            }
-            if (containsWebsite)
-                continue;
-            if (website.isInPublicCatalog() && website.isNew())
-                res.add(website);
-        }
         return res;
     }
 

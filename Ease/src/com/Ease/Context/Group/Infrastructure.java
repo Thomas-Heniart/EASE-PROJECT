@@ -1,13 +1,12 @@
 package com.Ease.Context.Group;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.servlet.ServletContext;
-
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import javax.servlet.ServletContext;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Infrastructure {
 	
@@ -23,7 +22,7 @@ public class Infrastructure {
 	 * 
 	 */
 	
-	public static void loadInfrastructures(DataBaseConnection db, ServletContext context) throws GeneralException {
+	public static void loadInfrastructures(DataBaseConnection db, ServletContext context) throws GeneralException, HttpServletException {
 		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 		DatabaseResult rs = db.prepareRequest("SELECT * FROM infrastructures;").get();
 		Infrastructure infra;

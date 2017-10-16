@@ -1,7 +1,7 @@
 package com.Ease.Context.Group;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.GroupApp;
 import com.Ease.Dashboard.Profile.GroupProfile;
 import com.Ease.Dashboard.User.User;
@@ -60,12 +60,12 @@ public class Group {
 		return group;
 	}
 	
-	public static List<Group> loadGroups(DataBaseConnection db, Infrastructure infra, ServletContext context)throws GeneralException {
+	public static List<Group> loadGroups(DataBaseConnection db, Infrastructure infra, ServletContext context) throws GeneralException, HttpServletException {
 		return loadGroup(db, null, infra, context);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<Group> loadGroup(DataBaseConnection db, Group parent, Infrastructure infra, ServletContext context) throws GeneralException {
+	public static List<Group> loadGroup(DataBaseConnection db, Group parent, Infrastructure infra, ServletContext context) throws GeneralException, HttpServletException {
 		IdGenerator idGenerator = (IdGenerator)context.getAttribute("idGenerator");
 		Catalog catalog = (Catalog) context.getAttribute("catalog");
 		List<Group> groups = new LinkedList<Group>();
@@ -101,7 +101,7 @@ public class Group {
 	}
 	
 	
-	private void loadWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException {
+	private void loadWebsites(DataBaseConnection db, Catalog catalog) throws GeneralException, HttpServletException {
 		DatabaseRequest request = db.prepareRequest("SELECT website_id FROM websitesAndGroupsMap WHERE group_id = ?;");
 		request.setInt(this.db_id);
 		DatabaseResult rs = request.get();

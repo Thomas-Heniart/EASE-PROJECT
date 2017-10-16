@@ -1,8 +1,8 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Sso;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Sso;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -43,21 +43,22 @@ public class ServletEditWebsite extends HttpServlet {
             Boolean integrated = sm.getBooleanParam("integrated", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id);
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            website.setName(name, db);
-            website.setFolder(folder, db);
-            website.setLoginUrl(login_url, db);
-            website.setLandingUrl(landing_url, db);
-            website.setIntegrated(integrated, db);
-            website.setTeams(teams, db);
+            website.setName(name);
+            website.setFolder(folder);
+            website.setLogin_url(login_url);
+            website.setWebsite_homepage(landing_url);
+            website.getWebsiteAttributes().setIntegrated(integrated);
+            //website.setTeams(teams, db);
             Sso sso = null;
             if (sso_id != -1)
-                sso = catalog.getSsoWithDbId(sso_id);
-            website.setSso(sso, db);
+                sso = catalog.getSsoWithId(sso_id);
+            website.setSso(sso);
+            sm.saveOrUpdate(website.getWebsiteAttributes());
+            sm.saveOrUpdate(website);
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
-            if (website.isIntegrated()) {
+            if (website.getWebsiteAttributes().isIntegrated()) {
                 TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+                DataBaseConnection db = sm.getDB();
                 for (Team team : teamManager.getTeams()) {
                     int transaction2 = db.startTransaction();
                     for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
@@ -77,8 +78,7 @@ public class ServletEditWebsite extends HttpServlet {
                     webSocketMessageList.clear();
                 }
             }
-            db.commitTransaction(transaction);
-            sm.setSuccess("Website edited");
+            sm.setSuccess("Catalog edited");
         } catch (Exception e) {
             sm.setError(e);
         }

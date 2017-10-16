@@ -1,0 +1,22 @@
+{
+  "name":"Sage One Paie",
+  "lastLogin":"",
+  "home":"https://sageone.bulletinsdepaye.com/Pages/Commun/Connexion/NewConnexion.aspx",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"input.Connexion_Login"},
+      {"action":"fill", "what":"password", "search":"input.Connexion_MotPasse"},
+      {"action":"trueClick", "search":"a.btn-login"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"i.icon-logout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"i.icon-logout, input.Connexion_Login"},
+    {"search":"i.icon-logout"}
+  ]
+}

@@ -1,6 +1,6 @@
 package com.Ease.Dashboard.App.WebsiteApp.ClassicApp;
 
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.*;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
@@ -150,7 +150,12 @@ public class ClassicApp extends WebsiteApp {
 
     public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
-        DatabaseRequest request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
+        DatabaseRequest request = db.prepareRequest("SELECT * from logWithApps WHERE logWith_website_app_id = ?;");
+        request.setInt(this.websiteAppDBid);
+        DatabaseResult rs = request.get();
+        if (rs.next())
+            throw new HttpServletException(HttpStatus.BadRequest, "You must delete apps using this before remove it");
+        request = db.prepareRequest("DELETE FROM classicApps WHERE id = ?;");
         request.setInt(classicDBid);
         request.set();
         account.removeFromDB(db);
@@ -202,7 +207,7 @@ public class ClassicApp extends WebsiteApp {
         return true;
     }
 
-    public JSONArray getJSON(ServletManager sm) throws GeneralException {
+    public JSONArray getJSON(ServletManager sm) throws GeneralException, HttpServletException {
         JSONArray infos = super.getJSON(sm);
         JSONObject websiteInfos = (JSONObject) infos.get(0);
         websiteInfos.put("user", this.account.getJSON(sm));
@@ -224,6 +229,13 @@ public class ClassicApp extends WebsiteApp {
         json.put("login", this.account.getInformationNamed("login"));
         json.put("type", "classicApp");
         json.put("website_name", this.website.getName());
+    }
+
+    public JSONObject getRestJson() {
+        JSONObject res = super.getRestJson();
+        res.put("account_information", this.getAccount().getRestJson());
+        res.put("type", "classicApp");
+        return res;
     }
 
     public void setPassword(String password, ServletManager sm) throws GeneralException {

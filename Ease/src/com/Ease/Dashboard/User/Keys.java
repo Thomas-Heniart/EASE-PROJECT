@@ -11,6 +11,8 @@ import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 
+import java.security.Key;
+import java.util.Date;
 import java.util.Map;
 
 public class Keys {
@@ -133,10 +135,6 @@ public class Keys {
         return new Keys(db_id, hashed_password, saltPerso, keyUser, publicKey, privateKey);
     }
 
-    public String getPublicKey() {
-        return this.publicKey;
-    }
-
     public static String getPublicKeyForUser(String user_id, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         DatabaseRequest request = db.prepareRequest("SELECT publicKey FROM userKeys JOIN users ON users.keys_id = userKeys.id WHERE users.id = ?;");
@@ -160,7 +158,7 @@ public class Keys {
             privateKey = publicAndPrivateKey.getValue();
         }
         String privateKey_ciphered = AES.encrypt(privateKey, keyUser);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?, NULL, NULL);");
         request.setString(hashed_password);
         request.setString(saltPerso);
         request.setString(crypted_keyUser);
@@ -176,6 +174,9 @@ public class Keys {
     protected String keyUser;
     protected String publicKey;
     protected String privateKey;
+    private String token;
+    private Date token_expiration;
+    private Key token_secret;
 
     public Keys(String db_id, String hashed_password, String saltPerso, String keyUser, String publicKey, String privateKey) {
         this.db_id = db_id;
@@ -214,11 +215,15 @@ public class Keys {
         return keyUser;
     }
 
+    public String getPublicKey() {
+        return this.publicKey;
+    }
+
     public String getPrivateKey() {
         return privateKey;
     }
 
-	/*
+    /*
      *
 	 * Utils
 	 * 

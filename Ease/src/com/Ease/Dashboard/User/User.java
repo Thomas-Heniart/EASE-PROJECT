@@ -14,13 +14,13 @@ import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Update.UpdateManager;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletContext;
+import java.security.Key;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -62,6 +62,32 @@ public class User {
 
     private void loadEmails(DataBaseConnection db) throws GeneralException {
         this.emails = UserEmail.loadEmails(db_id, this, db);
+    }
+
+    public static User loadUserFromJWT(JWToken jwToken, ServletContext context, DataBaseConnection db) throws HttpServletException {
+        try {
+            String db_id = jwToken.getUser_id();
+            String keyUser = jwToken.getKeyUser();
+            DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE id = ?");
+            request.setInt(db_id);
+            DatabaseResult rs = request.get();
+            int transaction = db.startTransaction();
+            if (rs.next()) {
+                String email = rs.getString(Data.EMAIL.ordinal());
+                Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
+                User connectedUser = usersMap.get(email);
+                if (connectedUser != null)
+                    return connectedUser;
+                Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, db);
+                User newUser = loadUserWithKeys(rs, keys, context, db);
+                db.commitTransaction(transaction);
+                return newUser;
+            } else {
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid token");
+            }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -109,14 +135,9 @@ public class User {
         User newUser = new User(db_id, firstName, email, keys, options, isAdmin, false,
                 sessionSave, status);
         newUser.loadTeamUsers(context, db);
-        System.out.println("Team users loaded.");
         newUser.initializeDashboardManager(context, db);
-        System.out.println("Dashboard loaded.");
         newUser.initializeNotificationManager();
-        System.out.println("Notifications loaded");
-        //newUser.loadExtensionKeys(db);
         newUser.loadEmails(db);
-        System.out.println("Emails loaded");
         for (App app : newUser.getDashboardManager().getApps()) {
             if (app.getType().equals("LogwithApp")) {
                 LogwithApp logwithApp = (LogwithApp) app;
@@ -133,7 +154,7 @@ public class User {
             if (userGroup != null)
                 newUser.getGroups().add(userGroup);
         }
-        System.out.println("Load user done.");
+        newUser.loadJWT((Key) context.getAttribute("secret"), db);
         return newUser;
     }
 
@@ -189,9 +210,9 @@ public class User {
     protected boolean sawGroupProfile;
     protected Status status;
     protected ExtensionKeys extensionKeys;
-    protected UpdateManager updateManager;
 
     protected SessionSave sessionSave;
+    private JWToken jwt;
     protected DashboardManager dashboardManager;
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
@@ -211,10 +232,6 @@ public class User {
         this.sessionSave = sessionSave;
         this.status = status;
         this.sawGroupProfile = sawGroupProfile;
-    }
-
-    public void initializeUpdateManager(ServletContext context, DataBaseConnection db) throws GeneralException {
-        this.updateManager = new UpdateManager(context, db, this);
     }
 
     private void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
@@ -260,10 +277,6 @@ public class User {
         return opt;
     }
 
-    public UpdateManager getUpdateManager() {
-        return this.updateManager;
-    }
-
     public DashboardManager getDashboardManager() {
         return this.dashboardManager;
     }
@@ -294,6 +307,14 @@ public class User {
 
     public SessionSave getSessionSave() {
         return sessionSave;
+    }
+
+    public JWToken getJwt() {
+        return this.jwt;
+    }
+
+    public void setJwt(JWToken jwt) {
+        this.jwt = jwt;
     }
 
 	/*
@@ -543,6 +564,9 @@ public class User {
         DatabaseRequest request = db.prepareRequest("DELETE FROM admins WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
+        request = db.prepareRequest("DELETE FROM jsonWebTokens WHERE user_id = ?;");
+        request.setInt(db_id);
+        request.set();
         request = db.prepareRequest("DELETE FROM groupsAndUsersMap WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
@@ -654,6 +678,7 @@ public class User {
         }
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
+        res.put("jwt", this.getJwt().getJwt());
         return res;
     }
 
@@ -663,5 +688,22 @@ public class User {
 
     public boolean isSchoolUser() {
         return this.email.endsWith("@iscparis.com") || this.email.endsWith("@edhec.com") || this.email.endsWith("ieseg.fr");
+    }
+
+    private void loadJWT(Key secret, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("SELECT id FROM jsonWebTokens WHERE user_id = ?;");
+            request.setInt(this.getDBid());
+            DatabaseResult rs = db.get();
+            JWToken jwt;
+            if (rs.next()) {
+                jwt = JWToken.loadJWTokenWithKeyUser(rs.getInt(1), this.getEmail(), this.getFirstName(), this.getKeys().getKeyUser(), secret, db);
+            }
+            else
+                jwt = JWToken.createJWTokenForUser(this, secret, db);
+            this.jwt = jwt;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 }
