@@ -34,7 +34,8 @@ class ClassicApp extends Component {
       Toast.show({
         text: `${this.credentialList[index].name} copied`,
         position: 'bottom',
-        buttonText: 'Got it!',
+        type: 'success',
+        buttonText: 'Ok!',
         duration: 2000
       })
     }
@@ -44,7 +45,7 @@ class ClassicApp extends Component {
     return (
         <ListItem style={{backgroundColor:'transparent', borderBottomWidth:0}} key={app.id} button onPress={this.showActions}>
           <View style={{marginRight:10}}>
-            <Image source={{uri: app.logo}} style={styles.websiteLogo}/>
+            <Image source={{uri: 'https://ease.space' + app.logo}} style={styles.websiteLogo}/>
           </View>
           <Content>
             <BoldText style={{fontWeight:'bold', fontSize:18}}>

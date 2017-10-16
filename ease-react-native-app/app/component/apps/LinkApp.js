@@ -21,8 +21,9 @@ class LinkApp extends Component {
       Clipboard.setString(this.props.app.url);
       Toast.show({
         text: "Url copied",
+        type: 'success',
         position: 'bottom',
-        buttonText: 'Got it!',
+        buttonText: 'Ok!',
         duration: 2000
       });
     }
@@ -33,7 +34,7 @@ class LinkApp extends Component {
     return (
         <ListItem style={{backgroundColor:'transparent', borderBottomWidth:0}} key={app.id} button onPress={this.showActions}>
           <View style={{marginRight:10}}>
-            <Image source={{uri: app.logo}} style={styles.websiteLogo}/>
+            <Image source={{uri: app.logo[0] != '/' ? app.logo : 'https://ease.space'+ app.logo}} style={styles.websiteLogo}/>
           </View>
           <Content>
             <BoldText style={{fontSize:18}}>

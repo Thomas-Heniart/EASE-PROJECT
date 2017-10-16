@@ -26,6 +26,17 @@ class Home extends Component {
   openDrawer = () => {
     this.drawer._root.open();
   };
+  componentDidMount(){
+    const {personal_space} = this.props.spaces;
+
+    if (this.props.selectedItem.subItemId === -1){
+      this.props.selectItemAndFetchApps({
+        itemId: -1,
+        subItemId: personal_space[0].id,
+        name: personal_space[0].name
+      });
+    }
+  }
   render(){
     return (
         <Drawer

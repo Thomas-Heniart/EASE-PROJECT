@@ -21,6 +21,14 @@ export const auth = createReducer({
       username: user_info.name,
       token: user_info.tok
     }
+  },
+  ['LOGOUT'](state, action){
+    return {
+      email: '',
+      expiration: 0,
+      username: '',
+      token: ''
+    }
   }
 });
 
@@ -40,80 +48,14 @@ export const selectedItem = createReducer({
 });
 
 export const spaces = createReducer({
-  personal_space: [
-    {name: 'Me', id:1},
-    {name: 'Google tools', id:2},
-    {name: 'PP Admin', id:3},
-    {name: 'PP Customer', id:4}
-  ],
-  teams: [
-    {
-      name: 'PIED PIPER',
-      id:1,
-      rooms: [
-        {
-          name: 'openspace',
-          id:2
-        },
-        {
-          name: 'administrators',
-          id:3
-        },
-        {
-          name: 'tech',
-          id:4
-        },
-        {
-          name: 'communication',
-          id:5
-        }
-      ]
-    },
-    {
-      name: 'PIED PIPER',
-      id:3,
-      rooms: [
-        {
-          name: 'openspace',
-          id:2
-        },
-        {
-          name: 'administrators',
-          id:3
-        },
-        {
-          name: 'tech',
-          id:4
-        },
-        {
-          name: 'communication',
-          id:5
-        }
-      ]
-    },
-    {
-      name: 'PIED PIPER',
-      id:2,
-      rooms: [
-        {
-          name: 'openspace',
-          id:2
-        },
-        {
-          name: 'administrators',
-          id:3
-        },
-        {
-          name: 'tech',
-          id:4
-        },
-        {
-          name: 'communication',
-          id:5
-        }
-      ]
-    }
-  ]
+  personal_space: [],
+  teams: []
 }, {
-
+  ['FETCH_SPACES_FULFILLED'](state, action){
+    return {
+        ...state,
+      personal_space: action.payload.spaces.personal_space,
+      teams: action.payload.spaces.teams
+    }
+  }
 });

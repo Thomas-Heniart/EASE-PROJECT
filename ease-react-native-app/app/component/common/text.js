@@ -8,7 +8,7 @@ export class BoldText extends Component {
   };
   render(){
     return (
-        <Text ref={component => this._root = component} {...this.props} style={[this.props.style, styles.text]}>
+        <Text ref={component => this._root = component} {...this.props} style={[styles.text, this.props.style]}>
           {this.props.children}
         </Text>
     )

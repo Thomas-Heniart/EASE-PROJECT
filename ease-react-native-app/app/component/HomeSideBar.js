@@ -5,6 +5,7 @@ import { Text,Toast, ActionSheet, Card, CardItem, List,ListItem, Item, Input, Dr
 import {BoldText } from "./common/text";
 import {ActionCreators} from "../actions/index";
 import {bindActionCreators} from "redux";
+import {resetNavigation} from "../utils/helpersFunctions";
 import {NavigationActions} from 'react-navigation';
 import {connect} from "react-redux";
 
@@ -39,7 +40,7 @@ class TeamRoomList extends Component {
           </BoldText>
           {rooms.map(item => {
             return (
-                <TouchableHighlight key={item.id} onPress={() => {select(team.id, item.id, item.name)}}>
+                <TouchableHighlight key={item.id} onPress={() => {select(team.id, item.id, `# ${item.name}`)}}>
                   <Text style={styles.subSection}>
                     # {item.name}
                   </Text>
@@ -53,16 +54,11 @@ class TeamRoomList extends Component {
 
 class HomeSideBar extends Component {
   logout = () => {
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({routeName: 'Login'})
-      ]
-    });
-    this.props.navigation.dispatch(resetAction);
+    this.props.logout();
+    resetNavigation(this.props.navigation, 'Login');
   };
   selectItem = (itemId, subItemId, name) => {
-    this.props.selectItem({
+    this.props.selectItemAndFetchApps({
       itemId: itemId,
       subItemId: subItemId,
       name: name
@@ -75,7 +71,7 @@ class HomeSideBar extends Component {
         <View style={{backgroundColor:'#373B60', flex:1, paddingTop:20, paddingBottom:20}}>
           <View style={{flexDirection:"row", alignItems:'center', marginBottom:20, paddingLeft:20, paddingRight:20}}>
             <Icon name='contact' style={{color: 'white', marginRight:15}}/>
-            <Text style={{color:"white"}}>
+            <Text style={{color:"white", fontSize:20}}>
               {this.props.auth.username}
             </Text>
           </View>
@@ -88,8 +84,11 @@ class HomeSideBar extends Component {
             })}
           </ScrollView>
           <View style={{paddingLeft:20, paddingRight:20}}>
+            <BoldText style={{fontSize:22}}>
+              2 FA
+            </BoldText>
             <TouchableHighlight onPress={this.logout}>
-              <BoldText style={{color:'#df5454', fontSize:16}}>
+              <BoldText style={{color:'#df5454', fontSize:22}}>
                 LOGOUT
               </BoldText>
             </TouchableHighlight>
@@ -102,14 +101,15 @@ class HomeSideBar extends Component {
 const styles = StyleSheet.create({
   sectionHeader: {
     color: 'white',
-    fontSize:20,
+    fontSize:22,
     marginBottom:10
   },
   subSection: {
     color: 'white',
-    marginBottom:5,
-    fontSize:16,
-    paddingLeft:5
+    fontSize:18,
+    paddingLeft:5,
+    paddingTop:7.5,
+    paddingBottom:7.5
   }
 });
 
