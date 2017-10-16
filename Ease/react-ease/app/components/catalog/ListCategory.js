@@ -10,9 +10,19 @@ class ListCategory extends React.Component {
     render() {
         return (
             <List link className="listCategory">
-                <List.Item onClick={e => this.props.showAllApps(e)}>All</List.Item>
+                {this.props.categorySelected !== '' ?
+                    <List.Item as='a' onClick={e => this.props.showAllApps(e)}>All</List.Item>
+                    :
+                    <List.Item as='a' active onClick={e => this.props.showAllApps(e)}>All</List.Item>
+                }
                 {this.props.categories.map((item, key) =>
-                    <List.Item key={key} onClick={e => this.props.sortList(e, item.name)}>{item.name}</List.Item>
+                    this.props.categorySelected === item.name
+                            ?
+                            <List.Item as='a' active key={key}
+                                       onClick={e => this.props.sortList(e, item.name)}>{item.name}</List.Item>
+                            :
+                            <List.Item as='a' key={key}
+                                       onClick={e => this.props.sortList(e, item.name)}>{item.name}</List.Item>
                 )}
             </List>
         )

@@ -33,6 +33,7 @@ button.only-text-button {
     font-weight: 300;
     color: #414141;
     text-transform: uppercase;
+    margin-top: 20px;
   }
   .bookmarkButton {
     display: flex;
@@ -60,31 +61,117 @@ button.only-text-button {
     font-weight: 300;
   }
   .logoCatalog {
+    padding-left: 20px;
     img {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       margin: 10px;
       border-radius: 5px;
       display: inline-flex;
       box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97)
     }
-    p {
-      font-size: 16px;
-      font-weight: bold;
-      color: #373b60;
-      display: inline-flex;
-    }
+
     .showSegment {
       padding: 0;
+      margin: 20px 0;
+      white-space: nowrap;
+      p {
+        top: 37%;
+        position: absolute;
+        font-size: 14px;
+        font-weight: bold;
+        color: #373b60;
+        display: inline-block;
+        margin-bottom: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+      }
+      i {
+        display: none;
+      }
       &:hover {
+        display: inline-block;
         padding-left: 0;
         padding-right: 0;
+        margin-top: 18px;
         border-radius: 7px;
         box-shadow: -3px 4px 4px 0 rgba(210, 218, 228, 0.77);
         border: solid 1px #d2dae4;
+        p {
+          max-width: 80px;
+        }
         img {
           box-shadow: none;
         }
+        i {
+          position: absolute;
+          font-size: 20px;
+          display: inline-flex;
+          top: 40%;
+          right: 0;
+          color: #d2dae4;
+        }
+      }
+    }
+  }
+  .requestAnApp {
+    border: none;
+    border-radius: 7px;
+    box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
+    p {
+      margin-top: 0;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 300;
+      color: #414141;
+    }
+    input {
+      margin-bottom: 20px;
+      margin-top: 5px;
+    }
+    span {
+      font-size: 14px;
+      font-weight: 300;
+      color: #414141;
+    }
+    .labelCheck {
+      display: inline-flex;
+      font-size: 14px;
+      font-weight: 300;
+      color: #414141;
+      margin-bottom: 20px;
+      .checkbox {
+        margin-right: 20px;
+        top: 22px;
+      }
+    }
+  }
+  .addBookmark {
+    border: none;
+    border-radius: 7px;
+    box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    .width50 {
+      width: 50%;
+    }
+    .logo {
+      img {
+        box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 7px;
+        width: 86px;
+        height: 86px;
+      }
+    }
+    input {
+      margin-bottom: 10px;
+      margin-left: 20px;
+    }
+    button {
+      padding: 10px;
+      i {
+        margin-left: 5px;
+        margin-right: 0;
       }
     }
   }

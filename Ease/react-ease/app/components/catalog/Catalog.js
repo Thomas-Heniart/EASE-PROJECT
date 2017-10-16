@@ -2,6 +2,7 @@ import React from 'react';
 import ShowGrid from './ShowGrid';
 import ListCategory from './ListCategory';
 import RequestForm from './RequestForm';
+import AddBookmark from './AddBookmark';
 import { Input, List, Button, Icon, Grid, Image, Segment, Checkbox, Form } from 'semantic-ui-react';
 import { render } from 'react-router-dom';
 import style from '../../../../WebContent/cssMinified.v00017/catalog.css';
@@ -30,10 +31,35 @@ class Catalog extends React.Component {
                 {name: 'Quora', logo: '/resources/websites/Quora/logo.png', category: 'Events'},
                 {name: 'Blablacar', logo: '/resources/websites/BlaBlaCar/logo.png', category: 'Finance'},
                 {name: 'Sens Critique', logo: '/resources/websites/SensCritique/logo.png', category: 'Chill'},
+                {name: 'MailChimp', logo: '/resources/websites/Mailchimp/logo.png', category: 'Events'},
+                {name: 'Instagram', logo: '/resources/websites/Instagram/logo.png', category: 'Chill'},
+                {name: 'Spotify', logo: '/resources/websites/Spotify/logo.png', category: 'Events'},
+                {name: 'Slack', logo: '/resources/websites/Slack/logo.png', category: 'Finance'},
+                {name: '9gag', logo: '/resources/websites/9gag/logo.png', category: 'Chill'},
+                {name: 'Outlook', logo: '/resources/websites/Outlook/logo.png', category: 'Finance'},
+                {name: 'Youtube', logo: '/resources/websites/Youtube/logo.png', category: 'Events'},
+                {name: 'Twitter', logo: '/resources/websites/Twitter/logo.png', category: 'Finance'},
+                {name: 'Paypal', logo: '/resources/websites/Paypal/logo.png', category: 'Chill'},
+                {name: 'Quora', logo: '/resources/websites/Quora/logo.png', category: 'Events'},
+                {name: 'Blablacar', logo: '/resources/websites/BlaBlaCar/logo.png', category: 'Finance'},
+                {name: 'Sens Critique', logo: '/resources/websites/SensCritique/logo.png', category: 'Chill'},
+                {name: 'MailChimp', logo: '/resources/websites/Mailchimp/logo.png', category: 'Events'},
+                {name: 'Instagram', logo: '/resources/websites/Instagram/logo.png', category: 'Chill'},
+                {name: 'Spotify', logo: '/resources/websites/Spotify/logo.png', category: 'Events'},
+                {name: 'Slack', logo: '/resources/websites/Slack/logo.png', category: 'Finance'},
+                {name: '9gag', logo: '/resources/websites/9gag/logo.png', category: 'Chill'},
+                {name: 'Outlook', logo: '/resources/websites/Outlook/logo.png', category: 'Finance'},
+                {name: 'Youtube', logo: '/resources/websites/Youtube/logo.png', category: 'Events'},
+                {name: 'Twitter', logo: '/resources/websites/Twitter/logo.png', category: 'Finance'},
+                {name: 'Paypal', logo: '/resources/websites/Paypal/logo.png', category: 'Chill'},
+                {name: 'Quora', logo: '/resources/websites/Quora/logo.png', category: 'Events'},
+                {name: 'Blablacar', logo: '/resources/websites/BlaBlaCar/logo.png', category: 'Finance'},
+                {name: 'Sens Critique', logo: '/resources/websites/SensCritique/logo.png', category: 'Chill'},
                 {name: 'MailChimp', logo: '/resources/websites/Mailchimp/logo.png', category: 'Events'}
             ],
             allApps: [],
-            loading: false
+            loading: false,
+            bookmark: false
         };
     }
 
@@ -46,21 +72,25 @@ class Catalog extends React.Component {
             return item.name.toString().toLowerCase().search(
                 e.target.value.toString().toLowerCase().trim()) !== -1;
         });
-        this.setState({ searchInput: e.target.value, allApps: appsFiltered });
+        this.setState({ searchInput: e.target.value, allApps: appsFiltered, bookmark: false });
     };
 
     sortList = (e, selected) => {
         let appsFiltered = this.state.apps.filter((item) => {
             return item.name.toString().toLowerCase().search('') !== -1;
         });
-        this.setState({ searchInput: '', categorySelected: selected, allApps: appsFiltered });
+        this.setState({ searchInput: '', categorySelected: selected, allApps: appsFiltered, bookmark: false });
     };
 
     showAllApps = (e) => {
         let appsFiltered = this.state.apps.filter((item) => {
             return item.name.toString().toLowerCase().search('') !== -1;
         });
-        this.setState({ searchInput: '', categorySelected: '', allApps: appsFiltered });
+        this.setState({ searchInput: '', categorySelected: '', allApps: appsFiltered, bookmark: false });
+    };
+
+    bookmarkActive = () => {
+        this.setState({ bookmark: true, searchInput: '', categorySelected: '' });
     };
 
     render() {
@@ -87,7 +117,7 @@ class Catalog extends React.Component {
                 <div className="container">
                     <Grid>
                         <Grid.Column width={3}>
-                            <Button className="bookmarkButton">
+                            <Button className="bookmarkButton" onClick={this.bookmarkActive}>
                                 <Icon name="bookmark" />
                                 Add a Bookmark
                             </Button>
@@ -95,10 +125,10 @@ class Catalog extends React.Component {
                                 <Icon name="facebook" />
                                 Import Accounts
                             </Button>
-                            <ListCategory categories={this.state.categories} sortList={this.sortList} showAllApps={this.showAllApps} />
+                            <ListCategory categories={this.state.categories} sortList={this.sortList} showAllApps={this.showAllApps} categorySelected={this.state.categorySelected}/>
                         </Grid.Column>
                         <Grid.Column width={10}>
-                            {appsSorted.length ?
+                            {appsSorted.length && !this.state.bookmark ?
                                 <div>
                                     <h3>{this.state.categorySelected}</h3>
                                     <ShowGrid apps={this.state.allApps} categorySelected={this.state.categorySelected} />
@@ -106,7 +136,7 @@ class Catalog extends React.Component {
                                 :
                                 <div/>
                             }
-                            {this.state.searchInput !== '' && this.state.categorySelected !== '' && this.state.allApps.length ?
+                            {this.state.searchInput !== '' && this.state.categorySelected !== '' && this.state.allApps.length && !this.state.bookmark ?
                                 <div>
                                     <h3>Others</h3>
                                     <ShowGrid apps={this.state.allApps} categorySelected='' />
@@ -114,11 +144,16 @@ class Catalog extends React.Component {
                                 :
                                 <div/>
                             }
-                            {!this.state.allApps.length ?
+                            {!this.state.allApps.length && !this.state.bookmark ?
                                 <div>
                                     <h3>Cannot find your App?</h3>
                                     <RequestForm loading={this.state.loading} />
                                 </div>
+                                :
+                                <div/>
+                            }
+                            {this.state.bookmark ?
+                                <AddBookmark />
                                 :
                                 <div/>
                             }
