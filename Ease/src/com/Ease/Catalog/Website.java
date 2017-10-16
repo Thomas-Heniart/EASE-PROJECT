@@ -62,6 +62,10 @@ public class Website {
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "signIn_website_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
     protected Set<Website> signIn_websites = ConcurrentHashMap.newKeySet();
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "signIn_website_id"))
+    protected Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
+
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
         this.login_url = login_url;
         this.name = name;
@@ -154,6 +158,14 @@ public class Website {
         this.signIn_websites = signIn_websites;
     }
 
+    public Set<Website> getConnectWith_websites() {
+        return connectWith_websites;
+    }
+
+    public void setConnectWith_websites(Set<Website> connectWith_websites) {
+        this.connectWith_websites = connectWith_websites;
+    }
+
     public String getLogo() {
         return "/resources/websites/" + this.getFolder() + "/logo.png";
     }
@@ -186,6 +198,10 @@ public class Website {
         for (Website website : this.getSignIn_websites())
             signIn_websites_ids.add(website.getDb_id());
         res.put("signIn_websites", signIn_websites_ids);
+        JSONArray connectWith_websites_ids = new JSONArray();
+        for (Website website : this.getConnectWith_websites())
+            connectWith_websites_ids.add(website.getDb_id());
+        res.put("connectWith_websites", connectWith_websites_ids);
         /* end loginWith part */
         res.put("integration_date", this.getWebsiteAttributes().getAddedDate().getTime());
         return res;
