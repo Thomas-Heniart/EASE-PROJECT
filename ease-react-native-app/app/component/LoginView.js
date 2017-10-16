@@ -45,9 +45,6 @@ class LoginView extends Component {
           </View>
           <View style={styles.container}>
             <View style={{flex:1}}/>
-            <Text>
-              {this.state.clicked}
-            </Text>
             <Image
                 style={{width:110, height:110, marginBottom:60}}
                 source={require('../resources/images/logo_hexagone_white.png')}/>
