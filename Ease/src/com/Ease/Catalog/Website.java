@@ -166,6 +166,8 @@ public class Website {
     public JSONObject getCatalogJson() {
         JSONObject res = this.getJson();
         res.put("landing_url", this.getWebsite_homepage());
+        res.put("category_id", this.getCategory() == null ? null : this.getCategory().getDb_id());
+        res.put("sso_id", this.getSso() == null ? null : this.getSso().getDb_id());
         /* loginWith part */
 
         /* end loginWith part */
