@@ -18,6 +18,9 @@ public class Category {
     @Column(name = "name")
     protected String name;
 
+    @Column(name = "position")
+    protected Integer position;
+
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
@@ -26,8 +29,9 @@ public class Category {
 
     }
 
-    public Category(String name) {
+    public Category(String name, Integer position) {
         this.name = name;
+        this.position = position;
     }
 
     public Integer getDb_id() {
@@ -54,6 +58,14 @@ public class Category {
         this.websiteMap = websiteMap;
     }
 
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         JSONArray websites = new JSONArray();
@@ -61,6 +73,7 @@ public class Category {
         res.put("websites", websites);
         res.put("id", this.getDb_id());
         res.put("name", this.getName());
+        res.put("position", this.getPosition());
         return res;
     }
 }

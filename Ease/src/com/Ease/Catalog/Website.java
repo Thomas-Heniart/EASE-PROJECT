@@ -6,6 +6,7 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -45,7 +46,7 @@ public class Website {
     @JoinColumn(name = "website_attributes_id")
     protected WebsiteAttributes websiteAttributes;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "website_id")
     protected Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
@@ -56,6 +57,10 @@ public class Website {
     @ManyToOne
     @JoinColumn(name = "sso")
     protected Sso sso;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "signIn_website_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
+    protected Set<Website> signIn_websites = ConcurrentHashMap.newKeySet();
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
         this.login_url = login_url;
@@ -141,6 +146,14 @@ public class Website {
         this.sso = sso;
     }
 
+    public Set<Website> getSignIn_websites() {
+        return signIn_websites;
+    }
+
+    public void setSignIn_websites(Set<Website> signIn_websites) {
+        this.signIn_websites = signIn_websites;
+    }
+
     public String getLogo() {
         return "/resources/websites/" + this.getFolder() + "/logo.png";
     }
@@ -169,7 +182,10 @@ public class Website {
         res.put("category_id", this.getCategory() == null ? null : this.getCategory().getDb_id());
         res.put("sso_id", this.getSso() == null ? null : this.getSso().getDb_id());
         /* loginWith part */
-
+        JSONArray signIn_websites_ids = new JSONArray();
+        for (Website website : this.getSignIn_websites())
+            signIn_websites_ids.add(website.getDb_id());
+        res.put("signIn_websites", signIn_websites_ids);
         /* end loginWith part */
         res.put("integration_date", this.getWebsiteAttributes().getAddedDate().getTime());
         return res;
@@ -219,6 +235,6 @@ public class Website {
     }
 
     public Integer getSsoId() {
-        return  this.getSso() == null ? -1 : this.getSso().getDb_id();
+        return this.getSso() == null ? -1 : this.getSso().getDb_id();
     }
 }
