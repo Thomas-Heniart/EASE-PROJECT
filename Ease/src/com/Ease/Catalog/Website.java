@@ -142,11 +142,11 @@ public class Website {
     }
 
     public String getLogo() {
-        return Variables.URL_PATH + "/" + this.getFolder() + "/logo.png";
+        return "/resources/websites/" + this.getFolder() + "/logo.png";
     }
 
     public JSONObject getJson() {
-        JSONObject res = new JSONObject();
+        JSONObject res = this.getSimpleJson();
         JSONObject information = new JSONObject();
         for (WebsiteInformation websiteInformation : this.getWebsiteInformationList())
             information.put(websiteInformation.getInformation_name(), websiteInformation.getJson());
@@ -199,7 +199,7 @@ public class Website {
         }
     }
 
-    public Map<String,String> getNeededInfosForEdition(ServletManager sm) {
+    public Map<String, String> getNeededInfosForEdition(ServletManager sm) {
         return null;
     }
 
@@ -207,14 +207,18 @@ public class Website {
     public JSONObject getConnectionJson() throws HttpServletException {
         JSONParser parser = new JSONParser();
         try {
-            JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.PROJECT_PATH + this.getFolder() + "/connect.json"));
+            JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.PROJECT_PATH + "/resources/websites/" + this.getFolder() + "/connect.json"));
             a.put("loginUrl", this.getLogin_url());
             a.put("website_name", this.getName());
             a.put("siteSrc", this.getFolder());
-            a.put("img", this.getLogo());
+            a.put("img", Variables.URL_PATH + this.getLogo());
             return a;
         } catch (IOException | ParseException e) {
             throw new HttpServletException(HttpStatus.InternError, "Sorry, fuck you");
         }
+    }
+
+    public Integer getSsoId() {
+        return  this.getSso() == null ? -1 : this.getSso().getDb_id();
     }
 }

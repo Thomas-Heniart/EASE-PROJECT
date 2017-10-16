@@ -79,7 +79,7 @@ response.addCookie(email);
 			</div>
 			<div class="CatalogViewTab <c:if test="${param.catalogOpen}">show</c:if>">
 			</div>
-			<script type="text/javascript">
+			<!-- <script type="text/javascript">
 				$(document).ready(function(){
 					asyncLoading.loadHtml({
 						urls: ['/templates/catalog/catalogView.jsp'],
@@ -93,7 +93,7 @@ response.addCookie(email);
 						async : true
 					});
 				});
-			</script>
+			</script> -->
 			<c:if test='${user.appsImported() && (user.allTipsDone() eq false)}'>
 			<%@ include file="Tips.jsp" %>
 		</c:if>
