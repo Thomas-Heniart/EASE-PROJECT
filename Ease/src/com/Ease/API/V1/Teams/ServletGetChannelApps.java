@@ -29,6 +29,8 @@ public class ServletGetChannelApps extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
+            if (!teamUser.isVerified())
+                throw new HttpServletException(HttpStatus.Forbidden, "Your admin must verify you first.");
             Integer channel_id = sm.getIntParam("channel_id", true);
             Channel channel = team.getChannelWithId(channel_id);
             if (!channel.getTeamUsers().contains(teamUser) && !teamUser.isTeamAdmin())
