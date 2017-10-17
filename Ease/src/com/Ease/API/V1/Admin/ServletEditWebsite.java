@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Category;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
@@ -40,6 +41,7 @@ public class ServletEditWebsite extends HttpServlet {
             String landing_url = sm.getStringParam("landing_url", true, false);
             JSONArray teams = (JSONArray) sm.getParam("teams", false, false);
             Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true, false));
+            Integer category_id = sm.getIntParam("category_id", true, false);
             Boolean integrated = sm.getBooleanParam("integrated", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id);
@@ -53,6 +55,12 @@ public class ServletEditWebsite extends HttpServlet {
             if (sso_id != -1)
                 sso = catalog.getSsoWithId(sso_id);
             website.setSso(sso);
+            Category category = null;
+            if (category_id != -1) {
+                category = catalog.getCategoryWithId(category_id);
+                category.addWebsite(website);
+            }
+            website.setCategory(category);
             sm.saveOrUpdate(website.getWebsiteAttributes());
             sm.saveOrUpdate(website);
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();

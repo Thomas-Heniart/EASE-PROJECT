@@ -47,6 +47,18 @@ $(document).ready(function () {
                         });
                         target.removeClass("loading");
                     });
+                    ajaxHandler.get("/api/v1/catalog/GetCategories", null, function() {
+
+                    }, function (data) {
+                        var categories = data.categories;
+                        categories.sort(function (c1, c2) {
+                            return c1.position - c2.position;
+                        });
+                        categories.forEach(function (category) {
+                            $("<div class='item' data-value='" + category.id + "'>" +
+                                category.name + "</div>").appendTo($("#website-edition .category .menu"));
+                        });
+                    });
                     break;
                 case "category-segment":
                     ajaxHandler.get("/api/v1/catalog/GetCategories", null, function () {
@@ -194,6 +206,11 @@ function openWebsiteIntegration(website, websiteElem) {
         $(".teams .item[data-value='" + team.id + "']", modal).click();
     });
     $(".sso .item[data-value='" + website.sso + "']", modal).click();
+    console.log(website.category_id);
+    $(".category .item[data-value='" + website.category_id + "']", modal).click();
+    /* website.connectWith.forEach(function(connectWith_id) {
+        $(".connectWith .item[data-value='" + connectWith_id + "']", modal).click();
+    }); */
     edit_website.submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -201,7 +218,11 @@ function openWebsiteIntegration(website, websiteElem) {
         var teams = [];
         if ($("input[name='team_id']", modal).val() !== "")
             teams = $("input[name='team_id']", modal).val().split(",").map(parseInt);
+        var connectWith = [];
+        if ($("input[name='connectWith_id']", modal).val() !== "")
+            connectWith = $("input[name='connectWith_id']", modal).val().split(",").map(parseInt);
         var sso_id = $("input[name='sso_id']", modal).val();
+        var category_id = parseInt($("input[name='category_id']", modal).val());
         ajaxHandler.post(action, {
             id: website.id,
             name: name.val(),
@@ -210,7 +231,9 @@ function openWebsiteIntegration(website, websiteElem) {
             folder: folder.val(),
             integrated: integrated.is(":checked"),
             teams: teams,
-            sso_id: sso_id
+            sso_id: sso_id,
+            category_id: category_id,
+            connectWith: connectWith
         }, function () {
 
         }, function () {
@@ -230,6 +253,7 @@ function openWebsiteIntegration(website, websiteElem) {
                 website.sso = parseInt(sso_id);
             else
                 website.sso = -1;
+            website.category_id = category_id;
             website.teams = teams;
             if (!website.integrated)
                 websiteElem.addClass("negative");
