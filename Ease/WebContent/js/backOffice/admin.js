@@ -44,10 +44,12 @@ $(document).ready(function () {
                         websites.forEach(function (website) {
                             addWebsiteRow(website).appendTo($("#website-manager-body"));
                             addResult(website).appendTo($("#website-merging .menu"));
+                            $("<div class='item' data-value='" + website.id + "'>" +
+                                website.name + "</div>").appendTo($("#website-edition .connectWith .menu"));
                         });
                         target.removeClass("loading");
                     });
-                    ajaxHandler.get("/api/v1/catalog/GetCategories", null, function() {
+                    ajaxHandler.get("/api/v1/catalog/GetCategories", null, function () {
 
                     }, function (data) {
                         var categories = data.categories;
@@ -171,7 +173,7 @@ function openCategoryEdit(category, elem) {
             $(".name", elem).text(category.name);
             $(".position", elem).text(category.position);
             modal.modal("hide");
-        }, function() {
+        }, function () {
             modal.modal("hide");
         });
         edit_category.off("submit");
@@ -202,25 +204,31 @@ function openWebsiteIntegration(website, websiteElem) {
         $("#integration", edit_website).addClass("checked");
         integrated.prop("checked", true);
     }
+    $("input[name='team_id']", modal).val("");
     website.teams.forEach(function (team) {
         $(".teams .item[data-value='" + team.id + "']", modal).click();
     });
     $(".sso .item[data-value='" + website.sso + "']", modal).click();
-    console.log(website.category_id);
     $(".category .item[data-value='" + website.category_id + "']", modal).click();
-    /* website.connectWith.forEach(function(connectWith_id) {
+    $("input[name='connectWith_id']", modal).val("");
+    website.connectWith.forEach(function (connectWith_id) {
         $(".connectWith .item[data-value='" + connectWith_id + "']", modal).click();
-    }); */
+    });
     edit_website.submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
         var action = $(this).attr("action");
         var teams = [];
         if ($("input[name='team_id']", modal).val() !== "")
-            teams = $("input[name='team_id']", modal).val().split(",").map(parseInt);
+            teams = $("input[name='team_id']", modal).val().split(",").map(function (x) {
+                return parseInt(x);
+            });
         var connectWith = [];
-        if ($("input[name='connectWith_id']", modal).val() !== "")
-            connectWith = $("input[name='connectWith_id']", modal).val().split(",").map(parseInt);
+        if ($("input[name='connectWith_id']", modal).val() !== "") {
+            connectWith = $("input[name='connectWith_id']", modal).val().split(",").map(function (x) {
+                return parseInt(x);
+            });
+        }
         var sso_id = $("input[name='sso_id']", modal).val();
         var category_id = parseInt($("input[name='category_id']", modal).val());
         ajaxHandler.post(action, {
@@ -255,6 +263,7 @@ function openWebsiteIntegration(website, websiteElem) {
                 website.sso = -1;
             website.category_id = category_id;
             website.teams = teams;
+            website.connectWith = connectWith;
             if (!website.integrated)
                 websiteElem.addClass("negative");
             $(".name", websiteElem).text(website.name);
@@ -270,6 +279,7 @@ function openWebsiteIntegration(website, websiteElem) {
             onHide: function () {
                 edit_website.off("submit");
                 $("input[name='team_id']", modal).val("");
+                $("input[name='connectWith_id']", modal).val("");
                 $("a.ui.label.transition", modal).remove();
                 $(".item.active")
                     .removeClass("active")

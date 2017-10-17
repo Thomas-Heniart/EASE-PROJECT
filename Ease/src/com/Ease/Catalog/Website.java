@@ -166,6 +166,14 @@ public class Website {
         this.connectWith_websites = connectWith_websites;
     }
 
+    public void addConnectWith_website(Website website) {
+        this.getConnectWith_websites().add(website);
+    }
+
+    public void addSignIn_website(Website website) {
+        this.getSignIn_websites().add(website);
+    }
+
     public String getLogo() {
         return "/resources/websites/" + this.getFolder() + "/logo.png";
     }

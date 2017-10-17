@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @WebServlet("/api/v1/admin/EditWebsite")
 public class ServletEditWebsite extends HttpServlet {
@@ -40,6 +41,7 @@ public class ServletEditWebsite extends HttpServlet {
             String login_url = sm.getStringParam("login_url", true, false);
             String landing_url = sm.getStringParam("landing_url", true, false);
             JSONArray teams = (JSONArray) sm.getParam("teams", false, false);
+            JSONArray connectWith_ids = sm.getArrayParam("connectWith", false, false);
             Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true, false));
             Integer category_id = sm.getIntParam("category_id", true, false);
             Boolean integrated = sm.getBooleanParam("integrated", true, false);
@@ -61,6 +63,13 @@ public class ServletEditWebsite extends HttpServlet {
                 category.addWebsite(website);
             }
             website.setCategory(category);
+            website.setConnectWith_websites(ConcurrentHashMap.newKeySet());
+            for (Object connectWith_id : connectWith_ids) {
+                Website connectWith = catalog.getWebsiteWithId(Math.toIntExact((Long) connectWith_id));
+                website.addConnectWith_website(connectWith);
+                connectWith.addSignIn_website(website);
+                sm.saveOrUpdate(connectWith);
+            }
             sm.saveOrUpdate(website.getWebsiteAttributes());
             sm.saveOrUpdate(website);
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
