@@ -6,15 +6,18 @@ import com.Ease.Context.Group.Group;
 import com.Ease.Context.Group.GroupManager;
 import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -64,7 +67,7 @@ public class User {
         this.emails = UserEmail.loadEmails(db_id, this, db);
     }
 
-    public static User loadUserFromJWT(JWToken jwToken, ServletContext context, DataBaseConnection db) throws HttpServletException {
+    public static User loadUserFromJWT(JWToken jwToken, com.Ease.Utils.Servlets.ServletManager sm, DataBaseConnection db) throws HttpServletException {
         try {
             String db_id = jwToken.getUser_id();
             String keyUser = jwToken.getKeyUser();
@@ -74,13 +77,33 @@ public class User {
             int transaction = db.startTransaction();
             if (rs.next()) {
                 String email = rs.getString(Data.EMAIL.ordinal());
-                Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
+                Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
                 User connectedUser = usersMap.get(email);
                 if (connectedUser != null)
                     return connectedUser;
                 Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, db);
-                User newUser = loadUserWithKeys(rs, keys, context, db);
+                User newUser = loadUserWithKeys(rs, keys, sm.getServletContext(), db);
                 db.commitTransaction(transaction);
+                HibernateQuery hibernateQuery = new HibernateQuery();
+                for (TeamUser teamUser : newUser.getTeamUsers()) {
+                    if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
+                        teamUser.finalizeRegistration();
+                        hibernateQuery.saveOrUpdateObject(teamUser);
+                    }
+                    if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
+                        String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), newUser.getKeys().getPrivateKey());
+                        teamUser.setTeamKey(newUser.encrypt(deciphered_teamKey));
+                        teamUser.setDeciphered_teamKey(deciphered_teamKey);
+                        teamUser.setDisabled(false);
+                        hibernateQuery.saveOrUpdateObject(teamUser);
+                        for (SharedApp sharedApp : teamUser.getSharedApps()) {
+                            sharedApp.setDisableShared(false, db);
+                        }
+                    }
+                }
+                hibernateQuery.commit();
+                usersMap.put(email, newUser);
+                newUser.getDashboardManager().decipherApps(sm);
                 return newUser;
             } else {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid token");
