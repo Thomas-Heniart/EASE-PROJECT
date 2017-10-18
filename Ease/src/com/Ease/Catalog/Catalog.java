@@ -99,7 +99,7 @@ public class Catalog {
         return res;
     }
 
-    private Collection<Category> getCategories() {
+    public Collection<Category> getCategories() {
         return this.getCategoryMap().values();
     }
 
@@ -130,5 +130,13 @@ public class Catalog {
         if (category == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No such category");
         return category;
+    }
+
+    public void addCategory(Category category) {
+        this.getCategoryMap().put(category.getDb_id(), category);
+    }
+
+    public void removeCategory(Integer id) {
+        this.getCategoryMap().remove(id);
     }
 }

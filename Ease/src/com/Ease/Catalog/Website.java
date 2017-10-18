@@ -1,6 +1,7 @@
 package com.Ease.Catalog;
 
 import com.Ease.Context.Variables;
+import com.Ease.Team.Team;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
@@ -65,6 +66,10 @@ public class Website {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "signIn_website_id"))
     protected Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
+
+    @ManyToMany(mappedBy = "teamWebsites", fetch = FetchType.EAGER)
+    private Set<Team> teams = ConcurrentHashMap.newKeySet();
+
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
         this.login_url = login_url;
@@ -166,12 +171,24 @@ public class Website {
         this.connectWith_websites = connectWith_websites;
     }
 
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
+
     public void addConnectWith_website(Website website) {
         this.getConnectWith_websites().add(website);
     }
 
     public void addSignIn_website(Website website) {
         this.getSignIn_websites().add(website);
+    }
+
+    public void addTeam(Team team) {
+        this.getTeams().add(team);
     }
 
     public String getLogo() {
@@ -201,7 +218,6 @@ public class Website {
         res.put("landing_url", this.getWebsite_homepage());
         res.put("category_id", this.getCategory() == null ? null : this.getCategory().getDb_id());
         res.put("sso_id", this.getSso() == null ? null : this.getSso().getDb_id());
-        /* loginWith part */
         JSONArray signIn_websites_ids = new JSONArray();
         for (Website website : this.getSignIn_websites())
             signIn_websites_ids.add(website.getDb_id());
@@ -210,7 +226,6 @@ public class Website {
         for (Website website : this.getConnectWith_websites())
             connectWith_websites_ids.add(website.getDb_id());
         res.put("connectWith_websites", connectWith_websites_ids);
-        /* end loginWith part */
         res.put("integration_date", this.getWebsiteAttributes().getAddedDate().getTime());
         return res;
     }

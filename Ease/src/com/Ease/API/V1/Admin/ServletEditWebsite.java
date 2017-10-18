@@ -52,7 +52,14 @@ public class ServletEditWebsite extends HttpServlet {
             website.setLogin_url(login_url);
             website.setWebsite_homepage(landing_url);
             website.getWebsiteAttributes().setIntegrated(integrated);
-            //website.setTeams(teams, db);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            for (Object team_id : teams) {
+                website.setTeams(ConcurrentHashMap.newKeySet());
+                Team team = teamManager.getTeamWithId(Math.toIntExact((Long) team_id));
+                team.addTeamWebsite(website);
+                website.addTeam(team);
+                sm.saveOrUpdate(team);
+            }
             Sso sso = null;
             if (sso_id != -1)
                 sso = catalog.getSsoWithId(sso_id);
@@ -74,7 +81,6 @@ public class ServletEditWebsite extends HttpServlet {
             sm.saveOrUpdate(website);
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
             if (website.getWebsiteAttributes().isIntegrated()) {
-                TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
                 DataBaseConnection db = sm.getDB();
                 for (Team team : teamManager.getTeams()) {
                     int transaction2 = db.startTransaction();
