@@ -13,6 +13,7 @@ import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
+import org.json.HTTP;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -110,6 +111,9 @@ public class Team {
     @Transient
     private Subscription subscription;
 
+    @Transient
+    private Customer customer;
+
     public Team(String name) {
         this.name = name;
     }
@@ -163,6 +167,16 @@ public class Team {
         this.subscription = subscription;
     }
 
+    public Customer getCustomer() throws HttpServletException {
+        try {
+            if (customer == null)
+                customer = Customer.retrieve(this.getCustomer_id());
+            return customer;
+        } catch (StripeException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public boolean isCard_entered() {
         return card_entered;
     }
@@ -200,7 +214,7 @@ public class Team {
     }
 
     public boolean isValidFreemium() throws HttpServletException {
-        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()));
+        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()) || this.getCustomer().getAccountBalance() < 0);
     }
 
     public synchronized Map<Integer, TeamUser> getTeamUsers() {
@@ -458,7 +472,7 @@ public class Team {
 
     public boolean isBlocked() {
         try {
-            return (this.isFreemium() && !card_entered && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+            return this.isFreemium() && !card_entered && (this.getSubscription().getTrialEnd() == null || new Date().getTime() > this.getSubscription().getTrialEnd() * 1000) && this.getCustomer().getAccountBalance() >= 0;
         } catch (HttpServletException e) {
             e.printStackTrace();
             return true;
@@ -489,7 +503,7 @@ public class Team {
                     hibernateQuery.executeUpdate();
                 } else
                     credit = 0;
-                Customer customer = Customer.retrieve(this.getCustomer_id());
+                Customer customer = this.getCustomer();
                 Map<String, Object> customerParams = new HashMap<>();
                 Integer account_balance = Math.toIntExact((customer.getAccountBalance() == null) ? 0 : customer.getAccountBalance());
                 Integer team_account_balance = account_balance - amount - credit;
@@ -505,6 +519,8 @@ public class Team {
             } catch (CardException e) {
                 e.printStackTrace();
             } catch (APIException e) {
+                e.printStackTrace();
+            } catch (HttpServletException e) {
                 e.printStackTrace();
             }
         }

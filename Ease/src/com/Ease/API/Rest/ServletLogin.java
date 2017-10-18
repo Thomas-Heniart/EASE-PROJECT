@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Key;
 import java.util.Map;
 
 @WebServlet("/api/rest/Connection")
@@ -29,8 +30,6 @@ public class ServletLogin extends HttpServlet {
                 DataBaseConnection db = sm.getDB();
                 if (!Regex.isEmail(email) || password.equals(""))
                     throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
-            /* String key = (String) sm.getContextAttr("privateKey");
-            password = RSA.Decrypt(password, key); */
                 DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?");
                 databaseRequest.setString(email);
                 if (!databaseRequest.get().next())
@@ -55,12 +54,13 @@ public class ServletLogin extends HttpServlet {
                 }
                 hibernateQuery.commit();
                 ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
-                ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
-                ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                 user.getDashboardManager().decipherApps(sm);
                 JSONObject res = new JSONObject();
-                res.put("JWT", user.getJwt().getJwt());
-                ((Map<String, User>) sm.getContextAttr("tokenUserMap")).put(user.getJwt().getConnection_token(), user);
+                Key secret = (Key) sm.getContextAttr("secret");
+                user.renewJWT(secret, db);
+                Map<String, User> tokenUserMap = (Map<String, User>) sm.getContextAttr("tokenUserMap");
+                tokenUserMap.put(user.getJwt().getConnection_token(), user);
+                res.put("JWT", user.getJwt().getJwt(secret));
                 sm.setSuccess(res);
             } catch (GeneralException e) {
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");

@@ -23,8 +23,8 @@ public class ServletGetChannel extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeTeamUser();
             Integer team_id = sm.getIntParam("team_id", true);
+            sm.needToBeTeamUserOfTeam(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true);
             if (team_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Team is null");
