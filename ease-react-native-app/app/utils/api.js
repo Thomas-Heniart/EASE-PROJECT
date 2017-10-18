@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://192.168.0.19:8080/api/rest';
+axios.defaults.baseURL = 'https://ease.space/api/rest';
 
 const basic_get = (url, params) => {
   return axios.get(url, {params: params})

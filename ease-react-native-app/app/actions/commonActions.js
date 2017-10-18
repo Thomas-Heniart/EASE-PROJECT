@@ -2,11 +2,26 @@ import api from "../utils/api";
 import axios from "axios";
 import base64 from "base-64";
 import {AsyncStorage} from "react-native";
+import { Toast } from 'native-base';
 
 function parseJwt (token) {
   let base64Url = token.split('.')[1];
   let str = base64Url.replace('-', '+').replace('_', '/');
   return JSON.parse(base64.decode(str));
+}
+
+export function connectionChanged(connectionInfo){
+  return (dispatch, getState) => {
+    if (connectionInfo.type === 'unknown')
+      return;
+    const network = connectionInfo.type !== 'none';
+    dispatch({
+      type: 'NET_CONNECTION_CHANGED',
+      payload: {
+        network: network
+      }
+    })
+  }
 }
 
 export function changeUsername({username}) {
@@ -96,7 +111,6 @@ export function fetchGroupApps({group_id}){
       group_id: group_id
     }).then(response => {
       const apps = response.apps;
-      console.log(response);
       dispatch({type: 'FETCH_APPS_FULFILLED', payload: {apps: apps}});
       return apps;
     }).catch(err => {

@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, TextInput, Image,Text, TouchableHighlight, TouchableNativeFeedback, Clipboard   } from 'react-native';
-import { Spinner, Toast, ActionSheet, Card, CardItem, List,ListItem, Item, Input, Drawer, Container, Header, Content, Button, Left,Right, Icon, Body, Title } from 'native-base';
+import { StyleSheet, ScrollView, View, TextInput, Image,Text, TouchableHighlight, TouchableNativeFeedback, Clipboard   } from 'react-native';
+import { Drawer,Spinner, Toast, ActionSheet, Card, CardItem, List,ListItem, Item, Input, Container, Header, Content, Button, Left,Right, Icon, Body, Title } from 'native-base';
 import {ActionCreators} from "../actions/index";
 import {BoldText } from "./common/text";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import HomeSideBar from "./HomeSideBar";
 import AppList from "./apps/AppList";
-import { NavigationActions } from 'react-navigation';
 
 class Home extends Component {
   constructor(props) {
@@ -21,10 +20,10 @@ class Home extends Component {
     this.setState({inputValue: ''});
   };
   closeDrawer = () => {
-    this.drawer._root.close();
+    this._drawer._root.close();
   };
   openDrawer = () => {
-    this.drawer._root.open();
+    this._drawer._root.open();
   };
   componentDidMount(){
     const {personal_space} = this.props.spaces;
@@ -40,18 +39,27 @@ class Home extends Component {
   render(){
     return (
         <Drawer
-            ref={(ref) => { this.drawer = ref; }}
-            content={<HomeSideBar navigation={this.props.navigation} close={this.closeDrawer}/>}
-            onClose={() => this.closeDrawer()}>
-          <Container>
-            <Header style={{backgroundColor:"#373B60", height:60, paddingTop:15}}>
-              <Left>
+            ref={(ref) => { this._drawer = ref }}
+            type="overlay"
+            openDrawerOffset={0.2}
+            captureGestures={true}
+            negotiatePan={true}
+            panCloseMask={0.2}
+            panOpenMask={0.1}
+            acceptTap={true}
+            useInteractionManager={true}
+            tweenDuration={100}
+            tapToClose={true}
+            content={<HomeSideBar navigation={this.props.navigation} close={this.closeDrawer}/>}>
+          <Container style={{zIndex:10}}>
+            <Header style={{zIndex:10,backgroundColor:"#373B60", height:60, paddingTop:15}}>
+              <Left onPress={this.openDrawer}>
                 <Button transparent onPress={this.openDrawer}>
-                  <Icon name='menu' color="#FFFFFF"/>
+                  <Icon name='menu' color="#FFF"/>
                 </Button>
               </Left>
               <Body>
-                <BoldText style={{color: 'white'}}>{this.props.selectedItem.name}</BoldText>
+              <BoldText style={{color: 'white', textAlign:'left'}} numberOfLines={1}>{this.props.selectedItem.name}</BoldText>
               </Body>
               <Right/>
             </Header>

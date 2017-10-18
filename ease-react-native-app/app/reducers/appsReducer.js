@@ -11,7 +11,6 @@ export const apps = createReducer({
     }
   },
   ['FETCH_APPS_FULFILLED'](state, action){
-    console.log(action.payload.apps);
     return {
       apps: action.payload.apps,
       loading: false

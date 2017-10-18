@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import Expo from 'expo';
 import { StyleSheet, View, TextInput, Image, ScrollView } from 'react-native';
-import { Toast, Item, Input, Container, Header, Content, Button, Text, Left,Right, Icon, Body, Title, Root } from 'native-base';
+import { Toast, Item, Input, Container, Header, Content, Text, Left,Right, Icon, Body, Title, Root } from 'native-base';
 import {connect} from "react-redux";
 import {AsyncStorage} from "react-native";
 import {bindActionCreators} from "redux";
 import {ActionCreators} from "../actions/index";
+import Button from 'apsl-react-native-button';
 import {resetNavigation,alertToast} from "../utils/helpersFunctions";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 
@@ -14,20 +15,25 @@ class LoginView extends Component {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      loading: false
     }
   }
   connect = () => {
+    this.setState({loading: true});
     this.props.connection({
       email: this.state.email,
       password: this.state.password
     }).then(response => {
       this.props.fetchSpaces().then(() => {
-        resetNavigation(this.props.navigation, 'Home');
+        this.setState({loading: false});
+        this.props.navigation.navigate('Home');
       }).catch(err => {
+        this.setState({loading: false});
         alertToast(err, 'Ok!',2000);
       });
     }).catch(err => {
+      this.setState({loading: false});
       alertToast(err, 'Ok!', 2000);
     });
   };
@@ -41,9 +47,6 @@ class LoginView extends Component {
   render(){
     return (
         <Container style={{flex:1}}>
-          <View style={{position:'absolute', width: '100%', height: '100%'}}>
-            <Image style={{width:'100%', height:'100%'}} source={require('../resources/images/blue_background.png')}/>
-          </View>
           <ScrollView contentContainerStyle={styles.container} scrollEnabled={false}>
             <View style={{flex:1}}/>
             <Image
@@ -54,6 +57,8 @@ class LoginView extends Component {
                 <Input placeholder='Email'
                        style={{color: "white"}}
                        keyboardType="email-address"
+                       returnKeyType="next"
+                       onSubmitEditing={() => this.secondInput._root.focus()}
                        placeholderTextColor="#D2DAE4"
                        value={this.state.email}
                        onChangeText={(email) => this.setState({email: email})}/>
@@ -61,15 +66,25 @@ class LoginView extends Component {
               <Item regular style={styles.inputWrapper}>
                 <Input placeholder='Password'
                        placeholderTextColor="#D2DAE4"
+                       ref={(ref) => {this.secondInput = ref}}
+                       returnKeyType="go"
                        style={{color: "white"}}
                        secureTextEntry={true}
+                       onSubmitEditing={() => this.connect()}
                        value={this.state.password}
                        onChangeText={(password) => this.setState({password: password})}/>
               </Item>
             </View>
             <View style={{flex:1}}/>
-            <Button block onPress={this.connect} style={{backgroundColor:"#45C997", height:50, borderRadius:5}}>
-              <Text style={{fontWeight:'bold'}}>Connection</Text>
+            <Button
+                onPress={this.connect}
+                textStyle={{fontWeight:'bold', color: 'white'}}
+                isLoading={this.state.loading}
+                style={{backgroundColor:"#45C997",
+                  borderColor:'transparent',
+                  height:50,
+                  borderRadius:5}}>
+              Connection
             </Button>
             <KeyboardSpacer/>
           </ScrollView>
@@ -89,9 +104,9 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     paddingBottom: 40,
     paddingTop: 20,
+    backgroundColor:'#373B60',
     alignItems:'center',
     justifyContent: 'space-between',
-    backgroundColor:'transparent'
   },
   inputWrapper: {
     marginBottom:30,

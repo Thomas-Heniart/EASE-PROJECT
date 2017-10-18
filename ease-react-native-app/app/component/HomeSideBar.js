@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Expo from 'expo';
-import { StyleSheet, View,TextInput, Image, TouchableHighlight, TouchableNativeFeedback, Clipboard, ScrollView   } from 'react-native';
+import { StyleSheet, View,TextInput, Image, TouchableHighlight, TouchableNativeFeedback,TouchableOpacity, Clipboard, ScrollView   } from 'react-native';
 import { Text,Toast, ActionSheet, Card, CardItem, List,ListItem, Item, Input, Drawer, Container, Header, Content, Button, Left,Right, Icon, Body, Title } from 'native-base';
 import {BoldText } from "./common/text";
 import SideBarChooseButton from "./common/SideBarChooseButton";
@@ -62,7 +62,7 @@ class TeamRoomList extends Component {
 class HomeSideBar extends Component {
   logout = () => {
     this.props.logout();
-    resetNavigation(this.props.navigation, 'Login');
+    this.props.navigation.navigate('Login');
   };
   selectItem = (itemId, subItemId, name) => {
     this.props.selectItemAndFetchApps({
@@ -106,11 +106,11 @@ class HomeSideBar extends Component {
                 <Image style={{height:17, width:60, marginLeft:20}} source={require('../resources/images/soon_image.png')}/>
               </View>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.mainButtons} onPress={this.logout}>
+            <TouchableOpacity style={styles.mainButtons} onPress={this.logout}>
               <BoldText style={{color:'#df5454', fontSize:22}}>
                 LOGOUT
               </BoldText>
-            </TouchableHighlight>
+            </TouchableOpacity>
           </View>
         </View>
     )

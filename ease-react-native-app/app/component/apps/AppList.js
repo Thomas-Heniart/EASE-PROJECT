@@ -9,7 +9,7 @@ class AppList extends Component {
     const {apps} = this.props;
 
     return (
-        <List pagingEnabled={true}>
+        <List>
           {apps.map(item => {
             if (item.type === 'linkApp')
               return <LinkApp key={item.id} app={item}/>;
