@@ -155,7 +155,7 @@ public class User {
             if (userGroup != null)
                 newUser.getGroups().add(userGroup);
         }
-        newUser.loadJWT((Key) context.getAttribute("secret"), db);
+        newUser.renewJWT((Key) context.getAttribute("secret"), db);
         return newUser;
     }
 
@@ -188,7 +188,7 @@ public class User {
         newUser.initializeNotificationManager();
         UserEmail userEmail = UserEmail.createUserEmail(email, newUser, true, db);
         newUser.getUserEmails().put(email, userEmail);
-        newUser.loadJWT((Key) context.getAttribute("secret"), db);
+        newUser.renewJWT((Key) context.getAttribute("secret"), db);
         request = db.prepareRequest("DELETE FROM pendingRegistrations WHERE email = ?;");
         request.setString(email);
         request.set();
@@ -697,22 +697,6 @@ public class User {
 
     public boolean isSchoolUser() {
         return this.email.endsWith("@iscparis.com") || this.email.endsWith("@edhec.com") || this.email.endsWith("ieseg.fr");
-    }
-
-    public void loadJWT(Key secret, DataBaseConnection db) throws HttpServletException {
-        try {
-            DatabaseRequest request = db.prepareRequest("SELECT id FROM jsonWebTokens WHERE user_id = ?;");
-            request.setInt(this.getDBid());
-            DatabaseResult rs = db.get();
-            JWToken jwt;
-            if (rs.next()) {
-                jwt = JWToken.loadJWTokenWithKeyUser(rs.getInt(1), this.getEmail(), this.getFirstName(), this.getKeys().getKeyUser(), secret, db);
-            } else
-                jwt = JWToken.createJWTokenForUser(this, secret, db);
-            this.jwt = jwt;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
     }
 
     public void renewJWT(Key secret, DataBaseConnection db) throws HttpServletException {
