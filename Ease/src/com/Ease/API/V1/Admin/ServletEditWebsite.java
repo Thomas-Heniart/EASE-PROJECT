@@ -53,8 +53,12 @@ public class ServletEditWebsite extends HttpServlet {
             website.setWebsite_homepage(landing_url);
             website.getWebsiteAttributes().setIntegrated(integrated);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            for (Team team : website.getTeams()) {
+                team.removeTeamWebsite(website);
+                sm.saveOrUpdate(team);
+            }
+            website.setTeams(ConcurrentHashMap.newKeySet());
             for (Object team_id : teams) {
-                website.setTeams(ConcurrentHashMap.newKeySet());
                 Team team = teamManager.getTeamWithId(Math.toIntExact((Long) team_id));
                 team.addTeamWebsite(website);
                 website.addTeam(team);

@@ -318,6 +318,10 @@ public class Team {
         this.getTeamWebsites().add(website);
     }
 
+    public void removeTeamWebsite(Website website) {
+        this.getTeamWebsites().remove(website);
+    }
+
     public void edit(JSONObject editJson) {
         String name = (String) editJson.get("name");
         if (name != null)
