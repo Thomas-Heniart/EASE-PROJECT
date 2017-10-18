@@ -6,7 +6,7 @@
 
 <div class="item" id='${profile.getDBid()}'>
 	<div class="ProfileBox" 
-	color="${profile.getColor()}" custom="${profile.isGroupProfile()}">
+	color="${profile.getColor()}">
 	<div class="ProfileName"
 	style="background-color: ${profile.getColor()};">
 	<p>@<c:out value='${profile.getName()}' /></p>

@@ -22,8 +22,7 @@ public class ClassicApp extends WebsiteApp {
         NOTHING,
         ID,
         WEBSITE_APP_ID,
-        ACCOUNT_ID,
-        GROUP_CLASSIC_APP_ID
+        ACCOUNT_ID
     }
 
 	/*
@@ -32,14 +31,14 @@ public class ClassicApp extends WebsiteApp {
 	 * 
 	 */
 
-    public static ClassicApp loadClassicApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, Integer websiteAppDBid, ServletContext context, DataBaseConnection db) throws GeneralException {
+    public static ClassicApp loadClassicApp(Integer db_id, Profile profile, Integer position, AppInformation infos, String insertDate, Website site, Integer websiteAppDBid, ServletContext context, DataBaseConnection db) throws GeneralException {
         DatabaseRequest request = db.prepareRequest("SELECT * from classicApps WHERE website_app_id= ?;");
         request.setInt(websiteAppDBid);
         DatabaseResult rs = request.get();
         if (rs.next()) {
             Account account = Account.loadAccount(rs.getString(Data.ACCOUNT_ID.ordinal()), db);
             Integer classicDBid = rs.getInt(Data.ID.ordinal());
-            return new ClassicApp(db_id, profile, position, infos, groupApp, insertDate, site, websiteAppDBid, account, classicDBid);
+            return new ClassicApp(db_id, profile, position, infos, insertDate, site, websiteAppDBid, account, classicDBid);
         }
         throw new GeneralException(ServletManager.Code.InternError, "Classic app not complete in db.");
     }
@@ -50,7 +49,7 @@ public class ClassicApp extends WebsiteApp {
         Map<String, Object> elevator = new HashMap<String, Object>();
         Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, db);
         Account account = Account.createAccount(false, infos, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
         Integer classicDBid = request.set();
@@ -62,7 +61,7 @@ public class ClassicApp extends WebsiteApp {
             }
         }
         db.commitTransaction(transaction);
-        return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
+        return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
     }
 
     public static ClassicApp createShareableClassicApp(String name, Website website, JSONObject account_information, TeamUser teamUser_owner, Integer reminderValue, PostServletManager sm) throws GeneralException, HttpServletException {
@@ -71,12 +70,12 @@ public class ClassicApp extends WebsiteApp {
         Map<String, Object> elevator = new HashMap<String, Object>();
         Integer websiteAppDBid = WebsiteApp.createWebsiteApp(null, null, name, "classicApp", website, elevator, db);
         Account account = Account.createShareableAccount(account_information, teamUser_owner.getDeciphered_teamKey(), reminderValue, db);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
         Integer classicDBid = request.set();
         db.commitTransaction(transaction);
-        return new ClassicApp((Integer) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), website, websiteAppDBid, account, classicDBid);
+        return new ClassicApp((Integer) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), website, websiteAppDBid, account, classicDBid);
     }
 
     public static App createClassicAppSameAs(Profile profile, int position, String name, Website site, ClassicApp sameApp, ServletManager sm, User user) throws GeneralException {
@@ -85,7 +84,7 @@ public class ClassicApp extends WebsiteApp {
         Map<String, Object> elevator = new HashMap<String, Object>();
         Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, db);
         Account account = Account.createAccountSameAs(sameApp.getAccount(), false, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
         Integer classicDBid = request.set();
@@ -97,7 +96,7 @@ public class ClassicApp extends WebsiteApp {
             }
         }
         db.commitTransaction(transaction);
-        return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
+        return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
     }
 
     public static ClassicApp createFromWebsiteApp(WebsiteApp websiteApp, String name, Map<String, String> infos, ServletManager sm, User user) throws GeneralException {
@@ -108,11 +107,11 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(websiteAppDBid);
         request.set();
         Account account = Account.createAccount(false, infos, websiteApp.getReminderIntervalValue(), websiteApp.getReminderIntervalType(), sm);
-        request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
         request.setInt(websiteAppDBid);
         request.setInt(account.getDBid());
         Integer classicDBid = request.set();
-        ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(), user.getDashboardManager().getProfileFromApp(websiteApp.getDBid()), websiteApp.getPosition(), websiteApp.getAppInformation(), null, websiteApp.getInsertDate(), websiteApp.getSite(), websiteAppDBid, account, classicDBid);
+        ClassicApp newClassicApp = new ClassicApp(websiteApp.getDBid(), user.getDashboardManager().getProfileFromApp(websiteApp.getDBid()), websiteApp.getPosition(), websiteApp.getAppInformation(), websiteApp.getInsertDate(), websiteApp.getSite(), websiteAppDBid, account, classicDBid);
         user.getDashboardManager().replaceApp(newClassicApp);
         for (String info : infos.values()) {
             if (Regex.isEmail(info) == true) {
@@ -136,14 +135,14 @@ public class ClassicApp extends WebsiteApp {
     /* SharedApp Interface */
     protected boolean adminHasAccess;
 
-    public ClassicApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, Integer websiteAppDBid, Account account, Integer classicDBid) {
-        super(db_id, profile, position, infos, groupApp, insertDate, site, websiteAppDBid);
+    public ClassicApp(Integer db_id, Profile profile, Integer position, AppInformation infos, String insertDate, Website site, Integer websiteAppDBid, Account account, Integer classicDBid) {
+        super(db_id, profile, position, infos, insertDate, site, websiteAppDBid);
         this.account = account;
         this.classicDBid = classicDBid;
     }
 
-    public ClassicApp(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, Website site, Integer websiteAppDBid, Account account, Integer classicDBid, ShareableApp holder) {
-        super(db_id, profile, position, infos, groupApp, insertDate, site, websiteAppDBid, holder, null, null);
+    public ClassicApp(Integer db_id, Profile profile, Integer position, AppInformation infos, String insertDate, Website site, Integer websiteAppDBid, Account account, Integer classicDBid, ShareableApp holder) {
+        super(db_id, profile, position, infos, insertDate, site, websiteAppDBid, holder, null, null);
         this.account = account;
         this.classicDBid = classicDBid;
     }
@@ -160,7 +159,6 @@ public class ClassicApp extends WebsiteApp {
         request.set();
         account.removeFromDB(db);
         super.removeFromDB(db);
-        //this.website.decrementRatio(db);
         db.commitTransaction(transaction);
     }
 
@@ -190,11 +188,7 @@ public class ClassicApp extends WebsiteApp {
                 this.getProfile().getUser().removeEmailIfNeeded(info.getInformationValue(), sm);
             }
         }
-        if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.EDIT.ordinal()))) {
-            this.account.editInfos(infos, sm);
-            /*if (password != null && !password.equals(""))
-                this.account.setPassword(password, this.getProfile().getUser(), sm);*/
-        }
+        this.account.editInfos(infos, sm);
         for (String info : infos.values()) {
             if (Regex.isEmail(info) == true) {
                 this.getProfile().getUser().addEmailIfNeeded(info, sm);
@@ -301,7 +295,7 @@ public class ClassicApp extends WebsiteApp {
         request.setInt(websiteAppId);
         request.setInt(sharedAccount.getDBid());
         Integer classicDBid = request.set();
-        App sharedApp = new ClassicApp((Integer) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), null, (String) elevator.get("insertDate"), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
+        App sharedApp = new ClassicApp((Integer) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), this.getSite(), websiteAppId, sharedAccount, classicDBid, this);
         sharedApp.setAdminHasAccess(true, sm.getDB());
         db.commitTransaction(transaction);
         sharedApp.setReceived(false);

@@ -1,7 +1,6 @@
 package com.Ease.Dashboard.Profile;
 
 import com.Ease.Catalog.Website;
-import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
@@ -25,7 +24,6 @@ public class Profile {
         USER_ID,
         COLUMN_IDX,
         POSITION_IDX,
-        GROUP_PROFILE_ID,
         PROFILE_INFO_ID,
     }
 
@@ -39,7 +37,7 @@ public class Profile {
     public static List<List<Profile>> createPersonnalProfiles(User user, DataBaseConnection db) throws GeneralException {
         List<List<Profile>> profilesColumn = new LinkedList<List<Profile>>();
         for (int i = 0; i < MAX_COLUMN; ++i) {
-            profilesColumn.add(new LinkedList<Profile>());
+            profilesColumn.add(new LinkedList<>());
         }
         profilesColumn.get(0).add(Profile.createPersonnalProfile(user, 0, 0, "Side", "#000000", db));
         profilesColumn.get(1).add(Profile.createPersonnalProfile(user, 1, 0, "Me", "#373B60", db));
@@ -49,7 +47,7 @@ public class Profile {
     public static List<List<Profile>> loadProfiles(User user, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         List<List<Profile>> profilesColumn = new LinkedList<List<Profile>>();
         for (int i = 0; i < MAX_COLUMN; ++i) {
-            profilesColumn.add(new LinkedList<Profile>());
+            profilesColumn.add(new LinkedList<>());
         }
         DatabaseRequest request = db.prepareRequest("SELECT * FROM profiles WHERE user_id= ?;");
         request.setInt(user.getDBid());
@@ -57,17 +55,14 @@ public class Profile {
         Integer db_id;
         int columnIdx;
         int posIdx;
-        GroupProfile groupProfile;
         ProfileInformation infos;
         List<App> apps;
         while (rs.next()) {
             db_id = rs.getInt(Data.ID.ordinal());
             columnIdx = rs.getInt(Data.COLUMN_IDX.ordinal());
             posIdx = rs.getInt(Data.POSITION_IDX.ordinal());
-            String groupProfileId = rs.getString(Data.GROUP_PROFILE_ID.ordinal());
-            groupProfile = (groupProfileId == null) ? null : GroupManager.getGroupManager(context).getGroupProfileFromDBid(groupProfileId);
             infos = ProfileInformation.loadProfileInformation(rs.getString(Data.PROFILE_INFO_ID.ordinal()), db);
-            Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, infos);
+            Profile profile = new Profile(db_id, user, columnIdx, posIdx, infos);
             apps = App.loadApps(profile, context, db);
             profile.setApps(apps);
             profilesColumn.get(columnIdx).add(profile);
@@ -83,53 +78,20 @@ public class Profile {
         return profilesColumn;
     }
 
-    private static Integer createProfileInDb(DataBaseConnection db, String userId, int columnIdx, int posIdx, String groupProfileId, String infoId) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("INSERT INTO profiles VALUES(NULL, ?, ?, ?, ?, ?);");
+    private static Integer createProfileInDb(DataBaseConnection db, String userId, int columnIdx, int posIdx, String infoId) throws GeneralException {
+        DatabaseRequest request = db.prepareRequest("INSERT INTO profiles VALUES(NULL, ?, ?, ?, ?);");
         request.setInt(userId);
         request.setInt(columnIdx);
         request.setInt(posIdx);
-        if (groupProfileId == null)
-            request.setNull();
-        else
-            request.setInt(groupProfileId);
         request.setInt(infoId);
         return request.set();
-    }
-
-    public static Profile createProfileWithGroup(User user, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        ProfileInformation info;
-        if (groupProfile.isCommon()) {
-            info = groupProfile.getInfo();
-        } else {
-            info = ProfileInformation.createProfileInformation(groupProfile.getName(), groupProfile.getColor(), db);
-        }
-        Integer db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, groupProfile.getDBid(), info.getDBid());
-        Profile profile = new Profile(db_id, user, columnIdx, posIdx, groupProfile, info);
-        db.commitTransaction(transaction);
-        return profile;
-    }
-
-    public static Integer createProfileWithGroupForUnconnected(String db_id, int columnIdx, int posIdx, GroupProfile groupProfile, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        String info_id;
-        if (groupProfile.isCommon()) {
-            info_id = groupProfile.getInfo().getDBid();
-        } else {
-            info_id = ProfileInformation.createProfileInformationForUnconnected(groupProfile.getName(), groupProfile.getColor(), sm);
-        }
-        Integer id = createProfileInDb(db, db_id, columnIdx, posIdx, groupProfile.getDBid(), info_id);
-        db.commitTransaction(transaction);
-        return id;
     }
 
     public static Profile createPersonnalProfile(User user, int columnIdx, int posIdx, String name, String color, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         ProfileInformation info = ProfileInformation.createProfileInformation(name, color, db);
-        Integer db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, null, info.getDBid());
-        Profile profile = new Profile(db_id, user, columnIdx, posIdx, null, info);
+        Integer db_id = createProfileInDb(db, user.getDBid(), columnIdx, posIdx, info.getDBid());
+        Profile profile = new Profile(db_id, user, columnIdx, posIdx, info);
         db.commitTransaction(transaction);
         return profile;
     }
@@ -159,24 +121,19 @@ public class Profile {
     protected User user;
     protected int columnIdx;
     protected int posIdx;
-    protected GroupProfile groupProfile;
     protected ProfileInformation infos;
     protected List<App> apps;
 
-    public Profile(Integer db_id, User user, int columnIdx, int posIdx, GroupProfile groupProfile, ProfileInformation infos) {
+    public Profile(Integer db_id, User user, int columnIdx, int posIdx, ProfileInformation infos) {
         this.db_id = db_id;
         this.user = user;
         this.columnIdx = columnIdx;
         this.posIdx = posIdx;
-        this.groupProfile = groupProfile;
         this.infos = infos;
         this.apps = new LinkedList<App>();
     }
 
     public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
-        if (this.groupProfile != null && (this.groupProfile.isCommon() || !this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.DELETE.ordinal()))) {
-            throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this profile.");
-        }
         int transaction = db.startTransaction();
         for (App app : apps) {
             if (app.isPinned())
@@ -187,8 +144,6 @@ public class Profile {
         DatabaseRequest request = db.prepareRequest("DELETE FROM profiles WHERE id = ?;");
         request.setInt(db_id);
         request.set();
-        if (this.groupProfile == null || this.groupProfile.isCommon() == false)
-            this.infos.removeFromDB(db);
         db.commitTransaction(transaction);
     }
 
@@ -232,19 +187,12 @@ public class Profile {
         this.posIdx = idx;
     }
 
-    public GroupProfile getGroupProfile() {
-        return this.groupProfile;
-    }
-
     public String getName() {
         return this.infos.getName();
     }
 
     public void setName(String name, ServletManager sm) throws GeneralException {
-        if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.RENAME.ordinal())))
-            this.infos.setName(name, sm);
-        else
-            throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to change the profile's name.");
+        this.infos.setName(name, sm);
     }
 
     public String getColor() {
@@ -252,10 +200,7 @@ public class Profile {
     }
 
     public void setColor(String color, ServletManager sm) throws GeneralException {
-        if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(ProfilePermissions.Perm.COLOR.ordinal())))
-            this.infos.setColor(color, sm);
-        else
-            throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permissions to change the profile's color.");
+        this.infos.setColor(color, sm);
     }
 
     public List<App> getApps() {
@@ -290,9 +235,6 @@ public class Profile {
         res.put("name", this.infos.getName());
         res.put("column", this.columnIdx);
         res.put("index", this.posIdx);
-        if (this.groupProfile != null) {
-            res.put("groupProfile", this.groupProfile.getJson());
-        }
         JSONArray array = new JSONArray();
         for (App app : this.apps) {
             JSONObject jsonApp = new JSONObject();
@@ -340,12 +282,6 @@ public class Profile {
             }
         }
         db.commitTransaction(transaction);
-    }
-
-    public boolean havePermission(ProfilePermissions.Perm perm) {
-        if (this.groupProfile == null || (!this.groupProfile.isCommon() && this.groupProfile.getPerms().havePermission(perm.ordinal())))
-            return true;
-        return false;
     }
 
     public ClassicApp addClassicApp(String name, Website site, Map<String, String> infos, ServletManager sm) throws GeneralException {
@@ -410,9 +346,5 @@ public class Profile {
     public void addApp(App newApp) {
         this.apps.add(newApp);
         this.user.getDashboardManager().addApp(newApp);
-    }
-
-    public boolean isGroupProfile() {
-        return this.groupProfile != null;
     }
 }

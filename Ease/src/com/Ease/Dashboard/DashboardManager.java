@@ -6,7 +6,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.Profile.ProfilePermissions;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.*;
 import org.json.simple.JSONArray;
@@ -269,16 +268,7 @@ public class DashboardManager {
             profileDest.getApps().add(positionDest, app);
             profileDest.updateAppsIndex(db);
         } else {
-            if (profileDest.getGroupProfile() != null
-                    && (profileDest.getGroupProfile().isCommon() == true || !profileDest.getGroupProfile().getPerms()
-                    .havePermission(ProfilePermissions.Perm.ADDAPP.ordinal())))
-                throw new GeneralException(ServletManager.Code.ClientWarning,
-                        "You don't have the permission to add app in this profile.");
             Profile profileSrc = app.getProfile();
-            if (profileSrc.getGroupProfile() != null && !(profileSrc.getGroupProfile().isCommon() == false || !profileSrc
-                    .getGroupProfile().getPerms().havePermission(ProfilePermissions.Perm.MOVE_APP_OUTSIDE.ordinal())))
-                throw new GeneralException(ServletManager.Code.ClientWarning,
-                        "You don't have the permission to move app out of this profile.");
             profileSrc.getApps().remove(app);
             profileSrc.updateAppsIndex(db);
             profileDest.getApps().add(positionDest, app);

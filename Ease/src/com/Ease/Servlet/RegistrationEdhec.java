@@ -1,7 +1,5 @@
 package com.Ease.Servlet;
 
-import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Regex;
@@ -74,10 +72,10 @@ public class RegistrationEdhec extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
             else {
                 User newUser = User.createUser(email, fname, confirmPassword, new Date().getTime(), sm.getServletContext(), sm.getDB());
-                GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
+                /* GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
                 Group edhecGroup = groupManager.getGroupFromDBid("22");
                 edhecGroup.addUser(newUser.getEmail(), newUser.getFirstName(), false, sm);
-                newUser.getGroups().add(edhecGroup);
+                newUser.getGroups().add(edhecGroup); */
                 session.setAttribute("user", newUser);
                 sm.setResponse(ServletManager.Code.Success, "Registered successfully");
             }
