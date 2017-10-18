@@ -7,6 +7,7 @@ import * as appActions from "../../actions/appsActions";
 import {teamCreateLinkAppNew} from "../../actions/appsActions";
 import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
 import {connect} from "react-redux";
+import { isUrl } from '../../utils/utils'
 
 class AddBookmark extends React.Component {
     constructor(props){
@@ -27,9 +28,13 @@ class AddBookmark extends React.Component {
     }
 
     getLogo = () => {
-        getClearbitLogo(this.state.url).then(response => {
-            this.setState({img_url: response});
-        });
+        if (isUrl(this.state.url)) {
+            getClearbitLogo(this.state.url).then(response => {
+                this.setState({img_url: response});
+            });
+        }
+        else
+            this.setState({img_url: ''});
     };
     changeUrl = (e, {value}) => {
         this.setState({url: value}, this.getLogo);

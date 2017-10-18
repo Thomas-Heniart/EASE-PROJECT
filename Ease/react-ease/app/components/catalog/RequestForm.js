@@ -6,22 +6,35 @@ class RequestForm extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            loading: false,
+            loadingRequest: false,
+            loadingSuggestion: false
+        }
     }
+
+    send = (string, e) => {
+        e.preventDefault();
+        string === 'request' ?
+        this.setState({loading: true, loadingRequest: true})
+        :
+        this.setState({loading: true, loadingSuggestion: true});
+    };
 
     render() {
         return (
             <Grid columns={2}>
                 <Grid.Column>
                     <Segment clearing className="requestAnApp">
-                        <Form>
+                        <Form onSubmit={e => this.send('suggestion', e)}>
                             <p>👋 Send suggestion</p>
                             <span>Paste website URL</span>
                             <Input required type='url' fluid placeholder='https://' size="mini" />
                             <Button positive
                                     size="mini"
                                     floated="right"
-                                    loading={this.props.loading}
-                                    disabled={this.props.loading}>
+                                    loading={this.state.loadingSuggestion}
+                                    disabled={this.state.loading} >
                                 <Icon name="send" />
                                 Send
                             </Button>
@@ -30,7 +43,7 @@ class RequestForm extends React.Component {
                 </Grid.Column>
                 <Grid.Column>
                     <Segment clearing className="requestAnApp">
-                        <Form>
+                        <Form onSubmit={e => this.send('request', e)}>
                             <p>🙏 Request an App</p>
                             <span>Paste website URL</span>
                             <Input required type='url' fluid placeholder='https://' size="mini" />
@@ -42,8 +55,8 @@ class RequestForm extends React.Component {
                             <Button positive
                                     size="mini"
                                     floated="right"
-                                    loading={this.props.loading}
-                                    disabled={this.props.loading}>
+                                    loading={this.state.loadingRequest}
+                                    disabled={this.state.loading} >
                                 <Icon name="send" />
                                 Send
                             </Button>
