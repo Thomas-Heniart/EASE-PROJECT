@@ -688,8 +688,6 @@ public class User {
         }
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
-        if (this.getJwt() != null)
-            res.put("jwt", this.getJwt().getJwt());
         return res;
     }
 
@@ -701,7 +699,7 @@ public class User {
         return this.email.endsWith("@iscparis.com") || this.email.endsWith("@edhec.com") || this.email.endsWith("ieseg.fr");
     }
 
-    private void loadJWT(Key secret, DataBaseConnection db) throws HttpServletException {
+    public void loadJWT(Key secret, DataBaseConnection db) throws HttpServletException {
         try {
             DatabaseRequest request = db.prepareRequest("SELECT id FROM jsonWebTokens WHERE user_id = ?;");
             request.setInt(this.getDBid());
@@ -709,12 +707,15 @@ public class User {
             JWToken jwt;
             if (rs.next()) {
                 jwt = JWToken.loadJWTokenWithKeyUser(rs.getInt(1), this.getEmail(), this.getFirstName(), this.getKeys().getKeyUser(), secret, db);
-            }
-            else
+            } else
                 jwt = JWToken.createJWTokenForUser(this, secret, db);
             this.jwt = jwt;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
+
+    public void renewJWT(Key secret, DataBaseConnection db) throws HttpServletException {
+        this.jwt = JWToken.renewJWTokenWithKeyUser(this.getEmail(), this.getFirstName(), this.getDBid(), this.getKeys().getKeyUser(), secret, db);
     }
 }
