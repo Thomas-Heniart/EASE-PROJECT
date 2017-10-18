@@ -13,6 +13,7 @@ import com.Ease.Utils.Crypto.RSA;
 import com.stripe.exception.StripeException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -424,10 +425,12 @@ public abstract class ServletManager {
             Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
             String connection_token = (String) claimsJws.get("tok");
             User user = tokenUserMap.get(connection_token);
+            Long expiration_date = (Long) claimsJws.get("exp");
+            if (expiration_date <= new Date().getTime())
+                throw new HttpServletException(HttpStatus.BadRequest, "Your token expired, you must login");
             if (user == null) {
                 String user_name = (String) claimsJws.get("name");
                 String user_email = (String) claimsJws.get("email");
-                Long expiration_date = (Long) claimsJws.get("exp");
                 JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
                 user = User.loadUserFromJWT(jwToken, this.getServletContext(), this.getDB());
                 for (TeamUser teamUser : user.getTeamUsers()) {
@@ -455,6 +458,8 @@ public abstract class ServletManager {
                 throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired");
             this.user = user;
             return this.user;
+        } catch (SignatureException e) {
+            throw new HttpServletException(HttpStatus.Forbidden, "This is not a valid token.");
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
