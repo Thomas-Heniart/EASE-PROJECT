@@ -52,6 +52,28 @@
                     </div>
                 </div>
                 <div class="field">
+                    <div class="ui fluid search selection dropdown category">
+                        <input type="hidden" name="category_id"/>
+                        <i class="dropdown icon"></i>
+                        <input class="search" autocomplete="off" tabindex="0">
+                        <div class="default text">Select Category</div>
+                        <div class="menu">
+                            <div class="item" data-value="-1">No category</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <div class="ui fluid multiple search selection dropdown connectWith">
+                        <input type="hidden" name="connectWith_id"/>
+                        <i class="dropdown icon"></i>
+                        <input class="search" autocomplete="off" tabindex="0">
+                        <div class="default text">Select connectWith...</div>
+                        <div class="menu"></div>
+                    </div>
+                </div>
+                <div class="field">
                     <div class="ui fluid multiple search selection dropdown teams">
                         <input type="hidden" name="team_id"/>
                         <i class="dropdown icon"></i>

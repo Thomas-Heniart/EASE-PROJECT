@@ -1,6 +1,5 @@
 package com.Ease.Dashboard.App;
 
-import com.Ease.Context.Group.GroupManager;
 import com.Ease.Dashboard.App.EnterpriseApp.EnterpriseAppAttributes;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
@@ -29,7 +28,6 @@ public class App implements ShareableApp, SharedApp {
         INSERT_DATE,
         TYPE,
         APP_INFO_ID,
-        GROUP_APP_ID,
         POSITION
     }
 
@@ -48,17 +46,12 @@ public class App implements ShareableApp, SharedApp {
         int position;
         String insertDate;
         AppInformation infos;
-        GroupApp groupApp = null;
         App app = null;
         while (rs.next()) {
             db_id = rs.getInt(Data.ID.ordinal());
             position = rs.getInt(Data.POSITION.ordinal());
             insertDate = rs.getString(Data.INSERT_DATE.ordinal());
             infos = AppInformation.loadAppInformation(rs.getString(Data.APP_INFO_ID.ordinal()), db);
-            String groupAppId = rs.getString(Data.GROUP_APP_ID.ordinal());
-            if (groupAppId != null) {
-                groupApp = GroupManager.getGroupManager(context).getGroupAppFromDBid(groupAppId);
-            }
             Integer shared_app_id = rs.getInt("shared_app_id");
             if (shared_app_id > 0) {
                 Integer team_id = rs.getInt("team_id");
@@ -71,10 +64,10 @@ public class App implements ShareableApp, SharedApp {
             } else {
                 switch (rs.getString(Data.TYPE.ordinal())) {
                     case "linkApp":
-                        app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, groupApp, context, db);
+                        app = LinkApp.loadLinkApp(db_id, profile, position, insertDate, infos, context, db);
                         break;
                     case "websiteApp":
-                        app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, groupApp, context, db);
+                        app = WebsiteApp.loadWebsiteApp(db_id, profile, position, insertDate, infos, context, db);
                         break;
                     default:
                         throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
@@ -84,7 +77,6 @@ public class App implements ShareableApp, SharedApp {
                 app.setPosition(apps.size(), db);
             app.setDisabled(rs.getBoolean("disabled"));
             apps.add(app);
-            groupApp = null;
         }
         return apps;
     }
@@ -115,10 +107,10 @@ public class App implements ShareableApp, SharedApp {
                 infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
                 switch (rs.getString("type")) {
                     case "linkApp":
-                        shareableApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
+                        shareableApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, context, db);
                         break;
                     case "websiteApp":
-                        shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
+                        shareableApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, context, db);
                         break;
                     default:
                         throw new GeneralException(ServletManager.Code.InternError, "This app type doesn't exist.");
@@ -159,10 +151,10 @@ public class App implements ShareableApp, SharedApp {
                 infos = AppInformation.loadAppInformation(rs.getString("app_info_id"), db);
                 switch (rs.getString("type")) {
                     case "linkApp":
-                        sharedApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, null, context, db);
+                        sharedApp = LinkApp.loadLinkApp(db_id, null, null, insertDate, infos, context, db);
                         break;
                     case "websiteApp":
-                        sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, null, context, db);
+                        sharedApp = WebsiteApp.loadWebsiteApp(db_id, null, null, insertDate, infos, context, db);
                         if (((App) sharedApp).isClassicApp()) {
                             sharedApp.setReceived(rs.getBoolean("received"));
                             sharedApp.setAdminHasAccess(rs.getBoolean("adminHasAccess"));
@@ -190,7 +182,7 @@ public class App implements ShareableApp, SharedApp {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String insertDate = dateFormat.format(date);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, default);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, default);");
         request.setString(insertDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
@@ -255,7 +247,6 @@ public class App implements ShareableApp, SharedApp {
     protected Profile profile;
     protected Integer position;
     protected AppInformation informations;
-    protected GroupApp groupApp;
     protected String insertDate;
     protected boolean received = true;
     protected boolean disabled;
@@ -277,28 +268,24 @@ public class App implements ShareableApp, SharedApp {
     protected boolean pinned = false;
 
 
-    public App(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate) {
+    public App(Integer db_id, Profile profile, Integer position, AppInformation infos, String insertDate) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
         this.informations = infos;
-        this.groupApp = groupApp;
         this.insertDate = insertDate;
     }
 
-    public App(Integer db_id, Profile profile, Integer position, AppInformation infos, GroupApp groupApp, String insertDate, ShareableApp holder) {
+    public App(Integer db_id, Profile profile, Integer position, AppInformation infos, String insertDate, ShareableApp holder) {
         this.db_id = db_id;
         this.profile = profile;
         this.position = position;
         this.informations = infos;
-        this.groupApp = groupApp;
         this.insertDate = insertDate;
         this.holder = holder;
     }
 
     public void removeFromDB(DataBaseConnection db) throws GeneralException, HttpServletException {
-        if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(AppPermissions.Perm.DELETE.ordinal())))
-            throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to remove this app.");
         int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("DELETE FROM profileAndAppMap WHERE app_id = ?;");
         request.setInt(db_id);
@@ -306,8 +293,7 @@ public class App implements ShareableApp, SharedApp {
         request = db.prepareRequest("DELETE FROM apps WHERE id = ?;");
         request.setInt(db_id);
         request.set();
-        if ((this.groupApp == null || this.groupApp.isCommon() == false) && (this.informations != null))
-            informations.removeFromDb(db);
+        informations.removeFromDb(db);
         db.commitTransaction(transaction);
     }
 
@@ -326,11 +312,7 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public void setName(String name, DataBaseConnection db) throws GeneralException {
-        if (this.groupApp == null || (!this.groupApp.isCommon() && this.groupApp.getPerms().havePermission(AppPermissions.Perm.RENAME.ordinal()))) {
-            this.informations.setName(name, db);
-        } else {
-            throw new GeneralException(ServletManager.Code.ClientWarning, "You have not the permission to change this app's name.");
-        }
+        this.informations.setName(name, db);
     }
 
     public Profile getProfile() {
@@ -395,12 +377,6 @@ public class App implements ShareableApp, SharedApp {
         }
     }
 
-    public boolean havePerm(AppPermissions.Perm perm) {
-        if (this.groupApp != null && (this.groupApp.isCommon() == true || !this.groupApp.getPerms().havePermission(perm.ordinal())))
-            return false;
-        return true;
-    }
-
     public boolean isClassicApp() {
         return false;
     }
@@ -426,11 +402,6 @@ public class App implements ShareableApp, SharedApp {
         json.put("position", this.position);
         json.put("name", this.informations.getName());
         json.put("id", this.getDBid());
-        if (this.groupApp != null) {
-            JSONObject groupJson = new JSONObject();
-            this.groupApp.fillJson(groupJson);
-            json.put("groupApp", groupJson);
-        }
     }
 
     /* Old version */

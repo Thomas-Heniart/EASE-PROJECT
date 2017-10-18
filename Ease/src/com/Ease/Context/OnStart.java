@@ -1,11 +1,8 @@
 package com.Ease.Context;
 
 import com.Ease.Context.Catalog.WebsitesVisitedManager;
-import com.Ease.Context.Group.GroupManager;
-import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
-import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
@@ -46,18 +43,13 @@ public class OnStart implements ServletContextListener {
             DatabaseRequest request;
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
-                context.setAttribute("idGenerator", new IdGenerator());
-                //Catalog catalog = new Catalog(db, context);
                 com.Ease.Catalog.Catalog catalog = new com.Ease.Catalog.Catalog();
                 catalog.populate();
                 context.setAttribute("catalog", catalog);
-                context.setAttribute("groupManager", new GroupManager());
+                //context.setAttribute("groupManager", new GroupManager());
                 context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
 
                 TeamManager teamManager = new TeamManager(context, db);
-                for (Team team : teamManager.getTeams()) {
-                    System.out.println(catalog.getWebsiteMap().values().containsAll(team.getTeamWebsites()));
-                }
                 context.setAttribute("teamManager", teamManager);
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
                 Stripe.apiVersion = "2017-08-15";
@@ -89,7 +81,7 @@ public class OnStart implements ServletContextListener {
                 colors.add("#FF5E88");
                 context.setAttribute("colors", colors);
 
-                Infrastructure.loadInfrastructures(db, evt.getServletContext());
+                //Infrastructure.loadInfrastructures(db, evt.getServletContext());
                 Map<String, User> usersMap = new ConcurrentHashMap<>();
                 context.setAttribute("users", usersMap);
                 Map<String, User> sessionIdUserMap = new ConcurrentHashMap<>();

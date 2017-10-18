@@ -1,10 +1,8 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Sso;
+import com.Ease.Catalog.Catalog;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,13 +19,7 @@ public class ServletGetSso extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            JSONArray res = new JSONArray();
-            for (Sso sso : catalog.getSsos()) {
-                JSONObject tmp = new JSONObject();
-                tmp.put("id", sso.getDbid());
-                tmp.put("name", sso.getName());
-                res.add(tmp);
-            }
+            JSONArray res = catalog.getSsoListJson();
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

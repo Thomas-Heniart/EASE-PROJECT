@@ -70,7 +70,7 @@ public class JWToken {
             Claims claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt).getBody();
             String connection_token = (String) claimsJws.get("tok");
             Long expiration_date = ((BigInteger) rs.getObject(2)).longValueExact();
-            if (expiration_date <= new Date().getTime()) {
+            if (expiration_date <= new Date().getTime() || !claimsJws.get("name").equals(user_name)) {
                 String salt = AES.generateSalt();
                 Map<String, Object> claims = new HashMap<>();
                 Calendar calendar = Calendar.getInstance();

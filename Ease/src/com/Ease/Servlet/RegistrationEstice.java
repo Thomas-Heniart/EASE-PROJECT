@@ -1,7 +1,9 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
-import java.util.Date;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.Regex;
+import com.Ease.Utils.ServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,13 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupManager;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.Regex;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * Servlet implementation class NewUser
@@ -75,10 +72,10 @@ public class RegistrationEstice extends HttpServlet {
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Passwords are not the same.");
             else {
                 User newUser = User.createUser(email, fname, confirmPassword, new Date().getTime(), sm.getServletContext(), sm.getDB());
-                GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
+                /* GroupManager groupManager = (GroupManager) sm.getContextAttr("groupManager");
                 Group esticeGroup = groupManager.getGroupFromDBid("12");
                 esticeGroup.addUser(newUser.getEmail(), newUser.getFirstName(), false, sm);
-                newUser.getGroups().add(esticeGroup);
+                newUser.getGroups().add(esticeGroup); */
                 session.setAttribute("user", newUser);
                 sm.setResponse(ServletManager.Code.Success, "Registered successfully");
             }

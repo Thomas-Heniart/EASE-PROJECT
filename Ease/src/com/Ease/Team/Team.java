@@ -115,6 +115,9 @@ public class Team {
     @Transient
     private Subscription subscription;
 
+    @Transient
+    private Customer customer;
+
     public Team(String name) {
         this.name = name;
     }
@@ -168,6 +171,16 @@ public class Team {
         this.subscription = subscription;
     }
 
+    public Customer getCustomer() throws HttpServletException {
+        try {
+            if (customer == null)
+                customer = Customer.retrieve(this.getCustomer_id());
+            return customer;
+        } catch (StripeException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     public boolean isCard_entered() {
         return card_entered;
     }
@@ -205,7 +218,7 @@ public class Team {
     }
 
     public boolean isValidFreemium() throws HttpServletException {
-        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()));
+        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()) || this.getCustomer().getAccountBalance() < 0);
     }
 
     public synchronized Map<Integer, TeamUser> getTeamUsers() {
@@ -471,14 +484,14 @@ public class Team {
 
     public boolean isBlocked() {
         try {
-            return (this.isFreemium() && !card_entered && (new Date().getTime() > this.getSubscription().getTrialEnd() * 1000));
+            return this.isFreemium() && !card_entered && (this.getSubscription().getTrialEnd() == null || new Date().getTime() > this.getSubscription().getTrialEnd() * 1000) && this.getCustomer().getAccountBalance() >= 0;
         } catch (HttpServletException e) {
             e.printStackTrace();
             return true;
         }
     }
 
-    public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
+    public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) throws HttpServletException {
         hibernateQuery.querySQLString("SELECT credit FROM teamCredit WHERE team_id = ?");
         hibernateQuery.setParameter(1, this.getDb_id());
         Integer credit = (Integer) hibernateQuery.getSingleResult();
@@ -502,12 +515,13 @@ public class Team {
                     hibernateQuery.executeUpdate();
                 } else
                     credit = 0;
-                Customer customer = Customer.retrieve(this.getCustomer_id());
+                Customer customer = this.getCustomer();
                 Map<String, Object> customerParams = new HashMap<>();
                 Integer account_balance = Math.toIntExact((customer.getAccountBalance() == null) ? 0 : customer.getAccountBalance());
                 Integer team_account_balance = account_balance - amount - credit;
                 customerParams.put("account_balance", team_account_balance);
                 customer.update(customerParams);
+                customer.setAccountBalance(Long.valueOf(team_account_balance));
                 return team_account_balance;
             } catch (AuthenticationException e) {
                 e.printStackTrace();

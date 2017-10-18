@@ -124,4 +124,11 @@ public class Catalog {
     public void removeWebsite(Integer id) {
         this.getWebsiteMap().remove(id);
     }
+
+    public Category getCategoryWithId(Integer id) throws HttpServletException {
+        Category category = this.getCategoryMap().get(id);
+        if (category == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "No such category");
+        return category;
+    }
 }

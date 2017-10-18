@@ -39,6 +39,7 @@
         <div class="ui vertical fluid tabular menu">
             <a class="item" data-target="#team-segment">Teams</a>
             <a class="item" data-target="#website-segment">Websites</a>
+            <a class="item" data-target="#category-segment">Categories</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -47,6 +48,9 @@
         </div>
         <div id="website-segment" class="ui segment loading" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebsiteManager.jsp" %>
+        </div>
+        <div id="category-segment" class="ui segement loading" style="display: none;">
+            <%@include file="templates/backofficeAdmin/CategoryManager.jsp" %>
         </div>
     </div>
 </div>

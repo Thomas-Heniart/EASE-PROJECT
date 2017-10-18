@@ -1,20 +1,18 @@
 package com.Ease.Dashboard.User;
 
-import com.Ease.Context.Catalog.Tag;
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Context.Group.Group;
-import com.Ease.Context.Group.GroupManager;
-import com.Ease.Context.Group.Infrastructure;
 import com.Ease.Dashboard.App.App;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.DashboardManager;
 import com.Ease.Dashboard.Profile.Profile;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -64,7 +62,7 @@ public class User {
         this.emails = UserEmail.loadEmails(db_id, this, db);
     }
 
-    public static User loadUserFromJWT(JWToken jwToken, ServletContext context, DataBaseConnection db) throws HttpServletException {
+    public static User loadUserFromJWT(JWToken jwToken, com.Ease.Utils.Servlets.ServletManager sm, DataBaseConnection db) throws HttpServletException {
         try {
             String db_id = jwToken.getUser_id();
             String keyUser = jwToken.getKeyUser();
@@ -74,13 +72,33 @@ public class User {
             int transaction = db.startTransaction();
             if (rs.next()) {
                 String email = rs.getString(Data.EMAIL.ordinal());
-                Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
+                Map<String, User> usersMap = (Map<String, User>) sm.getContextAttr("users");
                 User connectedUser = usersMap.get(email);
                 if (connectedUser != null)
                     return connectedUser;
                 Keys keys = Keys.loadKeysWithoutPassword(rs.getString(Data.KEYSID.ordinal()), keyUser, db);
-                User newUser = loadUserWithKeys(rs, keys, context, db);
+                User newUser = loadUserWithKeys(rs, keys, sm.getServletContext(), db);
                 db.commitTransaction(transaction);
+                HibernateQuery hibernateQuery = new HibernateQuery();
+                for (TeamUser teamUser : newUser.getTeamUsers()) {
+                    if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
+                        teamUser.finalizeRegistration();
+                        hibernateQuery.saveOrUpdateObject(teamUser);
+                    }
+                    if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
+                        String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), newUser.getKeys().getPrivateKey());
+                        teamUser.setTeamKey(newUser.encrypt(deciphered_teamKey));
+                        teamUser.setDeciphered_teamKey(deciphered_teamKey);
+                        teamUser.setDisabled(false);
+                        hibernateQuery.saveOrUpdateObject(teamUser);
+                        for (SharedApp sharedApp : teamUser.getSharedApps()) {
+                            sharedApp.setDisableShared(false, db);
+                        }
+                    }
+                }
+                hibernateQuery.commit();
+                usersMap.put(email, newUser);
+                newUser.getDashboardManager().decipherApps(sm);
                 return newUser;
             } else {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid token");
@@ -148,12 +166,6 @@ public class User {
         request = db.prepareRequest("SELECT group_id FROM groupsAndUsersMap WHERE user_id= ?;");
         request.setInt(newUser.getDBid());
         rs2 = request.get();
-        Group userGroup;
-        while (rs2.next()) {
-            userGroup = GroupManager.getGroupManager(context).getGroupFromDBid(rs2.getString(1));
-            if (userGroup != null)
-                newUser.getGroups().add(userGroup);
-        }
         newUser.loadJWT((Key) context.getAttribute("secret"), db);
         return newUser;
     }
@@ -205,7 +217,7 @@ public class User {
     protected Option opt;
     protected Map<String, UserEmail> emails;
     protected WebSocketManager webSocketManager;
-    protected List<Group> groups;
+    //protected List<Group> groups = new LinkedList<>();
     protected boolean isAdmin;
     protected boolean sawGroupProfile;
     protected Status status;
@@ -225,9 +237,8 @@ public class User {
         this.email = email;
         this.keys = keys;
         this.opt = opt;
-        this.emails = new HashMap<String, UserEmail>();
+        this.emails = new HashMap<>();
         this.webSocketManager = new WebSocketManager();
-        this.groups = new LinkedList<Group>();
         this.isAdmin = isAdmin;
         this.sessionSave = sessionSave;
         this.status = status;
@@ -293,7 +304,7 @@ public class User {
         return emails;
     }
 
-    public List<Group> getGroups() {
+    /* public List<Group> getGroups() {
         return groups;
     }
 
@@ -303,7 +314,7 @@ public class User {
             infras.add(group.getInfra());
         });
         return infras;
-    }
+    } */
 
     public SessionSave getSessionSave() {
         return sessionSave;
@@ -495,18 +506,6 @@ public class User {
         }
     }
 
-    public boolean tutoDone() {
-        return this.status.tutoIsDone();
-    }
-
-    public boolean appsImported() {
-        return this.status.appsImported();
-    }
-
-    public boolean sawGroupProfile() {
-        return this.groups.isEmpty() || this.sawGroupProfile;
-    }
-
     public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
         UserEmail userEmail = this.emails.get(email);
         if (userEmail != null)
@@ -535,24 +534,8 @@ public class User {
         return extensionKeys;
     }
 
-    public boolean canSeeTag(Tag tag) {
-        if (this.isAdmin())
-            return true;
-        if (tag.getName().equals("ISC Paris"))
-            return this.email.endsWith("@iscparis.com");
-        for (Group group : this.groups) {
-            if (tag.containsGroupId(group.getDBid()))
-                return true;
-        }
-        return tag.isPublic();
-    }
-
     public Status getStatus() {
         return this.status;
-    }
-
-    public boolean isInGroup() {
-        return !this.groups.isEmpty();
     }
 
     public void deleteFromDb(DataBaseConnection db) throws GeneralException, HttpServletException {
@@ -600,23 +583,6 @@ public class User {
         this.keys.removeFromDB(db);
         this.opt.removeFromDB(db);
         db.commitTransaction(transaction);
-    }
-
-    public int getWebsiteCount(Website website) {
-        int res = 0;
-        for (WebsiteApp app : this.dashboardManager.getWebsiteApps()) {
-            if (app.getSite().equals(website))
-                res++;
-        }
-        return res;
-    }
-
-    public boolean isGroupAdmin(Group group) {
-        int idx = this.groups.indexOf(group);
-        if (idx == -1)
-            return false;
-        Group tmp = this.groups.get(idx);
-        return tmp.isAdmin(this.db_id);
     }
 
     public List<TeamUser> getTeamUsers() {

@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Category;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @WebServlet("/api/v1/admin/EditWebsite")
 public class ServletEditWebsite extends HttpServlet {
@@ -39,7 +41,9 @@ public class ServletEditWebsite extends HttpServlet {
             String login_url = sm.getStringParam("login_url", true, false);
             String landing_url = sm.getStringParam("landing_url", true, false);
             JSONArray teams = (JSONArray) sm.getParam("teams", false, false);
+            JSONArray connectWith_ids = sm.getArrayParam("connectWith", false, false);
             Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true, false));
+            Integer category_id = sm.getIntParam("category_id", true, false);
             Boolean integrated = sm.getBooleanParam("integrated", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id);
@@ -53,6 +57,19 @@ public class ServletEditWebsite extends HttpServlet {
             if (sso_id != -1)
                 sso = catalog.getSsoWithId(sso_id);
             website.setSso(sso);
+            Category category = null;
+            if (category_id != -1) {
+                category = catalog.getCategoryWithId(category_id);
+                category.addWebsite(website);
+            }
+            website.setCategory(category);
+            website.setConnectWith_websites(ConcurrentHashMap.newKeySet());
+            for (Object connectWith_id : connectWith_ids) {
+                Website connectWith = catalog.getWebsiteWithId(Math.toIntExact((Long) connectWith_id));
+                website.addConnectWith_website(connectWith);
+                connectWith.addSignIn_website(website);
+                sm.saveOrUpdate(connectWith);
+            }
             sm.saveOrUpdate(website.getWebsiteAttributes());
             sm.saveOrUpdate(website);
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();

@@ -44,17 +44,57 @@ $(document).ready(function () {
                         websites.forEach(function (website) {
                             addWebsiteRow(website).appendTo($("#website-manager-body"));
                             addResult(website).appendTo($("#website-merging .menu"));
+                            $("<div class='item' data-value='" + website.id + "'>" +
+                                website.name + "</div>").appendTo($("#website-edition .connectWith .menu"));
                         });
                         target.removeClass("loading");
                     });
-                    break;
+                    ajaxHandler.get("/api/v1/catalog/GetCategories", null, function () {
 
+                    }, function (data) {
+                        var categories = data.categories;
+                        categories.sort(function (c1, c2) {
+                            return c1.position - c2.position;
+                        });
+                        categories.forEach(function (category) {
+                            $("<div class='item' data-value='" + category.id + "'>" +
+                                category.name + "</div>").appendTo($("#website-edition .category .menu"));
+                        });
+                    });
+                    break;
+                case "category-segment":
+                    ajaxHandler.get("/api/v1/catalog/GetCategories", null, function () {
+
+                    }, function (data) {
+                        var categories = data.categories;
+                        categories.sort(function (c1, c2) {
+                            return c1.position - c2.position;
+                        });
+                        categories.forEach(function (category) {
+                            addCategoryRow(category).appendTo($("#category-manager-body"));
+                        });
+                    });
+                    break;
                 default:
                     break;
             }
         }
     });
 });
+
+function addCategoryRow(category) {
+    var elem = $("<tr>" +
+        "<td>" + category.id + "</td>" +
+        "<td class='name'>" + category.name + "</td>" +
+        "<td class='position'>" + category.position + "</td>" +
+        "<td><a href='#' class='edit'><i class='fa fa-cog'></i></a></td>" +
+        "<td><a href='#'><i class='fa fa-trash'></i></a></td>" +
+        "</tr>");
+    $("a.edit", elem).click(function () {
+        openCategoryEdit(category, elem);
+    })
+    return elem;
+}
 
 function addTeamRow(team) {
     var elem = $("<tr>" +
@@ -110,6 +150,43 @@ function addWebsiteRow(website) {
     return elem;
 }
 
+function openCategoryEdit(category, elem) {
+    var modal = $("#category-modal");
+    var edit_category = $("#category-edition", modal);
+    var name = $("input[name='name']", edit_category);
+    var position = $("input[name='position']", edit_category);
+    name.val(category.name);
+    position.val(category.position);
+    edit_category.submit(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var action = $(this).attr("action");
+        ajaxHandler.post(action, {
+            category_id: category.id,
+            name: name.val(),
+            position: parseInt(position.val())
+        }, function () {
+
+        }, function () {
+            category.name = name.val();
+            category.position = parseInt(position.val());
+            $(".name", elem).text(category.name);
+            $(".position", elem).text(category.position);
+            modal.modal("hide");
+        }, function () {
+            modal.modal("hide");
+        });
+        edit_category.off("submit");
+    });
+    modal
+        .modal({
+            onHide: function () {
+                edit_category.off("submit");
+            }
+        })
+        .modal("show");
+}
+
 function openWebsiteIntegration(website, websiteElem) {
     var modal = $("#website-integration");
     var edit_website = $("#website-edition", modal);
@@ -127,18 +204,33 @@ function openWebsiteIntegration(website, websiteElem) {
         $("#integration", edit_website).addClass("checked");
         integrated.prop("checked", true);
     }
+    $("input[name='team_id']", modal).val("");
     website.teams.forEach(function (team) {
         $(".teams .item[data-value='" + team.id + "']", modal).click();
     });
     $(".sso .item[data-value='" + website.sso + "']", modal).click();
+    $(".category .item[data-value='" + website.category_id + "']", modal).click();
+    $("input[name='connectWith_id']", modal).val("");
+    website.connectWith.forEach(function (connectWith_id) {
+        $(".connectWith .item[data-value='" + connectWith_id + "']", modal).click();
+    });
     edit_website.submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
         var action = $(this).attr("action");
         var teams = [];
         if ($("input[name='team_id']", modal).val() !== "")
-            teams = $("input[name='team_id']", modal).val().split(",").map(parseInt);
+            teams = $("input[name='team_id']", modal).val().split(",").map(function (x) {
+                return parseInt(x);
+            });
+        var connectWith = [];
+        if ($("input[name='connectWith_id']", modal).val() !== "") {
+            connectWith = $("input[name='connectWith_id']", modal).val().split(",").map(function (x) {
+                return parseInt(x);
+            });
+        }
         var sso_id = $("input[name='sso_id']", modal).val();
+        var category_id = parseInt($("input[name='category_id']", modal).val());
         ajaxHandler.post(action, {
             id: website.id,
             name: name.val(),
@@ -147,7 +239,9 @@ function openWebsiteIntegration(website, websiteElem) {
             folder: folder.val(),
             integrated: integrated.is(":checked"),
             teams: teams,
-            sso_id: sso_id
+            sso_id: sso_id,
+            category_id: category_id,
+            connectWith: connectWith
         }, function () {
 
         }, function () {
@@ -167,7 +261,9 @@ function openWebsiteIntegration(website, websiteElem) {
                 website.sso = parseInt(sso_id);
             else
                 website.sso = -1;
+            website.category_id = category_id;
             website.teams = teams;
+            website.connectWith = connectWith;
             if (!website.integrated)
                 websiteElem.addClass("negative");
             $(".name", websiteElem).text(website.name);
@@ -183,6 +279,7 @@ function openWebsiteIntegration(website, websiteElem) {
             onHide: function () {
                 edit_website.off("submit");
                 $("input[name='team_id']", modal).val("");
+                $("input[name='connectWith_id']", modal).val("");
                 $("a.ui.label.transition", modal).remove();
                 $(".item.active")
                     .removeClass("active")

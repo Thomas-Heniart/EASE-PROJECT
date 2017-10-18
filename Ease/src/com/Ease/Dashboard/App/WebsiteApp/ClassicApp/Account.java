@@ -556,7 +556,6 @@ public class Account {
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
-
     }
 
     public void setReminderInterval(Integer reminderInterval, DataBaseConnection db) throws HttpServletException {

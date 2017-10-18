@@ -46,6 +46,11 @@ public class ServletGetWebsites extends HttpServlet {
                 tmp.put("teams", teams);
                 Sso sso = website.getSso();
                 tmp.put("sso", (sso == null) ? -1 : sso.getDb_id());
+                tmp.put("category_id", website.getCategory() == null ? -1 : website.getCategory().getDb_id());
+                JSONArray connectWtih = new JSONArray();
+                for (Website website1 : website.getConnectWith_websites())
+                    connectWtih.add(website1.getDb_id());
+                tmp.put("connectWith", connectWtih);
                 res.add(tmp);
             }
             sm.setSuccess(res);
