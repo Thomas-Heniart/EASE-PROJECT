@@ -158,7 +158,7 @@ public class Keys {
             privateKey = publicAndPrivateKey.getValue();
         }
         String privateKey_ciphered = AES.encrypt(privateKey, keyUser);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?, NULL, NULL);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO userKeys VALUES(NULL, ?, null, ?, ?, ?, ?);");
         request.setString(hashed_password);
         request.setString(saltPerso);
         request.setString(crypted_keyUser);
