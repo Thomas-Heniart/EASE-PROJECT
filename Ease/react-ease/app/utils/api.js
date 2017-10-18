@@ -179,6 +179,18 @@ module.exports = {
       return response.data;
     });
   },
+  getWebsitesCatalog: function() {
+      return axios.get('/api/v1/catalog/GetWebsites')
+          .then(function (response) {
+        return response.data;
+      });
+  },
+  getCategories: function() {
+    return axios.get('/api/v1/catalog/GetCategories')
+        .then(function (response) {
+          return response.data
+        });
+  },
   dashboard: {
     fetchProfiles: function(){
       return axios.get('/api/v1/dashboard/GetProfiles').then(response => {

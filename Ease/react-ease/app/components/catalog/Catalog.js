@@ -6,6 +6,8 @@ import AddBookmark from './AddBookmark';
 import { Input, List, Button, Icon, Grid, Image, Segment, Checkbox, Form } from 'semantic-ui-react';
 import { render } from 'react-router-dom';
 import style from '../../../../WebContent/cssMinified.v00017/catalog.css';
+import getWebsitesCatalog from '../../utils/api';
+import api from '../../utils/api';
 
 class Catalog extends React.Component {
 
@@ -14,57 +16,32 @@ class Catalog extends React.Component {
         this.state = {
             categorySelected: '',
             searchInput: '',
-            categories : [
+            categories: [
                 {name: 'Chill'},
                 {name: 'Events'},
                 {name: 'Finance'}
             ],
-            apps: [
-                {name: 'Instagram', logo: '/resources/websites/Instagram/logo.png', category: 'Chill'},
-                {name: 'Spotify', logo: '/resources/websites/Spotify/logo.png', category: 'Events'},
-                {name: 'Slack', logo: '/resources/websites/Slack/logo.png', category: 'Finance'},
-                {name: '9gag', logo: '/resources/websites/9gag/logo.png', category: 'Chill'},
-                {name: 'Outlook', logo: '/resources/websites/Outlook/logo.png', category: 'Finance'},
-                {name: 'Youtube', logo: '/resources/websites/Youtube/logo.png', category: 'Events'},
-                {name: 'Twitter', logo: '/resources/websites/Twitter/logo.png', category: 'Finance'},
-                {name: 'Paypal', logo: '/resources/websites/Paypal/logo.png', category: 'Chill'},
-                {name: 'Quora', logo: '/resources/websites/Quora/logo.png', category: 'Events'},
-                {name: 'Blablacar', logo: '/resources/websites/BlaBlaCar/logo.png', category: 'Finance'},
-                {name: 'Sens Critique', logo: '/resources/websites/SensCritique/logo.png', category: 'Chill'},
-                {name: 'MailChimp', logo: '/resources/websites/Mailchimp/logo.png', category: 'Events'},
-                {name: 'Instagram', logo: '/resources/websites/Instagram/logo.png', category: 'Chill'},
-                {name: 'Spotify', logo: '/resources/websites/Spotify/logo.png', category: 'Events'},
-                {name: 'Slack', logo: '/resources/websites/Slack/logo.png', category: 'Finance'},
-                {name: '9gag', logo: '/resources/websites/9gag/logo.png', category: 'Chill'},
-                {name: 'Outlook', logo: '/resources/websites/Outlook/logo.png', category: 'Finance'},
-                {name: 'Youtube', logo: '/resources/websites/Youtube/logo.png', category: 'Events'},
-                {name: 'Twitter', logo: '/resources/websites/Twitter/logo.png', category: 'Finance'},
-                {name: 'Paypal', logo: '/resources/websites/Paypal/logo.png', category: 'Chill'},
-                {name: 'Quora', logo: '/resources/websites/Quora/logo.png', category: 'Events'},
-                {name: 'Blablacar', logo: '/resources/websites/BlaBlaCar/logo.png', category: 'Finance'},
-                {name: 'Sens Critique', logo: '/resources/websites/SensCritique/logo.png', category: 'Chill'},
-                {name: 'MailChimp', logo: '/resources/websites/Mailchimp/logo.png', category: 'Events'},
-                {name: 'Instagram', logo: '/resources/websites/Instagram/logo.png', category: 'Chill'},
-                {name: 'Spotify', logo: '/resources/websites/Spotify/logo.png', category: 'Events'},
-                {name: 'Slack', logo: '/resources/websites/Slack/logo.png', category: 'Finance'},
-                {name: '9gag', logo: '/resources/websites/9gag/logo.png', category: 'Chill'},
-                {name: 'Outlook', logo: '/resources/websites/Outlook/logo.png', category: 'Finance'},
-                {name: 'Youtube', logo: '/resources/websites/Youtube/logo.png', category: 'Events'},
-                {name: 'Twitter', logo: '/resources/websites/Twitter/logo.png', category: 'Finance'},
-                {name: 'Paypal', logo: '/resources/websites/Paypal/logo.png', category: 'Chill'},
-                {name: 'Quora', logo: '/resources/websites/Quora/logo.png', category: 'Events'},
-                {name: 'Blablacar', logo: '/resources/websites/BlaBlaCar/logo.png', category: 'Finance'},
-                {name: 'Sens Critique', logo: '/resources/websites/SensCritique/logo.png', category: 'Chill'},
-                {name: 'MailChimp', logo: '/resources/websites/Mailchimp/logo.png', category: 'Events'}
-            ],
+            apps: [],
             allApps: [],
             loading: false,
-            bookmark: false
-        };
+            bookmark: false,
+        }
     }
 
-    componentWillMount() {
-        this.setState({allApps: this.state.apps});
+    updateApps = () => {
+        api.getWebsitesCatalog().then((data) => {
+            let appsSorted = data.websites.sort(function (a, b) {
+                return b.integration_date - a.integration_date;
+            });
+            this.setState({apps: appsSorted, allApps: appsSorted})
+        });
+        // api.getCategories().then((data) => {
+        //     this.setState({categories: data.categories})
+        // });
+    };
+
+    componentDidMount() {
+        this.updateApps();
     }
 
     search = (e) => {
@@ -95,10 +72,10 @@ class Catalog extends React.Component {
 
     render() {
 
-        let appsSorted = this.state.allApps.filter((item) => {
-            return item.category.toLowerCase().search(
-                this.state.categorySelected.toLowerCase()) !== -1;
-        });
+        // let appsSorted = this.state.allApps.filter((item) => {
+        //     return item.category.toLowerCase().search(
+        //         this.state.categorySelected.toLowerCase()) !== -1;
+        // });
 
         return (
             <div id="catalog">
@@ -128,7 +105,7 @@ class Catalog extends React.Component {
                             <ListCategory categories={this.state.categories} sortList={this.sortList} showAllApps={this.showAllApps} categorySelected={this.state.categorySelected}/>
                         </Grid.Column>
                         <Grid.Column width={10}>
-                            {appsSorted.length && !this.state.bookmark ?
+                            {!this.state.bookmark ?
                                 <div>
                                     <h3>{this.state.categorySelected}</h3>
                                     <ShowGrid apps={this.state.allApps} categorySelected={this.state.categorySelected} />
