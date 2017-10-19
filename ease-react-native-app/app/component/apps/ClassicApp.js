@@ -8,22 +8,20 @@ class ClassicApp extends Component {
   showActions = () => {
     const info = this.props.app.account_information;
     this.credentialList = Object.keys(info).map(item => {
-      let name = item;
-      name = name.charAt(0).toUpperCase() + name.slice(1);
       return {
-        name: name,
+        name: item,
         value: info[item]
       }
     });
     this.buttons = this.credentialList.map(item => {
-      return `${item.name}`
+      return `Copy ${item.name}`
     });
     this.buttons.push('Cancel');
     ActionSheet.show(
         {
           options: this.buttons,
           cancelButtonIndex: this.credentialList.length,
-          title: 'What would you like to copy ?'
+          title: 'What would you like to do?'
         },
         this.handleActionClick
     )

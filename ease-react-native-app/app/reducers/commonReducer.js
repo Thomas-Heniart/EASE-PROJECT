@@ -10,12 +10,20 @@ export const auth = createReducer({
   email: '',
   expiration: 0,
   username: '',
-  token: ''
+  token: '',
+  network: true
 }, {
+  ['NET_CONNECTION_CHANGED'](state, action){
+    return {
+      ...state,
+      network: action.payload.network
+    }
+  },
   ['CONNECTION'](state, action){
     const user_info = action.payload.user_info;
 
     return {
+        ...state,
       email: user_info.email,
       expiration: user_info.exp,
       username: user_info.name,
@@ -24,6 +32,7 @@ export const auth = createReducer({
   },
   ['LOGOUT'](state, action){
     return {
+        ...state,
       email: '',
       expiration: 0,
       username: '',
@@ -39,7 +48,7 @@ export const selectedItem = createReducer({
 }, {
   ['SELECT_ITEM'](state, action){
     return {
-        ...state,
+      ...state,
       itemId: action.payload.itemId,
       subItemId: action.payload.subItemId,
       name: action.payload.name
@@ -53,7 +62,7 @@ export const spaces = createReducer({
 }, {
   ['FETCH_SPACES_FULFILLED'](state, action){
     return {
-        ...state,
+      ...state,
       personal_space: action.payload.spaces.personal_space,
       teams: action.payload.spaces.teams
     }

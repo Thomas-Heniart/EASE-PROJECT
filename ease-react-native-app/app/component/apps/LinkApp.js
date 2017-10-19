@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, Image, TouchableHighlight, TouchableNative
 import {BoldText } from "../common/text";
 import { Spinner, Toast, ActionSheet,Text, Card, CardItem, List,ListItem, Item, Input, Drawer, Container, Header, Content, Button, Left,Right, Icon, Body, Title } from 'native-base';
 import styles from "./styles";
-const buttons = ["Url", "Cancel"];
+const buttons = ["Copy url", "Cancel"];
 
 class LinkApp extends Component {
   showActions = () => {
@@ -11,7 +11,7 @@ class LinkApp extends Component {
         {
           options: buttons,
           cancelButtonIndex: 1,
-          title: 'What would you like to copy ?'
+          title: 'What would you like to do?'
         },
         this.handleActionClick
     )
