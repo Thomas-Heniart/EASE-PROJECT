@@ -6,6 +6,8 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -27,6 +29,8 @@ public class ServletAddClassicApp extends HttpServlet {
                 user = sm.getUserWithToken();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             String name = sm.getStringParam("name", true, false);
+            if (name.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Website website = catalog.getPublicWebsiteWithId(website_id);

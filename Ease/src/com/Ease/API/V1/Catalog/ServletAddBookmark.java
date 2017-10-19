@@ -1,10 +1,6 @@
 package com.Ease.API.V1.Catalog;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.HttpServletException;
@@ -19,30 +15,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/catalog/AddLogWithApp")
-public class ServletAddLogWithApp extends HttpServlet {
+@WebServlet("/api/v1/catalog/AddBookmark")
+public class ServletAddBookmark extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             User user = sm.getUser();
             if (user == null)
                 user = sm.getUserWithToken();
+            String url = sm.getStringParam("url", false, false);
+            if (url.length() > 2000)
+                throw new HttpServletException(HttpStatus.BadRequest, "Url too long");
             String name = sm.getStringParam("name", true, false);
             if (name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
-            Integer website_id = sm.getIntParam("website_id", true, false);
+            String img_url = sm.getStringParam("img_url", false, false);
+            if (img_url.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Integer logWith_app_id = sm.getIntParam("logWith_app_id", true, false);
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getPublicWebsiteWithId(website_id);
             Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
-            App logWithApp = user.getDashboardManager().getAppWithId(logWith_app_id);
-            if (logWithApp.isEmpty() || logWithApp.isLinkApp())
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot login with this app.");
-            WebsiteApp websiteApp = (WebsiteApp) logWithApp;
-            if (!website.getConnectWith_websites().contains(websiteApp.getSite()))
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot login with this app.");
-            App app = LogwithApp.createLogwithApp(profile, profile.getApps().size(), name, website, websiteApp, sm.getDB());
+            LinkApp app = LinkApp.createLinkApp(profile, profile.getApps().size(), name, url, img_url, sm.getDB());
             profile.addApp(app);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
