@@ -1,0 +1,46 @@
+{
+  "name":"import.io",
+  "lastLogin":"",
+  "home":"https://import.io/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"fill", "what":"login", "search":"form[action*='login'] #usernameControl"},
+      {"action":"fill", "what":"password", "search":"form[action*='login'] #passwordControl"},
+      {"action":"click", "search":"form[action*='login'] button[type='submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"click", "search":".social-list li.facebook"}
+    ]
+},
+  "LinkedIn":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"click", "search":".social-list li.linkedin"}
+    ]
+  },
+  "Google":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"click", "search":".social-list li.google-plus"}
+    ]
+  },
+  "GitHub":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"click", "search":".social-list li.github"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#side-navigation .nav-accordian .accordian-item:last-child()"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitor", "search":"a[href*='login'], #side-navigation .nav-accordian .accordian-item:last-child() i.fa-sign-out"},
+    {"search":"#side-navigation .nav-accordian .accordian-item:last-child() i.fa-sign-out"}
+  ]
+}
