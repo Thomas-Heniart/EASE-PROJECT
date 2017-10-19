@@ -7,7 +7,6 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -196,6 +195,19 @@ public class Website {
         return "/resources/websites/" + this.getFolder() + "/logo.png";
     }
 
+    public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {
+        Map<String, String> res = new ConcurrentHashMap<>();
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
+            String value = (String) information.get(websiteInformation.getInformation_name());
+            if (value == null || value.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + websiteInformation.getInformation_name());
+            if (value.length() >= 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + websiteInformation.getInformation_name());
+            res.put(websiteInformation.getInformation_name(), value);
+        }
+        return res;
+    }
+
     public JSONObject getJson() {
         JSONObject res = this.getSimpleJson();
         JSONObject information = new JSONObject();
@@ -294,21 +306,5 @@ public class Website {
 
     public Integer getSsoId() {
         return this.getSso() == null ? -1 : this.getSso().getDb_id();
-    }
-
-    public Map<String, String> getInformationNeeded(PostServletManager sm) throws HttpServletException {
-        try {
-            Map<String, String> res = new ConcurrentHashMap<>();
-            for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
-                String value = sm.getStringParam(websiteInformation.getInformation_name(), false, false);
-                /* String private_key = (String) sm.getContextAttr("privateKey");
-                value = RSA.Decrypt(value, private_key); */
-                res.put(websiteInformation.getInformation_name(), value);
-            }
-            return res;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new HttpServletException(HttpStatus.InternError);
-        }
     }
 }
