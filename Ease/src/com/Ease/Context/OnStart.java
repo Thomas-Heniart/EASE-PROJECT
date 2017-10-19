@@ -1,6 +1,5 @@
 package com.Ease.Context;
 
-import com.Ease.Context.Catalog.WebsitesVisitedManager;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
@@ -46,8 +45,7 @@ public class OnStart implements ServletContextListener {
                 com.Ease.Catalog.Catalog catalog = new com.Ease.Catalog.Catalog();
                 catalog.populate();
                 context.setAttribute("catalog", catalog);
-                //context.setAttribute("groupManager", new GroupManager());
-                context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
+                //context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
 
                 TeamManager teamManager = new TeamManager(context, db);
                 context.setAttribute("teamManager", teamManager);
@@ -65,11 +63,11 @@ public class OnStart implements ServletContextListener {
                 /* Timers */
                 Timer time = new Timer(); // Instantiate Timer Object
                 StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
-                time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
-                /* WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
-                time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000); */
+                time.schedule(st, 12 * 60 * 60 * 1000, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
+                WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
+                time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
-                time.schedule(reminders, 0, 24 * 60 * 60 * 1000);
+                time.schedule(reminders, 24 * 60 * 60 * 1000, 24 * 60 * 60 * 1000);
                 List<String> colors = new ArrayList<String>();
                 colors.add("#373B60");
                 colors.add("#9B59B6");

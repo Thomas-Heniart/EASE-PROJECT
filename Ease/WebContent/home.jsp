@@ -215,7 +215,7 @@
             urls: ['/templates/SettingsView.jsp'],
             appendTo: '#loggedBody .SettingsView'
         });
-        /* asyncLoading.loadHtml({
+        asyncLoading.loadHtml({
             urls: ['/templates/catalog/catalogView.jsp'],
             appendTo: '.col-left .CatalogViewTab',
             callback: function () {
@@ -229,7 +229,7 @@
                         $('.MenuButtonSet.waiting-load').removeClass('waiting-load');
                     });
             }
-        }); */
+        });
         asyncLoading.loadHtml({
             urls: ['/templates/Footer.html'],
             appendTo: '#onComputer',

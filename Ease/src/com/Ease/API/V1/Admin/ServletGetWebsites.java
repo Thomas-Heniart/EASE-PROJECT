@@ -3,6 +3,7 @@ package com.Ease.API.V1.Admin;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
@@ -36,13 +37,12 @@ public class ServletGetWebsites extends HttpServlet {
                 tmp.put("public", website.getWebsiteAttributes().isPublic_website());
                 tmp.put("integrated", website.getWebsiteAttributes().isIntegrated());
                 JSONArray teams = new JSONArray();
-                /* for (String team_id : website.getTeam_ids()) {
-                    Team team = teamManager.getTeamWithId(Integer.valueOf(team_id));
+                for (Team team : website.getTeams()) {
                     JSONObject teamObj = new JSONObject();
                     teamObj.put("id", team.getDb_id());
                     teamObj.put("name", team.getName());
                     teams.add(teamObj);
-                } */
+                }
                 tmp.put("teams", teams);
                 Sso sso = website.getSso();
                 tmp.put("sso", (sso == null) ? -1 : sso.getDb_id());
