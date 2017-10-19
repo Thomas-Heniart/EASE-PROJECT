@@ -56,7 +56,6 @@ public abstract class ServletManager {
         this.request = request;
         this.response = response;
         this.user = (User) request.getSession().getAttribute("user");
-        this.teamUser = (TeamUser) request.getSession().getAttribute("teamUser");
         this.saveLogs = saveLogs;
     }
 
@@ -372,10 +371,6 @@ public abstract class ServletManager {
     public void setUser(User user) {
         this.user = user;
         this.getSession().setAttribute("user", user);
-    }
-
-    public TeamUser getTeamUser() {
-        return teamUser;
     }
 
     public HttpSession getSession() {

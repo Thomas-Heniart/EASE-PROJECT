@@ -91,7 +91,10 @@ public class PostServletManager extends ServletManager {
 
     public String getStringParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return (String) getParam(paramName, saveInLogs, canBeNull);
+            String param = (String) this.getParam(paramName, saveInLogs, canBeNull);
+            if (!canBeNull && param.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, paramName + " cannot be empty");
+            return param;
         } catch (ClassCastException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
         }

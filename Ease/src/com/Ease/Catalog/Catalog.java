@@ -139,4 +139,11 @@ public class Catalog {
     public void removeCategory(Integer id) {
         this.getCategoryMap().remove(id);
     }
+
+    public Website getPublicWebsiteWithId(Integer id) throws HttpServletException {
+        Website website = this.getWebsiteWithId(id);
+        if (!website.getWebsiteAttributes().isPublic_website())
+            throw new HttpServletException(HttpStatus.BadRequest, "This website is not public");
+        return website;
+    }
 }
