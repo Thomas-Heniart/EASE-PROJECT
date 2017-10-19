@@ -36,12 +36,10 @@ pageEncoding="UTF-8"%>
 			<div class="shadowHelper"></div>
 			<i class="fa fa-angle-left" aria-hidden="true"></i>
 			<span class="tags">
-				<c:forEach items='${catalog.getTags()}' var="item">
-				<c:if test="${user.canSeeTag(item)}">
-				<a href="#" tagId="${item.getDbId()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
-				style="background-color: ${item.getHexaColor()};">
-				${item.getName()}</a>					
-			</c:if>
+				<c:forEach items='${catalog.getCategories()}' var="item">
+				<a href="#" tagId="${item.getDb_id()}" class="tag btn btn-default ease-button hvr-grow" name="${item.getName()}"
+				style="background-color: #373B60;">
+				${item.getName()}</a>
 		</c:forEach>
 	</span>
 	<i class="fa fa-angle-right" aria-hidden="true"></i>

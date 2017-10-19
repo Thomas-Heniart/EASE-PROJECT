@@ -254,8 +254,26 @@ public class Website {
         }
     }
 
-    public Map<String, String> getNeededInfosForEdition(ServletManager sm) {
-        return null;
+    public Map<String, String> getNeededInfosForEdition(ServletManager sm) throws GeneralException {
+        Map<String, String> infos = new HashMap<String, String>();
+        for (WebsiteInformation info : this.getWebsiteInformationList()) {
+            String info_name = info.getInformation_name();
+            String value = sm.getServletParam(info_name, false);
+            if (value == null || value.equals("")) {
+                if (info_name.equals("password"))
+                    continue;
+                else
+                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
+            }
+            if (info_name.equals("password")) {
+                //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
+                String keyDate = sm.getServletParam("keyDate", true);
+                if (keyDate != null && !keyDate.equals(""))
+                    value = RSA.Decrypt(value, Integer.parseInt(keyDate));
+            }
+            infos.put(info_name, value);
+        }
+        return infos;
     }
 
     /* For current version of askInfo */
