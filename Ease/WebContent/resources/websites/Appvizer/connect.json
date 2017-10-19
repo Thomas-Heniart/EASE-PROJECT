@@ -1,0 +1,34 @@
+{
+  "name":"appvizer",
+  "lastLogin":"",
+  "home":"https://www.appvizer.fr/",
+  "connect":{
+    "todo":[
+      {"action":"click", "search":"#connection-menu button[href*='connexion']"},
+      {"action":"waitfor", "search":"form[ng-submit*='loginService.submitForm()']"},
+      {"action":"fill", "what":"login", "search":"form[ng-submit*='loginService.submitForm()'] input[type='email']"},
+      {"action":"fill", "what":"password", "search":"form[ng-submit*='loginService.submitForm()'] input[type='password']"},
+      {"action":"click", "search":"form[ng-submit*='loginService.submitForm()'] button[type='submit']"}
+    ]
+  },
+  "LinkedIn": {
+    "todo":[
+      {"action":"click", "search":"#connection-menu button"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":".btn-linkedin"},
+      {"action":"click", "search":".btn-linkedin"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"click","search":"#connection-menu button[container='#connection-menu']"},
+      {"action":"waitfor", "search":"a[ng-click='headerCtrl.logout()']"},
+      {"action":"trueClick", "search":"a[ng-click='headerCtrl.logout()']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#connection-menu button[href*='connexion'], #connection-menu button[container='#connection-menu']"},
+    {"search":"#connection-menu button[container='#connection-menu']"}
+  ]
+}
