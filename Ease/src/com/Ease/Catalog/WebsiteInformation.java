@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Created by thomas on 25/04/2017.
  */
 @Entity
-@Table(name = "WebsitesInformations")
+@Table(name = "websitesInformations")
 public class WebsiteInformation {
     @Id
     @GeneratedValue

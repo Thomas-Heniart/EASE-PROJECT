@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 24/04/2017.
  */
 @Entity
-@Table(name = "Websites")
+@Table(name = "websites")
 public class Website {
     @Id
     @GeneratedValue

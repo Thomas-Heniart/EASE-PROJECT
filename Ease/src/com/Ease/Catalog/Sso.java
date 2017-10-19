@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 24/04/2017.
  */
 @Entity
-@Table(name = "Sso")
+@Table(name = "sso")
 public class Sso {
     @Id
     @GeneratedValue

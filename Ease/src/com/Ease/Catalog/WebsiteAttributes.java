@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by thomas on 24/04/2017.
  */
 @Entity
-@Table(name = "WebsiteAttributes")
+@Table(name = "websiteAttributes")
 public class WebsiteAttributes {
     @Id
     @GeneratedValue
