@@ -2,8 +2,6 @@ package com.Ease.Dashboard.Profile;
 
 import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.*;
@@ -14,7 +12,6 @@ import javax.servlet.ServletContext;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Profile {
 
@@ -282,32 +279,6 @@ public class Profile {
             }
         }
         db.commitTransaction(transaction);
-    }
-
-    public ClassicApp addClassicApp(String name, Website site, Map<String, String> infos, ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        int position = this.apps.size();
-        ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, infos, user, db);
-        this.apps.add(app);
-        for (Map.Entry<String, String> entry : infos.entrySet()) {
-            if (Regex.isEmail(entry.getValue()) == true)
-                this.user.addEmailIfNeeded(entry.getValue(), db);
-        }
-        this.user.getDashboardManager().addApp(app);
-        db.commitTransaction(transaction);
-        return app;
-    }
-
-    public LogwithApp addLogwithApp(String name, Website site, App logwith, ServletManager sm) throws GeneralException {
-        int position = this.apps.size();
-        if (logwith.getType().equals("LogwithApp") || logwith.getType().equals("ClassicApp")) {
-            LogwithApp app = LogwithApp.createLogwithApp(this, position, name, site, (WebsiteApp) logwith, sm);
-            this.apps.add(app);
-            this.user.getDashboardManager().addApp(app);
-            return app;
-        }
-        throw new GeneralException(ServletManager.Code.ClientError, "This app is not a Classic or Logwith app.");
     }
 
     public WebsiteApp addEmptyApp(String name, Website site, DataBaseConnection db) throws GeneralException {
