@@ -1,14 +1,20 @@
 import React from 'react';
 import ShowGrid from './ShowGrid';
 import ListCategory from './ListCategory';
+import Categories from "./Categories";
 import RequestForm from './RequestForm';
 import AddBookmark from './AddBookmark';
 import { Input, List, Button, Icon, Grid, Image, Segment, Checkbox, Form } from 'semantic-ui-react';
-import { render } from 'react-router-dom';
 import style from '../../../../WebContent/cssMinified.v00017/catalog.css';
 import getWebsitesCatalog from '../../utils/api';
 import api from '../../utils/api';
+import {reduxActionBinder} from "../../actions/index";
+import {connect} from "react-redux";
+import { NavLink } from 'react-router-dom';
 
+@connect(store => ({
+  catalog: store.catalog
+}), reduxActionBinder)
 class Catalog extends React.Component {
 
   constructor(props) {
@@ -41,6 +47,7 @@ class Catalog extends React.Component {
   };
 
   componentDidMount() {
+    this.props.fetchCatalog();
     this.updateApps();
   }
 
@@ -94,7 +101,7 @@ class Catalog extends React.Component {
             <div className="container">
                 <Grid>
                     <Grid.Column width={3}>
-                        <Button className="bookmarkButton" onClick={this.bookmarkActive}>
+                        <Button as={NavLink} to={`/main/catalog/bookmark`} className="bookmarkButton" onClick={this.bookmarkActive}>
                             <Icon name="bookmark" />
                             Add a Bookmark
                         </Button>
@@ -102,6 +109,7 @@ class Catalog extends React.Component {
                             <Icon name="facebook" />
                             Import Accounts
                         </Button>
+                        <Categories/>
                         <ListCategory categories={this.state.categories} sortList={this.sortList} showAllApps={this.showAllApps} categorySelected={this.state.categorySelected}/>
                     </Grid.Column>
                     <Grid.Column width={10}>
@@ -120,7 +128,7 @@ class Catalog extends React.Component {
                           <h3>Cannot find your App?</h3>
                           <RequestForm loading={this.state.loading} />
                       </div>}
-                      {this.state.bookmark &
+                      {this.state.bookmark &&
                       <AddBookmark />}
                     </Grid.Column>
                     <Grid.Column width={3} />

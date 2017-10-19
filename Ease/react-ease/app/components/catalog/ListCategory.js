@@ -1,6 +1,5 @@
 import React from 'react';
 import { List } from 'semantic-ui-react';
-import { render } from 'react-router-dom';
 
 class ListCategory extends React.Component {
     constructor(props){

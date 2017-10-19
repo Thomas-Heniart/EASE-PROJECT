@@ -8,9 +8,9 @@ export function fetchCatalog(){
         api.catalog.getCategories(),
         api.catalog.getSsoList()
     ]).then(values => {
-      const websites = values[0];
-      const categories = values[1];
-      const sso_list = values[2];
+      const websites = values[0].websites;
+      const categories = values[1].categories;
+      const sso_list = values[2].sso_list;
       dispatch({type: 'FETCH_CATALOG_FULFILLED', payload:{
         websites : websites,
         categories: categories,
