@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Catalog;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -28,7 +28,7 @@ public class ServletGetWebsiteInformation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing website id.");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
-            JSONObject res = website.getInformationJson();
+            JSONObject res = website.getJson();
             res.put("id", website_id);
             sm.setSuccess(res);
         } catch (Exception e) {

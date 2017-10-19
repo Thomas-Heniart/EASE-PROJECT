@@ -635,7 +635,6 @@ public class User {
         }
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
-        res.put("jwt", this.getJwt().getJwt());
         return res;
     }
 
