@@ -284,15 +284,15 @@ public class Profile {
         db.commitTransaction(transaction);
     }
 
-    public ClassicApp addClassicApp(String name, Website site, Map<String, String> infos, ServletManager sm) throws GeneralException {
+    public ClassicApp addClassicApp(String name, Website site, Map<String, String> infos, ServletManager sm) throws GeneralException, HttpServletException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();
         int position = this.apps.size();
-        ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, infos, sm, user);
+        ClassicApp app = ClassicApp.createClassicApp(this, position, name, site, infos, user, db);
         this.apps.add(app);
         for (Map.Entry<String, String> entry : infos.entrySet()) {
             if (Regex.isEmail(entry.getValue()) == true)
-                this.user.addEmailIfNeeded(entry.getValue(), sm);
+                this.user.addEmailIfNeeded(entry.getValue(), db);
         }
         this.user.getDashboardManager().addApp(app);
         db.commitTransaction(transaction);

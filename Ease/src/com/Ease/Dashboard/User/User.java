@@ -497,11 +497,11 @@ public class User {
         }
     }
 
-    public void addEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
+    public void addEmailIfNeeded(String email, DataBaseConnection db) throws HttpServletException {
         UserEmail userEmail = this.emails.get(email);
         if (userEmail != null)
             return;
-        userEmail = UserEmail.createUserEmail(email, this, false, sm.getDB());
+        userEmail = UserEmail.createUserEmail(email, this, false, db);
         this.emails.put(email, userEmail);
     }
 
