@@ -103,10 +103,9 @@ class NotificationList extends React.Component {
 @connect((store)=>{
   return {
     user: store.common.user,
-    notifications: store.notifications,
-    catalog: store.catalog
+    notifications: store.notifications
   };
-}, reduxActionBinder)
+})
 class HomeTemporaryNavbar extends React.Component {
   constructor(props){
     super(props);
