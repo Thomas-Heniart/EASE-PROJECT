@@ -1,0 +1,56 @@
+{
+  "name":"Daycause",
+  "lastLogin":"",
+  "home":"https://www.daycause.com/",
+  "connect":{
+    "todo":[
+      {"action": "waitfor", "search": "button.branding-page-background"},
+      {"action":"click", "search":"button.branding-page-background"},
+      {"action": "waitfor", "search": ".login__form input[name='email']"},
+      {"action": "waitfor", "search": ".login__form input[name='password']"},
+      {"action": "waitfor", "search": ".login__form button[ath-translate='LOGIN_SUBMIT']"},
+      {"action":"fill", "search":".login__form input[name='email']", "what":"login"},
+      {"action":"fill", "search":".login__form input[name='password']", "what":"password"},
+      {"action":"trueClick", "search":".login__form button[ath-translate='LOGIN_SUBMIT']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"button[ath-translate='HEADER_LOGOUT']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action": "waitfor", "search": ".header__user, button.branding-page-background"},
+    {"search":".header__user"}
+  ],
+  "Facebook":{
+    "todo":[
+      {"action": "waitfor", "search": "button.branding-page-background"},
+      {"action":"click", "search":"button.branding-page-background"},
+      {"action": "waitfor", "search": ".login__form input[name='email']"},
+      {"action": "waitfor", "search": ".login__form input[name='password']"},
+      {"action": "waitfor", "search": ".login__form button[ath-translate='LOGIN_SUBMIT']"},
+      {"action": "trueClick", "search": ".-brand-facebook"}
+    ]
+  },
+  "Google": {
+    "todo": [
+      {"action": "waitfor", "search": "button.branding-page-background"},
+      {"action":"click", "search":"button.branding-page-background"},
+      {"action": "waitfor", "search": ".login__form input[name='email']"},
+      {"action": "waitfor", "search": ".login__form input[name='password']"},
+      {"action": "waitfor", "search": ".login__form button[ath-translate='LOGIN_SUBMIT']"},
+      {"action": "trueClick", "search": ".-brand-google"}
+    ]
+  },
+  "Twitter": {
+    "todo": [
+      {"action": "waitfor", "search": "button.branding-page-background"},
+      {"action":"click", "search":"button.branding-page-background"},
+      {"action": "waitfor", "search": ".login__form input[name='email']"},
+      {"action": "waitfor", "search": ".login__form input[name='password']"},
+      {"action": "waitfor", "search": ".login__form button[ath-translate='LOGIN_SUBMIT']"},
+      {"action": "trueClick", "search": ".-brand-twitter"}
+    ]
+  }
+}
