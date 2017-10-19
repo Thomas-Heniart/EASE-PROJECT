@@ -1,11 +1,13 @@
 var axios = require('axios');
 
-const regularCall = (promise) => {
-  return promise.then(response => {
-    return response.data;
-  }).catch(err => {
-    throw err.response.data;
-  });
+const basic_post = (url, params) => {
+  return axios.post(url, params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
 };
 
 module.exports = {
