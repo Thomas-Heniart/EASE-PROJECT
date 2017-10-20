@@ -146,4 +146,8 @@ public class Catalog {
             throw new HttpServletException(HttpStatus.BadRequest, "This website is not public");
         return website;
     }
+
+    public void addWebsite(Website website) {
+        this.getWebsiteMap().put(website.getDb_id(), website);
+    }
 }

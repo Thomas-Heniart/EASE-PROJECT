@@ -128,7 +128,7 @@ public abstract class ServletManager {
 
     public void needToBeConnected() throws HttpServletException {
         if (user == null)
-            throw new HttpServletException(HttpStatus.AccessDenied);
+            user = this.getUserWithToken();
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
