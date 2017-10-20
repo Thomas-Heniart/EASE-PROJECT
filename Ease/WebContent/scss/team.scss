@@ -59,6 +59,11 @@ button.only-text-button {
   .listCategory {
     font-size: 18px;
     font-weight: 300;
+    a {
+      &:focus {
+        text-decoration: none;
+      }
+    }
   }
   .logoCatalog {
     padding-left: 20px;

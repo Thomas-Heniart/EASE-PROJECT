@@ -4,41 +4,39 @@
   	"home":"https://www.tripadvisor.com/",
   	"connect":{
     	"todo":[
-      		{"action":"click", "search":"li.login", "grave":true},
-      		{"action":"waitfor", "search":"#overlayRegFrame"},
-      		{"action":"enterFrame", "search":"#overlayRegFrame"},
-      		{"action":"fill", "what":"login", "search":"input[type='email']:eq(1)"},
-      		{"action":"fill", "what":"password", "search":"input[type='password']:eq(1)"},
-      		{"action":"click", "search":".regSubmitBtn"},
-      		{"action":"exitFrame"}
+          {"action":"aclick", "search":"a.login-button"},
+          {"action":"waitfor", "search":"#regSignIn .regSubmitBtn"},
+          {"action":"waitfor", "search":"#regSignIn input[type='email']"},
+          {"action":"fill", "what":"login", "search":"#regSignIn input[type='email']"},
+          {"action":"fill", "what":"password", "search":"#regSignIn input[type='password']"},
+          {"action":"trueClick", "search":"#regSignIn .regSubmitBtn"}
     	]
   	},
   	"logout":{
     	"todo":[
-      		{"action":"click", "search":"ul.options li:nth-child(3)", "grave":true},
-      		{"action":"waitfor", "search":"#SIGNOUT_LINK"},
-      		{"action":"click", "search":"#SIGNOUT_LINK", "grave":true}
+      		{"action":"trueClick", "search":"a[href*='SignOut']"},
+			{"action":"waitload"},
+			{"action":"waitload"}
     	]
   	},
   	"checkAlreadyLogged":[
-    	{"search":".greeting"}
+		{"action":"waitfor", "search":"a.login-button, a[href*='SignOut']"},
+    	{"search":"a[href*='SignOut']"}
   	],
   	"Facebook":{
-    	"todo":[
-      		{"action":"click", "search":"li.login", "grave":true},
-      		{"action":"waitfor", "search":"#overlayRegFrame"},
-      		{"action":"enterFrame", "search":"#overlayRegFrame"},
-      		{"action":"click", "search":"#facebookBtn"},
-      		{"action":"exitFrame"}
-    	]
+      "todo":[
+        {"action":"aclick", "search":"a.login-button"},
+        {"action":"waitfor", "search":"#regSignIn .regSubmitBtn"},
+        {"action":"waitfor", "search":"#facebookBtn"},
+        {"action":"trueClick", "search":"#facebookBtn"}
+      ]
   	},
   	"Google":{
-    	"todo":[
-      		{"action":"click", "search":"li.login", "grave":true},
-      		{"action":"waitfor", "search":"#overlayRegFrame"},
-      		{"action":"enterFrame", "search":"#overlayRegFrame"},
-      		{"action":"click", "search":"#googleBtn"},
-      		{"action":"exitFrame"}
-    	]
+      "todo":[
+        {"action":"aclick", "search":"a.login-button"},
+        {"action":"waitfor", "search":"#regSignIn .regSubmitBtn"},
+        {"action":"waitfor", "search":"#googleBtn"},
+        {"action":"trueClick", "search":"#googleBtn"}
+      ]
   	}
 }
