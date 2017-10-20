@@ -129,3 +129,21 @@
         </div>
     </div>
 </div>
+
+<div class="ui modal basic" id="website-delete">
+    <div class="ui icon header">
+        Delete website
+    </div>
+    <div class="content">
+        <p>Do you really want to delete this website and all apps related</p>
+    </div>
+    <div class="actions">
+        <div class="ui red basic ok inverted button">
+            <i class="remove icon"></i>
+            Yes
+        </div>
+        <div class="ui grey cancel inverted button">
+            Cancel
+        </div>
+    </div>
+</div>

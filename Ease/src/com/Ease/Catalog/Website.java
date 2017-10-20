@@ -47,8 +47,7 @@ public class Website {
     @JoinColumn(name = "website_attributes_id")
     protected WebsiteAttributes websiteAttributes;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "website_id")
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
     @ManyToOne
@@ -70,12 +69,10 @@ public class Website {
     @ManyToMany(mappedBy = "teamWebsites", fetch = FetchType.EAGER)
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "website_id")
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected Set<WebsiteRequest> websiteRequests = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "website_id")
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
 
 

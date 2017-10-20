@@ -12,6 +12,10 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,7 +24,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @WebServlet("/api/v1/admin/DeleteWebsite")
 public class ServletDeleteWebsite extends HttpServlet {
@@ -43,19 +49,26 @@ public class ServletDeleteWebsite extends HttpServlet {
                     WebsiteApp websiteApp = (WebsiteApp) app;
                     if (websiteApp.getSite() != website)
                         continue;
+                    Integer app_id = app.getDBid();
+                    JSONObject target = shareableApp.getOrigin();
+                    target.put("team_id", team.getDb_id());
                     team.getAppManager().removeShareableApp(shareableApp, db);
+                    sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.REMOVED, app_id, target));
                 }
                 team.removeTeamWebsite(website);
             }
             for (User user : userMap.values()) {
+                Set<App> appSet = new HashSet<>();
                 for (App app : user.getDashboardManager().getApps()) {
                     if (app.isLinkApp())
                         continue;
                     WebsiteApp websiteApp = (WebsiteApp) app;
                     if (websiteApp.getSite() != website)
                         continue;
-                    app.removeFromDB(db);
+                    appSet.add(app);
                 }
+                for (App app : appSet)
+                    user.getDashboardManager().removeAppWithId(app.getDBid(), db);
             }
             DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM websiteApps WHERE website_id = ?;");
             databaseRequest.setInt(website_id);
@@ -86,6 +99,9 @@ public class ServletDeleteWebsite extends HttpServlet {
                 databaseRequest = db.prepareRequest("SELECT app_info_id FROM apps WHERE id = ?;");
                 databaseRequest.setInt(app_id);
                 rs2 = databaseRequest.get();
+                databaseRequest = db.prepareRequest("DELETE FROM profileAndAppMap WHERE app_id = ?");
+                databaseRequest.setInt(app_id);
+                databaseRequest.set();
                 databaseRequest = db.prepareRequest("DELETE FROM apps WHERE id = ?");
                 databaseRequest.setInt(app_id);
                 databaseRequest.set();
@@ -97,12 +113,6 @@ public class ServletDeleteWebsite extends HttpServlet {
             }
             db.commitTransaction(transaction);
             catalog.removeWebsite(website_id);
-            website.setConnectWith_websites(null);
-            website.setSignIn_websites(null);
-            website.setWebsiteInformationList(null);
-            website.setTeams(null);
-            website.setWebsiteCredentials(null);
-            website.setWebsiteRequests(null);
             sm.deleteObject(website);
             sm.setSuccess("Done");
         } catch (Exception e) {

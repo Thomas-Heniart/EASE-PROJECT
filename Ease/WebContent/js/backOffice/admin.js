@@ -203,14 +203,26 @@ function addWebsiteRow(website) {
         openWebsiteMerging(website, elem);
     });
     $(".delete", elem).click(function() {
-        $("#website-segment").addClass("loading");
-        ajaxHandler.post("/api/v1/admin/DeleteWebsite", {
-            id: website.id
-        }, function() {
-            $("#website-segment").removeClass("loading");
-        }, function() {
-            $(elem).remove();
-        });
+        var modal = $("#website-delete");
+        var button = $(".ok", modal);
+        button.click(function() {
+            button.addClass("loading")
+            ajaxHandler.post("/api/v1/admin/DeleteWebsite", {
+                id: website.id
+            }, function() {
+            }, function() {
+                $(elem).remove();
+                modal.modal("hide");
+            });
+            button.off("click");
+        })
+        modal
+            .modal({
+                onHide: function () {
+                    button.off("click");
+                }
+            })
+            .modal("show");
     });
     return elem;
 }
