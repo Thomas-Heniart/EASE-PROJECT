@@ -39,7 +39,7 @@ public class ServletWebsiteRequest extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             catalog.addWebsite(website);
             String email = user.getEmail();
-            WebsiteRequest websiteRequest = new WebsiteRequest(url, email);
+            WebsiteRequest websiteRequest = new WebsiteRequest(url, email, website);
             sm.saveOrUpdate(websiteRequest);
             sm.setSuccess("Request sent");
         } catch (Exception e) {

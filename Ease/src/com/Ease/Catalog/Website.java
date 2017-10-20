@@ -300,7 +300,8 @@ public class Website {
             a.put("img", Variables.URL_PATH + this.getLogo());
             return a;
         } catch (IOException | ParseException e) {
-            throw new HttpServletException(HttpStatus.InternError, "Sorry, fuck you");
+            e.printStackTrace();
+            throw new HttpServletException(HttpStatus.InternError);
         }
     }
 
