@@ -10,6 +10,9 @@
         <th>Edit</th>
         <th><i class="fa fa-trash-o"/></th>
         <th>Merge</th>
+        <th>Login</th>
+        <th>Password</th>
+        <th>Public key</th>
     </tr>
     </thead>
     <tbody id="website-manager-body"></tbody>

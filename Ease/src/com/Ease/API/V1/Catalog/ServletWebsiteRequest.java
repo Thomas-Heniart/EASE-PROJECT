@@ -2,9 +2,12 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.*;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,6 +29,10 @@ public class ServletWebsiteRequest extends HttpServlet {
             String url = sm.getStringParam("url", false, false);
             if (url.length() > 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Url too long");
+            JSONObject userCredentials = sm.getJsonParam("website_credentials", false, true);
+            if (userCredentials != null) {
+                /* Decipher login and password */
+            }
             WebsiteAttributes websiteAttributes = new WebsiteAttributes(true);
             Website website = new Website(url, "TODO", "Undefined", url, websiteAttributes);
             WebsiteInformation loginInformation = new WebsiteInformation("login", "text", 0, "Login", "fa-user-o", website);
@@ -40,7 +47,15 @@ public class ServletWebsiteRequest extends HttpServlet {
             catalog.addWebsite(website);
             String email = user.getEmail();
             WebsiteRequest websiteRequest = new WebsiteRequest(url, email, website);
+            website.addWebsiteRequest(websiteRequest);
             sm.saveOrUpdate(websiteRequest);
+            if (userCredentials != null) {
+                HibernateQuery hibernateQuery = sm.getHibernateQuery();
+                hibernateQuery.queryString("SELECT key FROM ServerPublicKey key");
+                ServerPublicKey serverPublicKey = (ServerPublicKey) hibernateQuery.getSingleResult();
+                WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt((String) userCredentials.get("login"), serverPublicKey.getPublicKey()), RSA.Encrypt((String) userCredentials.get("password"), serverPublicKey.getPublicKey()), website, serverPublicKey);
+                sm.saveOrUpdate(websiteCredentials);
+            }
             sm.setSuccess("Request sent");
         } catch (Exception e) {
             sm.setError(e);

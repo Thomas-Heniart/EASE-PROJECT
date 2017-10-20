@@ -1,12 +1,32 @@
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
+    $("#website-requests-segment button").click(function () {
+        var requests = $("#website-requests-manager-body tr.positive .checkbox input:checked").map(function (elem) {
+            var jElem = $(elem);
+            return {
+                email: $(".email", jElem).text(),
+                id: parseInt($(".id", jElem).text())
+            }
+        });
+        var all_requests = {};
+        requests.forEach(function (request) {
+            var existing_request = all_requests.email;
+            if (existing_request === null)
+                existing_request = [];
+            existing_request.push(request.id);
+            all_requests.email = existing_request;
+        });
+        console.log(requests);
+    });
     $(".ui.menu a.item").on("click", function () {
         $(this)
             .addClass("active")
             .siblings().removeClass("active");
         var target = $($(this).attr("data-target"));
         $(".segment").hide();
+        $(".segment").addClass("loading");
+        $(".segment table tbody tr").remove();
         target.show();
         if (target.hasClass("loading")) {
             switch (target.attr("id")) {
@@ -16,8 +36,8 @@ $(document).ready(function () {
                         data.forEach(function (team) {
                             addTeamRow(team).appendTo($("#team-manager-body"));
                         });
-                        target.removeClass("loading");
                     });
+                    target.removeClass("loading");
                     break;
 
                 case "website-segment":
@@ -73,6 +93,21 @@ $(document).ready(function () {
                         categories.forEach(function (category) {
                             addCategoryRow(category).appendTo($("#category-manager-body"));
                         });
+                        target.removeClass("loading");
+                    });
+                    break;
+                case "website-requests-segment":
+                    ajaxHandler.get("/api/v1/admin/GetWebsiteRequests", null, function () {
+
+                    }, function (data) {
+                        var requests = data.website_requests;
+                        requests.sort(function (r1, r2) {
+                            r2.date - r1.date;
+                        });
+                        requests.forEach(function (request) {
+                            createRequestRow(request).appendTo($("#website-requests-manager-body"));
+                        });
+                        target.removeClass("loading");
                     });
                     break;
                 default:
@@ -81,6 +116,23 @@ $(document).ready(function () {
         }
     });
 });
+
+function createRequestRow(request) {
+    var elem = $("<tr>" +
+        "<td class='id'>" + request.id + "</td>" +
+        "<td class='url'>" + request.url + "</td>" +
+        "<td class='email'>" + request.email + "</td>" +
+        "<td class='date'>" + new Date(request.date).toLocaleString() + "</a></td>" +
+        '<td><div class="ui checkbox"><input type="checkbox"/><label></label></div></td>' +
+        "<td><a href='#' class='delete'><i class='fa fa-trash'></i></a></td>" +
+        "</tr>");
+    if (request.integrated)
+        elem.addClass("positive");
+    $("a.delete", elem).click(function () {
+        /* @TODO */
+    })
+    return elem;
+}
 
 function addCategoryRow(category) {
     var elem = $("<tr>" +
@@ -125,8 +177,11 @@ function addWebsiteRow(website) {
         + '<td class="landing_url">' + website.landing_url + '</td>'
         + '<td> <div class="ui checkbox public"><input type="checkbox"/><label></label></div></td>'
         + '<td><a href="#"><i class="fa fa-pencil edit-website"/></a></td>'
-        + '<td> <div class="ui checkbox delete"><input type="checkbox"/><label></label></div></td>'
+        + '<td><a href="#" class="delete"><i class="fa fa-trash"/></a></td>'
         + '<td><a href="#" class="merge-website">Merge</a></td>'
+        + "<td class='login'>" + (website.website_credentials === undefined ? "" : website.website_credentials.login) + "</td>"
+        + "<td class='password'>" + (website.website_credentials === undefined ? "" : website.website_credentials.password) + "</td>"
+        + "<td class='publicKey'>" + (website.website_credentials === undefined ? "" : website.website_credentials.publicKey) + "</td>"
         + '</tr>');
     if (!website.integrated)
         elem.addClass("negative");
@@ -146,6 +201,16 @@ function addWebsiteRow(website) {
     });
     $(".merge-website", elem).click(function () {
         openWebsiteMerging(website, elem);
+    });
+    $(".delete", elem).click(function() {
+        $("#website-segment").addClass("loading");
+        ajaxHandler.post("/api/v1/admin/DeleteWebsite", {
+            id: website.id
+        }, function() {
+            $("#website-segment").removeClass("loading");
+        }, function() {
+            $(elem).remove();
+        });
     });
     return elem;
 }

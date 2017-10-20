@@ -44,6 +44,7 @@
             <a class="item" data-target="#team-segment">Teams</a>
             <a class="item" data-target="#website-segment">Websites</a>
             <a class="item" data-target="#category-segment">Categories</a>
+            <a class="item" data-target="#website-requests-segment">Requests</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">

@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Catalog.WebsiteRequest;
-import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Catalog.Catalog;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/api/v1/admin/GetWebsiteRequests")
 public class ServletGetWebsiteRequests extends HttpServlet {
@@ -21,14 +19,10 @@ public class ServletGetWebsiteRequests extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT w FROM WebsiteRequest w");
-            List<WebsiteRequest> websiteRequests = hibernateQuery.list();
-            JSONArray requests = new JSONArray();
-            for (WebsiteRequest websiteRequest : websiteRequests)
-                requests.add(websiteRequest.getJson());
+            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            JSONArray requests = catalog.getWebsiteRequests();
             JSONObject res = new JSONObject();
-            res.put("website_requests", websiteRequests);
+            res.put("website_requests", requests);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

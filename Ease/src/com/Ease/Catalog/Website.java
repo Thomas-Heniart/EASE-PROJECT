@@ -47,7 +47,7 @@ public class Website {
     @JoinColumn(name = "website_attributes_id")
     protected WebsiteAttributes websiteAttributes;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "website_id")
     protected Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
@@ -69,6 +69,14 @@ public class Website {
 
     @ManyToMany(mappedBy = "teamWebsites", fetch = FetchType.EAGER)
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "website_id")
+    protected Set<WebsiteRequest> websiteRequests = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "website_id")
+    protected Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
 
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
@@ -179,6 +187,22 @@ public class Website {
         this.teams = teams;
     }
 
+    public Set<WebsiteRequest> getWebsiteRequests() {
+        return websiteRequests;
+    }
+
+    public void setWebsiteRequests(Set<WebsiteRequest> websiteRequests) {
+        this.websiteRequests = websiteRequests;
+    }
+
+    public Set<WebsiteCredentials> getWebsiteCredentials() {
+        return websiteCredentials;
+    }
+
+    public void setWebsiteCredentials(Set<WebsiteCredentials> websiteCredentials) {
+        this.websiteCredentials = websiteCredentials;
+    }
+
     public void addConnectWith_website(Website website) {
         this.getConnectWith_websites().add(website);
     }
@@ -189,6 +213,18 @@ public class Website {
 
     public void addTeam(Team team) {
         this.getTeams().add(team);
+    }
+
+    public void addWebsiteRequest(WebsiteRequest websiteRequest) {
+        this.getWebsiteRequests().add(websiteRequest);
+    }
+
+    public void removeWebsiteRequest(WebsiteRequest websiteRequest) {
+        this.getWebsiteRequests().remove(websiteRequest);
+    }
+
+    public void addWebsiteCredentials(WebsiteCredentials websiteCredentials) {
+        this.getWebsiteCredentials().remove(websiteCredentials);
     }
 
     public String getLogo() {
@@ -307,5 +343,12 @@ public class Website {
 
     public Integer getSsoId() {
         return this.getSso() == null ? -1 : this.getSso().getDb_id();
+    }
+
+    public JSONObject getRequestJson() {
+        JSONObject res = new JSONObject();
+        for (WebsiteRequest websiteRequest : this.getWebsiteRequests())
+            res = websiteRequest.getJson();
+        return res;
     }
 }

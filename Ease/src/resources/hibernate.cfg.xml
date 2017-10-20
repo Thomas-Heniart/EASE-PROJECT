@@ -30,6 +30,8 @@
         <mapping class="com.Ease.Catalog.Sso"/>
         <mapping class="com.Ease.Catalog.Category" />
         <mapping class="com.Ease.Catalog.WebsiteRequest" />
+        <mapping class="com.Ease.Catalog.WebsiteCredentials" />
+        <mapping class="com.Ease.Catalog.ServerPublicKey" />
         <mapping class="com.Ease.Team.TeamUserStatus"/>
     </session-factory>
 </hibernate-configuration>
