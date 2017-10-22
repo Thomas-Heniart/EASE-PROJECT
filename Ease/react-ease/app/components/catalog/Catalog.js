@@ -2,138 +2,73 @@ import React from 'react';
 import ShowGrid from './ShowGrid';
 import ListCategory from './ListCategory';
 import Categories from "./Categories";
+import WebsitesContainer from "./WebsitesContainer";
 import RequestForm from './RequestForm';
 import AddBookmark from './AddBookmark';
-import { Input, List, Button, Icon, Grid, Image, Segment, Checkbox, Form } from 'semantic-ui-react';
+import {handleSemanticInput} from "../../utils/utils";
+import { Sticky, Rail, Input, List, Button, Icon, Grid, Image, Segment, Checkbox, Form } from 'semantic-ui-react';
 import style from '../../../../WebContent/cssMinified.v00017/catalog.css';
 import getWebsitesCatalog from '../../utils/api';
 import api from '../../utils/api';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import { NavLink } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
+import {requestWebsite} from "../../actions/teamModalActions";
 
 @connect(store => ({
   catalog: store.catalog
 }), reduxActionBinder)
 class Catalog extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      categorySelected: '',
-      searchInput: '',
-      categories: [
-        {name: 'Chill'},
-        {name: 'Events'},
-        {name: 'Finance'}
-      ],
-      apps: [],
-      allApps: [],
-      loading: false,
-      bookmark: false,
+      query: ''
     }
   }
-
-  updateApps = () => {
-    api.getWebsitesCatalog().then((data) => {
-      let appsSorted = data.websites.sort(function (a, b) {
-        return b.integration_date - a.integration_date;
-      });
-      this.setState({apps: appsSorted, allApps: appsSorted})
-    });
-    // api.getCategories().then((data) => {
-    //     this.setState({categories: data.categories})
-    // });
-  };
-
+  handleInput = handleSemanticInput.bind(this);
   componentDidMount() {
-    this.props.fetchCatalog();
-    this.updateApps();
+    if (!this.props.catalog.loaded)
+      this.props.fetchCatalog();
   }
-
-  search = (e) => {
-    let appsFiltered = this.state.apps.filter((item) => {
-      return item.name.toString().toLowerCase().search(
-          e.target.value.toString().toLowerCase().trim()) !== -1;
-    });
-    this.setState({ searchInput: e.target.value, allApps: appsFiltered, bookmark: false });
-  };
-
-  sortList = (e, selected) => {
-    let appsFiltered = this.state.apps.filter((item) => {
-      return item.name.toString().toLowerCase().search('') !== -1;
-    });
-    this.setState({ searchInput: '', categorySelected: selected, allApps: appsFiltered, bookmark: false });
-  };
-
-  showAllApps = (e) => {
-    let appsFiltered = this.state.apps.filter((item) => {
-      return item.name.toString().toLowerCase().search('') !== -1;
-    });
-    this.setState({ searchInput: '', categorySelected: '', allApps: appsFiltered, bookmark: false });
-  };
-
-  bookmarkActive = () => {
-    this.setState({ bookmark: true, searchInput: '', categorySelected: '' });
-  };
-
   render() {
-
-    // let appsSorted = this.state.allApps.filter((item) => {
-    //     return item.category.toLowerCase().search(
-    //         this.state.categorySelected.toLowerCase()) !== -1;
-    // });
-
     return (
         <div id="catalog">
-            <header>
-                <div className="container">
-                    <div>
-                        <p>Catalogue d'Apps</p>
-                        <Input
-                            className="inputSearch centered"
-                            placeholder='Search'
-                            onChange={e => this.search(e)}
-                            value={this.state.searchInput} />
-                    </div>
-                </div>
-            </header>
+          <header>
             <div className="container">
-                <Grid>
-                    <Grid.Column width={3}>
-                        <Button as={NavLink} to={`/main/catalog/bookmark`} className="bookmarkButton" onClick={this.bookmarkActive}>
-                            <Icon name="bookmark" />
-                            Add a Bookmark
-                        </Button>
-                        <Button className="importButton" color="facebook">
-                            <Icon name="facebook" />
-                            Import Accounts
-                        </Button>
-                        <Categories/>
-                        <ListCategory categories={this.state.categories} sortList={this.sortList} showAllApps={this.showAllApps} categorySelected={this.state.categorySelected}/>
-                    </Grid.Column>
-                    <Grid.Column width={10}>
-                      {!this.state.bookmark &&
-                      <div>
-                          <h3>{this.state.categorySelected}</h3>
-                          <ShowGrid apps={this.state.allApps} categorySelected={this.state.categorySelected} />
-                      </div>}
-                      {this.state.searchInput !== '' && this.state.categorySelected !== '' && this.state.allApps.length && !this.state.bookmark &&
-                      <div>
-                          <h3>Others</h3>
-                          <ShowGrid apps={this.state.allApps} categorySelected='' />
-                      </div>}
-                      {!this.state.allApps.length && !this.state.bookmark &&
-                      <div>
-                          <h3>Cannot find your App?</h3>
-                          <RequestForm loading={this.state.loading} />
-                      </div>}
-                      {this.state.bookmark &&
-                      <AddBookmark />}
-                    </Grid.Column>
-                    <Grid.Column width={3} />
-                </Grid>
+              <div>
+                <p>Catalogue d'Apps</p>
+                <Input
+                    className="inputSearch centered"
+                    placeholder='Search'
+                    name="query"
+                    onChange={this.handleInput}
+                    value={this.state.query} />
+              </div>
             </div>
+          </header>
+          <div className="container" >
+            <Grid>
+              <Grid.Column width={3}>
+                  <Button as={NavLink} to={`/main/catalog/bookmark`} className="bookmarkButton">
+                    <Icon name="bookmark" />
+                    Add a Bookmark
+                  </Button>
+                  <Button className="importButton" color="facebook">
+                    <Icon name="facebook" />
+                    Import Accounts
+                  </Button>
+                  <Categories/>
+              </Grid.Column>
+              <Grid.Column width={10}>
+                <Switch>
+                  <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
+                  <Route path={`${this.props.match.path}`} render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>
+                </Switch>
+              </Grid.Column>
+              <Grid.Column width={3} />
+            </Grid>
+          </div>
         </div>
     )
   }
