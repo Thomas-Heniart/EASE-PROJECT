@@ -31,7 +31,7 @@ public class WebsiteInformation {
     protected String placeholder_icon;
 
     @ManyToOne
-    @JoinColumn(name = "website_id", nullable = false)
+    @JoinColumn(name = "website_id")
     protected Website website;
 
     public WebsiteInformation(String information_name, String information_type, Integer priority, String placeholder, String placeholder_icon, Website website) {

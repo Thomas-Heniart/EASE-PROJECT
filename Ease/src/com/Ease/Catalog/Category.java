@@ -82,4 +82,8 @@ public class Category {
             return;
         this.getWebsiteMap().put(website.getDb_id(), website);
     }
+
+    public void removeWebsite(Website website) {
+        this.getWebsiteMap().remove(website.getDb_id());
+    }
 }
