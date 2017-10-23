@@ -19,6 +19,21 @@ $(document).ready(function () {
         });
         console.log(requests);
     });
+    $("#category-segment #add-category").submit(function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var input = $("input", $(this));
+        input.parent().addClass("disabled");
+        ajaxHandler.post("/api/v1/admin/AddCategory", {
+            name: input.val()
+        }, function() {
+
+        }, function(category) {
+            addCategoryRow(category).appendTo($("#category-manager-body"));
+            input.parent().removeClass("disabled");
+            input.val("");
+        });
+    });
     $(".ui.menu a.item").on("click", function () {
         $(this)
             .addClass("active")
@@ -140,11 +155,34 @@ function addCategoryRow(category) {
         "<td class='name'>" + category.name + "</td>" +
         "<td class='position'>" + category.position + "</td>" +
         "<td><a href='#' class='edit'><i class='fa fa-cog'></i></a></td>" +
-        "<td><a href='#'><i class='fa fa-trash'></i></a></td>" +
+        "<td><a href='#' class='delete'><i class='fa fa-trash'></i></a></td>" +
         "</tr>");
     $("a.edit", elem).click(function () {
         openCategoryEdit(category, elem);
-    })
+    });
+    $("a.delete", elem).click(function () {
+        var modal = $("#category-delete");
+        var button = $(".ok", modal);
+        button.click(function() {
+            button.addClass("loading");
+            ajaxHandler.post("/api/v1/admin/DeleteCategory", {
+                id: category.id
+            }, function() {
+            }, function() {
+                button.removeClass("loading");
+                $(elem).remove();
+                modal.modal("hide");
+            });
+            button.off("click");
+        });
+        modal
+            .modal({
+                onHide: function () {
+                    button.off("click");
+                }
+            })
+            .modal("show");
+    });
     return elem;
 }
 
@@ -206,7 +244,7 @@ function addWebsiteRow(website) {
         var modal = $("#website-delete");
         var button = $(".ok", modal);
         button.click(function() {
-            button.addClass("loading")
+            button.addClass("loading");
             ajaxHandler.post("/api/v1/admin/DeleteWebsite", {
                 id: website.id
             }, function() {
@@ -215,7 +253,7 @@ function addWebsiteRow(website) {
                 modal.modal("hide");
             });
             button.off("click");
-        })
+        });
         modal
             .modal({
                 onHide: function () {

@@ -130,7 +130,6 @@
 <%@ include file="RequestedSitesView.jsp"%>
 <%@ include file="UploadWebsite.jsp"%>
 <%@ include file="MoveSites.jsp" %>
-<%@ include file="backofficeAdmin/TagsManager.jsp"%>
 <%@ include file="ChangeBackground.jsp"%>
 <%@ include file="ServerKeysManager.jsp"%>
 <%@ include file="TestWebsites.jsp"%>

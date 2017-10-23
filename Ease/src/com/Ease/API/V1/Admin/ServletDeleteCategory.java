@@ -2,8 +2,7 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Category;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
+import com.Ease.Catalog.Website;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -13,24 +12,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 
-@WebServlet("/api/v1/admin/AddCategory")
-public class ServletAddCategory extends HttpServlet {
+@WebServlet("/api/v1/admin/DeleteCategory")
+public class ServletDeleteCategory extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            String name = sm.getStringParam("name", true, false);
-            //Integer position = sm.getIntParam("position", true, false);
+            Integer category_id = sm.getIntParam("id", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            for (Category category : catalog.getCategories()) {
-                if (category.getName().equals(name))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Already a category with this name.");
+            Category category = catalog.getCategoryWithId(category_id);
+            for (Website website : category.getWebsites()) {
+                website.setCategory(null);
+                sm.saveOrUpdate(website);
             }
-            Category category = new Category(name, (catalog.getCategories().size() + 1) * 10);
-            sm.saveOrUpdate(category);
-            catalog.addCategory(category);
-            sm.setSuccess(category.getJson());
+            category.setWebsiteMap(new HashMap<>());
+            catalog.removeCategory(category_id);
+            sm.deleteObject(category);
+            sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);
         }
