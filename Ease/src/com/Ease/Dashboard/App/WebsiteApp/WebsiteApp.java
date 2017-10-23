@@ -283,6 +283,10 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         return true;
     }
 
+    public boolean isWebsiteApp() {
+        return true;
+    }
+
     @Override
     public String getLogo() {
         return this.website.getFolder() + "logo.png";
