@@ -3,7 +3,7 @@ import ShowGrid from './ShowGrid';
 import ListCategory from './ListCategory';
 import RequestForm from './RequestForm';
 import AddBookmark from './AddBookmark';
-import { Input, List, Button, Icon, Grid, Image, Segment, Checkbox, Form } from 'semantic-ui-react';
+import { Input, Button, Icon, Grid } from 'semantic-ui-react';
 import { render } from 'react-router-dom';
 import style from '../../../../WebContent/cssMinified.v00017/catalog.css';
 import getWebsitesCatalog from '../../utils/api';
@@ -16,11 +16,7 @@ class Catalog extends React.Component {
         this.state = {
             categorySelected: '',
             searchInput: '',
-            categories: [
-                {name: 'Chill'},
-                {name: 'Events'},
-                {name: 'Finance'}
-            ],
+            categories: [],
             apps: [],
             allApps: [],
             loading: false,
@@ -35,9 +31,9 @@ class Catalog extends React.Component {
             });
             this.setState({apps: appsSorted, allApps: appsSorted})
         });
-        // api.getCategories().then((data) => {
-        //     this.setState({categories: data.categories})
-        // });
+        api.getCategories().then((data) => {
+            this.setState({categories: data.categories})
+        });
     };
 
     componentDidMount() {
@@ -67,15 +63,17 @@ class Catalog extends React.Component {
     };
 
     bookmarkActive = () => {
-        this.setState({ bookmark: true, searchInput: '', categorySelected: '' });
+        this.setState({ bookmark: true, searchInput: '', categorySelected: ''});
     };
 
     render() {
 
-        // let appsSorted = this.state.allApps.filter((item) => {
-        //     return item.category.toLowerCase().search(
-        //         this.state.categorySelected.toLowerCase()) !== -1;
-        // });
+        let appsSorted = this.state.allApps.filter((item) => {
+            if (item.category_id && this.state.categorySelected.id)
+                return item.category_id !== this.state.categorySelected.id;
+            else
+                return item;
+        });
 
         return (
             <div id="catalog">
@@ -102,21 +100,28 @@ class Catalog extends React.Component {
                                 <Icon name="facebook" />
                                 Import Accounts
                             </Button>
-                            <ListCategory categories={this.state.categories} sortList={this.sortList} showAllApps={this.showAllApps} categorySelected={this.state.categorySelected}/>
+                            <ListCategory categories={this.state.categories}
+                                          sortList={this.sortList}
+                                          showAllApps={this.showAllApps}
+                                          categorySelected={this.state.categorySelected} />
                         </Grid.Column>
                         <Grid.Column width={10}>
-                            {!this.state.bookmark ?
+                            {appsSorted.length && !this.state.bookmark ?
                                 <div>
-                                    <h3>{this.state.categorySelected}</h3>
-                                    <ShowGrid apps={this.state.allApps} categorySelected={this.state.categorySelected} />
+                                    <h3>{this.state.categorySelected.name}</h3>
+                                    <ShowGrid apps={this.state.allApps} categorySelected={this.state.categorySelected.id} />
                                 </div>
                                 :
                                 <div/>
                             }
-                            {this.state.searchInput !== '' && this.state.categorySelected !== '' && this.state.allApps.length && !this.state.bookmark ?
+                            {this.state.searchInput !== ''
+                            && this.state.categorySelected
+                            && this.state.allApps.length
+                            && !this.state.bookmark ?
                                 <div>
                                     <h3>Others</h3>
-                                    <ShowGrid apps={this.state.allApps} categorySelected='' />
+                                    <ShowGrid apps={this.state.allApps}
+                                              categorySelected='' />
                                 </div>
                                 :
                                 <div/>
