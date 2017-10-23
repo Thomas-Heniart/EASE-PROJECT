@@ -1,12 +1,57 @@
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
+    $("#website-requests-segment button").click(function () {
+        var button = $(this);
+        button.addClass("loading");
+        var requests = $("#website-requests-manager-body tr.positive .checkbox input:checked").map(function (i, elem) {
+            var jElem = $(elem).parent().parent().parent();
+            return {
+                email: $(".email", jElem).text(),
+                id: parseInt(jElem.attr("website-id"))
+            }
+        });
+        var all_requests = {};
+        console.log(requests.toArray());
+        requests.toArray().forEach(function (request) {
+            var existing_request = all_requests[request.email];
+            if (existing_request === undefined)
+                existing_request = [];
+            existing_request.push(request.id);
+            all_requests[request.email] = existing_request;
+        });
+        ajaxHandler.post("/api/v1/admin/SendWebsitesIntegrated", {
+            emailAndWebsiteIds: all_requests
+        }, function () {
+
+        }, function () {
+            button.removeClass("loading");
+            $("#website-requests-manager-body tr.positive .checkbox input:checked").parent().parent().parent().remove();
+        });
+    });
+    $("#category-segment #add-category").submit(function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var input = $("input", $(this));
+        input.parent().addClass("disabled");
+        ajaxHandler.post("/api/v1/admin/AddCategory", {
+            name: input.val()
+        }, function () {
+
+        }, function (category) {
+            addCategoryRow(category).appendTo($("#category-manager-body"));
+            input.parent().removeClass("disabled");
+            input.val("");
+        });
+    });
     $(".ui.menu a.item").on("click", function () {
         $(this)
             .addClass("active")
             .siblings().removeClass("active");
         var target = $($(this).attr("data-target"));
         $(".segment").hide();
+        $(".segment").addClass("loading");
+        $(".segment table tbody tr").remove();
         target.show();
         if (target.hasClass("loading")) {
             switch (target.attr("id")) {
@@ -16,8 +61,8 @@ $(document).ready(function () {
                         data.forEach(function (team) {
                             addTeamRow(team).appendTo($("#team-manager-body"));
                         });
-                        target.removeClass("loading");
                     });
+                    target.removeClass("loading");
                     break;
 
                 case "website-segment":
@@ -73,6 +118,21 @@ $(document).ready(function () {
                         categories.forEach(function (category) {
                             addCategoryRow(category).appendTo($("#category-manager-body"));
                         });
+                        target.removeClass("loading");
+                    });
+                    break;
+                case "website-requests-segment":
+                    ajaxHandler.get("/api/v1/admin/GetWebsiteRequests", null, function () {
+
+                    }, function (data) {
+                        var requests = data.website_requests;
+                        requests.sort(function (r1, r2) {
+                            r2.date - r1.date;
+                        });
+                        requests.forEach(function (request) {
+                            createRequestRow(request).appendTo($("#website-requests-manager-body"));
+                        });
+                        target.removeClass("loading");
                     });
                     break;
                 default:
@@ -82,17 +142,80 @@ $(document).ready(function () {
     });
 });
 
+function createRequestRow(request) {
+    var elem = $("<tr website-id='" + request.website_id + "'>" +
+        "<td class='id'>" + request.id + "</td>" +
+        "<td class='url'>" + request.url + "</td>" +
+        "<td class='email'>" + request.email + "</td>" +
+        "<td class='date'>" + new Date(request.date).toLocaleString() + "</a></td>" +
+        '<td><div class="ui checkbox"><input type="checkbox"/><label></label></div></td>' +
+        "<td><a href='#' class='delete'><i class='fa fa-trash'></i></a></td>" +
+        "</tr>");
+    if (request.integrated)
+        elem.addClass("positive");
+    $("a.delete", elem).click(function () {
+        $("a.delete", elem).click(function () {
+            var modal = $("#request-delete");
+            var button = $(".ok", modal);
+            button.click(function () {
+                button.addClass("loading");
+                ajaxHandler.post("/api/v1/admin/DeleteWebsiteRequest", {
+                    website_request_id: request.id,
+                    website_id: request.website_id
+                }, function () {
+                }, function () {
+                    button.removeClass("loading");
+                    $(elem).remove();
+                    modal.modal("hide");
+                });
+                button.off("click");
+            });
+            modal
+                .modal({
+                    onHide: function () {
+                        button.off("click");
+                    }
+                })
+                .modal("show");
+        });
+    });
+    return elem;
+}
+
 function addCategoryRow(category) {
     var elem = $("<tr>" +
         "<td>" + category.id + "</td>" +
         "<td class='name'>" + category.name + "</td>" +
         "<td class='position'>" + category.position + "</td>" +
         "<td><a href='#' class='edit'><i class='fa fa-cog'></i></a></td>" +
-        "<td><a href='#'><i class='fa fa-trash'></i></a></td>" +
+        "<td><a href='#' class='delete'><i class='fa fa-trash'></i></a></td>" +
         "</tr>");
     $("a.edit", elem).click(function () {
         openCategoryEdit(category, elem);
-    })
+    });
+    $("a.delete", elem).click(function () {
+        var modal = $("#category-delete");
+        var button = $(".ok", modal);
+        button.click(function () {
+            button.addClass("loading");
+            ajaxHandler.post("/api/v1/admin/DeleteCategory", {
+                id: category.id
+            }, function () {
+            }, function () {
+                button.removeClass("loading");
+                $(elem).remove();
+                modal.modal("hide");
+            });
+            button.off("click");
+        });
+        modal
+            .modal({
+                onHide: function () {
+                    button.off("click");
+                }
+            })
+            .modal("show");
+    });
     return elem;
 }
 
@@ -125,8 +248,11 @@ function addWebsiteRow(website) {
         + '<td class="landing_url">' + website.landing_url + '</td>'
         + '<td> <div class="ui checkbox public"><input type="checkbox"/><label></label></div></td>'
         + '<td><a href="#"><i class="fa fa-pencil edit-website"/></a></td>'
-        + '<td> <div class="ui checkbox delete"><input type="checkbox"/><label></label></div></td>'
+        + '<td><a href="#" class="delete"><i class="fa fa-trash"/></a></td>'
         + '<td><a href="#" class="merge-website">Merge</a></td>'
+        + "<td class='login'>" + (website.website_credentials === undefined ? "" : website.website_credentials.login) + "</td>"
+        + "<td class='password'>" + (website.website_credentials === undefined ? "" : website.website_credentials.password) + "</td>"
+        + "<td class='publicKey'>" + (website.website_credentials === undefined ? "" : website.website_credentials.publicKey) + "</td>"
         + '</tr>');
     if (!website.integrated)
         elem.addClass("negative");
@@ -146,6 +272,28 @@ function addWebsiteRow(website) {
     });
     $(".merge-website", elem).click(function () {
         openWebsiteMerging(website, elem);
+    });
+    $(".delete", elem).click(function () {
+        var modal = $("#website-delete");
+        var button = $(".ok", modal);
+        button.click(function () {
+            button.addClass("loading");
+            ajaxHandler.post("/api/v1/admin/DeleteWebsite", {
+                id: website.id
+            }, function () {
+            }, function () {
+                $(elem).remove();
+                modal.modal("hide");
+            });
+            button.off("click");
+        });
+        modal
+            .modal({
+                onHide: function () {
+                    button.off("click");
+                }
+            })
+            .modal("show");
     });
     return elem;
 }
@@ -353,6 +501,19 @@ function openTeamSettings(team, teamRow) {
             input.removeClass("disabled");
         });
     });
+    $("button.negative", modal).click(function () {
+        var button = $(this);
+        button.addClass("loading");
+        ajaxHandler.post("/api/v1/admin/DeleteTeam", {
+            team_id: team.id
+        }, function() {
+
+        }, function() {
+            button.removeClass("loading");
+            teamRow.remove();
+            modal.modal("hide");
+        })
+    })
     modal
         .modal({
             onHide: function () {

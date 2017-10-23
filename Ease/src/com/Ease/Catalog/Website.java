@@ -7,7 +7,6 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.ServletManager;
-import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,8 +47,7 @@ public class Website {
     @JoinColumn(name = "website_attributes_id")
     protected WebsiteAttributes websiteAttributes;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "website_id")
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
     @ManyToOne
@@ -70,6 +68,12 @@ public class Website {
 
     @ManyToMany(mappedBy = "teamWebsites", fetch = FetchType.EAGER)
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    protected Set<WebsiteRequest> websiteRequests = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    protected Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
 
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
@@ -180,6 +184,22 @@ public class Website {
         this.teams = teams;
     }
 
+    public Set<WebsiteRequest> getWebsiteRequests() {
+        return websiteRequests;
+    }
+
+    public void setWebsiteRequests(Set<WebsiteRequest> websiteRequests) {
+        this.websiteRequests = websiteRequests;
+    }
+
+    public Set<WebsiteCredentials> getWebsiteCredentials() {
+        return websiteCredentials;
+    }
+
+    public void setWebsiteCredentials(Set<WebsiteCredentials> websiteCredentials) {
+        this.websiteCredentials = websiteCredentials;
+    }
+
     public void addConnectWith_website(Website website) {
         this.getConnectWith_websites().add(website);
     }
@@ -192,8 +212,33 @@ public class Website {
         this.getTeams().add(team);
     }
 
+    public void addWebsiteRequest(WebsiteRequest websiteRequest) {
+        this.getWebsiteRequests().add(websiteRequest);
+    }
+
+    public void removeWebsiteRequest(WebsiteRequest websiteRequest) {
+        this.getWebsiteRequests().remove(websiteRequest);
+    }
+
+    public void addWebsiteCredentials(WebsiteCredentials websiteCredentials) {
+        this.getWebsiteCredentials().remove(websiteCredentials);
+    }
+
     public String getLogo() {
         return "/resources/websites/" + this.getFolder() + "/logo.png";
+    }
+
+    public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {
+        Map<String, String> res = new ConcurrentHashMap<>();
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
+            String value = (String) information.get(websiteInformation.getInformation_name());
+            if (value == null || value.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + websiteInformation.getInformation_name());
+            if (value.length() >= 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + websiteInformation.getInformation_name());
+            res.put(websiteInformation.getInformation_name(), value);
+        }
+        return res;
     }
 
     public JSONObject getJson() {
@@ -288,7 +333,8 @@ public class Website {
             a.put("img", Variables.URL_PATH + this.getLogo());
             return a;
         } catch (IOException | ParseException e) {
-            throw new HttpServletException(HttpStatus.InternError, "Sorry, fuck you");
+            e.printStackTrace();
+            throw new HttpServletException(HttpStatus.InternError);
         }
     }
 
@@ -296,19 +342,10 @@ public class Website {
         return this.getSso() == null ? -1 : this.getSso().getDb_id();
     }
 
-    public Map<String, String> getInformationNeeded(PostServletManager sm) throws HttpServletException {
-        try {
-            Map<String, String> res = new ConcurrentHashMap<>();
-            for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
-                String value = sm.getStringParam(websiteInformation.getInformation_name(), false, false);
-                /* String private_key = (String) sm.getContextAttr("privateKey");
-                value = RSA.Decrypt(value, private_key); */
-                res.put(websiteInformation.getInformation_name(), value);
-            }
-            return res;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new HttpServletException(HttpStatus.InternError);
-        }
+    public JSONObject getRequestJson() {
+        JSONObject res = new JSONObject();
+        for (WebsiteRequest websiteRequest : this.getWebsiteRequests())
+            res = websiteRequest.getJson();
+        return res;
     }
 }

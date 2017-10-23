@@ -12,7 +12,7 @@ function MainView(props){
         <Switch>
           <Route path='/main/teamsPreview' component={TeamsPreview}/>
           <Route path='/main/simpleTeamCreation' component={SimpleTeamCreationView}/>
-            <Route path='/main/catalog' component={Catalog} />
+          <Route path='/main/catalog' component={Catalog} />
         </Switch>
       </div>
   )

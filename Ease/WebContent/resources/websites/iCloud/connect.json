@@ -4,21 +4,26 @@
   "home":"https://www.icloud.com/",
   "connect": {
     "todo": [
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"iframe#auth-frame"},
+      {"action":"enterFrame", "search":"iframe#auth-frame"},
+      {"action":"waitfor", "search":"#appleId"},
       {"action":"fill", "what":"login", "search":"#appleId"},
       {"action":"fill", "what":"password", "search":"#pwd"},
-      {"action":"click", "search":"#sign-in"}
+      {"action":"click", "search":"#sign-in"},
+      {"action":"exitFrame"}
     ]
   },
   "logout": {
     "todo": [
-      {"action":"clickona", "search":"a[data-zcqa='signOut']"},
-      {"action":"waitload"},
-      {"action":"waitfor", "search":"a.signin"},
-      {"action":"goto", "url":"https://crm.zoho.com"}
+      {"action":"click", "search":".icloud-controls.account-menu[role='button']"},
+      {"action":"waitfor", "search":"div[role='menu'] div.sc-menu-scroll-view div.sc-container-view div.sc-view div:last-child() a.menu-item"},
+      {"action":"clickona", "waitfor":"div[role='menu'] div.sc-menu-scroll-view div.sc-container-view div.sc-view div:last-child() a.menu-item"},
+      {"action":"waitload"}
     ]
   },
   "checkAlreadyLogged": [
-    {"action":"waitfor", "search":"a[data-zcqa='signOut'], #signin"},
-    {"search":"a[data-zcqa='signOut']"}
+    {"action":"waitfor", "search":".icloud-controls.account-menu[role='button'][tabindex='0'], iframe#auth-frame"},
+    {"search":".icloud-controls.account-menu[role='button'][tabindex='0']"}
   ]
 }

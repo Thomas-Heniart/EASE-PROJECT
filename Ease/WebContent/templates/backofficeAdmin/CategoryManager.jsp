@@ -10,6 +10,9 @@
     </thead>
     <tbody id="category-manager-body"></tbody>
 </table>
+<form id="add-category">
+    <div class="ui input"><input placeholder="Add category..."/></div>
+</form>
 <div class="ui modal" id="category-modal">
     <i class="close icon"></i>
     <div class="header">Edit websites</div>
@@ -28,5 +31,22 @@
             </div>
             <button class="ui button">Edit</button>
         </form>
+    </div>
+</div>
+<div class="ui modal basic" id="category-delete">
+    <div class="ui icon header">
+        Delete category
+    </div>
+    <div class="content">
+        <p>Do you really want to delete this category</p>
+    </div>
+    <div class="actions">
+        <div class="ui red basic ok inverted button">
+            <i class="remove icon"></i>
+            Yes
+        </div>
+        <div class="ui grey cancel inverted button">
+            Cancel
+        </div>
     </div>
 </div>

@@ -4,6 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,7 +22,7 @@ public class Category {
     @Column(name = "position")
     protected Integer position;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     @MapKey(name = "db_id")
     protected Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
 
@@ -81,5 +82,13 @@ public class Category {
         if (this.getWebsiteMap().containsKey(website.getDb_id()))
             return;
         this.getWebsiteMap().put(website.getDb_id(), website);
+    }
+
+    public void removeWebsite(Website website) {
+        this.getWebsiteMap().remove(website.getDb_id());
+    }
+
+    public Collection<Website> getWebsites() {
+        return this.getWebsiteMap().values();
     }
 }

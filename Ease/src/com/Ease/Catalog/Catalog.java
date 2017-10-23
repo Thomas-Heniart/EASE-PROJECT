@@ -121,7 +121,15 @@ public class Catalog {
         return sso;
     }
 
-    public void removeWebsite(Integer id) {
+    public void removeWebsite(Integer id) throws HttpServletException {
+        Website website_to_remove = this.getWebsiteWithId(id);
+        for (Website website : this.getWebsites()) {
+            website.getConnectWith_websites().remove(website_to_remove);
+            website.getSignIn_websites().remove(website_to_remove);
+        }
+        if (website_to_remove.getCategory() != null)
+            this.getCategoryWithId(website_to_remove.getCategory().getDb_id()).removeWebsite(website_to_remove);
+        website_to_remove.setCategory(null);
         this.getWebsiteMap().remove(id);
     }
 
@@ -145,5 +153,19 @@ public class Catalog {
         if (!website.getWebsiteAttributes().isPublic_website())
             throw new HttpServletException(HttpStatus.BadRequest, "This website is not public");
         return website;
+    }
+
+    public void addWebsite(Website website) {
+        this.getWebsiteMap().put(website.getDb_id(), website);
+    }
+
+    public JSONArray getWebsiteRequests() {
+        JSONArray res = new JSONArray();
+        for (Website website : this.getWebsites()) {
+            if (website.getWebsiteRequests().isEmpty())
+                continue;
+            res.add(website.getRequestJson());
+        }
+        return res;
     }
 }

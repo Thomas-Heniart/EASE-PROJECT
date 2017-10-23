@@ -1,0 +1,21 @@
+{
+  "name":"Elocky Admin",
+  "lastlogin":"",
+  "home":"https://elocky.com/admin",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login", "search":"form[action*='login'] input[name='_username']"},
+      {"action":"fill", "what":"password", "search":"form[action*='login'] input[type='password']"},
+      {"action":"click", "search":"form[action*='login'] button[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[href*='logout'], form[action*='login'] button[type='submit']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

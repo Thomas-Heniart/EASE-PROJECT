@@ -71,22 +71,26 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         }
     }
 
-    public static LinkApp createLinkApp(Profile profile, Integer position, String name, String url, String imgUrl, com.Ease.Utils.Servlets.ServletManager sm) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        Map<String, Object> elevator = new HashMap<String, Object>();
-        Integer appDBid = App.createApp(profile, position, name, "linkApp", elevator, db);
-        LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, db);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?);");
-        request.setInt(appDBid);
-        request.setInt(infos.getDb_id());
-        Integer linkDBid = request.set();
-        db.commitTransaction(transaction);
-        return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), infos, linkDBid);
+    public static LinkApp createLinkApp(Profile profile, Integer position, String name, String url, String imgUrl, DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            Map<String, Object> elevator = new HashMap<String, Object>();
+            Integer appDBid = App.createApp(profile, position, name, "linkApp", elevator, db);
+            LinkAppInformation infos = LinkAppInformation.createLinkAppInformation(url, imgUrl, db);
+            DatabaseRequest request = db.prepareRequest("INSERT INTO linkApps values(NULL, ?, ?);");
+            request.setInt(appDBid);
+            request.setInt(infos.getDb_id());
+            Integer linkDBid = request.set();
+            db.commitTransaction(transaction);
+            return new LinkApp(appDBid, profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), infos, linkDBid);
+        } catch (GeneralException e) {
+            e.printStackTrace();
+            throw new HttpServletException(HttpStatus.InternError);
+        }
     }
 
     public static LinkApp createShareableLinkApp(String name, String link, String img_url, PostServletManager sm) throws GeneralException, HttpServletException {
-        return createLinkApp(null, null, name, link, img_url.equals("") ? "/resources/icons/link_app.png" : img_url, sm);
+        return createLinkApp(null, null, name, link, img_url.equals("") ? "/resources/icons/link_app.png" : img_url, sm.getDB());
     }
 
 	/*

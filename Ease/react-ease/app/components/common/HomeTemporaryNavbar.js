@@ -7,6 +7,7 @@ import {withRouter} from "react-router-dom";
 import {processLogout} from "../../actions/commonActions";
 import { NavLink } from 'react-router-dom';
 import {connect} from "react-redux";
+import {reduxActionBinder} from "../../actions/index";
 import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 
 class TeamsList extends React.Component {

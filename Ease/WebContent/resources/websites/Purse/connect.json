@@ -1,7 +1,7 @@
 {
   "name": "Purse",
   "lastLogin": "",
-  "home": "https://purse.io",
+  "home": "https://purse.io/shop",
   "folder": "Purse",
   "connect": {
     "todo": [
@@ -11,8 +11,7 @@
       },
       {
         "action": "trueClick",
-        "search": "a[href*='/login']",
-        "grave": true
+        "search": "a[href*='/login']"
       },
       {
         "action": "waitfor",
@@ -25,14 +24,12 @@
       {
         "action": "fill",
         "what": "password",
-        "search": "#login-password",
-        "grave": true
+        "search": "#login-password"
       },
       {
         "action": "fill",
         "what": "login",
-        "search": "#login-email",
-        "grave": true
+        "search": "#login-email"
       },
       {
         "action": "waitfor",
@@ -40,8 +37,7 @@
       },
       {
         "action": "click",
-        "search": "form#auth-login-form button[type='submit']",
-        "grave": true
+        "search": "form#auth-login-form button[type='submit']"
       }
     ]
   },
@@ -53,15 +49,18 @@
       },
       {
         "action": "trueClick",
-        "search": "a[href*='/login']",
-        "grave": true
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-password"
       },
       {
         "action": "waitfor",
         "search": ".btn-social-compact-fb"
       },
       {
-        "action": "click",
+        "action": "trueClick",
         "search": ".btn-social-compact-fb"
       }
     ]
@@ -74,8 +73,11 @@
       },
       {
         "action": "trueClick",
-        "search": "a[href*='/login']",
-        "grave": true
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-password"
       },
       {
         "action": "waitfor",
@@ -95,8 +97,11 @@
       },
       {
         "action": "trueClick",
-        "search": "a[href*='/login']",
-        "grave": true
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-password"
       },
       {
         "action": "waitfor",
@@ -112,12 +117,23 @@
     "todo": [
       {
         "action": "waitfor",
-        "search": "a[href*='/logout']"
+        "search": "a[href*='logout']"
       },
       {
-        "action": "trueClick",
-        "search": "a[href*='/logout']",
-        "grave": true
+        "action": "goto",
+        "url": "https://purse.io/logout"
+      },
+      {
+        "action": "waitfor",
+        "search": "#main-loading[style*='display: none;']"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='/login']"
+      },
+      {
+        "action": "goto",
+        "url": "https://purse.io"
       }
     ]
   },

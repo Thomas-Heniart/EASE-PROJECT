@@ -14,20 +14,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/ServletAddCategory")
+@WebServlet("/api/v1/admin/AddCategory")
 public class ServletAddCategory extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
             String name = sm.getStringParam("name", true, false);
-            Integer position = sm.getIntParam("position", true, false);
+            //Integer position = sm.getIntParam("position", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             for (Category category : catalog.getCategories()) {
                 if (category.getName().equals(name))
                     throw new HttpServletException(HttpStatus.BadRequest, "Already a category with this name.");
             }
-            Category category = new Category(name, position);
+            Category category = new Category(name, (catalog.getCategories().size() + 1) * 10);
             sm.saveOrUpdate(category);
             catalog.addCategory(category);
             sm.setSuccess(category.getJson());

@@ -42,19 +42,23 @@ public class LogwithApp extends WebsiteApp {
         throw new GeneralException(ServletManager.Code.InternError, "Logwith app not complete in db.");
     }
 
-    public static LogwithApp createLogwithApp(Profile profile, int position, String name, Website site, WebsiteApp logwith, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        Map<String, Object> elevator = new HashMap<String, Object>();
-        Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, db);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?);");
-        request.setInt(websiteAppDBid);
-        request.setInt(logwith.getWebsiteAppDBid());
-        Integer logwithDBid = request.set();
-        db.commitTransaction(transaction);
-        LogwithApp app = new LogwithApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
-        app.rempLogwith(logwith);
-        return app;
+    public static LogwithApp createLogwithApp(Profile profile, int position, String name, Website site, WebsiteApp logwith, DataBaseConnection db) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            Map<String, Object> elevator = new HashMap<String, Object>();
+            Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "logwithApp", site, elevator, db);
+            DatabaseRequest request = db.prepareRequest("INSERT INTO logWithApps VALUES(NULL, ?, ?);");
+            request.setInt(websiteAppDBid);
+            request.setInt(logwith.getWebsiteAppDBid());
+            Integer logwithDBid = request.set();
+            db.commitTransaction(transaction);
+            LogwithApp app = new LogwithApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), site, websiteAppDBid, logwith.getDBid(), logwithDBid);
+            app.rempLogwith(logwith);
+            return app;
+        } catch (GeneralException e) {
+            e.printStackTrace();
+            throw new HttpServletException(HttpStatus.InternError);
+        }
     }
 
     public static LogwithApp createFromWebsiteApp(WebsiteApp websiteApp, String name, WebsiteApp logwith, ServletManager sm, User user) throws GeneralException {
@@ -76,7 +80,7 @@ public class LogwithApp extends WebsiteApp {
     }
 
 	/*
-	 * 
+     *
 	 * Constructor
 	 * 
 	 */

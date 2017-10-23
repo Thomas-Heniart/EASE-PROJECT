@@ -1,0 +1,27 @@
+{
+  "name":"Smartlook",
+  "lastLogin":"",
+  "home":"https://www.smartlook.com/app/dashboard",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#frm-signIn-form-email"},
+      {"action":"fill", "what":"password", "search":"#frm-signIn-form-password"},
+      {"action":"click", "search":"input[name='_submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"clickona", "search":".login-facebook a"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"li.dropdown.menu-select ul.dropdown-menu li:last-child() a, #frm-signIn-form-email, a[href*='sign/in']"},
+    {"search":"li.dropdown.menu-select ul.dropdown-menu li:last-child() a"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"li.dropdown.menu-select ul.dropdown-menu li:last-child() a"},
+      {"action":"waitload"}
+    ]
+  }
+}

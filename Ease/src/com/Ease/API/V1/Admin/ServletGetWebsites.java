@@ -3,6 +3,7 @@ package com.Ease.API.V1.Admin;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
+import com.Ease.Catalog.WebsiteCredentials;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -51,6 +52,11 @@ public class ServletGetWebsites extends HttpServlet {
                 for (Website website1 : website.getConnectWith_websites())
                     connectWtih.add(website1.getDb_id());
                 tmp.put("connectWith", connectWtih);
+                JSONObject website_credentials = null;
+                for (WebsiteCredentials websiteCredentials : website.getWebsiteCredentials())
+                    website_credentials = websiteCredentials.getJson();
+                if (website_credentials != null)
+                    tmp.put("website_credentials", website_credentials);
                 res.add(tmp);
             }
             sm.setSuccess(res);

@@ -2,30 +2,30 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import {
-    CopyPasswordButton,
-    ExtendFillSwitch,
-    PasswordChangeDropdown,
-    PasswordChangeHolder,
-    PinAppButton,
-    setUserDropdownText,
-    SharingRequestButton,
-    TeamAppActionButton
+  CopyPasswordButton,
+  ExtendFillSwitch,
+  PasswordChangeDropdown,
+  PasswordChangeHolder,
+  PinAppButton,
+  setUserDropdownText,
+  SharingRequestButton,
+  TeamAppActionButton
 } from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {
-    teamAppDeleteReceiver,
-    teamEditEnterpriseApp,
-    teamEditEnterpriseAppReceiver,
-    teamShareEnterpriseApp
+  teamAppDeleteReceiver,
+  teamEditEnterpriseApp,
+  teamEditEnterpriseAppReceiver,
+  teamShareEnterpriseApp
 } from "../../actions/appsActions";
 import {
-    credentialIconType,
-    handleSemanticInput,
-    reflect,
-    transformCredentialsListIntoObject,
-    transformWebsiteInfoIntoList,
-    transformWebsiteInfoIntoListAndSetValues
+  credentialIconType,
+  handleSemanticInput,
+  reflect,
+  transformCredentialsListIntoObject,
+  transformWebsiteInfoIntoList,
+  transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
 import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
 
@@ -136,7 +136,7 @@ const SimpleCredentialsInput = ({receiver, me, team_id}) => {
         {receiver.credentials.map(item => {
           return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true} receiver_id={receiver.id} key={item.priority} onChange={null} item={item}/>
         })}
-          {(isAdmin(me.role) || receiver.id === me.id) &&
+        {receiver.id === me.id &&
         <CopyPasswordButton team_id={team_id} shared_app_id={receiver.shared_app_id}/>}
       </div>
   )

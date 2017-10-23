@@ -1,14 +1,48 @@
 var axios = require('axios');
 
-const regularCall = (promise) => {
-  return promise.then(response => {
-    return response.data;
-  }).catch(err => {
-    throw err.response.data;
-  });
+const basic_post = (url, params) => {
+  return axios.post(url, params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
 };
 
 module.exports = {
+  catalog: {
+    addClassicApp: ({name, website_id, profile_id, account_information}) => {
+      return basic_post('/api/v1/catalog/AddClassicApp', {
+        name: name,
+        website_id: website_id,
+        profile_id: profile_id,
+        account_information: account_information
+      });
+    },
+    addBookmark: ({name, profile_id, url, img_url}) => {
+      return basic_post('/api/v1/catalog/AddBookmark', {
+        name: name,
+        profile_id: profile_id,
+        url: url,
+        img_url: img_url
+      });
+    },
+    addLogWithApp: ({name, website_id, profile_id, logWith_app_id}) => {
+      return basic_post('/api/v1/catalog/AddLogWithApp', {
+        name: name,
+        website_id: website_id,
+        profile_id: profile_id,
+        logWith_app_id: logWith_app_id
+      });
+    },
+    requestWebsite: ({url, acount_information}) => {
+      return basic_post('/api/v1/catalog/WebsiteRequest', {
+        url: url,
+        account_information: account_information
+      });
+    }
+  },
   teamChannel: {
     editName : function(ws_id, team_id, channel_id, name){
       return axios.post('/api/v1/teams/EditChannelName', {

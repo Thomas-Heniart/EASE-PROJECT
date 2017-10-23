@@ -208,7 +208,7 @@ public class App implements ShareableApp, SharedApp {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
         String registrationDate = dateFormat.format(date);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, NULL, default);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO apps VALUES (NULL, ?, ?, ?, default);");
         request.setString(registrationDate);
         request.setString(type);
         request.setInt(infos.getDb_id());
@@ -382,6 +382,10 @@ public class App implements ShareableApp, SharedApp {
     }
 
     public boolean isLinkApp() {
+        return false;
+    }
+
+    public boolean isWebsiteApp() {
         return false;
     }
 

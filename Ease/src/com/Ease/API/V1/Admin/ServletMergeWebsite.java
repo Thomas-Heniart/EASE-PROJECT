@@ -5,6 +5,7 @@ import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
+import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.DataBaseConnection;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/api/v1/admin/MergeWebsite")
 public class ServletMergeWebsite extends HttpServlet {
@@ -40,6 +42,7 @@ public class ServletMergeWebsite extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
             DataBaseConnection db = sm.getDB();
+            Map<String, User> userMap = (Map<String, User>) sm.getContextAttr("users");
             int transaction2 = db.startTransaction();
             for (Team team : teamManager.getTeams()) {
                 int transaction = db.startTransaction();
@@ -51,6 +54,7 @@ public class ServletMergeWebsite extends HttpServlet {
                     if (website_to_merge != websiteApp.getSite())
                         continue;
                     websiteApp.setWebsite(website, db);
+                    app.setName(website.getName(), db);
                     JSONObject target = shareableApp.getOrigin();
                     target.put("team_id", team.getDb_id());
                     webSocketMessageList.add(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
@@ -59,6 +63,16 @@ public class ServletMergeWebsite extends HttpServlet {
                 System.out.println(webSocketMessageList.size() + " messages send");
                 team.getWebSocketManager().sendObjects(webSocketMessageList);
                 webSocketMessageList.clear();
+            }
+            for (User user : userMap.values()) {
+                for (App app : user.getDashboardManager().getApps()) {
+                    if (!app.isWebsiteApp())
+                        continue;
+                    WebsiteApp websiteApp = (WebsiteApp) app;
+                    if (website_to_merge != websiteApp.getSite())
+                        continue;
+                    websiteApp.setWebsite(website, db);
+                }
             }
             DatabaseRequest databaseRequest = db.prepareRequest("UPDATE websiteApps SET website_id = ? WHERE website_id = ?;");
             databaseRequest.setInt(website.getDb_id());

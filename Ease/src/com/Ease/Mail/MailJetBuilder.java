@@ -58,7 +58,6 @@ public class MailJetBuilder {
 
     public void setTemplateId(int id) {
         request.property(Email.MJTEMPLATEID, id);
-        //
     }
 
     public void addTo(String email) {

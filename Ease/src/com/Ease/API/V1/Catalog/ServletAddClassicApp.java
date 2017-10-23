@@ -6,7 +6,10 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,11 +30,15 @@ public class ServletAddClassicApp extends HttpServlet {
                 user = sm.getUserWithToken();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             String name = sm.getStringParam("name", true, false);
+            if (name.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Website website = catalog.getPublicWebsiteWithId(website_id);
             Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
-            Map<String, String> information = website.getInformationNeeded(sm);
+            JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            /* @TODO decipher account information */
+            Map<String, String> information = website.getInformationNeeded(account_information);
             App app = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, website, information, user, sm.getDB());
             profile.addApp(app);
             sm.setSuccess(app.getJson());
