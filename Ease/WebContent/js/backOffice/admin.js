@@ -12,12 +12,13 @@ $(document).ready(function () {
             }
         });
         var all_requests = {};
+        console.log(requests.toArray());
         requests.toArray().forEach(function (request) {
-            var existing_request = all_requests.email;
+            var existing_request = all_requests[request.email];
             if (existing_request === undefined)
                 existing_request = [];
             existing_request.push(request.id);
-            all_requests.email = existing_request;
+            all_requests[request.email] = existing_request;
         });
         ajaxHandler.post("/api/v1/admin/SendWebsitesIntegrated", {
             emailAndWebsiteIds: all_requests
