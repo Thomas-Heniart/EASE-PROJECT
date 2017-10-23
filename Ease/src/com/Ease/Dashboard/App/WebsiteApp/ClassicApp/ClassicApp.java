@@ -292,7 +292,7 @@ public class ClassicApp extends WebsiteApp {
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         this.getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
         Account sharedAccount = Account.createSharedAccount(this.getAccount().getAccountInformations(), deciphered_teamKey, sm.getDB());
-        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
         request.setInt(websiteAppId);
         request.setInt(sharedAccount.getDBid());
         Integer classicDBid = request.set();

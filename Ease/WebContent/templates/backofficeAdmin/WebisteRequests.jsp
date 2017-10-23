@@ -11,25 +11,22 @@
     </thead>
     <tbody id="website-requests-manager-body"></tbody>
 </table>
-<button>Send email(s)</button>
-<div class="ui modal" id="website-requests-modal">
-    <i class="close icon"></i>
-    <div class="header">Edit websites</div>
+<button class="ui primary button">Send email(s)</button>
+
+<div class="ui modal basic" id="request-delete">
+    <div class="ui icon header">
+        Delete category
+    </div>
     <div class="content">
-        <form action="/api/vi/admin/EmailWebsiteIntegration" class="ui form" id="website-integration">
-            <h4 class="ui dividing header">Basics</h4>
-            <div class="two fields">
-                <p>Email to: <span id="user-email"></span></p>
-                <div class="field">
-                    <label>Name</label>
-                    <textarea
-                </div>
-                <div class="field">
-                    <label>Position</label>
-                    <input name="position" placeholder="position">
-                </div>
-            </div>
-            <button class="ui button">Edit</button>
-        </form>
+        <p>Do you really want to delete this request</p>
+    </div>
+    <div class="actions">
+        <div class="ui red basic ok inverted button">
+            <i class="remove icon"></i>
+            Yes
+        </div>
+        <div class="ui grey cancel inverted button">
+            Cancel
+        </div>
     </div>
 </div>
