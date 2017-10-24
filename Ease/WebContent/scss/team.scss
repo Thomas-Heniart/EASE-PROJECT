@@ -740,6 +740,11 @@ button.action_text_button {
     color: $themeBlue2Color;
   }
   .container {
+    button.button.modal-button {
+      width: 116.3%;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
     .button.modal-button {
       @include display-flex();
       @include align-items(center);

@@ -11,7 +11,7 @@ export function fetchCatalog(){
     ]).then(values => {
       const websites = values[0].websites;
       const categories = values[1].categories;
-      const sso_list = values[2].sso_list;
+      const sso_list = values[2].ssoList;
       dispatch({type: 'FETCH_CATALOG_FULFILLED', payload:{
         websites : websites,
         categories: categories,
