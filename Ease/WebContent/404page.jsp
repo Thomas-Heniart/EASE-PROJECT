@@ -57,7 +57,7 @@
 <h1>404 error🛰️</h1>
 <h2>This page is lost in space...</h2>
 
-<a href='https://ease.space'><p>Get back to hearth </p></a>
+<a href='https://ease.space'><p>Get back to earth </p></a>
 <p>🌎</p>
 </body>
 </html>

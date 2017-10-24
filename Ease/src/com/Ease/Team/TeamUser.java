@@ -72,9 +72,11 @@ public class TeamUser {
     protected String username;
 
     @Column(name = "arrivalDate")
+    @Temporal(TemporalType.TIMESTAMP)
     protected Date arrivalDate;
 
     @Column(name = "departureDate")
+    @Temporal(TemporalType.TIMESTAMP)
     protected Date departureDate;
 
     @Column(name = "jobTitle")

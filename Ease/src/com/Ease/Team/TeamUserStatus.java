@@ -17,7 +17,6 @@ public class TeamUserStatus {
     @Column(name = "reminder_three_days_sended")
     protected Boolean reminder_three_days_sended = false;
 
-
     @Column(name = "first_app_received")
     protected Boolean first_app_received = false;
 
