@@ -310,10 +310,14 @@ i.icon.pin_button {
 }
 
 #team_user_tab {
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
   .rooms .label {
     margin-top: .14285714em;
     margin-bottom: .14285714em;
   }
+
 }
 
 #team_tab {
@@ -650,6 +654,9 @@ button.action_text_button {
 }
 
 #add_user_modal {
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
   label {
     line-height: 1.8;
   }

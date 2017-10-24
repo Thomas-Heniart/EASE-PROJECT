@@ -24,6 +24,7 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditTeamUserFirstName")
 public class ServletEditTeamUserFirstName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(request.getParameter("first_name"));
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
@@ -35,9 +36,10 @@ public class ServletEditTeamUserFirstName extends HttpServlet {
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
                 throw new HttpServletException(HttpStatus.Forbidden, "You don't have access.");
-            String firstName = sm.getStringParam("first_name", true, true);
-            if (firstName == null || firstName.equals(""))
+            String firstName = sm.getStringParam("first_name", true, false);
+            if (firstName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty firstName.");
+            System.out.println(firstName);
             teamUserToModify.editFirstName(firstName);
             sm.saveOrUpdate(teamUserToModify);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));

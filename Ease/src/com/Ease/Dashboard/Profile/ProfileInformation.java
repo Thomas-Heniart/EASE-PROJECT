@@ -1,6 +1,7 @@
 package com.Ease.Dashboard.Profile;
 
 import com.Ease.Utils.*;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONObject;
 
 public class ProfileInformation {
@@ -76,7 +77,8 @@ public class ProfileInformation {
 	}
 	
 	public String getName() {
-		return name;
+		return StringEscapeUtils.unescapeHtml4(name);
+
 	}
 	public void setName(String name, ServletManager sm) throws GeneralException {
 		DataBaseConnection db = sm.getDB();
