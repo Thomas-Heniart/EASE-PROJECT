@@ -73,7 +73,7 @@ export function catalogAddBookmark({name, profile_id, url, img_url}) {
   }
 }
 
-export function catalogRequestWebsite({url, acount_information}){
+export function catalogRequestWebsite({url, account_information}){
   return (dispatch, getState) => {
     return post_api.catalog.requestWebsite({
       url: url,

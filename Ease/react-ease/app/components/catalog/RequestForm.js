@@ -56,7 +56,7 @@ class RequestForm extends React.Component {
                                     size="mini"
                                     floated="right"
                                     loading={this.state.loadingRequest}
-                                    disabled={this.state.loading} >
+                                    disabled={this.state.loading}>
                                 <Icon name="send" />
                                 Send
                             </Button>
