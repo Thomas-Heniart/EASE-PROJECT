@@ -89,8 +89,13 @@ class TeamAddChannelModal extends React.Component {
                   </Header.Subheader>
                 </Header>
                 <Form error={this.state.errorMessage.length > 0} onSubmit={this.validateChannelCreation}>
-                  <Form.Input label="Name" onChange={this.inputChange} icon="hashtag" iconPosition="left" placeholder="Name" type="text" name="name"/>
-                  <p>This is a tip</p>
+                  <Form.Field>
+                    <label>
+                      Name
+                    </label>
+                    <Input onChange={this.inputChange} icon="hashtag" iconPosition="left" placeholder="Name" type="text" name="name"/>
+                    <p>Ex: marketing, dev, sales, administrators, social_media, product</p>
+                  </Form.Field>
                   <Form.Input label="Purpose" onChange={this.inputChange} placeholder="Purpose" type="text" name="purpose"/>
                   <Form.Dropdown
                       search={true}

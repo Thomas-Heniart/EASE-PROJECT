@@ -1041,6 +1041,9 @@ button.action_text_button {
 }
 
 #add_user_modal {
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
   label {
     line-height: 1.8;
   }
@@ -1395,6 +1398,11 @@ button.action_text_button {
   h1 {
     text-align: left;
   }
+  p {
+    font-size: 0.75em;
+    margin: 0.5em 0 0 0;
+    color: #9a9a9a;
+  }
 }
 .input_tag {
   background: $themeBlueColor;
@@ -1543,6 +1551,9 @@ button.action_text_button {
 }
 
 #team_user_tab {
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
   #user_role_select, #departure_date {
     border-radius: 5px;
   }

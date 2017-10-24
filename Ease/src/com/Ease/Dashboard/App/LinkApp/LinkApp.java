@@ -161,6 +161,14 @@ public class LinkApp extends App implements SharedApp, ShareableApp {
         return res;
     }
 
+    public JSONObject getProfileJson() {
+        JSONObject res = super.getProfileJson();
+        res.put("logo", this.linkInfos.getImgUrl());
+        res.put("url", this.linkInfos.getLink());
+        res.put("type", "linkApp");
+        return res;
+    }
+
     public void fillJson(JSONObject json) {
         super.fillJson(json);
         json.put("url", this.linkInfos.getLink());

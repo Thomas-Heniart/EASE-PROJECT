@@ -156,6 +156,13 @@ public class LogwithApp extends WebsiteApp {
         return res;
     }
 
+    public JSONObject getProfileJson() {
+        JSONObject res = super.getProfileJson();
+        res.put("type", "logWithApp");
+        res.put("logWith_app_id", this.getLogwith().getDBid());
+        return res;
+    }
+
     public void edit(String name, App logwith, ServletManager sm) throws GeneralException {
         DataBaseConnection db = sm.getDB();
         int transaction = db.startTransaction();

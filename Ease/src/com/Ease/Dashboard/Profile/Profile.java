@@ -248,7 +248,7 @@ public class Profile {
         res.put("name", this.infos.getName());
         JSONArray apps = new JSONArray();
         for (App app : this.getApps())
-            apps.add(app.getJson());
+            apps.add(app.getProfileJson());
         res.put("apps", apps);
         return res;
     }

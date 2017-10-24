@@ -45,10 +45,10 @@ public class OnStart implements ServletContextListener {
                 com.Ease.Catalog.Catalog catalog = new com.Ease.Catalog.Catalog();
                 catalog.populate();
                 context.setAttribute("catalog", catalog);
-                //context.setAttribute("websitesVisitedManager", new WebsitesVisitedManager(db, context));
 
                 TeamManager teamManager = new TeamManager(context, db);
                 context.setAttribute("teamManager", teamManager);
+
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
                 Stripe.apiVersion = "2017-08-15";
 
@@ -62,12 +62,21 @@ public class OnStart implements ServletContextListener {
 
                 /* Timers */
                 Timer time = new Timer(); // Instantiate Timer Object
+                Calendar delay = Calendar.getInstance();
+                int hour = delay.get(Calendar.HOUR_OF_DAY);
+                int minutes = delay.get(Calendar.MINUTE);
+                if (hour > 9 || (hour == 9 && minutes > 30))
+                    delay.add(Calendar.DAY_OF_YEAR, 1);
+                delay.set(Calendar.HOUR_OF_DAY, 9);
+                delay.set(Calendar.MINUTE, 30);
+                long next_clock = delay.getTimeInMillis() - new Date().getTime();
                 StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
-                time.schedule(st, 12 * 60 * 60 * 1000, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
+                time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
-                time.schedule(reminders, 24 * 60 * 60 * 1000, 24 * 60 * 60 * 1000);
+                time.schedule(reminders, next_clock, 24 * 60 * 60 * 1000);
+
                 List<String> colors = new ArrayList<String>();
                 colors.add("#373B60");
                 colors.add("#9B59B6");
@@ -78,8 +87,6 @@ public class OnStart implements ServletContextListener {
                 colors.add("#E74C3C");
                 colors.add("#FF5E88");
                 context.setAttribute("colors", colors);
-
-                //Infrastructure.loadInfrastructures(db, evt.getServletContext());
                 Map<String, User> usersMap = new ConcurrentHashMap<>();
                 context.setAttribute("users", usersMap);
                 Map<String, User> sessionIdUserMap = new ConcurrentHashMap<>();

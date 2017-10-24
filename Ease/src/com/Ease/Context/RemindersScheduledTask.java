@@ -24,7 +24,7 @@ public class RemindersScheduledTask extends TimerTask {
     @Override
     public void run() {
         try {
-            teamManager.reminderThreeDays();
+            teamManager.teamUserNotRegisteredReminder();
             //reminderEmailManager.lunchReminders();
             teamManager.passwordReminder();
             DataBaseConnection db;
