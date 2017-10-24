@@ -11,9 +11,19 @@ button.only-text-button {
 #catalog {
   position: absolute;
   width: 100%;
+  & > .container {
+    padding-top: 135px;
+  }
+  #catalog-nav {
+    position: fixed;
+    z-index: 1;
+  }
   header {
-    margin-bottom: 30px;
-    height: 184px;
+    height: 118px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1;
     background-image: radial-gradient(circle at 50% 0, #686d99, #636994 40%, #373b60);
     box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
     p {
@@ -21,7 +31,8 @@ button.only-text-button {
       font-weight: 300;
       color: white;
       text-align: center;
-      margin-top: 70px;
+      margin-top: 26px;
+      margin-bottom: 10px;
     }
     .inputSearch {
       margin-top: 25px;
