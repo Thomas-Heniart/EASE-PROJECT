@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-var TeamAddUserModal = require('../teamModals/TeamAddUserModal');
-var TeamAddChannelModal = require('../teamModals/TeamAddChannelModal');
-var TeamDeleteUserModal = require('../teamModals/TeamDeleteUserModal');
-var TeamDeleteRoomModal = require('../teamModals/TeamDeleteRoomModal');
-var TeamDeleteUserFromRoomModal = require('../teamModals/TeamDeleteUserFromRoomModal');
-var PinTeamAppToDashboardModal = require('../teamModals/PinTeamAppToDashboardModal');
-var TeamDeleteAppModal = require('../teamModals/TeamDeleteAppModal');
-var TeamLeaveAppModal = require('../teamModals/TeamLeaveAppModal');
-var TeamManageAppRequestModal = require('../teamModals/TeamManageAppRequestModal');
-var TeamTransferOwnershipModal = require('../teamModals/TeamTransferOwnershipModal');
-var TeamPhoneNumberModal = require('../teamModals/TeamPhoneNumberModal');
-var RequestWebsiteModal = require('../teamModals/RequestWebsiteModal');
+import TeamAddUserModal from '../teamModals/TeamAddUserModal';
+import TeamAddChannelModal from '../teamModals/TeamAddChannelModal';
+import TeamDeleteUserModal from '../teamModals/TeamDeleteUserModal';
+import TeamDeleteRoomModal from '../teamModals/TeamDeleteRoomModal';
+import TeamDeleteUserFromRoomModal from '../teamModals/TeamDeleteUserFromRoomModal';
+import PinTeamAppToDashboardModal from '../teamModals/PinTeamAppToDashboardModal';
+import TeamDeleteAppModal from '../teamModals/TeamDeleteAppModal';
+import TeamLeaveAppModal from '../teamModals/TeamLeaveAppModal';
+import TeamManageAppRequestModal from '../teamModals/TeamManageAppRequestModal';
+import TeamTransferOwnershipModal from '../teamModals/TeamTransferOwnershipModal';
+import TeamPhoneNumberModal from '../teamModals/TeamPhoneNumberModal';
+import RequestWebsiteModal from '../teamModals/RequestWebsiteModal';
 import AskJoinEnterpriseAppModal from "../teamModals/AskJoinEnterpriseAppModal";
 import VerifyTeamUserModal from '../teamModals/VerifyTeamUserModal';
 import ReactivateTeamUserModal from '../teamModals/ReactivateTeamUserModal';
@@ -22,6 +22,7 @@ import EditEnterpriseAppModal from "../teamModals/EditEnterpriseAppModal";
 import FreeTrialEndModal from "../teamModals/FreeTrialEndModal";
 import UpgradeTeamPlanModal from "../teamModals/UpgradeTeamPlanModal";
 import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
+import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 
 @connect(store => ({
   addUserModalActive: store.teamModals.addUserModalActive,
@@ -46,7 +47,10 @@ import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
   requestWebsiteModal: store.teamModals.requestWebsiteModal,
   freeTrialEndModal: store.teamModals.freeTrialEndModal,
   upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
-  departureDateEndModal: store.teamModals.departureDateEndModal
+  departureDateEndModal: store.teamModals.departureDateEndModal,
+  catalogAddBookmarkModal: store.teamModals.catalogAddBookmarkModal,
+  catalogAddAppModal: store.teamModals.catalogAddAppModal,
+  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal
 }))
 class ModalsContainer extends Component{
   constructor(props){
@@ -101,6 +105,8 @@ class ModalsContainer extends Component{
           <UpgradeTeamPlanModal/>}
           {this.props.departureDateEndModal.active &&
           <DepartureDateEndModal/>}
+          {this.props.catalogAddBookmarkModal.active &&
+          <CatalogAddBookmarkModal/>}
         </div>
     )
   }

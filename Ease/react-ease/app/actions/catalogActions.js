@@ -5,9 +5,9 @@ export function fetchCatalog(){
   return (dispatch,getState) => {
     dispatch({type: 'FETCH_CATALOG_PENDING'});
     return Promise.all([
-        api.catalog.getWebsites(),
-        api.catalog.getCategories(),
-        api.catalog.getSsoList()
+      api.catalog.getWebsites(),
+      api.catalog.getCategories(),
+      api.catalog.getSsoList()
     ]).then(values => {
       const websites = values[0].websites;
       const categories = values[1].categories;
@@ -57,23 +57,23 @@ export function catalogAddLogWithApp({name, website_id, profile_id, logWith_app_
   }
 }
 
-export function catalogAddBookmark({name, profile_id, url, img_url}) {
+export function catalogAddBookmark({name, profile_id, url, img_url}){
   return (dispatch, getState) => {
     return post_api.catalog.addBookmark({
       name: name,
       profile_id: profile_id,
       url: url,
       img_url: img_url
-    }).then(response => {
-      dispatch({type: 'CATALOG_ADD_BOOKMARK_FULFILLED', payload: {app: response}});
-      return response;
+    }).then(app => {
+      dispatch({type: 'CATALOG_ADD_BOOKMARK_FULFILLED', payload: {app: app}});
+      return app;
     }).catch(err => {
       throw err;
     })
   }
 }
 
-export function catalogRequestWebsite({url, acount_information}){
+export function catalogRequestWebsite({url, account_information}){
   return (dispatch, getState) => {
     return post_api.catalog.requestWebsite({
       url: url,
@@ -84,5 +84,57 @@ export function catalogRequestWebsite({url, acount_information}){
     }).catch(err => {
       throw err;
     });
+  }
+}
+
+export function catalogAddBookmarkModal({name, url, img_url}){
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'SHOW_CATALOG_ADD_BOOKMARK_MODAL',
+        payload: {
+          active: true,
+          name: name,
+          url: url,
+          img_url: img_url,
+          resolve: resolve,
+          reject: reject
+        }
+      })
+    })
+  }
+}
+
+export function showCatalogAddBookmarkModal({active, name, url, img_url, resolve, reject}){
+  return {
+    type: 'SHOW_CATALOG_ADD_BOOKMARK_MODAL',
+    payload: {
+      active: active,
+      name: name,
+      url: url,
+      img_url: img_url,
+      resolve: resolve,
+      reject: reject
+    }
+  }
+}
+
+export function showCatalogAddAppModal({active, website}){
+  return {
+    type: 'SHOW_CATALOG_ADD_APP_MODAL',
+    payload: {
+      active: active,
+      website: website
+    }
+  }
+}
+
+export function showCatalogAddSSOAppModal({active, website}){
+  return {
+    type: 'SHOW_CATALOG_ADD_SSO_APP_MODAL',
+    payload: {
+      active: active,
+      website: website
+    }
   }
 }
