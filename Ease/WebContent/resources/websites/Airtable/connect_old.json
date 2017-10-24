@@ -1,0 +1,87 @@
+{
+  "name": "Airtable",
+  "lastLogin": "",
+  "home": "https://airtable.com/login",
+  "folder": "Airtable",
+  "connect": {
+    "todo": [
+      
+
+       {
+        "action": "goto",
+        "url": "https://airtable.com/login"
+      },
+
+      {
+        "action": "waitfor",
+        "search": "#sign-in-form-fields-root input[name='email']"
+      },
+
+        {
+        "action": "waitfor",
+        "search": "#sign-in-form-fields-root input[name='password']"
+      },
+        {
+        "action": "waitfor",
+        "search": "#sign-in-form-fields-root input[type='submit']"
+      },
+
+
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#sign-in-form-fields-root input[name='email']",
+        "grave": true
+      },
+  
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#sign-in-form-fields-root input[name='password']",
+        "grave": true
+      },
+
+      {
+        "action": "trueClick",
+        "search": "#sign-in-form-fields-root input[type='submit']",
+        "grave": true
+      }
+    ]
+  },
+
+  "logout": {
+    "todo": [
+
+      {
+        "action": "trueClick",
+        "search": ".userIconWrapper.normalSize:not([data-reactroot]) .userIcon",
+        "grave": true
+      },
+
+      { 
+        "action": "waitfor",
+        "search": ".reactMenuBase"
+      },
+
+       {
+        "action": "trueClick",
+        "search": ".reactMenuBase > li:last-child",
+        "grave": true
+      }
+
+    ]
+  },
+
+  "checkAlreadyLogged": [
+    {
+        "search": ".userIconWrapper.normalSize .userIcon"
+    }
+  ]
+}
+
+
+
+
+
+
+
