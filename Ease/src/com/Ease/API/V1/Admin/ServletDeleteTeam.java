@@ -7,6 +7,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -38,6 +39,21 @@ public class ServletDeleteTeam extends HttpServlet {
                 int transaction = db.startTransaction();
                 for (ShareableApp shareableApp : shareableAppList)
                     team.getAppManager().removeShareableApp(shareableApp, db);
+                DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE team_id = ?");
+                databaseRequest.setInt(team_id);
+                databaseRequest.set();
+                for (Integer id : team.getTeamUsers().keySet()) {
+                    databaseRequest = db.prepareRequest("DELETE FROM pendingTeamUserVerifications WHERE teamUser_id = ?");
+                    databaseRequest.setInt(id);
+                    databaseRequest.set();
+                    databaseRequest = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?");
+                    databaseRequest.setInt(id);
+                    databaseRequest.set();
+                }
+                for (TeamUser teamUser : team.getTeamUsers().values()) {
+                    teamUser.setAdmin_id(null);
+                    sm.saveOrUpdate(teamUser);
+                }
                 db.commitTransaction(transaction);
                 teamManager.removeTeamWithId(team_id);
                 sm.deleteObject(team);
