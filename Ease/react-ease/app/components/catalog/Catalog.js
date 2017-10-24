@@ -47,10 +47,10 @@ class Catalog extends React.Component {
               </div>
             </div>
           </header>
-          <div className="container" >
+          <div className="container">
             <Grid>
               <Grid.Column width={3}>
-                <div>
+                <div id="catalog-nav">
                   <Button as={NavLink} to={`/main/catalog/bookmark`} className="bookmarkButton">
                     <Icon name="bookmark" />
                     Add a Bookmark
@@ -62,7 +62,7 @@ class Catalog extends React.Component {
                   <Categories/>
                 </div>
               </Grid.Column>
-              <Grid.Column width={10}>
+              <Grid.Column width={10} style={{marginTop: '23px'}}>
                 <Switch>
                   <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
                   <Route path={`${this.props.match.path}`} render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>

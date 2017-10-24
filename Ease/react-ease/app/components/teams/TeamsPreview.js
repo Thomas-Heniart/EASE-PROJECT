@@ -227,7 +227,7 @@ function TeamEnterprisePlan(props){
 function Step2(props){
   return (
       <div class="content display-flex flex_direction_column marginAuto step2">
-        <h1 class="text-center" style={{margin: '0 0 10px 0'}}>Fair and transparent pricing</h1>
+        <h1 class="text-center" style={{margin: '0 0 10px 0'}}>Before creating your team, please choose a plan.</h1>
         <span class="sub-title"><u>Monthly billing</u> per <u>active user</u>*, <u>cancel any time</u></span>
         <div class="display-flex" style={{margin: '55px 0 37px 0'}}>
           <TeamBasicPlan/>

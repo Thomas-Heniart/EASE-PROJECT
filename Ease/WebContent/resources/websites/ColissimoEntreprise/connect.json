@@ -1,0 +1,41 @@
+{
+  "name": "Colissimo entreprise",
+  "lastLogin": "",
+  "home": "https://www.colissimo.entreprise.laposte.fr/",
+  "folder": "Coinbase",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#identifier"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password"
+      },
+      {
+        "action": "click",
+        "search": "#validButtonLogin"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "click",
+        "search": ".DropdownMenu__Dropdown-kuxaaY .DropdownMenu__DropdownLink-kJecXv:last-child",
+        "grave": true
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "search": "body.signed-in"
+    }
+  ]
+}

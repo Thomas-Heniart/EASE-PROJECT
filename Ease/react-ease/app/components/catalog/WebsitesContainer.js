@@ -14,6 +14,12 @@ import {reduxActionBinder} from "../../actions/index";
 class WebsitesContainer extends Component{
   constructor(props){
     super(props);
+    this.state = {
+      websites: []
+    }
+  }
+  componentDidMount(){
+
   }
   openModal = (item) => {
     if (!item.sso_id) {
