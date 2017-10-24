@@ -13,6 +13,12 @@ import CategoryAppsContainer from "./CategoryAppsContainer";
 class WebsitesContainer extends Component{
   constructor(props){
     super(props);
+    this.state = {
+      websites: []
+    }
+  }
+  componentDidMount(){
+
   }
   render(){
     const query = this.props.query;
