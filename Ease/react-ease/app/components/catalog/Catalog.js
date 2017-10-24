@@ -47,9 +47,10 @@ class Catalog extends React.Component {
               </div>
             </div>
           </header>
-          <div className="container" >
+          <div className="container">
             <Grid>
               <Grid.Column width={3}>
+                <div id="catalog-nav">
                   <Button as={NavLink} to={`/main/catalog/bookmark`} className="bookmarkButton">
                     <Icon name="bookmark" />
                     Add a Bookmark
@@ -59,6 +60,7 @@ class Catalog extends React.Component {
                     Import Accounts
                   </Button>
                   <Categories/>
+                </div>
               </Grid.Column>
               <Grid.Column width={10}>
                 <Switch>

@@ -11,9 +11,19 @@ button.only-text-button {
 #catalog {
   position: absolute;
   width: 100%;
+  & > .container {
+    padding-top: 135px;
+  }
+  #catalog-nav {
+    position: fixed;
+    z-index: 1;
+  }
   header {
-    margin-bottom: 30px;
-    height: 184px;
+    height: 118px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1;
     background-image: radial-gradient(circle at 50% 0, #686d99, #636994 40%, #373b60);
     box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
     p {
@@ -21,7 +31,8 @@ button.only-text-button {
       font-weight: 300;
       color: white;
       text-align: center;
-      margin-top: 70px;
+      margin-top: 26px;
+      margin-bottom: 10px;
     }
     .inputSearch {
       margin-top: 25px;
@@ -80,6 +91,7 @@ button.only-text-button {
       padding: 0;
       margin: 20px 0;
       white-space: nowrap;
+      border:1px solid transparent;
       p {
         top: 37%;
         position: absolute;
@@ -99,7 +111,6 @@ button.only-text-button {
         display: inline-block;
         padding-left: 0;
         padding-right: 0;
-        margin-top: 18px;
         border-radius: 7px;
         box-shadow: -3px 4px 4px 0 rgba(210, 218, 228, 0.77);
         border: solid 1px #d2dae4;
@@ -124,12 +135,14 @@ button.only-text-button {
     border: none;
     border-radius: 7px;
     box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
-    p {
-      margin-top: 0;
-      text-align: center;
-      font-size: 18px;
-      font-weight: 300;
-      color: #414141;
+    .ui.header {
+      font-size: 20px;
+      font-weight: normal;
+      .sub.header {
+        color: $themeBlue2Color;
+        margin-top: 5px;
+        font-size: 16px;
+      }
     }
     input {
       margin-bottom: 20px;
@@ -188,6 +201,52 @@ button.only-text-button {
     border-radius: 5px;
     width: 80px;
     height: 80px;
+  }
+}
+
+#add_bookmark_form {
+  .app_name {
+    font-size: 20px;
+    color: $themeBlue2Color;
+  }
+  .create_profile_input {
+    input {
+      border:none;
+      &::placeholder {
+        font-style: italic;
+      }
+    }
+    i {
+      margin: 0;
+      color: #d2dae4;
+      width: 1em;
+      font-size: 20px;
+    }
+  }
+  .profiles {
+    padding: 16px;
+    border:1px solid #E1E1E1;
+    border-radius: 5px;
+    .ui.list {
+      color: $themeBlue2Color;
+      .item {
+        color: inherit;
+        margin-bottom: 10px;
+        strong {
+          font-size: 14px;
+          white-space: nowrap;
+        }
+        em {
+          font-size: 12px;
+        }
+      }
+      .item:hover {
+        color: rgba(#4fca6c, 0.7);
+      }
+      .item.active {
+        color: #4fca6c;
+      }
+    }
   }
 }
 

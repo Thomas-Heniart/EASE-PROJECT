@@ -36,7 +36,7 @@ module.exports = {
         logWith_app_id: logWith_app_id
       });
     },
-    requestWebsite: ({url, acount_information}) => {
+    requestWebsite: ({url, account_information}) => {
       return basic_post('/api/v1/catalog/WebsiteRequest', {
         url: url,
         account_information: account_information
