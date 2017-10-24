@@ -5,6 +5,7 @@ import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.*;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -185,7 +186,7 @@ public class Profile {
     }
 
     public String getName() {
-        return this.infos.getName();
+        return StringEscapeUtils.unescapeHtml4(this.infos.getName());
     }
 
     public void setName(String name, ServletManager sm) throws GeneralException {

@@ -407,7 +407,7 @@ class EnterpriseTeamApp extends Component {
           <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
             <Header as="h4">
-              {website.website_name}
+              {website.name}
               {meReceiver !== null && meReceiver.accepted &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.sharing_requests.length > 0 && isAdmin(me.role) &&

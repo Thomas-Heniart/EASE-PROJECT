@@ -13,13 +13,13 @@ import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
-const AppResultRenderer = ({website_name, logo, request, profile_name, login}) => {
+const AppResultRenderer = ({name, logo, request, profile_name, login}) => {
   if (request)
     return (<div><Icon name="gift" color="red"/><strong>Didn't found your website? Request it!</strong></div>);
   return (
       <div>
         <img src={logo} class="logo"/>
-        {website_name}
+        {name}
         {profile_name !== undefined &&
         <span class="text-muted">&nbsp;- from {profile_name} - {login}</span>}
       </div>
@@ -40,7 +40,7 @@ class SimpleTeamAppSearch extends Component {
     this.setState({value: value});
     const apps = this.state.allApps.filter(item => {
       return (
-          item.website_name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null
+          item.name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null
       )
     });
     apps.push({request: true, key: -1});
@@ -225,7 +225,7 @@ class SimpleTeamAppAdder extends Component {
             <div>
               <Segment>
                 <Header as="h4">
-                  {app.website_name}
+                  {app.name}
                 </Header>
                 <Button icon="delete" type="button" size="mini" class="close" onClick={this.close}/>
                 <div class="display_flex">
