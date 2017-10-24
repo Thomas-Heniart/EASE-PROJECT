@@ -218,6 +218,13 @@ public class ClassicApp extends WebsiteApp {
         return res;
     }
 
+    public JSONObject getProfileJson() {
+        JSONObject res = super.getProfileJson();
+        res.put("type", "classicApp");
+        res.put("account_information", this.getAccount().getInformationJsonWithoutPassword());
+        return res;
+    }
+
     public void fillJson(JSONObject json) {
         super.fillJson(json);
         json.put("accountInformations", this.account.getJSON());
