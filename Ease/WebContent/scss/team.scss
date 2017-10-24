@@ -83,7 +83,7 @@ button.only-text-button {
       margin: 10px;
       border-radius: 5px;
       display: inline-flex;
-      box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97)
+      box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97);
     }
 
     .showSegment {
@@ -304,6 +304,47 @@ button.only-text-button {
     i {
       text-decoration: none;
       margin-right: 10px;
+    }
+  }
+}
+
+.ssoListSegment {
+  height: 140px;
+  padding: 20px !important;
+  .ssoListGrid {
+    padding: 20px;
+    .showSegment {
+      padding: 0 !important;
+      margin-bottom: 20px;
+      white-space: nowrap;
+      img {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        border-radius: 5px;
+        box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.15);
+        margin-right: 5px;
+      }
+      p {
+        display: inline-flex;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 105px;
+        color: #424242;
+      }
+      i {
+        display: none;
+        color: #717274;
+      }
+      &:hover {
+        p {
+          max-width: 95px;
+        }
+        i {
+          display: inline-block;
+        }
+      }
     }
   }
 }
