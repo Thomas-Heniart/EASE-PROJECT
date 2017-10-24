@@ -23,6 +23,9 @@ import FreeTrialEndModal from "../teamModals/FreeTrialEndModal";
 import UpgradeTeamPlanModal from "../teamModals/UpgradeTeamPlanModal";
 import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
 import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
+import ClassicAppModal from "../catalog/ClassicAppModal";
+import SsoAppModal from "../catalog/SsoAppModal";
+
 
 @connect(store => ({
   addUserModalActive: store.teamModals.addUserModalActive,
@@ -107,6 +110,10 @@ class ModalsContainer extends Component{
           <DepartureDateEndModal/>}
           {this.props.catalogAddBookmarkModal.active &&
           <CatalogAddBookmarkModal/>}
+          {this.props.catalogAddAppModal.active &&
+          <ClassicAppModal/>}
+          {this.props.catalogAddSSOAppModal.active &&
+          <SsoAppModal/>}
         </div>
     )
   }
