@@ -62,7 +62,7 @@ class Catalog extends React.Component {
                   <Categories/>
                 </div>
               </Grid.Column>
-              <Grid.Column width={10}>
+              <Grid.Column width={10} style={{marginTop: '23px'}}>
                 <Switch>
                   <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
                   <Route path={`${this.props.match.path}`} render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>

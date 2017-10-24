@@ -36,7 +36,7 @@ class SimpleRequestBox extends Component {
         <Segment clearing className="requestAnApp">
           <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
             <Header as="h5" textAlign={'center'}>
-              😀👋 Send suggestion
+              👋 Send suggestion
             </Header>
             <span>Paste website URL</span>
             <Input
