@@ -91,6 +91,7 @@ button.only-text-button {
       padding: 0;
       margin: 20px 0;
       white-space: nowrap;
+      border:1px solid transparent;
       p {
         top: 37%;
         position: absolute;
@@ -110,7 +111,6 @@ button.only-text-button {
         display: inline-block;
         padding-left: 0;
         padding-right: 0;
-        margin-top: 18px;
         border-radius: 7px;
         box-shadow: -3px 4px 4px 0 rgba(210, 218, 228, 0.77);
         border: solid 1px #d2dae4;
