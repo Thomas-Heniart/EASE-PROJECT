@@ -153,6 +153,8 @@ function createRequestRow(request) {
         "</tr>");
     if (request.integrated)
         elem.addClass("positive");
+    else
+        elem.addClass("negative");
     $("a.delete", elem).click(function () {
         $("a.delete", elem).click(function () {
             var modal = $("#request-delete");
