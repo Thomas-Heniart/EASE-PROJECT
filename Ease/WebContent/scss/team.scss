@@ -892,6 +892,9 @@ button.action_text_button {
 }
 
 #add_user_modal {
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
   label {
     line-height: 1.8;
   }
@@ -1394,6 +1397,9 @@ button.action_text_button {
 }
 
 #team_user_tab {
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
   #user_role_select, #departure_date {
     border-radius: 5px;
   }
