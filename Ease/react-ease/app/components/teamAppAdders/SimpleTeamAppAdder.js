@@ -10,7 +10,10 @@ import {teamCreateSingleApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import {setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
+import {
+    setUserDropdownText, PasswordChangeDropdown, PasswordChangeManagerLabel,
+    renderSimpleAppAddUserLabel
+} from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
 const AppResultRenderer = ({name, logo, request, profile_name, login}) => {
@@ -253,7 +256,7 @@ class SimpleTeamAppAdder extends Component {
                           onChange={this.handleInput}
                           value={this.state.selected_users}
                           selection={true}
-                          renderLabel={renderSimpleAppUserLabel}
+                          renderLabel={renderSimpleAppAddUserLabel}
                           multiple
                           placeholder="Tag your team members here..."/>
                     </div>
