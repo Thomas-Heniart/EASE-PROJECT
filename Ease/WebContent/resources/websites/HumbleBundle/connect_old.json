@@ -1,7 +1,7 @@
 {
   "name":"Humble Bundle",
   "lastLogin":"",
-  "home":"https://www.humblebundle.com",
+  "home":"https://www.humblebundle.com/stardock-bundle",
   "connect":{
     "todo":[
       {"action":"trueClick", "search":"a.account-login"},
