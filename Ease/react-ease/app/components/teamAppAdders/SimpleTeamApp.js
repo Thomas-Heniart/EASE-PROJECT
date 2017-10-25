@@ -294,14 +294,8 @@ class SimpleTeamApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
-    if (state) {
-      if (app.website.isPinneable)
+    if (state)
         this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
-      else {
-        /* @TODO show error */
-      }
-
-    }
     else
       this.props.dispatch(teamAppDeleteReceiver({
         team_id: this.props.team_id,
