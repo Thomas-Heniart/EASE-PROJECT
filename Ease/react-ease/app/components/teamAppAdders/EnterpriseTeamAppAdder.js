@@ -12,13 +12,13 @@ import {connect} from "react-redux";
 import {ExtendFillSwitch, setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 
-const AppResultRenderer = ({website_name, logo, request}) => {
+const AppResultRenderer = ({name, logo, request}) => {
   if (request)
     return (<div><Icon name="gift" color="red"/><strong>Didn't found your website? Request it!</strong></div>);
   return (
       <div>
         <img src={logo} class="logo"/>
-        {website_name}
+        {name}
       </div>
   )
 };
@@ -37,7 +37,7 @@ class TeamAppSearch extends Component {
     this.setState({value: value});
     const apps = this.state.allApps.filter(item => {
       return (
-          item.website_name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null
+          item.name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null
       )
     });
     apps.push({request: true, key: -1});
@@ -49,9 +49,9 @@ class TeamAppSearch extends Component {
         item.key = item.id;
         return item;
       }).sort(function(a,b){
-        if (a.website_name < b.website_name)
+        if (a.name < b.name)
           return -1;
-        if (a.website_name > b.website_name)
+        if (a.name > b.name)
           return 1;
         return 0;
       });
@@ -240,7 +240,7 @@ class EnterpriseTeamAppAdder extends Component {
             <div>
               <Segment>
                 <Header as="h4">
-                  {app.website_name}
+                  {app.name}
                 </Header>
                 <Button icon="delete" type="button" size="mini" class="close" onClick={this.close}/>
                 <div class="display_flex">

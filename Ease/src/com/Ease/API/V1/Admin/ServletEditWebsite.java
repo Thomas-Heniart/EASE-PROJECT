@@ -6,6 +6,7 @@ import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -95,10 +96,16 @@ public class ServletEditWebsite extends HttpServlet {
                         WebsiteApp websiteApp = (WebsiteApp) app;
                         if (website != websiteApp.getSite())
                             continue;
+                        String old_name = app.getName();
                         app.setName(website.getName(), db);
+                        for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
+                            App app1 = (App) sharedApp;
+                            if (app1.getName().equals(old_name))
+                                app1.setName(website.getName(), db);
+                        }
                         JSONObject target = shareableApp.getOrigin();
                         target.put("team_id", team.getDb_id());
-                        webSocketMessageList.add(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
+                        team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
                     }
                     db.commitTransaction(transaction2);
                     System.out.println(webSocketMessageList.size() + " messages send");

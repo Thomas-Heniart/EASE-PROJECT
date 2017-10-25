@@ -181,9 +181,9 @@ module.exports = {
         .then(axios.spread(function(dashboard, teams){
           let apps = dashboard.concat(teams);
           apps.sort(function(a,b){
-            if (a.website_name < b.website_name)
+            if (a.name < b.name)
               return -1;
-            if (a.website_name > b.website_name)
+            if (a.name > b.name)
               return 1;
             return 0;
           });

@@ -146,7 +146,7 @@ const StaticReceivers = ({receivers, me, team_id, expanded}) => {
   return (
       <div class="receivers">
         {receivers.map((item, idx) => {
-          if (idx > 3 && !expanded)
+          if (idx > 2 && !expanded)
             return null;
           return <SimpleCredentialsInput key={item.id} receiver={item} me={me} team_id={team_id}/>
         })}
@@ -172,20 +172,27 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
   )
 };
 
-const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
-  return (
-      <span style={{lineHeight: '1.7'}}>
-        You received an Enterprise App,
-        &nbsp;
-        <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
-        &nbsp;or&nbsp;
-        <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
-        &nbsp;it?
-      </span>
-  )
+const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
+  if (pinneable)
+    return (
+        <span style={{lineHeight: '1.7'}}>
+          You received an Enterprise App,
+          &nbsp;
+          <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
+          &nbsp;or&nbsp;
+          <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
+          &nbsp;it?
+        </span>
+    );
+  else
+    return (
+        <span style={{lineHeight: '1.7'}}>
+          This app is new to our robot, we are processing the integration. It will be ready in few hours.
+        </span>
+    )
 };
 
-const ButtonShowMore = ({show_more, showMore}) => {
+const ButtonShowMore = ({number_of_users, show_more, showMore}) => {
   if (show_more)
     return (
         <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, false)}>
@@ -196,7 +203,7 @@ const ButtonShowMore = ({show_more, showMore}) => {
   return (
       <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, true)}>
         <Icon name="add user"/>
-        Show more
+        {number_of_users}&nbsp;users
       </Button>
   )
 };
@@ -404,10 +411,10 @@ class EnterpriseTeamApp extends Component {
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
                    onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
-          <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
+          <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
             <Header as="h4">
-              {website.website_name}
+              {website.name}
               {meReceiver !== null && meReceiver.accepted &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.sharing_requests.length > 0 && isAdmin(me.role) &&
@@ -438,8 +445,6 @@ class EnterpriseTeamApp extends Component {
                     <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}
                     {this.state.edit && this.props.plan_id === 0 &&
                     <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
-                    {!this.state.edit && users.length > 4 &&
-                    <ButtonShowMore show_more={this.state.show_more} showMore={this.setShowMore}/>}
                   </div>
                 </div>
                 {!this.state.edit &&
@@ -448,6 +453,10 @@ class EnterpriseTeamApp extends Component {
                                  expanded={this.state.show_more}
                                  me={me}
                                  team_id={this.props.team_id}/>}
+                <div>
+                    {!this.state.edit && users.length > 2 &&
+                    <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
+                </div>
                 {this.state.edit &&
                 <Receivers receivers={users}
                            onChange={this.handleReceiverInput}
