@@ -48,6 +48,7 @@ class TeamView extends React.Component {
     if (this.props !== nextProps) {
       if (this.props.match.params.teamId !== nextProps.match.params.teamId) {
         this.setState({loadingInfo: true});
+        console.log('here');
         this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(nextProps.match.params.teamId)).then(() => {
           this.setState({loadingInfo: false});
           if (this.isValidTeamItemId(itemId)) {
@@ -176,4 +177,4 @@ class TeamView extends React.Component {
   }
 }
 
-module.exports = withRouter(TeamView);
+module.exports = TeamView;

@@ -9,10 +9,17 @@ button.only-text-button {
 }
 
 #catalog {
-  position: absolute;
-  width: 100%;
-  & > .container {
-    padding-top: 135px;
+  margin-top: -60px;
+  height: 100%;
+  @include display-flex();
+  @include flex-direction(column);
+  & + #ease_header {
+    border:none;
+  }
+  & > .mainContainer {
+    padding-top: 20px;
+    overflow: auto;
+    @include flex-grow(1);
   }
   #catalog-nav {
     position: fixed;
@@ -20,14 +27,13 @@ button.only-text-button {
   }
   header {
     height: 118px;
-    position: fixed;
     left: 0;
     right: 0;
     z-index: 1;
     background-image: radial-gradient(circle at 50% 0, #686d99, #636994 40%, #373b60);
     box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
     p {
-      font-size: 36px;
+      font-size: 28px;
       font-weight: 300;
       color: white;
       text-align: center;
@@ -35,12 +41,12 @@ button.only-text-button {
       margin-bottom: 10px;
     }
     .inputSearch {
-      margin-top: 25px;
+      margin-top: 40px;
       width: 700px;
     }
   }
   h3 {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 300;
     color: #414141;
     text-transform: uppercase;
@@ -70,6 +76,7 @@ button.only-text-button {
     font-size: 18px;
     font-weight: 300;
     a {
+      margin-bottom: 2px;
       &:focus {
         text-decoration: none;
       }
@@ -132,7 +139,7 @@ button.only-text-button {
     }
   }
   .requestAnApp {
-    border: none;
+    border: 1px solid rgba(34,36,38,.15);
     border-radius: 7px;
     box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
     .ui.header {
@@ -166,12 +173,19 @@ button.only-text-button {
     }
   }
   .addBookmark {
-    border: none;
+    border: 1px solid rgba(34,36,38,.15);
     border-radius: 7px;
     box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
     padding: 40px;
     .width50 {
       width: 50%;
+    }
+    .closeButton {
+      position: absolute;
+      right: 5px;
+      top: 7px;
+      margin: 0;
+      opacity: .6;
     }
     .logo {
       img {
@@ -302,11 +316,14 @@ button.only-text-button {
   cursor: pointer;
 }
 
-#add_bookmark_form {
+.ease_popup {
   .app_name {
     font-size: 20px;
     color: $themeBlue2Color;
   }
+}
+
+#add_bookmark_form {
   .create_profile_input {
     input {
       border:none;

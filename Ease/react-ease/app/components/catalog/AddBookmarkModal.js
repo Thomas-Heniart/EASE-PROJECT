@@ -3,7 +3,7 @@ import {dashboard} from "../../utils/post_api";
 var api = require('../../utils/api');
 import {handleSemanticInput} from "../../utils/utils";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import {Button,List, Form,Input, Icon, Message, Container} from 'semantic-ui-react';
+import {Button,List, Form,Input, Loader, Icon, Message, Container} from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 
@@ -22,7 +22,8 @@ class AddBookmarkModal extends Component {
       errorMessage: '',
       profiles: [],
       profileName: '',
-      addingProfile: false
+      addingProfile: false,
+      profileLoading: false
     }
   }
   handleInput = handleSemanticInput.bind(this);
@@ -64,8 +65,11 @@ class AddBookmarkModal extends Component {
     });
   };
   componentWillMount(){
+    this.setState({profileLoading: true});
     api.dashboard.fetchProfiles().then(response => {
-      this.setState({profiles: response});
+      this.setState({profiles: response, profileLoading: false});
+    }).catch(err => {
+      this.setState({profileLoading: false});
     });
   }
   render(){
@@ -96,7 +100,7 @@ class AddBookmarkModal extends Component {
             headerContent={'Choose app location'}>
           <Form class="container" id="add_bookmark_form" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
             <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-              <div class="squared_image_handler" style={{boxShadow:'none'}}>
+              <div class="squared_image_handler">
                 <img src={this.state.img_url} alt="Website logo"/>
               </div>
               <span class="app_name">{this.state.name}</span>
@@ -105,21 +109,26 @@ class AddBookmarkModal extends Component {
               <div style={{marginBottom: '10px'}}>App location (you can always change it later)</div>
               <Container class="profiles">
                 <List link>
-                  {profiles}
+
+                  {this.state.profileLoading ?
+                      <Loader inline={'centered'} active size="tiny"/>:
+                      profiles}
                 </List>
-                <form ref={(ref) => {this.form = ref}} style={{marginBottom: 0}} onSubmit={this.createProfile}>
+                {!this.state.profileLoading &&
+                <form style={{marginBottom: 0}} onSubmit={this.createProfile}>
                   <Input
                       loading={this.state.addingProfile}
                       value={this.state.profileName}
                       name="profileName"
                       required
+                      style={{fontSize:'14px'}}
                       transparent
                       onChange={this.handleInput}
                       class="create_profile_input"
                       icon={<Icon name="plus square" link onClick={this.createProfile}/>}
                       placeholder='Create new group'
                   />
-                </form>
+                </form>}
               </Container>
             </Form.Field>
             <Message error content={this.state.errorMessage}/>

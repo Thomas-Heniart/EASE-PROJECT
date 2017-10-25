@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Image, Icon, Label, Form, Button, Message, Checkbox, Divider, Segment, List, Container, Input } from 'semantic-ui-react';
+import { Loader, Image, Icon,Dropdown, Label, Form, Button, Message, Checkbox, Divider, Segment, List, Container, Input } from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {dashboard} from "../../utils/post_api";
 import {handleSemanticInput,
@@ -65,7 +65,7 @@ class ProfileChooseStep extends Component {
     return (
         <Form class="container" id="add_bookmark_form" onSubmit={confirm}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-            <div class="squared_image_handler" style={{boxShadow:'none'}}>
+            <div class="squared_image_handler">
               <img src={website.logo} alt="Website logo"/>
             </div>
             <span class="app_name"><Input size="mini" type="text" placeholder="App name..."
@@ -79,12 +79,16 @@ class ProfileChooseStep extends Component {
             <div style={{marginBottom: '10px'}}>App location (you can always change it later)</div>
             <Container class="profiles">
               <List link>
-                {profiles}
+                {this.props.loading ?
+                    <Loader inline={'centered'} active size="tiny"/>:
+                    profiles}
               </List>
+              {!this.props.loading &&
               <form style={{marginBottom: 0}} onSubmit={this.createProfile}>
                 <Input
                     loading={this.state.addingProfile}
                     value={this.state.profileName}
+                    style={{fontSize:'14px'}}
                     name="profileName"
                     required
                     transparent
@@ -93,7 +97,7 @@ class ProfileChooseStep extends Component {
                     icon={<Icon name="plus square" link onClick={this.createProfile}/>}
                     placeholder='Create new group'
                 />
-              </form>
+              </form>}
             </Container>
           </Form.Field>
           <Button
@@ -117,6 +121,7 @@ const CredentialInput = ({item, onChange}) => {
                autoFocus={item.autoFocus}
                class="modalInput team-app-input"
                required
+               autoComplete='on'
                name={item.name}
                onChange={onChange}
                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
@@ -156,11 +161,12 @@ class AddBookmarkForm extends Component {
     return (
         <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
           <Form.Field>
-            <label style={{ fontSize: '16px', fontWeight: '300', color: '#424242' }}>{this.props.nameLabel}</label>
+            <label style={{ fontSize: '16px', fontWeight: '300', color: '#424242' }}>Here is the link</label>
             <Input fluid
                    className="modalInput team-app-input"
                    size='large'
                    type='url'
+                   autoFocus
                    name='url'
                    placeholder='Url'
                    onChange={handleInput}
@@ -178,6 +184,52 @@ class AddBookmarkForm extends Component {
               class="modal-button uppercase"
               content={'CONFIRM'} />
         </Form>
+    )
+  }
+}
+
+class CredentialLoginInput extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      options: [
+        { key: 'English', text: 'English', value: 'English' },
+        { key: 'French', text: 'French', value: 'French' },
+        { key: 'Spanish', text: 'Spanish', value: 'Spanish' },
+        { key: 'German', text: 'German', value: 'German' },
+        { key: 'Chinese', text: 'Chinese', value: 'Chinese' },
+      ]
+    }
+  }
+  handleAddition = (e, { value }) => {
+    this.setState({
+      options: [{ key: value, text: value, value }, ...this.state.options],
+    })
+  };
+  render(){
+    const {item, onChange} = this.props;
+    return (
+        <Form.Field>
+          <label style={{ fontSize: '16px', fontWeight: '300', color: '#424242' }}>{item.placeholder}</label>
+          <Dropdown size="large"
+                    options={this.state.options}
+                    autoFocus={item.autoFocus}
+                    class="modalInput team-app-input"
+                    required
+                    search
+                    allowAdditions
+                    selection
+                    floating
+                    name={item.name}
+                    onAddItem={this.handleAddition}
+                    onChange={onChange}
+                    label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+                    labelPosition="left"
+                    placeholder={item.placeholder}
+                    value={item.value}
+                    scrolling
+                    type={item.type}/>
+        </Form.Field>
     )
   }
 }
@@ -212,7 +264,7 @@ class AddClassicAppForm extends Component {
       chooseLogWith,
       handleCredentialInput} = this.props;
     const credentialsInputs = credentials.map(item => {
-      return <CredentialInput key={item.priority} onChange={handleCredentialInput} item={item}/>
+      return <CredentialInput key={item.priority} onChange={handleCredentialInput} item={item}/>;
     });
     const logWithButtons = logWith_websites.map(item => {
       const name = item.name.toLowerCase();
@@ -263,18 +315,15 @@ class SecondStep extends Component {
   render(){
     const {
       website,
-      appName,
-      credentials,
-      url,
-      handleInput,
-      handleCredentialInput,
-      changeView
+      appName
     } = this.props;
     return (
         <Form as="div" class="container">
-          <Form.Field>
-            <Image src={website.logo} style={{ width:'80px', marginRight: '10px', display: 'inline-block', borderRadius: '5px'}}/>
-            <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{appName}</p>
+          <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
+            <div class="squared_image_handler">
+              <img src={website.logo} alt="Website logo"/>
+            </div>
+            <span class="app_name">{appName}</span>
           </Form.Field>
           <Form.Field>
             <p style={{ display: 'inline-block', fontSize: '20px', color: '#414141' }}><strong>Add just a Bookmark</strong></p>
@@ -329,9 +378,11 @@ class AddLogWithAppForm extends Component {
     });
     return (
         <Form as="div" class="container" id="add_logwith_form" error={this.state.errorMessage.length > 0}>
-          <Form.Field>
-            <Image src={website.logo} style={{ width:'80px', marginRight: '10px', display: 'inline-block', borderRadius: '5px'}}/>
-            <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{appName}</p>
+          <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
+            <div class="squared_image_handler">
+              <img src={website.logo} alt="Website logo"/>
+            </div>
+            <span class="app_name">{appName}</span>
           </Form.Field>
           <Form.Field>
             <p className='backPointer' onClick={goBack}><Icon name='arrow left'/>Back</p>
@@ -384,7 +435,8 @@ class ClassicAppModal extends React.Component {
       url: this.props.modal.website.landing_url,
       profiles: [],
       selectedProfile: -1,
-      view: 1
+      view: 1,
+      loading: false
     }
   }
   chooseLogWith = (logwithId) => {
@@ -393,6 +445,7 @@ class ClassicAppModal extends React.Component {
 
   };
   componentWillMount(){
+    this.setState({loading: true});
     api.dashboard.fetchProfiles().then(profiles => {
       this.setState({profiles: profiles});
       let logwith = this.props.modal.website.connectWith_websites.map(item => {
@@ -407,7 +460,9 @@ class ClassicAppModal extends React.Component {
         website.personal_apps = apps;
         return website;
       });
-      this.setState({logWith_websites: logwith});
+      this.setState({logWith_websites: logwith, loading: false});
+    }).catch(err => {
+      this.setState({loading: false});
     });
   }
   handleInput = handleSemanticInput.bind(this);
@@ -442,6 +497,7 @@ class ClassicAppModal extends React.Component {
           <ProfileChooseStep
               website={this.state.website}
               appName={this.state.name}
+              loading={this.state.loading}
               profiles={this.state.profiles}
               handleInput={this.handleInput}
               selectedProfile={this.state.selectedProfile}
