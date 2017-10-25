@@ -20,6 +20,13 @@ module.exports = {
         account_information: account_information
       });
     },
+    addMultipleClassicApp: ({profile_id, apps, account_information}) => {
+        return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
+          profile_id: profile_id,
+          apps_to_add: apps,
+          account_information: account_information
+        });
+    },
     addBookmark: ({name, profile_id, url, img_url}) => {
       return basic_post('/api/v1/catalog/AddBookmark', {
         name: name,

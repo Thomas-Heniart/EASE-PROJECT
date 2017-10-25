@@ -7,10 +7,8 @@ import {handleSemanticInput,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
 import {selectItemFromListById} from "../../utils/helperFunctions";
-import InputModalCatalog from './InputModalCatalog';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
-import AddBookmarkModal from "./AddBookmarkModal";
 var api = require('../../utils/api');
 
 class ProfileChooseStep extends Component {
@@ -140,7 +138,7 @@ class AddBookmarkForm extends Component {
   }
   confirm = (e) => {
     e.preventDefault();
-    this.setState({loading: false, errorMessage: ''});
+    this.setState({loading: true, errorMessage: ''});
     this.props.catalogAddBookmark({
       name: this.props.appName,
       profile_id: this.props.profile_id,
@@ -157,22 +155,26 @@ class AddBookmarkForm extends Component {
     const {url, handleInput} = this.props;
     return (
         <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
-          <InputModalCatalog
-              nameLabel='Here is the link'
-              nameInput='url'
-              inputType='url'
-              placeholderInput=''
-              handleInput={handleInput}
-              iconLabel='home'
-              valueInput={url}/>
+          <Form.Field>
+            <label style={{ fontSize: '16px', fontWeight: '300', color: '#424242' }}>{this.props.nameLabel}</label>
+            <Input fluid
+                   className="modalInput team-app-input"
+                   size='large'
+                   type='url'
+                   name='url'
+                   placeholder='Url'
+                   onChange={handleInput}
+                   required
+                   label={{ icon: 'home' }}
+                   labelPosition='left'
+                   value={url} />
+          </Form.Field>
           <Message error content={this.state.errorMessage}/>
           <Button
-              attached='bottom'
               type="submit"
               loading={this.state.loading}
               disabled={this.state.loading || url.length === 0}
               positive
-              onClick={this.confirm}
               class="modal-button uppercase"
               content={'CONFIRM'} />
         </Form>
@@ -207,6 +209,7 @@ class AddClassicAppForm extends Component {
     const {
       credentials,
       logWith_websites,
+      chooseLogWith,
       handleCredentialInput} = this.props;
     const credentialsInputs = credentials.map(item => {
       return <CredentialInput key={item.priority} onChange={handleCredentialInput} item={item}/>
@@ -214,8 +217,9 @@ class AddClassicAppForm extends Component {
     const logWithButtons = logWith_websites.map(item => {
       const name = item.name.toLowerCase();
       return (
-          <Form.Field>
+          <Form.Field key={item.id}>
             <Button fluid
+                    onClick={chooseLogWith.bind(null, item.id)}
                     type="button"
                     className='buttonModalConnect'
                     color={name}
@@ -234,12 +238,10 @@ class AddClassicAppForm extends Component {
           {logWithButtons}
           <Message error content={this.state.errorMessage}/>
           <Button
-              attached='bottom'
               type="submit"
               loading={this.state.loading}
               disabled={this.state.loading}
               positive
-              onClick={this.confirm}
               class="modal-button uppercase"
               content={'CONFIRM'} />
         </Form>
@@ -290,38 +292,73 @@ class SecondStep extends Component {
 class AddLogWithAppForm extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      loading: false,
+      errorMessage: '',
+      selectedAppId: -1
+    }
   }
+  confirm = (e) => {
+    e.preventDefault();
+    this.setState({loading: true, errorMessage: ''});
+    this.props.catalogAddLogWithApp({
+      name: this.props.appName,
+      website_id: this.props.website.id,
+      profile_id: this.props.profile_id,
+      logWith_app_id: this.state.selectedAppId
+    }).then(app => {
+      this.setState({loading: false});
+      this.props.showCatalogAddAppModal({active: false});
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
+  };
+  selectApp = (id) => {
+    this.setState({selectedAppId: id});
+  };
   render(){
+    const {website, appName, profile_id, goBack, logWithWebsite} = this.props;
+    const logWithName = logWithWebsite.name.toLowerCase();
+    const logWithSelectors = logWithWebsite.personal_apps.map(item => {
+      return (
+          <List.Item key={item.id} as="p" active={this.state.selectedAppId === item.id} onClick={this.selectApp.bind(null, item.id)}>
+            <Icon name='user circle' />
+            <span>{item.account_information.login}</span>
+          </List.Item>
+      )
+    });
     return (
-        <Form as="div" class="container">
+        <Form as="div" class="container" id="add_logwith_form" error={this.state.errorMessage.length > 0}>
           <Form.Field>
             <Image src={website.logo} style={{ width:'80px', marginRight: '10px', display: 'inline-block', borderRadius: '5px'}}/>
             <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{appName}</p>
           </Form.Field>
           <Form.Field>
-            <p className='backPointer' onClick={this.back}><Icon name='arrow left'/>Back</p>
+            <p className='backPointer' onClick={goBack}><Icon name='arrow left'/>Back</p>
           </Form.Field>
           <Form.Field>
-            <Segment.Group className='connectWithFacebook'>
+            <Segment.Group className={logWithName}>
               <Segment className='first'>
-                <Icon name='facebook'/>
-                Select your Facebook account
+                <Icon name={logWithName}/>
+                Select your {logWithWebsite.name} account
               </Segment>
               <Segment>
-                <List link className="listCategory">
-                  <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@hotmail.fr')}><Icon name='user circle' />victor_nivet@hotmail.fr</a></p></List.Item>
-                  <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@gmail.com')}><Icon name='user circle' />victor_nivet@gmail.com</a></p></List.Item>
-                  <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@outlook.fr')}><Icon name='user circle' />victor_nivet@outlook.fr</a></p></List.Item>
-                  <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@free.fr')}><Icon name='user circle' />victor_nivet@free.fr</a></p></List.Item>
+                <List className="listCategory">
+                  {logWithSelectors.length > 0 ?
+                      logWithSelectors :
+                      <p class="text-center errorMessage">
+                        You don’t have a {logWithWebsite.name} Account setup yet. Please install one before all.
+                      </p>}
                 </List>
               </Segment>
             </Segment.Group>
           </Form.Field>
+          <Message error content={this.state.errorMessage}/>
           <Button
               attached='bottom'
               type="submit"
               loading={this.state.loading}
-              disabled={this.state.loading}
+              disabled={this.state.loading || this.state.selectedAppId === -1}
               positive
               onClick={this.confirm}
               class="modal-button uppercase"
@@ -330,130 +367,6 @@ class AddLogWithAppForm extends Component {
     )
   }
 }
-
-const tmp = (props) => {
-  return (
-      <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm}>
-        <Form.Field>
-          <Image src={this.props.modal.website.logo} style={{ width:'80px', marginRight: '10px', display: 'inline-block', borderRadius: '5px'}}/>
-          <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{this.props.modal.website.name}</p>
-        </Form.Field>
-        {!this.state.facebook && !this.state.linkedin ?
-            <div>
-              <Form.Field>
-                <p style={{ display: 'inline-block', fontSize: '20px', color: '#414141' }}><strong>Add just a Bookmark</strong></p>
-                <Checkbox toggle onClick={e => this.toggleBookmark()} style={{ marginLeft: '20px', marginBottom: '0' }} />
-              </Form.Field>
-              {!this.state.addBookmark ?
-                  <div>
-                    <InputModalCatalog
-                        nameLabel='Login'
-                        nameInput='login'
-                        inputType='text'
-                        placeholderInput='Your login'
-                        handleInput={this.handleInput}
-                        iconLabel='user' />
-                    <InputModalCatalog
-                        nameLabel='Password'
-                        nameInput='password'
-                        inputType='password'
-                        placeholderInput='Your password'
-                        handleInput={this.handleInput}
-                        iconLabel='lock' />
-                  </div>
-                  :
-                  <div>
-                    <InputModalCatalog
-                        nameLabel='Here is the link'
-                        nameInput='url'
-                        inputType='url'
-                        placeholderInput=''
-                        handleInput={this.handleInput}
-                        iconLabel='home'
-                        valueInput={!this.state.url ? this.props.modal.website.landing_url : this.state.url} />
-                  </div>
-              }
-              {!this.state.addBookmark && this.props.modal.website.connectWith_websites.length ?
-                  <div>
-                    <Form.Field>
-                      <Divider horizontal>Or</Divider>
-                    </Form.Field>
-                    <Form.Field>
-                      <Button fluid
-                              className='buttonModalConnect'
-                              color='facebook'
-                              content={'Connect with Facebook'}
-                              icon='facebook'
-                              onClick={e => this.connectWith('facebook')} />
-                    </Form.Field>
-                    <Form.Field>
-                      <Button fluid
-                              className='buttonModalConnect'
-                              color='linkedin'
-                              content={'Connect with Linkedin'}
-                              icon='linkedin square'
-                              onClick={e => this.connectWith('linkedin')} />
-                    </Form.Field>
-                  </div>
-                  :
-                  <div/>
-              }
-            </div>
-            : this.state.facebook ?
-                <div>
-                  <Form.Field>
-                    <p className='backPointer' onClick={this.back}><Icon name='arrow left'/>Back</p>
-                  </Form.Field>
-                  <Form.Field>
-                    <Segment.Group className='connectWithFacebook'>
-                      <Segment className='first'>
-                        <Icon name='facebook'/>
-                        Select your Facebook account
-                      </Segment>
-                      <Segment>
-                        <List link className="listCategory">
-                          <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@hotmail.fr')}><Icon name='user circle' />victor_nivet@hotmail.fr</a></p></List.Item>
-                          <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@gmail.com')}><Icon name='user circle' />victor_nivet@gmail.com</a></p></List.Item>
-                          <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@outlook.fr')}><Icon name='user circle' />victor_nivet@outlook.fr</a></p></List.Item>
-                          <List.Item activeClassName="active"><p><a onClick={e => this.selectAccount('victor_nivet@free.fr')}><Icon name='user circle' />victor_nivet@free.fr</a></p></List.Item>
-                        </List>
-                      </Segment>
-                    </Segment.Group>
-                  </Form.Field>
-                </div>
-                :
-                <div>
-                  <Form.Field>
-                    <p className='backPointer' onClick={this.back}><Icon name='arrow left'/>Back</p>
-                  </Form.Field>
-                  <Form.Field>
-                    <Segment.Group className='connectWithLinkedin'>
-                      <Segment className='first'>
-                        <Icon name='linkedin square'/>
-                        Select your Linkedin account
-                      </Segment>
-                      <Segment>
-                        <p><a><Icon name='user circle' />victor_nivet@hotmail.fr</a></p>
-                        <p><a><Icon name='user circle' />victor_nivet@gmail.com</a></p>
-                        <p><a><Icon name='user circle' />victor_nivet@outlook.fr</a></p>
-                        <p><a><Icon name='user circle' />victor_nivet@free.fr</a></p>
-                      </Segment>
-                    </Segment.Group>
-                  </Form.Field>
-                </div>}
-        <Message error content={this.state.errorMessage} />
-        <Button
-            disabled={!this.state.addBookmark && (!this.state.login || !this.state.password) && !this.state.accountFacebookSelected}
-            attached='bottom'
-            type="submit"
-            positive
-            loading={this.state.loading}
-            onClick={this.confirm}
-            class="modal-button uppercase"
-            content={'CONFIRM'} />
-      </Form>
-  )
-};
 
 @connect(store => ({
   catalog: store.catalog,
@@ -467,30 +380,28 @@ class ClassicAppModal extends React.Component {
       name: this.props.modal.website.name,
       credentials: transformWebsiteInfoIntoList(this.props.modal.website.information),
       logWith_websites: [],
-      errorMessage: '',
+      choosenLogWithWebsite: null,
       url: this.props.modal.website.landing_url,
-      login: '',
-      password: '',
-      loading: false,
-      facebook: false,
-      linkedin: false,
-      addBookmark: false,
-      accountFacebookSelected: '',
       profiles: [],
       selectedProfile: -1,
       view: 1
     }
   }
+  chooseLogWith = (logwithId) => {
+    const logWithWebsite = selectItemFromListById(this.state.logWith_websites, logwithId);
+    this.setState({view: 3, choosenLogWithWebsite:logWithWebsite});
+
+  };
   componentWillMount(){
     api.dashboard.fetchProfiles().then(profiles => {
       this.setState({profiles: profiles});
-      const logwith = this.props.modal.website.connectWith_websites.map(item => {
+      let logwith = this.props.modal.website.connectWith_websites.map(item => {
         let website = selectItemFromListById(this.props.catalog.websites, item);
         let apps = [];
         profiles.map(item => {
           item.apps.map(app => {
             if (app.website_id === website.id)
-              apps.push(item);
+              apps.push(app);
           });
         });
         website.personal_apps = apps;
@@ -508,68 +419,8 @@ class ClassicAppModal extends React.Component {
     });
     this.setState({credentials: credentials});
   };
-  connectWith = (string) => {
-    if (string === 'facebook')
-      this.setState({ facebook: true, login: '', password: '' });
-    else
-      this.setState({ linkedin: true, login: '', password: '' });
-  };
-
-  toggleBookmark = () => {
-    if (this.state.addBookmark)
-      this.setState({ addBookmark: false, url: '' });
-    else
-      this.setState({ addBookmark: true, login: '', password: '' });
-  };
-
-  back = () => {
-    this.setState({ facebook: false, linkedin: false, accountFacebookSelected: '' });
-  };
-
-  selectAccount = (account) => {
-    this.setState({ accountFacebookSelected: account });
-  };
-
   selectProfile = (id) => {
     this.setState({selectedProfile: id});
-  };
-
-  confirm = () => {
-    console.log(this.state.name);
-    if (this.state.view === 1) {
-      this.setState({ view: 2 });
-    }
-    else {
-      this.setState({loading: true, errorMessage: ''});
-      if (this.state.addBookmark) {
-        this.props.catalogAddBookmark({
-          name: this.state.name,
-          profile_id: this.state.selectedProfile,
-          url: this.state.url,
-          img_url: this.props.modal.website.img_url
-        }).then(r => {
-          this.setState({loading: false});
-          this.props.showCatalogAddAppModal({active: false})
-        }).catch(err => {
-          this.setState({loading: false});
-          this.setState({errorMessage: err});
-        });
-      }
-      else {
-        this.props.catalogAddClassicApp({
-          name: this.state.name,
-          website_id: this.props.modal.website.id,
-          profile_id: this.state.selectedProfile,
-          account_information: { login: this.state.login, password: this.state.password }
-        }).then(r => {
-          this.setState({loading: false});
-          this.props.showCatalogAddAppModal({active: false})
-        }).catch(err => {
-          this.setState({loading: false});
-          this.setState({errorMessage: err});
-        });
-      }
-    }
   };
   addProfile = (profile) => {
     let profiles = this.state.profiles.slice();
@@ -608,7 +459,16 @@ class ClassicAppModal extends React.Component {
               handleInput={this.handleInput}
               profile_id={this.state.selectedProfile}
               handleCredentialInput={this.handleCredentialInput}
+              chooseLogWith={this.chooseLogWith}
               changeView={this.changeView}/>}
+          {this.state.view === 3 &&
+          <AddLogWithAppForm
+              {...this.props}
+              website={this.state.website}
+              appName={this.state.name}
+              profile_id={this.state.selectedProfile}
+              goBack={this.changeView.bind(null, 2)}
+              logWithWebsite={this.state.choosenLogWithWebsite}/>}
         </SimpleModalTemplate>
     )
   }
