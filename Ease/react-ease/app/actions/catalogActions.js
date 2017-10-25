@@ -8,18 +8,17 @@ export function fetchCatalog(){
       api.catalog.getWebsites(),
       api.catalog.getCategories(),
       api.catalog.getSsoList(),
-//      api.catalog.getRequestsNumber()
+      api.catalog.getRequestsNumber()
     ]).then(values => {
       const websites = values[0].websites;
       const categories = values[1].categories;
       const sso_list = values[2].ssoList;
-//      const requestsNumber = values[3].request_number;
+      const requestsNumber = values[3].request_number;
       dispatch({type: 'FETCH_CATALOG_FULFILLED', payload:{
         websites : websites,
         categories: categories,
         sso_list: sso_list,
-        requests_number:1
-//        requests_number: requestsNumber
+        requests_number: requestsNumber
       }});
       return values;
     }).catch(err => {
