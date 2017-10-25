@@ -175,7 +175,7 @@ public class Account {
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
-        List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), publicKey, sm);
+        List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), publicKey, db);
         db.commitTransaction(transaction);
         Account account = new Account(db_id, false, publicKey, ciphered_key, infos, sameAccount.getPasswordChangeInterval());
         account.setPrivateKey(privateKey);
