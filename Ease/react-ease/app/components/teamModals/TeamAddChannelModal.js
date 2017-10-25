@@ -63,10 +63,10 @@ class TeamAddChannelModal extends React.Component {
       this.setState({loading: false, errorMessage: err})
     })
   }
-  inputChange(e, {value}){
-      console.log(e);
-    this.setState({[e.target.name] : value});
-  }
+  inputChange = (e) => {
+    e.target.value = e.target.value.replace(" ", "_").toLowerCase();
+    this.setState({[e.target.name] : e.target.value});
+  };
   dropdownChange(e, {value}){
     if (value.indexOf(this.props.myId) === -1)
       return;

@@ -95,10 +95,10 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
                  <span>Mobile access: on</span>}
                  {accepted && !can_see_information &&
                  <span>Mobile access: off</span>}
-                 <br/>
+                 <br/> &&
                  {accepted && can_see_information &&
                  <span>Password copy: on</span>}
-                 {accepted && !can_see_information &&
+                   {accepted && can_see_information &&
                  <span>Password copy: off</span>}
                </div>}/>
   )
