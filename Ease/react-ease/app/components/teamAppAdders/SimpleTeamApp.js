@@ -72,7 +72,7 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
   )
 };
 
-const TeamAppReceiverLabel = ({username, accepted, can_see_information}) => {
+const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) => {
   return (
       <Popup size="mini"
              position="bottom center"
@@ -80,23 +80,26 @@ const TeamAppReceiverLabel = ({username, accepted, can_see_information}) => {
              flowing
              hideOnScroll={true}
              trigger={
-               <Label class={classnames("user-label static", accepted ? 'accepted' : null)}>
+               <Label class={classnames("user-label static", accepted ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
                  {username}
-                 <Icon name={can_see_information ? 'unhide' : 'hide'}/>
+                 {can_see_information && !admin && accepted &&
+                 <Icon name='mobile'/>}
+                 {admin &&
+                 <Icon name={can_see_information ? 'unhide' : 'hide'}/>}
                </Label>
              }
-             header={<h5 class="mrgn0 text-center">User informations</h5>}
              content={
                <div>
-                 {can_see_information &&
-                 <span><Icon name='unhide'/> User can see the password</span>}
-                 {!can_see_information &&
-                 <span><Icon name='hide'/> User cannot see the password</span>}
-                 <br/>
-                 {accepted &&
-                 <span><Icon name='circle' style={{color: '#949EB7'}}/> User accepted the app</span>}
-                 {!accepted &&
-                 <span><Icon name='circle' style={{color: '#D2DAE4'}}/> User didn't accept the app</span>}
+                 {!accepted && <span>App acceptation pending...</span>}
+                 {accepted && can_see_information &&
+                 <span>Mobile access: on</span>}
+                 {accepted && !can_see_information &&
+                 <span>Mobile access: off</span>}
+                 <br/> &&
+                 {accepted && can_see_information &&
+                 <span>Password copy: on</span>}
+                   {accepted && can_see_information &&
+                 <span>Password copy: off</span>}
                </div>}/>
   )
 };
@@ -122,6 +125,7 @@ class ReceiversLabelGroup extends Component {
             const receiver = item.receiver;
             return (
                 <TeamAppReceiverLabel key={receiver.team_user_id}
+                                      admin={this.props.meAdmin}
                                       username={user.username}
                                       can_see_information={receiver.can_see_information}
                                       accepted={receiver.accepted}/>
@@ -362,7 +366,7 @@ class SimpleTeamApp extends Component {
                 </div>
                 <div>
                   {!this.state.edit ?
-                      <ReceiversLabelGroup receivers={userReceiversMap}/> :
+                      <ReceiversLabelGroup meAdmin={isAdmin(me.role)} receivers={userReceiversMap}/> :
                       <Dropdown
                           class="mini"
                           search={true}

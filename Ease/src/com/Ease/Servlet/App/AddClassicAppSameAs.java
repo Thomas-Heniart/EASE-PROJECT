@@ -80,7 +80,7 @@ public class AddClassicAppSameAs extends HttpServlet {
 					Website site = catalog.getWebsiteWithId(Integer.parseInt((String)websiteId));
 					if (site == null)
 						throw new GeneralException(ServletManager.Code.ClientError, "This website does not exist");
-					App newApp = ClassicApp.createClassicAppSameAs(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, sameApp, sm, user);
+					App newApp = ClassicApp.createClassicAppSameAs(profile, profile.getApps().size(), (res.size() == 0) ? name : site.getName(), site, sameApp, sm.getDB(), user);
 					profile.addApp(newApp);
 					res.add(newApp.getDBid());
 				}

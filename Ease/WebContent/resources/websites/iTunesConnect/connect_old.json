@@ -1,7 +1,7 @@
 {
-  "name":"iCloud",
+  "name":"iTunes Connect",
   "lastlogin":"",
-  "home":"https://www.icloud.com/",
+  "home":"https://itunesconnect.apple.com",
   "connect": {
     "todo": [
       {"action":"fill", "what":"login", "search":"#appleId"},
@@ -18,7 +18,7 @@
     ]
   },
   "checkAlreadyLogged": [
-    {"action":"waitfor", "search":"a[data-zcqa='signOut'], #signin"},
+    {"action":"waitfor", "search":"a[data-zcqa='signOut'], iframe[src*='login']"},
     {"search":"a[data-zcqa='signOut']"}
   ]
 }

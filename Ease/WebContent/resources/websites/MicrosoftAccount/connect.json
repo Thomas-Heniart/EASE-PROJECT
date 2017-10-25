@@ -1,0 +1,30 @@
+{
+  "name":"Microsoft account",
+  "lastLogin":"",
+  "home":"https://accounts.microsoft.com/",
+  "connect":{
+    "todo":[
+      {"action":"waitload"},
+      {"action":"trueClick", "search":"#meControl > div"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"form[name='f1'] input[name='loginfmt']"},
+      {"action":"fill", "what":"login", "search":"form[name='f1'] input[name='loginfmt']"},
+      {"action":"click", "search":"form[name='f1'] input[type='submit']"},
+      {"action":"waitfor", "search":"form[name='f1'] input[name='passwd'][aria-required='true']"},
+      {"action":"fill", "what":"password", "search":"form[name='f1'] input[name='passwd'][aria-required='true']"},
+      {"action":"click", "search":"form[name='f1'] input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#meControl"},
+      {"action":"waitfor", "search":".msame_Drop_signOut a"},
+      {"action":"clickona", "search":".msame_Drop_signOut a"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"html.home-index, html.SignedOut-AccountPage.signedout"},
+    {"search":"html.home-index"}
+  ]
+}

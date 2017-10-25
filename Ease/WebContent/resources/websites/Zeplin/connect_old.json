@@ -1,0 +1,25 @@
+{
+  "name":"Zeplin",
+  "lastLogin":"",
+  "home":"https://app.zeplin.io/projects",
+  "connect":{
+    "todo":[
+      {"action":"waitfor", "search":"#loginForm #handle"},
+      {"action":"fill", "what":"login", "search":"#loginForm input#handle"},
+      {"action":"waitfor", "search":"#loginForm #password"},
+      {"action":"fill", "what":"password", "search":"#loginForm input#password"},
+      {"action":"waitfor", "search":"#loginForm button"},
+      {"action":"click", "search":"#loginForm button"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"#logoutButton"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#logoutButton, #loginForm #handle"},
+    {"search": "#logoutButton"}
+  ]
+}

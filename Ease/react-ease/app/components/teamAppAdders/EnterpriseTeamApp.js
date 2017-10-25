@@ -113,18 +113,21 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
                  <Icon name="refresh" color={!up_to_date ? 'red' : null}/>
                </Label>
              }
-             header={<h5 class="mrgn0 text-center">User informations</h5>}
              content={
                <div>
-                 {up_to_date &&
-                 <span><Icon name='refresh'/> Password is up to date</span>}
-                 {!up_to_date &&
-                 <span><Icon name='refresh' color="red"/> Password must be changed</span>}
-                 <br/>
+                 {!accepted && <span>App acceptation pending...</span>}
                  {accepted &&
-                 <span><Icon name='circle' style={{color: '#949EB7'}}/> User accepted the app</span>}
-                 {!accepted &&
-                 <span><Icon name='circle' style={{color: '#D2DAE4'}}/> User didn't accept the app</span>}
+                 <span>Mobile access: on</span>}
+                 {accepted &&
+                 <br/>}
+                 {accepted &&
+                 <span>Password copy: on</span>}
+                 {accepted &&
+                 <br/>}
+                 {accepted && up_to_date &&
+                 <span>Password is up to date</span>}
+                 {accepted && !up_to_date &&
+                 <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
                </div>}/>
   )
 };
