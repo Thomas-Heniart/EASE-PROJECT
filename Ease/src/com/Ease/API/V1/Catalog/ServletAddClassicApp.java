@@ -37,7 +37,11 @@ public class ServletAddClassicApp extends HttpServlet {
             Website website = catalog.getPublicWebsiteWithId(website_id);
             Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            /* @TODO decipher account information */
+            /* String private_key = (String) sm.getContextAttr("privateKey");
+            for (Object entry : account_information.entrySet()) {
+                Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
+                account_information.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
+            }*/
             Map<String, String> information = website.getInformationNeeded(account_information);
             App app = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, website, information, user, sm.getDB());
             profile.addApp(app);
