@@ -81,25 +81,28 @@ public class ClassicApp extends WebsiteApp {
         return new ClassicApp((Integer) elevator.get("appDBid"), null, null, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), website, websiteAppDBid, account, classicDBid);
     }
 
-    public static App createClassicAppSameAs(Profile profile, int position, String name, Website site, ClassicApp sameApp, ServletManager sm, User user) throws GeneralException, HttpServletException {
-        DataBaseConnection db = sm.getDB();
-        int transaction = db.startTransaction();
-        Map<String, Object> elevator = new HashMap<String, Object>();
-        Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, db);
-        Account account = Account.createAccountSameAs(sameApp.getAccount(), false, sm);
-        DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
-        request.setInt(websiteAppDBid);
-        request.setInt(account.getDBid());
-        Integer classicDBid = request.set();
-        for (AccountInformation info : account.getAccountInformations()) {
-            if (info.getInformationName().equals("login")) {
-                String infoValue = info.getInformationValue();
-                if (Regex.isEmail(infoValue) == true)
-                    user.addEmailIfNeeded(infoValue, db);
+    public static App createClassicAppSameAs(Profile profile, int position, String name, Website site, ClassicApp sameApp, DataBaseConnection db, User user) throws HttpServletException {
+        try {
+            int transaction = db.startTransaction();
+            Map<String, Object> elevator = new HashMap<String, Object>();
+            Integer websiteAppDBid = WebsiteApp.createWebsiteApp(profile, position, name, "classicApp", site, elevator, db);
+            Account account = Account.createAccountSameAs(sameApp.getAccount(), user.getKeys().getKeyUser(), db);
+            DatabaseRequest request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
+            request.setInt(websiteAppDBid);
+            request.setInt(account.getDBid());
+            Integer classicDBid = request.set();
+            for (AccountInformation info : account.getAccountInformations()) {
+                if (info.getInformationName().equals("login")) {
+                    String infoValue = info.getInformationValue();
+                    if (Regex.isEmail(infoValue) == true)
+                        user.addEmailIfNeeded(infoValue, db);
+                }
             }
+            db.commitTransaction(transaction);
+            return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError);
         }
-        db.commitTransaction(transaction);
-        return new ClassicApp((Integer) elevator.get("appDBid"), profile, position, (AppInformation) elevator.get("appInfos"), (String) elevator.get("insertDate"), site, websiteAppDBid, account, classicDBid);
     }
 
     public static ClassicApp createFromWebsiteApp(WebsiteApp websiteApp, String name, Map<String, String> infos, ServletManager sm, User user) throws GeneralException, HttpServletException {

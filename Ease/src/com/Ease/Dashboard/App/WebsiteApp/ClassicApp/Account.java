@@ -164,21 +164,20 @@ public class Account {
         return account;
     }
 
-    public static Account createAccountSameAs(Account sameAccount, boolean shared, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
+    public static Account createAccountSameAs(Account sameAccount, String keyUser, DataBaseConnection db) throws GeneralException {
         int transaction = db.startTransaction();
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String publicKey = publicAndPrivateKey.getKey();
         String privateKey = publicAndPrivateKey.getValue();
-        String ciphered_key = sm.getUser().encrypt(privateKey);
+        String ciphered_key = AES.encrypt(privateKey, keyUser);
         DatabaseRequest request = db.prepareRequest("INSERT INTO accounts values (null, ?, default, null, null, ?, ?, 0, 0, 0);");
-        request.setBoolean(shared);
+        request.setBoolean(false);
         request.setString(publicKey);
         request.setString(ciphered_key);
         String db_id = request.set().toString();
         List<AccountInformation> infos = AccountInformation.createAccountInformationFromAccountInformations(db_id, sameAccount.getAccountInformations(), publicKey, sm);
         db.commitTransaction(transaction);
-        Account account = new Account(db_id, shared, publicKey, ciphered_key, infos, sameAccount.getPasswordChangeInterval());
+        Account account = new Account(db_id, false, publicKey, ciphered_key, infos, sameAccount.getPasswordChangeInterval());
         account.setPrivateKey(privateKey);
         return account;
     }
