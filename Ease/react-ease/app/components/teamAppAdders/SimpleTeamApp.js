@@ -270,7 +270,8 @@ class SimpleTeamApp extends Component {
         selected_users.push(item.id);
       return {
         ...item,
-        can_see_information: can_see_information
+        can_see_information: can_see_information,
+        receiver: receiver
       }
     });
     this.setState({users: users, selected_users:selected_users});
