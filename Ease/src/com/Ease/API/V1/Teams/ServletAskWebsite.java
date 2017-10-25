@@ -1,11 +1,8 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
-import com.Ease.Context.Catalog.WebsiteAttributes;
+import com.Ease.Catalog.*;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -18,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 @WebServlet("/api/v1/teams/AskWebsite")
 public class ServletAskWebsite extends HttpServlet {
@@ -44,29 +43,28 @@ public class ServletAskWebsite extends HttpServlet {
             String private_key = (String) sm.getContextAttr("privateKey");
             login = RSA.Decrypt(login, private_key);
             password = RSA.Decrypt(password, private_key);
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            WebsiteAttributes websiteAttributes = WebsiteAttributes.createWebsiteAttributes(is_public, false, db);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            String[] urlParsed = url.split("\\.");
-            Website website = Website.createWebsite(team_id, url, url, websiteAttributes, sm.getServletContext(), db);
-            catalog.addWebsite(website);
-            db.commitTransaction(transaction);
+            WebsiteAttributes websiteAttributes = new WebsiteAttributes(is_public);
+            Website website = new Website(url, "In progress", "undefined", url, websiteAttributes);
+            WebsiteInformation loginInformation = new WebsiteInformation("login", "text", 0, "Login", "fa-user-o", website);
+            WebsiteInformation passwordInformation = new WebsiteInformation("password", "password", 1, "Password", "fa-lock", website);
+            Set<WebsiteInformation> websiteInformationSet = new HashSet<>();
+            websiteInformationSet.add(loginInformation);
+            websiteInformationSet.add(passwordInformation);
+            website.setWebsiteInformationList(websiteInformationSet);
+            sm.saveOrUpdate(websiteAttributes);
+            sm.saveOrUpdate(website);
+            String email = sm.getUser().getEmail();
+            WebsiteRequest websiteRequest = new WebsiteRequest(url, email, website);
+            website.addWebsiteRequest(websiteRequest);
+            sm.saveOrUpdate(websiteRequest);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.querySQLString("SELECT id, publicKey FROM serverPublicKeys LIMIT 1");
-            Object[] idAndPublicKey = (Object[]) hibernateQuery.getSingleResult();
-            Integer id = (Integer) idAndPublicKey[0];
-            String key = (String) idAndPublicKey[1];
-            hibernateQuery.querySQLString("INSERT INTO customerCredentialsReception VALUES (null, ?, ?, ?, ?, ?, default);");
-            hibernateQuery.setParameter(1, sm.getUser().getEmail());
-            hibernateQuery.setParameter(2, url);
-            login = RSA.Encrypt(login, key);
-            password = RSA.Encrypt(password, key);
-            hibernateQuery.setParameter(3, login);
-            hibernateQuery.setParameter(4, password);
-            hibernateQuery.setParameter(5, id);
-            hibernateQuery.executeUpdate();
-            JSONObject res = website.getInformationJson();
+            hibernateQuery.queryString("SELECT key FROM ServerPublicKey key");
+            ServerPublicKey serverPublicKey = (ServerPublicKey) hibernateQuery.getSingleResult();
+            WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt(login, serverPublicKey.getPublicKey()), RSA.Encrypt(password, serverPublicKey.getPublicKey()), website, serverPublicKey);
+            sm.saveOrUpdate(websiteCredentials);
+            catalog.addWebsite(website);
+            JSONObject res = website.getCatalogJson();
             res.put("id", website.getDb_id());
             sm.setSuccess(res);
         } catch (Exception e) {

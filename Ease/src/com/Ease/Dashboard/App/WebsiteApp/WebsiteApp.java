@@ -320,7 +320,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
         String deciphered_teamKey = sm.getTeamUserForTeam(team).getDeciphered_teamKey();
         Boolean adminHasAccess = true;
         Account account = Account.createSharedAccountFromJson(account_information, deciphered_teamKey, adminHasAccess, this.getReminderIntervalValue(), db);
-        request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?, NULL);");
+        request = db.prepareRequest("INSERT INTO classicApps VALUES(NULL, ?, ?);");
         request.setInt(websiteAppId);
         request.setInt(account.getDBid());
         Integer classicDBid = request.set();

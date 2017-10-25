@@ -16,7 +16,6 @@ import {
 } from "./common";
 import {
     askJoinTeamApp,
-    teamAcceptSharedApp,
     teamAppDeleteReceiver,
     teamEditSingleApp,
     teamEditSingleAppReceiver,
@@ -143,17 +142,24 @@ class ReceiversLabelGroup extends Component {
   }
 };
 
-const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
-  return (
-      <span style={{lineHeight: '1.7'}}>
-        You received a Single App,
-        &nbsp;
-        <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
-        &nbsp;or&nbsp;
-        <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
-        &nbsp;it?
-      </span>
-  )
+const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
+  if (pinneable)
+    return (
+        <span style={{lineHeight: '1.7'}}>
+          You received a Single App,
+          &nbsp;
+          <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
+          &nbsp;or&nbsp;
+          <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
+          &nbsp;it?
+        </span>
+    );
+  else
+    return (
+        <span style={{lineHeight: '1.7'}}>
+          This app is new to our robot, we are processing the integration. It will be ready in few hours.
+        </span>
+    )
 };
 
 class SimpleTeamApp extends Component {
@@ -288,15 +294,8 @@ class SimpleTeamApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
-    if (state) {
-      this.props.dispatch(teamAcceptSharedApp({
-        team_id: this.props.team_id,
-        app_id: app.id,
-        shared_app_id: meReceiver.shared_app_id
-      })).then(() => {
+    if (state)
         this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
-      });
-    }
     else
       this.props.dispatch(teamAppDeleteReceiver({
         team_id: this.props.team_id,
@@ -325,7 +324,7 @@ class SimpleTeamApp extends Component {
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
-          <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
+          <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
             <Header as="h4">
               {website.name}

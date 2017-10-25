@@ -34,7 +34,7 @@ public class ServletWebsiteRequest extends HttpServlet {
                 /* Decipher login and password */
             }
             WebsiteAttributes websiteAttributes = new WebsiteAttributes(true);
-            Website website = new Website(url, "TODO", "Undefined", url, websiteAttributes);
+            Website website = new Website(url, "In progress", "undefined", url, websiteAttributes);
             WebsiteInformation loginInformation = new WebsiteInformation("login", "text", 0, "Login", "fa-user-o", website);
             WebsiteInformation passwordInformation = new WebsiteInformation("password", "password", 1, "Password", "fa-lock", website);
             Set<WebsiteInformation> websiteInformationSet = new HashSet<>();
