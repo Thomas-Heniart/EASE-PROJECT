@@ -34,6 +34,8 @@ const TeamAppReceiverLabel = ({username}) => {
                content={
                    <div>
                        <span>User pinned the app</span>
+                       <br/>
+                       <span>Mobile access: on</span>
                    </div>}/>
     )
 };

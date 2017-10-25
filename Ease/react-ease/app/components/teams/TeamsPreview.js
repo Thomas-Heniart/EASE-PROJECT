@@ -19,9 +19,9 @@ function Step1(props){
   return (
       <div class="content display-flex marginAuto step1" style={{width: '900px'}}>
         <div class="display-flex flex_direction_column" style={{flexBasis:'500px', flexShrink:'0', marginRight:'100px'}}>
-          <h3 style={{fontSize:'24px', marginBottom: '40px'}}>Vous pouvez maintenant gérer les mots de passe pour votre équipe sereinement et facilement.</h3>
-          <span style={{lineHeight:'1.78', color: '#838593'}}>Des mots de passe mal gérés et des accès mal controlés impliquent une baisse de la sécurité et de la productivité de votre équipe.</span>
-          <span style={{lineHeight:'1.78', color: '#838593'}}>Notre mission est de sécuriser la manière dont vous stockéz et partagez vos mots de passe tout en facilitant l'accès aux sites et outils web utilisés par vos collaborateurs.</span>
+          <h3 style={{fontSize:'24px', marginBottom: '40px'}}>Let’s start managing company passwords now. The Team Tpace allows companies to easily share and use passwords together.</h3>
+          <span style={{lineHeight:'1.78', color: '#838593'}}>Setting up your team will take less than 10 minutes and you don’t need to do it all at once.</span>
+          <span style={{lineHeight:'1.78', color: '#838593'}}>Enjoy !</span>
         </div>
         <div class="display-flex flex_direction_column justify_content_center" style={{flexBasis:'300px'}}>
           <img class="width100" src="/resources/images/Team.jpg" alt="image" style={{marginBottom: '20px'}}/>

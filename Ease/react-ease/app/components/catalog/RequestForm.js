@@ -37,6 +37,9 @@ class SimpleRequestBox extends Component {
           <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
             <Header as="h5" textAlign={'center'}>
               👋 Send suggestion
+              <Header.Subheader>
+                Currently {this.props.requests_number} suggestions pending
+              </Header.Subheader>
             </Header>
             <span>Paste website URL</span>
             <Input
@@ -170,7 +173,7 @@ class ExtendedRequestBox extends Component {
 }
 
 @connect(store => ({
-
+  requests_number: store.catalog.requests_number
 }), reduxActionBinder)
 class RequestForm extends Component {
   constructor(props) {
@@ -180,7 +183,7 @@ class RequestForm extends Component {
     return (
         <Grid columns={2}>
           <Grid.Column>
-            <SimpleRequestBox requestWebsite={this.props.catalogRequestWebsite}/>
+            <SimpleRequestBox requestWebsite={this.props.catalogRequestWebsite} requests_number={this.props.requests_number}/>
           </Grid.Column>
           <Grid.Column>
             <ExtendedRequestBox requestWebsite={this.props.catalogRequestWebsite}/>

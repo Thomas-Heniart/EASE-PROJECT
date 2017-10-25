@@ -4,6 +4,7 @@ import { getClearbitLogo } from "../../utils/api";
 import {handleSemanticInput, isUrl} from "../../utils/utils";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
+import { NavLink } from 'react-router-dom';
 
 @connect(store => ({
 }), reduxActionBinder)
@@ -47,6 +48,9 @@ class AddBookmark extends React.Component {
         <Container fluid class="mrgn0" as="form" onSubmit={this.send}>
             <h3>Add a Bookmark</h3>
             <Segment clearing className="addBookmark">
+              <NavLink to={`/main/catalog`}>
+                <Icon name="close" link class="closeButton"/>
+              </NavLink>
                 <div className="display_flex">
                     <div className="logo">
                         <img src={this.state.img_url} alt="website logo"/>

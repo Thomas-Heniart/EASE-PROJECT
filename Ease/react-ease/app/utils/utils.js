@@ -147,7 +147,7 @@ export const credentialIconType = {
   login: 'user',
   team: 'slack',
   storeName: 'shopping bag',
-  subdomain: 'link'
+  subdomain: 'linkify'
 };
 
 export const passwordChangeOptions = [

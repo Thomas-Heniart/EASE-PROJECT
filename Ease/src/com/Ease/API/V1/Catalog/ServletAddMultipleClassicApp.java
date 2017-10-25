@@ -37,7 +37,11 @@ public class ServletAddMultipleClassicApp extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            /* @TODO decipher account information */
+            /* String private_key = (String) sm.getContextAttr("privateKey");
+            for (Object entry : account_information.entrySet()) {
+                Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
+                account_information.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
+            }*/
             List<App> appList = new LinkedList<>();
             for (Object app_to_add : apps_to_add) {
                 JSONObject websiteAndName = (JSONObject) app_to_add;
