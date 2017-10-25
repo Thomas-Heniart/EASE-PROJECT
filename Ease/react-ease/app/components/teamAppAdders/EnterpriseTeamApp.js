@@ -146,7 +146,7 @@ const StaticReceivers = ({receivers, me, team_id, expanded}) => {
   return (
       <div class="receivers">
         {receivers.map((item, idx) => {
-          if (idx > 3 && !expanded)
+          if (idx > 2 && !expanded)
             return null;
           return <SimpleCredentialsInput key={item.id} receiver={item} me={me} team_id={team_id}/>
         })}
@@ -192,7 +192,7 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
     )
 };
 
-const ButtonShowMore = ({show_more, showMore}) => {
+const ButtonShowMore = ({number_of_users, show_more, showMore}) => {
   if (show_more)
     return (
         <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, false)}>
@@ -203,7 +203,7 @@ const ButtonShowMore = ({show_more, showMore}) => {
   return (
       <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, true)}>
         <Icon name="add user"/>
-        Show more
+        {number_of_users}&nbsp;users
       </Button>
   )
 };
@@ -445,8 +445,6 @@ class EnterpriseTeamApp extends Component {
                     <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}
                     {this.state.edit && this.props.plan_id === 0 &&
                     <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
-                    {!this.state.edit && users.length > 4 &&
-                    <ButtonShowMore show_more={this.state.show_more} showMore={this.setShowMore}/>}
                   </div>
                 </div>
                 {!this.state.edit &&
@@ -455,6 +453,10 @@ class EnterpriseTeamApp extends Component {
                                  expanded={this.state.show_more}
                                  me={me}
                                  team_id={this.props.team_id}/>}
+                <div>
+                    {!this.state.edit && users.length > 2 &&
+                    <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
+                </div>
                 {this.state.edit &&
                 <Receivers receivers={users}
                            onChange={this.handleReceiverInput}
