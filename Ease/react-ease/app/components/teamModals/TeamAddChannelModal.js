@@ -11,6 +11,7 @@ import { Header, Container, Segment, Checkbox, Form, Input, Select, Dropdown, Bu
     return {
         users: store.users.users,
         myId: store.team.myTeamUserId,
+        team_id: store.team.id,
         channels: store.channels.channels,
         plan_id: store.team.plan_id
     };
@@ -58,7 +59,7 @@ class TeamAddChannelModal extends React.Component {
             }, this);
             Promise.all(addUserActions.map(reflect)).then(() => {
                 this.props.dispatch(showAddTeamChannelModal(false));
-                this.props.history.push(`/teams/${this.props.match.params.teamId}/${channel_id}`);
+                this.props.history.push(`/teams/${this.props.team_id}/${channel_id}`);
             });
         }).catch(err => {
             this.setState({loading: false, errorMessage: err})
