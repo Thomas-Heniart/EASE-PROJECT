@@ -53,7 +53,7 @@ public class ServletDeleteWebsite extends HttpServlet {
                     JSONObject target = shareableApp.getOrigin();
                     target.put("team_id", team.getDb_id());
                     team.getAppManager().removeShareableApp(shareableApp, db);
-                    sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.REMOVED, app_id, target));
+                    team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.REMOVED, app_id, target));
                 }
                 team.removeTeamWebsite(website);
             }

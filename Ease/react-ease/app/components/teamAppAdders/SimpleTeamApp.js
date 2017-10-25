@@ -321,7 +321,6 @@ class SimpleTeamApp extends Component {
                                          onChange={this.handleCredentialInput}
                                          item={item}/>
         });
-    console.log(app);
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
