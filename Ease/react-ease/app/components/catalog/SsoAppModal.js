@@ -382,7 +382,7 @@ class SsoAppModal extends React.Component {
                                                     if (this.checkDouble(double, key.account_information.login) === true) {
                                                         double.push(key.account_information.login);
                                                         return (
-                                                            <List.Item key={key.id} as="p">
+                                                            <List.Item key={key.id} as="p" className="overflow-ellipsis">
                                                                 <a onClick={e => this.selectAccount(key.account_information.login, key.website_id, key.id)}>
                                                                     <Icon name='user circle'/>
                                                                     <span>{key.account_information.login}</span>
