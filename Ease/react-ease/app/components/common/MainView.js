@@ -7,13 +7,13 @@ var SimpleTeamCreationView = require('../teams/SimpleTeamCreationView');
 
 function MainView(props){
   return (
-      <div class="display-flex flex_direction_column full_flex">
-        <EaseHeader/>
+      <div class="display-flex flex_direction_column full_flex bordered_scrollbar" style={{flexFlow: 'column-reverse'}}>
         <Switch>
           <Route path='/main/teamsPreview' component={TeamsPreview}/>
           <Route path='/main/simpleTeamCreation' component={SimpleTeamCreationView}/>
           <Route path='/main/catalog' component={Catalog} />
         </Switch>
+        <EaseHeader/>
       </div>
   )
 }

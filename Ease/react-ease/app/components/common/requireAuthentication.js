@@ -17,15 +17,9 @@ export function requireAuthentication(Component){
       }
     }
     render() {
-      return (
-          <div>
-            {this.props.authenticated === true
-                ? <Component {...this.props}/>
-                : null
-            }
-          </div>
-      )
-
+      if (this.props.authenticated)
+        return <Component {...this.props}/>;
+      return null;
     }
   }
 

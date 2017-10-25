@@ -13,15 +13,16 @@ class Categories extends Component {
     super(props);
   }
   render(){
+    const {resetQuery} = this.props;
     return (
         <List link className="listCategory">
           {this.props.categories.length > 0 &&
-          <List.Item as={NavLink} exact to={`/main/catalog`} activeClassName="active">
+          <List.Item as={NavLink} exact to={`/main/catalog`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog` && resetQuery()}}>
             All
           </List.Item>}
           {this.props.categories.length > 0 && this.props.categories.map(item => {
             return (
-                <List.Item key={item.id} as={NavLink} to={`/main/catalog/${item.id}`} activeClassName="active">
+                <List.Item key={item.id} as={NavLink} to={`/main/catalog/${item.id}`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/${item.id}` && resetQuery()}}>
                   {item.name}
                 </List.Item>
             )
