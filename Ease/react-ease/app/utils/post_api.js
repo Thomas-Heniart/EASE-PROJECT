@@ -20,10 +20,18 @@ module.exports = {
         account_information: account_information
       });
     },
-    addMultipleClassicApp: ({profile_id, apps, account_information}) => {
+    addClassicAppSameAs: ({website_id, name, same_app_id, profile_id}) => {
+        return basic_post('/api/v1/catalog/AddClassicAppSameAs', {
+            website_id: website_id,
+            name: name,
+            same_app_id: same_app_id,
+            profile_id: profile_id
+        });
+    },
+    addMultipleClassicApp: ({profile_id, apps_to_add, account_information}) => {
         return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
           profile_id: profile_id,
-          apps_to_add: apps,
+          apps_to_add: apps_to_add,
           account_information: account_information
         });
     },

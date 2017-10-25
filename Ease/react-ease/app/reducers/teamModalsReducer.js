@@ -261,7 +261,7 @@ export default function reducer(state=initialState, action){
         catalogAddAppModal: action.payload
       }
     }
-    case 'SHOW_CATALOG_ADD_SSO_MODAL': {
+    case 'SHOW_CATALOG_ADD_SSO_APP_MODAL': {
       return {
           ...state,
         catalogAddSSOAppModal: action.payload

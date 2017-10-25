@@ -41,11 +41,11 @@ export function catalogAddClassicApp({name, website_id, profile_id, account_info
   }
 }
 
-export function catalogAddMultipleClassicApp({profile_id, apps, account_information}) {
+export function catalogAddMultipleClassicApp({profile_id, apps_to_add, account_information}) {
   return (dispatch, getState) => {
     return post_api.catalog.addMultipleClassicApp({
       profile_id: profile_id,
-      apps: apps,
+      apps_to_add: apps_to_add,
       account_information: account_information
     }).then(apps => {
       dispatch({type: 'CATALOG_ADD_MULTIPLE_CLASSIC_APP', payload: {apps: apps}});
@@ -54,6 +54,22 @@ export function catalogAddMultipleClassicApp({profile_id, apps, account_informat
       throw err;
     });
   }
+}
+
+export function catalogAddClassicAppSameAs({website_id, name, same_app_id, profile_id}) {
+    return (dispatch, getState) => {
+        return post_api.catalog.addClassicAppSameAs({
+            website_id: website_id,
+            name: name,
+            same_app_id: same_app_id,
+            profile_id: profile_id
+        }).then(apps => {
+            dispatch({type: 'CATALOG_ADD_CLASSIC_APP_SAME_AS', payload: {apps: apps}});
+            return apps;
+        }).catch(err => {
+            throw err;
+        });
+    }
 }
 
 export function catalogAddLogWithApp({name, website_id, profile_id, logWith_app_id}) {
