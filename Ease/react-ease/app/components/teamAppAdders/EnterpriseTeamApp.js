@@ -172,17 +172,24 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
   )
 };
 
-const AcceptRefuseAppHeader = ({onAccept, onRefuse}) => {
-  return (
-      <span style={{lineHeight: '1.7'}}>
-        You received an Enterprise App,
-        &nbsp;
-        <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
-        &nbsp;or&nbsp;
-        <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
-        &nbsp;it?
-      </span>
-  )
+const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
+  if (pinneable)
+    return (
+        <span style={{lineHeight: '1.7'}}>
+          You received an Enterprise App,
+          &nbsp;
+          <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
+          &nbsp;or&nbsp;
+          <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
+          &nbsp;it?
+        </span>
+    );
+  else
+    return (
+        <span style={{lineHeight: '1.7'}}>
+          This app is new to our robot, we are processing the integration. It will be ready in few hours.
+        </span>
+    )
 };
 
 const ButtonShowMore = ({show_more, showMore}) => {
@@ -404,7 +411,7 @@ class EnterpriseTeamApp extends Component {
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
                    onSubmit={this.modify}>
           {meReceiver !== null && !meReceiver.accepted &&
-          <AcceptRefuseAppHeader onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
+          <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
             <Header as="h4">
               {website.name}

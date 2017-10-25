@@ -279,8 +279,6 @@ public class Keys {
             fName = rs.getString(1);
         else
             throw new GeneralException(ServletManager.Code.ClientWarning, "This user does not exist");
-        /*SendGridMail passwordLostEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-        passwordLostEmail.sendPasswordLostEmail(email, fName, code);*/
         db.commitTransaction(transaction);
         MailJetBuilder mailJetBuilder = new MailJetBuilder();
         mailJetBuilder.setTemplateId(178530);
