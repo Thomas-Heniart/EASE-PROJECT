@@ -360,7 +360,7 @@ public class ClassicApp extends WebsiteApp {
 
     public Object getSearchJson() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("website_name", this.website.getName());
+        jsonObject.put("name", this.website.getName());
         jsonObject.put("id", this.getDBid());
         jsonObject.put("logo", this.website.getLogo());
         jsonObject.put("profile_name", this.profile.getName());
