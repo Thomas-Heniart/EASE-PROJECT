@@ -317,33 +317,63 @@ button.only-text-button {
       padding: 0 !important;
       margin-bottom: 20px;
       white-space: nowrap;
-      img {
+      .appLogo {
         width: 35px;
         height: 35px;
-        display: inline-flex;
+        z-index: 2;
         border-radius: 5px;
+        display: inline-block;
         box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.15);
         margin-right: 5px;
       }
-      p {
-        display: inline-flex;
-        font-size: 14px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 105px;
-        color: #424242;
-      }
-      i {
+      .iconCheck {
         display: none;
-        color: #717274;
+        position: absolute;
+        top: 20%;
+        left: 3%;
+        font-size: 25px;
+        color: white;
       }
-      &:hover {
-        p {
-          max-width: 95px;
+      .active {
+        .create_profile_input {
+          width: 95px;
+          input {
+            max-width: 95px;
+          }
         }
-        i {
+        .appLogo {
+          background-color: rgba(65, 65, 65, 0.51);
+        }
+        .iconCheck {
+          display: flex;
+        }
+        .iconWrite {
           display: inline-block;
         }
+      }
+      img {
+        display: inline-flex;
+        border-radius: 5px;
+        z-index: -1;
+      }
+      .create_profile_input {
+        width: 105px;
+        input {
+          display: inline-flex;
+          font-size: 14px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 105px;
+          color: #424242;
+          &:disabled {
+            opacity: 1;
+          }
+        }
+      }
+      .iconWrite {
+        display: none;
+        color: #717274;
+        font-size: 14px;
       }
     }
   }

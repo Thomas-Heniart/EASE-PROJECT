@@ -70,7 +70,6 @@ class ClassicAppModal extends React.Component {
     };
 
     confirm = () => {
-        console.log(this.state.name);
       if (this.state.view === 1) {
           this.setState({ view: 2 });
       }
@@ -81,7 +80,7 @@ class ClassicAppModal extends React.Component {
                   name: this.state.name,
                   profile_id: this.state.selectedProfile,
                   url: this.state.url,
-                  img_url: this.props.modal.website.img_url
+                  img_url: this.props.modal.website.logo
               }).then(r => {
                   this.setState({loading: false});
                   this.props.showCatalogAddAppModal({active: false})
@@ -200,7 +199,7 @@ class ClassicAppModal extends React.Component {
                 <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm}>
                     <Form.Field>
                         <Image src={this.props.modal.website.logo} style={{ width:'80px', marginRight: '10px', display: 'inline-block', borderRadius: '5px'}}/>
-                        <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{this.props.modal.website.name}</p>
+                        <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{this.state.name}</p>
                     </Form.Field>
                     {!this.state.facebook && !this.state.linkedin ?
                         <div>
