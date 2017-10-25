@@ -9,7 +9,6 @@ import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,32 +17,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
-@WebServlet("/api/v1/catalog/AddClassicApp")
-public class ServletAddClassicApp extends HttpServlet {
+@WebServlet("/api/v1/catalog/AddClassicAppSameAs")
+public class ServletAddClassicAppSameAs extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             User user = sm.getUser();
-            if (user == null)
-                user = sm.getUserWithToken();
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            String name = sm.getStringParam("name", true, false);
-            if (name.length() > 255)
-                throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             Integer website_id = sm.getIntParam("website_id", true, false);
+            String name = sm.getStringParam("name", true, false);
+            if (name.equals("") || name.length() >= 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
+            Integer app_id = sm.getIntParam("same_app_id", true, false);
+            App same_app = user.getDashboardManager().getAppWithId(app_id);
+            if (!same_app.isClassicApp())
+                throw new HttpServletException(HttpStatus.BadRequest, "Please provide a classic app");
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Website website = catalog.getPublicWebsiteWithId(website_id);
+            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            Website website = catalog.getWebsiteWithId(website_id);
             Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
-            JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            /* String private_key = (String) sm.getContextAttr("privateKey");
-            for (Object entry : account_information.entrySet()) {
-                Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
-                account_information.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
-            }*/
-            Map<String, String> information = website.getInformationNeeded(account_information);
-            App app = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, website, information, user, sm.getDB());
+            App app = ClassicApp.createClassicAppSameAs(profile, profile.getApps().size(), name, website, (ClassicApp) same_app, sm.getDB(), user);
             profile.addApp(app);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {

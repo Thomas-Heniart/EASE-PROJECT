@@ -5,6 +5,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -57,12 +58,12 @@ public class ServletPricingContact extends HttpServlet {
             mailJetBuilder.addCc("sergii@ease.space");
             mailJetBuilder.addCc("thomas@ease.space");
             mailJetBuilder.setTemplateId(209268);
-            mailJetBuilder.addVariable("message", message);
+            mailJetBuilder.addVariable("message", StringEscapeUtils.unescapeHtml4(message));
             mailJetBuilder.addVariable("role", role);
             mailJetBuilder.addVariable("enterprise", enterprise);
             mailJetBuilder.addVariable("collaborators", collaborators);
             mailJetBuilder.addVariable("phoneNumber", phoneNumber);
-            mailJetBuilder.addVariable("name", name);
+            mailJetBuilder.addVariable("name", StringEscapeUtils.unescapeHtml4(name));
             mailJetBuilder.addVariable("email", email);
             mailJetBuilder.sendEmail();
             sm.setSuccess("Email sent");

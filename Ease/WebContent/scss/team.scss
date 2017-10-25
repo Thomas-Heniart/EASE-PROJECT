@@ -487,11 +487,19 @@ i.icon.pin_button {
   }
   .ui.label.user-label {
     &.static {
-      color: white;
       font-weight:normal;
-      background-color: $themeLightBlueColor;
+      background-color: transparent;
+      color: $themeLightGreyTextColor;
+      border: 1px solid $themeLightGreyTextColor;
       &.accepted {
         background-color: $themeBlue2Color;
+        color: $themeWhiteColor ;
+        border: 1px solid $themeBlue2Color;
+      }
+      &.accepted.can_see_information, &.pinned {
+        color: $themeWhiteColor;
+        background-color: $themeButtonGreenColor;
+        border: 1px solid $themeButtonGreenColor;
       }
     }
     i.icon {
@@ -558,6 +566,19 @@ i.icon.pin_button {
           margin-right: 0;
         }
       }
+      div.labeled.button {
+        color: #414141;
+        font-weight: 300;
+        border: 1px solid #e0e1e2;
+        background-color: transparent;
+        i {
+          background-color: #e0e1e2;
+          color: white;
+        }
+      }
+      div.labeled.button[name='password_change_interval'] {
+        background-color: white;
+      }
     }
     & > div {
       margin-bottom: .5rem;
@@ -601,9 +622,13 @@ i.icon.pin_button {
   }
   .receiver {
     & > .ui.label {
-      background-color: #D2DAE4;
+      background-color: transparent;
+      color: $themeLightGreyTextColor;
+      border: 1px solid $themeLightGreyTextColor;
       &.accepted {
-        background-color: $themeBlue2Color;
+        background-color: $themeButtonGreenColor;
+        border: 1px solid $themeButtonGreenColor;
+        color: white;
       }
     }
   }
@@ -1369,7 +1394,7 @@ button.action_text_button {
   h1 {
     text-align: left;
   }
-  p {
+  p.advice {
     font-size: 0.75em;
     margin: 0.5em 0 0 0;
     color: #9a9a9a;

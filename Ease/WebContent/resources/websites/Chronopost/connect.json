@@ -1,0 +1,23 @@
+{
+  "name":"chronopost",
+  "lastLogin":"",
+  "home":"https://www.chronopost.fr/fr/particulier",
+  "connect":{
+    "todo":[
+      {"action":"click", "search":"div.ch-login-click"},
+      {"action":"waitfor", "search":"#edit-name"},
+      {"action":"fill", "what":"login", "search":"#edit-name"},
+      {"action":"fill", "what":"password", "search":"#edit-pass"},
+      {"action":"click", "search":"#edit-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick","search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], #edit-name"},
+    {"search":"a[href*='logout']"}
+  ]
+}

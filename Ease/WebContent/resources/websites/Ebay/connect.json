@@ -1,0 +1,24 @@
+{
+  "name":"Ebay",
+  "lastLogin":"",
+  "home":"https://www.ebay.fr/",
+  "connect":{
+    "todo":[
+      {"action": "trueClick", "search": ".gh-ug-guest > a"},
+      {"action": "waitload"},
+      {"action":"fill", "what":"login", "search":"#userid"},
+      {"action":"fill", "what":"password", "search":"#pass"},
+      {"action":"trueClick", "search":"#sgnBt"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#gh-ug"},
+      {"action":"waitfor", "search":"#gh-uo > a"},
+      {"action":"trueClick", "search":"#gh-uo > a"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"#gh-ug:not(.gh-ug-guest)"}
+  ]
+}

@@ -245,7 +245,10 @@ class RoomNameSection extends React.Component {
       this.setState({errorMessage: err, loading: false});
     });
   };
-  handleInput = handleSemanticInput.bind(this);
+  handleInput = (e) => {
+      e.target.value = e.target.value.replace(" ", "_").toLowerCase();
+      this.setState({[e.target.name] : e.target.value});
+  };
   render(){
     const room = this.props.room;
     const me = this.props.me;
@@ -451,8 +454,11 @@ class UsernameModifier extends React.Component {
       loading: false,
       error: false
     }
-  }
-  handleInput = handleSemanticInput.bind(this);
+  };
+  handleInput = (e) => {
+    e.target.value = e.target.value.replace(" ", "_").toLowerCase();
+    this.setState({[e.target.name] : e.target.value});
+  };
   setModifying  = (state) => {
     this.setState({username: this.props.user.username, modifying: state, error : false, loading: false});
   };
