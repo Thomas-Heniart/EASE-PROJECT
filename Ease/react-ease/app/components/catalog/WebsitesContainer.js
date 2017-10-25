@@ -54,7 +54,7 @@ class WebsitesContainer extends Component{
                    path={`${this.props.match.path}`}
                    render={(props) => <AppsContainer {...props} title={'Recently added'} websites={websites} openModal={this.openModal}/>}/>
             <Route path={`${this.props.match.path}/:categoryId`}
-                   render={(props) => <CategoryAppsContainer {...props} websites={websites}/>}/>
+                   render={(props) => <CategoryAppsContainer {...props} websites={websites} openModal={this.openModal}/>}/>
           </Switch>}
           {websites.length === 0 && this.props.catalog.loaded &&
           <div>

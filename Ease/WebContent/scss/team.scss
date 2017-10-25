@@ -218,62 +218,52 @@ button.only-text-button {
   }
 }
 
-.connectWithFacebook {
-  border: solid 1px #3b5998 !important;
-  .first {
-    font-size: 16px !important;
-    background-color: #3b5998;
-    color: white;
-    i {
-      margin-right: 20px;
-    }
-  }
-  p {
-    font-size: 16px !important;
-    line-height: 1.25;
-    a {
-      color: #414141 !important;
-      &:hover {
-        text-decoration: underline;
-        color: #3b5998 !important;
-        i {
-          text-decoration: none;
-        }
-      }
-    }
-    i {
-      text-decoration: none;
-      margin-right: 10px;
-    }
-  }
-}
 
-.connectWithLinkedin {
-  border: solid 1px #1f88be !important;
-  .first {
-    font-size: 16px !important;
-    background-color: #1f88be;
-    color: white;
-    i {
-      margin-right: 20px;
-    }
-  }
-  p {
-    font-size: 16px !important;
-    line-height: 1.25;
-    a {
-      color: #414141 !important;
-      &:hover {
-        text-decoration: underline;
-        color: #1f88be !important;
-        i {
-          text-decoration: none;
-        }
+#add_logwith_form{
+  .ui.segments{
+    font-size: 16px;
+    &.facebook {
+      border: solid 1px #3b5998 !important;
+      .first {
+        background-color: #3b5998;
       }
     }
-    i {
-      text-decoration: none;
-      margin-right: 10px;
+    &.linkedin {
+      border: solid 1px #1f88be !important;
+      .first {
+        background-color: #1f88be;
+      }
+    }
+    .first {
+      color: white;
+      i {
+        margin-right: 20px;
+      }
+    }
+    .errorMessage {
+      color: #eb555c;
+    }
+    .ui.list {
+      font-size: 16px;
+      .item {
+        cursor: pointer;
+        @include display-flex();
+        @include align-items(center);
+        opacity: .7;
+        &:hover {
+          opacity: 1;
+        }
+        .icon {
+          margin-right: 10px;
+        }
+      }
+      .item.active {
+        color: #3b5998;
+        opacity: 1;
+        span {
+          text-decoration: underline;
+        }
+      }
     }
   }
 }
@@ -764,6 +754,11 @@ button.action_text_button {
     color: $themeBlue2Color;
   }
   .container {
+    button.button.modal-button {
+      width: 116.3%;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
     .button.modal-button {
       @include display-flex();
       @include align-items(center);
