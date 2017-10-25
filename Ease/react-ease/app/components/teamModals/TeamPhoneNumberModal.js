@@ -18,7 +18,7 @@ class TeamPhoneNumberModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      phone: ''
+      phone: '+33'
     };
     this.confirmModal = this.confirmModal.bind(this);
   }
@@ -47,6 +47,7 @@ class TeamPhoneNumberModal extends React.Component {
               <Phone
                   placeholder="Enter phone number"
                   value={ this.state.phone }
+                  country={"FR"}
                   onChange={ phone => {this.setState({ phone })} } />
             </div>
             <button class="row button-unstyle positive_button big_validate_button"

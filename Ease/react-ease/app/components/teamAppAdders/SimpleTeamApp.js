@@ -82,10 +82,10 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
              trigger={
                <Label class={classnames("user-label static", accepted ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
                  {username}
-                 {can_see_information && !admin && accepted &&
-                 <Icon name='mobile'/>}
                  {admin &&
-                 <Icon name={can_see_information ? 'unhide' : 'hide'}/>}
+                 <Icon name={can_see_information ? 'unhide' : 'hide'}/>}&nbsp;
+                 {can_see_information &&
+                 <Icon name='mobile'/>}
                </Label>
              }
              content={
@@ -95,10 +95,10 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
                  <span>Mobile access: on</span>}
                  {accepted && !can_see_information &&
                  <span>Mobile access: off</span>}
-                 <br/> &&
+                 <br/>
                  {accepted && can_see_information &&
                  <span>Password copy: on</span>}
-                   {accepted && can_see_information &&
+                 {accepted && !can_see_information &&
                  <span>Password copy: off</span>}
                </div>}/>
   )
