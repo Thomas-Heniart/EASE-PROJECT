@@ -3,7 +3,6 @@ package com.Ease.Context;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -52,9 +51,12 @@ public class OnStart implements ServletContextListener {
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
                 Stripe.apiVersion = "2017-08-15";
 
-                Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
-                context.setAttribute("publicKey", publicAndPrivateKey.getKey());
-                context.setAttribute("privateKey", publicAndPrivateKey.getValue());
+                context.setAttribute("publicKey", "UxJguNs0XrWs81eJLyiD+1M6UhH1/gFIuGim1xsBalKiuKO4q/g7W9cmK2QUWPrfLkC3eT3Ldg3liMpPYFmV0ygHit11rSLkn9uqrsUiBVd1NEyMHNdDPxyimCdm9XZ5/DlPwcsaAl7gZ2KVYb42bUc2JxofKfqRRfBst/4tRJY=");
+                context.setAttribute("privateKey", "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAIxSIq8SyhAkccc/R5Ew1F6bBkQlc5HHBkbhn/4q2WUo9A1z2TYrJnWkH/LZP2oIVo9oJvzN2Cwj4fwE9M0X3HnPiltlyzTRzBygQWPiLYckR4gcHmf6emZFFsITsp9FG/DDelUnxE1Wx8hxnHe7xE9eUy8aweB" +
+                        "64X5Ygs1juv+dAgMBAAECgYBOCDsLevptYab4M4N8BViER9eDPAR50+D0t/H+KRv9+nlFpd/sFLDtiNjPduqh74MbesL7oQkO+uFoAeWUzCkprEGhR4ASXaosDfaFLZIkBvN6C5TKiQMEBmJZQpCqmLsklw6L2dok3Cg3JOs+zfAQOG0fR3pi2ty6zBZonGD7oQJBANJrqs8b6k" +
+                        "pE7Eev5j8sopAqkjvP9uw8OjI6YZlgKQoAeIYzORBa2758cCXvK7sUJvPJhcNvVN8LN5HkHQA33GkCQQCqt0R75g92zKsClH04vrLowlx8jHcZEDur+wa8dpnDkePLNaB/E4ggbnFxDOgGV/W5uiNc3CRF09zNQaIotTMVAkEAxUT9SNex6dj97yNAZ9+vtBrFJ+ALbWP1Z1uGX" +
+                        "qVhNChG1gG1sNiNhOLivR2h0OzOq+U1S4jXd5frjBHhAnBcaQJAEXyORkathNS4G56MKRjXiKIICTX2KRoRkq825G0dmPvDopgOpZWhlvjZI+RXi/bMk8auQp/GE2T9NAUqEBNndQJAE6+lsecozNONV1D4iKPX6eAhjZZn6iP+l8nht5Q9nxocj0hEQhd+uFLcB+KDRJjgsVzc" +
+                        "mWyig4wiTBOq+BRDzg==");
 
                 context.setAttribute("userManager", new UserManager());
 

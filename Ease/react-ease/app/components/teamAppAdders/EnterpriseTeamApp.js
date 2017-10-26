@@ -79,7 +79,7 @@ const ReadOnlyTeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, 
 const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
   return (
       <div class="receiver">
-        <Label class="receiver-label" color="blue">
+          <Label class={classnames("receiver-label", (receiver.receiver !== null && receiver.receiver.accepted) ? 'accepted': null)}>
           <span>{receiver.username}</span>
           <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
         </Label>
@@ -90,7 +90,7 @@ const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly}) => {
   return (
       <div class="receiver">
-        <Label class="receiver-label" color="blue"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        <Label class={classnames("receiver-label", (receiver.receiver !== null && receiver.receiver.accepted) ? 'accepted': null)}><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
         {
           receiver.credentials.map(item => {
             return <TeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={readOnly} receiver_id={receiver.id} key={item.priority} onChange={onChange} item={item}/>
@@ -317,7 +317,8 @@ class EnterpriseTeamApp extends Component {
       return {
         ...item,
         credentials: credentials,
-        password_filled: receiver !== null && receiver.password_filled
+        password_filled: receiver !== null && receiver.password_filled,
+        receiver: receiver
       }
     });
     this.setState({users: users, selected_users: selected_users});
@@ -459,7 +460,7 @@ class EnterpriseTeamApp extends Component {
                                  me={me}
                                  team_id={this.props.team_id}/>}
                 <div>
-                    {!this.state.edit && users.length > 2 &&
+                    {!this.state.edit && users.length > 3 &&
                     <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
                 </div>
                 {this.state.edit &&
