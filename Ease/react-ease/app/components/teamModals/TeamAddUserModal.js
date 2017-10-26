@@ -52,6 +52,10 @@ class TeamAddUserModal extends React.Component {
     this.state.defaultRooms = this.state.value.slice();
   }
   handleInput = handleSemanticInput.bind(this);
+  usernameInput = (e) => {
+      e.target.value = e.target.value.replace(" ", "_").toLowerCase();
+      this.setState({[e.target.name] : e.target.value});
+  };
   userRoleInput = (e, {value}) => {
     if (this.props.plan_id === 0 && value === 2) {
       this.props.dispatch(showUpgradeTeamPlanModal(true, 3));
@@ -122,7 +126,7 @@ class TeamAddUserModal extends React.Component {
               </Form.Group>
               <Form.Group>
                 <Form.Input label="Username" type="text" name="username"
-                            onChange={this.handleInput}
+                            onChange={this.usernameInput}
                             required
                             placeholder="Username" width={6}/>
                 <Form.Select

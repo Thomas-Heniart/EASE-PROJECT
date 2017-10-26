@@ -9,13 +9,103 @@ export const setUserDropdownText = (user) => {
 };
 
 export const renderSimpleAppUserLabel = (label, index, props) => {
-  return (
-      <Label color="blue" class="user-label">
-        {label.username}
-        <Icon link name={label.can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>
-        <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
-      </Label>
-  )
+    console.log(label);
+    const {username, can_see_information, receiver} = label;
+    return (
+        <Popup size="mini"
+               position="bottom center"
+               inverted
+               flowing
+               hideOnScroll={true}
+               trigger={
+                   <Label class={classnames("user-label static", (receiver !== null && receiver.accepted) ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
+                       {username}
+                       <Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
+                       {can_see_information &&
+                       <Icon name='mobile'/>}
+                       <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
+                   </Label>
+               }
+               content={
+                   <div>
+                       {(receiver === null || !receiver.accepted) && <span>App acceptation pending...</span>}
+                       {receiver !== null && receiver.accepted && can_see_information &&
+                       <span>Mobile access: on</span>}
+                       {receiver !== null && receiver.accepted && !can_see_information &&
+                       <span>Mobile access: off</span>}
+                       <br/>
+                       {receiver !== null && receiver.accepted && can_see_information &&
+                       <span>Password copy: on</span>}
+                       {receiver !== null && receiver.accepted && !can_see_information &&
+                       <span>Password copy: off</span>}
+                   </div>}/>
+    )
+};
+
+export const renderSimpleAppEditUserLabel = (label, index, props) => {
+    console.log(label);
+    const {username, can_see_information, receiver} = label;
+    return (
+        <Popup size="mini"
+               position="bottom center"
+               inverted
+               flowing
+               hideOnScroll={true}
+               trigger={
+                   <Label class={classnames("user-label static", (receiver !== null && receiver.accepted) ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
+                       {username}
+                       <Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
+                       {can_see_information &&
+                       <Icon name='mobile'/>}
+                       <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
+                   </Label>
+               }
+               content={
+                   <div>
+                       {can_see_information &&
+                       <span>Mobile access: on</span>}
+                       {!can_see_information &&
+                       <span>Mobile access: off</span>}
+                       <br/>
+                       {can_see_information &&
+                       <span>Password copy: on</span>}
+                       {!can_see_information &&
+                       <span>Password copy: off</span>}
+                   </div>}/>
+    )
+};
+
+
+export const renderSimpleAppAddUserLabel = (label, index, props) => {
+    const {username, can_see_information} = label;
+    return (
+        <Popup size="mini"
+               position="bottom center"
+               inverted
+               flowing
+               hideOnScroll={true}
+               trigger={
+                   <Label class={classnames("user-label static", can_see_information ? 'can_see_information' : null)}>
+                       {username}
+                       <Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
+                       {can_see_information &&
+                       <Icon name='mobile'/>}
+                       <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
+                   </Label>
+               }
+               content={
+                   <div>
+                       {can_see_information &&
+                       <span>Mobile access: on</span>}
+                       {!can_see_information &&
+                       <span>Mobile access: off</span>}
+                       <br/>
+                       {can_see_information &&
+                       <span>Password copy: on</span>}
+                       {!can_see_information &&
+                       <span>Password copy: off</span>}
+                   </div>}/>
+    )
 };
 
 export const PasswordChangeDropdown = ({value, onChange, disabled}) => {

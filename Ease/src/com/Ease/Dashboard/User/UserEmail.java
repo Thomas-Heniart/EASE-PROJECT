@@ -36,13 +36,18 @@ public class UserEmail {
         return emails;
     }
 
-    public static UserEmail createUserEmail(String email, User user, boolean verified, DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("INSERT INTO usersEmails VALUES(NULL, ?, ?, ?);");
-        request.setInt(user.getDBid());
-        request.setString(email);
-        request.setBoolean(verified);
-        String db_id = request.set().toString();
-        return new UserEmail(db_id, email, verified, user);
+    public static UserEmail createUserEmail(String email, User user, boolean verified, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("INSERT INTO usersEmails VALUES(NULL, ?, ?, ?);");
+            request.setInt(user.getDBid());
+            request.setString(email);
+            request.setBoolean(verified);
+            String db_id = request.set().toString();
+            return new UserEmail(db_id, email, verified, user);
+        } catch (GeneralException e) {
+            e.printStackTrace();
+            throw new HttpServletException(HttpStatus.InternError);
+        }
     }
 
     protected String db_id;

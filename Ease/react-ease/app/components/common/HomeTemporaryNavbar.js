@@ -129,6 +129,9 @@ class HomeTemporaryNavbar extends React.Component {
   goHome(){
     window.location.href = "/home";
   }
+  goCatalog(){
+    window.location.href = "/teams#/main/catalog";
+  }
   componentDidMount(){
     ReactTooltip.rebuild();
   }
@@ -150,9 +153,12 @@ class HomeTemporaryNavbar extends React.Component {
         </Menu.Item>
       <NotificationList notifications={this.props.notifications} history={this.props.history} dispatch={this.props.dispatch}/>
       <TeamsList user={this.props.user}/>
-      <Menu.Item id="catalog_button" data-tip="Apps Catalogue" onClick={e => {enterEditMode()}}>
+      <Menu.Item id="catalog_button" data-tip="Apps Catalogue" onClick={this.goCatalog}>
         <Icon name="plus"/>
       </Menu.Item>
+      {/*<Menu.Item id="catalog_button" data-tip="Apps Catalogue" onClick={e => {enterEditMode()}}>*/}
+        {/*<Icon name="plus"/>*/}
+      {/*</Menu.Item>*/}
     </Menu>
     )
   }

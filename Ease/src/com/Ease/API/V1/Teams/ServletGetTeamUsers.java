@@ -3,8 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -24,16 +22,13 @@ public class ServletGetTeamUsers extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
-            if (!teamUser.isVerified())
-                throw new HttpServletException(HttpStatus.Forbidden, "Your admin must verify you first.");
+            sm.getUser().getTeamUserForTeam(team);
             JSONArray jsonArray = new JSONArray();
-            for (TeamUser teamUser1 : team.getTeamUsers().values())
-                jsonArray.add(teamUser1.getJson());
+            for (TeamUser teamUser : team.getTeamUsers().values())
+                jsonArray.add(teamUser.getJson());
             sm.setSuccess(jsonArray);
         } catch (Exception e) {
             sm.setError(e);

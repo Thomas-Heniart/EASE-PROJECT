@@ -61,7 +61,7 @@ function UserList(props){
         </button>}
         <NavLink to={`/teams/${props.match.params.teamId}/${props.match.params.itemId}/members`} className="section-header">
           <span class="inline-tooltipped" data-tip="Open a Desk" data-place="right">
-            Desks
+            Users
           </span>
           <span className="header-count"> ({props.items.length})</span>
         </NavLink>

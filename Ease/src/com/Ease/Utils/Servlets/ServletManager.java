@@ -1,6 +1,5 @@
 package com.Ease.Utils.Servlets;
 
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.JWToken;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
@@ -9,11 +8,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.Utils.Crypto.RSA;
 import com.stripe.exception.StripeException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -59,7 +56,6 @@ public abstract class ServletManager {
         this.request = request;
         this.response = response;
         this.user = (User) request.getSession().getAttribute("user");
-        this.teamUser = (TeamUser) request.getSession().getAttribute("teamUser");
         this.saveLogs = saveLogs;
     }
 
@@ -132,7 +128,7 @@ public abstract class ServletManager {
 
     public void needToBeConnected() throws HttpServletException {
         if (user == null)
-            throw new HttpServletException(HttpStatus.AccessDenied);
+            user = this.getUserWithToken();
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
@@ -377,10 +373,6 @@ public abstract class ServletManager {
         this.getSession().setAttribute("user", user);
     }
 
-    public TeamUser getTeamUser() {
-        return teamUser;
-    }
-
     public HttpSession getSession() {
         return request.getSession();
     }
@@ -416,52 +408,27 @@ public abstract class ServletManager {
     }
 
     public User getUserWithToken() throws HttpServletException {
-        try {
-            String token = this.request.getHeader("Authorization");
-            if (token == null || token.equals(""))
-                throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
-            Map<String, User> tokenUserMap = (Map<String, User>) this.getContextAttr("tokenUserMap");
-            Key key = (Key) this.getContextAttr("secret");
-            Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-            String connection_token = (String) claimsJws.get("tok");
-            User user = tokenUserMap.get(connection_token);
+        String token = this.request.getHeader("Authorization");
+        if (token == null || token.equals(""))
+            throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
+        Map<String, User> tokenUserMap = (Map<String, User>) this.getContextAttr("tokenUserMap");
+        Key key = (Key) this.getContextAttr("secret");
+        Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        String connection_token = (String) claimsJws.get("tok");
+        User user = tokenUserMap.get(connection_token);
+        if (user == null) {
+            String user_name = (String) claimsJws.get("name");
+            String user_email = (String) claimsJws.get("email");
             Long expiration_date = (Long) claimsJws.get("exp");
-            if (expiration_date <= new Date().getTime())
-                throw new HttpServletException(HttpStatus.BadRequest, "Your token expired, you must login");
-            if (user == null) {
-                String user_name = (String) claimsJws.get("name");
-                String user_email = (String) claimsJws.get("email");
-                JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
-                user = User.loadUserFromJWT(jwToken, this.getServletContext(), this.getDB());
-                for (TeamUser teamUser : user.getTeamUsers()) {
-                    if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
-                        teamUser.finalizeRegistration();
-                        this.getHibernateQuery().saveOrUpdateObject(teamUser);
-                    }
-                    if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
-                        String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), user.getKeys().getPrivateKey());
-                        teamUser.setTeamKey(user.encrypt(deciphered_teamKey));
-                        teamUser.setDeciphered_teamKey(deciphered_teamKey);
-                        teamUser.setDisabled(false);
-                        this.getHibernateQuery().saveOrUpdateObject(teamUser);
-                        for (SharedApp sharedApp : teamUser.getSharedApps()) {
-                            sharedApp.setDisableShared(false, this.getDB());
-                        }
-                    }
-                }
-                tokenUserMap.put(jwToken.getConnection_token(), user);
-                user.getDashboardManager().decipherApps(this);
-                ((Map<String, User>) this.getContextAttr("users")).put(user.getEmail(), user);
-            }
-            user.getJwt().checkJwt(claimsJws);
-            if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
-                throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired");
-            this.user = user;
-            return this.user;
-        } catch (SignatureException e) {
-            throw new HttpServletException(HttpStatus.Forbidden, "This is not a valid token.");
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
+            JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
+            jwToken.setJwt(token);
+            user = User.loadUserFromJWT(jwToken, this, this.getDB());
+            tokenUserMap.put(jwToken.getConnection_token(), user);
         }
+        user.getJwt().checkJwt(claimsJws);
+        if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
+            throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired");
+        this.user = user;
+        return this.user;
     }
 }

@@ -18,8 +18,8 @@
     <title>Ease.space admin</title>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="manifest" href="manifest.json">
-    <script src="jsMinified.v00021/jquery-3.1.0.js"></script>
-    <script src="jsMinified.v00021/ajaxHandler.js"></script>
+    <script src="jsMinified.v00022/jquery-3.1.0.js"></script>
+    <script src="jsMinified.v00022/ajaxHandler.js"></script>
     <script src="js/backOffice/admin.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
@@ -31,6 +31,10 @@
             max-height: 600px;
             max-width: 99%;
         }
+        .ui.celled.table tr td, .ui.celled.table tr th {
+            max-width: 250px;
+            overflow: auto;
+        }
     </style>
 </head>
 <body role="document" class="mainBody">
@@ -39,6 +43,8 @@
         <div class="ui vertical fluid tabular menu">
             <a class="item" data-target="#team-segment">Teams</a>
             <a class="item" data-target="#website-segment">Websites</a>
+            <a class="item" data-target="#category-segment">Categories</a>
+            <a class="item" data-target="#website-requests-segment">Requests</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -47,6 +53,12 @@
         </div>
         <div id="website-segment" class="ui segment loading" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebsiteManager.jsp" %>
+        </div>
+        <div id="category-segment" class="ui segment loading" style="display: none;">
+            <%@include file="templates/backofficeAdmin/CategoryManager.jsp" %>
+        </div>
+        <div id="website-requests-segment" class="ui segment loading" style="display: none;">
+            <%@include file="templates/backofficeAdmin/WebisteRequests.jsp"%>
         </div>
     </div>
 </div>

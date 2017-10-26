@@ -157,8 +157,7 @@ class EaseMainNavbar extends React.Component {
                 <NotificationList notifications={this.props.notifications} history={this.props.history}
                                   dispatch={this.props.dispatch}/>
                 <TeamsList user={this.props.user}/>
-                <Menu.Item id="catalog_button" style={{backgroundColor: "#979797", cursor: 'not-allowed'}}
-                           data-tip="Apps Catalogue">
+                <Menu.Item as={NavLink} data-tip="Apps Catalogue" id="catalog_button" to={'/main/catalog'}>
                     <Icon name="plus"/>
                 </Menu.Item>
             </Menu>

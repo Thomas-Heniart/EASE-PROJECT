@@ -3,7 +3,7 @@ var classnames = require('classnames');
 var api = require('../../utils/api');
 import {dashboard} from "../../utils/post_api";
 import {showPinTeamAppToDashboardModal} from "../../actions/teamModalActions"
-import {teamAppPinToDashboard, teamPinLinkApp} from "../../actions/appsActions"
+import {teamAppPinToDashboard, teamAcceptSharedApp, teamPinLinkApp} from "../../actions/appsActions"
 import {findMeInReceivers} from "../../utils/helperFunctions"
 import {connect} from "react-redux"
 
@@ -43,27 +43,33 @@ class PinTeamAppToDashboardModal extends React.Component {
   };
   confirmModal(){
     const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
-    if (meReceiver === null && this.state.selectedProfile === -1){
-      this.props.dispatch(showPinTeamAppToDashboardModal(false));
-      return;
-    }
-    if (meReceiver !== null && meReceiver.profile_id === -1 && this.state.selectedProfile === -1){
-      this.props.dispatch(showPinTeamAppToDashboardModal(false));
-      return;
-    }
-    if (this.props.modal.app.type === 'link'){
-      this.props.dispatch(teamPinLinkApp({
+    this.props.dispatch(teamAcceptSharedApp({
         team_id: this.props.team_id,
         app_id: this.props.modal.app.id,
-        app_name: this.state.name,
-        profile_id: this.state.selectedProfile
-      })).then(() => {
-        this.props.dispatch(showPinTeamAppToDashboardModal(false));
-      });
-      return;
-    }
-    this.props.dispatch(teamAppPinToDashboard(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name, this.props.modal.app.id)).then(response => {
-      this.props.dispatch(showPinTeamAppToDashboardModal(false));
+        shared_app_id: meReceiver.shared_app_id
+    })).then(() => {
+        if (meReceiver === null && this.state.selectedProfile === -1){
+            this.props.dispatch(showPinTeamAppToDashboardModal(false));
+            return;
+        }
+        if (meReceiver !== null && meReceiver.profile_id === -1 && this.state.selectedProfile === -1){
+            this.props.dispatch(showPinTeamAppToDashboardModal(false));
+            return;
+        }
+        if (this.props.modal.app.type === 'link'){
+            this.props.dispatch(teamPinLinkApp({
+                team_id: this.props.team_id,
+                app_id: this.props.modal.app.id,
+                app_name: this.state.name,
+                profile_id: this.state.selectedProfile
+            })).then(() => {
+                this.props.dispatch(showPinTeamAppToDashboardModal(false));
+            });
+            return;
+        }
+        this.props.dispatch(teamAppPinToDashboard(meReceiver.shared_app_id, this.state.selectedProfile, this.state.name, this.props.modal.app.id)).then(response => {
+            this.props.dispatch(showPinTeamAppToDashboardModal(false));
+        });
     });
   }
   setNameModifying(){
