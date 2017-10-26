@@ -20,6 +20,9 @@ class Catalog extends React.Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  componentWillMount() {
+    document.title = "Apps Catalogue"
+  }
   componentDidMount() {
     if (!this.props.catalog.loaded)
       this.props.fetchCatalog();

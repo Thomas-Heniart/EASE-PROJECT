@@ -951,15 +951,20 @@ header .intro-text .intro-heading {
     background-repeat: no-repeat;
     background-size: 100%;
     width: 100%;
-    height: 100%;
     left: .1%;
+    &:hover {
+        .inTheMac {
+            filter: blur(3px);
+            transition: all .5s ease;
+        }
+    }
 }
 
 
 .inTheMac {
     position: absolute;
     left: 16%;
-    top: 15%;
+    top: 11%;
     background-image: url(/resources/images/screen.png);
     background-position-x: center;
     background-position-y: center;
@@ -979,16 +984,21 @@ header .intro-text .intro-heading {
 
 #discoverButton {
     position: absolute;
+    top: 50%;
+    left: 48.3%;
     z-index: 2;
     color: #ffffff;
     background-color: #373b60;
+    -webkit-transform: translateX(-41.5%) translateY(-41.5%);
+    -ms-transform: translateX(-41.5%) translateY(-41.5%);
+    transform: translateX(-41.5%) translateY(-41.5%) !important;
     &:hover {
         filter:none !important;
         color: #ffffff;
         background-color: #373b60;
-        -webkit-transform: scale(1.2) translateX(-41.5%) translateY(-50%);
-        -ms-transform: scale(1.2) translateX(-41.5%) translateY(-50%);
-        transform: scale(1.2) translateX(-41.5%) translateY(-50%) !important;
+        -webkit-transform: scale(1.2) translateX(-35%) translateY(-41.5%);
+        -ms-transform: scale(1.2) translateX(-35%) translateY(-41.5%);
+        transform: scale(1.2) translateX(-35%) translateY(-41.5%) !important;
         transition: all .5s ease;
     }
 }
@@ -997,9 +1007,9 @@ header .intro-text .intro-heading {
     filter: none !important;
     color: #ffffff;
     background-color: #373b60;
-    -webkit-transform: scale(1.1) translateX(-41.5%) translateY(-50%);
-    -ms-transform: scale(1.1) translateX(-41.5%) translateY(-50%);
-    transform: scale(1.1) translateX(-41.5%) translateY(-50%);
+    -webkit-transform: scale(1.1) translateX(-41.5%) translateY(-41.5%);
+    -ms-transform: scale(1.1) translateX(-41.5%) translateY(-41.5%);
+    transform: scale(1.1) translateX(-41.5%) translateY(-41.5%);
     transition: all .5s ease;
 }
 
@@ -1359,11 +1369,14 @@ header {
     #columnMac {
         height: 130%;
     }
+    .rightLanding {
+        height: 80%;
+    }
     .inTheMac {
         margin:0;
         padding:0;
         height: 100%;
-        top: 0;
+        top: -10;
     }
     #footer {
         padding: 10% 20%;
