@@ -60,7 +60,7 @@ class AddBookmark extends React.Component {
                             <Input placeholder="Paste website URL"
                                    className="width100"
                                    autoComplete="off"
-                                   type="text"
+                                   type="url"
                                    name="url"
                                    value={this.state.url}
                                    onChange={this.changeUrl}
