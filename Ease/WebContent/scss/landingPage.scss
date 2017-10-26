@@ -952,6 +952,12 @@ header .intro-text .intro-heading {
     background-size: 100%;
     width: 100%;
     left: .1%;
+    &:hover {
+        .inTheMac {
+            filter: blur(3px);
+            transition: all .5s ease;
+        }
+    }
 }
 
 
@@ -1364,7 +1370,7 @@ header {
         height: 130%;
     }
     .rightLanding {
-        height: 100%;
+        height: 80%;
     }
     .inTheMac {
         margin:0;
