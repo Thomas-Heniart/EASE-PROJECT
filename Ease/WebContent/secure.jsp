@@ -30,14 +30,14 @@
 
 
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="/jsMinified.v00021/tracker.js"></script>
+    <script src="/jsMinified.v00022/tracker.js"></script>
     <script type="text/javascript">
         (function (e, t) {
             var n = e.amplitude || {_q: [], _iq: {}};
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00021/amplitude-analytics.js";
+            r.src = "/jsMinified.v00022/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };
