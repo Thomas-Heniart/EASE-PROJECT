@@ -224,10 +224,14 @@ class SsoAppModal extends React.Component {
 
     checkAccountGoogle = () => {
         const account = this.state.logWith_websites.map(item => {
-            return item.personal_apps.map(key => {
+             return item.personal_apps.map(key => {
                 if (key.account_information) {
-                    return key;
+                    console.log(key.account_information);
+                        return key;
                 }
+            }).filter(key2 => {
+                if (key2)
+                    return true
             });
         });
         const response = account.filter(item => {

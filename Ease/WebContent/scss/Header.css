@@ -4,66 +4,86 @@
   left: 0;
   right: 0;
   padding-right: 5px;
-  height: 43px;
+  height: 60px;
   z-index: 1; }
-  #main_header nav {
-    position: relative;
-    float: right;
-    margin-top: 4.5px;
-    border: 1px solid #E1E1E1;
-    border-radius: 5px; }
-    #main_header nav button {
-      border-right: 1px solid #E1E1E1;
-      position: relative; }
-      #main_header nav button:first-child {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px; }
-      #main_header nav button:last-child {
-        border-right: none;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px; }
-      #main_header nav button:hover {
-        background-color: #f8f8f8; }
-      #main_header nav button.active {
-        background-color: #f8f8f8; }
-        #main_header nav button.active .menu {
-          display: block; }
-      #main_header nav button .menu {
-        display: none;
-        width: 170px;
-        min-width: 170px;
-        overflow: inherit;
-        background-color: white;
-        top: 100%;
-        font-size: .7rem;
-        font-weight: bold;
-        right: 0;
-        margin-top: 10px;
-        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
-        border: none; }
-        #main_header nav button .menu .menu_row {
-          padding: 5px 10px;
-          border-bottom: 1px solid #E1E1E1; }
-          #main_header nav button .menu .menu_row:last-child {
-            border-bottom: none; }
-    #main_header nav #catalog_button {
-      background-color: #4FCB6C; }
-      #main_header nav #catalog_button:hover {
-        background-color: #3FA056; }
-    #main_header nav #settings_button {
-      padding: 0 10px; }
 
-#main_header .logoImg {
-  height: 100%;
+.ui.menu .item > i.icon {
   margin: 0; }
 
-#team_button .icon {
-  margin-right: 5px; }
-#team_button .menu_row.teams_container {
-  padding: 0 !important; }
-#team_button .team_select {
-  border-bottom: none; }
-#team_button .team_select {
+#main_navbar {
+  font-size: .7rem;
+  margin: auto; }
+  #main_navbar .menu {
+    left: auto;
+    right: 0; }
+  #main_navbar #catalog_button {
+    background-color: #45C997;
+    color: white;
+    border-top-right-radius: .28571429rem;
+    border-bottom-right-radius: .28571429rem; }
+    #main_navbar #catalog_button:hover {
+      cursor: pointer;
+      background-color: #31aa7c; }
+  #main_navbar #logout_button .menu > .item {
+    font-weight: bold !important;
+    color: #E84855 !important; }
+  #main_navbar #teams_list .menu > .item {
+    font-weight: bold !important; }
+    #main_navbar #teams_list .menu > .item.active {
+      color: #3C91E6 !important; }
+  #main_navbar #notifications_menu > .icons .red.circle {
+    transform: scale(1.8);
+    right: 3px;
+    text-shadow: none; }
+  #main_navbar #notifications_menu .menu {
+    width: 320px !important;
+    max-width: 320px;
+    z-index: 100; }
+    #main_navbar #notifications_menu .menu > * {
+      white-space: normal;
+      line-height: 1.3; }
+    #main_navbar #notifications_menu .menu .notification-card {
+      display: flex; }
+      #main_navbar #notifications_menu .menu .notification-card.new {
+        background-color: #f8f8f8 !important; }
+        #main_navbar #notifications_menu .menu .notification-card.new:before {
+          content: "\f111";
+          left: 6px;
+          font-size: 8px;
+          color: #E84855;
+          top: 35%;
+          position: absolute;
+          font-family: FontAwesome; }
+
+#ease_main_navbar #notification_button .menu {
+  padding: 1px;
+  width: 370px;
+  max-height: 346px;
+  right: -59px;
+  overflow: auto;
+  border: 2px solid transparent; }
+  #ease_main_navbar #notification_button .menu:before {
+    right: 66px; }
+  #ease_main_navbar #notification_button .menu .menu_row {
+    overflow: hidden;
+    border-bottom: 1px solid white;
+    padding: 0 0 0 0; }
+    #ease_main_navbar #notification_button .menu .menu_row:last-child {
+      border: none; }
+
+.notification-card .date {
+  color: #979797;
+  margin-top: 10px; }
+.notification-card .icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  -webkit-flex-shrink: 0;
+  -moz-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0; }
+
+#ease_header {
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-flex;
@@ -73,15 +93,112 @@
   -webkit-align-items: center;
   -webkit-box-align: center;
   -moz-align-items: center;
-  align-items: center; }
-#team_button .team_select:hover, #team_button #team_adder:hover {
+  align-items: center;
+  -webkit-flex-basis: 60px;
+  -moz-flex-basis: 60px;
+  -ms-flex-preferred-size: 60px;
+  flex-basis: 60px;
+  -webkit-flex-shrink: 0;
+  -moz-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  z-index: 2;
+  position: relative;
+  padding-right: 14px;
+  height: 60px;
+  border-bottom: 1px solid #E1E1E1; }
+  #ease_header .logo_container {
+    height: 100%; }
+    #ease_header .logo_container img {
+      height: 100%; }
+
+#ease_main_navbar {
+  position: relative;
+  float: right;
+  border: 1px solid #E1E1E1;
+  border-radius: 5px;
+  z-index: 3;
+  height: 36px;
+  background-color: white; }
+  #ease_main_navbar button {
+    border-right: 1px solid #E1E1E1;
+    position: relative; }
+    #ease_main_navbar button:first-child {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px; }
+    #ease_main_navbar button:last-child {
+      border-right: none;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px; }
+    #ease_main_navbar button:hover {
+      background-color: #f8f8f8; }
+    #ease_main_navbar button.active {
+      background-color: #f8f8f8; }
+      #ease_main_navbar button.active .menu {
+        display: block; }
+    #ease_main_navbar button .menu {
+      display: none;
+      width: 170px;
+      min-width: 170px;
+      overflow: inherit;
+      background-color: white;
+      top: 100%;
+      font-size: .7rem;
+      font-weight: bold;
+      right: 0;
+      margin-top: 10px;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
+      border: none; }
+      #ease_main_navbar button .menu .menu_row {
+        padding: 5px 10px;
+        border-bottom: 1px solid #E1E1E1; }
+        #ease_main_navbar button .menu .menu_row:last-child {
+          border-bottom: none; }
+  #ease_main_navbar #catalog_button, #ease_main_navbar #notification_button, #ease_main_navbar #logout_button, #ease_main_navbar #teams_button, #ease_main_navbar #settings_button {
+    width: 36px; }
+  #ease_main_navbar #catalog_button {
+    background-color: #4FCB6C;
+    border: 1px solid #3fa056; }
+    #ease_main_navbar #catalog_button:hover {
+      background-color: #3fa056; }
+  #ease_main_navbar #dashboard_button {
+    padding: 0 10px; }
+
+#main_header .logoImg {
+  height: 100%;
+  margin: 0; }
+
+#ease_main_navbar .team_select a {
+  text-align: left;
+  width: 100%;
+  text-decoration: none;
+  color: #414141; }
+  #ease_main_navbar .team_select a.active {
+    color: #3C91E6; }
+
+#team_adder a {
+  text-decoration: none;
+  color: #414141; }
+  #team_adder a.active {
+    color: #3C91E6; }
+
+#teams_button .icon {
+  margin-right: 5px; }
+#teams_button .team_select {
+  border-bottom: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex; }
+#teams_button .team_select:hover, #teams_button #team_adder:hover {
   background-color: #f8f8f8; }
 
-#logout_button .menu_arrow:before, #notification_button .menu_arrow:before, #team_button .menu_arrow:before {
+#logout_button .menu_arrow:before, #notification_button .menu_arrow:before, #teams_button .menu_arrow:before {
   right: 12px; }
-#logout_button:focus, #notification_button:focus, #team_button:focus {
+#logout_button:focus, #notification_button:focus, #teams_button:focus {
   background-color: #f8f8f8; }
-  #logout_button:focus .menu, #notification_button:focus .menu, #team_button:focus .menu {
+  #logout_button:focus .menu, #notification_button:focus .menu, #teams_button:focus .menu {
     display: block; }
 
 .menu_arrow:before {
@@ -108,9 +225,10 @@
   color: #DF5454;
   font-size: 11px;
   top: 12px;
-  left: 15px; }
+  left: 15px;
+  pointer-events: none; }
 
-.header:before {
+.ease-header:before {
   content: "";
   position: absolute;
   width: 100%;
@@ -121,18 +239,23 @@
   transition: top .1s;
   border-bottom: 1px solid #d0d1d5; }
 
-.header.scrolling:before {
+.ease-header.scrolling:before {
   content: "";
   top: 0;
   transition: top .1s; }
 
-.header {
-  height: 43px;
+.ease-header#app {
+  height: auto; }
+  .ease-header#app #ease_header {
+    border-bottom: none; }
+
+.ease-header {
+  height: 60px;
   position: fixed;
   width: 100%;
   z-index: 2;
   top: 0px; }
-  .header #breakButton {
+  .ease-header #breakButton {
     font-size: 12px;
     float: right;
     margin-right: 160px;
@@ -141,16 +264,16 @@
     background-color: transparent;
     margin-top: 2px;
     margin-bottom: 0px; }
-    .header #breakButton:hover {
+    .ease-header #breakButton:hover {
       color: black; }
-    .header #breakButton span {
+    .ease-header #breakButton span {
       text-transform: none;
       vertical-align: initial; }
 
-.header .searchInput {
+.ease-header .searchInput {
   display: none; }
 
-.header .userSettingsContainer, .header .logoutContainer {
+.ease-header .userSettingsContainer, .ease-header .logoutContainer {
   position: relative;
   overflow: hidden;
   float: right;
@@ -161,11 +284,11 @@
   -webkit-transition: max-height 0.5s;
   -moz-transition: max-height 0.5s;
   transition: max-height 0.5s; }
-.header .userSettingsContainer {
+.ease-header .userSettingsContainer {
   width: 190px;
   overflow: visible;
   font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif; }
-  .header .userSettingsContainer #userSettingsButton {
+  .ease-header .userSettingsContainer #userSettingsButton {
     padding: 5px;
     text-align: center;
     width: 100%;
@@ -179,25 +302,25 @@
     font-family: "Museo", "Raleway", "Source Sans Pro", sans-serif;
     font-weight: bold;
     letter-spacing: 1px; }
-    .header .userSettingsContainer #userSettingsButton span {
+    .ease-header .userSettingsContainer #userSettingsButton span {
       text-decoration: none;
       display: inline-block;
       border-bottom: 1px solid transparent;
       width: fit-content;
       -webkit-transition: border 0.5s ease-in-out;
       transition: border 0.5s ease-in-out; }
-    .header .userSettingsContainer #userSettingsButton span:hover {
+    .ease-header .userSettingsContainer #userSettingsButton span:hover {
       -webkit-transition: border 0.5s ease-in-out;
       transition: border 0.5s ease-in-out;
       border-bottom: 1px solid #373b60; }
-  .header .userSettingsContainer .userSettings {
+  .ease-header .userSettingsContainer .userSettings {
     visibility: hidden;
     opacity: 0;
     position: relative;
     margin-top: 42px;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     text-align: center; }
-    .header .userSettingsContainer .userSettings .dropDownButton {
+    .ease-header .userSettingsContainer .userSettings .dropDownButton {
       position: relative;
       display: block;
       background-color: #efefef;
@@ -210,43 +333,43 @@
       color: #373b60;
       margin-top: 12px;
       letter-spacing: 1px; }
-      .header .userSettingsContainer .userSettings .dropDownButton .icon {
+      .ease-header .userSettingsContainer .userSettings .dropDownButton .icon {
         font-size: 14px; }
-        .header .userSettingsContainer .userSettings .dropDownButton .icon .fa-stack-1x {
+        .ease-header .userSettingsContainer .userSettings .dropDownButton .icon .fa-stack-1x {
           color: white;
           font-size: 1.5em; }
-        .header .userSettingsContainer .userSettings .dropDownButton .icon .fa-stack-2x {
+        .ease-header .userSettingsContainer .userSettings .dropDownButton .icon .fa-stack-2x {
           color: #373b60; }
-    .header .userSettingsContainer .userSettings .directSettings {
+    .ease-header .userSettingsContainer .userSettings .directSettings {
       background-color: #efefef;
       border-radius: 4px;
       position: relative;
       color: #373b60;
       padding: 4px; }
-      .header .userSettingsContainer .userSettings .directSettings .settingsHeader {
+      .ease-header .userSettingsContainer .userSettings .directSettings .settingsHeader {
         border-bottom: 1px solid #373b60;
         margin-bottom: 10px;
         text-align: left;
         letter-spacing: 1px; }
-      .header .userSettingsContainer .userSettings .directSettings .settingsRaw {
+      .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw {
         margin: 0;
         margin-bottom: 5px;
         padding: 3px;
         position: relative;
         width: 100%;
         text-align: left; }
-        .header .userSettingsContainer .userSettings .directSettings .settingsRaw span.sliderContainer {
+        .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw span.sliderContainer {
           margin-left: 26px; }
-        .header .userSettingsContainer .userSettings .directSettings .settingsRaw span {
+        .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw span {
           letter-spacing: 1px; }
-        .header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle {
+        .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle {
           margin-left: 5px;
           position: relative;
           display: inline-block; }
-          .header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle i {
+          .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle i {
             transition: color .3s;
             color: #cccccc; }
-          .header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle .infoBubble {
+          .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle .infoBubble {
             position: absolute;
             display: none;
             background-color: #ccc;
@@ -258,7 +381,7 @@
             border-radius: 10px;
             font-size: 13px;
             color: black; }
-            .header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle .infoBubble .caretHelper {
+            .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle .infoBubble .caretHelper {
               background-color: #ccc;
               width: 10px;
               height: 10px;
@@ -266,11 +389,11 @@
               right: 12px;
               bottom: 0;
               transform: translateY(50%) rotateZ(45deg); }
-          .header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle:hover i {
+          .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle:hover i {
             color: #373b60; }
-          .header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle:hover .infoBubble {
+          .ease-header .userSettingsContainer .userSettings .directSettings .settingsRaw .infoCircle:hover .infoBubble {
             display: block; }
-  .header .userSettingsContainer .onoffswitch {
+  .ease-header .userSettingsContainer .onoffswitch {
     position: relative;
     display: inline-block;
     float: right;
@@ -278,9 +401,9 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none; }
-  .header .userSettingsContainer .onoffswitch-checkbox {
+  .ease-header .userSettingsContainer .onoffswitch-checkbox {
     display: none; }
-  .header .userSettingsContainer .onoffswitch-label {
+  .ease-header .userSettingsContainer .onoffswitch-label {
     display: block;
     overflow: hidden;
     cursor: pointer;
@@ -291,7 +414,7 @@
     border-radius: 20px;
     background-color: #CCCCCC;
     transition: background-color 0.15s ease-in; }
-  .header .userSettingsContainer .onoffswitch-label:before {
+  .ease-header .userSettingsContainer .onoffswitch-label:before {
     content: "";
     transition: background-color 0.15s ease-in;
     display: block;
@@ -306,16 +429,16 @@
     border: 1px solid #CCCCCC;
     border-radius: 20px;
     transition: all 0.15s cubic-bezier(0.33, 1.6, 0.66, 1) 0s; }
-  .header .userSettingsContainer .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+  .ease-header .userSettingsContainer .onoffswitch-checkbox:checked + .onoffswitch-label:before {
     right: 0px;
     background: #45c997; }
-  .header .userSettingsContainer .userSettings.show {
+  .ease-header .userSettingsContainer .userSettings.show {
     visibility: visible;
     opacity: 1;
     transition: opacity 0.15s ease, visibility 0.3s ease; }
-.header .logoutContainer {
+.ease-header .logoutContainer {
   width: 102px; }
-  .header .logoutContainer #logoutButton {
+  .ease-header .logoutContainer #logoutButton {
     position: relative;
     float: right;
     background-color: #373b60;
@@ -326,7 +449,7 @@
     padding: 8px;
     border-radius: 4px;
     cursor: pointer; }
-  .header .logoutContainer .logoutOptions {
+  .ease-header .logoutContainer .logoutOptions {
     position: fixed;
     display: block;
     width: 180px;
@@ -337,7 +460,7 @@
     transition: opacity 0.3s ease, visibility 0.3s ease;
     visibility: hidden;
     overflow: hidden; }
-    .header .logoutContainer .logoutOptions #allLogoutButton, .header .logoutContainer .logoutOptions #easeLogoutButton {
+    .ease-header .logoutContainer .logoutOptions #allLogoutButton, .ease-header .logoutContainer .logoutOptions #easeLogoutButton {
       position: relative;
       display: block;
       float: right;
@@ -352,19 +475,19 @@
       overflow: hidden;
       border: 1px solid #373b60;
       text-align: center; }
-      .header .logoutContainer .logoutOptions #allLogoutButton:hover, .header .logoutContainer .logoutOptions #easeLogoutButton:hover {
+      .ease-header .logoutContainer .logoutOptions #allLogoutButton:hover, .ease-header .logoutContainer .logoutOptions #easeLogoutButton:hover {
         cursor: pointer;
         transition: all 0.3s;
         background-color: white;
         color: #373b60; }
-  .header .logoutContainer .logoutOptions.show {
+  .ease-header .logoutContainer .logoutOptions.show {
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s ease, visibility 0.3s ease; }
 
-.header.scrolling #searchBar {
+.ease-header.scrolling #searchBar {
   background-color: rgba(239, 239, 239, 0.89); }
-.header.scrolling #userSettingsButton {
+.ease-header.scrolling #userSettingsButton {
   background-color: rgba(239, 239, 239, 0.89); }
 
 #searchBar {
