@@ -364,7 +364,7 @@ class SsoAppModal extends React.Component {
                     {!this.state.addGoogleAccount ?
                         <div>
                             <Form.Field>
-                                <p style={{display: 'inline-block', fontSize: '20px', color: '#414141'}}><strong>Add just a Bookmark</strong></p>
+                                <p style={{display: 'inline-block', fontSize: '20px', color: '#414141'}}><strong>Add as Bookmark</strong></p>
                                 <Checkbox toggle onClick={e => this.toggleBookmark()}
                                           style={{marginLeft: '20px', marginBottom: '0'}}/>
                             </Form.Field>

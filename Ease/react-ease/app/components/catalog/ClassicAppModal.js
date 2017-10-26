@@ -326,7 +326,7 @@ class SecondStep extends Component {
             <span class="app_name">{appName}</span>
           </Form.Field>
           <Form.Field>
-            <p style={{ display: 'inline-block', fontSize: '20px', color: '#414141' }}><strong>Add just a Bookmark</strong></p>
+            <p style={{ display: 'inline-block', fontSize: '20px', color: '#414141' }}><strong>Add as Bookmark</strong></p>
             <Checkbox toggle name='bookmark' checked={this.state.bookmark} onClick={this.handleInput} style={{ marginLeft: '20px', marginBottom: '0' }} />
           </Form.Field>
           {this.state.bookmark &&
