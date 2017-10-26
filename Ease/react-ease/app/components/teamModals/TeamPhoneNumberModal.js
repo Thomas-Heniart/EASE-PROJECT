@@ -48,7 +48,8 @@ class TeamPhoneNumberModal extends React.Component {
                     <Form class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
                         <Form.Field>
                             <span>As owner, if you lose your password, we will contact you to make sure your password renewal is legitimate.</span>
-                            <span>If you want, you can transfer the ownership to someone else in your team.</span>
+                            <br/>
+                            <span>Later, you will be able to transfer the ownership to someone else in your team.</span>
                         </Form.Field>
                         <Form.Field>
                             <Form.Input

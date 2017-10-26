@@ -459,8 +459,8 @@ class EnterpriseTeamApp extends Component {
                                  me={me}
                                  team_id={this.props.team_id}/>}
                 <div>
-                  {!this.state.edit && users.length > 2 &&
-                  <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
+                    {!this.state.edit && users.length > 3 &&
+                    <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
                 </div>
                 {this.state.edit &&
                 <Receivers receivers={users}
