@@ -13,6 +13,9 @@ const basic_post = (url, params) => {
 module.exports = {
   catalog: {
     addClassicApp: ({name, website_id, profile_id, account_information}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/catalog/AddClassicApp', {
         name: name,
         website_id: website_id,
@@ -29,7 +32,10 @@ module.exports = {
         });
     },
     addMultipleClassicApp: ({profile_id, apps_to_add, account_information}) => {
-        return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
           profile_id: profile_id,
           apps_to_add: apps_to_add,
           account_information: account_information
@@ -52,6 +58,10 @@ module.exports = {
       });
     },
     requestWebsite: ({url, account_information}) => {
+      if (account_information !== undefined)
+        Object.keys(account_information).map(item => {
+          account_information[item] = cipher(account_information[item]);
+        });
       return basic_post('/api/v1/catalog/WebsiteRequest', {
         url: url,
         account_information: account_information

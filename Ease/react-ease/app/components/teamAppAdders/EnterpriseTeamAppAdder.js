@@ -95,7 +95,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) =
 const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
   return (
       <div class="receiver">
-        <Label class="receiver-label" color="blue"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        <Label class="receiver-label"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
       </div>
   )
 };
@@ -103,7 +103,7 @@ const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe}) => {
   return (
       <div class="receiver">
-        <Label class="receiver-label" color="blue"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        <Label class="receiver-label"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
         {
           receiver.credentials.map(item => {
             return <TeamAppCredentialInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item}/>

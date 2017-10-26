@@ -2,14 +2,13 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
-import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {
     SingleAppCopyPasswordButton,
     PasswordChangeDropdown,
     PasswordChangeHolder,
     PasswordChangeManagerLabel,
     PinAppButton,
-    renderSimpleAppUserLabel,
+    renderSimpleAppEditUserLabel,
     setUserDropdownText,
     SharingRequestButton,
     TeamAppActionButton
@@ -258,6 +257,8 @@ class SimpleTeamApp extends Component {
     }).sort((a, b) => {
       if (a.id === this.props.me.id)
         return -1000;
+      else if (b.id === this.props.me.id)
+        return 1000;
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
@@ -373,7 +374,7 @@ class SimpleTeamApp extends Component {
                           onChange={this.handleInput}
                           value={this.state.selected_users}
                           selection={true}
-                          renderLabel={renderSimpleAppUserLabel}
+                          renderLabel={renderSimpleAppEditUserLabel}
                           multiple
                           placeholder="Tag your team members here..."/>}
                 </div>

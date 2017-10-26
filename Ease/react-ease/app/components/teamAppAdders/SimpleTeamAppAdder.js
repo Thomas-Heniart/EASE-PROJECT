@@ -9,7 +9,6 @@ import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/team
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
-import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {
     setUserDropdownText, PasswordChangeDropdown, PasswordChangeManagerLabel,
     renderSimpleAppAddUserLabel

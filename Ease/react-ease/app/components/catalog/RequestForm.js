@@ -154,7 +154,7 @@ class ExtendedRequestBox extends Component {
                         name="confirm"
                         checked={this.state.confirm}
                         onClick={this.handleInput}/>
-                    In order to add this website to my apps. I authorize Ease.space to use my credentials for a temporarily period of time of 72 hours maximum. More info
+                    In order to add this website to my apps. I authorize Ease.space to use my credentials for a temporarily period of time of 72 hours maximum
                 </span>
             <Form.Field>
               <Message error size="mini" content={this.state.errorMessage}/>

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @WebServlet("/api/v1/catalog/WebsiteRequest")
@@ -29,9 +30,13 @@ public class ServletWebsiteRequest extends HttpServlet {
             String url = sm.getStringParam("url", false, false);
             if (url.length() > 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Url too long");
-            JSONObject userCredentials = sm.getJsonParam("website_credentials", false, true);
+            JSONObject userCredentials = sm.getJsonParam("account_information", false, true);
             if (userCredentials != null) {
-                /* Decipher login and password */
+                String private_key = (String) sm.getContextAttr("privateKey");
+                for (Object entry : userCredentials.entrySet()) {
+                    Map.Entry<String, String> userCredential = (Map.Entry<String, String>) entry;
+                    userCredentials.put(userCredential.getKey(), RSA.Decrypt(userCredential.getValue(), private_key));
+                }
             }
             WebsiteAttributes websiteAttributes = new WebsiteAttributes(true);
             Website website = new Website(url, "In progress", "undefined", url, websiteAttributes);
