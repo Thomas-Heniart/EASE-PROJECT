@@ -278,7 +278,7 @@ var Catalog = function(rootEl){
 	this.ssos = [];
 
 	ajaxHandler.get(
-		'/api/v1/catalog/GetWebsites',
+		'/api/v1/catalog/GetAllWebsites',
 		null,
 		function(){
 		},

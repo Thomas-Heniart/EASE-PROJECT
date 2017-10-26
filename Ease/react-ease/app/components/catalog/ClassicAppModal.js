@@ -453,7 +453,7 @@ class ClassicAppModal extends React.Component {
         let apps = [];
         profiles.map(item => {
           item.apps.map(app => {
-            if (app.website_id === website.id)
+            if (app.website_id === website.id && (app.type === 'classicApp' || app.type === 'logWithApp'))
               apps.push(app);
           });
         });
