@@ -18,7 +18,7 @@ class Categories extends Component {
         <List link className="listCategory">
           {this.props.categories.length > 0 &&
           <List.Item as={NavLink} exact to={`/main/catalog`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog` && resetQuery()}}>
-            All
+            All Apps
           </List.Item>}
           {this.props.categories.length > 0 && this.props.categories.map(item => {
             return (
