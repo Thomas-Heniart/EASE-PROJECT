@@ -115,10 +115,6 @@ class SimpleTeamAppAdder extends Component {
   };
   handleInput = handleSemanticInput.bind(this);
   toggleCanSeeInformation = (id) => {
-    if (this.props.plan_id === 0){
-      this.props.dispatch(showUpgradeTeamPlanModal(true, 1));
-      return;
-    }
     let users = this.state.users.map(item => {
       return {
         ...item,
