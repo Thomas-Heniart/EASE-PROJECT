@@ -122,14 +122,12 @@
                 <p style="margin-top:10px;font-size:15px;font-weight:300;"><a href="/companyContact" style="color:#4fcb6c;"><fmt:message key="landing.underemail"/></a></p>
             </div>
             <div class="rightLanding nine wide column">
-                <div class="inTheMac">
-                    <img class="ui fluid large image" src="/resources/images/screen.png"/>
-                    <a href="/product">
-                        <button id="discoverButton" class="ui small button">
-                            <fmt:message key="landing.discover"/>
-                        </button>
-                    </a>
-                </div>
+                <div class="inTheMac"></div>
+                <a href="/product">
+                    <button id="discoverButton" class="ui small button">
+                        <fmt:message key="landing.discover"/>
+                    </button>
+                </a>
             </div>
             <div id="counter"  class="sixteen wide column" style="text-align:center;"></div>
             <div class="sixteen wide column" style="text-align:center;">
