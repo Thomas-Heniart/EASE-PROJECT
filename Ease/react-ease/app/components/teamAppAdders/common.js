@@ -8,16 +8,6 @@ export const setUserDropdownText = (user) => {
   return (user.username + (user.first_name.length > 0 || user.last_name > 0 ? ` - ${user.first_name} ${user.last_name}` : ''));
 };
 
-export const renderSimpleAppUserLabel2 = (label, index, props) => {
-  return (
-      <Label color="blue" class="user-label">
-        {label.username}
-        <Icon link name={label.can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>
-        <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
-      </Label>
-  )
-};
-
 export const renderSimpleAppUserLabel = (label, index, props) => {
     const {username, can_see_information, receiver} = label;
     return (
