@@ -56,7 +56,7 @@ class Catalog extends React.Component {
               <Grid>
                 <Grid.Column width={3}>
                   <div id="catalog-nav">
-                    <Button as={NavLink} to={`/main/catalog/bookmark`} className="bookmarkButton">
+                    <Button as={NavLink} to={`/main/catalog/bookmark`} onClick={e => {this.props.match.pathname !== `/main/catalog/bookmark` && this.resetQuery()}} className="bookmarkButton">
                       <Icon name="bookmark" />
                       Add a Bookmark
                     </Button>

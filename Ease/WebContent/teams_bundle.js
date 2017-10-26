@@ -2501,6 +2501,9 @@ module.exports = {
           profile_id = _ref.profile_id,
           account_information = _ref.account_information;
 
+      Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/catalog/AddClassicApp', {
         name: name,
         website_id: website_id,
@@ -2526,6 +2529,9 @@ module.exports = {
           apps_to_add = _ref3.apps_to_add,
           account_information = _ref3.account_information;
 
+      Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
         profile_id: profile_id,
         apps_to_add: apps_to_add,
@@ -2562,6 +2568,9 @@ module.exports = {
       var url = _ref6.url,
           account_information = _ref6.account_information;
 
+      if (account_information !== undefined) Object.keys(account_information).map(function (item) {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/catalog/WebsiteRequest', {
         url: url,
         account_information: account_information
@@ -45687,7 +45696,9 @@ var Catalog = (_dec = (0, _reactRedux.connect)(function (store) {
                   { id: "catalog-nav" },
                   _react2.default.createElement(
                     _semanticUiReact.Button,
-                    { as: _reactRouterDom.NavLink, to: "/main/catalog/bookmark", className: "bookmarkButton" },
+                    { as: _reactRouterDom.NavLink, to: "/main/catalog/bookmark", onClick: function onClick(e) {
+                        _this3.props.match.pathname !== "/main/catalog/bookmark" && _this3.resetQuery();
+                      }, className: "bookmarkButton" },
                     _react2.default.createElement(_semanticUiReact.Icon, { name: "bookmark" }),
                     "Add a Bookmark"
                   ),
