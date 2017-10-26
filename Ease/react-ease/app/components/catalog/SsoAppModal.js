@@ -226,7 +226,6 @@ class SsoAppModal extends React.Component {
         const account = this.state.logWith_websites.map(item => {
              return item.personal_apps.map(key => {
                 if (key.account_information) {
-                    console.log(key.account_information);
                         return key;
                 }
             }).filter(key2 => {
@@ -283,13 +282,12 @@ class SsoAppModal extends React.Component {
                 }
                 else {
                     const calls = this.state.ssoSelected.map(item => {
-                        if (this.props.modal.website.id !== item.website_id)
-                            return this.props.catalogAddClassicAppSameAs({
-                                website_id: item.website_id,
-                                name: item.name,
-                                same_app_id: this.state.appIdOfLoginSelected,
-                                profile_id: this.state.selectedProfile
-                            });
+                        return this.props.catalogAddClassicAppSameAs({
+                            website_id: item.website_id,
+                            name: item.name,
+                            same_app_id: this.state.appIdOfLoginSelected,
+                            profile_id: this.state.selectedProfile
+                        });
                     });
                     const response = calls.filter(item => {
                                         if (item)
