@@ -137,20 +137,26 @@ class SsoAppModal extends React.Component {
             newSelectedSSO.push({website_id: id, name: name});
             this.setState({ ssoSelected: newSelectedSSO });
         }
-        else {
+        // else {
+        //     let key = 0;
+        //     this.state.ssoSelected.filter((item, keyItem) => {
+        //         if (item.website_id  === id)
+        //             return key = keyItem;
+        //     });
+        //     newSelectedSSO.splice(key, 1);
+        //     this.setState({ ssoSelected: newSelectedSSO});
+        // }
+    };
+
+    deselectSSO = (id) => {
+        const newSelectedSSO = this.state.ssoSelected.slice();
+        if (this.checkActive(id)) {
             let key = 0;
-            // let key2 = 0;
-            // const newEditSSOName = this.state.editSSOName.slice();
             this.state.ssoSelected.filter((item, keyItem) => {
                 if (item.website_id  === id)
                     return key = keyItem;
             });
-            // this.state.editSSOName.filter((item, keyItem) => {
-            //     if (item.id  === id)
-            //         return key2 = keyItem;
-            // });
             newSelectedSSO.splice(key, 1);
-            // newEditSSOName.splice(key2, 1);
             this.setState({ ssoSelected: newSelectedSSO});
         }
     };
@@ -193,6 +199,21 @@ class SsoAppModal extends React.Component {
         else {
             return true;
         }
+    };
+
+    checkNameEmpty = () => {
+        const empty = this.state.ssoSelected.map(item => {
+           if(item.name === '')
+               return item;
+        });
+        const response = empty.filter(item => {
+            if (item)
+                return true
+        });
+        if (response.length)
+            return false;
+        else
+            return true;
     };
 
     confirm = () => {
@@ -311,7 +332,7 @@ class SsoAppModal extends React.Component {
                 {this.state.view === 1 ?
                     <Form class="container" id="add_bookmark_form" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
                         <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-                            <div class="squared_image_handler" style={{boxShadow:'none'}}>
+                            <div class="squared_image_handler">
                                 <img src={this.props.modal.website.logo} alt="Website logo"/>
                             </div>
                             <span class="app_name">
@@ -346,20 +367,20 @@ class SsoAppModal extends React.Component {
                         </Form.Field>
                         <Message error content={this.state.errorMessage}/>
                         <Button
-                            attached='bottom'
                             type="submit"
                             loading={this.state.loading}
                             positive
                             disabled={this.state.selectedProfile === -1 || this.state.loading || !this.state.name}
-                            onClick={this.confirm}
                             className="modal-button"
                             content="NEXT"/>
                     </Form>
                     :  this.state.view === 2 ?
                 <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm}>
-                    <Form.Field>
-                        <Image src={this.props.modal.website.logo} style={{ width:'80px', marginRight: '10px', display: 'inline-block', borderRadius: '5px'}}/>
-                        <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{this.state.name}</p>
+                    <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
+                        <div className="squared_image_handler">
+                            <Image src={this.props.modal.website.logo}  alt="Website logo"/>
+                        </div>
+                        <span className='app_name'>{this.state.name}</span>
                     </Form.Field>
                     {!this.state.addGoogleAccount ?
                         <div>
@@ -379,16 +400,19 @@ class SsoAppModal extends React.Component {
                                         <Segment>
                                             {this.state.logWith_websites.map(item => {
                                                 return item.personal_apps.map(key => {
-                                                    if (this.checkDouble(double, key.account_information.login) === true) {
-                                                        double.push(key.account_information.login);
-                                                        return (
-                                                            <List.Item key={key.id} as="p" className="overflow-ellipsis">
-                                                                <a onClick={e => this.selectAccount(key.account_information.login, key.website_id, key.id)}>
-                                                                    <Icon name='user circle'/>
-                                                                    <span>{key.account_information.login}</span>
-                                                                </a>
-                                                            </List.Item>
-                                                        )
+                                                    if (key.account_information) {
+                                                        if (this.checkDouble(double, key.account_information.login) === true) {
+                                                            double.push(key.account_information.login);
+                                                            return (
+                                                                <List.Item key={key.id} as="p"
+                                                                           className="overflow-ellipsis">
+                                                                    <a onClick={e => this.selectAccount(key.account_information.login, key.website_id, key.id)}>
+                                                                        <Icon name='user circle'/>
+                                                                        <span>{key.account_information.login}</span>
+                                                                    </a>
+                                                                </List.Item>
+                                                            )
+                                                        }
                                                     }
                                                 })
                                             })}
@@ -435,26 +459,26 @@ class SsoAppModal extends React.Component {
                     <Message error content={this.state.errorMessage} />
                         <Button
                             disabled={!this.state.addBookmark && (!this.state.login || !this.state.password) && !this.state.accountGoogleSelected}
-                            attached='bottom'
                             type="submit"
                             positive
                             loading={this.state.loading}
-                            onClick={this.confirm}
                             class="modal-button uppercase"
                             content={'CONFIRM'} />
                 </Form>
                     :
                     <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm}>
-                        <Form.Field>
-                            <Image src={this.props.modal.website.logo} style={{ width:'80px', marginRight: '10px', display: 'inline-block', borderRadius: '5px'}}/>
-                            <p style={{ display: 'inline-block', fontSize: '20px', fontWeight: '300', color: '#939eb7' }}>{this.state.name}</p>
+                        <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
+                            <div className="squared_image_handler">
+                                <Image src={this.props.modal.website.logo}  alt="Website logo"/>
+                            </div>
+                            <span className='app_name'>{this.state.name}</span>
                         </Form.Field>
                         <Form.Field>
                             <p className='backPointer' onClick={this.back}><Icon name='arrow left'/>Back</p>
                         </Form.Field>
                         <Form.Field>
                             <Segment.Group className='connectWithGoogle'>
-                                <Segment className='first'>
+                                <Segment className='first overflow-ellipsis'>
                                     <Icon name='google'/>
                                     {this.state.accountGoogleSelected}
                                 </Segment>
@@ -467,28 +491,27 @@ class SsoAppModal extends React.Component {
                             <Segment className='pushable ssoListSegment'>
                                 <Grid columns={2} className='ssoListGrid'>
                                     {this.state.logWith_websites.map((item) => {
-                                        if (!item.personal_apps.filter(key => {if (key.account_information.login === this.state.login)return true}).length && this.props.modal.website.id !== item.id) {
+                                        if (!item.personal_apps.filter(key => {if (key.account_information){if (key.account_information.login === this.state.login)return true}}).length && this.props.modal.website.id !== item.id) {
                                             return (
                                                 <Grid.Column key={item.id} className="showSegment">
-                                                    <List.Item as='a' active={this.checkActive(item.id)}>
-                                                        <div className='appLogo'
-                                                             onClick={e => this.selectSSO(item.id, item.name)}>
+                                                    <List.Item as='a' active={this.checkActive(item.id)} onClick={e => this.selectSSO(item.id, item.name)}>
+                                                        <div className='appLogo' onClick={e => this.deselectSSO(item.id)}>
                                                             <Image src={item.logo}/>
                                                             <Icon className='iconCheck' name="check"/>
                                                         </div>
                                                         <Input disabled={!this.checkActive(item.id)}
-                                                               autoFocus
+                                                               focus={this.checkActive(item.id)}
                                                                value={this.checkNameSSO(item) === null ? item.name : this.checkNameSSO(item)}
                                                                name="ssoAppName"
                                                                transparent
                                                                onChange={e => this.editSSO(e, item)}
-                                                               class="create_profile_input"
+                                                               class='create_profile_input'
                                                                placeholder='Change name of your App'/>
                                                         <Icon className='iconWrite' name="write"/>
                                                     </List.Item>
                                                 </Grid.Column>)
                                         }
-                                        else if (item.personal_apps.filter(key => {if (key.account_information.login === this.state.login)return true}).length && this.props.modal.website.id !== item.id) {
+                                        else if (item.personal_apps.filter(key => {if (key.account_information){if (key.account_information.login === this.state.login)return true}}).length && this.props.modal.website.id !== item.id) {
                                             return (
                                                 <Grid.Column key={item.id} className="showSegment">
                                                     <List.Item as='a' active>
@@ -500,7 +523,6 @@ class SsoAppModal extends React.Component {
                                                                value={item.name}
                                                                name="ssoAppName"
                                                                transparent
-                                                               onChange={e => this.editSSO(e, item)}
                                                                class="create_profile_input"
                                                                placeholder='Change name of your App'/>
                                                     </List.Item>
@@ -512,7 +534,7 @@ class SsoAppModal extends React.Component {
                         </Form.Field>
                         <Message error content={this.state.errorMessage} />
                         <Button
-                            disabled={!this.state.addBookmark && (!this.state.login || !this.state.password) && !this.state.accountGoogleSelected}
+                            disabled={!this.state.addBookmark && (!this.state.login || !this.state.password) && !this.state.accountGoogleSelected || this.checkNameEmpty() === false}
                             type="submit"
                             positive
                             loading={this.state.loading}
