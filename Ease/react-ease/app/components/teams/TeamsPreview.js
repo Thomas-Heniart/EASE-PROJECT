@@ -19,7 +19,7 @@ function Step1(props){
   return (
       <div class="content display-flex marginAuto step1" style={{width: '900px'}}>
         <div class="display-flex flex_direction_column" style={{flexBasis:'500px', flexShrink:'0', marginRight:'100px'}}>
-          <h3 style={{fontSize:'24px', marginBottom: '40px'}}>Let’s start managing company passwords now. The Team Tpace allows companies to easily share and use passwords together.</h3>
+          <h3 style={{fontSize:'24px', marginBottom: '40px'}}>Let’s start managing company passwords now. The Team Space allows companies to easily share and use passwords together.</h3>
           <span style={{lineHeight:'1.78', color: '#838593'}}>Setting up your team will take less than 10 minutes and you don’t need to do it all at once.</span>
           <span style={{lineHeight:'1.78', color: '#838593'}}>Enjoy !</span>
         </div>
