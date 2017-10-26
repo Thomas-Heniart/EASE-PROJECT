@@ -76,7 +76,10 @@ class SsoAppModal extends React.Component {
     };
 
     back = () => {
-        this.setState({ accountGoogleSelected: '', view: 2, login: '', password: '', addGoogleAccount: false, errorMessage: '', ssoSelected: [{ website_id: this.props.modal.website.id, name: this.state.name }] });
+        if (this.checkAccountGoogle() === true)
+            this.setState({ accountGoogleSelected: '', view: 2, login: '', password: '', addGoogleAccount: false, errorMessage: '', ssoSelected: [{ website_id: this.props.modal.website.id, name: this.state.name }] });
+        else
+            this.setState({ accountGoogleSelected: '', view: 2, login: '', password: '', addGoogleAccount: true, errorMessage: '', ssoSelected: [{ website_id: this.props.modal.website.id, name: this.state.name }] });
     };
 
     selectAccount = (account, website_id, app_id) => {
@@ -106,7 +109,10 @@ class SsoAppModal extends React.Component {
     addMainAppToSSOSelected = () => {
         const newSelectedSSO = this.state.ssoSelected.slice();
         newSelectedSSO.push({ website_id: this.props.modal.website.id, name: this.state.name });
-        this.setState({ ssoSelected: newSelectedSSO, view: 2 });
+        if (this.checkAccountGoogle() === true)
+            this.setState({ ssoSelected: newSelectedSSO, view: 2 });
+        else
+            this.setState({ ssoSelected: newSelectedSSO, view: 2, addGoogleAccount: true });
     };
 
     editSSO = (e, sso) => {
@@ -214,6 +220,24 @@ class SsoAppModal extends React.Component {
             return false;
         else
             return true;
+    };
+
+    checkAccountGoogle = () => {
+        const account = this.state.logWith_websites.map(item => {
+            return item.personal_apps.map(key => {
+                if (key.account_information) {
+                    return key;
+                }
+            });
+        });
+        const response = account.filter(item => {
+            if (item.length)
+                return true
+        });
+        if (response.length)
+            return true;
+        else
+            return false;
     };
 
     confirm = () => {
