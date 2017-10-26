@@ -28,6 +28,8 @@ class TeamPhoneNumberModal extends React.Component {
         this.setState({loading: true, errorMessage: ''});
         this.props.dispatch(editTeamUserPhone(me.id, this.state.phone)).then(r => {
             this.props.dispatch(showTeamPhoneNumberModal(false));
+        }).catch(err => {
+            this.setState({loading: false, errorMessage: err});
         });
     }
 
@@ -53,6 +55,8 @@ class TeamPhoneNumberModal extends React.Component {
                                 defaultValue={this.state.phone}
                                 onChange={this.handleInput}
                                 autoFocus={true}
+                                type="tel"
+                                pattern="^((\+\d{1,3}(-| )?\(?\d\)?(-| )?\d{1,5})|(\(?\d{2,6}\)?))(-| )?(\d{3,4})(-| )?(\d{4})(( x| ext)\d{1,5}){0,1}$"
                                 placeholder={"+33 6 26 97 88 97"}
                                 onFocus={(e) => {
                                     let val = e.target.value;
@@ -64,6 +68,7 @@ class TeamPhoneNumberModal extends React.Component {
                         <Button
                             type="submit"
                             loading={this.state.loading}
+                            disabled={this.state.phone.length < 7 || this.state.loading}
                             positive
                             className="modal-button"
                             content="SAVE"/>

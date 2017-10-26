@@ -11,7 +11,9 @@ export function fetchCatalog(){
       api.catalog.getRequestsNumber()
     ]).then(values => {
       const websites = values[0].websites;
-      const categories = values[1].categories;
+      const categories = values[1].categories.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
       const sso_list = values[2].ssoList;
       const requestsNumber = values[3].request_number;
       dispatch({type: 'FETCH_CATALOG_FULFILLED', payload:{
