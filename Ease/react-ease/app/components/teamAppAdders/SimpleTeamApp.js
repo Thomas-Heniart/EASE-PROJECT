@@ -262,6 +262,8 @@ class SimpleTeamApp extends Component {
     }).sort((a, b) => {
       if (a.id === this.props.me.id)
         return -1000;
+      else if (b.id === this.props.me.id)
+        return 1000;
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);

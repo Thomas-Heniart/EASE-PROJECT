@@ -97,6 +97,8 @@ export function sortReceiversAndMap(receivers, users, myId) {
   }).sort((a,b) => {
     if (a.user.id === myId)
       return -1000;
+    else if (b.user.id === myId)
+      return 1000;
     return a.user.username.localeCompare(b.user.username);
   });
 }

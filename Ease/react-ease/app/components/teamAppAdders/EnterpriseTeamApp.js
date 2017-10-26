@@ -302,7 +302,7 @@ class EnterpriseTeamApp extends Component {
       }
     }).sort((a, b) => {
       if (a.id === this.props.me.id)
-        return -10000;
+        return -1000;
       if (b.id === this.props.me.id)
         return 1000;
       return a.username.localeCompare(b.username);
@@ -400,6 +400,8 @@ class EnterpriseTeamApp extends Component {
     }).sort((a,b) => {
       if (a.id === this.props.me.id)
         return -1000;
+      if (b.id === this.props.me.id)
+        return 1000;
       return a.username.localeCompare(b.username);
     });
   };

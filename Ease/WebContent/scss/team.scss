@@ -557,20 +557,18 @@ i.icon.pin_button {
     display: none;
   }
   .ui.label.user-label {
+    font-size: .85714286rem;
+    box-shadow: 0 0 0 1px rgba(34,36,38,.15) inset;
     &.static {
       font-weight:normal;
       background-color: transparent;
-      color: $themeLightGreyTextColor;
-      border: 1px solid $themeLightGreyTextColor;
       &.accepted {
         background-color: $themeBlue2Color;
         color: $themeWhiteColor ;
-        border: 1px solid $themeBlue2Color;
       }
       &.accepted.can_see_information, &.pinned {
         color: $themeWhiteColor;
         background-color: $themeButtonGreenColor;
-        border: 1px solid $themeButtonGreenColor;
       }
     }
     i.icon {
@@ -674,6 +672,14 @@ i.icon.pin_button {
   color: #9a9a9a;
   .checkbox {
     margin: 0 0 0 9px;
+  }
+}
+
+#enterprise-app-adder {
+  .receiver-label {
+    background-color: transparent;
+    box-shadow: 0 0 0 1px rgba(34,36,38,.15) inset;
+    font-weight:normal;
   }
 }
 
