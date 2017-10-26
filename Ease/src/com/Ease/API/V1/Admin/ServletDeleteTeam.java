@@ -7,6 +7,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 @WebServlet("/api/v1/admin/DeleteTeam")
 public class ServletDeleteTeam extends HttpServlet {
@@ -27,9 +30,34 @@ public class ServletDeleteTeam extends HttpServlet {
             sm.needToBeEaseAdmin();
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team;
             try {
-                teamManager.getTeamWithId(team_id);
-                sm.setError(new HttpServletException(HttpStatus.BadRequest, "Cannot delete this team"));
+                team = teamManager.getTeamWithId(team_id);
+                List<ShareableApp> shareableAppList = new LinkedList<>();
+                shareableAppList.addAll(team.getAppManager().getShareableApps().values());
+                DataBaseConnection db = sm.getDB();
+                int transaction = db.startTransaction();
+                for (ShareableApp shareableApp : shareableAppList)
+                    team.getAppManager().removeShareableApp(shareableApp, db);
+                DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE team_id = ?");
+                databaseRequest.setInt(team_id);
+                databaseRequest.set();
+                for (Integer id : team.getTeamUsers().keySet()) {
+                    databaseRequest = db.prepareRequest("DELETE FROM pendingTeamUserVerifications WHERE teamUser_id = ?");
+                    databaseRequest.setInt(id);
+                    databaseRequest.set();
+                    databaseRequest = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?");
+                    databaseRequest.setInt(id);
+                    databaseRequest.set();
+                }
+                for (TeamUser teamUser : team.getTeamUsers().values()) {
+                    teamUser.setAdmin_id(null);
+                    sm.saveOrUpdate(teamUser);
+                }
+                db.commitTransaction(transaction);
+                teamManager.removeTeamWithId(team_id);
+                sm.deleteObject(team);
+                sm.setSuccess("Team deleted");
             } catch (HttpServletException e) {
                 HibernateQuery hibernateQuery = sm.getHibernateQuery();
                 hibernateQuery.querySQLString("SELECT * FROM teams WHERE id = ?");
@@ -41,7 +69,7 @@ public class ServletDeleteTeam extends HttpServlet {
                 hibernateQuery.executeUpdate();
                 hibernateQuery.queryString("SELECT t FROM Team t WHERE t.id = ?");
                 hibernateQuery.setParameter(1, team_id);
-                Team team = (Team) hibernateQuery.getSingleResult();
+                team = (Team) hibernateQuery.getSingleResult();
                 DataBaseConnection db = sm.getDB();
                 int transaction = db.startTransaction();
                 for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values())

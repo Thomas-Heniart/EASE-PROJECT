@@ -82,41 +82,57 @@ const initialState = {
   freeTrialEndModal: {
     active: false
   },
-    departureDateEndModal: {
-        active: false,
-        user: null
-    }
+  departureDateEndModal: {
+    active: false,
+    user: null
+  },
+  catalogAddBookmarkModal: {
+    active: false,
+    name: '',
+    url: '',
+    img_url: '',
+    resolve: null,
+    reject: null
+  },
+  catalogAddAppModal: {
+    active: false,
+    website: null
+  },
+  catalogAddSSOAppModal: {
+    active: false,
+    website: null
+  }
 };
 export default function reducer(state=initialState, action){
   switch (action.type){
     case 'SHOW_ADD_TEAM_USER_MODAL': {
       return {
-          ...initialState,
+        ...initialState,
         addUserModalActive: action.payload
       }
     }
     case 'SHOW_ADD_TEAM_CHANNEL_MODAL': {
       return {
-          ...initialState,
+        ...initialState,
         addChannelModalActive: action.payload
       }
     }
     case 'SHOW_TEAM_CHANNEL_ADD_USER_MODAL': {
       return {
-          ...initialState,
+        ...initialState,
         teamChannelAddUserModal:action.payload
       }
     }
     case 'SHOW_TEAM_DELETE_USER_MODAL': {
       return {
-          ...initialState,
-          teamDeleteUserModal: action.payload
+        ...initialState,
+        teamDeleteUserModal: action.payload
       }
     }
     case 'SHOW_TEAM_DELETE_CHANNEL_MODAL': {
       return {
-          ...state,
-          teamDeleteChannelModal: action.payload
+        ...state,
+        teamDeleteChannelModal: action.payload
       }
     }
     case 'SHOW_TEAM_DELETE_USER_FROM_CHANNEL_MODAL': {
@@ -139,7 +155,7 @@ export default function reducer(state=initialState, action){
     }
     case 'SHOW_TEAM_LEAVE_APP_MODAL': {
       return {
-          ...state,
+        ...state,
         teamLeaveAppModal: action.payload
       }
     }
@@ -151,7 +167,7 @@ export default function reducer(state=initialState, action){
     }
     case 'SHOW_TEAM_ACCEPT_MULTI_APP_MODAL': {
       return {
-          ...state,
+        ...state,
         teamAcceptMultiAppModal: action.payload
       }
     }
@@ -163,7 +179,7 @@ export default function reducer(state=initialState, action){
     }
     case 'SHOW_TEAM_EDIT_ENTERPRISE_APP_MODAL': {
       return {
-          ...state,
+        ...state,
         teamEditEnterpriseAppModal: action.payload
       }
     }
@@ -175,64 +191,82 @@ export default function reducer(state=initialState, action){
     }
     case 'SHOW_TEAM_SETTINGS_MODAL': {
       return {
-          ...state,
+        ...state,
         teamSettingsModalActive: action.payload.active
       }
     }
     case 'SHOW_VERIFY_TEAM_USER_MODAL': {
       return {
-          ...state,
+        ...state,
         verifyTeamUserModal: action.payload
       }
     }
     case 'SHOW_REACTIVATE_TEAM_USER_MODAL': {
       return {
-          ...state,
+        ...state,
         reactivateTeamUserModal: action.payload
       }
     }
     case 'SHOW_TEAM_TRANSFER_OWNERSHIP_MODAL': {
       return {
-          ...state,
+        ...state,
         teamTransferOwnershipModal: action.payload
       }
     }
     case 'SHOW_TEAM_PHONE_NUMBER_MODAL': {
       return {
-          ...state,
+        ...state,
         teamPhoneNumberModal: action.payload
       }
     }
     case 'SHOW_REQUEST_WEBSITE_MODAL': {
       return {
-          ...state,
+        ...state,
         requestWebsiteModal: action.payload
       }
     }
     case 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL': {
       return {
-          ...state,
+        ...state,
         teamAddMultipleUsersModal: action.payload
       }
     }
     case 'SHOW_UPGRADE_TEAM_PLAN_MODAL' : {
       return {
-          ...state,
+        ...state,
         upgradeTeamPlanModal: action.payload
       }
     }
     case 'SHOW_FREE_TRIAL_END_MODAL': {
       return {
-          ...state,
+        ...state,
         freeTrialEndModal: action.payload
       }
     }
-      case 'DEPARTURE_DATE_END_MODAL': {
-          return {
-              ...state,
-              departureDateEndModal: action.payload
-          }
+    case 'DEPARTURE_DATE_END_MODAL': {
+      return {
+        ...state,
+        departureDateEndModal: action.payload
       }
+    }
+    case 'SHOW_CATALOG_ADD_BOOKMARK_MODAL': {
+      return {
+        ...state,
+        catalogAddBookmarkModal: action.payload
+      }
+    }
+    case 'SHOW_CATALOG_ADD_APP_MODAL': {
+      return {
+        ...state,
+        catalogAddAppModal: action.payload
+      }
+    }
+    case 'SHOW_CATALOG_ADD_SSO_APP_MODAL': {
+      return {
+          ...state,
+        catalogAddSSOAppModal: action.payload
+      }
+    }
   }
   return state;
 }

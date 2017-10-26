@@ -25,25 +25,25 @@
 
     <link rel="manifest" href="manifest.json">
 
-    <script src="/jsMinified.v00021/jquery1.12.4.js"></script>
-    <script src="/jsMinified.v00021/bootstrap.js"></script>
-    <script src="/jsMinified.v00021/basic-utils.js"></script>
-    <script src="/jsMinified.v00021/ajaxHandler.js"></script>
-    <script src="/jsMinified.v00021/languageChooser.js"></script>
-    <script src="/jsMinified.v00021/tracker.js"></script>
+    <script src="/jsMinified.v00022/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00022/bootstrap.js"></script>
+    <script src="/jsMinified.v00022/basic-utils.js"></script>
+    <script src="/jsMinified.v00022/ajaxHandler.js"></script>
+    <script src="/jsMinified.v00022/languageChooser.js"></script>
+    <script src="/jsMinified.v00022/tracker.js"></script>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00017/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {
         d = document;
         s = d.createElement("script");
-        s.src = "/jsMinified.v00021/crisp.js";
+        s.src = "/jsMinified.v00022/crisp.js";
         s.async = 1;
         d.getElementsByTagName("head")[0].appendChild(s);
     })();</script>
@@ -53,7 +53,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00021/amplitude-analytics.js";
+            r.src = "/jsMinified.v00022/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };

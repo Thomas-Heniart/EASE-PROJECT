@@ -356,8 +356,18 @@ modifyAppPopup = function (rootEl) {
         self.resetInputs();
     };
     this.initializeCurrentInputs = function () {
-        for (var i = 0; i < self.relatedCatalogApp.inputs.length; i++) {
-            var input = self.relatedCatalogApp.inputs[i];
+        var inputs = [];
+        for (var key in self.relatedCatalogApp.inputs) {
+            if (self.relatedCatalogApp.inputs.hasOwnProperty(key)) {
+                var tmp_input = self.relatedCatalogApp.inputs[key];
+                inputs.push({name: key, placeholder: tmp_input.placeholder, type: tmp_input.type, placeholderIcon: tmp_input.placeholderIcon, priority: tmp_input.priority});
+            }
+        }
+        inputs.sort(function(a, b) {
+            return a.priority - b.priority;
+        });
+        for (var i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
             var inputValue = self.currentApp.getAccountInformationValue(input.name);
             self.currentInputs.push(new EditInput(self.loginPasswordRow, self, input.name, input.type, inputValue, input.placeholder, input.placeholderIcon));
         }

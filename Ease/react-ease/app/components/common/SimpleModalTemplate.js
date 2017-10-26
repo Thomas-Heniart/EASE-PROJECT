@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Header} from 'semantic-ui-react';
+import {Header, Icon} from 'semantic-ui-react';
 
 export default function (props) {
   return (
@@ -7,7 +7,7 @@ export default function (props) {
         <div class="popover_mask" onClick={props.onClose}/>
         <div class="ease_popup ease_team_popup">
           <button class="button-unstyle action_button close_button" onClick={props.onClose}>
-            <i class="fa fa-times"/>
+            <Icon name="close" class="mrgn0" link/>
           </button>
           <Header as="h3" attached="top">
             {props.headerContent}

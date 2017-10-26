@@ -1,0 +1,26 @@
+{
+  "name":"Yooda",
+  "lastLogin":"",
+  "home":"https://www.yooda.com/",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":"a.connexion"},
+      {"action":"waitfor", "search":"#yoodaConnect-ifram"},
+      {"action":"enterFrame", "search":"#yoodaConnect-ifram"},
+      {"action":"waitfor", "search":"#username"},
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"#_submit"},
+      {"action":"exitFrame"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick","search":"a[href*='deconnexion']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='deconnexion'], a.connexion"},
+    {"search":"a[href*='deconnexion']"}
+  ]
+}

@@ -7,6 +7,7 @@ import {fetchMyInformation} from "../../actions/commonActions";
 import api from "../../utils/api";
 import ReactTooltip from 'react-tooltip';
 import WebsocketClient from './WebsocketClient';
+import ModalsContainer from "./ModalsContainer";
 
 @connect((store)=>{
   return {
@@ -68,6 +69,7 @@ class Base extends React.Component {
                           eventOff="dblclick"/>
             <WebsocketClient/>
             {this.props.children}
+            <ModalsContainer/>
           </div>
       )
   }

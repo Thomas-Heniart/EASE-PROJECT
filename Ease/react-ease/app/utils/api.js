@@ -1,6 +1,30 @@
 var axios = require('axios');
 
+const basic_get = (url, params) => {
+  return axios.get(url, {params: params})
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
+};
+
 module.exports = {
+  catalog: {
+    getWebsites: () => {
+      return basic_get('/api/v1/catalog/GetWebsites');
+    },
+    getCategories: () => {
+      return basic_get('/api/v1/catalog/GetCategories');
+    },
+    getSsoList: () => {
+      return basic_get('/api/v1/catalog/GetSsoList');
+    },
+    getRequestsNumber: () => {
+      return basic_get('/api/v1/catalog/GetRequestNumber')
+    }
+  },
   getClearbitLogo : function (url) {
     const l = document.createElement("a");
     l.href = url;
@@ -10,7 +34,7 @@ module.exports = {
         return "";
       return img_url;
     }).catch(err => {
-      return "";
+      throw err;
     })
   },
   fetchTeams : function(){
@@ -160,9 +184,9 @@ module.exports = {
         .then(axios.spread(function(dashboard, teams){
           let apps = dashboard.concat(teams);
           apps.sort(function(a,b){
-            if (a.website_name < b.website_name)
+            if (a.name < b.name)
               return -1;
-            if (a.website_name > b.website_name)
+            if (a.name > b.name)
               return 1;
             return 0;
           });
@@ -178,6 +202,18 @@ module.exports = {
     }).then(function (response) {
       return response.data;
     });
+  },
+  getWebsitesCatalog: function() {
+      return axios.get('/api/v1/catalog/GetWebsites')
+          .then(function (response) {
+        return response.data;
+      });
+  },
+  getCategories: function() {
+    return axios.get('/api/v1/catalog/GetCategories')
+        .then(function (response) {
+          return response.data
+        });
   },
   dashboard: {
     fetchProfiles: function(){

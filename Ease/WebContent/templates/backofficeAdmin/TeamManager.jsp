@@ -41,6 +41,9 @@
             <div class="column" id="card-with-password-reminder">
                 Number of cards with password modification: <span></span>
             </div>
+            <div class="column">
+                <button class="ui button negative">Delete</button>
+            </div>
         </div>
     </div>
 </div>

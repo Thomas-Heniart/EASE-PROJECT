@@ -1,5 +1,6 @@
 package com.Ease.Utils.Servlets;
 
+import com.Ease.Dashboard.User.JWToken;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -8,6 +9,8 @@ import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
 import com.stripe.exception.StripeException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.Key;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -52,7 +56,6 @@ public abstract class ServletManager {
         this.request = request;
         this.response = response;
         this.user = (User) request.getSession().getAttribute("user");
-        this.teamUser = (TeamUser) request.getSession().getAttribute("teamUser");
         this.saveLogs = saveLogs;
     }
 
@@ -125,7 +128,7 @@ public abstract class ServletManager {
 
     public void needToBeConnected() throws HttpServletException {
         if (user == null)
-            throw new HttpServletException(HttpStatus.AccessDenied);
+            user = this.getUserWithToken();
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
@@ -370,10 +373,6 @@ public abstract class ServletManager {
         this.getSession().setAttribute("user", user);
     }
 
-    public TeamUser getTeamUser() {
-        return teamUser;
-    }
-
     public HttpSession getSession() {
         return request.getSession();
     }
@@ -406,5 +405,30 @@ public abstract class ServletManager {
         if (this.timestamp == null)
             this.timestamp = this.getCurrentTime();
         return timestamp;
+    }
+
+    public User getUserWithToken() throws HttpServletException {
+        String token = this.request.getHeader("Authorization");
+        if (token == null || token.equals(""))
+            throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
+        Map<String, User> tokenUserMap = (Map<String, User>) this.getContextAttr("tokenUserMap");
+        Key key = (Key) this.getContextAttr("secret");
+        Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        String connection_token = (String) claimsJws.get("tok");
+        User user = tokenUserMap.get(connection_token);
+        if (user == null) {
+            String user_name = (String) claimsJws.get("name");
+            String user_email = (String) claimsJws.get("email");
+            Long expiration_date = (Long) claimsJws.get("exp");
+            JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
+            jwToken.setJwt(token);
+            user = User.loadUserFromJWT(jwToken, this, this.getDB());
+            tokenUserMap.put(jwToken.getConnection_token(), user);
+        }
+        user.getJwt().checkJwt(claimsJws);
+        if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
+            throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired");
+        this.user = user;
+        return this.user;
     }
 }

@@ -23,7 +23,7 @@
                 <i class="fa fa-cog"></i>
             </div>
             <img class="logo" src="/resources/helpers/1x1_grey_square.jpg"
-                 lazy-src="<c:out value='${app.getSite().getFolder()}logo.png'/>"/>
+                 lazy-src="<c:out value='${app.getSite().getLogo()}'/>"/>
         </div>
     </c:when>
     <c:when test="${app.getType() eq 'LinkApp'}">
@@ -35,7 +35,7 @@
         logwith=""
         data-type="${app.getType()}">
         <div class="linkImage">
-            <c:if test='${app.havePerm("DELETE") && app.isPinned() eq false}'>
+            <c:if test='${app.isPinned() eq false}'>
                 <div class="showAppActionsButton">
                     <i class="fa fa-cog"></i>
                 </div>
@@ -83,7 +83,7 @@
                 <img class="logo app_disabled" src="/resources/icons/app_disabled.png"/>
             </c:if>
             <img class="logo" src="/resources/helpers/1x1_grey_square.jpg"
-                 lazy-src="<c:out value='${app.getSite().getFolder()}logo.png'/>"/>
+                 lazy-src="<c:out value='${app.getSite().getLogo()}'/>"/>
         </div>
     </c:otherwise>
 </c:choose>

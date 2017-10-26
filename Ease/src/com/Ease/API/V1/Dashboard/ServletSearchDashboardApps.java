@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
@@ -32,7 +32,7 @@ public class ServletSearchDashboardApps extends HttpServlet {
                 Website website = classicApp.getSite();
                 if (search == null || search.equals(""))
                     jsonArray.add(classicApp.getSearchJson());
-                else if (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.isIntegrated())
+                else if (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.getWebsiteAttributes().isIntegrated())
                     jsonArray.add(classicApp.getSearchJson());
             }
             sm.setSuccess(jsonArray);

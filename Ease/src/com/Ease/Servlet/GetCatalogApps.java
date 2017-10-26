@@ -1,6 +1,10 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
+import org.json.simple.JSONArray;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,13 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.json.simple.JSONArray;
-
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import java.io.IOException;
 
 /**
  * Servlet implementation class GetCatalogApps
@@ -50,7 +48,7 @@ public class GetCatalogApps extends HttpServlet {
 			sm.needToBeConnected();
 			JSONArray res;
 			Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-			res = catalog.getWebsitesJsonForUser(user);
+			res = catalog.getCatalogWebsites();
 			sm.setResponse(ServletManager.Code.Success, res.toString());
 			sm.setLogResponse("Get catalog apps done");
 		} catch (GeneralException e) {

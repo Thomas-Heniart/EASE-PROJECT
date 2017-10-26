@@ -1,14 +1,73 @@
 var axios = require('axios');
 
-const regularCall = (promise) => {
-  return promise.then(response => {
-    return response.data;
-  }).catch(err => {
-    throw err.response.data;
-  });
+const basic_post = (url, params) => {
+  return axios.post(url, params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
 };
 
 module.exports = {
+  catalog: {
+    addClassicApp: ({name, website_id, profile_id, account_information}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/catalog/AddClassicApp', {
+        name: name,
+        website_id: website_id,
+        profile_id: profile_id,
+        account_information: account_information
+      });
+    },
+    addClassicAppSameAs: ({website_id, name, same_app_id, profile_id}) => {
+        return basic_post('/api/v1/catalog/AddClassicAppSameAs', {
+            website_id: website_id,
+            name: name,
+            same_app_id: same_app_id,
+            profile_id: profile_id
+        });
+    },
+    addMultipleClassicApp: ({profile_id, apps_to_add, account_information}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
+          profile_id: profile_id,
+          apps_to_add: apps_to_add,
+          account_information: account_information
+        });
+    },
+    addBookmark: ({name, profile_id, url, img_url}) => {
+      return basic_post('/api/v1/catalog/AddBookmark', {
+        name: name,
+        profile_id: profile_id,
+        url: url,
+        img_url: img_url
+      });
+    },
+    addLogWithApp: ({name, website_id, profile_id, logWith_app_id}) => {
+      return basic_post('/api/v1/catalog/AddLogWithApp', {
+        name: name,
+        website_id: website_id,
+        profile_id: profile_id,
+        logWith_app_id: logWith_app_id
+      });
+    },
+    requestWebsite: ({url, account_information}) => {
+      if (account_information !== undefined)
+        Object.keys(account_information).map(item => {
+          account_information[item] = cipher(account_information[item]);
+        });
+      return basic_post('/api/v1/catalog/WebsiteRequest', {
+        url: url,
+        account_information: account_information
+      });
+    }
+  },
   teamChannel: {
     editName : function(ws_id, team_id, channel_id, name){
       return axios.post('/api/v1/teams/EditChannelName', {

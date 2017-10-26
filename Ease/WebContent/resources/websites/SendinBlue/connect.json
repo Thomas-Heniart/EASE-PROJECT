@@ -1,20 +1,21 @@
 {
     "name":"SendinBlue",
     "lastlogin":"",
-    "home":"https://sendinblue.com/",
+    "home":"https://my.sendinblue.com/",
     "connect": {
     	"todo": [
-    		{"action":"fill", "what":"login", "search":"#login-form input[name='email']"},
-    		{"action":"fill", "what":"password", "search":"#login-form input[name='pass']"},
-    		{"action":"click", "search":"#login-form button[type='submit']"}
+          {"action":"fill", "what":"login", "search":"#login-form input[name='email']"},
+          {"action":"fill", "what":"password", "search":"#login-form input[name='pass']"},
+          {"action":"click", "search":"#login-form button[type='submit']"}
        	]
     },
     "logout": {
     	"todo": [
-    		{"action":"goto", "url":"https://my.sendinblue.com/users/logout"}
+          {"action":"aclick", "search":"a[href*='logout']"}
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a[href*='logout']"}
+      {"action":"waitfor", "search":"a[href*='logout'], #login-form button[type='submit']"},
+      {"search":"a[href*='logout']"}
     ]
 }

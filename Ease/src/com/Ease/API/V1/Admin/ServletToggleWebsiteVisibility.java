@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Context.Catalog.Catalog;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.WebsiteAttributes;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -20,8 +21,10 @@ public class ServletToggleWebsiteVisibility extends HttpServlet {
             Integer website_id = sm.getIntParam("id", true, false);
             Boolean is_private = sm.getBooleanParam("private", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            catalog.getWebsiteWithId(website_id).setPublic(!is_private, sm.getDB());
-            sm.setSuccess("Website edited");
+            WebsiteAttributes websiteAttributes = catalog.getWebsiteWithId(website_id).getWebsiteAttributes();
+            websiteAttributes.setPublic_website(!is_private);
+            sm.saveOrUpdate(websiteAttributes);
+            sm.setSuccess("Catalog edited");
         } catch (Exception e) {
             sm.setError(e);
         }

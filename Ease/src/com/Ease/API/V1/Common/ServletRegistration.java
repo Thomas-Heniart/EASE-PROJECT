@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Context.Catalog.Catalog;
-import com.Ease.Context.Catalog.Website;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
 import com.Ease.Dashboard.App.LinkApp.LinkApp;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
@@ -140,9 +140,9 @@ public class ServletRegistration extends HttpServlet {
                 profile_pro.addEmptyApp(slack.getName(), slack, db);
                 profile_pro.addEmptyApp(linkedin.getName(), linkedin, db);
                 profile_pro.addEmptyApp(trello.getName(), trello, db);
-                LinkApp appear_in = LinkApp.createLinkApp(profile_pro, profile_pro.getApps().size(), "Talk to Ease", "https://appear.in/ease.space_chat", "https://logo.clearbit.com/appear.in", sm);
+                LinkApp appear_in = LinkApp.createLinkApp(profile_pro, profile_pro.getApps().size(), "Talk to Ease", "https://appear.in/ease.space_chat", "https://logo.clearbit.com/appear.in", db);
                 profile_pro.addApp(appear_in);
-                LinkApp le_monde = LinkApp.createLinkApp(profile_perso, profile_perso.getApps().size(), "Le Monde", "http://www.lemonde.fr/", "https://logo.clearbit.com/lemonde.fr", sm);
+                LinkApp le_monde = LinkApp.createLinkApp(profile_perso, profile_perso.getApps().size(), "Le Monde", "http://www.lemonde.fr/", "https://logo.clearbit.com/lemonde.fr", db);
                 profile_perso.addApp(le_monde);
             }
             db.commitTransaction(transaction);
