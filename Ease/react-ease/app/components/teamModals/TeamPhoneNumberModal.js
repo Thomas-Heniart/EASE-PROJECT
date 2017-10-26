@@ -1,5 +1,3 @@
-import Input from "react-phone-number-input/es6/input";
-
 var React = require('react');
 var classnames = require('classnames');
 import {Button, Form, Message, Header} from 'semantic-ui-react';
