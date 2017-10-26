@@ -16,7 +16,8 @@ class Catalog extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      query: ''
+      query: '',
+      mounted: false
     }
   }
   handleInput = handleSemanticInput.bind(this);
@@ -26,6 +27,9 @@ class Catalog extends React.Component {
   componentDidMount() {
     if (!this.props.catalog.loaded)
       this.props.fetchCatalog();
+    setTimeout(() => {
+      this.setState({mounted: true});
+    }, 1);
   }
   resetQuery = () => {
     this.setState({query: ''});
@@ -64,10 +68,12 @@ class Catalog extends React.Component {
                   </div>
                 </Grid.Column>
                 <Grid.Column width={10} style={{marginTop: '23px'}}>
-                  <Switch>
-                    <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
-                    <Route path={`${this.props.match.path}`} render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>
-                  </Switch>
+                  {this.state.mounted &&
+                    <Switch>
+                      <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
+                      <Route path={`${this.props.match.path}`}
+                             render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>
+                    </Switch>}
                 </Grid.Column>
                 <Grid.Column width={3} />
               </Grid>
