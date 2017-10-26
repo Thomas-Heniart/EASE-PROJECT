@@ -21,10 +21,6 @@
 				<i class="fa fa-stack-1x fa-link fa-rotate-90"></i>
 			</span>
 		</a>
-		<span class="fa-stack fa-lg apps-integrated">
-			<i class="fa fa-circle fa-stack-2x"></i>
-			<i class="count">0</i>
-		</span>
 		<c:if test="${newApp == true}">
 			<span class="newCatalogApp">New!</span>
 		</c:if>

@@ -1,6 +1,5 @@
 package com.Ease.Context.Catalog;
 
-import com.Ease.Context.Group.Group;
 import com.Ease.Context.Variables;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.TeamUser;
@@ -44,7 +43,7 @@ public class Website {
             throw new GeneralException(ServletManager.Code.UserMiss, "This website already exists");
         int transaction = db.startTransaction();
         WebsiteAttributes attributes = WebsiteAttributes.createWebsiteAttributes(is_public, db);
-        request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?);");
+        request = db.prepareRequest("INSERT INTO websites VALUES (null, ?, ?, ?, ?, ?, ?, 0, 1, ?, NULL);");
         request.setString(url);
         request.setString(name);
         request.setString(folder);
@@ -494,6 +493,7 @@ public class Website {
         res.put("id", this.getDb_id());
         res.put("logo", this.getLogo());
         JSONArray logWithWebsites = new JSONArray();
+
         for (Website logWithWebsite : this.loginWithWebsites)
             logWithWebsites.add(logWithWebsite.getDb_id());
         res.put("loginWith", logWithWebsites);
@@ -513,7 +513,6 @@ public class Website {
         res.put("inputs", inputs);
         res.put("isNew", this.isNew());
         res.put("position", this.position);
-        res.put("count", user.getWebsiteCount(this));
         return res;
     }
 
@@ -546,10 +545,10 @@ public class Website {
             return false;
         if (user.isAdmin())
             return true;
-        for (Group group : user.getGroups()) {
+        /* for (Group group : user.getGroups()) {
             if (this.groupIds.contains(group.getDBid()))
                 return true;
-        }
+        } */
         for (TeamUser teamUser : user.getTeamUsers()) {
             if (this.teamIds.contains(teamUser.getTeam().getDb_id()))
                 return true;

@@ -1,5 +1,6 @@
 package com.Ease.Team;
 
+import com.Ease.Catalog.Website;
 import com.Ease.Context.Variables;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
@@ -13,7 +14,6 @@ import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
-import org.json.HTTP;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -92,6 +92,10 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
+    protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
     @Transient
     protected Map<Integer, TeamUser> teamUsersWaitingForVerification = new ConcurrentHashMap<>();
@@ -237,6 +241,14 @@ public class Team {
         this.channels = channels;
     }
 
+    public Set<Website> getTeamWebsites() {
+        return teamWebsites;
+    }
+
+    public void setTeamWebsites(Set<Website> teamWebsites) {
+        this.teamWebsites = teamWebsites;
+    }
+
     public AppManager getAppManager() {
         return appManager;
     }
@@ -300,6 +312,14 @@ public class Team {
 
     public void removeChannel(Channel channel) {
         this.getChannels().remove(channel.getDb_id());
+    }
+
+    public void addTeamWebsite(Website website) {
+        this.getTeamWebsites().add(website);
+    }
+
+    public void removeTeamWebsite(Website website) {
+        this.getTeamWebsites().remove(website);
     }
 
     public void edit(JSONObject editJson) {
@@ -479,7 +499,7 @@ public class Team {
         }
     }
 
-    public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) {
+    public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) throws HttpServletException {
         hibernateQuery.querySQLString("SELECT credit FROM teamCredit WHERE team_id = ?");
         hibernateQuery.setParameter(1, this.getDb_id());
         Integer credit = (Integer) hibernateQuery.getSingleResult();
@@ -509,6 +529,7 @@ public class Team {
                 Integer team_account_balance = account_balance - amount - credit;
                 customerParams.put("account_balance", team_account_balance);
                 customer.update(customerParams);
+                customer.setAccountBalance(Long.valueOf(team_account_balance));
                 return team_account_balance;
             } catch (AuthenticationException e) {
                 e.printStackTrace();
@@ -519,8 +540,6 @@ public class Team {
             } catch (CardException e) {
                 e.printStackTrace();
             } catch (APIException e) {
-                e.printStackTrace();
-            } catch (HttpServletException e) {
                 e.printStackTrace();
             }
         }

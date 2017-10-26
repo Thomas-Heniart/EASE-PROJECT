@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00017/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00018/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00017/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00018/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;
@@ -122,14 +122,12 @@
                 <p style="margin-top:10px;font-size:15px;font-weight:300;"><a href="/companyContact" style="color:#4fcb6c;"><fmt:message key="landing.underemail"/></a></p>
             </div>
             <div class="rightLanding nine wide column">
-                <div class="inTheMac">
-                    <img class="ui fluid large image" src="/resources/images/screen.png"/>
-                    <a href="/product">
-                        <button id="discoverButton" class="ui small button">
-                            <fmt:message key="landing.discover"/>
-                        </button>
-                    </a>
-                </div>
+                <div class="inTheMac"></div>
+                <a href="/product">
+                    <button id="discoverButton" class="ui small button">
+                        <fmt:message key="landing.discover"/>
+                    </button>
+                </a>
             </div>
             <div id="counter"  class="sixteen wide column" style="text-align:center;"></div>
             <div class="sixteen wide column" style="text-align:center;">
@@ -148,13 +146,13 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00021/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00021/jquery.complexify.js"></script>
-<script src="/jsMinified.v00021/bootstrap.js" async></script>
-<script src="/jsMinified.v00021/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00021/basic-utils.js" async></script>
-<script src="/jsMinified.v00021/languageChooser.js" async></script>
-<script src="/jsMinified.v00021/tracker.js" async></script>
+<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00022/jquery.complexify.js"></script>
+<script src="/jsMinified.v00022/bootstrap.js" async></script>
+<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00022/basic-utils.js" async></script>
+<script src="/jsMinified.v00022/languageChooser.js" async></script>
+<script src="/jsMinified.v00022/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
@@ -276,7 +274,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00021/thirdParty/crisp.js";
+            s.src = "/jsMinified.v00022/thirdParty/crisp.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();
@@ -289,7 +287,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00021/amplitude-analytics.js";
+            r.src = "/jsMinified.v00022/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };

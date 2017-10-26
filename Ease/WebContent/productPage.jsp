@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00017/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/securityPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00017/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00018/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00018/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -368,14 +368,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00021/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00021/jquery.complexify.js"></script>
-<script src="/jsMinified.v00021/bootstrap.js" async></script>
-<script src="/jsMinified.v00021/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00021/landingPage.js" async></script>
-<script src="/jsMinified.v00021/basic-utils.js" async></script>
-<script src="/jsMinified.v00021/languageChooser.js" async></script>
-<script src="/jsMinified.v00021/tracker.js" async></script>
+<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00022/jquery.complexify.js"></script>
+<script src="/jsMinified.v00022/bootstrap.js" async></script>
+<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00022/landingPage.js" async></script>
+<script src="/jsMinified.v00022/basic-utils.js" async></script>
+<script src="/jsMinified.v00022/languageChooser.js" async></script>
+<script src="/jsMinified.v00022/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
 <script>
     if (window.matchMedia("(max-width: 768px)").matches) {

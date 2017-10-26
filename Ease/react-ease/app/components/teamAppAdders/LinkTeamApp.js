@@ -27,14 +27,15 @@ const TeamAppReceiverLabel = ({username}) => {
                flowing
                hideOnScroll={true}
                trigger={
-                   <Label class={classnames("user-label static accepted")}>
+                   <Label class={classnames("user-label static pinned")}>
                        {username}
                    </Label>
                }
-               header={<h5 class="mrgn0 text-center">User informations</h5>}
                content={
                    <div>
-                       <span><Icon name='circle' style={{color: '#949eb7'}}/> User pinned the app</span>
+                       <span>User pinned the app</span>
+                       <br/>
+                       <span>Mobile access: on</span>
                    </div>}/>
     )
 };

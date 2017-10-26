@@ -3,9 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -29,9 +26,7 @@ public class ServletGetChannels extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
-            if (!teamUser.isVerified())
-                throw new HttpServletException(HttpStatus.Forbidden, "Your admin must verify you first.");
+            sm.getUser().getTeamUserForTeam(team);
             JSONArray jsonArray = new JSONArray();
             for (Channel channel : team.getChannels().values())
                 jsonArray.add(channel.getSimpleJson());

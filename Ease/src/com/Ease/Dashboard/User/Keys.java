@@ -11,6 +11,8 @@ import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 
+import java.security.Key;
+import java.util.Date;
 import java.util.Map;
 
 public class Keys {
@@ -172,6 +174,9 @@ public class Keys {
     protected String keyUser;
     protected String publicKey;
     protected String privateKey;
+    private String token;
+    private Date token_expiration;
+    private Key token_secret;
 
     public Keys(String db_id, String hashed_password, String saltPerso, String keyUser, String publicKey, String privateKey) {
         this.db_id = db_id;
@@ -274,8 +279,6 @@ public class Keys {
             fName = rs.getString(1);
         else
             throw new GeneralException(ServletManager.Code.ClientWarning, "This user does not exist");
-        /*SendGridMail passwordLostEmail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-        passwordLostEmail.sendPasswordLostEmail(email, fName, code);*/
         db.commitTransaction(transaction);
         MailJetBuilder mailJetBuilder = new MailJetBuilder();
         mailJetBuilder.setTemplateId(178530);

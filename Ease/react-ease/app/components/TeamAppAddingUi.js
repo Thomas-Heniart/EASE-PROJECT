@@ -44,7 +44,7 @@ class DashboardAndTeamAppSearch extends React.Component{
                                key={idx}
                                onClick={this.props.dashboardSelectFunc.bind(null, item)}>
                             <img className="logo" src={item.logo}/>
-                            <span className="app_name overflow-ellipsis">{item.website_name}</span>
+                            <span className="app_name overflow-ellipsis">{item.name}</span>
                             <span className="overflow-ellipsis text-muted">&nbsp;- from {item.profile_name} - {item.login}</span>
                           </div>
                       );
@@ -53,7 +53,7 @@ class DashboardAndTeamAppSearch extends React.Component{
                              key={idx}
                              onClick={this.props.selectFunc.bind(null, item)}>
                           <img className="logo" src={item.logo}/>
-                          <span className="app_name overflow-ellipsis">{item.website_name}</span>
+                          <span className="app_name overflow-ellipsis">{item.name}</span>
                         </div>
                     )
                   }, this) :
@@ -432,7 +432,7 @@ class SimpleTeamAppAdd extends React.Component {
         });
         this.setState({
           choosenApp: {info: app, inputs:data.information},
-          appName:app.website_name,
+          appName:app.name,
           credentials: credentials
         });
       }.bind(this));
@@ -444,7 +444,7 @@ class SimpleTeamAppAdd extends React.Component {
       Object.keys(data.information).map(function (item) {
         credentials[item] = '';
       });
-      this.setState({choosenApp: {info : app, inputs: data.information}, appName : app.website_name, credentials: credentials});
+      this.setState({choosenApp: {info : app, inputs: data.information}, appName : app.name, credentials: credentials});
     }.bind(this));
   }
   handleComment(event){

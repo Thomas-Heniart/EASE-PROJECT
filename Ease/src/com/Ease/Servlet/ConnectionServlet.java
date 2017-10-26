@@ -102,8 +102,6 @@ public class ConnectionServlet extends HttpServlet {
             } else {
                 throw new GeneralException(ServletManager.Code.UserMiss, "Too much attempts to connect. Please retry in 5 minutes.");
             }
-        } catch (HttpServletException e) {
-            sm.setResponse(new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password"));
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (Exception e) {

@@ -31,6 +31,11 @@ public class DateComparator {
 
     public static boolean isInDays(Date date, int numberOfDays) {
         long time = date.getTime() - new Date().getTime();
-        return time <= (numberOfDays * millisecondsInDay) && time >= ((numberOfDays - 1) * millisecondsInDay);
+        return time <= (numberOfDays + 1) * millisecondsInDay && time >= ((numberOfDays - 1) * millisecondsInDay);
+    }
+
+    public static boolean wasDaysAgo(Date date, int numberOfDays) {
+        long time = new Date().getTime() - date.getTime();
+        return (numberOfDays - 1) * millisecondsInDay <= time && time <= (numberOfDays + 1) * millisecondsInDay;
     }
 }

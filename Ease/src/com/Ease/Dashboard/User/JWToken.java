@@ -15,6 +15,7 @@ import java.util.*;
 public class JWToken {
 
     private Integer id;
+    private String jwt;
     private String user_id;
     private String connection_token;
     private String keyUser;
@@ -51,50 +52,12 @@ public class JWToken {
             request.setInt(user.getDBid());
             request.setObject(expiration_date);
             Integer id = request.set();
-            JWToken jwToken = new JWToken(id, user.getEmail(), user.getFirstName(), new Date(expiration_date));
+            JWToken jwToken = new JWToken(id, jwt, user.getEmail(), user.getFirstName(), new Date(expiration_date));
             jwToken.setConnection_token(connection_token);
             return jwToken;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
-    }
-
-    public static JWToken renewJWTokenWithKeyUser(String user_email, String user_name, String user_id, String keyUser, Key secret, DataBaseConnection db) throws HttpServletException {
-        try {
-            String salt = AES.generateSalt();
-            Map<String, Object> claims = new HashMap<>();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 3);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            Long expiration_date = calendar.getTimeInMillis();
-            calendar.clear();
-            String connection_token = UUID.randomUUID().toString();
-            claims.put("exp", expiration_date);
-            claims.put("email", user_email);
-            claims.put("name", user_name);
-            claims.put("tok", connection_token);
-            String jwt = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
-            String jwt_ciphered = AES.encrypt(jwt, keyUser);
-            String keyUser_ciphered = AES.cipherKey(keyUser, connection_token, salt);
-            DatabaseRequest request = db.prepareRequest("INSERT INTO jsonWebTokens VALUES (NULL, ?, ?, ?, ?, ?, ?)");
-            request.setString(Hashing.hash(connection_token));
-            request.setString(jwt_ciphered);
-            request.setString(keyUser_ciphered);
-            request.setString(salt);
-            request.setInt(user_id);
-            request.setObject(expiration_date);
-            Integer jwt_id = request.set();
-            JWToken jwToken = new JWToken(jwt_id, user_email, user_name, new Date(expiration_date));
-            jwToken.setConnection_token(connection_token);
-            return jwToken;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-
     }
 
     public static JWToken loadJWTokenWithKeyUser(Integer id, String user_email, String user_name, String keyUser, Key secret, DataBaseConnection db) throws HttpServletException {
@@ -107,7 +70,7 @@ public class JWToken {
             Claims claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt).getBody();
             String connection_token = (String) claimsJws.get("tok");
             Long expiration_date = ((BigInteger) rs.getObject(2)).longValueExact();
-            if (expiration_date <= new Date().getTime()) {
+            if (expiration_date <= new Date().getTime() || !claimsJws.get("name").equals(user_name)) {
                 String salt = AES.generateSalt();
                 Map<String, Object> claims = new HashMap<>();
                 Calendar calendar = Calendar.getInstance();
@@ -136,7 +99,7 @@ public class JWToken {
                 request.setInt(id);
                 request.set();
             }
-            JWToken jwToken = new JWToken(id, user_email, user_name, new Date(expiration_date));
+            JWToken jwToken = new JWToken(id, jwt, user_email, user_name, new Date(expiration_date));
             jwToken.setConnection_token(connection_token);
             return jwToken;
         } catch (GeneralException e) {
@@ -153,12 +116,8 @@ public class JWToken {
             DatabaseResult rs = request.get();
             if (!rs.next())
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid token.");
-            do {
-                if (Hashing.compare(connection_token, rs.getString("connection_token_hash")))
-                    break;
-            } while (rs.next());
             if (!Hashing.compare(connection_token, rs.getString("connection_token_hash")))
-                throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid JWT");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid token.");
             String keyUser = AES.decryptUserKey(rs.getString("keyUser_cipher"), connection_token, rs.getString("salt"));
             JWToken jwToken = new JWToken();
             jwToken.setKeyUser(keyUser);
@@ -177,8 +136,9 @@ public class JWToken {
 
     }
 
-    public JWToken(Integer id, String user_email, String user_name, Date expiration_date) {
+    public JWToken(Integer id, String jwt, String user_email, String user_name, Date expiration_date) {
         this.id = id;
+        this.jwt = jwt;
         this.user_email = user_email;
         this.user_name = user_name;
         this.expiration_date = expiration_date;
@@ -192,13 +152,12 @@ public class JWToken {
         this.id = id;
     }
 
-    public String getJwt(Key secret) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("exp", expiration_date);
-        claims.put("email", user_email);
-        claims.put("name", user_name);
-        claims.put("tok", connection_token);
-        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+    public String getJwt() {
+        return jwt;
+    }
+
+    public void setJwt(String jwt) {
+        this.jwt = jwt;
     }
 
     public String getUser_id() {

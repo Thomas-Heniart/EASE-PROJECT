@@ -30,7 +30,10 @@ public class HttpServletException extends Exception {
 
     public HttpServletException(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
-        this.msg = null;
+        if (this.httpStatus == HttpStatus.InternError)
+            this.msg = "Darn - that didn’t work. Feel free to send Thomas at thomas@ease.space";
+        else
+            this.msg = null;
     }
 
     public String getMsg() {

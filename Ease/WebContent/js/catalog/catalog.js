@@ -188,9 +188,6 @@ $(document).ready(function() {
 		var activeTag = $(".selectedTagsContainer .tag-active");
 		if (activeTag.length)
 			removeActiveTagFromFront(activeTag);
-		/*activeTag.toggleClass("hvr-grow");
-		activeTag.toggleClass("tag-active");
-		updateCatalogFront(activeTag);*/
 		if(!$(event.target).hasClass("tag-active")){
 			$(event.target).toggleClass("tag-active");
 			$(event.target).toggleClass("hvr-grow");
@@ -271,7 +268,6 @@ var Catalog = function(rootEl){
 	var self = this;
 	this.qRoot = rootEl;
 	this.isOpen = false;
-//	this.oUpdate = new UpdateManager(this.qRoot.find('.catalogUpdates'));
 	this.quitButton = this.qRoot.find('#quit');
 	this.appsHolder = this.qRoot.find('.scaleContainerView');
 	this.appsArea = this.qRoot.find('#catalog');
@@ -281,38 +277,34 @@ var Catalog = function(rootEl){
 	this.apps = [];
 	this.ssos = [];
 
-	postHandler.post(
-		'GetCatalogApps',
-		{},
+	ajaxHandler.get(
+		'/api/v1/catalog/GetAllWebsites',
+		null,
 		function(){
 		},
-		function(msg){
-			var apps = JSON.parse(msg);
+		function(data){
+			var apps = data.websites;
 			var app;
 			for (var i = 0; i < apps.length; i++) {
 				app = apps[i];
-				self.addApp(new catalogApp(app.name, app.id, app.logo, app.loginWith, app.ssoId, app.url, app.inputs, app.isNew, app.count));
+				self.addApp(new catalogApp(app.name, app.id, app.logo, app.connectWith_websites, app.sso_id, app.landing_url, app.information, false, 0));
 			}
 		},
 		function(msg){
-		},
-		'text'
-		);
-	postHandler.post(
-		'GetSso',
-		{},
+		});
+	ajaxHandler.get(
+		'/api/v1/catalog/GetSsoList',
+		null,
 		function(){},
-		function(msg){
-			var ssos = JSON.parse(msg);
+		function(data){
+			var ssos = data.ssoList;
 			for (var i = 0; i < ssos.length; i++) {
-				self.ssos.push(new ssoObject(ssos[i].name, ssos[i].singleId, ssos[i].imgSrc));
+				self.ssos.push(new ssoObject(ssos[i].name, ssos[i].id, ssos[i].logo));
 			}
 		},
 		function(msg){
 
-		},
-		'text'
-	);
+		});
 	this.getSsoById = function(id){
 		for (var i = 0; i < self.ssos.length; i++) {
 			if (self.ssos[i].id == id)

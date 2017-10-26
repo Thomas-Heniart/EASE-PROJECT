@@ -1,5 +1,6 @@
 package com.Ease.Team;
 
+import com.Ease.Context.Variables;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
@@ -8,7 +9,6 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.*;
-import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
 import java.sql.SQLException;
@@ -82,40 +82,95 @@ public class TeamManager {
             team.checkFreeTrialEnd(db);
     }
 
-    public void reminderThreeDays() throws HttpServletException {
-        System.out.println("Three days reminder start...");
-        List<TeamUser> unregistered_teamUsers = new LinkedList<>();
+    public void teamUserNotRegisteredReminder() throws HttpServletException {
+        System.out.println("Team users not registered reminder start...");
+        List<TeamUser> three_days_teamUsers = new LinkedList<>();
+        List<TeamUser> eight_days_teamUsers = new LinkedList<>();
+        List<TeamUser> twelve_days_teamUsers = new LinkedList<>();
         for (Team team : this.getTeams()) {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
-                if (teamUser.isRegistered() || teamUser.getTeamUserStatus().reminder_three_days_sended())
+                if (teamUser.isRegistered())
                     continue;
-                if (DateComparator.isOutdated(teamUser.getArrivalDate(), 3))
-                    unregistered_teamUsers.add(teamUser);
+                if (DateComparator.wasDaysAgo(teamUser.getArrivalDate(), 3))
+                    three_days_teamUsers.add(teamUser);
+                else if (DateComparator.wasDaysAgo(teamUser.getArrivalDate(), 8))
+                    eight_days_teamUsers.add(teamUser);
+                else if (DateComparator.wasDaysAgo(teamUser.getArrivalDate(), 12))
+                    twelve_days_teamUsers.add(teamUser);
             }
         }
-        if (unregistered_teamUsers.isEmpty()) {
-            System.out.println("Three days reminder end...");
-            return;
-        }
-
-        System.out.println("Three days reminder emails: " + unregistered_teamUsers.size());
-        MailJetBuilder mailJetBuilder = new MailJetBuilder();
-        mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-        mailJetBuilder.setTemplateId(180262);
+        MailJetBuilder mailJetBuilder;
         HibernateQuery hibernateQuery = new HibernateQuery();
-        for (TeamUser teamUser : unregistered_teamUsers) {
-            JSONObject vars = new JSONObject();
-            vars.put("first_name", teamUser.getFirstName());
-            vars.put("last_name", teamUser.getLastName());
-            vars.put("team_name", teamUser.getTeam().getName());
-            mailJetBuilder.addRecipient(teamUser.getEmail(), vars);
-            teamUser.getTeamUserStatus().setReminder_three_days_sended(true);
-            hibernateQuery.saveOrUpdateObject(teamUser.getTeamUserStatus());
+        if (!three_days_teamUsers.isEmpty()) {
+            System.out.println("Three days reminder emails: " + three_days_teamUsers.size());
+            for (TeamUser teamUser : three_days_teamUsers) {
+                if (teamUser.getAdmin_id() == null)
+                    continue;
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.setTemplateId(180262);
+                mailJetBuilder.addTo(teamUser.getEmail());
+                TeamUser admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
+                mailJetBuilder.addVariable("first_name", admin.getFirstName());
+                mailJetBuilder.addVariable("last_name", admin.getLastName());
+                mailJetBuilder.addVariable("email", admin.getEmail());
+                mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
+                String url = Variables.URL_PATH + "teams#/teamJoin/";
+                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
+                hibernateQuery.setParameter(1, teamUser.getDb_id());
+                url += (String) hibernateQuery.getSingleResult();
+                mailJetBuilder.addVariable("url", url);
+                mailJetBuilder.sendEmail();
+            }
         }
-        mailJetBuilder.sendEmail();
+        if (!eight_days_teamUsers.isEmpty()) {
+            System.out.println("Eight days reminder emails: " + eight_days_teamUsers.size());
+            for (TeamUser teamUser : eight_days_teamUsers) {
+                if (teamUser.getAdmin_id() == null)
+                    continue;
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.setTemplateId(238541);
+                mailJetBuilder.addTo(teamUser.getEmail());
+                TeamUser admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
+                mailJetBuilder.addVariable("first_name", admin.getFirstName());
+                mailJetBuilder.addVariable("last_name", admin.getLastName());
+                mailJetBuilder.addVariable("email", admin.getEmail());
+                mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
+                String url = Variables.URL_PATH + "teams#/teamJoin/";
+                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
+                hibernateQuery.setParameter(1, teamUser.getDb_id());
+                url += (String) hibernateQuery.getSingleResult();
+                mailJetBuilder.addVariable("url", url);
+                mailJetBuilder.sendEmail();
+            }
+        }
+        if (!twelve_days_teamUsers.isEmpty()) {
+            System.out.println("Twelve days reminder emails: " + twelve_days_teamUsers.size());
+            for (TeamUser teamUser : twelve_days_teamUsers) {
+                if (teamUser.getAdmin_id() == null)
+                    continue;
+                mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.setTemplateId(238542);
+                mailJetBuilder.addTo(teamUser.getEmail());
+                TeamUser admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
+                mailJetBuilder.addVariable("first_name", admin.getFirstName());
+                mailJetBuilder.addVariable("last_name", admin.getLastName());
+                mailJetBuilder.addVariable("email", admin.getEmail());
+                mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
+                String url = Variables.URL_PATH + "teams#/teamJoin/";
+                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
+                hibernateQuery.setParameter(1, teamUser.getDb_id());
+                url += (String) hibernateQuery.getSingleResult();
+                mailJetBuilder.addVariable("url", url);
+                mailJetBuilder.sendEmail();
+            }
+        }
         hibernateQuery.commit();
-        System.out.println("Three days reminder end...");
+        System.out.println("Team user not registered reminder end...");
     }
+
 
     public void passwordReminder() throws HttpServletException {
 

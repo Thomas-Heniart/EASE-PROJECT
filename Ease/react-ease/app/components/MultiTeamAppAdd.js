@@ -36,7 +36,7 @@ class TeamAppSearch extends React.Component{
                              key={item.id}
                              onClick={this.props.selectFunc.bind(null, item)}>
                           <img className="logo" src={item.logo}/>
-                          <span className="app_name overflow-ellipsis">{item.website_name}</span>
+                          <span className="app_name overflow-ellipsis">{item.name}</span>
                         </div>
                     )
                   }, this) :
@@ -195,7 +195,7 @@ class MultiTeamAppAdd extends React.Component {
       Object.keys(data.information).map(function (item) {
         credentials[item] = '';
       });
-      this.setState({choosenApp: {info : app, inputs: data.information}, appName : app.website_name, credentials: credentials});
+      this.setState({choosenApp: {info : app, inputs: data.information}, appName : app.name, credentials: credentials});
       if (this.props.selectedItem.type === 'user')
         this.handleUserSelect(this.state.users[0].id);
     }.bind(this));

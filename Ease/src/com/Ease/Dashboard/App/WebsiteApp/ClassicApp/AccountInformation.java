@@ -41,10 +41,10 @@ public class AccountInformation {
         return accountInformationList;
     }
 
-    public static List<AccountInformation> createAccountInformationFromAccountInformations(String account_id, List<AccountInformation> accountInformations, String publicKey, ServletManager sm) throws GeneralException {
+    public static List<AccountInformation> createAccountInformationFromAccountInformations(String account_id, List<AccountInformation> accountInformations, String publicKey, DataBaseConnection db) throws GeneralException {
         List<AccountInformation> informations = new LinkedList<AccountInformation>();
         for (AccountInformation info : accountInformations)
-            informations.add(createAccountInformation(account_id, info.getInformationName(), info.getInformationValue(), publicKey, sm.getDB()));
+            informations.add(createAccountInformation(account_id, info.getInformationName(), info.getInformationValue(), publicKey, db));
         return informations;
     }
 
