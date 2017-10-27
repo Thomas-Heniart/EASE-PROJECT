@@ -53,7 +53,7 @@ public class ServletUpgradePlan extends HttpServlet {
             team.setSubscription_id(subscription.getId());
             team.setSubscription(subscription);
             sm.saveOrUpdate(team);
-            sm.setSuccess(team.getJson());
+            sm.setSuccess(team.getSimpleJson());
         } catch (StripeException e) {
             sm.setError(e);
         } catch (Exception e) {
