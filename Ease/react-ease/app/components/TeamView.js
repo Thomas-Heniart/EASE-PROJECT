@@ -111,7 +111,7 @@ class TeamView extends React.Component {
     const teamId = this.props.match.params.teamId;
 
     const defaultRoom = this.props.channels.find(item => (item.default));
-    this.props.history.push(`/teams/${teamId}/${defaultRoom.id}`);
+    this.props.history.replace(`/teams/${teamId}/${defaultRoom.id}`);
   }
   getSelectedItem(){
     const itemId = this.props.match.params.itemId;
