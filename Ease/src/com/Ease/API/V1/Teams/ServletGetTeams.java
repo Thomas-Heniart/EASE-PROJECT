@@ -32,7 +32,7 @@ public class ServletGetTeams extends HttpServlet {
             JSONArray res = new JSONArray();
             for (TeamUser teamUser : teamUserList) {
                 JSONObject tmp = teamUser.getTeam().getJson();
-                tmp.put("my_user_id", teamUser.getDb_id());
+                tmp.put("my_team_user_id", teamUser.getDb_id());
                 res.add(tmp);
             }
             sm.setSuccess(res);

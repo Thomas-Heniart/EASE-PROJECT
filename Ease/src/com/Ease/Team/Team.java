@@ -356,12 +356,12 @@ public class Team {
         JSONObject res = this.getSimpleJson();
         JSONArray rooms = new JSONArray();
         JSONArray teamUsers = new JSONArray();
-        for (Integer id : this.getChannels().keySet())
-            rooms.add(id);
-        for (Integer id : this.getTeamUsers().keySet())
-            teamUsers.add(id);
-        res.put("room_ids", rooms);
-        res.put("user_ids", teamUsers);
+        for (Channel channel : this.getChannels().values())
+            rooms.add(channel.getJson());
+        for (TeamUser teamUser : this.getTeamUsers().values())
+            teamUsers.add(teamUser.getJson());
+        res.put("rooms", rooms);
+        res.put("team_users", teamUsers);
         return res;
     }
 
