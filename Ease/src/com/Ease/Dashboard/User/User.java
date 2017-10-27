@@ -645,7 +645,7 @@ public class User {
         return this.email.endsWith("@iscparis.com") || this.email.endsWith("@edhec.com") || this.email.endsWith("ieseg.fr");
     }
 
-    private void renewJwt(Key secret, DataBaseConnection db) throws HttpServletException {
+    public void renewJwt(Key secret, DataBaseConnection db) throws HttpServletException {
         this.setJwt(JWToken.renewJWToken(Integer.valueOf(this.getDBid()), this.getKeys().getKeyUser(), this.getEmail(), this.getFirstName(), secret, db));
     }
 }

@@ -48,7 +48,7 @@ public class JWToken {
             Integer id;
             if (rs.next()) {
                 id = rs.getInt(1);
-                request = db.prepareRequest("UPDATE jsonWebTokens SET connection_token_hash= ?, jwt_ciphered = ?, keyUser_cipher= ?, salt = ?, expiration_date = ? WHERE user_id = ?)");
+                request = db.prepareRequest("UPDATE jsonWebTokens SET connection_token_hash = ?, jwt_ciphered = ?, keyUser_cipher = ?, salt = ?, expiration_date = ? WHERE user_id = ?;");
                 request.setString(Hashing.hash(connection_token));
                 request.setString(jwt_ciphered);
                 request.setString(keyUser_ciphered);

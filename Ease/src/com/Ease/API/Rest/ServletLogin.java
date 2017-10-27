@@ -36,6 +36,7 @@ public class ServletLogin extends HttpServlet {
             if (!databaseRequest.get().next())
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
             User user = User.loadUser(email, password, sm.getServletContext(), db);
+            user.renewJwt((Key) sm.getContextAttr("secret"), db);
             HibernateQuery hibernateQuery = new HibernateQuery();
             for (TeamUser teamUser : user.getTeamUsers()) {
                 if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
