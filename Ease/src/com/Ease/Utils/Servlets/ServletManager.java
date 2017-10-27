@@ -421,7 +421,6 @@ public abstract class ServletManager {
             String user_email = (String) claimsJws.get("email");
             Long expiration_date = (Long) claimsJws.get("exp");
             JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
-            jwToken.setJwt(token);
             user = User.loadUserFromJWT(jwToken, this, this.getDB());
             tokenUserMap.put(jwToken.getConnection_token(), user);
         }

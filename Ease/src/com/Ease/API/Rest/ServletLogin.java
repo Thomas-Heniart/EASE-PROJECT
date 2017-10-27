@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Key;
 import java.util.Map;
 
 @WebServlet("/api/rest/Connection")
@@ -58,7 +59,8 @@ public class ServletLogin extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
             user.getDashboardManager().decipherApps(sm);
             JSONObject res = new JSONObject();
-            res.put("JWT", user.getJwt().getJwt());
+
+            res.put("JWT", user.getJwt().getJwt((Key) sm.getContextAttr("secret")));
             ((Map<String, User>) sm.getContextAttr("tokenUserMap")).put(user.getJwt().getConnection_token(), user);
             sm.setSuccess(res);
         } catch (Exception e) {
