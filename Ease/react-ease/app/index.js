@@ -26,8 +26,7 @@ class App extends React.Component {
               <Route path="/teamCreation" component={TeamCreationView}/>
               <Route path="/main" component={requireAuthentication(MainView)}/>
               <Route path="/teamJoin/:code" component={TeamJoinView}/>
-              <Route exact path="/teams/:teamId" component={TeamView}/>
-              <Route path="/teams/:teamId/:itemId" component={TeamView}/>
+              <Route path="/teams/:teamId/:itemId?" component={TeamView}/>
               <Route path="/login" component={Login}/>
               <Route path="/registration" component={Registration}/>
             </Base>
