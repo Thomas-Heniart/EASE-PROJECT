@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Key;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,6 +71,7 @@ public class ConnectionServlet extends HttpServlet {
                     String key = (String) sm.getContextAttr("privateKey");
                     password = RSA.Decrypt(password, key);
                     user = User.loadUser(email, password, sm.getServletContext(), db);
+                    user.renewJwt((Key) sm.getContextAttr("secret"), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();
                     for (TeamUser teamUser : user.getTeamUsers()) {

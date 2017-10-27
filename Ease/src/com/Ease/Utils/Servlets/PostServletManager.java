@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class PostServletManager extends ServletManager {
 
     public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         super(servletName, request, response, saveLogs);
-        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = "";
         String buffer;
         while ((buffer = br.readLine()) != null)

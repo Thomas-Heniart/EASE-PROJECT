@@ -11,18 +11,23 @@ ALTER TABLE websites ADD COLUMN `category_id` INT(10) UNSIGNED;
 ALTER TABLE websites ADD FOREIGN KEY (category_id) REFERENCES categories(id);
 
 INSERT INTO categories values (NULL, 'Analytics', 10);
-INSERT INTO categories values (NULL, 'Customer Support', 20);
-INSERT INTO categories values (NULL, 'Developer Tools', 30);
-INSERT INTO categories values (NULL, 'HR', 40);
-INSERT INTO categories values (NULL, 'File Management', 50);
-INSERT INTO categories values (NULL, 'Health & Medical', 60);
-INSERT INTO categories values (NULL, 'Office Management', 70);
-INSERT INTO categories values (NULL, 'Payment & Accounting', 80);
-INSERT INTO categories values (NULL, 'Productivity', 90);
-INSERT INTO categories values (NULL, 'Project Management', 100);
-INSERT INTO categories values (NULL, 'Sales', 110);
-INSERT INTO categories values (NULL, 'Social & Fun', 120);
-INSERT INTO categories values (NULL, 'Travel', 130);
+INSERT INTO categories values (NULL, 'Administrative', 20);
+INSERT INTO categories values (NULL, 'Communication', 30);
+INSERT INTO categories values (NULL, 'Developer Tools', 40);
+INSERT INTO categories VALUES (NULL, 'Design', 50);
+INSERT INTO categories VALUES (NULL, 'E-Learning', 60);
+INSERT INTO categories values (NULL, 'File Management', 70);
+INSERT INTO categories values (NULL, 'Food', 80);
+INSERT INTO categories values (NULL, 'Health & Medical', 90);
+INSERT INTO categories values (NULL, 'HR', 100);
+INSERT INTO categories values (NULL, 'News', 110);
+INSERT INTO categories values (NULL, 'Payment & Accounting', 120);
+INSERT INTO categories values (NULL, 'Productivity', 130);
+INSERT INTO categories values (NULL, 'Project Management', 140);
+INSERT INTO categories values (NULL, 'Sales & Marketing', 150);
+INSERT INTO categories values (NULL, 'Shopping', 160);
+INSERT INTO categories values (NULL, 'Social & Fun', 170);
+INSERT INTO categories values (NULL, 'Travel', 180);
 
 CREATE TABLE websiteAndSignInWebsiteMap (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,

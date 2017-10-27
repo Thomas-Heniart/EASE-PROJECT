@@ -3,7 +3,6 @@ package com.Ease.Utils.Servlets;
 import com.Ease.Dashboard.User.JWToken;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -66,6 +65,7 @@ public abstract class ServletManager {
 
     protected void setInternError() {
         response.setStatus(HttpStatus.InternError.getValue());
+        this.errorMessage = "Darn - that didn’t work. Feel free to contact Thomas at thomas@ease.space";
     }
 
     protected void setForbidden() {
@@ -99,7 +99,7 @@ public abstract class ServletManager {
     public void setError(Exception e) {
         try {
             HttpServletException httpServletException = (HttpServletException) e;
-            System.out.println("Error code: " + httpServletException.getHttpStatus());
+            System.out.println("Error code: " + httpServletException.getHttpStatus().getValue());
             if (httpServletException.getMsg() == null && httpServletException.getJsonObject() != null) {
                 response.setContentType("application/json");
                 this.errorMessage = httpServletException.getJsonObject().toString();
@@ -107,9 +107,8 @@ public abstract class ServletManager {
                 this.errorMessage = httpServletException.getMsg();
             System.out.println(this.errorMessage);
             this.logResponse = this.errorMessage;
-            if (httpServletException.getHttpStatus() == HttpStatus.InternError) {
-                MailJetBuilder mailJetBuilder = new MailJetBuilder();
-            }
+            if (httpServletException.getHttpStatus().getValue() == HttpStatus.InternError.getValue())
+                this.setInternError();
             response.setStatus(httpServletException.getHttpStatus().getValue());
         } catch (ClassCastException e1) {
             e.printStackTrace();
@@ -421,7 +420,6 @@ public abstract class ServletManager {
             String user_email = (String) claimsJws.get("email");
             Long expiration_date = (Long) claimsJws.get("exp");
             JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
-            jwToken.setJwt(token);
             user = User.loadUserFromJWT(jwToken, this, this.getDB());
             tokenUserMap.put(jwToken.getConnection_token(), user);
         }
