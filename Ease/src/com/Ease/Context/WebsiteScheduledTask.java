@@ -20,7 +20,7 @@ public class WebsiteScheduledTask extends TimerTask {
     public void run() {
         try {
             HibernateQuery hibernateQuery = new HibernateQuery();
-            hibernateQuery.queryString("SELECT websites.id FROM websites JOIN websiteAttributes ON (websites.website_attributes_id = websiteAttributes.id) WHERE addedDate <= CURRENT_TIMESTAMP - INTERVAL 4 DAY AND new = 1;");
+            hibernateQuery.querySQLString("SELECT websites.id FROM websites JOIN websiteAttributes ON (websites.website_attributes_id = websiteAttributes.id) WHERE addedDate <= CURRENT_TIMESTAMP - INTERVAL 4 DAY AND new = 1;");
             List<Object> rs = hibernateQuery.list();
             rs.forEach((Object obj) -> {
                 Integer id = (Integer) obj;
