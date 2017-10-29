@@ -71,7 +71,6 @@ public class ConnectionServlet extends HttpServlet {
                     String key = (String) sm.getContextAttr("privateKey");
                     password = RSA.Decrypt(password, key);
                     user = User.loadUser(email, password, sm.getServletContext(), db);
-                    user.renewJwt((Key) sm.getContextAttr("secret"), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();
                     for (TeamUser teamUser : user.getTeamUsers()) {
