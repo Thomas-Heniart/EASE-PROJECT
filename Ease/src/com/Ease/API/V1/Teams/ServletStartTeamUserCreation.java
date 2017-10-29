@@ -93,8 +93,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             query.setParameter(2, code);
             query.setParameter(3, team.getDb_id());
             query.executeUpdate();
-            query.commit();
-            team.getDefaultChannel().addTeamUser(teamUser, sm.getDB());
+            team.getDefaultChannel().addTeamUser(teamUser);
+            sm.saveOrUpdate(team.getDefaultChannel());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
             mailJetBuilder.setTemplateId(179023);

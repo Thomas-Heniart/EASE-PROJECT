@@ -4,7 +4,6 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -40,11 +39,9 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             if (channel.getRoom_manager() == teamUser_to_remove)
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove the room manager.");
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            team.getAppManager().removeSharedAppsForTeamUserInChannel(teamUser_to_remove, channel, db);
-            channel.removeTeamUser(teamUser_to_remove, sm.getDB());
-            db.commitTransaction(transaction);
+            team.getAppManager().removeSharedAppsForTeamUserInChannel(teamUser_to_remove, channel, sm.getDB());
+            channel.removeTeamUser(teamUser_to_remove);
+            sm.saveOrUpdate(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_remove.getJson(), teamUser_to_remove.getOrigin()));
             sm.setSuccess(channel.getJson());

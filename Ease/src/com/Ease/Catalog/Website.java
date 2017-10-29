@@ -66,7 +66,7 @@ public class Website {
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "signIn_website_id"))
     protected Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(mappedBy = "teamWebsites", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "teamWebsites")
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

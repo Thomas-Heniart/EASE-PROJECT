@@ -28,7 +28,7 @@ public class ServletDeleteJoinChannelRequest extends HttpServlet {
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
-            channel.removePendingTeamUser(team.getTeamUserWithId(teamUser_id), sm.getDB());
+            channel.removePendingTeamUser(team.getTeamUserWithId(teamUser_id));
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {

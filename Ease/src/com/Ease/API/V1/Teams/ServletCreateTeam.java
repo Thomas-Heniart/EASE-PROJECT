@@ -140,9 +140,9 @@ public class ServletCreateTeam extends HttpServlet {
             /* ====== Stripe END ====== */
 
             sm.saveOrUpdate(team);
-            sm.getHibernateQuery().commit();
             user.addTeamUser(owner);
-            channel.addTeamUser(owner, sm.getDB());
+            channel.addTeamUser(owner);
+            sm.saveOrUpdate(channel);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             teamManager.addTeam(team);
             team.lazyInitialize();

@@ -26,8 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by thomas on 10/04/2017.
  */
-@Entity
-@Table(name = "teams")
+@Entity(name = "teams")
 public class Team {
 
     private static final String DEFAULT_CHANNEL_NAME = "openspace";
@@ -44,9 +43,14 @@ public class Team {
 
     public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
         HibernateQuery query = new HibernateQuery();
-        query.queryString("SELECT t FROM Team t WHERE t.active = true");
+        query.queryString("SELECT t FROM teams t WHERE t.active = true");
         List<Team> teams = query.list();
+        query.commit();
         for (Team team : teams) {
+            System.out.println(team.getName());
+            /* TeamUser teamUser = team.getTeamUserOwner();
+            System.out.println(team.getDefaultChannel().getTeam() == teamUser.getTeam());
+            System.out.println(team.getDefaultChannel().getTeamUsers().contains(teamUser)); */
             team.lazyInitialize();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
@@ -54,8 +58,10 @@ public class Team {
                 shareableApp.setSharedApps(sharedApps);
                 team.getAppManager().setSharedApps(sharedApps);
             }
+            TeamUser teamUser = team.getTeamUserOwner();
+            System.out.println(team.getDefaultChannel().getTeam() == teamUser.getTeam());
+            System.out.println(team.getDefaultChannel().getTeamUsers().contains(teamUser));
         }
-        query.commit();
         return teams;
     }
 
@@ -85,15 +91,15 @@ public class Team {
     @Column(name = "active")
     protected boolean active = true;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
     protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 

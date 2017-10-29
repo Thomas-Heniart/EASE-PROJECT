@@ -2,9 +2,12 @@ package com.Ease.Context;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Test.TestA;
+import com.Ease.Utils.Test.TestB;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -27,6 +30,27 @@ public class OnStart implements ServletContextListener {
         HibernateDatabase.getSessionFactory().close();
     }
 
+    /* @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        try {
+            HibernateQuery hibernateQuery = new HibernateQuery();
+            hibernateQuery.queryString("SELECT t FROM teams t where t.id = 35");
+            Team team = (Team) hibernateQuery.getSingleResult();
+            System.out.println(team.getDefaultChannel().getTeamUsers().contains(team.getTeamUserWithId(220)));
+            hibernateQuery.queryString("SELECT t FROM testA t WHERE t.id= 1");
+            TestA testA = (TestA) hibernateQuery.getSingleResult();
+            testA.bar();
+            System.out.println("Je suis là");
+            System.out.println(testA.getTestBSet().get(0) == null);
+            hibernateQuery.queryString("SELECT t FROM testB t WHERE t.id = 1");
+            TestB testB = (TestB) hibernateQuery.getSingleResult();
+            System.out.println(testA.getTestBSet().get(0) == testB);
+            System.out.println(testA == testB.getTestA());
+            hibernateQuery.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+    } */
+
     // Run this before web application is started
     @Override
     public void contextInitialized(ServletContextEvent evt) {
@@ -47,6 +71,12 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("catalog", catalog);
 
                 TeamManager teamManager = new TeamManager(context, db);
+                /* for (Team team : teamManager.getTeams()) {
+                    System.out.println(team.getName());
+                    TeamUser teamUser = team.getTeamUserOwner();
+                    System.out.println(team.getDefaultChannel().getTeam() == teamUser.getTeam());
+                    System.out.println(team.getDefaultChannel().getTeamUsers().contains(teamUser));
+                } */
                 context.setAttribute("teamManager", teamManager);
 
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
@@ -60,8 +90,7 @@ public class OnStart implements ServletContextListener {
 
                 context.setAttribute("metrics", new Metrics(db));
 
-                /* Timers */
-                Timer time = new Timer(); // Instantiate Timer Object
+                Timer time = new Timer();
                 Calendar delay = Calendar.getInstance();
                 int hour = delay.get(Calendar.HOUR_OF_DAY);
                 int minutes = delay.get(Calendar.MINUTE);
@@ -70,8 +99,8 @@ public class OnStart implements ServletContextListener {
                 delay.set(Calendar.HOUR_OF_DAY, 9);
                 delay.set(Calendar.MINUTE, 30);
                 long next_clock = delay.getTimeInMillis() - new Date().getTime();
-                StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
-                time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
+                StripeScheduledTask st = new StripeScheduledTask(teamManager);
+                time.schedule(st, 0, 12 * 60 * 60 * 1000);
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
@@ -103,6 +132,22 @@ public class OnStart implements ServletContextListener {
                 String date = dateFormat.format(mydate);
                 request = db.prepareRequest("INSERT INTO logs values('Server Start', 200, NULL, '', 'Server started correctly', ?);");
                 request.setString(date);
+
+                HibernateQuery hibernateQuery = new HibernateQuery();
+                hibernateQuery.queryString("SELECT t FROM testA t WHERE t.id= 1");
+                TestA testA = (TestA) hibernateQuery.getSingleResult();
+                testA.bar();
+                try {
+                    System.out.println("Je suis là");
+                    System.out.println(testA.getTestBSet().get(0) == null);
+                    hibernateQuery.queryString("SELECT t FROM testB t WHERE t.id = 1");
+                    TestB testB = (TestB) hibernateQuery.getSingleResult();
+                    System.out.println(testA.getTestBSet().get(0) == testB);
+                    System.out.println(testA == testB.getTestA());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                hibernateQuery.commit();
             } catch (GeneralException e1) {
                 System.out.println("Start failed");
                 String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");
@@ -118,5 +163,5 @@ public class OnStart implements ServletContextListener {
             e2.printStackTrace();
             return;
         }
-    }
+}
 }

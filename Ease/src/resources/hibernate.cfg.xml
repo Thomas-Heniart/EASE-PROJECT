@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD//EN"
-        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
@@ -14,7 +14,9 @@
         <property name="hibernate.connection.username">client</property>
         <property name="hibernate.connection.password">P6au23q7</property>
         <property name="hibernate.connection.pool_size">10</property>
-        <property name="show_sql">true</property>
+        <property name="hibernate.cache.use_query_cache">true</property>
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</property>
+        <property name="show_sql">false</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.c3p0.min_size">5</property>
@@ -37,5 +39,8 @@
         <mapping class="com.Ease.Catalog.WebsiteCredentials" />
         <mapping class="com.Ease.Catalog.ServerPublicKey" />
         <mapping class="com.Ease.Team.TeamUserStatus"/>
+        <mapping class="com.Ease.Utils.Test.TestA"/>
+        <mapping class="com.Ease.Utils.Test.TestB"/>
+        <mapping class="com.Ease.Utils.Test.TestC"/>
     </session-factory>
 </hibernate-configuration>

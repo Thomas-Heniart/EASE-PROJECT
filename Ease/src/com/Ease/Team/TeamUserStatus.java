@@ -5,8 +5,7 @@ import javax.persistence.*;
 /**
  * Created by thomas on 06/07/2017.
  */
-@Entity
-@Table(name = "teamUserStatus")
+@Entity(name = "teamUserStatus")
 public class TeamUserStatus {
 
     @Id

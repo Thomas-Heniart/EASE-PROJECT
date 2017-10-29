@@ -34,7 +34,8 @@ public class ServletAskJoinChannel extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Channel channel = team.getChannelWithId(channel_id);
-            channel.addPendingTeamUser(teamUser, sm.getDB());
+            channel.addPendingTeamUser(teamUser);
+            sm.saveOrUpdate(channel);
             channel.getRoom_manager().addNotification(teamUser.getUsername() + " would like to join #" + channel.getName(), channel.getDb_id() + "/flexPanel", "/resources/notifications/channel.png", sm.getTimestamp(), sm.getDB());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");

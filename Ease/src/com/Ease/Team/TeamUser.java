@@ -16,12 +16,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by thomas on 10/04/2017.
  */
-@Entity
-@Table(name = "teamUsers")
+@Entity(name = "teamUsers")
 public class TeamUser {
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -32,7 +33,7 @@ public class TeamUser {
     protected Integer db_id;
 
     @Transient
-    protected com.Ease.Dashboard.User.User dashboard_user;
+    private transient com.Ease.Dashboard.User.User dashboard_user;
 
     @Column(name = "user_id")
     protected String user_id;
@@ -56,10 +57,10 @@ public class TeamUser {
     protected boolean active;
 
     @Transient
-    protected boolean active_subscription = false;
+    private transient boolean active_subscription = false;
 
     @Transient
-    protected String deciphered_teamKey;
+    private transient String deciphered_teamKey;
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
@@ -98,6 +99,12 @@ public class TeamUser {
 
     @Column(name = "disabled_date")
     private Date disabledDate;
+
+    @ManyToMany(mappedBy = "teamUsers")
+    private Set<Channel> channels = ConcurrentHashMap.newKeySet();
+
+    @ManyToMany(mappedBy = "pending_teamUsers")
+    private Set<Channel> pending_channels = ConcurrentHashMap.newKeySet();
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
@@ -286,6 +293,38 @@ public class TeamUser {
         this.phone_number = phone_number;
     }
 
+    public Set<Channel> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(Set<Channel> channels) {
+        this.channels = channels;
+    }
+
+    public Set<Channel> getPending_channels() {
+        return pending_channels;
+    }
+
+    public void setPending_channels(Set<Channel> pending_channels) {
+        this.pending_channels = pending_channels;
+    }
+
+    public void addChannel(Channel channel) {
+        this.getChannels().add(channel);
+    }
+
+    public void removeChannel(Channel channel) {
+        this.getChannels().remove(channel);
+    }
+
+    public void addPending_channel(Channel channel) {
+        this.getPending_channels().add(channel);
+    }
+
+    public void removePending_channel(Channel channel) {
+        this.getPending_channels().remove(channel);
+    }
+
     public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
         TeamUser owner = new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, team, teamUserRole);
@@ -307,7 +346,7 @@ public class TeamUser {
         res.put("state", this.state);
         res.put("phone_number", this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
-        for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
+        for (Channel channel : this.getChannels())
             channel_ids.add(channel.getDb_id());
         res.put("room_ids", channel_ids);
         JSONArray apps = new JSONArray();
@@ -419,15 +458,14 @@ public class TeamUser {
             Team team = this.getTeam();
             /* @TODO remove this */
             team.getAppManager().removeSharedAppsForTeamUser(this, db);
-            for (Channel channel : this.getTeam().getChannels().values())
-                channel.removeTeamUser(this, db);
+            for (Channel channel : this.getChannels())
+                channel.removeTeamUser(this);
+            for (Channel channel : this.getPending_channels())
+                channel.removePendingTeamUser(this);
             DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
             request = db.prepareRequest("DELETE FROM pendingTeamUserVerifications WHERE teamUser_id = ?;");
-            request.setInt(this.getDb_id());
-            request.set();
-            request = db.prepareRequest("DELETE FROM pendingJoinChannelRequests WHERE teamUser_id = ?;");
             request.setInt(this.getDb_id());
             request.set();
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
@@ -468,9 +506,5 @@ public class TeamUser {
             this.dashboard_user.getWebSocketManager().sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
         }
 
-    }
-
-    public List<Channel> getChannels() {
-        return this.getTeam().getChannelsForTeamUser(this);
     }
 }
