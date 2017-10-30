@@ -15,8 +15,6 @@
         <property name="hibernate.connection.password">P6au23q7</property>
         <property name="hibernate.connection.pool_size">10</property>
         <property name="hibernate.cache.use_query_cache">true</property>
-        <property name="hibernate.cache.use_second_level_cache">true</property>
-        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
         <property name="show_sql">false</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
@@ -40,8 +38,5 @@
         <mapping class="com.Ease.Catalog.WebsiteCredentials" />
         <mapping class="com.Ease.Catalog.ServerPublicKey" />
         <mapping class="com.Ease.Team.TeamUserStatus"/>
-        <mapping class="com.Ease.Utils.Test.TestA"/>
-        <mapping class="com.Ease.Utils.Test.TestB"/>
-        <mapping class="com.Ease.Utils.Test.TestC"/>
     </session-factory>
 </hibernate-configuration>

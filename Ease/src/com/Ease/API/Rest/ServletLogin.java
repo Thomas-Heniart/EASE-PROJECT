@@ -38,7 +38,7 @@ public class ServletLogin extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
                 User user = User.loadUser(email, password, sm.getServletContext(), db);
                 user.renewJwt((Key) sm.getContextAttr("secret"), db);
-                HibernateQuery hibernateQuery = new HibernateQuery();
+                HibernateQuery hibernateQuery = sm.getHibernateQuery();
                 for (TeamUser teamUser : user.getTeamUsers()) {
                     if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
                         teamUser.finalizeRegistration();
@@ -55,15 +55,14 @@ public class ServletLogin extends HttpServlet {
                         }
                     }
                 }
-                hibernateQuery.commit();
                 ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
                 ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                 ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                 user.getDashboardManager().decipherApps(sm);
                 JSONObject res = new JSONObject();
-
                 res.put("JWT", user.getJwt().getJwt((Key) sm.getContextAttr("secret")));
                 ((Map<String, User>) sm.getContextAttr("tokenUserMap")).put(user.getJwt().getConnection_token(), user);
+                sm.setUser(user);
                 sm.setSuccess(res);
             } catch (GeneralException e) {
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");

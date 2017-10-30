@@ -31,13 +31,6 @@ public class User {
 
     @SuppressWarnings("unchecked")
     public static User loadUser(String email, String password, ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
-        Map<String, User> usersMap = (Map<String, User>) context.getAttribute("users");
-        User connectedUser = usersMap.get(email);
-        if (connectedUser != null) {
-            if (!connectedUser.getKeys().isGoodPassword(password))
-                throw new GeneralException(ServletManager.Code.UserMiss, "Wrong email or password.");
-            return connectedUser;
-        }
         DatabaseRequest request = db.prepareRequest("SELECT * FROM users WHERE email = ?");
         request.setString(email);
         DatabaseResult rs = request.get();
