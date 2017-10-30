@@ -157,7 +157,6 @@ public class User {
                 logwithApp.rempLogwith((WebsiteApp) websiteApp);
             }
         }
-        newUser.renewJwt((Key) context.getAttribute("secret"), db);
         return newUser;
     }
 

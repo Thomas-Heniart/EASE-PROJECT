@@ -585,14 +585,7 @@ class TeamAppAddingUi extends React.Component {
           {this.props.addAppUI.TeamSimpleAppAddActive &&
                    <SimpleTeamAppAdder item={item}/>}
           {this.props.addAppUI.TeamLinkAppAddActive &&
-              <LinkTeamAppAdder item={item} dispatch={this.props.dispatch}/>
-              /*<LinkTeamAppAdd
-                  team_id={this.props.team_id}
-                  selectedItem={this.props.selectedItem}
-                  item={item}
-                  my_id={this.props.my_id}
-                  userSelectFunc={selectUserFromListById.bind(null, this.props.users)}
-                  dispatch={this.props.dispatch}/>*/}
+              <LinkTeamAppAdder item={item} dispatch={this.props.dispatch}/>}
           {this.props.addAppUI.TeamMultiAppAddActive &&
           <EnterpriseTeamAppAdder item={item}/>}
         </div>

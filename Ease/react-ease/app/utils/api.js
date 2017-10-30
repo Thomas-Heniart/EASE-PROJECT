@@ -43,8 +43,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }
     }).then(function(response){
-          return response.data;
-        });
+      return response.data;
+    });
   },
   fetchTeam : function (team_id) {
     return axios.get('/api/v1/teams/GetTeam',{
@@ -204,10 +204,10 @@ module.exports = {
     });
   },
   getWebsitesCatalog: function() {
-      return axios.get('/api/v1/catalog/GetWebsites')
-          .then(function (response) {
-        return response.data;
-      });
+    return axios.get('/api/v1/catalog/GetWebsites')
+        .then(function (response) {
+          return response.data;
+        });
   },
   getCategories: function() {
     return axios.get('/api/v1/catalog/GetCategories')
@@ -251,6 +251,9 @@ module.exports = {
     }
   },
   teams: {
+    fetchTeams: () => {
+      return basic_get('/api/v1/teams/GetTeams');
+    },
     getInvitationInformation : function({code}){
       return axios.get('/api/v1/teams/GetInvitationInformation', {
         params : {

@@ -1,0 +1,24 @@
+{
+  "name":"Materiel.net",
+  "lastLogin":"",
+  "home":"https://www.materiel.net/pm/client/login.html",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url": "https://www.materiel.net/pm/client/login.html"},
+      {"action": "waitfor", "search": ".login-form #identifier"},
+      {"action": "waitfor", "search": ".login-form #credentials"},
+      {"action":"fill", "what":"login", "search":".login-form #identifier"},
+      {"action":"fill", "what":"password", "search":".login-form #credentials"},
+      {"action":"trueClick", "search":".login-form button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":".deconnect a"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action": "waitfor", "search": ".topBarEspacePersoPictoDeco, .login-form"},
+    {"search":".topBarEspacePersoPictoDeco"}
+  ]
+}
