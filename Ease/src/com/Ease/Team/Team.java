@@ -8,7 +8,6 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Mail.SendGridMail;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
@@ -46,7 +45,6 @@ public class Team {
         query.queryString("SELECT t FROM teams t WHERE t.active = true");
         List<Team> teams = query.list();
         for (Team team : teams) {
-            //team.lazyInitialize();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                 List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, context, db);
@@ -55,11 +53,6 @@ public class Team {
             }
         }
         query.commit();
-        for (Team team : teams) {
-            TeamUser teamUser = team.getTeamUserOwner();
-            System.out.println(team.getDefaultChannel().getTeam() == teamUser.getTeam());
-            System.out.println(team.getDefaultChannel().getTeamUsers().contains(teamUser));
-        }
         return teams;
     }
 
@@ -89,15 +82,15 @@ public class Team {
     @Column(name = "active")
     protected boolean active = true;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
     protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
@@ -257,14 +250,6 @@ public class Team {
         return appManager;
     }
 
-    public void lazyInitialize() {
-        for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
-            TeamUser teamUser = entry.getValue();
-            if (!teamUser.isVerified())
-                this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
-        }
-    }
-
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
         Channel channel = this.getChannels().get(channel_id);
         if (channel == null)
@@ -291,8 +276,6 @@ public class Team {
 
     public void addTeamUser(TeamUser teamUser) {
         this.getTeamUsers().put(teamUser.getDb_id(), teamUser);
-        if (!teamUser.isVerified())
-            this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
     }
 
     public void addChannel(Channel channel) {
@@ -367,32 +350,6 @@ public class Team {
         res.put("rooms", rooms);
         res.put("team_users", teamUsers);
         return res;
-    }
-
-    public void askVerificationForTeamUser(TeamUser teamUser, String code) {
-        for (Map.Entry<String, String> usernameAndEmail : this.getAdministratorsUsernameAndEmail().entrySet()) {
-            String username = usernameAndEmail.getKey();
-            String email = usernameAndEmail.getValue();
-            SendGridMail sendGridMail = new SendGridMail("Benjamin @Ease", "benjamin@ease.space");
-            sendGridMail.sendTeamUserVerificationEmail(username, email, teamUser.getUsername(), code);
-        }
-    }
-
-    public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
-        if (!this.teamUsersWaitingForVerification.containsKey(teamUser.getDb_id()))
-            throw new HttpServletException(HttpStatus.BadRequest, "teamUser already validated");
-        try {
-            DatabaseRequest request = db.prepareRequest("SELECT userKeys.publicKey FROM (userKeys JOIN users ON userKeys.id = users.key_id) JOIN teamUsers ON users.id = teamUsers.user_id WHERE teamUsers.id = ?;");
-            request.setInt(teamUser.getDb_id());
-            DatabaseResult rs = request.get();
-            rs.next();
-            String userPublicKey = rs.getString(1);
-            teamUser.validateRegistration(deciphered_teamKey, userPublicKey, db);
-            this.teamUsersWaitingForVerification.remove(teamUser);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError);
-        }
-
     }
 
     public void editName(String name) {

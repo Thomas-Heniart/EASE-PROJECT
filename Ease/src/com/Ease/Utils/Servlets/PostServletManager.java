@@ -61,8 +61,9 @@ public class PostServletManager extends ServletManager {
 
     @Override
     protected Date getCurrentTime() throws HttpServletException {
-        Long timestamp = this.getLongParam("timestamp", false, false);
-        return new Date(timestamp);
+        /* Long timestamp = this.getLongParam("timestamp", false, false);
+        return new Date(timestamp); */
+        return new Date();
     }
 
     public Object getParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {

@@ -57,17 +57,13 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to add other admins.");
             String first_name = sm.getStringParam("first_name", true, false);
             String last_name = sm.getStringParam("last_name", true, false);
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
+                if (teamUser.getEmail().equals(email))
+                    throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
+                if (teamUser.getUsername().equals(username))
+                    throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
+            }
             HibernateQuery query = sm.getHibernateQuery();
-            query.querySQLString("SELECT id FROM teamUsers WHERE email = ? AND team_id = ?;");
-            query.setParameter(1, email);
-            query.setParameter(2, team_id);
-            if (!query.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
-            query.querySQLString("SELECT id FROM teamUsers WHERE username = ? AND team_id = ?;");
-            query.setParameter(1, username);
-            query.setParameter(2, team_id);
-            if (!query.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             Date arrival_date = sm.getTimestamp();
             Long departure_date = sm.getLongParam("departure_date", true, true);
             if (!team.isValidFreemium() || departure_date == null)
@@ -80,19 +76,15 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date != null)
                 teamUser.setDepartureDate(new Date(departure_date));
-            query.saveOrUpdateObject(teamUser);
-            team.addTeamUser(teamUser);
             String code;
             do {
                 code = CodeGenerator.generateNewCode();
-                query.querySQLString("SELECT * FROM pendingTeamInvitations WHERE code = ?");
+                query.querySQLString("SELECT * FROM teamUsers WHERE code = ?");
                 query.setParameter(1, code);
             } while (!query.list().isEmpty());
-            query.querySQLString("INSERT INTO pendingTeamInvitations values(NULL, ?, ?, ?);");
-            query.setParameter(1, teamUser.getDb_id());
-            query.setParameter(2, code);
-            query.setParameter(3, team.getDb_id());
-            query.executeUpdate();
+            teamUser.setInvitation_code(code);
+            sm.saveOrUpdate(teamUser);
+            team.addTeamUser(teamUser);
             team.getDefaultChannel().addTeamUser(teamUser);
             sm.saveOrUpdate(team.getDefaultChannel());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();

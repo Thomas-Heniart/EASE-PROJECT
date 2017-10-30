@@ -231,10 +231,6 @@ public class SendGridMail {
         this.sendEmail();
     }
 
-    public void sendTeamUserVerificationEmail(String adminUsername, String adminEmail, String username, String code) {
-        //@Todo
-    }
-
     void sendReminderSixDaysEmail(String firstName, String email) throws GeneralException {
         mail.setTemplateId("2c03ac41-648f-49c4-95dc-7057a09de38b");
         Personalization personalization = this.createNewPersonalization();

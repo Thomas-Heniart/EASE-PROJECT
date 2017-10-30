@@ -6,7 +6,6 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -71,43 +70,28 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (job_index == (jobRoles.length - 1) && (job_details == null || job_details.equals("")))
                 throw new HttpServletException(HttpStatus.BadRequest, "It would be awesome to know more about your work!");
             HibernateQuery query = sm.getHibernateQuery();
-            query.querySQLString("SELECT id, team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?");
+            query.querySQLString("SELECT id, team_id FROM teamUsers WHERE code = ?");
             query.setParameter(1, code);
             Object idTeamAndTeamUserObj = query.getSingleResult();
             if (idTeamAndTeamUserObj == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot be part of this team");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Object[] idTeamAndTeamUser = (Object[]) idTeamAndTeamUserObj;
-            Integer id = (Integer) idTeamAndTeamUser[0];
             Integer team_id = (Integer) idTeamAndTeamUser[1];
             if (sm.getTeamUserForTeamId(team_id) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot have two accounts in a team.");
-            Integer teamUser_id = (Integer) idTeamAndTeamUser[2];
+            Integer teamUser_id = (Integer) idTeamAndTeamUser[0];
             Team team = teamManager.getTeamWithId(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);
             teamUser.setUsername(username);
             teamUser.setJobTitle(jobRoles[job_index]);
-            query.saveOrUpdateObject(teamUser);
-            query.querySQLString("DELETE FROM pendingTeamInvitations WHERE id = ?");
-            query.setParameter(1, id);
-            query.executeUpdate();
-            String verificationCode;
-            do {
-                verificationCode = CodeGenerator.generateNewCode();
-                query.querySQLString("SELECT * FROM pendingTeamUserVerifications WHERE code = ?");
-                query.setParameter(1, verificationCode);
-            } while (query.getSingleResult() != null);
-            query.querySQLString("INSERT INTO pendingTeamUserVerifications values(NULL, ?, ?);");
-            query.setParameter(1, teamUser.getDb_id());
-            query.setParameter(2, code);
-            query.executeUpdate();
             teamUser.setUser_id(sm.getUser().getDBid());
             teamUser.setDashboard_user(sm.getUser());
+            teamUser.setInvitation_code(null);
             teamUser.setState(1);
             sm.saveOrUpdate(teamUser);
-            team.askVerificationForTeamUser(teamUser, verificationCode);
             if (teamUser.getAdmin_id() == null || teamUser.getAdmin_id() == 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "The user must be invited by an admin");
             TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());

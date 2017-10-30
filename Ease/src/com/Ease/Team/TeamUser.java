@@ -3,6 +3,7 @@ package com.Ease.Team;
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Notification.Notification;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
@@ -11,11 +12,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,8 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Entity(name = "teamUsers")
 public class TeamUser {
-
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
     @Id
     @GeneratedValue
@@ -98,7 +94,11 @@ public class TeamUser {
     protected String phone_number;
 
     @Column(name = "disabled_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date disabledDate;
+
+    @Column(name = "invitation_code")
+    private String invitation_code;
 
     @ManyToMany(mappedBy = "teamUsers", fetch = FetchType.EAGER)
     private Set<Channel> channels = ConcurrentHashMap.newKeySet();
@@ -293,6 +293,14 @@ public class TeamUser {
         this.phone_number = phone_number;
     }
 
+    public String getInvitation_code() {
+        return invitation_code;
+    }
+
+    public void setInvitation_code(String invitation_code) {
+        this.invitation_code = invitation_code;
+    }
+
     public Set<Channel> getChannels() {
         return channels;
     }
@@ -454,20 +462,14 @@ public class TeamUser {
 
     public void delete(DataBaseConnection db) throws HttpServletException {
         try {
-            int transaction = db.startTransaction();
-            Team team = this.getTeam();
-            /* @TODO remove this */
-            team.getAppManager().removeSharedAppsForTeamUser(this, db);
             for (Channel channel : this.getChannels())
                 channel.removeTeamUser(this);
             for (Channel channel : this.getPending_channels())
                 channel.removePendingTeamUser(this);
-            DatabaseRequest request = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE teamUser_id = ?;");
-            request.setInt(this.getDb_id());
-            request.set();
-            request = db.prepareRequest("DELETE FROM pendingTeamUserVerifications WHERE teamUser_id = ?;");
-            request.setInt(this.getDb_id());
-            request.set();
+            int transaction = db.startTransaction();
+            Team team = this.getTeam();
+            /* @TODO remove this */
+            team.getAppManager().removeSharedAppsForTeamUser(this, db);
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                 if (shareableApp.getPendingTeamUsers().containsKey(this.getDb_id()))
                     shareableApp.removePendingTeamUser(this, db);
@@ -506,5 +508,25 @@ public class TeamUser {
             this.dashboard_user.getWebSocketManager().sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
         }
 
+    }
+
+    public void cipheringStep(HibernateQuery hibernateQuery, DataBaseConnection db) throws HttpServletException {
+        try {
+            if (this.getState() == 1) {
+                this.finalizeRegistration();
+                hibernateQuery.saveOrUpdateObject(this);
+            } else if (this.getState() == 2 && this.isDisabled()) {
+                String deciphered_teamKey = RSA.Decrypt(this.getTeamKey(), this.getDashboard_user().getKeys().getPrivateKey());
+                this.setTeamKey(this.getDashboard_user().encrypt(deciphered_teamKey));
+                this.setDeciphered_teamKey(deciphered_teamKey);
+                this.setDisabled(false);
+                hibernateQuery.saveOrUpdateObject(this);
+                for (SharedApp sharedApp : this.getSharedApps()) {
+                    sharedApp.setDisableShared(false, db);
+                }
+            }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 }

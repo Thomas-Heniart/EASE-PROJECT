@@ -17,10 +17,11 @@ public class GetServletManager extends ServletManager {
 
     @Override
     protected Date getCurrentTime() throws HttpServletException {
-        String timestamp = this.getParam("timestamp", false);
+        /* String timestamp = this.getParam("timestamp", false);
         if (timestamp == null || timestamp.equals(""))
             throw new HttpServletException(HttpStatus.BadRequest, "Missing current time.");
-        return new Date(Long.valueOf(timestamp));
+        return new Date(Long.valueOf(timestamp)); */
+        return new Date();
     }
 
     public String getParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {

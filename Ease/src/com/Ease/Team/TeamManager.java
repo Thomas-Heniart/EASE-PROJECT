@@ -12,10 +12,8 @@ import com.Ease.Utils.*;
 
 import javax.servlet.ServletContext;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by thomas on 28/04/2017.
@@ -23,7 +21,7 @@ import java.util.List;
 public class TeamManager {
 
     protected List<Team> teams;
-    protected HashMap<Integer, Team> teamIdMap;
+    private Map<Integer, Team> teamIdMap = new ConcurrentHashMap<>();
 
     public TeamManager(ServletContext context, DataBaseConnection db) throws HttpServletException {
         this.teams = Team.loadTeams(context, db);

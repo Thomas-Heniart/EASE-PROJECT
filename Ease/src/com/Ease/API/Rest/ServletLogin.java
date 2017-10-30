@@ -1,10 +1,8 @@
 package com.Ease.API.Rest;
 
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
@@ -39,22 +37,8 @@ public class ServletLogin extends HttpServlet {
                 User user = User.loadUser(email, password, sm.getServletContext(), db);
                 user.renewJwt((Key) sm.getContextAttr("secret"), db);
                 HibernateQuery hibernateQuery = sm.getHibernateQuery();
-                for (TeamUser teamUser : user.getTeamUsers()) {
-                    if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
-                        teamUser.finalizeRegistration();
-                        hibernateQuery.saveOrUpdateObject(teamUser);
-                    }
-                    if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
-                        String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), user.getKeys().getPrivateKey());
-                        teamUser.setTeamKey(user.encrypt(deciphered_teamKey));
-                        teamUser.setDeciphered_teamKey(deciphered_teamKey);
-                        teamUser.setDisabled(false);
-                        hibernateQuery.saveOrUpdateObject(teamUser);
-                        for (SharedApp sharedApp : teamUser.getSharedApps()) {
-                            sharedApp.setDisableShared(false, sm.getDB());
-                        }
-                    }
-                }
+                for (TeamUser teamUser : user.getTeamUsers())
+                    teamUser.cipheringStep(hibernateQuery, db);
                 ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
                 ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                 ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
