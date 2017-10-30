@@ -328,10 +328,6 @@ public class Team {
             this.name = name;
     }
 
-    public JSONObject getJson() throws HttpServletException {
-        return this.getSimpleJson();
-    }
-
     public Map<String, String> getAdministratorsUsernameAndEmail() {
         Map<String, String> res = new HashMap<>();
         for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
@@ -353,6 +349,19 @@ public class Team {
         Integer plan_id = this.getPlan_id();
         res.put("plan_id", plan_id);
         res.put("payment_required", this.isBlocked());
+        return res;
+    }
+
+    public JSONObject getJson() throws HttpServletException {
+        JSONObject res = this.getSimpleJson();
+        JSONArray rooms = new JSONArray();
+        JSONArray teamUsers = new JSONArray();
+        for (Channel channel : this.getChannels().values())
+            rooms.add(channel.getJson());
+        for (TeamUser teamUser : this.getTeamUsers().values())
+            teamUsers.add(teamUser.getJson());
+        res.put("rooms", rooms);
+        res.put("team_users", teamUsers);
         return res;
     }
 

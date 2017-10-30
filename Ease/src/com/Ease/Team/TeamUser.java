@@ -1,5 +1,6 @@
 package com.Ease.Team;
 
+import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Notification.Notification;
@@ -308,7 +309,13 @@ public class TeamUser {
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getTeam().getChannelsForTeamUser(this))
             channel_ids.add(channel.getDb_id());
-        res.put("channel_ids", channel_ids);
+        res.put("room_ids", channel_ids);
+        JSONArray apps = new JSONArray();
+        for (ShareableApp shareableApp : this.getTeam().getAppManager().getShareableApps().values()) {
+            if (shareableApp.getTeamUser_tenants().contains(this))
+                apps.add(((App)shareableApp).getDBid());
+        }
+        res.put("app_ids", apps);
         return res;
     }
 
