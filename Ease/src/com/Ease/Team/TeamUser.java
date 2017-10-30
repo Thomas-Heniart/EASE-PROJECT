@@ -100,10 +100,10 @@ public class TeamUser {
     @Column(name = "disabled_date")
     private Date disabledDate;
 
-    @ManyToMany(mappedBy = "teamUsers")
+    @ManyToMany(mappedBy = "teamUsers", fetch = FetchType.EAGER)
     private Set<Channel> channels = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(mappedBy = "pending_teamUsers")
+    @ManyToMany(mappedBy = "pending_teamUsers", fetch = FetchType.EAGER)
     private Set<Channel> pending_channels = ConcurrentHashMap.newKeySet();
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) {

@@ -2,12 +2,9 @@ package com.Ease.Context;
 
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateDatabase;
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
-import com.Ease.Utils.Test.TestA;
-import com.Ease.Utils.Test.TestB;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -132,22 +129,6 @@ public class OnStart implements ServletContextListener {
                 String date = dateFormat.format(mydate);
                 request = db.prepareRequest("INSERT INTO logs values('Server Start', 200, NULL, '', 'Server started correctly', ?);");
                 request.setString(date);
-
-                HibernateQuery hibernateQuery = new HibernateQuery();
-                hibernateQuery.queryString("SELECT t FROM testA t WHERE t.id= 1");
-                TestA testA = (TestA) hibernateQuery.getSingleResult();
-                testA.bar();
-                try {
-                    System.out.println("Je suis là");
-                    System.out.println(testA.getTestBSet().get(0) == null);
-                    hibernateQuery.queryString("SELECT t FROM testB t WHERE t.id = 1");
-                    TestB testB = (TestB) hibernateQuery.getSingleResult();
-                    System.out.println(testA.getTestBSet().get(0) == testB);
-                    System.out.println(testA == testB.getTestA());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                hibernateQuery.commit();
             } catch (GeneralException e1) {
                 System.out.println("Start failed");
                 String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");
