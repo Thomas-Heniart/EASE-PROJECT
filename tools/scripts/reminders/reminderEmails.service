@@ -1,6 +1,0 @@
-[Unit]
-Description=Reminder emails
-
-[Service]
-type=oneshot
-ExecStart=/usr/bin/sh -c '~/bin/reminderEmails.sh'

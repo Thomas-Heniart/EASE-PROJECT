@@ -163,6 +163,7 @@ public class Channel {
                 apps.add(((App) shareableApp).getDBid());
         }
         jsonObject.put("app_ids", apps);
+        jsonObject.put("team_id", team.getDb_id());
         return jsonObject;
     }
 
