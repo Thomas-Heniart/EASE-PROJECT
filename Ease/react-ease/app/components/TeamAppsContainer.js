@@ -22,21 +22,21 @@ class TeamAppsContainer extends React.Component{
     super(props);
   }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps !== this.props) {
-            if ((!this.props.loading && prevProps.loading !== this.props.loading) || this.props.location.search !== prevProps.location.search) {
-                const query = queryString.parse(this.props.location.search);
-                if (query.app_id !== undefined && query.app_id.length !== 0) {
-                    const el = document.getElementById(`app_${query.app_id}`);
-                    if (el) {
-                        el.scrollIntoView(true);
-                        el.classList.add('blink');
-                        window.setTimeout(() => {
-                            el.classList.remove('blink')
-                        }, 3000);
-                    }
-                }
-            }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props) {
+      if ((!this.props.loading && prevProps.loading !== this.props.loading) || this.props.location.search !== prevProps.location.search) {
+        const query = queryString.parse(this.props.location.search);
+        if (query.app_id !== undefined && query.app_id.length !== 0) {
+          const el = document.getElementById(`app_${query.app_id}`);
+          if (el) {
+            el.scrollIntoView(true);
+            el.classList.add('blink');
+            window.setTimeout(() => {
+              el.classList.remove('blink')
+            }, 3000);
+          }
+        }
+      }
     }
   }
   render() {
@@ -44,42 +44,42 @@ class TeamAppsContainer extends React.Component{
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
             {this.props.selectedItem.apps.map(function(item){
-                if (item.type === 'simple')
-                  return (
-                      <SimpleTeamApp
-                          app={item}
-                          users={this.props.users}
-                          channels={this.props.channels}
-                          me={this.props.me}
-                          key={item.id}
-                          plan_id={this.props.plan_id}
-                          team_id={this.props.team_id}
-                          dispatch={this.props.dispatch}/>
-                  );
-                if (item.type === 'link')
-                  return (
-                      <TeamLinkApp
-                          app={item}
-                          users={this.props.users}
-                          channels={this.props.channels}
-                          me={this.props.me}
-                          key={item.id}
-                          team_id={this.props.team_id}
-                          dispatch={this.props.dispatch}/>
-                  );
-                if (item.type === 'multi')
-                  return (
-                      <EnterpriseTeamApp
-                          app={item}
-                          plan_id={this.props.plan_id}
-                          users={this.props.users}
-                          channels={this.props.channels}
-                          me={this.props.me}
-                          key={item.id}
-                          team_id={this.props.team_id}
-                          dispatch={this.props.dispatch}/>
-                  );
-              }, this)
+              if (item.type === 'simple')
+                return (
+                    <SimpleTeamApp
+                        app={item}
+                        users={this.props.users}
+                        channels={this.props.channels}
+                        me={this.props.me}
+                        key={item.id}
+                        plan_id={this.props.plan_id}
+                        team_id={this.props.team_id}
+                        dispatch={this.props.dispatch}/>
+                );
+              if (item.type === 'link')
+                return (
+                    <TeamLinkApp
+                        app={item}
+                        users={this.props.users}
+                        channels={this.props.channels}
+                        me={this.props.me}
+                        key={item.id}
+                        team_id={this.props.team_id}
+                        dispatch={this.props.dispatch}/>
+                );
+              if (item.type === 'multi')
+                return (
+                    <EnterpriseTeamApp
+                        app={item}
+                        plan_id={this.props.plan_id}
+                        users={this.props.users}
+                        channels={this.props.channels}
+                        me={this.props.me}
+                        key={item.id}
+                        team_id={this.props.team_id}
+                        dispatch={this.props.dispatch}/>
+                );
+            }, this)
             }
           </div>
         </div>

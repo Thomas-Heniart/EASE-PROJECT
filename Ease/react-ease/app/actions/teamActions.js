@@ -5,6 +5,23 @@ import * as UserActions from "./userActions"
 import * as ChannelActions from "./channelActions"
 import {closeAppAddUI} from "./teamAppsAddUIActions";
 
+export function fetchTeams(){
+  return (dispatch, getState) => {
+    dispatch({type: 'FETCH_TEAMS_PENDING'});
+    return api.teams.fetchTeams().then(response => {
+      let teams = {};
+      response.map(team => {
+        teams[team.id] = team;
+      });
+      dispatch({type: 'FETCH_TEAMS_FULFILLED', payload: {teams: teams}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'FETCH_TEAMS_REJECTED'});
+      throw err;
+    });
+  }
+}
+
 export function fetchTeam(id) {
   return function(dispatch){
     dispatch({type:'FETCH_TEAM_PENDING', payload:id});
