@@ -8,6 +8,7 @@ import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,11 @@ public class AppManager {
     public void addSharedApp(SharedApp sharedApp) {
         App app = (App) sharedApp;
         this.sharedApps.put(app.getDBid(), sharedApp);
+    }
+
+    public void addSharedApps(Collection<SharedApp> sharedApps) {
+        for (SharedApp sharedApp : sharedApps)
+            this.addSharedApp(sharedApp);
     }
 
     public SharedApp getSharedApp(Integer sharedApp_id) throws HttpServletException {

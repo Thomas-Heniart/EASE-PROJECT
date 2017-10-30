@@ -7,6 +7,7 @@ import com.Ease.Notification.Notification;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketMessageFactory;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -23,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 10/04/2017.
  */
 @Entity(name = "teamUsers")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class TeamUser {
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);

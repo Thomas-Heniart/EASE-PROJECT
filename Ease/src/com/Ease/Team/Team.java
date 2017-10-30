@@ -14,6 +14,7 @@ import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -27,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 10/04/2017.
  */
 @Entity(name = "teams")
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Team {
 
     private static final String DEFAULT_CHANNEL_NAME = "openspace";
@@ -45,19 +48,20 @@ public class Team {
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT t FROM teams t WHERE t.active = true");
         List<Team> teams = query.list();
-        query.commit();
         for (Team team : teams) {
-            System.out.println(team.getName());
-            /* TeamUser teamUser = team.getTeamUserOwner();
-            System.out.println(team.getDefaultChannel().getTeam() == teamUser.getTeam());
-            System.out.println(team.getDefaultChannel().getTeamUsers().contains(teamUser)); */
-            team.lazyInitialize();
+            //team.lazyInitialize();
             team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
             for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                 List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, context, db);
                 shareableApp.setSharedApps(sharedApps);
-                team.getAppManager().setSharedApps(sharedApps);
+                team.getAppManager().addSharedApps(sharedApps);
             }
+            TeamUser teamUser = team.getTeamUserOwner();
+            System.out.println(team.getDefaultChannel().getTeam() == teamUser.getTeam());
+            System.out.println(team.getDefaultChannel().getTeamUsers().contains(teamUser));
+        }
+        query.commit();
+        for (Team team : teams) {
             TeamUser teamUser = team.getTeamUserOwner();
             System.out.println(team.getDefaultChannel().getTeam() == teamUser.getTeam());
             System.out.println(team.getDefaultChannel().getTeamUsers().contains(teamUser));
