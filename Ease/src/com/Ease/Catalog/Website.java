@@ -66,7 +66,8 @@ public class Website {
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "signIn_website_id"))
     protected Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(mappedBy = "teamWebsites")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -212,6 +213,10 @@ public class Website {
         this.getTeams().add(team);
     }
 
+    public void removeTeam(Team team) {
+        this.getTeams().remove(team);
+    }
+
     public void addWebsiteRequest(WebsiteRequest websiteRequest) {
         this.getWebsiteRequests().add(websiteRequest);
     }
@@ -221,6 +226,10 @@ public class Website {
     }
 
     public void addWebsiteCredentials(WebsiteCredentials websiteCredentials) {
+        this.getWebsiteCredentials().add(websiteCredentials);
+    }
+
+    public void removeWebsiteCredentials(WebsiteCredentials websiteCredentials) {
         this.getWebsiteCredentials().remove(websiteCredentials);
     }
 
@@ -324,6 +333,8 @@ public class Website {
 
     /* For current version of askInfo */
     public JSONObject getConnectionJson() throws HttpServletException {
+        if (!this.getWebsiteAttributes().isIntegrated())
+            throw new HttpServletException(HttpStatus.BadRequest, "Please, wait until we integrate this website");
         JSONParser parser = new JSONParser();
         try {
             JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.PROJECT_PATH + "/resources/websites/" + this.getFolder() + "/connect.json"));
