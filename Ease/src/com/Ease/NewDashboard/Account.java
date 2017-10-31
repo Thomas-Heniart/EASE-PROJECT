@@ -1,4 +1,4 @@
-package com.Ease.App;
+package com.Ease.NewDashboard;
 
 import javax.persistence.*;
 import java.util.Date;

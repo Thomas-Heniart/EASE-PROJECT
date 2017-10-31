@@ -1,4 +1,4 @@
-package com.Ease.App;
+package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
 
@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "websiteApps")
 @PrimaryKeyJoinColumn(name = "id")
-public class WebsiteApp extends App{
+abstract public class WebsiteApp extends App {
 
     @Column(name = "type")
     private String websiteApp_type;
@@ -18,6 +18,12 @@ public class WebsiteApp extends App{
 
     public WebsiteApp() {
 
+    }
+
+    public WebsiteApp(AppInformation appInformation, String type, String websiteApp_type, Website website) {
+        super(appInformation, type);
+        this.websiteApp_type = websiteApp_type;
+        this.website = website;
     }
 
     public String getWebsiteApp_type() {

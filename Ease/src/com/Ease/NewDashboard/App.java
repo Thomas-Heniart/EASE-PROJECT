@@ -1,11 +1,11 @@
-package com.Ease.App;
+package com.Ease.NewDashboard;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "apps")
 @Inheritance(strategy=InheritanceType.JOINED)
-public class App {
+abstract public class App {
     @Id
     @GeneratedValue
     @Column(name = "id")
@@ -18,8 +18,20 @@ public class App {
     @Column(name = "type")
     private String type;
 
+    @ManyToOne
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
+    @Column(name = "position")
+    private Integer position;
+
     public App() {
 
+    }
+
+    public App(AppInformation appInformation, String type) {
+        this.appInformation = appInformation;
+        this.type = type;
     }
 
     public Integer getDb_id() {
@@ -44,5 +56,21 @@ public class App {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

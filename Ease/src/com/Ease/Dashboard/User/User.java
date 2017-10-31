@@ -1,18 +1,15 @@
 package com.Ease.Dashboard.User;
 
-import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.DashboardManager;
+import com.Ease.NewDashboard.DashboardManager;
 import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -91,7 +88,7 @@ public class User {
                 }
                 hibernateQuery.commit();
                 usersMap.put(email, newUser);
-                newUser.getDashboardManager().decipherApps(sm);
+                //newUser.getDashboardManager().decipherApps(sm);
                 return newUser;
             } else {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid token");
@@ -140,16 +137,16 @@ public class User {
         User newUser = new User(db_id, firstName, email, keys, options, isAdmin, false,
                 sessionSave, status);
         newUser.loadTeamUsers(context, db);
-        newUser.initializeDashboardManager(context, db);
+        //newUser.initializeDashboardManager(context, db);
         newUser.initializeNotificationManager();
         newUser.loadEmails(db);
-        for (App app : newUser.getDashboardManager().getApps()) {
+        /* for (App app : newUser.getDashboardManager().getApps()) {
             if (app.getType().equals("LogwithApp")) {
                 LogwithApp logwithApp = (LogwithApp) app;
                 App websiteApp = newUser.getDashboardManager().getWebsiteAppWithId(logwithApp.getLogwithDBid());
                 logwithApp.rempLogwith((WebsiteApp) websiteApp);
             }
-        }
+        } */
         return newUser;
     }
 
@@ -178,7 +175,7 @@ public class User {
         SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
         User newUser = new User(db_id, firstName, email, keys, opt, false, false, sessionSave, status);
         Profile.createPersonnalProfiles(newUser, db);
-        newUser.initializeDashboardManager(context, db);
+        //newUser.initializeDashboardManager(context, db);
         newUser.initializeNotificationManager();
         UserEmail userEmail = UserEmail.createUserEmail(email, newUser, true, db);
         newUser.getUserEmails().put(email, userEmail);
@@ -227,8 +224,12 @@ public class User {
         this.sawGroupProfile = sawGroupProfile;
     }
 
-    private void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
+    /* private void initializeDashboardManager(ServletContext context, DataBaseConnection db) throws GeneralException, HttpServletException {
         this.dashboardManager = new DashboardManager(this, context, db);
+    } */
+
+    public void initializeDashboardManager(HibernateQuery hibernateQuery) {
+        this.dashboardManager = new DashboardManager(hibernateQuery, Integer.valueOf(this.getDBid()));
     }
 
     private void initializeNotificationManager() {
@@ -522,7 +523,7 @@ public class User {
 
     public void deleteFromDb(DataBaseConnection db) throws GeneralException, HttpServletException {
         int transaction = db.startTransaction();
-        this.dashboardManager.removeFromDB(db);
+        //this.dashboardManager.removeFromDB(db);
         for (UserEmail email : this.emails.values())
             email.removeFromDB(db);
         this.sessionSave.eraseFromDB(db);

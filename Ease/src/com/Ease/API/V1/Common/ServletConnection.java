@@ -74,7 +74,7 @@ public class ServletConnection extends HttpServlet {
                     ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                     ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                     sm.setUser(user);
-                    user.getDashboardManager().decipherApps(sm);
+                    //user.getDashboardManager().decipherApps(sm);
                     removeIpFromDataBase(client_ip, db);
                     JSONObject res = new JSONObject();
                     res.put("user", user.getJson());

@@ -37,11 +37,16 @@
         <mapping class="com.Ease.Catalog.WebsiteCredentials" />
         <mapping class="com.Ease.Catalog.ServerPublicKey" />
         <mapping class="com.Ease.Team.TeamUserStatus"/>
-        <mapping class="com.Ease.App.App"/>
-        <mapping class="com.Ease.App.AppInformation"/>
-        <mapping class="com.Ease.App.WebsiteApp"/>
-        <mapping class="com.Ease.App.ClassicApp"/>
-        <mapping class="com.Ease.App.Account"/>
-        <mapping class="com.Ease.App.AccountInformation"/>
+        <mapping class="com.Ease.NewDashboard.Profile"/>
+        <mapping class="com.Ease.NewDashboard.ProfileInformation"/>
+        <mapping class="com.Ease.NewDashboard.App"/>
+        <mapping class="com.Ease.NewDashboard.AppInformation"/>
+        <mapping class="com.Ease.NewDashboard.LinkApp"/>
+        <mapping class="com.Ease.NewDashboard.LinkAppInformation"/>
+        <mapping class="com.Ease.NewDashboard.WebsiteApp"/>
+        <mapping class="com.Ease.NewDashboard.LogWithApp"/>
+        <mapping class="com.Ease.NewDashboard.ClassicApp"/>
+        <mapping class="com.Ease.NewDashboard.Account"/>
+        <mapping class="com.Ease.NewDashboard.AccountInformation"/>
     </session-factory>
 </hibernate-configuration>

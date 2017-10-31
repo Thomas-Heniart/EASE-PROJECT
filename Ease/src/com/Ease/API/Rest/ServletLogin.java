@@ -42,7 +42,8 @@ public class ServletLogin extends HttpServlet {
                 ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
                 ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                 ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
-                user.getDashboardManager().decipherApps(sm);
+                //user.getDashboardManager().decipherApps(sm);
+                user.initializeDashboardManager(sm.getHibernateQuery());
                 JSONObject res = new JSONObject();
                 res.put("JWT", user.getJwt().getJwt((Key) sm.getContextAttr("secret")));
                 ((Map<String, User>) sm.getContextAttr("tokenUserMap")).put(user.getJwt().getConnection_token(), user);

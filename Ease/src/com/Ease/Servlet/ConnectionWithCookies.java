@@ -1,20 +1,15 @@
 package com.Ease.Servlet;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.Ease.Dashboard.User.SessionSave;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Servlet implementation class ConnectionServlet
@@ -56,7 +51,7 @@ public class ConnectionWithCookies extends HttpServlet {
                 ((Map<String, User>) sm.getContextAttr("users")).put(user.getEmail(), user);
                 ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                 ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
-                user.getDashboardManager().decipherApps(sm);
+                //user.getDashboardManager().decipherApps(sm);
                 success = true;
                 sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
             }

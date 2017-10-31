@@ -76,7 +76,8 @@ ALTER TABLE classicApps
   DROP FOREIGN KEY classicapps_ibfk_1;
 ALTER TABLE classicApps
   MODIFY id INT(10) UNSIGNED NOT NULL;
-ALTER TABLE classicApps DROP PRIMARY KEY;
+ALTER TABLE classicApps
+  DROP PRIMARY KEY;
 UPDATE classicApps t
   JOIN websiteApps t1 ON t.website_app_id = t1.id
 SET t.id = t1.app_id;
@@ -87,7 +88,8 @@ ALTER TABLE logWithApps
   DROP FOREIGN KEY logwithapps_ibfk_2;
 ALTER TABLE logWithApps
   MODIFY id INT(10) UNSIGNED NOT NULL;
-ALTER TABLE logWithApps DROP PRIMARY KEY;
+ALTER TABLE logWithApps
+  DROP PRIMARY KEY;
 UPDATE logWithApps t
   JOIN websiteApps t1 ON t.website_app_id = t1.id
 SET t.id = t1.app_id;
@@ -99,7 +101,8 @@ ALTER TABLE websiteApps
   DROP FOREIGN KEY websiteapps_ibfk_1;
 ALTER TABLE websiteApps
   MODIFY id INT(10) UNSIGNED NOT NULL;
-ALTER TABLE websiteApps DROP PRIMARY KEY;
+ALTER TABLE websiteApps
+  DROP PRIMARY KEY;
 UPDATE websiteApps
 SET id = app_id;
 
@@ -115,6 +118,36 @@ ALTER TABLE classicApps
   ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
 ALTER TABLE logWithApps
   ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
-ALTER TABLE websiteApps ADD PRIMARY KEY (id);
-ALTER TABLE classicApps ADD PRIMARY KEY (id);
-ALTER TABLE logWithApps ADD PRIMARY KEY (id);
+ALTER TABLE websiteApps
+  ADD PRIMARY KEY (id);
+ALTER TABLE classicApps
+  ADD PRIMARY KEY (id);
+ALTER TABLE logWithApps
+  ADD PRIMARY KEY (id);
+
+ALTER TABLE linkApps
+  DROP FOREIGN KEY linkapps_ibfk_1;
+ALTER TABLE linkApps
+  MODIFY id INT(10) UNSIGNED NOT NULL;
+ALTER TABLE linkApps
+  DROP PRIMARY KEY;
+UPDATE linkApps
+SET id = app_id;
+ALTER TABLE linkApps
+  DROP COLUMN app_id;
+ALTER TABLE linkApps
+  ADD FOREIGN KEY (id) REFERENCES apps (id);
+ALTER TABLE linkApps
+  ADD PRIMARY KEY (id);
+
+ALTER TABLE apps
+  ADD COLUMN profile_id INT(10) UNSIGNED;
+ALTER TABLE apps
+  ADD FOREIGN KEY (profile_id) REFERENCES profiles (id);
+ALTER TABLE apps
+  ADD COLUMN position INT UNSIGNED;
+UPDATE apps a LEFT JOIN profileAndAppMap p ON a.id = p.app_id
+SET a.profile_id = p.profile_id, a.position = p.position;
+DROP TABLE profileAndAppMap;
+ALTER TABLE profileInfo
+  DROP COLUMN color;
