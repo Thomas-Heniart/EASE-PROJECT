@@ -1,6 +1,8 @@
 DROP TABLE pendingTeamUserVerifications;
-ALTER TABLE teamUsers ADD COLUMN invitation_code VARCHAR(255);
-UPDATE teamUsers t LEFT JOIN pendingTeamInvitations t1 ON t.id = t1.teamUser_id SET t.invitation_code = t1.code;
+ALTER TABLE teamUsers
+  ADD COLUMN invitation_code VARCHAR(255);
+UPDATE teamUsers t LEFT JOIN pendingTeamInvitations t1 ON t.id = t1.teamUser_id
+SET t.invitation_code = t1.code;
 DROP TABLE pendingTeamInvitations;
 
 DELETE t1
@@ -69,3 +71,50 @@ DROP TABLE sharedKeys, tmpSharedApps;
 DELETE FROM accounts
 WHERE id NOT IN (SELECT account_id
                  FROM classicApps);
+
+ALTER TABLE classicApps
+  DROP FOREIGN KEY classicapps_ibfk_1;
+ALTER TABLE classicApps
+  MODIFY id INT(10) UNSIGNED NOT NULL;
+ALTER TABLE classicApps DROP PRIMARY KEY;
+UPDATE classicApps t
+  JOIN websiteApps t1 ON t.website_app_id = t1.id
+SET t.id = t1.app_id;
+
+ALTER TABLE logWithApps
+  DROP FOREIGN KEY logwithapps_ibfk_1;
+ALTER TABLE logWithApps
+  DROP FOREIGN KEY logwithapps_ibfk_2;
+ALTER TABLE logWithApps
+  MODIFY id INT(10) UNSIGNED NOT NULL;
+ALTER TABLE logWithApps DROP PRIMARY KEY;
+UPDATE logWithApps t
+  JOIN websiteApps t1 ON t.website_app_id = t1.id
+SET t.id = t1.app_id;
+UPDATE logWithApps t
+  JOIN websiteApps t1 ON t.logWith_website_app_id = t1.id
+SET t.logWith_website_app_id = t1.id;
+
+ALTER TABLE websiteApps
+  DROP FOREIGN KEY websiteapps_ibfk_1;
+ALTER TABLE websiteApps
+  MODIFY id INT(10) UNSIGNED NOT NULL;
+ALTER TABLE websiteApps DROP PRIMARY KEY;
+UPDATE websiteApps
+SET id = app_id;
+
+ALTER TABLE websiteApps
+  DROP COLUMN app_id;
+ALTER TABLE classicApps
+  DROP COLUMN website_app_id;
+ALTER TABLE logWithApps
+  DROP COLUMN website_app_id;
+ALTER TABLE websiteApps
+  ADD FOREIGN KEY (id) REFERENCES apps (id);
+ALTER TABLE classicApps
+  ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
+ALTER TABLE logWithApps
+  ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
+ALTER TABLE websiteApps ADD PRIMARY KEY (id);
+ALTER TABLE classicApps ADD PRIMARY KEY (id);
+ALTER TABLE logWithApps ADD PRIMARY KEY (id);
