@@ -1355,7 +1355,7 @@ button.action_text_button {
 
 .ease_modal {
   display: block;
-  z-index: 12;
+  z-index: 15;
   position: fixed;
   top: 0;
   left: 0;
@@ -2101,6 +2101,7 @@ button.action_text_button {
           .apps_container {
             @include display-flex();
             @include flex(1);
+            z-index: 1;
             padding-top: .25em;
             padding-bottom: .25em;
             .apps_scroller_div {
@@ -3080,32 +3081,32 @@ button.big-button {
 }
 
 .slideLeft-enter {
-  transition: all 200ms ease-in;
+  transition: all 400ms ease-in;
   transform: translateX(-100%);
 }
 
 .slideLeft-enter.slideLeft-enter-active {
-  transition: all 200ms ease-in;
+  transition: all 400ms ease-in;
   transform: translateX(0);
 }
 
 .slideLeft-appear {
-  transition: all 200ms ease-in;
+  transition: all 400ms ease-in;
   transform: translateX(-100%);
 }
 
 .slideLeft-appear.slideLeft-appear-active {
-  transition: all 200ms ease-in;
+  transition: all 400ms ease-in;
   transform: translateX(0);
 }
 
 .slideLeft-leave {
-  transition: all 200ms ease-in;
+  transition: all 400ms ease-in;
   transform: translateX(0);
 }
 
 .slideLeft-leave.slideLeft-leave-active {
-  transition: all 200ms ease-in;
+  transition: all 400ms ease-in;
   transform: translateX(100%);
 }
 

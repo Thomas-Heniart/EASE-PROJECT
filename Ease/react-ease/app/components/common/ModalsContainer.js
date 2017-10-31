@@ -25,7 +25,7 @@ import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
 import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 import ClassicAppModal from "../catalog/ClassicAppModal";
 import SsoAppModal from "../catalog/SsoAppModal";
-
+import SimpleAppSettingsModal from "../modals/SimpleAppSettingsModal";
 
 @connect(store => ({
   addUserModalActive: store.teamModals.addUserModalActive,
@@ -53,7 +53,8 @@ import SsoAppModal from "../catalog/SsoAppModal";
   departureDateEndModal: store.teamModals.departureDateEndModal,
   catalogAddBookmarkModal: store.teamModals.catalogAddBookmarkModal,
   catalogAddAppModal: store.teamModals.catalogAddAppModal,
-  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal
+  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal,
+  modals: store.modals
 }))
 class ModalsContainer extends Component{
   constructor(props){
@@ -114,6 +115,8 @@ class ModalsContainer extends Component{
           <ClassicAppModal/>}
           {this.props.catalogAddSSOAppModal.active &&
           <SsoAppModal/>}
+          {this.props.modals.simpleAppSettings.active &&
+          <SimpleAppSettingsModal/>}
         </div>
     )
   }

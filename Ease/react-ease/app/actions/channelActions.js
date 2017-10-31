@@ -121,11 +121,16 @@ export function removeTeamUserFromChannel(channel_id, team_user_id){
   }
 }
 
-export function editTeamChannelName(channel_id, name){
+export function editTeamChannelName({team_id, room_id, name}){
   return function (dispatch, getState) {
     dispatch({type: 'EDIT_TEAM_CHANNEL_NAME_PENDING'});
-    return post_api.teamChannel.editName(getState().common.ws_id, getState().team.id, channel_id, name).then(response => {
-      dispatch({type:'EDIT_TEAM_CHANNEL_NAME_FULFILLED', payload: {id:channel_id, name: name}});
+    return post_api.teamChannel.editName({
+      ws_id: getState().common.ws_id,
+      team_id: team_id,
+      room_id: room_id,
+      name: name
+    }).then(response => {
+      dispatch({type:'TEAM_ROOM_CHANGED', payload: {room: response}});
     }).catch(err => {
       dispatch({type:"EDIT_TEAM_CHANNEL_NAME_REJECTED", payload:err});
       throw err;
@@ -140,6 +145,7 @@ export function editTeamChannelPurpose(channel_id, purpose){
       dispatch({type:'EDIT_TEAM_CHANNEL_PURPOSE_FULFILLED', payload: {id:channel_id, purpose: purpose}});
     }).catch(err => {
       dispatch({type:"EDIT_TEAM_CHANNEL_PURPOSE_REJECTED", payload:err});
+      throw err;
     });
   }
 }

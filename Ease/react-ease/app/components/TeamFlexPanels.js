@@ -1,37 +1,37 @@
 var React = require('react');
 import {
-    showTeamDeleteChannelModal,
-    showTeamDeleteUserFromChannelModal,
-    showTeamDeleteUserModal,
-    showTeamTransferOwnershipModal,
-    showUpgradeTeamPlanModal
+  showTeamDeleteChannelModal,
+  showTeamDeleteUserFromChannelModal,
+  showTeamDeleteUserModal,
+  showTeamTransferOwnershipModal,
+  showUpgradeTeamPlanModal
 } from "../actions/teamModalActions";
 import * as channelActions from "../actions/channelActions"
 import * as userActions from "../actions/userActions"
 import {
-    isAdmin,
-    isOwner,
-    isSuperior,
-    isSuperiorOrMe,
-    selectChannelFromListById,
-    selectItemFromListById,
-    selectUserFromListById
+  isAdmin,
+  isOwner,
+  isSuperior,
+  isSuperiorOrMe,
+  selectChannelFromListById,
+  selectItemFromListById,
+  selectUserFromListById
 } from "../utils/helperFunctions";
 import {renderUserLabel} from "../utils/renderHelpers";
 import {basicDateFormat, handleSemanticInput, reflect, teamUserRoles, teamUserRoleValues, userNameRuleString} from "../utils/utils";
 import {
-    Button,
-    Dropdown,
-    Form,
-    Grid,
-    Header,
-    Icon,
-    Input,
-    Label,
-    List,
-    Message,
-    Popup,
-    TextArea
+  Button,
+  Dropdown,
+  Form,
+  Grid,
+  Header,
+  Icon,
+  Input,
+  Label,
+  List,
+  Message,
+  Popup,
+  TextArea
 } from 'semantic-ui-react';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
@@ -239,15 +239,19 @@ class RoomNameSection extends React.Component {
   confirm = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    this.props.dispatch(channelActions.editTeamChannelName(this.props.room.id, this.state.name)).then(response => {
+    this.props.dispatch(channelActions.editTeamChannelName({
+      team_id: this.props.team_id,
+      room_id: this.props.room.id,
+      name: this.state.name
+    })).then(response => {
       this.setModifying(false);
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
     });
   };
   handleInput = (e) => {
-      e.target.value = e.target.value.replace(" ", "_").toLowerCase();
-      this.setState({[e.target.name] : e.target.value});
+    e.target.value = e.target.value.replace(" ", "_").toLowerCase();
+    this.setState({[e.target.name] : e.target.value});
   };
   render(){
     const room = this.props.room;
@@ -290,37 +294,10 @@ class TeamChannelFlexTab extends React.Component{
     this.state = {
       purposeModifying: false,
       modifiedPurpose: null,
-      nameModifying: false,
-      modifiedName: null
     };
     this.handlePurposeInput = this.handlePurposeInput.bind(this);
     this.setPurposeModifying = this.setPurposeModifying.bind(this);
-    this.handleNameInput = this.handleNameInput.bind(this);
-    this.setNameModifying = this.setNameModifying.bind(this);
-    this.confirmNameChange = this.confirmNameChange.bind(this);
     this.confirmPurposeChange = this.confirmPurposeChange.bind(this);
-  }
-  confirmNameChange(){
-    this.props.dispatch(channelActions.editTeamChannelName(this.props.item.id, this.state.modifiedName)).then(response => {
-      this.setState({
-        nameModifying: false
-      });
-    });
-  }
-  handleNameInput(event){
-    this.setState({modifiedName: event.target.value})
-  }
-  setNameModifying(state){
-    if (state){
-      this.setState({
-        nameModifying: state,
-        modifiedName: this.props.item.name
-      });
-    } else {
-      this.setState({
-        nameModifying: state
-      });
-    }
   }
   confirmPurposeChange(){
     this.props.dispatch(channelActions.editTeamChannelPurpose(this.props.item.id, this.state.modifiedPurpose)).then(response => {
@@ -346,9 +323,10 @@ class TeamChannelFlexTab extends React.Component{
   }
   render() {
     const me = this.props.me;
+    const team = this.props.team;
     const channel = this.props.item;
-    const channel_users = channel.userIds.map(id => {
-      return selectItemFromListById(this.props.users, id);
+    const channel_users = channel.user_ids.map(id => {
+      return team.team_users[id];
     });
     return (
         <div className="flex_contents_panel active" id="team_tab">
@@ -365,7 +343,7 @@ class TeamChannelFlexTab extends React.Component{
           <div className="tab_content_body">
             <Grid container celled="internally" columns={1} padded>
               <Grid.Row>
-                <RoomNameSection dispatch={this.props.dispatch} room={channel} me={me}/>
+                <RoomNameSection dispatch={this.props.dispatch} room={channel} me={me} team_id={team.id}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
@@ -691,8 +669,8 @@ class TeamUserFlexTab extends React.Component{
     }
   }
   render() {
+    const {me, team} = this.props;
     const user = this.props.item;
-    const me = this.props.me;
 
     return (
         <div className="flex_contents_panel active" id="team_user_tab">
@@ -763,7 +741,7 @@ class TeamUserFlexTab extends React.Component{
                         {isSuperior(user, me) && me.id !== user.id &&
                         <Icon link name="pencil" className="mrgnLeft5" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
                         {isSuperior(user, me) && me.id !== user.id && this.props.plan_id === 0 &&
-                            <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
+                        <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
                         </span> :
                       <Input type="date" size="mini"
                              fluid action name="departureDate"
@@ -778,15 +756,15 @@ class TeamUserFlexTab extends React.Component{
               <Grid.Row>
                 <Grid.Column class="rooms">
                   <Header as="h5">Rooms:</Header>
-                  {user.channel_ids.map(item => {
-                    const channel = selectChannelFromListById(this.props.channels, item);
+                  {user.room_ids.map(id => {
+                    const room = team.rooms[id];
                     return (
-                        <Label size="mini" key={item}>
+                        <Label size="mini" key={id}>
                           <Icon name="hashtag"/>
-                          {channel.name}
-                          {isAdmin(me.role) && !channel.default &&
+                          {room.name}
+                          {isAdmin(me.role) && !room.default &&
                           <Icon name="delete" link
-                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, channel.id, this.props.item.id))}}/>}
+                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, room.id, user.id))}}/>}
                         </Label>
                     )
                   }, this)}
@@ -825,9 +803,7 @@ class FlexPanels extends React.Component {
     this.props.history.replace(this.props.backLink);
   }
   render(){
-    const item = this.props.item;
-    const selectionProps = this.props.selectionProps;
-    const me = this.props.me;
+    const {item, team, me} = this.props;
 
     return (
         <div id="flex_contents">
@@ -835,21 +811,17 @@ class FlexPanels extends React.Component {
           <TeamChannelFlexTab
               me={me}
               item={item}
-              apps={selectionProps.apps}
-              flexActive={this.props.flexActive}
+              team={team}
               toggleFlexFunc={this.closePanel}
-              plan_id={this.props.plan_id}
-              users={this.props.users}
+              plan_id={team.plan_id}
               dispatch={this.props.dispatch}/>}
           {item.username !== undefined &&
           <TeamUserFlexTab
               me={me}
               item={item}
-              apps={selectionProps.apps}
-              flexActive={this.props.flexActive}
+              team={team}
               toggleFlexFunc={this.closePanel}
-              plan_id={this.props.plan_id}
-              channels={this.props.channels}
+              plan_id={team.plan_id}
               dispatch={this.props.dispatch}/>}
         </div>
     )

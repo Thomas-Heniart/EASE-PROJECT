@@ -69,11 +69,11 @@ module.exports = {
     }
   },
   teamChannel: {
-    editName : function(ws_id, team_id, channel_id, name){
+    editName : function({ws_id, team_id, room_id, name}){
       return axios.post('/api/v1/teams/EditChannelName', {
         ws_id: ws_id,
         team_id: team_id,
-        channel_id: channel_id,
+        channel_id: room_id,
         name: name,
         timestamp: new Date().getTime()
       }).then(response => {
