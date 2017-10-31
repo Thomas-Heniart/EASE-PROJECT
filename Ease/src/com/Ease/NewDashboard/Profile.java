@@ -26,6 +26,7 @@ public class Profile {
     private ProfileInformation profileInformation;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "profile")
+    @MapKey(name = "db_id")
     private Map<Integer, App> appMap = new ConcurrentHashMap<>();
 
     public Profile() {

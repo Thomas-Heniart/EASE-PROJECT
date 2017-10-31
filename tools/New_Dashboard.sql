@@ -94,7 +94,7 @@ UPDATE logWithApps t
   JOIN websiteApps t1 ON t.website_app_id = t1.id
 SET t.id = t1.app_id;
 UPDATE logWithApps t
-  JOIN websiteApps t1 ON t.logWith_website_app_id = t1.id
+  JOIN websiteApps t1 ON t.logWith_website_app_id = t1.app_id
 SET t.logWith_website_app_id = t1.id;
 
 ALTER TABLE websiteApps
@@ -118,6 +118,8 @@ ALTER TABLE classicApps
   ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
 ALTER TABLE logWithApps
   ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
+ALTER TABLE ease.logWithApps
+  ADD FOREIGN KEY (logWith_website_app_id) REFERENCES websiteApps (id);
 ALTER TABLE websiteApps
   ADD PRIMARY KEY (id);
 ALTER TABLE classicApps

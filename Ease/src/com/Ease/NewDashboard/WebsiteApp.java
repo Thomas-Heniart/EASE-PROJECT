@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "websiteApps")
 @PrimaryKeyJoinColumn(name = "id")
-abstract public class WebsiteApp extends App {
+public class WebsiteApp extends App {
 
     @Column(name = "type")
     private String websiteApp_type;
