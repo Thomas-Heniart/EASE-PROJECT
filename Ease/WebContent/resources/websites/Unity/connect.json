@@ -1,0 +1,38 @@
+{
+  "name":"Unity",
+  "lastLogin":"",
+  "home":"https://store.unity.com/",
+  "connect":{
+    "todo":[
+      {"action": "trueClick", "search": "a.js-cms-oauth-login-url"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login", "search":"#new_conversations_create_session_form #conversations_create_session_form_email"},
+      {"action":"fill", "what":"password", "search":"#new_conversations_create_session_form #conversations_create_session_form_password"},
+      {"action":"trueClick", "search":"#new_conversations_create_session_form input[name*='commit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action": "waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action": "waitfor", "search": "a[href*='logout'], a[href*='login']"},
+    {"search":"a[href*='logout']"}
+  ],
+  "Facebook": {
+    "todo": [
+      {"action": "trueClick", "search": "a.js-cms-oauth-login-url"},
+      {"action":"waitload"},
+      {"action": "trueClick", "search": ".login_btn_div .facebook_btn_login"}
+    ]
+  },
+  "Google": {
+    "todo": [
+      {"action": "trueClick", "search": "a.js-cms-oauth-login-url"},
+      {"action":"waitload"},
+      {"action":"trueClick", "search":".login_btn_div .google_btn_login"}
+    ]
+  }
+}

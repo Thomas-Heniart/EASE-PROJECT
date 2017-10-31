@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Key;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +51,6 @@ public class ServletConnection extends HttpServlet {
                     if (!databaseRequest.get().next())
                         throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
                     user = User.loadUser(email, password, sm.getServletContext(), db);
-                    user.renewJwt((Key) sm.getContextAttr("secret"), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = new HibernateQuery();
                     for (TeamUser teamUser : user.getTeamUsers()) {

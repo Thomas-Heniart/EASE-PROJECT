@@ -93,8 +93,7 @@ public class Team {
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "team_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
+    @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
     protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
     @Transient

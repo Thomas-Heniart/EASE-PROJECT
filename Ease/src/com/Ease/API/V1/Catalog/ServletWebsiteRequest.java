@@ -59,6 +59,7 @@ public class ServletWebsiteRequest extends HttpServlet {
                 hibernateQuery.queryString("SELECT key FROM ServerPublicKey key");
                 ServerPublicKey serverPublicKey = (ServerPublicKey) hibernateQuery.getSingleResult();
                 WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt((String) userCredentials.get("login"), serverPublicKey.getPublicKey()), RSA.Encrypt((String) userCredentials.get("password"), serverPublicKey.getPublicKey()), website, serverPublicKey);
+                website.addWebsiteCredentials(websiteCredentials);
                 sm.saveOrUpdate(websiteCredentials);
             }
             sm.setSuccess("Request sent");

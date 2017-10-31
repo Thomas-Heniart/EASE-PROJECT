@@ -1,0 +1,21 @@
+{
+  "name":"ShareCG",
+  "lastLogin":"",
+  "home":"https://www.sharecg.com",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url": "https://www.sharecg.com/login.php"},
+      {"action":"fill", "what":"login", "search":"form.login:first-child #user_name"},
+      {"action":"fill", "what":"password", "search":"form.login:first-child #password"},
+      {"action":"trueClick", "search":"form.login:first-child input[type='submit']:first-child"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"a[href*='logout']"}
+  ]
+}
