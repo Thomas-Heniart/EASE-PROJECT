@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @WebServlet("/api/v1/admin/DeleteWebsite")
 public class ServletDeleteWebsite extends HttpServlet {
@@ -41,6 +42,7 @@ public class ServletDeleteWebsite extends HttpServlet {
             Website website = catalog.getWebsiteWithId(website_id);
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
+            website.setTeams(ConcurrentHashMap.newKeySet());
             for (Team team : teamManager.getTeams()) {
                 for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                     App app = (App) shareableApp;
@@ -55,8 +57,9 @@ public class ServletDeleteWebsite extends HttpServlet {
                     team.getAppManager().removeShareableApp(shareableApp, db);
                     team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.REMOVED, app_id, target));
                 }
-                team.removeTeamWebsite(website);
             }
+            for (Team team : website.getTeams())
+                team.removeTeamWebsite(website);
             for (User user : userMap.values()) {
                 Set<App> appSet = new HashSet<>();
                 for (App app : user.getDashboardManager().getApps()) {
