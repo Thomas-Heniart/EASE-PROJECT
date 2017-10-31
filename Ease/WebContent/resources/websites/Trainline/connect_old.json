@@ -14,10 +14,6 @@
       },
       {
         "action": "waitfor",
-        "search": "body.with-overlay"
-      },
-      {
-        "action": "waitfor",
         "search": "#signin-form input[name='email']"
       },
       {
@@ -48,10 +44,6 @@
       },
       {
         "action": "waitfor",
-        "search": "body.with-overlay"
-      },
-      {
-        "action": "waitfor",
         "search": ".social-signin-facebook"
       },
       {
@@ -64,10 +56,8 @@
     "todo": [
       {
         "action": "click",
-        "search": ".user-menu__icon--signout"
-      },
-      {
-        "action": "waitload"
+        "search": ".user-menu__icon--signout",
+        "grave": true
       }
     ]
   },

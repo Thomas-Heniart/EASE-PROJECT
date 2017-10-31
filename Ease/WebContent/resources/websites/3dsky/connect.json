@@ -1,0 +1,36 @@
+{
+  "name": "3dsky",
+  "lastLogin": "",
+  "home": "https://3dsky.org/",
+  "folder": "3dsky",
+  "connect": {
+    "todo": [
+      {"action": "trueClick", "search": ".user_login"},
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#username",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".user_logout"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "search": ".user_name"
+    }
+  ]
+}
