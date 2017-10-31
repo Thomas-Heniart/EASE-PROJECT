@@ -13,7 +13,7 @@
     "todo":[
       {"action":"trueClick", "search":"a[href*='deconnexion']"},
       {"action":"waitload"},
-      {"action":"aclick", "search":"a[href='em.php']"},
+      {"action":"aclick", "search":"a[href='em.php']"}
     ]
   },
   "checkAlreadyLogged":[
