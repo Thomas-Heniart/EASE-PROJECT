@@ -183,6 +183,10 @@ i.icon.hide {
   cursor: pointer;
   text-decoration: underline;
   color: inherit;
+  &:hover {
+    color: inherit;
+    text-decoration: underline;
+  }
 }
 
 button.inline-text-button {

@@ -26,6 +26,11 @@ import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 import ClassicAppModal from "../catalog/ClassicAppModal";
 import SsoAppModal from "../catalog/SsoAppModal";
 import SimpleAppSettingsModal from "../modals/SimpleAppSettingsModal";
+import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
+import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
+import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
+import LockedTeamAppModal from "../modals/LockedTeamAppModal";
+import LogWithAppSettings from "../modals/LogWithAppSettings";
 
 @connect(store => ({
   addUserModalActive: store.teamModals.addUserModalActive,
@@ -117,6 +122,16 @@ class ModalsContainer extends Component{
           <SsoAppModal/>}
           {this.props.modals.simpleAppSettings.active &&
           <SimpleAppSettingsModal/>}
+          {this.props.modals.extensionDownload.active &&
+          <ExtensionDownloadModal/>}
+          {this.props.modals.linkAppSettings.active &&
+          <LinkAppSettingsModal/>}
+          {this.props.modals.passwordLostInformation.active &&
+          <PasswordLostInformationModal/>}
+          {this.props.modals.lockedTeamApp.active &&
+          <LockedTeamAppModal/>}
+          {this.props.modals.logWithAppSettings.active &&
+          <LogWithAppSettings/>}
         </div>
     )
   }

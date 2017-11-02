@@ -233,50 +233,48 @@ button.only-text-button {
 }
 
 
-#add_logwith_form{
-  .ui.segments{
-    font-size: 16px;
-    &.facebook {
-      border: solid 1px #3b5998 !important;
-      .first {
-        background-color: #3b5998;
-      }
-    }
-    &.linkedin {
-      border: solid 1px #1f88be !important;
-      .first {
-        background-color: #1f88be;
-      }
-    }
+.logwith_app_selectors.ui.segments{
+  font-size: 16px;
+  &.facebook {
+    border: solid 1px #3b5998 !important;
     .first {
-      color: white;
-      i {
-        margin-right: 20px;
-      }
+      background-color: #3b5998;
     }
-    .errorMessage {
-      color: #eb555c;
+  }
+  &.linkedin {
+    border: solid 1px #1f88be !important;
+    .first {
+      background-color: #1f88be;
     }
-    .ui.list {
-      font-size: 16px;
-      .item {
-        cursor: pointer;
-        @include display-flex();
-        @include align-items(center);
-        opacity: .7;
-        &:hover {
-          opacity: 1;
-        }
-        .icon {
-          margin-right: 10px;
-        }
-      }
-      .item.active {
-        color: #3b5998;
+  }
+  .first {
+    color: white;
+    i {
+      margin-right: 20px;
+    }
+  }
+  .errorMessage {
+    color: #eb555c;
+  }
+  .ui.list {
+    font-size: 16px;
+    .item {
+      cursor: pointer;
+      @include display-flex();
+      @include align-items(center);
+      opacity: .7;
+      &:hover {
         opacity: 1;
-        span {
-          text-decoration: underline;
-        }
+      }
+      .icon {
+        margin-right: 10px;
+      }
+    }
+    .item.active {
+      color: #3b5998;
+      opacity: 1;
+      span {
+        text-decoration: underline;
       }
     }
   }
@@ -316,10 +314,10 @@ button.only-text-button {
   height: 140px;
   padding: 20px !important;
   .ssoListGrid {
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     .showSegment {
       padding: 0 !important;
-      margin-bottom: 20px;
+      margin-top: 20px;
       white-space: nowrap;
       .appLogo {
         width: 35px;
