@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 
@@ -13,12 +14,16 @@ public class LogWithApp extends WebsiteApp {
     @JoinColumn(name = "logWith_website_app_id")
     private WebsiteApp loginWith_app;
 
+    @OneToOne
+    @JoinColumn(name = "logWithWebsite_id")
+    private Website logWith_website;
+
     public LogWithApp() {
 
     }
 
-    public LogWithApp(AppInformation appInformation, String type, String websiteApp_type, Website website, WebsiteApp loginWith_app) {
-        super(appInformation, type, websiteApp_type, website);
+    public LogWithApp(AppInformation appInformation, Website website, WebsiteApp loginWith_app) {
+        super(appInformation, website);
         this.loginWith_app = loginWith_app;
     }
 
@@ -28,5 +33,21 @@ public class LogWithApp extends WebsiteApp {
 
     public void setLoginWith_app(WebsiteApp loginWith_app) {
         this.loginWith_app = loginWith_app;
+    }
+
+    public Website getLogWith_website() {
+        return logWith_website;
+    }
+
+    public void setLogWith_website(Website logWith_website) {
+        this.logWith_website = logWith_website;
+    }
+
+    @Override
+    public JSONObject getJson() {
+        JSONObject res = super.getJson();
+        res.put("logWithApp_id", this.getLoginWith_app().getDb_id());
+        res.put("logWith_website", this.getLogWith_website().getCatalogJson());
+        return res;
     }
 }

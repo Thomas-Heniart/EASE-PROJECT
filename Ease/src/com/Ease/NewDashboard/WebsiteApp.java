@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 
@@ -8,9 +9,6 @@ import javax.persistence.*;
 @Table(name = "websiteApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class WebsiteApp extends App {
-
-    @Column(name = "type")
-    private String websiteApp_type;
 
     @ManyToOne
     @JoinColumn(name = "website_id")
@@ -20,18 +18,9 @@ public class WebsiteApp extends App {
 
     }
 
-    public WebsiteApp(AppInformation appInformation, String type, String websiteApp_type, Website website) {
-        super(appInformation, type);
-        this.websiteApp_type = websiteApp_type;
+    public WebsiteApp(AppInformation appInformation, Website website) {
+        super(appInformation);
         this.website = website;
-    }
-
-    public String getWebsiteApp_type() {
-        return websiteApp_type;
-    }
-
-    public void setWebsiteApp_type(String websiteApp_type) {
-        this.websiteApp_type = websiteApp_type;
     }
 
     public Website getWebsite() {
@@ -40,5 +29,25 @@ public class WebsiteApp extends App {
 
     public void setWebsite(Website website) {
         this.website = website;
+    }
+
+    public String getLogo() {
+        return this.getWebsite().getLogo();
+    }
+
+    public String getType() {
+        return "websiteApp";
+    }
+
+    @Override
+    public boolean isWebsiteApp() {
+        return true;
+    }
+
+    @Override
+    public JSONObject getJson() {
+        JSONObject res = super.getJson();
+        res.put("website", this.getWebsite().getCatalogJson());
+        return res;
     }
 }

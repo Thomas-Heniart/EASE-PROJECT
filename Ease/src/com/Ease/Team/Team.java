@@ -8,6 +8,7 @@ import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
@@ -92,6 +93,10 @@ public class Team {
 
     @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
     protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @MapKey(name = "db_id")
+    private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
 
     @Transient
     protected Map<Integer, TeamUser> teamUsersWaitingForVerification = new ConcurrentHashMap<>();
@@ -207,6 +212,29 @@ public class Team {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Map<Integer, TeamCard> getTeamCardMap() {
+        return teamCardMap;
+    }
+
+    public void setTeamCardMap(Map<Integer, TeamCard> teamCardMap) {
+        this.teamCardMap = teamCardMap;
+    }
+
+    public TeamCard getTeamCard(Integer id) throws HttpServletException {
+        TeamCard teamCard = this.getTeamCardMap().get(id);
+        if (teamCard == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "This teamCard does not exist");
+        return teamCard;
+    }
+
+    public void addTeamCard(TeamCard teamCard) {
+        this.getTeamCardMap().put(teamCard.getDb_id(), teamCard);
+    }
+
+    public void removeTeamCard(TeamCard teamCard) {
+        this.getTeamCardMap().remove(teamCard.getDb_id());
     }
 
     public boolean isFreemium() throws HttpServletException {

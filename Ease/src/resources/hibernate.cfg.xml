@@ -48,5 +48,14 @@
         <mapping class="com.Ease.NewDashboard.ClassicApp"/>
         <mapping class="com.Ease.NewDashboard.Account"/>
         <mapping class="com.Ease.NewDashboard.AccountInformation"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamWebsiteCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamSingleCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamEnterpriseCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamLinkCard"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamCardReceiver"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamLinkCardReceiver"/>
     </session-factory>
 </hibernate-configuration>

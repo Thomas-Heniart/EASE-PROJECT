@@ -2,11 +2,13 @@ package com.Ease.Team;
 
 import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,6 +43,10 @@ public class Channel {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "pendingJoinChannelRequests", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "teamUser_id"))
     private Set<TeamUser> pending_teamUsers = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "channel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "db_id")
+    private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
 
     @Transient
     private WebSocketManager webSocketManager = new WebSocketManager();
@@ -109,6 +115,14 @@ public class Channel {
 
     public void setPending_teamUsers(Set<TeamUser> pending_teamUsers) {
         this.pending_teamUsers = pending_teamUsers;
+    }
+
+    public Map<Integer, TeamCard> getTeamCardMap() {
+        return teamCardMap;
+    }
+
+    public void setTeamCardMap(Map<Integer, TeamCard> teamCardMap) {
+        this.teamCardMap = teamCardMap;
     }
 
     public void addTeamUser(TeamUser teamUser) {
@@ -202,5 +216,9 @@ public class Channel {
 
     public void setWebSocketManager(WebSocketManager webSocketManager) {
         this.webSocketManager = webSocketManager;
+    }
+
+    public void addTeamCard(TeamCard teamCard) {
+        this.getTeamCardMap().put(teamCard.getDb_id(), teamCard);
     }
 }

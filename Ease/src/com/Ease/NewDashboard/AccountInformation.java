@@ -1,5 +1,10 @@
 package com.Ease.NewDashboard;
 
+import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,8 +25,17 @@ public class AccountInformation {
     @Column(name = "information_value")
     private String information_value;
 
+    @Transient
+    private String deciphered_information_value;
+
     public AccountInformation() {
 
+    }
+
+    public AccountInformation(String information_name, String information_value, String deciphered_information_value) {
+        this.information_name = information_name;
+        this.information_value = information_value;
+        this.deciphered_information_value = deciphered_information_value;
     }
 
     public Integer getDb_id() {
@@ -54,5 +68,21 @@ public class AccountInformation {
 
     public void setInformation_value(String information_value) {
         this.information_value = information_value;
+    }
+
+    public String getDeciphered_information_value() {
+        return deciphered_information_value;
+    }
+
+    public void setDeciphered_information_value(String deciphered_information_value) {
+        this.deciphered_information_value = deciphered_information_value;
+    }
+
+    public void decipher(String private_key) throws HttpServletException {
+        try {
+            this.setDeciphered_information_value(RSA.Decrypt(this.getInformation_value(), private_key));
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Notification.Notification;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -105,6 +106,10 @@ public class TeamUser {
 
     @ManyToMany(mappedBy = "pending_teamUsers", fetch = FetchType.EAGER)
     private Set<Channel> pending_channels = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "teamUser_id")
+    private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
@@ -315,6 +320,14 @@ public class TeamUser {
 
     public void setPending_channels(Set<Channel> pending_channels) {
         this.pending_channels = pending_channels;
+    }
+
+    public Set<TeamCardReceiver> getTeamCardReceivers() {
+        return teamCardReceivers;
+    }
+
+    public void setTeamCardReceivers(Set<TeamCardReceiver> teamCardReceivers) {
+        this.teamCardReceivers = teamCardReceivers;
     }
 
     public void addChannel(Channel channel) {

@@ -1,10 +1,14 @@
 package com.Ease.NewDashboard;
 
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONObject;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "apps")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 abstract public class App {
     @Id
     @GeneratedValue
@@ -15,9 +19,6 @@ abstract public class App {
     @JoinColumn(name = "app_info_id")
     private AppInformation appInformation;
 
-    @Column(name = "type")
-    private String type;
-
     @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
@@ -25,13 +26,15 @@ abstract public class App {
     @Column(name = "position")
     private Integer position;
 
+    @OneToOne(mappedBy = "app")
+    private TeamCardReceiver teamCardReceiver;
+
     public App() {
 
     }
 
-    public App(AppInformation appInformation, String type) {
+    public App(AppInformation appInformation) {
         this.appInformation = appInformation;
-        this.type = type;
     }
 
     public Integer getDb_id() {
@@ -50,14 +53,6 @@ abstract public class App {
         this.appInformation = appInformation;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public Profile getProfile() {
         return profile;
     }
@@ -72,5 +67,49 @@ abstract public class App {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public TeamCardReceiver getTeamCardReceiver() {
+        return teamCardReceiver;
+    }
+
+    public void setTeamCardReceiver(TeamCardReceiver teamCardReceiver) {
+        this.teamCardReceiver = teamCardReceiver;
+    }
+
+    public abstract String getLogo();
+
+    public abstract String getType();
+
+    public boolean isClassicApp() {
+        return false;
+    }
+
+    public boolean isWebsiteApp() {
+        return false;
+    }
+
+    public boolean isLinkApp() {
+        return false;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getDb_id());
+        res.put("logo", this.getLogo());
+        res.put("name", this.getAppInformation().getName());
+        res.put("type", this.getType());
+        res.put("profile_id", this.getProfile() == null ? -1 : this.getProfile().getDb_id());
+        if (this.getTeamCardReceiver() != null)
+            res.putAll(this.getTeamCardReceiver().getJson());
+        return res;
+    }
+
+    public JSONObject getRestJson() {
+        return this.getJson();
+    }
+
+    public void decipher(String keyUser) throws HttpServletException {
+        return;
     }
 }

@@ -196,7 +196,6 @@ public class User {
     protected Option opt;
     protected Map<String, UserEmail> emails;
     protected WebSocketManager webSocketManager;
-    //protected List<Group> groups = new LinkedList<>();
     protected boolean isAdmin;
     protected boolean sawGroupProfile;
     protected Status status;
@@ -640,5 +639,9 @@ public class User {
 
     public void renewJwt(Key secret, DataBaseConnection db) throws HttpServletException {
         this.setJwt(JWToken.renewJWToken(Integer.valueOf(this.getDBid()), this.getKeys().getKeyUser(), this.getEmail(), this.getFirstName(), secret, db));
+    }
+
+    public void decipherDashboard() throws HttpServletException {
+        this.getDashboardManager().decipher(this.getKeys().getKeyUser());
     }
 }

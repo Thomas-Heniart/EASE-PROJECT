@@ -2,10 +2,9 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.*;
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -19,16 +18,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @WebServlet("/api/v1/catalog/AddClassicApp")
 public class ServletAddClassicApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             User user = sm.getUser();
-            if (user == null)
-                user = sm.getUserWithToken();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             String name = sm.getStringParam("name", true, false);
             if (name.length() > 255)
@@ -36,7 +36,7 @@ public class ServletAddClassicApp extends HttpServlet {
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Website website = catalog.getPublicWebsiteWithId(website_id);
-            Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
+            Profile profile = user.getDashboardManager().getProfile(profile_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             String private_key = (String) sm.getContextAttr("privateKey");
             for (Object entry : account_information.entrySet()) {
@@ -44,9 +44,20 @@ public class ServletAddClassicApp extends HttpServlet {
                 account_information.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
             }
             Map<String, String> information = website.getInformationNeeded(account_information);
-            App app = ClassicApp.createClassicApp(profile, profile.getApps().size(), name, website, information, user, sm.getDB());
-            profile.addApp(app);
-            sm.setSuccess(app.getJson());
+            Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
+            Set<AccountInformation> accountInformationSet = new HashSet<>();
+            for (Map.Entry<String, String> entry : information.entrySet())
+                accountInformationSet.add(new AccountInformation(entry.getKey(), RSA.Encrypt(entry.getValue(), public_and_private_key.getKey()), entry.getValue()));
+            Account account = new Account(0, public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), user.getKeys().getKeyUser()), accountInformationSet, public_and_private_key.getValue());
+            accountInformationSet.stream().forEach(accountInformation -> accountInformation.setAccount(account));
+            AppInformation appInformation = new AppInformation(name);
+            ClassicApp classicApp = new ClassicApp(appInformation, website, account);
+            classicApp.setProfile(profile);
+            classicApp.setPosition(profile.getAppMap().size());
+            sm.saveOrUpdate(classicApp);
+            profile.addApp(classicApp);
+            user.getDashboardManager().addApp(classicApp);
+            sm.setSuccess(classicApp.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

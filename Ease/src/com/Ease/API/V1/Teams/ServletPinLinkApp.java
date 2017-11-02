@@ -57,7 +57,7 @@ public class ServletPinLinkApp extends HttpServlet {
                 String name = sm.getStringParam("app_name", true, false);
                 if (name == null || name.equals(""))
                     throw new HttpServletException(HttpStatus.BadRequest, "You cannot leave name empty.");
-                Profile profile = user.getDashboardManager().getProfile(profile_id);
+                Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
                 app = (App) sharedApp;
                 app.setName(name, db);
                 sharedApp.pinToDashboard(profile, db);

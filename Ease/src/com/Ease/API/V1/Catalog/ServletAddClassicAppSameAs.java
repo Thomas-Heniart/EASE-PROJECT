@@ -2,10 +2,10 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.*;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @WebServlet("/api/v1/catalog/AddClassicAppSameAs")
 public class ServletAddClassicAppSameAs extends HttpServlet {
@@ -30,16 +33,27 @@ public class ServletAddClassicAppSameAs extends HttpServlet {
             if (name.equals("") || name.length() >= 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             Integer app_id = sm.getIntParam("same_app_id", true, false);
-            App same_app = user.getDashboardManager().getAppWithId(app_id);
+            App same_app = user.getDashboardManager().getApp(app_id);
             if (!same_app.isClassicApp())
                 throw new HttpServletException(HttpStatus.BadRequest, "Please provide a classic app");
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
+            Set<AccountInformation> accountInformationSet = new HashSet<>();
+            for (AccountInformation accountInformation : ((ClassicApp)same_app).getAccount().getAccountInformationSet())
+                accountInformationSet.add(new AccountInformation(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_and_private_key.getKey()), accountInformation.getDeciphered_information_value()));
+            Account account = new Account(((ClassicApp)same_app).getAccount().getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), user.getKeys().getKeyUser()), accountInformationSet, public_and_private_key.getValue());
+            accountInformationSet.stream().forEach(accountInformation -> accountInformation.setAccount(account));
             Website website = catalog.getWebsiteWithId(website_id);
-            Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
-            App app = ClassicApp.createClassicAppSameAs(profile, profile.getApps().size(), name, website, (ClassicApp) same_app, sm.getDB(), user);
-            profile.addApp(app);
-            sm.setSuccess(app.getJson());
+            Profile profile = user.getDashboardManager().getProfile(profile_id);
+            AppInformation appInformation = new AppInformation(name);
+            ClassicApp classicApp = new ClassicApp(appInformation, website, account);
+            classicApp.setProfile(profile);
+            classicApp.setPosition(profile.getAppMap().size());
+            sm.saveOrUpdate(classicApp);
+            profile.addApp(classicApp);
+            user.getDashboardManager().addApp(classicApp);
+            sm.setSuccess(classicApp.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

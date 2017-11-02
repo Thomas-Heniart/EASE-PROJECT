@@ -153,3 +153,98 @@ SET a.profile_id = p.profile_id, a.position = p.position;
 DROP TABLE profileAndAppMap;
 ALTER TABLE profileInfo
   DROP COLUMN color;
+
+ALTER TABLE classicApps
+  MODIFY account_id INT(10) UNSIGNED;
+
+CREATE TABLE teamCards (
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  team_id INT(10) UNSIGNED NOT NULL,
+  channel_id INT(10) UNSIGNED NOT NULL,
+  creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (team_id) REFERENCES teams(id),
+  FOREIGN KEY (channel_id) REFERENCES channels(id)
+);
+
+CREATE TABLE teamLinkCards (
+  id      INT(10) UNSIGNED NOT NULL,
+  name    VARCHAR(255),
+  url     VARCHAR(2000),
+  img_url VARCHAR(2000),
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamCards (id)
+);
+
+CREATE TABLE teamWebsiteCards (
+  id                         INT(10) UNSIGNED NOT NULL,
+  website_id                 INT(10) UNSIGNED NOT NULL,
+  password_reminder_interval TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamCards (id),
+  FOREIGN KEY (website_id) REFERENCES websites (id)
+);
+
+CREATE TABLE teamSingleCards (
+  id         INT(10) UNSIGNED NOT NULL,
+  account_id INT(10) UNSIGNED,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamWebsiteCards (id),
+  FOREIGN KEY (account_id) REFERENCES accounts (id)
+);
+
+CREATE TABLE teamEnterpriseCards (
+  id INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamWebsiteCards (id)
+);
+
+DELETE FROM profiles
+WHERE column_idx = 0;
+DELETE FROM profileInfo
+WHERE id NOT IN (SELECT profile_info_id
+                 FROM profiles);
+
+ALTER TABLE apps
+  DROP COLUMN type;
+ALTER TABLE websiteApps
+  DROP COLUMN type;
+
+CREATE TABLE teamCardReceivers (
+  id          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  teamCard_id INT(10) UNSIGNED NOT NULL,
+  teamUser_id INT(10) UNSIGNED NOT NULL,
+  app_id      INT(10) UNSIGNED,
+  PRIMARY KEY (id),
+  FOREIGN KEY (teamCard_id) REFERENCES teamCards (id),
+  FOREIGN KEY (teamUser_id) REFERENCES teamUsers (id),
+  FOREIGN KEY (app_id) REFERENCES apps (id)
+);
+
+CREATE TABLE teamLinkCardReceivers (
+  id INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamCardReceivers (id)
+);
+
+CREATE TABLE teamEnterpriseCardReceivers (
+  id INT(10) UNSIGNED NOT NULL,
+
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamCardReceivers (id)
+);
+
+CREATE TABLE teamSingleCardReceivers (
+  id                      INT(10) UNSIGNED NOT NULL,
+  allowed_to_see_password TINYINT(1) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamCardReceivers (id)
+);
+
+ALTER TABLE logWithApps
+  ADD COLUMN logWithWebsite_id INT(10) UNSIGNED NOT NULL;
+UPDATE logWithApps t
+  JOIN websiteApps t1 ON t.logWith_website_app_id = t1.id
+SET t.logWithWebsite_id = t1.website_id;
+ALTER TABLE logWithApps
+  ADD FOREIGN KEY (logWithWebsite_id) REFERENCES websites (id);

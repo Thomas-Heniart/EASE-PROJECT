@@ -151,6 +151,16 @@ public abstract class ServletManager {
         throw new HttpServletException(HttpStatus.Forbidden);
     }
 
+    public void needToBeTeamUserOfTeam(Team team) throws HttpServletException {
+        this.needToBeTeamUser();
+        this.timestamp = this.getCurrentTime();
+        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
+            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam() == team && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+                return;
+        }
+        throw new HttpServletException(HttpStatus.Forbidden);
+    }
+
     public void needToBeAdminOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
         this.timestamp = this.getCurrentTime();

@@ -1,8 +1,13 @@
 package com.Ease.NewDashboard;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "profiles")
@@ -86,5 +91,26 @@ public class Profile {
 
     public void setAppMap(Map<Integer, App> appMap) {
         this.appMap = appMap;
+    }
+
+    public void addApp(App app) {
+        this.getAppMap().put(app.getDb_id(), app);
+    }
+
+    /**
+     * @return a JSONObect representing this profile with a JSONArray of app ids ordered by app position
+     */
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getDb_id());
+        JSONArray app_ids = new JSONArray();
+        this.getAppMap().values().stream().sorted(Comparator.comparingInt(App::getPosition)).forEach(app -> app_ids.add(app.getDb_id()));
+        res.put("app_ids", app_ids);
+        res.put("name", this.getProfileInformation().getName());
+        return res;
+    }
+
+    public Stream<App> getApps() {
+        return this.getAppMap().values().stream().sorted(Comparator.comparingInt(App::getPosition));
     }
 }
