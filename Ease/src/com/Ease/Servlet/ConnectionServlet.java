@@ -88,12 +88,12 @@ public class ConnectionServlet extends HttpServlet {
                             }
                         }
                     }
-                    hibernateQuery.commit();
                     ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
                     ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                     ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
-                    //user.initializeUpdateManager(sm.getServletContext(), sm.getDB());
-                    //user.getDashboardManager().decipherApps(sm);
+                    user.initializeDashboardManager(hibernateQuery);
+                    user.decipherDashboard();
+                    hibernateQuery.commit();
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
                     //sm.addWebsockets(sessionWebsockets);
