@@ -13,7 +13,8 @@ class TeamMenu extends React.Component {
     this.goToPersonalSpace = this.goToPersonalSpace.bind(this);
   }
   hideIt(){
-    this.props.dispatch(showTeamMenu(false));
+    this.props.closeMenu();
+//    this.props.dispatch(showTeamMenu(false));
   }
   goToPersonalSpace(){
     const team = this.props.team;

@@ -25,7 +25,12 @@ import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
 import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 import ClassicAppModal from "../catalog/ClassicAppModal";
 import SsoAppModal from "../catalog/SsoAppModal";
-
+import SimpleAppSettingsModal from "../modals/SimpleAppSettingsModal";
+import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
+import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
+import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
+import LockedTeamAppModal from "../modals/LockedTeamAppModal";
+import LogWithAppSettings from "../modals/LogWithAppSettings";
 
 @connect(store => ({
   addUserModalActive: store.teamModals.addUserModalActive,
@@ -53,7 +58,8 @@ import SsoAppModal from "../catalog/SsoAppModal";
   departureDateEndModal: store.teamModals.departureDateEndModal,
   catalogAddBookmarkModal: store.teamModals.catalogAddBookmarkModal,
   catalogAddAppModal: store.teamModals.catalogAddAppModal,
-  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal
+  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal,
+  modals: store.modals
 }))
 class ModalsContainer extends Component{
   constructor(props){
@@ -114,6 +120,18 @@ class ModalsContainer extends Component{
           <ClassicAppModal/>}
           {this.props.catalogAddSSOAppModal.active &&
           <SsoAppModal/>}
+          {this.props.modals.simpleAppSettings.active &&
+          <SimpleAppSettingsModal/>}
+          {this.props.modals.extensionDownload.active &&
+          <ExtensionDownloadModal/>}
+          {this.props.modals.linkAppSettings.active &&
+          <LinkAppSettingsModal/>}
+          {this.props.modals.passwordLostInformation.active &&
+          <PasswordLostInformationModal/>}
+          {this.props.modals.lockedTeamApp.active &&
+          <LockedTeamAppModal/>}
+          {this.props.modals.logWithAppSettings.active &&
+          <LogWithAppSettings/>}
         </div>
     )
   }

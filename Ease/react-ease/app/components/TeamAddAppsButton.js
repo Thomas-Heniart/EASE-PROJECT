@@ -7,11 +7,11 @@ import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider,
 class TeamAddAppsButton extends React.Component {
   constructor(props){
     super(props);
-    this.selectItem = this.selectItem.bind(this);
   }
-  selectItem(type){
-    this.props.dispatch(showAppAddUIElement(type, true));
-  }
+  selectItem = (type) =>{
+    this.props.setAddAppView(type);
+//    this.props.dispatch(showAppAddUIElement(type, true));
+  };
   render(){
     const targetType = this.props.target.purpose !== undefined ? 1 : 2;
     return (

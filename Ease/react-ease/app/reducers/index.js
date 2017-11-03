@@ -9,9 +9,13 @@ import teamAppsAddUI from "./teamAppsAddUIReducer";
 import common from "./commonReducer";
 import notifications from "./notificationsReducer";
 import * as catalog from "./catalogReducer";
+import * as teams from "./teamsReducer";
+import * as modals from "./modalReducer";
 
 const reducers = Object.assign(
-    catalog
+    catalog,
+    teams,
+    modals
 );
 
 export default combineReducers({

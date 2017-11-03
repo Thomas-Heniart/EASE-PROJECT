@@ -252,7 +252,16 @@ module.exports = {
   },
   teams: {
     fetchTeams: () => {
-      return basic_get('/api/v1/teams/GetTeams');
+      return basic_get('/api/v1/teams/GetTeams', {
+        timestamp: new Date().getTime()
+      });
+    },
+    fetchTeamApp: ({team_id, app_id}) => {
+      return basic_get('/api/v1/teams/GetShareableApp', {
+        team_id: team_id,
+        app_id: app_id,
+        timestamp: new Date().getTime()
+      })
     },
     getInvitationInformation : function({code}){
       return axios.get('/api/v1/teams/GetInvitationInformation', {

@@ -188,52 +188,6 @@ class AddBookmarkForm extends Component {
   }
 }
 
-class CredentialLoginInput extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      options: [
-        { key: 'English', text: 'English', value: 'English' },
-        { key: 'French', text: 'French', value: 'French' },
-        { key: 'Spanish', text: 'Spanish', value: 'Spanish' },
-        { key: 'German', text: 'German', value: 'German' },
-        { key: 'Chinese', text: 'Chinese', value: 'Chinese' },
-      ]
-    }
-  }
-  handleAddition = (e, { value }) => {
-    this.setState({
-      options: [{ key: value, text: value, value }, ...this.state.options],
-    })
-  };
-  render(){
-    const {item, onChange} = this.props;
-    return (
-        <Form.Field>
-          <label style={{ fontSize: '16px', fontWeight: '300', color: '#424242' }}>{item.placeholder}</label>
-          <Dropdown size="large"
-                    options={this.state.options}
-                    autoFocus={item.autoFocus}
-                    class="modalInput team-app-input"
-                    required
-                    search
-                    allowAdditions
-                    selection
-                    floating
-                    name={item.name}
-                    onAddItem={this.handleAddition}
-                    onChange={onChange}
-                    label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-                    labelPosition="left"
-                    placeholder={item.placeholder}
-                    value={item.value}
-                    scrolling
-                    type={item.type}/>
-        </Form.Field>
-    )
-  }
-}
-
 class AddClassicAppForm extends Component {
   constructor(props){
     super(props);
@@ -377,7 +331,7 @@ class AddLogWithAppForm extends Component {
       )
     });
     return (
-        <Form as="div" class="container" id="add_logwith_form" error={this.state.errorMessage.length > 0}>
+        <Form as="div" class="container" error={this.state.errorMessage.length > 0}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
             <div class="squared_image_handler">
               <img src={website.logo} alt="Website logo"/>
@@ -388,7 +342,7 @@ class AddLogWithAppForm extends Component {
             <p className='backPointer' onClick={goBack}><Icon name='arrow left'/>Back</p>
           </Form.Field>
           <Form.Field>
-            <Segment.Group className={logWithName}>
+            <Segment.Group class={`logwith_app_selectors ${logWithName}`}>
               <Segment className='first'>
                 <Icon name={logWithName}/>
                 Select your {logWithWebsite.name} account

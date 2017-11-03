@@ -21,7 +21,7 @@ function TeamHeader(props){
       <header id="client_header">
         <div className="channel_header">
           <div className="tab_header">
-            <TeamAddAppsButton target={props.item}/>
+            <TeamAddAppsButton target={props.item} setAddAppView={props.setAddAppView}/>
             <div className="channel_title">
               <div id="channel_name_container" className="channel_name_container">
                             <span id="channel_name" className="channel_name">
@@ -33,12 +33,12 @@ function TeamHeader(props){
               <div className="channel_header_info">
                 <div className="channel_header_info_item" id="apps_number">
                   <i className="icon_left fa fa-square"/>
-                  <span className="value">{props.appsLength}</span>
+                  <span className="value">{props.item.app_ids.length}</span>
                 </div>
-                {props.item.userIds &&
+                {props.item.user_ids &&
                 <div className="channel_header_info_item" id="users_number">
                   <i className="icon_left fa fa-user-o"/>
-                  <span className="value">{props.item.userIds.length}</span>
+                  <span className="value">{props.item.user_ids.length}</span>
                 </div>}
                 {props.item.purpose !== undefined && props.item.purpose.length > 0 &&
                 <div className="channel_header_info_item" id="channel_purpose">

@@ -1,5 +1,6 @@
 var React = require('react');
 import {connect} from "react-redux";
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {showTeamMenu} from "../actions/teamActions";
 import * as channelActions from "../actions/channelActions";
 import * as userActions from "../actions/userActions";
@@ -10,6 +11,8 @@ import ReactTooltip from 'react-tooltip';
 import {findDOMNode} from 'react-dom';
 
 function ChannelList(props){
+  const {team, me} = props;
+  const rooms = team.rooms;
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_channels">
         {isAdmin(props.me.role) &&
@@ -25,22 +28,19 @@ function ChannelList(props){
           <span class="inline-tooltipped" data-tip="Browse all Rooms" data-place="right">
             Rooms&nbsp;
           </span>
-          <span className="inline-tooltipped header-count" data-tip="Browse all Rooms"  data-place="right" ref={(ref) => {window.refs.rooms = ref}}> ({props.items.length})</span>
+          <span className="inline-tooltipped header-count" data-tip="Browse all Rooms"  data-place="right" ref={(ref) => {window.refs.rooms = ref}}> ({Object.keys(rooms).length})</span>
         </NavLink>
         <div className="section-list">
           {
-            props.items.map(function(channel){
-              if (channel.userIds.indexOf(props.me.id) !== -1)
-                return (
-                  <NavLink to={`/teams/${props.team_id}/${channel.id}`} className="section-list-item channel" key={channel.id}>
+            me.room_ids.map(room_id => {
+              const room = rooms[room_id];
+              return (
+                  <NavLink to={`/teams/${team.id}/${room.id}`} className="section-list-item channel" key={room.id}>
                     <div className="primary_action channel_name">
                       <i className="fa fa-hashtag prefix"/>
-                      <span className="overflow-ellipsis full_flex">{channel.name}</span>
-                      <span class="inline-notification" style={{display:'none'}}>3</span>
+                      <span className="overflow-ellipsis full_flex">{room.name}</span>
                     </div>
-                  </NavLink>);
-              else
-                return null
+                  </NavLink>)
             }, this)
           }
         </div>
@@ -49,9 +49,13 @@ function ChannelList(props){
 }
 
 function UserList(props){
+  const {team, me} = props;
+  const user_list = Object.keys(team.team_users).map(user_id => {
+    return team.team_users[user_id];
+  });
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_channels">
-        {isAdmin(props.me.role) &&
+        {isAdmin(me.role) &&
         <button className="heading-button button-unstyle"
                 data-tip="Invite new user"
                 data-place="top"
@@ -63,13 +67,13 @@ function UserList(props){
           <span class="inline-tooltipped" data-tip="Open a Desk" data-place="right">
             Users
           </span>
-          <span className="header-count"> ({props.items.length})</span>
+          <span className="header-count"> ({user_list.length})</span>
         </NavLink>
         <div className="section-list">
           {
-            props.items.map(function(user){
+            user_list.map(function(user){
               return (
-                  <NavLink to={`/teams/${props.team_id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                  <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
                     <div className="primary_action channel_name">
                       <i className="fa fa-user prefix"/>
                       <span className="overflow-ellipsis">{user.username}</span>
@@ -100,12 +104,14 @@ class TeamSideBar extends React.Component{
     ReactTooltip.rebuild();
   }
   render() {
-    const me = this.props.me;
+    const team = this.props.team;
+    const me = team.team_users[team.my_team_user_id];
+
     return (
-        <div className="client_channels_container">
-          <div id="team_menu" onClick={e => {this.props.dispatch(showTeamMenu(true))}}>
+        <div class="client_channels_container">
+          <div id="team_menu" onClick={this.props.openMenu}>
             <div className="team_name_container">
-              {this.props.team_name}
+              {team.name}
             </div>
             <div className="team_client_user">
               <i className="fa fa-square icon_left"/>
@@ -116,17 +122,13 @@ class TeamSideBar extends React.Component{
             <div id="col_channels_scroller">
               <ChannelList
                   me={me}
-                  selectedItem={this.props.selectedItem}
+                  team={team}
                   match={this.props.match}
-                  team_id={this.props.team_id}
-                  items={this.props.channels}
                   dispatch={this.props.dispatch}/>
               <UserList
                   me={me}
-                  team_id={this.props.team_id}
+                  team={team}
                   match={this.props.match}
-                  selectedItem={this.props.selectedItem}
-                  items={this.props.users}
                   dispatch={this.props.dispatch}/>
             </div>
           </div>

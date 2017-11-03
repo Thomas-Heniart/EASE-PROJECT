@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {fetchNotifications} from "../../actions/notificationsActions";
 import {fetchMyInformation} from "../../actions/commonActions";
+import {fetchTeams} from "../../actions/teamActions";
 import api from "../../utils/api";
 import ReactTooltip from 'react-tooltip';
 import WebsocketClient from './WebsocketClient';
@@ -38,13 +39,19 @@ class Base extends React.Component {
     this.checkConnection();
     if (!this.props.common.authenticated){
       this.props.dispatch(fetchMyInformation()).then(response => {
-        this.setState({fetching: false});
-        if (this.props.common.authenticated)
+        if (this.props.common.authenticated){
           this.props.dispatch(fetchNotifications(0));
+          this.props.dispatch(fetchTeams()).then(response => {
+            this.setState({fetching: false});
+          });
+        }else
+          this.setState({fetching: false});
       });
     }else {
-      this.setState({fetching: false});
       this.props.dispatch(fetchNotifications(0));
+      this.props.dispatch(fetchTeams()).then(response => {
+        this.setState({fetching: false});
+      });
     }
   }
   render(){
