@@ -1,5 +1,6 @@
 package com.Ease.Team.TeamCardReceiver;
 
+import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -33,8 +34,11 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
     @Override
     public JSONObject getCardJson() {
         JSONObject res = super.getCardJson();
-        res.put("account_information", ((ClassicApp)this.getApp()).getAccount().getJsonWithoutPassword());
-        res.put("last_update", ((ClassicApp)this.getApp()).getAccount().getLast_update().getTime());
+        Account account = ((ClassicApp)this.getApp()).getAccount();
+        if (account == null)
+            return res;
+        res.put("account_information", account.getJsonWithoutPassword());
+        res.put("last_update", account.getLast_update().getTime());
         return res;
     }
 }

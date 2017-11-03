@@ -102,7 +102,7 @@ abstract public class TeamCard {
         res.put("type", this.getType());
         res.put("creation_date", this.getCreation_date().getTime());
         JSONArray receivers = new JSONArray();
-        this.getTeamCardReceiverMap().values().stream().sorted(Comparator.comparingInt(TeamCardReceiver::getDb_id)).forEach(c -> receivers.add(c.getJson()));
+        this.getTeamCardReceiverMap().values().stream().sorted(Comparator.comparingInt(TeamCardReceiver::getDb_id)).forEach(c -> receivers.add(c.getCardJson()));
         res.put("receivers", receivers);
         return res;
     }

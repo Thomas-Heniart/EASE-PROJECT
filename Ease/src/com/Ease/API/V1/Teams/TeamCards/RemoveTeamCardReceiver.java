@@ -28,7 +28,7 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             TeamCard teamCard = team.getTeamCard(teamCard_id);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamCard_receiver_id);
             teamCard.removeTeamCardReceiver(teamCardReceiver);
-            sm.deleteObject(teamCardReceiver);
+            sm.saveOrUpdate(teamCard);
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {
             sm.setError(e);

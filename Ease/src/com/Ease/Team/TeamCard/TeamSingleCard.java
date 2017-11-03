@@ -45,6 +45,8 @@ public class TeamSingleCard extends TeamWebsiteCard {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
+        if (this.getAccount() == null)
+            return res;
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
         res.put("last_update", this.getAccount().getLast_update().getTime());
         return res;

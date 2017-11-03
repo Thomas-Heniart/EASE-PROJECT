@@ -86,6 +86,7 @@ abstract public class TeamCardReceiver {
         res.put("teamCard_id", this.getTeamCard().getDb_id());
         res.put("team_id", this.getTeamCard().getTeam().getDb_id());
         res.put("teamCardReceiver_id", this.getDb_id());
+        res.put("name", this.getApp().getAppInformation().getName());
         return res;
     }
 

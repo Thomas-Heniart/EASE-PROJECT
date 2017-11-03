@@ -55,7 +55,9 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public JSONObject getJson() {
-        JSONObject res =  super.getJson();
+        JSONObject res = super.getJson();
+        if (this.getAccount() == null)
+            return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
         return res;
@@ -64,6 +66,9 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getRestJson() {
         JSONObject res = super.getRestJson();
+        if (this.getAccount() == null)
+            return res;
+        res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJson());
         return res;
     }
