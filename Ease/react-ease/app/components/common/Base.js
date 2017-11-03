@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {fetchNotifications} from "../../actions/notificationsActions";
 import {fetchMyInformation} from "../../actions/commonActions";
+import {fetchDashboard} from "../../actions/dashboardActions";
 import {fetchTeams} from "../../actions/teamActions";
 import api from "../../utils/api";
 import ReactTooltip from 'react-tooltip';
@@ -41,7 +42,10 @@ class Base extends React.Component {
       this.props.dispatch(fetchMyInformation()).then(response => {
         if (this.props.common.authenticated){
           this.props.dispatch(fetchNotifications(0));
-          this.props.dispatch(fetchTeams()).then(response => {
+          Promise.all([
+            this.props.dispatch(fetchTeams()),
+            this.props.dispatch(fetchDashboard())
+          ]).then(response => {
             this.setState({fetching: false});
           });
         }else
@@ -49,7 +53,10 @@ class Base extends React.Component {
       });
     }else {
       this.props.dispatch(fetchNotifications(0));
-      this.props.dispatch(fetchTeams()).then(response => {
+      Promise.all([
+        this.props.dispatch(fetchTeams()),
+        this.props.dispatch(fetchDashboard())
+      ]).then(response => {
         this.setState({fetching: false});
       });
     }

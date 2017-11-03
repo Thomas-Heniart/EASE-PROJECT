@@ -220,6 +220,12 @@ module.exports = {
       return axios.get('/api/v1/dashboard/GetProfiles').then(response => {
         return response.data;
       });
+    },
+    fetchProfileList: function () {
+      return basic_get('/api/v1/dashboard/GetProfileList');
+    },
+    fetchApps: function() {
+      return basic_get('/api/v1/dashboard/GetApps');
     }
   },
   teamApps: {
