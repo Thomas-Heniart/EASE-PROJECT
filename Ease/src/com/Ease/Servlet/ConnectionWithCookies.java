@@ -2,6 +2,7 @@ package com.Ease.Servlet;
 
 import com.Ease.Dashboard.User.SessionSave;
 import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.ServletManager;
 
@@ -51,7 +52,11 @@ public class ConnectionWithCookies extends HttpServlet {
                 ((Map<String, User>) sm.getContextAttr("users")).put(user.getEmail(), user);
                 ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                 ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
-                //user.getDashboardManager().decipherApps(sm);
+                HibernateQuery hibernateQuery = new HibernateQuery();
+                user.initializeDashboardManager(hibernateQuery);
+                user.decipherDashboard();
+                hibernateQuery.commit();
+                user.getDashboardManager().decipher(user.getKeys().getKeyUser());
                 success = true;
                 sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
             }

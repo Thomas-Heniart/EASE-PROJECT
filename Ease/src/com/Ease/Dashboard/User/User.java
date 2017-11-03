@@ -137,16 +137,8 @@ public class User {
         User newUser = new User(db_id, firstName, email, keys, options, isAdmin, false,
                 sessionSave, status);
         newUser.loadTeamUsers(context, db);
-        //newUser.initializeDashboardManager(context, db);
         newUser.initializeNotificationManager();
         newUser.loadEmails(db);
-        /* for (App app : newUser.getDashboardManager().getApps()) {
-            if (app.getType().equals("LogwithApp")) {
-                LogwithApp logwithApp = (LogwithApp) app;
-                App websiteApp = newUser.getDashboardManager().getWebsiteAppWithId(logwithApp.getLogwithDBid());
-                logwithApp.rempLogwith((WebsiteApp) websiteApp);
-            }
-        } */
         return newUser;
     }
 
