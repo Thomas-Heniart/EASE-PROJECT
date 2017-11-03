@@ -118,4 +118,16 @@ abstract public class TeamCard {
     public boolean containsTeamUser(TeamUser teamUser_receiver) {
         return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver -> teamCardReceiver.getTeamUser() ==  teamUser_receiver).findFirst().orElse(null) != null;
     }
+
+    public boolean isTeamSingleCard() {
+        return false;
+    }
+
+    public boolean isTeamLinkCard() {
+        return false;
+    }
+
+    public boolean isTeamEnterpriseCard() {
+        return false;
+    }
 }

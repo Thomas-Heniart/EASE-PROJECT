@@ -27,7 +27,7 @@ public class ServletGetTeams extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeTeamUser();
+            sm.needToBeConnected();
             List<TeamUser> teamUserList = sm.getTeamUsers();
             JSONArray res = new JSONArray();
             for (TeamUser teamUser : teamUserList) {

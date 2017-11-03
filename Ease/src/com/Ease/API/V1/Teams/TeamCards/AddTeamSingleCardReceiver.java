@@ -32,10 +32,13 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
             TeamCard teamCard = team.getTeamCard(teamCard_id);
+            if (!teamCard.isTeamSingleCard())
+                throw new HttpServletException(HttpStatus.Forbidden, "This is not a team single card");
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
             TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver();
+            //Account account = AccountFactory.getInstance().createAccountFromAccount(teamCard.ge)
 
         } catch (Exception e) {
             sm.setError(e);
