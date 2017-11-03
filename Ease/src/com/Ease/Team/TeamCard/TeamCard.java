@@ -3,6 +3,7 @@ package com.Ease.Team.TeamCard;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -112,5 +113,9 @@ abstract public class TeamCard {
 
     public void removeteamCardReceiver(TeamCardReceiver teamCardReceiver) {
         this.getTeamCardReceiverMap().remove(teamCardReceiver.getDb_id());
+    }
+
+    public boolean containsTeamUser(TeamUser teamUser_receiver) {
+        return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver -> teamCardReceiver.getTeamUser() ==  teamUser_receiver).findFirst().orElse(null) != null;
     }
 }

@@ -43,13 +43,13 @@ public class CreateTeamSingleCard extends HttpServlet {
             JSONObject account_information_obj = sm.getJsonParam("account_information", false, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
-            Integer reminder_interval = sm.getIntParam("reminder_interval", true, false);
+            Integer reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval cannot be under 0");
             Map<String, String> account_information = website.getInformationNeeded(account_information_obj);
             String team_key = teamUser_connected.getDeciphered_teamKey();
             Account account = AccountFactory.getInstance().createAccountFromMap(account_information, team_key, reminder_interval);
-            TeamCard teamCard = new TeamSingleCard(team, channel, website, account);
+            TeamCard teamCard = new TeamSingleCard(team, channel, website, reminder_interval, account);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.entrySet()) {

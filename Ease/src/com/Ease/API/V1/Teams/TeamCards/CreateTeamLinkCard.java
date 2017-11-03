@@ -1,9 +1,9 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
+import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/teams/AddTeamSingleCardReceiver")
-public class AddTeamSingleCardReceiver extends HttpServlet {
+@WebServlet("/api/v1/teams/CreateTeamLinkCard")
+public class CreateTeamLinkCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -27,16 +27,25 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeTeamUserOfTeam(team);
-            Integer teamUser_id = sm.getIntParam("teamUser_id", true, false);
-            Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
+            Integer channel_id = sm.getIntParam("channel_id", true, false);
+            Channel channel = team.getChannelWithId(channel_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
-            TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
-            if (teamCard.containsTeamUser(teamUser_receiver))
-                throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
-            TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver();
-
+            if (!channel.getTeamUsers().contains(teamUser_connected))
+                throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
+            String url = sm.getStringParam("url", true, false);
+            if (url.length() >= 2000 || url.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter url");
+            String img_url = sm.getStringParam("img_url", true, false);
+            if (img_url.length() >= 2000 || img_url.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter img_url");
+            String name = sm.getStringParam("name", true, false);
+            if (name.length() >= 255 || name.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
+            TeamCard teamCard = new TeamLinkCard(team, channel, name, url, img_url);
+            sm.saveOrUpdate(teamCard);
+            channel.addTeamCard(teamCard);
+            team.addTeamCard(teamCard);
+            sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

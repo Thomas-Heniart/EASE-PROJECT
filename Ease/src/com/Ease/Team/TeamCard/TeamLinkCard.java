@@ -1,5 +1,8 @@
 package com.Ease.Team.TeamCard;
 
+import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,7 +23,8 @@ public class TeamLinkCard extends TeamCard {
 
     }
 
-    public TeamLinkCard(String name, String url, String img_url) {
+    public TeamLinkCard(Team team, Channel channel, String name, String url, String img_url) {
+        super(team, channel);
         this.name = name;
         this.url = url;
         this.img_url = img_url;
