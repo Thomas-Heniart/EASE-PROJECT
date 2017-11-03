@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
-import com.Ease.NewDashboard.Account;
-import com.Ease.NewDashboard.AccountFactory;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
@@ -29,7 +28,7 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
-            sm.needToBeTeamUserOfTeam(team);
+            sm.needToBeAdminOfTeam(team);
             Integer teamUser_id = sm.getIntParam("teamUser_id", true, false);
             Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
@@ -41,8 +40,13 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
-            TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver();
             Account account = AccountFactory.getInstance().createAccountFromAccount(teamSingleCard.getAccount(), teamUser_connected.getDeciphered_teamKey());
+            AppInformation appInformation = new AppInformation(teamSingleCard.getName());
+            App app = new ClassicApp(appInformation, teamSingleCard.getWebsite(), account);
+            TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser_receiver, allowed_to_see_password);
+            sm.saveOrUpdate(teamCardReceiver);
+            teamCard.addTeamCardReceiver(teamCardReceiver);
+            sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);
         }

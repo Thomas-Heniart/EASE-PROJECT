@@ -53,4 +53,9 @@ public class TeamSingleCard extends TeamWebsiteCard {
     public String getType() {
         return "teamSingleCard";
     }
+
+    @Override
+    public boolean isTeamSingleCard() {
+        return true;
+    }
 }

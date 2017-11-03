@@ -52,7 +52,7 @@ public class ServletConnection extends HttpServlet {
                         throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
                     user = User.loadUser(email, password, sm.getServletContext(), db);
                     sm.setUser(user);
-                    HibernateQuery hibernateQuery = new HibernateQuery();
+                    HibernateQuery hibernateQuery = sm.getHibernateQuery();
                     for (TeamUser teamUser : user.getTeamUsers()) {
                         if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
                             teamUser.finalizeRegistration();
@@ -69,12 +69,12 @@ public class ServletConnection extends HttpServlet {
                             }
                         }
                     }
-                    hibernateQuery.commit();
                     ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
                     ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                     ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                     sm.setUser(user);
-                    //user.getDashboardManager().decipherApps(sm);
+                    user.initializeDashboardManager(hibernateQuery);
+                    user.getDashboardManager().decipher(user.getKeys().getKeyUser());
                     removeIpFromDataBase(client_ip, db);
                     JSONObject res = new JSONObject();
                     res.put("user", user.getJson());
