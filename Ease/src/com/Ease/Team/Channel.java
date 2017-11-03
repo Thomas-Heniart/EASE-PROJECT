@@ -221,4 +221,8 @@ public class Channel {
     public void addTeamCard(TeamCard teamCard) {
         this.getTeamCardMap().put(teamCard.getDb_id(), teamCard);
     }
+
+    public void removeTeamCard(TeamCard teamCard) {
+        this.getTeamCardMap().remove(teamCard);
+    }
 }
