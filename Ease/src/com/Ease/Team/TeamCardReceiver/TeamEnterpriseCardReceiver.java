@@ -1,6 +1,9 @@
 package com.Ease.Team.TeamCardReceiver;
 
+import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamUser;
 import org.json.simple.JSONObject;
 
 import javax.persistence.Entity;
@@ -16,6 +19,10 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
 
     public TeamEnterpriseCardReceiver() {
 
+    }
+
+    public TeamEnterpriseCardReceiver(App app, TeamCard teamCard, TeamUser teamUser) {
+        super(app, teamCard, teamUser);
     }
 
     @Override

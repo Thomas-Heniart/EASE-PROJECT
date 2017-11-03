@@ -1,5 +1,6 @@
 package com.Ease.NewDashboard;
 
+import com.Ease.Hibernate.HibernateQuery;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -112,5 +113,14 @@ public class Profile {
 
     public Stream<App> getApps() {
         return this.getAppMap().values().stream().sorted(Comparator.comparingInt(App::getPosition));
+    }
+
+    public void removeAppAndUpdatePositions(App app, HibernateQuery hibernateQuery) {
+        int position = app.getPosition();
+        this.getAppMap().values().stream().filter(app1 -> app1.getPosition() > position).forEach(app1 -> {
+            app1.setPosition(app1.getPosition() - 1);
+            hibernateQuery.saveOrUpdateObject(app1);
+        });
+        this.getAppMap().remove(app.getDb_id());
     }
 }

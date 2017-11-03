@@ -64,4 +64,9 @@ public class TeamLinkCard extends TeamCard {
     public String getType() {
         return "teamLinkCard";
     }
+
+    @Override
+    public boolean isTeamLinkCard() {
+        return true;
+    }
 }

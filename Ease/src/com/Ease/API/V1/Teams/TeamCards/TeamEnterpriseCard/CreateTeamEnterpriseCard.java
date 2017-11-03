@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Teams.TeamCards;
+package com.Ease.API.V1.Teams.TeamCards.TeamEnterpriseCard;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
@@ -6,9 +6,9 @@ import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
+import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/api/v1/teams/CreateTeamSingleCard")
-public class CreateTeamSingleCard extends HttpServlet {
+@WebServlet("/api/v1/teams/CreateTeamEnterpriseCard")
+public class CreateTeamEnterpriseCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -40,34 +40,32 @@ public class CreateTeamSingleCard extends HttpServlet {
             if (!channel.getTeamUsers().contains(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             Integer website_id = sm.getIntParam("website_id", true, false);
-            JSONObject account_information_obj = sm.getJsonParam("account_information", false, false);
+            Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
+            if (password_reminder_interval < 0)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
-            Integer reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval cannot be under 0");
-            Map<String, String> account_information = website.getInformationNeeded(account_information_obj);
-            String team_key = teamUser_connected.getDeciphered_teamKey();
-            Account account = AccountFactory.getInstance().createAccountFromMap(account_information, team_key, reminder_interval);
-            TeamCard teamCard = new TeamSingleCard(team, channel, website, reminder_interval, account);
+            TeamCard teamCard = new TeamEnterpriseCard(team, channel, website, password_reminder_interval);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.entrySet()) {
                 Map.Entry<String, JSONObject> entry = (Map.Entry<String, JSONObject>) object;
                 Integer teamUser_id = Integer.valueOf(entry.getKey());
-                Boolean allowed_to_see_password = (Boolean) entry.getValue().get("allowed_to_see_password");
+                JSONObject account_information = (JSONObject) entry.getValue().get("account_information");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
-                Account account1 = AccountFactory.getInstance().createAccountFromMap(account_information, team_key, reminder_interval);
+                Account account = null;
+                if (account_information != null && !account_information.isEmpty())
+                    account = AccountFactory.getInstance().createAccountFromMap(account_information, teamUser_connected.getDeciphered_teamKey(), password_reminder_interval);
                 AppInformation appInformation = new AppInformation(website.getName());
-                App app = new ClassicApp(appInformation, website, account1);
-                TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser, allowed_to_see_password);
+                App app = new ClassicApp(appInformation, website, account);
+                TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser);
                 sm.saveOrUpdate(teamCardReceiver);
                 teamCard.addTeamCardReceiver(teamCardReceiver);
             }
-            channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);
+            channel.addTeamCard(teamCard);
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

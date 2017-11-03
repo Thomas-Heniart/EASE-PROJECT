@@ -143,4 +143,8 @@ abstract public class TeamCard {
             throw new HttpServletException(HttpStatus.BadRequest, "No team card receiver with this id");
         return teamCardReceiver;
     }
+
+    public TeamCardReceiver getTeamCardReceiver(TeamUser teamUser) {
+        return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> teamCardReceiver1.getTeamUser() == teamUser).findFirst().orElse(null);
+    }
 }
