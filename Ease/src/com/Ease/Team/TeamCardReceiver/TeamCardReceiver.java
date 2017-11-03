@@ -16,7 +16,7 @@ abstract public class TeamCardReceiver {
     @Column(name = "id")
     protected Integer db_id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "app_id")
     private App app;
 

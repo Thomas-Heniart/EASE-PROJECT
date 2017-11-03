@@ -592,7 +592,8 @@ public class User {
             teamUser.setDashboard_user(this);
             if (teamUser.isVerified() && !teamUser.isDisabled()) {
                 teamUser.decipher_teamKey();
-                team.decipherApps(teamUser.getDeciphered_teamKey());
+                team.decipherTeamCards(teamUser.getDeciphered_teamKey());
+                //team.decipherApps(teamUser.getDeciphered_teamKey());
             }
         }
     }

@@ -4,6 +4,7 @@ import com.Ease.Catalog.Website;
 import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
@@ -57,5 +58,14 @@ public class TeamSingleCard extends TeamWebsiteCard {
     @Override
     public boolean isTeamSingleCard() {
         return true;
+    }
+
+    public void decipher(String symmetric_key) throws HttpServletException {
+        if (this.getAccount() == null || this.getAccount().getDeciphered_private_key() != null)
+            return;
+        this.getAccount().decipher(symmetric_key);
+        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
+            teamCardReceiver.getApp().decipher(symmetric_key);
+        }
     }
 }

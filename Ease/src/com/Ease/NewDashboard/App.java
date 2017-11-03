@@ -26,7 +26,7 @@ abstract public class App {
     @Column(name = "position")
     private Integer position;
 
-    @OneToOne(mappedBy = "app")
+    @OneToOne(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
     private TeamCardReceiver teamCardReceiver;
 
     public App() {
@@ -109,7 +109,7 @@ abstract public class App {
         return this.getJson();
     }
 
-    public void decipher(String keyUser) throws HttpServletException {
+    public void decipher(String symmetric_key) throws HttpServletException {
         return;
     }
 }

@@ -36,7 +36,7 @@ abstract public class TeamCard {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creation_date;
 
-    @OneToMany(mappedBy = "teamCard", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teamCard", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
     private Map<Integer, TeamCardReceiver> teamCardReceiverMap = new ConcurrentHashMap<>();
 

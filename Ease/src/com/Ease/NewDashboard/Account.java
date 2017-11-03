@@ -36,8 +36,7 @@ public class Account {
     @Column(name = "mustBeReciphered")
     private boolean must_be_reciphered = false;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "account_id")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<AccountInformation> accountInformationSet = ConcurrentHashMap.newKeySet();
 
     @Transient

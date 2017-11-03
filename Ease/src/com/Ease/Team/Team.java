@@ -9,6 +9,7 @@ import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
@@ -638,6 +639,15 @@ public class Team {
             }
         } catch (HttpServletException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void decipherTeamCards(String deciphered_teamKey) throws HttpServletException {
+        for (TeamCard teamCard : this.getTeamCardMap().values()) {
+            if (!teamCard.isTeamSingleCard())
+                continue;
+            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+            teamSingleCard.decipher(deciphered_teamKey);
         }
     }
 }

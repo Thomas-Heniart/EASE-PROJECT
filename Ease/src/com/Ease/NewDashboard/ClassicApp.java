@@ -11,7 +11,7 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "id")
 public class ClassicApp extends WebsiteApp {
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -38,6 +38,8 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public void decipher(String symmetric_key) throws HttpServletException {
+        if (this.getAccount() == null)
+            return;
         this.getAccount().decipher(symmetric_key);
     }
 

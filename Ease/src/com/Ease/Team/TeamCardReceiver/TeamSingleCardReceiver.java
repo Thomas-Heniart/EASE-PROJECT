@@ -51,6 +51,13 @@ public class TeamSingleCardReceiver extends TeamCardReceiver {
     }
 
     @Override
+    public JSONObject getCardJson() {
+        JSONObject res = super.getCardJson();
+        res.put("allowed_to_see_password", this.isAllowed_to_see_password());
+        return res;
+    }
+
+    @Override
     public String getType() {
         return "teamSingleApp";
     }
