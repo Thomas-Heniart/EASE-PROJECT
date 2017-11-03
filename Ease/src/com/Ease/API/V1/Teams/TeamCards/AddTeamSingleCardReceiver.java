@@ -1,7 +1,10 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.NewDashboard.Account;
+import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamManager;
@@ -34,12 +37,12 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             TeamCard teamCard = team.getTeamCard(teamCard_id);
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "This is not a team single card");
+            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
             TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver();
-            //Account account = AccountFactory.getInstance().createAccountFromAccount(teamCard.ge)
-
+            Account account = AccountFactory.getInstance().createAccountFromAccount(teamSingleCard.getAccount(), teamUser_connected.getDeciphered_teamKey());
         } catch (Exception e) {
             sm.setError(e);
         }

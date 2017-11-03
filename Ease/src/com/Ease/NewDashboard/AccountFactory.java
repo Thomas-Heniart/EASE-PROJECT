@@ -33,4 +33,19 @@ public class AccountFactory {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
+
+    public Account createAccountFromAccount(Account account, String symmetric_key) throws HttpServletException {
+        try {
+            Set<AccountInformation> accountToCopyInformationSet = account.getAccountInformationSet();
+            Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
+            Set<AccountInformation> accountInformationSet = new HashSet<>();
+            for (AccountInformation accountInformation : accountToCopyInformationSet)
+                accountInformationSet.add(new AccountInformation(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_and_private_key.getKey()), accountInformation.getDeciphered_information_value()));
+            Account new_account = new Account(account.getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), symmetric_key), accountInformationSet, public_and_private_key.getValue());
+            accountInformationSet.stream().forEach(accountInformation -> accountInformation.setAccount(new_account));
+            return new_account;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
 }
