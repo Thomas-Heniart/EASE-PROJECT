@@ -10,8 +10,20 @@ class Preferences extends React.Component {
             loading: false
         }
     }
-
+    componentDidMount() {
+        const self = this;
+        this.setState({ loading: true });
+        document.addEventListener("GetSettingsDone", (e) => {
+            self.setState({ homepage: e.detail });
+            self.setState({ loading: false })
+        });
+        document.dispatchEvent(new CustomEvent("GetSettings", {bubbles: true}))
+    }
+    componentWillUnmount() {
+        document.removeListener("GetSettingsDone");
+    }
     toggleHomepage = () => {
+        document.dispatchEvent(new CustomEvent("SetHompage", {detail: !this.state.homepage, bubbles: true}))
         if (this.state.homepage === true)
             this.setState({ homepage: false });
         else
@@ -29,7 +41,7 @@ class Preferences extends React.Component {
             <Segment>
                 <Header as='h5'>Choose your preferences</Header>
                 <div>
-                    <Checkbox toggle onChange={this.toggleHomepage} disabled={this.state.loading} />
+                    <Checkbox toggle checked={this.state.homepage} onChange={this.toggleHomepage} disabled={this.state.loading} />
                     <span>Ease.space as Homepage</span>
                 </div>
                 <p>This option allows you to have the Ease.space page when you’ll open a new tab in your browser.</p>
