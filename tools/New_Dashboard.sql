@@ -344,3 +344,6 @@ ALTER TABLE websiteApps
   DROP COLUMN reminderIntervalType;
 ALTER TABLE websiteApps
   DROP COLUMN reminderIntervalValue;
+
+ALTER TABLE status ADD COLUMN edit_email_code VARCHAR(6);
+ALTER TABLE status ADD COLUMN email_requested VARCHAR(100);

@@ -67,7 +67,7 @@ public class DashboardManager {
         List<List<Profile>> profiles = new LinkedList<>();
         for (int i = 0; i < MAX_PROFILE; i++)
             profiles.add(new LinkedList<>());
-        this.getProfileMap().values().stream().forEach(profile -> profiles.get(profile.getColumn_index() - 1).add(profile));
+        this.getProfileMap().values().stream().forEach(profile -> profiles.get(profile.getColumn_index()).add(profile));
         profiles.forEach(profiles1 -> {
             JSONArray tmp = new JSONArray();
             profiles1.stream().sorted(Comparator.comparingInt(Profile::getPosition_index)).forEach(profile -> tmp.add(profile.getJson()));
