@@ -23,6 +23,7 @@ public class ServletEditUsername extends HttpServlet {
             if (!Regex.isValidUsername(username))
                 throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid username.");
             sm.getUser().setFirstName(username, sm.getDB());
+            sm.setSuccess("Username edited");
         } catch (Exception e) {
             sm.setError(e);
         }

@@ -636,6 +636,7 @@ public class User {
         }
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
+        res.put("background_picture", this.getOptions().isBackground_picked());
         return res;
     }
 
