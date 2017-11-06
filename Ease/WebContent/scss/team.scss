@@ -8,6 +8,94 @@ button.only-text-button {
   }
 }
 
+#personal_settings {
+  height: 100%;
+  .grid {
+    height: 0;
+    padding: 50px;
+    .menu {
+      a {
+        h4 {
+          font-weight: bold;
+          font-size: 18px;
+          div {
+            font-size: 13px;
+          }
+        }
+        &.active {
+          h4 {
+            color: #2987cd;
+          }
+          &:hover {
+            h4 {
+              color: #2987cd;
+            }
+          }
+        }
+      }
+      .disabled {
+        h4 {
+          font-weight: bold;
+          font-size: 18px;
+          color: darkgray;
+          img {
+            width: 50px;
+            float: right;
+            margin-top: 5px;
+          }
+          div {
+            font-size: 13px;
+            color: darkgray;
+          }
+        }
+      }
+    }
+    .segment {
+      padding: 30px;
+      background-color: #f8f8f8;
+      .checkbox {
+        margin-bottom: 0;
+        margin-right: 10px;
+      }
+      .inputInSegment {
+        width: 40%;
+        border-color: #dededf;
+      }
+      .message {
+        background-color: transparent;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        p {
+          margin: 0;
+          color: #eb555c;
+        }
+      }
+      button {
+        margin-top: 25px;
+        background-color: #2987cd;
+        color: white;
+        font-weight: 300;
+        font-size: 14px;
+      }
+      p {
+        color: #424242;
+        font-size: 16px;
+        margin-top: 10px;
+        a {
+          color: #424242;
+          text-decoration: underline;
+        }
+      }
+      span {
+        margin-top: 10px;
+        color: #424242;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
 #catalog {
   margin-top: -60px;
   height: 100%;
@@ -429,6 +517,35 @@ button.only-text-button {
         strong {
           font-size: 14px;
           white-space: nowrap;
+        }
+        em {
+          font-size: 12px;
+        }
+      }
+      .item:hover {
+        color: rgba(#4fca6c, 0.7);
+      }
+      .item.active {
+        color: #4fca6c;
+      }
+    }
+  }
+  .newProfiles {
+    padding: 0;
+    border:1px solid #E1E1E1;
+    border-radius: 5px;
+    max-height: 300px;
+    font-size: 14px;
+    height: auto;
+    .ui.list {
+      color: $themeBlue2Color;
+      .item {
+        color: inherit;
+        margin-bottom: 10px;
+        strong {
+          font-size: 14px;
+          white-space: nowrap;
+          max-width: 90%;
         }
         em {
           font-size: 12px;
