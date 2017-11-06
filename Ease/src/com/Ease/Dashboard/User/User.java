@@ -656,6 +656,7 @@ public class User {
         try {
             DatabaseRequest request = db.prepareRequest("UPDATE users SET email = ? WHERE id = ?;");
             request.setString(email);
+            request.setInt(this.getDBid());
             request.set();
             this.email = email;
         } catch (GeneralException e) {

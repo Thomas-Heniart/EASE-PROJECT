@@ -148,6 +148,8 @@ public class Status {
                 request.setNull();
             else
                 request.setString(edit_email_code);
+            request.setInt(this.getDbId());
+            request.set();
             this.edit_email_code = edit_email_code;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
@@ -165,6 +167,8 @@ public class Status {
                 request.setNull();
             else
                 request.setString(email_requested);
+            request.setInt(this.getDbId());
+            request.set();
             this.email_requested = email_requested;
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
