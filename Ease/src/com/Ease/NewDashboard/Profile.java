@@ -108,6 +108,7 @@ public class Profile {
         this.getAppMap().values().stream().sorted(Comparator.comparingInt(App::getPosition)).forEach(app -> app_ids.add(app.getDb_id()));
         res.put("app_ids", app_ids);
         res.put("name", this.getProfileInformation().getName());
+        res.put("column_index", this.getColumn_index());
         return res;
     }
 

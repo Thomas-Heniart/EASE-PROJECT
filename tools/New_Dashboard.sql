@@ -248,3 +248,5 @@ UPDATE logWithApps t
 SET t.logWithWebsite_id = t1.website_id;
 ALTER TABLE logWithApps
   ADD FOREIGN KEY (logWithWebsite_id) REFERENCES websites (id);
+
+UPDATE profiles SET column_idx = column_idx - 1;
