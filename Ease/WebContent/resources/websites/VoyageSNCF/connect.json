@@ -1,25 +1,57 @@
 {
-    "name":"Voyages SNCF",
-    "lastLogin":"",
-    "home":"http://www.voyages-sncf.com/",
-    "connect":{
-        "url":"http://www.voyages-sncf.com/",
-        "todo":[
-        	{"action":"clickona", "search":"#ccl-not-connected-link"},
-            {"action":"fill", "what":"login", "search":"#vsc-menu-ccl-login-form input#ccl-email"},
-            {"action":"fill", "what":"password", "search":"#vsc-menu-ccl-login-form input#ccl-password"},
-            {"action":"click", "search":"#vsc-menu-ccl-login-form button#edit-connect"},
-            {"action":"waitfor", "search":".vsc__header-table"},
-            {"action":"click", "search":".vsc__header-table .vsc__header-menu button"}
-        ]
-    },
-    "logout":{
-        "url":"http://www.voyages-sncf.com/",
-        "todo":[
-            {"action":"aclick", "search":"a.vsc__menu-ccl__step__logout"}
-            ]
-    },
-    "checkAlreadyLogged":[
-        {"search":"#vsc-menu-ccl-step-connected[style*='display: block']"}
+  "name": "Voyages SNCF",
+  "lastLogin": "",
+  "home": "http://www.voyages-sncf.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "#ccl-not-connected-link"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#vsc-menu-ccl-login-form input#ccl-email"
+      },
+      {
+        "action": "trueClick",
+        "search": "#vsc-menu-ccl-login-form button#edit-connect"
+      },
+      {
+        "action": "waitfor",
+        "search": "#vsc-menu-ccl-login-form input#ccl-password"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#vsc-menu-ccl-login-form input#ccl-password"
+      },
+      {
+        "action": "trueClick",
+        "search": "#vsc-menu-ccl-login-form button#edit-connect"
+      },
+      {
+        "action": "waitfor",
+        "search": ".vsc__header-table"
+      },
+      {
+        "action": "click",
+        "search": ".vsc__header-table .vsc__header-menu button"
+      }
     ]
+  },
+  "logout": {
+    "url": "http://www.voyages-sncf.com/",
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a.vsc__menu-ccl__step__logout"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "search": "#vsc-menu-ccl-step-connected[style*='display: block']"
+    }
+  ]
 }

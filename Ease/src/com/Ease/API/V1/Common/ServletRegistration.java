@@ -126,22 +126,13 @@ public class ServletRegistration extends HttpServlet {
                 school_profile.addEmptyApp(workplace.getName(), workplace, db);
             } else {
                 Profile profile_perso = newUser.getDashboardManager().getProfilesList().get(0);
-                Profile profile_pro = newUser.getDashboardManager().addProfile("Pro", "#373B60", db);
+                newUser.getDashboardManager().addProfile("Pro", "#373B60", db);
                 Website facebook = catalog.getWebsiteWithName("Facebook");
-                Website slack = catalog.getWebsiteWithName("Slack");
                 Website gmail = catalog.getWebsiteWithName("Gmail");
-                Website linkedin = catalog.getWebsiteWithName("LinkedIn");
                 Website sncf = catalog.getWebsiteWithName("Voyages SNCF");
-                Website trello = catalog.getWebsiteWithName("Trello");
                 profile_perso.addEmptyApp(facebook.getName(), facebook, db);
                 profile_perso.addEmptyApp("Gmail perso", gmail, db);
                 profile_perso.addEmptyApp(sncf.getName(), sncf, db);
-                profile_pro.addEmptyApp("Gmail pro", gmail, db);
-                profile_pro.addEmptyApp(slack.getName(), slack, db);
-                profile_pro.addEmptyApp(linkedin.getName(), linkedin, db);
-                profile_pro.addEmptyApp(trello.getName(), trello, db);
-                LinkApp appear_in = LinkApp.createLinkApp(profile_pro, profile_pro.getApps().size(), "Talk to Ease", "https://appear.in/ease.space_chat", "https://logo.clearbit.com/appear.in", db);
-                profile_pro.addApp(appear_in);
                 LinkApp le_monde = LinkApp.createLinkApp(profile_perso, profile_perso.getApps().size(), "Le Monde", "http://www.lemonde.fr/", "https://logo.clearbit.com/lemonde.fr", db);
                 profile_perso.addApp(le_monde);
             }
