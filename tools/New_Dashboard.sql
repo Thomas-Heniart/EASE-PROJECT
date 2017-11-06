@@ -158,13 +158,14 @@ ALTER TABLE classicApps
   MODIFY account_id INT(10) UNSIGNED;
 
 CREATE TABLE teamCards (
-  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  team_id INT(10) UNSIGNED NOT NULL,
-  channel_id INT(10) UNSIGNED NOT NULL,
-  creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  id            INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  team_id       INT(10) UNSIGNED NOT NULL,
+  channel_id    INT(10) UNSIGNED NOT NULL,
+  description   VARCHAR(255),
+  creation_date DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
-  FOREIGN KEY (team_id) REFERENCES teams(id),
-  FOREIGN KEY (channel_id) REFERENCES channels(id)
+  FOREIGN KEY (team_id) REFERENCES teams (id),
+  FOREIGN KEY (channel_id) REFERENCES channels (id)
 );
 
 CREATE TABLE teamLinkCards (
@@ -205,6 +206,10 @@ DELETE FROM profileInfo
 WHERE id NOT IN (SELECT profile_info_id
                  FROM profiles);
 
+INSERT INTO classicApps SELECT (id, NULL)
+                        FROM websiteApps
+                        WHERE type = 'websiteApp';
+
 ALTER TABLE apps
   DROP COLUMN type;
 ALTER TABLE websiteApps
@@ -236,7 +241,7 @@ CREATE TABLE teamEnterpriseCardReceivers (
 
 CREATE TABLE teamSingleCardReceivers (
   id                      INT(10) UNSIGNED NOT NULL,
-  allowed_to_see_password TINYINT(1) NOT NULL,
+  allowed_to_see_password TINYINT(1)       NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (id) REFERENCES teamCardReceivers (id)
 );
@@ -249,4 +254,93 @@ SET t.logWithWebsite_id = t1.website_id;
 ALTER TABLE logWithApps
   ADD FOREIGN KEY (logWithWebsite_id) REFERENCES websites (id);
 
-UPDATE profiles SET column_idx = column_idx - 1;
+UPDATE profiles
+SET column_idx = column_idx - 1;
+
+INSERT INTO teamCards SELECT
+                        id,
+                        team_id,
+                        channel_id,
+                        CURRENT_TIMESTAMP,
+                        description
+                      FROM shareableApps;
+INSERT INTO teamLinkCards SELECT
+                            apps.id,
+                            appsInformations.name,
+                            linkAppInformations.url,
+                            linkAppInformations.img_url
+                          FROM shareableApps
+                            JOIN apps ON shareableApps.id = apps.id
+                            JOIN appsInformations ON apps.app_info_id = appsInformations.id
+                            JOIN linkApps ON apps.id = linkApps.id
+                            JOIN linkAppInformations ON linkApps.link_app_info_id = linkAppInformations.id;
+
+INSERT INTO teamWebsiteCards SELECT
+                               apps.id,
+                               websiteApps.website_id,
+                               websiteApps.reminderIntervalValue
+                             FROM shareableApps
+                               JOIN apps ON shareableApps.id = apps.id
+                               JOIN appsInformations ON apps.app_info_id = appsInformations.id
+                               JOIN websiteApps ON apps.id = websiteApps.id;
+
+INSERT INTO teamEnterpriseCards SELECT apps.id
+                                FROM shareableApps
+                                  JOIN apps ON shareableApps.id = apps.id
+                                  JOIN appsInformations ON apps.app_info_id = appsInformations.id
+                                  JOIN websiteApps ON apps.id = websiteApps.id
+                                  JOIN classicApps ON websiteApps.id = classicApps.id
+                                WHERE classicApps.account_id IS NULL;
+
+INSERT INTO teamSingleCards SELECT
+                              apps.id,
+                              classicApps.account_id
+                            FROM shareableApps
+                              JOIN apps ON shareableApps.id = apps.id
+                              JOIN appsInformations ON apps.app_info_id = appsInformations.id
+                              JOIN websiteApps ON apps.id = websiteApps.id
+                              JOIN classicApps ON websiteApps.id = classicApps.id
+                            WHERE classicApps.account_id IS NOT NULL;
+
+INSERT INTO teamCardReceivers SELECT
+                                sharedApps.id,
+                                sharedApps.shareable_app_id,
+                                sharedApps.teamUser_tenant_id,
+                                apps.id
+                              FROM sharedApps
+                                JOIN apps ON sharedApps.id = apps.id;
+
+INSERT INTO teamLinkCardReceivers SELECT sharedApps.id
+                                  FROM sharedApps
+                                    JOIN apps ON sharedApps.id = apps.id
+                                    JOIN linkApps ON apps.id = linkApps.id;
+
+INSERT INTO teamEnterpriseCardReceivers SELECT sharedApps.id
+                                        FROM sharedApps
+                                          JOIN apps ON sharedApps.id = apps.id
+                                          JOIN websiteApps ON apps.id = websiteApps.id
+                                          JOIN classicApps ON websiteApps.id = classicApps.id
+                                          JOIN teamEnterpriseCards
+                                            ON sharedApps.shareable_app_id = teamEnterpriseCards.id;
+
+INSERT INTO teamSingleCardReceivers SELECT
+                                      sharedApps.id,
+                                      sharedApps.canSeeInformation
+                                    FROM sharedApps
+                                      JOIN apps ON sharedApps.id = apps.id
+                                      JOIN websiteApps ON apps.id = websiteApps.id
+                                      JOIN classicApps ON websiteApps.id = classicApps.id
+                                      JOIN teamEnterpriseCards
+                                        ON sharedApps.shareable_app_id = teamSingleCardReceivers.id;
+
+DELETE FROM sharedApps;
+DELETE FROM classicApps WHERE id IN (SELECT id FROM shareableApps);
+DELETE FROM websiteApps WHERE id IN (SELECT id FROM shareableApps);
+DELETE FROM linkApps WHERE id IN (SELECT id FROM shareableApps);
+DELETE FROM shareableApps;
+DELETE FROM apps WHERE id NOT IN (SELECT id FROM websiteApps) AND id NOT IN (SELECT id FROM linkApps);
+
+ALTER TABLE websiteApps
+  DROP COLUMN reminderIntervalType;
+ALTER TABLE websiteApps
+  DROP COLUMN reminderIntervalValue;

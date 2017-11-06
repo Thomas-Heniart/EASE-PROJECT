@@ -32,6 +32,9 @@ abstract public class TeamCard {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "creation_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creation_date;
@@ -44,9 +47,10 @@ abstract public class TeamCard {
 
     }
 
-    public TeamCard(Team team, Channel channel) {
+    public TeamCard(Team team, Channel channel, String description) {
         this.team = team;
         this.channel = channel;
+        this.description = description;
         this.creation_date = new Date();
     }
 
@@ -72,6 +76,14 @@ abstract public class TeamCard {
 
     public void setChannel(Channel channel) {
         this.channel = channel;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreation_date() {

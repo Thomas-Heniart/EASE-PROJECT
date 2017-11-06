@@ -15,8 +15,8 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
 
     }
 
-    public TeamEnterpriseCard(Team team, Channel channel, Website website, Integer password_reminder_interval) {
-        super(team, channel, website, password_reminder_interval);
+    public TeamEnterpriseCard(Team team, Channel channel, String description, Website website, Integer password_reminder_interval) {
+        super(team, channel, description, website, password_reminder_interval);
     }
 
     @Override

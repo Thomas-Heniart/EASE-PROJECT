@@ -122,6 +122,7 @@ public class Account {
     /**
      * This method is used to decipher the account
      * For example: after user connection
+     *
      * @param symmetric_key the user or team symmetric key to decipher private_key from the database
      * @throws HttpServletException if a decryption error occurred
      */
@@ -134,8 +135,9 @@ public class Account {
     /**
      * This method update public and private key and encrypt all account information in the database with the new public key
      * For example: when a user update his password
-     * @param public_key the new public key
-     * @param private_key the new private key
+     *
+     * @param public_key    the new public key
+     * @param private_key   the new private key
      * @param symmetric_key the user symmetric key to cipher private_key from the database
      * @throws HttpServletException if an encryption error occurred
      */
@@ -167,5 +169,20 @@ public class Account {
         JSONObject res = new JSONObject();
         this.getAccountInformationSet().forEach(accountInformation -> res.put(accountInformation.getInformation_name(), accountInformation.getInformation_name().equals("password") ? "" : accountInformation.getDeciphered_information_value()));
         return res;
+    }
+
+    public void edit(JSONObject account_information) throws HttpServletException {
+        try {
+            for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+                String value = (String) account_information.get(accountInformation.getInformation_name());
+                if (value == null || value.equals(""))
+                    continue;
+                if (accountInformation.getInformation_name().equals("password"))
+                    this.setLast_update(new Date());
+                accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
+            }
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 }

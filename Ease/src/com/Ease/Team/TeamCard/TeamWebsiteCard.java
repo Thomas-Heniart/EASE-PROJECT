@@ -23,8 +23,8 @@ public abstract class TeamWebsiteCard extends TeamCard {
 
     }
 
-    public TeamWebsiteCard(Team team, Channel channel, Website website, Integer password_reminder_interval) {
-        super(team, channel);
+    public TeamWebsiteCard(Team team, Channel channel, String description, Website website, Integer password_reminder_interval) {
+        super(team, channel, description);
         this.website = website;
         this.password_reminder_interval = password_reminder_interval;
     }

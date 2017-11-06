@@ -23,8 +23,8 @@ public class TeamLinkCard extends TeamCard {
 
     }
 
-    public TeamLinkCard(Team team, Channel channel, String name, String url, String img_url) {
-        super(team, channel);
+    public TeamLinkCard(Team team, Channel channel, String description, String name, String url, String img_url) {
+        super(team, channel, description);
         this.name = name;
         this.url = url;
         this.img_url = img_url;

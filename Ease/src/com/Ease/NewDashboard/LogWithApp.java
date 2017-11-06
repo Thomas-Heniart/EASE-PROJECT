@@ -43,6 +43,10 @@ public class LogWithApp extends WebsiteApp {
         this.logWith_website = logWith_website;
     }
 
+    public boolean isLogWithApp() {
+        return true;
+    }
+
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
