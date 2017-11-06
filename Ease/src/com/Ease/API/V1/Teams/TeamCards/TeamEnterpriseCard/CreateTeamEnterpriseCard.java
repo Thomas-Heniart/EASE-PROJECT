@@ -45,7 +45,10 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
-            TeamCard teamCard = new TeamEnterpriseCard(team, channel, website, password_reminder_interval);
+            String description = sm.getStringParam("description", true, true);
+            if (description.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
+            TeamCard teamCard = new TeamEnterpriseCard(team, channel, description, website, password_reminder_interval);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.entrySet()) {

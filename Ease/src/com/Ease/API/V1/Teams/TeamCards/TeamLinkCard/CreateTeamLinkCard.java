@@ -41,7 +41,10 @@ public class CreateTeamLinkCard extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.length() >= 255 || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
-            TeamCard teamCard = new TeamLinkCard(team, channel, name, url, img_url);
+            String description = sm.getStringParam("description", true, true);
+            if (description.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
+            TeamCard teamCard = new TeamLinkCard(team, channel, description, name, url, img_url);
             sm.saveOrUpdate(teamCard);
             channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);
