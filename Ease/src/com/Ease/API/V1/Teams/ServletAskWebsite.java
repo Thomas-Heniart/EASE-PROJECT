@@ -2,6 +2,8 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Catalog.*;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -29,6 +31,8 @@ public class ServletAskWebsite extends HttpServlet {
             String login = sm.getStringParam("login", false, false);
             String password = sm.getStringParam("password", false, false);
             Integer team_id = sm.getIntParam("team_id", true, false);
+            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeTeamUserOfTeam(team_id);
             if (url.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
@@ -53,7 +57,10 @@ public class ServletAskWebsite extends HttpServlet {
             websiteInformationSet.add(passwordInformation);
             website.setWebsiteInformationList(websiteInformationSet);
             sm.saveOrUpdate(websiteAttributes);
+            website.addTeam(team);
+            team.addTeamWebsite(website);
             sm.saveOrUpdate(website);
+            sm.saveOrUpdate(team);
             String email = sm.getUser().getEmail();
             WebsiteRequest websiteRequest = new WebsiteRequest(url, email, website);
             website.addWebsiteRequest(websiteRequest);
@@ -62,6 +69,7 @@ public class ServletAskWebsite extends HttpServlet {
             hibernateQuery.queryString("SELECT key FROM ServerPublicKey key");
             ServerPublicKey serverPublicKey = (ServerPublicKey) hibernateQuery.getSingleResult();
             WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt(login, serverPublicKey.getPublicKey()), RSA.Encrypt(password, serverPublicKey.getPublicKey()), website, serverPublicKey);
+            website.addWebsiteCredentials(websiteCredentials);
             sm.saveOrUpdate(websiteCredentials);
             catalog.addWebsite(website);
             JSONObject res = website.getCatalogJson();

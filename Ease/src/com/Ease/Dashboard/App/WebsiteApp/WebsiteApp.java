@@ -282,7 +282,7 @@ public class WebsiteApp extends App implements SharedApp, ShareableApp {
 
     public JSONObject getRestJson() {
         JSONObject res = super.getRestJson();
-        res.put("logo", this.website.getFolder() + "logo.png");
+        res.put("logo", this.getSite().getLogo());
         return res;
     }
 

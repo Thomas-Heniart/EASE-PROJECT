@@ -53,6 +53,7 @@ public class ServletGetWebsites extends HttpServlet {
                     connectWtih.add(website1.getDb_id());
                 tmp.put("connectWith", connectWtih);
                 JSONObject website_credentials = null;
+                System.out.println(website.getWebsiteCredentials().size());
                 for (WebsiteCredentials websiteCredentials : website.getWebsiteCredentials())
                     website_credentials = websiteCredentials.getJson();
                 if (website_credentials != null)

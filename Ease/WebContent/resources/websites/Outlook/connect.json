@@ -1,26 +1,64 @@
 {
-	"name":"Outlook",
-	"lastLogin":"",
-	"home":"https://outlook.live.com/owa/?nlp=1",
-	"connect":{
-        "todo":[
-            {"action":"waitfor", "time":200,"search":"input[name='loginfmt']"},
-            {"action":"fill", "what":"login", "search":"input[name='loginfmt']"},
-            {"action":"click", "search":"input[type='submit']"},
-            {"action":"waitfor", "search":"input[name='login']"},
-            {"action":"fill", "what":"password", "search":"input[name='passwd']"},
-            {"action":"click", "search":"input[type='submit']"}
-        ]
+  "name": "Outlook",
+  "lastLogin": "",
+  "home": "https://login.live.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "form[name='f1'] input[name='loginfmt']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "form[name='f1'] input[name='loginfmt']"
+      },
+      {
+        "action": "waitfor",
+        "search": "form[name='f1'] input[name='passwd']"
+      },
+      {
+        "action": "click",
+        "search": "form[name='f1'] input[type='submit']"
+      },
+      {
+        "action": "waitfor",
+        "search": "form[name='f1'] input[name='passwd'][aria-required='true']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "form[name='f1'] input[name='passwd'][aria-required='true']"
+      },
+      {
+        "action": "click",
+        "search": "form[name='f1'] input[type='submit']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "goto",
+        "url": "https://outlook.live.com/owa/logoff.owa"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href='http://outlook.com/']"
+      },
+      {
+        "action": "goto",
+        "url": "https://outlook.live.com/owa/?nlp=1"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#O365_MainLink_Logo, input[name='loginfmt']"
     },
-	"logout":{
-		"todo":[
-			{"action":"goto", "url":"https://outlook.live.com/owa/logoff.owa"},
-			{"action":"waitfor", "search":"a[href='http://outlook.com/']"},
-			{"action":"goto", "url":"https://outlook.live.com/owa/?nlp=1"}
-		]
-	},
-	"checkAlreadyLogged":[
-		{"action":"waitfor", "search":"#O365_MainLink_Logo, input[name='loginfmt']"},
-		{"search":"#O365_MainLink_Logo"}
-	]
+    {
+      "search": "#O365_MainLink_Logo"
+    }
+  ]
 }

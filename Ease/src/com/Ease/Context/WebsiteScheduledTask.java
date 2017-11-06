@@ -3,11 +3,9 @@ package com.Ease.Context;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Utils.DataBase;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
-import com.Ease.Utils.DatabaseResult;
+import com.Ease.Utils.HttpServletException;
 
+import java.util.List;
 import java.util.TimerTask;
 
 public class WebsiteScheduledTask extends TimerTask {
@@ -21,16 +19,21 @@ public class WebsiteScheduledTask extends TimerTask {
     @Override
     public void run() {
         try {
-            DataBaseConnection db = new DataBaseConnection(DataBase.getConnection());
-            DatabaseRequest request = db.prepareRequest("SELECT websites.id FROM websites JOIN websiteAttributes ON (websites.website_attributes_id = websiteAttributes.id) WHERE addedDate <= CURRENT_TIMESTAMP - INTERVAL 4 DAY AND new = 1;");
-            DatabaseResult rs = request.get();
             HibernateQuery hibernateQuery = new HibernateQuery();
-            while (rs.next()) {
-                Website website = catalog.getWebsiteWithId(rs.getInt(1));
-                System.out.println(website.getName() + " not new anymore");
-                website.getWebsiteAttributes().setNew_website(false);
-                hibernateQuery.saveOrUpdateObject(website.getWebsiteAttributes());
-            }
+            hibernateQuery.querySQLString("SELECT websites.id FROM websites JOIN websiteAttributes ON (websites.website_attributes_id = websiteAttributes.id) WHERE addedDate <= CURRENT_TIMESTAMP - INTERVAL 4 DAY AND new = 1;");
+            List<Object> rs = hibernateQuery.list();
+            rs.forEach((Object obj) -> {
+                Integer id = (Integer) obj;
+                Website website = null;
+                try {
+                    website = catalog.getWebsiteWithId(id);
+                    System.out.println(website.getName() + " not new anymore");
+                    website.getWebsiteAttributes().setNew_website(false);
+                    hibernateQuery.saveOrUpdateObject(website.getWebsiteAttributes());
+                } catch (HttpServletException e) {
+                    e.printStackTrace();
+                }
+            });
             hibernateQuery.commit();
         } catch (Exception e) {
             e.printStackTrace();
