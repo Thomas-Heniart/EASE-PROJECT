@@ -144,6 +144,11 @@ public class Profile {
 
     public void addAppAndUpdatePositions(App app, Integer position, HibernateQuery hibernateQuery) {
         this.addApp(app);
-        this.updateAppPositions(app, position, hibernateQuery);
+        this.getAppMap().values().stream().filter(app1 -> app != app1 && app1.getPosition() >= position).forEach(app1 -> {
+            app1.setPosition(app1.getPosition() + 1);
+            hibernateQuery.saveOrUpdateObject(app1);
+        });
+        app.setPosition(position >= this.getAppMap().size() ? this.getAppMap().size() - 1 : position);
+        hibernateQuery.saveOrUpdateObject(app);
     }
 }
