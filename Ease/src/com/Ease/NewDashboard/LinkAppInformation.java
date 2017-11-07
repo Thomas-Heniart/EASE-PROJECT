@@ -48,4 +48,19 @@ public class LinkAppInformation {
     public void setImg_url(String img_url) {
         this.img_url = img_url;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LinkAppInformation that = (LinkAppInformation) o;
+
+        return db_id.equals(that.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

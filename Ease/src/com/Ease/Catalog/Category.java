@@ -91,4 +91,19 @@ public class Category {
     public Collection<Website> getWebsites() {
         return this.getWebsiteMap().values();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        return db_id.equals(category.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

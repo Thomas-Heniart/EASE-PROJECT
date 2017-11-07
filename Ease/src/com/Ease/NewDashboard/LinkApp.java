@@ -42,6 +42,11 @@ public class LinkApp extends App {
     }
 
     @Override
+    public boolean isLinkApp() {
+        return true;
+    }
+
+    @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
         res.put("url", this.getLinkAppInformation().getUrl());

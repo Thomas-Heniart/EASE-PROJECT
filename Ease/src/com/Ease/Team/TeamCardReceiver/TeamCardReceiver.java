@@ -91,4 +91,19 @@ abstract public class TeamCardReceiver {
     }
 
     public abstract String getType();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TeamCardReceiver that = (TeamCardReceiver) o;
+
+        return db_id.equals(that.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

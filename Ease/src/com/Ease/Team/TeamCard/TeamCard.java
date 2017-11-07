@@ -159,4 +159,19 @@ abstract public class TeamCard {
     public TeamCardReceiver getTeamCardReceiver(TeamUser teamUser) {
         return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> teamCardReceiver1.getTeamUser() == teamUser).findFirst().orElse(null);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TeamCard teamCard = (TeamCard) o;
+
+        return db_id.equals(teamCard.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

@@ -177,12 +177,28 @@ public class Account {
                 String value = (String) account_information.get(accountInformation.getInformation_name());
                 if (value == null || value.equals(""))
                     continue;
-                if (accountInformation.getInformation_name().equals("password"))
+                if (accountInformation.getInformation_name().equals("password") && !accountInformation.getInformation_value().equals(value))
                     this.setLast_update(new Date());
                 accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
+                accountInformation.setDeciphered_information_value(value);
             }
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+
+        return db_id.equals(account.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
     }
 }

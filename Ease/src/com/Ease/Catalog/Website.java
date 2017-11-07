@@ -359,4 +359,19 @@ public class Website {
             res = websiteRequest.getJson();
         return res;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Website website = (Website) o;
+
+        return db_id.equals(website.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

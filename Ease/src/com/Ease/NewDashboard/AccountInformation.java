@@ -85,4 +85,19 @@ public class AccountInformation {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AccountInformation that = (AccountInformation) o;
+
+        return db_id.equals(that.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

@@ -542,4 +542,19 @@ public class TeamUser {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TeamUser teamUser = (TeamUser) o;
+
+        return db_id.equals(teamUser.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "id")
 public class WebsiteApp extends App {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "website_id")
     private Website website;
 

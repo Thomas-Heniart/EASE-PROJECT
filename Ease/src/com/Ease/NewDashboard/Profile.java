@@ -152,4 +152,19 @@ public class Profile {
         app.setPosition(position >= this.getAppMap().size() ? this.getAppMap().size() - 1 : position);
         hibernateQuery.saveOrUpdateObject(app);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Profile profile = (Profile) o;
+
+        return db_id.equals(profile.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

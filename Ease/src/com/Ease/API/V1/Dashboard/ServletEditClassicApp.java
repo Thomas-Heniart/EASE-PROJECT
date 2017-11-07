@@ -1,9 +1,12 @@
-package com.Ease.NewDashboard;
+package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/dashboard/ServletEditLinkApp")
-public class ServletEditLinkApp extends HttpServlet {
+@WebServlet("/api/v1/dashboard/EditClassicApp")
+public class ServletEditClassicApp extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -29,16 +32,15 @@ public class ServletEditLinkApp extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
-            String url = sm.getStringParam("url", false, false);
-            if (url.equals("") || url.length() > 2000)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter url");
-            String img_url = sm.getStringParam("img_url", false, false);
-            if (img_url.equals("") || img_url.length() > 255)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter img_url");
-            LinkApp linkApp = (LinkApp) app;
+            JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            /* String private_key = (String) sm.getContextAttr("privateKey");
+            for (Object object : account_information.entrySet()) {
+                Map.Entry<String, String> entry = (Map.Entry<String, String>) object;
+                account_information.put(entry.getKey(), RSA.Decrypt(entry.getValue(), private_key));
+            } */
+            ClassicApp classicApp = (ClassicApp) app;
+            classicApp.getAccount().edit(account_information);
             app.getAppInformation().setName(name);
-            linkApp.getLinkAppInformation().setUrl(url);
-            linkApp.getLinkAppInformation().setImg_url(img_url);
             sm.saveOrUpdate(app);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {

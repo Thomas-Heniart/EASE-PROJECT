@@ -116,4 +116,19 @@ abstract public class App {
     public void decipher(String symmetric_key) throws HttpServletException {
         return;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        App app = (App) o;
+
+        return db_id.equals(app.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

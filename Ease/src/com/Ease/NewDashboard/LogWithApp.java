@@ -25,6 +25,7 @@ public class LogWithApp extends WebsiteApp {
     public LogWithApp(AppInformation appInformation, Website website, WebsiteApp loginWith_app) {
         super(appInformation, website);
         this.loginWith_app = loginWith_app;
+        this.logWith_website = loginWith_app.getWebsite();
     }
 
     public WebsiteApp getLoginWith_app() {
@@ -48,10 +49,17 @@ public class LogWithApp extends WebsiteApp {
     }
 
     @Override
+    public String getType() {
+        return "logWithApp";
+    }
+
+    @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
         res.put("logWithApp_id", this.getLoginWith_app().getDb_id());
         res.put("logWith_website", this.getLogWith_website().getCatalogJson());
         return res;
     }
+
+
 }

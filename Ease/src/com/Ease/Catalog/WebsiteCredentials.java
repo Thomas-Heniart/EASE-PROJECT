@@ -85,4 +85,19 @@ public class WebsiteCredentials {
         res.put("publicKey", this.getServerPublicKey().getPublicKey());
         return res;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WebsiteCredentials that = (WebsiteCredentials) o;
+
+        return db_id.equals(that.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

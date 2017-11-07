@@ -78,4 +78,19 @@ public class Sso {
         res.put("websites", websites);
         return res;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sso sso = (Sso) o;
+
+        return db_id.equals(sso.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

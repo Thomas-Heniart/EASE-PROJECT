@@ -225,4 +225,19 @@ public class Channel {
     public void removeTeamCard(TeamCard teamCard) {
         this.getTeamCardMap().remove(teamCard);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Channel channel = (Channel) o;
+
+        return db_id.equals(channel.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

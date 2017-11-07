@@ -118,4 +118,19 @@ public class WebsiteInformation {
         res.put("priority", this.getPriority());
         return res;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WebsiteInformation that = (WebsiteInformation) o;
+
+        return db_id.equals(that.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
+    }
 }

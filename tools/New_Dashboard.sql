@@ -1,3 +1,5 @@
+ALTER TABLE linkAppInformations MODIFY `img_url` VARCHAR(2000) NOT NULL;
+
 DROP TABLE pendingTeamUserVerifications;
 ALTER TABLE teamUsers
   ADD COLUMN invitation_code VARCHAR(255);
