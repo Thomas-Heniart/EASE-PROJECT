@@ -39,8 +39,8 @@ public class PinTeamCardReceiverToDashboard extends HttpServlet {
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             Profile profile = sm.getUser().getDashboardManager().getProfile(profile_id);
-            Profile old_profile = teamCardReceiver.getApp().getProfile();
-            if (old_profile != null && old_profile != profile) {
+            Profile old_profile = sm.getUser().getDashboardManager().getProfile(teamCardReceiver.getApp().getProfile().getDb_id());
+            if (old_profile != null && !old_profile.equals(profile)) {
                 old_profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 teamCardReceiver.getApp().setPosition(profile.getAppMap().size());
             } else if (old_profile == null)

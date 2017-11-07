@@ -47,7 +47,7 @@ public class CreateTeamSingleCard extends HttpServlet {
             if (reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval cannot be under 0");
             String description = sm.getStringParam("description", true, true);
-            if (description.length() > 255)
+            if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             Map<String, String> account_information = website.getInformationNeeded(account_information_obj);
             String team_key = teamUser_connected.getDeciphered_teamKey();

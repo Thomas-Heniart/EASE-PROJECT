@@ -118,7 +118,7 @@ public class Profile {
 
     public void removeAppAndUpdatePositions(App app, HibernateQuery hibernateQuery) {
         int position = app.getPosition();
-        this.getAppMap().values().stream().filter(app1 -> app != app1 && app1.getPosition() >= position).forEach(app1 -> {
+        this.getAppMap().values().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
             app1.setPosition(app1.getPosition() - 1);
             hibernateQuery.saveOrUpdateObject(app1);
         });
@@ -129,12 +129,12 @@ public class Profile {
         if (app.getPosition().equals(position))
             return;
         if (app.getPosition() < position) {
-            this.getApps().filter(app1 -> app != app1 && app1.getPosition() > app.getPosition() && app1.getPosition() <= position).forEach(app1 -> {
+            this.getApps().filter(app1 -> !app.equals(app1) && app1.getPosition() > app.getPosition() && app1.getPosition() <= position).forEach(app1 -> {
                 app1.setPosition(app1.getPosition() - 1);
                 hibernateQuery.saveOrUpdateObject(app1);
             });
         } else {
-            this.getApps().filter(app1 -> app != app1 && app1.getPosition() >= position && app1.getPosition() < app.getPosition()).forEach(app1 -> {
+            this.getApps().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position && app1.getPosition() < app.getPosition()).forEach(app1 -> {
                 app1.setPosition(app1.getPosition() + 1);
                 hibernateQuery.saveOrUpdateObject(app1);
             });
@@ -145,7 +145,7 @@ public class Profile {
 
     public void addAppAndUpdatePositions(App app, Integer position, HibernateQuery hibernateQuery) {
         this.addApp(app);
-        this.getAppMap().values().stream().filter(app1 -> app != app1 && app1.getPosition() >= position).forEach(app1 -> {
+        this.getAppMap().values().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
             app1.setPosition(app1.getPosition() + 1);
             hibernateQuery.saveOrUpdateObject(app1);
         });

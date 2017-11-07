@@ -46,7 +46,7 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id);
             String description = sm.getStringParam("description", true, true);
-            if (description.length() > 255)
+            if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             TeamCard teamCard = new TeamEnterpriseCard(team, channel, description, website, password_reminder_interval);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);

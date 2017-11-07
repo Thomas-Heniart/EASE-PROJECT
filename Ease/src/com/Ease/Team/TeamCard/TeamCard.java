@@ -157,7 +157,7 @@ abstract public class TeamCard {
     }
 
     public TeamCardReceiver getTeamCardReceiver(TeamUser teamUser) {
-        return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> teamCardReceiver1.getTeamUser() == teamUser).findFirst().orElse(null);
+        return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> teamCardReceiver1.getTeamUser().equals(teamUser)).findFirst().orElse(null);
     }
 
     @Override

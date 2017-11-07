@@ -11,6 +11,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -42,27 +43,47 @@ public class PinTeamLinkCardToDashboard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamUser);
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = sm.getUser().getDashboardManager().getProfile(profile_id);
-            if (teamCardReceiver == null) {
+            Profile profile = null;
+            if (profile_id != -1)
+                profile = sm.getUser().getDashboardManager().getProfile(profile_id);
+            App app = null;
+            if (teamCardReceiver == null && profile != null) {
                 AppInformation appInformation = new AppInformation(name);
                 LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
-                App app = new LinkApp(appInformation, linkAppInformation);
+                app = new LinkApp(appInformation, linkAppInformation);
+                app.setProfile(profile);
+                app.setPosition(profile.getAppMap().size());
                 teamCardReceiver = new TeamLinkCardReceiver(app, teamCard, teamUser);
+                app.setTeamCardReceiver(teamCardReceiver);
                 sm.saveOrUpdate(teamCardReceiver);
+                profile.addApp(app);
                 teamCard.addTeamCardReceiver(teamCardReceiver);
+            } else if (teamCardReceiver != null) {
+                Profile old_profile = sm.getUser().getDashboardManager().getProfile(teamCardReceiver.getApp().getProfile().getDb_id());
+                app = teamCardReceiver.getApp();
+                if (profile == null) {
+                    old_profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
+                    sm.getUser().getDashboardManager().removeApp(app);
+                    teamCard.removeTeamCardReceiver(teamCardReceiver.getDb_id());
+                    app = null;
+                } else if (!profile.equals(old_profile)) {
+                    old_profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
+                    profile.addApp(app);
+                    app.setProfile(profile);
+                    app.setPosition(profile.getAppMap().size());
+                }
+                if (app != null)
+                    app.getAppInformation().setName(name);
+                sm.saveOrUpdate(teamCard);
             }
-            Profile old_profile = teamCardReceiver.getApp().getProfile();
-            if (old_profile != null && old_profile != profile) {
-                old_profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
-                teamCardReceiver.getApp().setPosition(profile.getAppMap().size());
-            } else if (old_profile == null)
-                teamCardReceiver.getApp().setPosition(profile.getAppMap().size());
-            teamCardReceiver.getApp().setProfile(profile);
-            teamCardReceiver.getApp().getAppInformation().setName(name);
-            sm.saveOrUpdate(teamCardReceiver.getApp());
-            profile.addApp(teamCardReceiver.getApp());
-            sm.getUser().getDashboardManager().addApp(teamCardReceiver.getApp());
-            sm.setSuccess(teamCardReceiver.getApp().getJson());
+            if (app != null)
+                sm.getUser().getDashboardManager().addApp(app);
+            JSONObject res = new JSONObject();
+            if (app == null)
+                res.put("msg", "Unpin done");
+            else
+                res = app.getJson();
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }

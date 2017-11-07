@@ -57,6 +57,10 @@ public class DashboardManager {
         this.getAppMap().put(app.getDb_id(), app);
     }
 
+    public void removeApp(App app) {
+        this.getAppMap().remove(app.getDb_id());
+    }
+
     public void decipher(String keyUser) throws HttpServletException {
         for (App app : this.getAppMap().values())
             app.decipher(keyUser);
