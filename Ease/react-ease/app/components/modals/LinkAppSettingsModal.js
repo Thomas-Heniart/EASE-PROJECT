@@ -1,26 +1,38 @@
 import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {connect} from "react-redux";
+import {getLogo} from "../../utils/api";
 import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {handleSemanticInput} from "../../utils/utils";
+import {editLinkApp} from "../../actions/dashboardActions";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 
-@connect()
-class LinkAppSettingsModal extends Component{
+@connect(store => ({
+  app: store.modals.linkAppSettings.app
+}))
+class LinkAppSettingsModal extends Component {
+
   constructor(props){
     super(props);
     this.state = {
       view: 'Account',
-      url: 'https://www.facebook.com',
-      appName: 'lala',
-      img_src: '/resources/websites/Facebook/logo.png',
+      url: this.props.app.url,
+      appName: this.props.app.name,
+      logo: this.props.app.logo,
       loading: false,
-      edit: false
+      edit: false,
+      errorMessage: ''
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  linkInput = (e, {value}) => {
+    this.setState({url: value});
+    getLogo({url: value}).then(response => {
+      this.setState({logo:response});
+    });
+  };
   toggleEdit = () => {
     this.setState({edit: !this.state.edit});
   };
@@ -30,8 +42,23 @@ class LinkAppSettingsModal extends Component{
   remove = () => {
     this.close();
   };
+  edit = (e) => {
+    e.preventDefault();
+    this.setState({loading: true, errorMessage: ''});
+    this.props.dispatch(editLinkApp({
+      app_id: this.props.app.id,
+      name: this.state.appName,
+      url: this.state.url,
+      img_url: this.state.logo
+    })).then(response => {
+      this.setState({loading: false});
+      this.close();
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
+  };
   render(){
-    const {view, img_src} = this.state;
+    const {view, logo} = this.state;
 
     return (
         <SimpleModalTemplate
@@ -40,27 +67,21 @@ class LinkAppSettingsModal extends Component{
           <Container class="app_settings_modal">
             <div class="display-flex align_items_center">
               <div class="squared_image_handler">
-                <img src={img_src} alt="Website logo"/>
+                <img src={logo} alt="Website logo"/>
               </div>
               <AppSettingsNameInput value={this.state.appName} onChange={this.handleInput}/>
             </div>
             <AppSettingsMenu view={view} onChange={this.handleInput}/>
             {view === 'Account' &&
-            <Form>
+            <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
               <Form.Field>
                 <label>Here is the link</label>
                 <div class="display_flex align_items_center">
-                  <LabeledInput value={this.state.url} disabled={!this.state.edit} name="url" icon="home" placeholder="https://ease.space" onChange={this.handleInput}/>
+                  <LabeledInput value={this.state.url} disabled={!this.state.edit} name="url" icon="home" placeholder="https://ease.space" onChange={this.linkInput}/>
                   <Icon name="pencil" fitted link style={{paddingLeft:'15px'}} onClick={this.toggleEdit}/>
                 </div>
               </Form.Field>
-              <Form.Field>
-                <label>Here is the link</label>
-                <div class="display_flex align_items_center">
-                  <LabeledInput value={this.state.url} disabled={!this.state.edit} name="url" icon="home" placeholder="https://ease.space" onChange={this.handleInput}/>
-                  <Icon name="pencil" fitted link style={{paddingLeft:'15px'}} onClick={this.toggleEdit}/>
-                </div>
-              </Form.Field>
+              <Message error content={this.state.errorMessage}/>
               <Button
                   type="submit"
                   loading={this.state.loading}

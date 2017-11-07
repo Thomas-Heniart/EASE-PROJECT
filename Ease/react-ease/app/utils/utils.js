@@ -16,6 +16,15 @@ export function reflect(promise){
       function(e){ return {data:e, error: true }});
 }
 
+export function isAppInformationEmpty(information){
+  let empty_params = 0;
+  Object.keys(information).map(item => {
+    if (!information[item].length)
+      empty_params++;
+  });
+  return empty_params > 1;
+}
+
 export function handleSemanticInput(e, {name, value, checked}){
   if (checked !== undefined){
     this.setState({[name]: !checked});

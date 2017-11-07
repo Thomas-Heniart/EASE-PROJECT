@@ -1,17 +1,19 @@
-export function showSimpleAppSettingsModal({active}){
+export function showClassicAppSettingsModal({active, app}){
   return {
-    type: 'SHOW_SIMPLE_APP_SETTINGS_MODAL',
+    type: 'SHOW_CLASSIC_APP_SETTINGS_MODAL',
     payload: {
-      active: active
+      active: active,
+      app: app
     }
   }
 }
 
-export function showLogWithAppSettingsModal({active}){
+export function showLogWithAppSettingsModal({active, app}){
   return {
     type:'SHOW_LOG_WITH_APP_SETTINGS_MODAL',
     payload: {
-      active:active
+      active:active,
+      app: app
     }
   }
 }
@@ -25,11 +27,12 @@ export function showExtensionDownloadModal({active}){
   }
 }
 
-export function showLinkAppSettingsModal({active}){
+export function showLinkAppSettingsModal({active, app}){
   return {
     type: 'SHOW_LINK_APP_SETTINGS_MODAL',
     payload: {
-      active: active
+      active: active,
+      app: app
     }
   }
 }

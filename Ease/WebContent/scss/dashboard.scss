@@ -4,18 +4,59 @@
   height: 100%;
   @include display-flex();
   @include flex-direction(column);
-  .ui.container {
+  & > .ui.container {
     padding: 10px;
     overflow: auto;
     @include justify-content(center);
+    & > .column {
+      transition: all .3s ease;
+      padding: 0 5px;
+      width: 310px;
+      &.fitted {
+        transition: all .3s ease;
+        width: 0;
+        padding: 0 !important;
+      }
+      & > .app_group.dragging {
+        border: 3px dashed #949EB7;
+        border-radius: 5px;
+      }
+    }
+  }
+}
+
+.app_group_adder {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: solid 1px #e1e1e1;
+  margin-bottom: 10px;
+  position: relative;
+  padding: 25px 40px 50px 40px;
+  & > * {
+    position: relative;
+    display: block;
+    text-align: center;
   }
 }
 
 .app_group {
-  width: 300px;
+  width: 100%;
   background-color: rgba(255, 255, 255, 0.8);
   border: solid 1px #e1e1e1;
+  margin-bottom: 10px;
+  position: relative;
   padding: 25px 40px 50px 40px;
+  &:hover {
+    .move_button {
+      display: block;
+    }
+  }
+  .move_button {
+    display: none;
+    position: absolute;
+    left:.4rem;
+    top:.5rem;
+  }
   .app_group_name {
     margin-bottom: 5px;
     .input.ui {
@@ -26,6 +67,7 @@
         padding: 0;
         border:none;
         box-shadow: none;
+        background-color: transparent;
         &:focus {
           background-color: $themeLightGreyColor;
         }
@@ -34,67 +76,84 @@
   }
   .apps_container {
     @include display-inline-flex();
-    @include justify-content(space-between);
     @include flex-wrap(wrap);
     width: 100%;
-    .app {
-      width: 60px;
+    .app_wrapper {
+      width: 33.3333%;
       margin-top: 20px;
-      .app_notification {
-        position: absolute;
-        z-index: 1;
-        transform: translate3d(-35%, -35%, 0);
-      }
-      .logo_area {
-        position: relative;
-      }
-      .logo_handler {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-        border-radius: 5px;
-        box-shadow: -5px 5px 10px 0 rgba(black,.15);
-        img {
+      &.dragging {
+        .logo_area {
+          border: 3px dashed #949EB7;
           border-radius: 5px;
-          width: 100%;
-        }
-        &:hover {
-          cursor: pointer;
-          .settings_button {
-            transition: all .3s ease;
-            transform: translateY(0);
-            &:hover {
-              font-size: 9px;
-            }
+          & > * {
+            opacity: 0;
           }
         }
-        .settings_button {
-          position: absolute;
-          bottom:0;
-          left:0;
-          transition: all .3s ease;
-          transform: translateY(100%);
-          text-transform: uppercase;
-          font-weight: bold;
-          right: 0;
-          border:none;
-          width: 100%;
-          padding-top: 5px;
-          padding-bottom: 4px;
-          color:white;
-          font-size: 8px;
-          background-color: #424242;
-          text-align: center;
-          border-bottom-right-radius: 5px;
-          border-bottom-left-radius: 5px;
+        .app_name {
+          opacity: 0;
         }
       }
-      .app_name {
-        margin-top: 10px;
-        width: 100%;
-        text-align: center;
-        font-size: .7rem;
-        color: $themeBlue2Color;
+      .app {
+        @include display-flex();
+        @include flex-direction(column);
+        @include align-items(center);
+        .app_notification {
+          position: absolute;
+          z-index: 1;
+          transform: translate3d(-35%, -35%, 0);
+        }
+        .logo_area {
+          width: 60px;
+          position: relative;
+        }
+        .logo_handler {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+          border-radius: 5px;
+          box-shadow: -5px 5px 10px 0 rgba(black, .15);
+          img {
+            border-radius: 5px;
+            width: 100%;
+          }
+          &:hover {
+            cursor: pointer;
+            .settings_button {
+              transition: all .3s ease;
+              transform: translateY(0);
+              &:hover {
+                font-size: 9px;
+              }
+            }
+          }
+          .settings_button {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: all .3s ease;
+            transform: translateY(102%);
+            text-transform: uppercase;
+            font-weight: bold;
+            right: 0;
+            border: none;
+            width: 100%;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            color: white;
+            font-size: 8px;
+            background-color: #424242;
+            text-align: center;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+          }
+        }
+        .app_name {
+          margin-top: 10px;
+          width: 100%;
+          text-align: center;
+          font-size: .7rem;
+          color: $themeBlue2Color;
+        }
       }
     }
   }
@@ -120,5 +179,29 @@
     margin-left: -30px;
     margin-right: -30px;
     padding: 0 30px;
+  }
+}
+
+.app_drag_preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+}
+
+.empty_app_indicator {
+  @include display-flex();
+  @include align-items(center);
+  @include justify-content(center);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left:0;
+  top:0;
+  z-index: 1;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: rgba(55, 59, 96, 0.8);
+  i {
+    color:white;
   }
 }

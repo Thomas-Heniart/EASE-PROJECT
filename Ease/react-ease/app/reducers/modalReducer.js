@@ -1,14 +1,16 @@
 import createReducer from  "./createReducer";
 
 export const modals = createReducer({
-  simpleAppSettings: {
+  classicAppSettings: {
     active: false
   },
   linkAppSettings: {
-    active: false
+    active: false,
+    app: null
   },
   logWithAppSettings: {
-    active: false
+    active: false,
+    app: null
   },
   extensionDownload: {
     active: false
@@ -20,10 +22,10 @@ export const modals = createReducer({
     active: false
   }
 }, {
-  ['SHOW_SIMPLE_APP_SETTINGS_MODAL'](state, action){
+  ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
     return {
         ...state,
-      simpleAppSettings: action.payload
+      classicAppSettings: action.payload
     }
   },
   ['SHOW_EXTENSION_DOWNLOAD_MODAL'](state, action){

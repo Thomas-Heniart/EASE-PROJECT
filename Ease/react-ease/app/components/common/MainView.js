@@ -4,6 +4,9 @@ import TeamsPreview from '../teams/TeamsPreview';
 import Catalog from '../catalog/Catalog';
 import Dashboard from "../dashboard/Dashboard";
 import { Switch, Route } from 'react-router-dom';
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+import CustomDragLayer from "../dashboard/CustomDragLayer";
 var SimpleTeamCreationView = require('../teams/SimpleTeamCreationView');
 
 function MainView(props){
@@ -16,8 +19,9 @@ function MainView(props){
           <Route path='/main/dashboard' component={Dashboard}/>
         </Switch>
         <EaseHeader/>
+        <CustomDragLayer/>
       </div>
   )
 }
 
-module.exports = MainView;
+module.exports = DragDropContext(HTML5Backend)(MainView);

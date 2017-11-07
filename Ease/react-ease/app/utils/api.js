@@ -1,4 +1,5 @@
 var axios = require('axios');
+import {reflect} from "./utils";
 
 const basic_get = (url, params) => {
   return axios.get(url, {params: params})
@@ -31,11 +32,21 @@ module.exports = {
     const img_url = "https://logo.clearbit.com/" + l.hostname;
     return axios.get("https://logo.clearbit.com/" + l.hostname).then(response => {
       if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1)
-        return "";
+        return '/resources/icons/link_app.png';
       return img_url;
     }).catch(err => {
       throw err;
     })
+  },
+  getLogo: function({url: url}) {
+    const l = document.createElement("a");
+    l.href = url;
+    const img_url = "https://logo.clearbit.com/" + l.hostname;
+    return reflect(axios.get("https://logo.clearbit.com/" + l.hostname)).then(response => {
+      if (response.error)
+        return '/resources/icons/link_app.png';
+      return img_url;
+    });
   },
   fetchTeams : function(){
     return axios.get('/api/v1/teams/GetTeams',{

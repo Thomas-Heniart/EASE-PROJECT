@@ -25,7 +25,7 @@ import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
 import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 import ClassicAppModal from "../catalog/ClassicAppModal";
 import SsoAppModal from "../catalog/SsoAppModal";
-import SimpleAppSettingsModal from "../modals/SimpleAppSettingsModal";
+import ClassicAppSettingsModal from "../modals/ClassicAppSettingsModal";
 import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
 import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
 import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
@@ -120,8 +120,8 @@ class ModalsContainer extends Component{
           <ClassicAppModal/>}
           {this.props.catalogAddSSOAppModal.active &&
           <SsoAppModal/>}
-          {this.props.modals.simpleAppSettings.active &&
-          <SimpleAppSettingsModal/>}
+          {this.props.modals.classicAppSettings.active &&
+          <ClassicAppSettingsModal/>}
           {this.props.modals.extensionDownload.active &&
           <ExtensionDownloadModal/>}
           {this.props.modals.linkAppSettings.active &&

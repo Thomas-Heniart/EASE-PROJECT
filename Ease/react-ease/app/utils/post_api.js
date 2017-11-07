@@ -11,6 +11,39 @@ const basic_post = (url, params) => {
 };
 
 module.exports = {
+  dashboard: {
+    createProfile : function({name}) {
+      return axios.post('/api/v1/dashboard/CreateProfile', {
+        name: name
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    editClassicApp: ({app_id, name, account_information}) => {
+      return basic_post('/api/v1/dashboard/EditClassicApp', {
+        app_id: app_id,
+        name: name,
+        account_information: account_information
+      });
+    },
+    editLogWithApp: ({app_id, name, logWithApp_id}) => {
+      return basic_post('/api/v1/dashboard/EditLogWithApp', {
+        app_id: app_id,
+        name: name,
+        logWithApp_id:logWithApp_id
+      });
+    },
+    editLinkApp: ({app_id, name, url, img_url}) => {
+      return basic_post('/api/v1/dashboard/EditLinkApp', {
+        app_id: app_id,
+        name: name,
+        url: url,
+        img_url: img_url
+      })
+    }
+  },
   catalog: {
     addClassicApp: ({name, website_id, profile_id, account_information}) => {
       Object.keys(account_information).map(item => {
@@ -869,17 +902,6 @@ module.exports = {
       return axios.post('/api/v1/teams/AskOwnerToUpgrade', {
         team_id: team_id,
         timestamp: new Date().getTime()
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
-      });
-    }
-  },
-  dashboard: {
-    createProfile : function({name}){
-      return axios.post('/api/v1/dashboard/CreateProfile', {
-        name: name
       }).then(response => {
         return response.data;
       }).catch(err => {

@@ -7,13 +7,18 @@ import {handleSemanticInput} from "../../utils/utils";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 
-@connect()
+@connect(store => ({
+  app: store.modals.logWithAppSettings.app,
+  apps: store.dashboard.apps
+}))
 class LogWithAppSettings extends Component {
   constructor(props){
     super(props);
     this.state = {
       view: 'Account',
-      appName: 'MyName'
+      appName: this.props.app.name,
+      lw_app_id: this.props.app.logWithApp_id,
+      lw_apps: []
     }
   }
   handleInput = handleSemanticInput.bind(this);
@@ -23,9 +28,22 @@ class LogWithAppSettings extends Component {
   remove = () => {
 
   };
+  edit = (e) => {
+    e.preventDefault();
+  };
+  componentWillMount(){
+    const {app, apps} = this.props;
+    const lw_apps = Object.keys(apps).map(item => {
+      return apps[item];
+    }).filter(item => {
+      return item.type === 'classicApp' && item.website.id === app.logWith_website.id
+    });
+    this.setState({lw_apps: lw_apps});
+  };
   render(){
+    const {app} = this.props;
     const {view} = this.state;
-    const img_src = '/resources/websites/Crisp/logo.png';
+    const lw_name = app.logWith_website.name.toLowerCase();
 
     return (
         <SimpleModalTemplate
@@ -34,7 +52,7 @@ class LogWithAppSettings extends Component {
           <Container class="app_settings_modal">
             <div class="display-flex align_items_center">
               <div class="squared_image_handler">
-                <img src={img_src} alt="Website logo"/>
+                <img src={app.logo} alt="Website logo"/>
               </div>
               <AppSettingsNameInput value={this.state.appName} onChange={this.handleInput}/>
             </div>
@@ -42,10 +60,10 @@ class LogWithAppSettings extends Component {
             {view === 'Account' &&
             <Form>
               <Form.Field>
-                <Segment.Group class={`logwith_app_selectors linkedin`}>
+                <Segment.Group class={`logwith_app_selectors ${lw_name}`}>
                   <Segment className='first'>
-                    <Icon name='linkedin'/>
-                    Select your Linkedin account
+                    <Icon name={lw_name}/>
+                    Select your {app.logWith_website.name} account
                   </Segment>
                   <Segment>
                     <List className="listCategory">
@@ -54,7 +72,7 @@ class LogWithAppSettings extends Component {
                         <span>fisun.serge76@gmail.com</span>
                       </List.Item>
                       <p class="text-center errorMessage">
-                        You don’t have a Linkedin Account setup yet. Please install one before all.
+                        You don’t have a {app.logWith_website.name} Account setup yet. Please install one before all.
                       </p>
                     </List>
                   </Segment>

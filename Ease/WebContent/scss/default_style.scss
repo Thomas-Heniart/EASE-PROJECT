@@ -126,6 +126,10 @@ input[type=number]::-webkit-inner-spin-button {
   position: inherit;
 }
 
+.ui.disabled.input, .ui.input:not(.disabled) input[disabled] {
+  opacity: inherit;
+}
+
 .max-border-radius {
   border-radius: 100%;
 }
