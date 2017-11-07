@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 
@@ -19,8 +20,8 @@ public class ServletEditEmail extends HttpServlet {
         try {
             sm.needToBeConnected();
             String password = sm.getStringParam("password", false, false);
-            /* String private_key = (String) sm.getContextAttr("privateKey");
-            password = RSA.Decrypt(password, private_key); */
+            String private_key = (String) sm.getContextAttr("privateKey");
+            password = RSA.Decrypt(password, private_key);
             User user = sm.getUser();
             if (!user.getKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password");

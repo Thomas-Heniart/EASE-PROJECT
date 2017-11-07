@@ -26,45 +26,15 @@
           rel='stylesheet' type='textcss'/>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/lib/niftyPopupWindow/component.css">
     <link rel="manifest" href="manifest.json">
 
-    <script
-            src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-    <script src="js/classie.js"></script>
-    <script src="js/owl.carousel.js"></script>
-    <script src="js/basic-utils.js"></script>
+    <script src="jsMinified.v00022/jquery-3.1.0.js"></script>
     <script src="js/postHandler.js"></script>
-    <script src="js/form/form.js"></script>
-    <script src="js/form/errorMsg.js"></script>
-    <script src="js/form/input.js"></script>
-    <script src="js/form/popup.js"></script>
-    <script src="js/form/emailSuggestions.js"></script>
-    <script src="js/admin.js"></script>
-    <script src="js/statistics.js"></script>
-
-    <script src="js/jquery.mousewheel.min.js"></script>
-
-    <script src="js/snap.svg-min.js"></script>
-    <script src="js/modalEffects.js"></script>
-    <script src="js/selectFx.js"></script>
-    <script src="js/backOffice/websitesVisited.js"></script>
-    <script src="js/backOffice/tags.js"></script>
-    <script src="js/backOffice/unregisteredEmails.js"></script>
-    <script src="js/backOffice/websitesRequests.js"></script>
-    <link rel="stylesheet" type="text/css"
-          href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="css/lib/dropDownMenu/dropdown.css"/>
-    <link rel="stylesheet" type="text/css" href="component.css"/>
-    <link rel="stylesheet" href="css/hover.css">
+    <script src="js/admin.js?0"></script>
 </head>
 
 
 <body role="document" class="mainBody">
-<c:set var="groupManager" scope="session" value='${servletContext.getAttribute("groupManager")}'/>
-<c:set var="websitesVisitedManager" scope="session" value='${servletContext.getAttribute("websitesVisitedManager")}'/>
 <div id="loggedBody">
     <div class="col-left show" style="width: 100%; float: left">
         <%@ include file="templates/AdminView.jsp" %>
