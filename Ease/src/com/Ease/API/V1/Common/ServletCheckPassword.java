@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -24,8 +25,8 @@ public class ServletCheckPassword extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             if (password == null || password.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
-            /* String private_key = (String) sm.getContextAttr("privateKey");
-            password = RSA.Decrypt(password, private_key); */
+            String private_key = (String) sm.getContextAttr("privateKey");
+            password = RSA.Decrypt(password, private_key);
             JSONObject res = new JSONObject();
             res.put("valid", user.getKeys().isGoodPassword(password));
             sm.setSuccess(res);
