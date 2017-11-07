@@ -62,6 +62,22 @@ button.only-text-button {
         margin-top: 10px;
         color: #424242;
         font-size: 16px; }
+      #personal_settings .grid .segment .checkbox label {
+        margin-top: 10px;
+        color: #424242;
+        font-size: 16px; }
+      #personal_settings .grid .segment .checkbox:after {
+        top: 13px; }
+      #personal_settings .grid .segment .error {
+        margin-bottom: 0; }
+        #personal_settings .grid .segment .error label {
+          color: #424242; }
+        #personal_settings .grid .segment .error input {
+          border-color: #eb555c;
+          color: #424242;
+          background-color: white; }
+      #personal_settings .grid .segment .deactivationMessage {
+        color: #eb555c; }
 
 #catalog {
   margin-top: -60px;
