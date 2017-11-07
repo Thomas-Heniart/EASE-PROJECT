@@ -71,7 +71,7 @@ class Settings extends React.Component {
                                 <Header as='h4'>
                                     Account activation
                                     <Header.Subheader>
-                                        Desactivate account
+                                        Deactivate account
                                     </Header.Subheader>
                                 </Header>
                             </Menu.Item>

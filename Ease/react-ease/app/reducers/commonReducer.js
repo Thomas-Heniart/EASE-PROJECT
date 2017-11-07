@@ -4,7 +4,8 @@ const initialState = {
   ws_id: '-1',
   authenticated : false,
   loginRedirectUrl: '',
-  teamsTutorial: false
+  teamsTutorial: false,
+  homepage: false
 };
 
 export default function reducer(state=initialState, action) {
@@ -21,6 +22,12 @@ export default function reducer(state=initialState, action) {
         ...state,
         user : action.payload.user,
         authenticated : true
+      }
+    }
+    case 'CHECK_PASSWORD_FULFILLED': {
+      return {
+        ...state,
+        password : action.payload.password
       }
     }
     case 'SET_LOGIN_REDIRECT_URL': {
@@ -85,6 +92,12 @@ export default function reducer(state=initialState, action) {
       return {
           ...state,
         user: user
+      }
+    }
+    case 'SET_HOMEPAGE': {
+      return {
+        ...state,
+        homepage: action.payload.homepage
       }
     }
   }

@@ -107,3 +107,97 @@ export function setWSId(id){
     }
   }
 }
+
+export function askEditEmail(password, new_email){
+  return function (dispatch){
+    return post_api.common.askEditEmail(password, new_email
+    ).then(response => {
+      dispatch({type: 'ASK_EDIT_EMAIL_FULFILLED', payload: response});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'ASK_EDIT_EMAIL_REJECTED', payload: err});
+      throw err;
+    })
+  }
+}
+
+export function editEmail(password, new_email, digits){
+    return function (dispatch){
+        return post_api.common.editEmail(password, new_email, digits
+        ).then(response => {
+            dispatch({type: 'EDIT_EMAIL_FULFILLED', payload: response});
+            return response;
+        }).catch(err => {
+            dispatch({type: 'EDIT_EMAIL_REJECTED', payload: err});
+            throw err;
+        })
+    }
+}
+
+export function editPersonalUsername(username){
+    return function (dispatch){
+        return post_api.common.editPersonalUsername(username
+        ).then(response => {
+            dispatch({type: 'EDIT_USERNAME_FULFILLED', payload: response});
+            return response;
+        }).catch(err => {
+            dispatch({type: 'EDIT_USERNAME_REJECTED', payload: err});
+            throw err;
+        })
+    }
+}
+
+export function checkPassword(password){
+  return function (dispatch){
+    return post_api.common.checkPassword(password).then(response => {
+      dispatch({type: 'CHECK_PASSWORD_FULFILLED', payload: response});
+        return response;
+      }).catch(err => {
+        dispatch({type: 'CHECK_PASSWORD_REJECTED', payload: err});
+        throw err;
+      })
+  }
+}
+
+export function editPassword(password, new_password){
+    return function (dispatch){
+        return post_api.common.editPassword(password, new_password)
+            .then(response => {
+            dispatch({type: 'EDIT_PASSWORD_FULFILLED', payload: response});
+            return response;
+        }).catch(err => {
+            dispatch({type: 'EDIT_PASSWORD_REJECTED', payload: err});
+            throw err;
+        })
+    }
+}
+
+export function setBackgroundPicture(active){
+    return function (dispatch){
+        return post_api.common.setBackgroundPicture(active).then(response => {
+            dispatch({type: 'SET_BACKGROUND_FULFILLED', payload: response});
+            return response;
+        }).catch(err => {
+            dispatch({type: 'SET_BACKGROUND_REJECTED', payload: err});
+            throw err;
+        })
+    }
+}
+
+export function deleteAccount(password){
+    return function (dispatch){
+        return post_api.common.deleteAccount(password).then(response => {
+            dispatch({type: 'DELETE_ACCOUNT_FULFILLED', payload: response});
+            return response;
+        }).catch(err => {
+            dispatch({type: 'DELETE_ACCOUNT_REJECTED', payload: err});
+            throw err;
+        })
+    }
+}
+
+export function setHomepage({homepage}){
+    return {
+        type: 'SET_HOMEPAGE', payload: {homepage: homepage}
+    }
+}

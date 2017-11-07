@@ -542,15 +542,6 @@ public class User {
         request = db.prepareRequest("DELETE FROM jsonWebTokens WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
-        request = db.prepareRequest("DELETE FROM groupsAndUsersMap WHERE user_id = ?;");
-        request.setInt(db_id);
-        request.set();
-        request = db.prepareRequest("DELETE FROM infrastructuresAdminsMap WHERE user_id = ?;");
-        request.setInt(db_id);
-        request.set();
-        request = db.prepareRequest("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = ?;");
-        request.setInt(db_id);
-        request.set();
         request = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();

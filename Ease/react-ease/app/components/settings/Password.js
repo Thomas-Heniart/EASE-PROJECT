@@ -1,6 +1,13 @@
 import React from 'react';
 import { Input, Button, Segment, Form, Header, Message } from 'semantic-ui-react';
+import {reduxActionBinder} from "../../actions/index";
+import {connect} from "react-redux";
+import {checkPassword} from "../../actions/commonActions";
+import {editPassword} from "../../actions/commonActions";
 
+@connect(store => ({
+    common: store.common
+}), reduxActionBinder)
 class Password extends React.Component {
     constructor(props) {
         super(props);
@@ -10,15 +17,23 @@ class Password extends React.Component {
             newPassword: '',
             confirmNewPassword: '',
             errorMessage: '',
-            fakePassword: 'haha'
+            fakePassword: 'haha',
+            loading: false
         }
     }
 
     accessModification = () => {
-        if (this.state.currentPassword === this.state.fakePassword)
-            this.setState({ view: 2, errorMessage: '' });
-        else
-            this.setState({ errorMessage: 'Wrong Password' });
+        this.setState({ loading: true, errorMessage: '' });
+        this.props.dispatch(checkPassword({
+            password: this.state.currentPassword
+        })).then(response => {
+            if (response.valid)
+                this.setState({ loading: false, view: 2, errorMessage: '' });
+            else
+                this.setState({ loading: false, errorMessage: 'Wrong Password' });
+        }).catch(err => {
+            this.setState({ loading: false, errorMessage: err });
+        });
     };
     cancel = () => {
         this.setState({ view: 1, newPassword: '', currentPassword: '', confirmNewPassword: '', errorMessage: '' });
@@ -29,8 +44,30 @@ class Password extends React.Component {
     confirm = () => {
         if (this.state.newPassword !== this.state.confirmNewPassword)
             this.setState({ errorMessage: 'Password do not match' });
-        else
-            this.setState({ view: 1, newPassword: '', currentPassword: '', confirmNewPassword: '', errorMessage: '' });
+        else {
+            if (this.state.newPassword.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+).{8,}/gi)) {
+                this.setState({loading: true, errorMessage: ''});
+                this.props.dispatch(editPassword({
+                    password: this.state.currentPassword,
+                    new_password: this.state.newPassword
+                })).then(response => {
+                    if (response.msg === 'Password edited')
+                        this.setState({
+                            loading: false,
+                            view: 1,
+                            errorMessage: '',
+                            newPassword: '',
+                            confirmNewPassword: '',
+                            currentPassword: ''
+                        });
+                }).catch(err => {
+                    this.setState({loading: false, errorMessage: err});
+                });
+            }
+            else {
+                this.setState({ errorMessage: 'Your password must contain at least 8 character, 1 uppercase, 1 lowercase and 1 number.' });
+            }
+        }
     };
     render() {
         return (
@@ -42,6 +79,7 @@ class Password extends React.Component {
                             Your password must contain at least 8 character, 1 uppercase, 1 lowercase and 1 number.
                         </Header.Subheader>
                     </Header>
+                    {this.state.view === 1 &&
                     <Form onSubmit={this.accessModification} size='mini' error={this.state.errorMessage.length > 0}>
                         <Form.Field style={{ display: 'inline-flex', width: '100%' }}>
                             <Form.Input className='inputInSegment'
@@ -53,15 +91,23 @@ class Password extends React.Component {
                                         onChange={this.handleInput}
                                         disabled={this.state.view === 2}
                                         required />
-                            {this.state.view === 1 &&
                             <Form.Button type='submit'
+                                         loading={this.state.loading}
                                          content='Access modification'
-                                         style={{ marginLeft: '15px' }} />}
+                                         style={{ marginLeft: '15px' }} />
                         </Form.Field>
-                        {this.state.view === 1 && <Message error content={this.state.errorMessage} />}
-                    </Form>
+                        <Message error content={this.state.errorMessage} />
+                    </Form>}
                     {this.state.view === 2 &&
                     <Form onSubmit={this.confirm} size='mini' error={this.state.errorMessage.length > 0}>
+                        <Form.Field style={{ display: 'inline-flex', width: '100%' }}>
+                            <Form.Input className='inputInSegment'
+                                        label='Current password'
+                                        name='currentPassword'
+                                        type='password'
+                                        value={this.state.currentPassword}
+                                        disabled />
+                        </Form.Field>
                         <Form.Field>
                             <Form.Input className='inputInSegment'
                                         label='New password'

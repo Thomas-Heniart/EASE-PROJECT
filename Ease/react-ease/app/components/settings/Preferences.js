@@ -1,52 +1,68 @@
 import React from 'react';
-import { Segment, Checkbox, Form, Header } from 'semantic-ui-react';
+import { Segment, Checkbox, Header } from 'semantic-ui-react';
+import {setBackgroundPicture} from "../../actions/commonActions";
+import {reduxActionBinder} from "../../actions/index";
+import {connect} from "react-redux";
 
+@connect(store => ({
+    common: store.common
+}), reduxActionBinder)
 class Preferences extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            homepage: false,
-            background: false,
-            loading: false
+            homepage: this.props.common.homepage,
+            background: this.props.common.user.background_picture,
+            loading: false,
+            errorMessage: ''
         }
     }
-    componentDidMount() {
-        const self = this;
-        this.setState({ loading: true });
-        document.addEventListener("GetSettingsDone", (e) => {
-            self.setState({ homepage: e.detail });
-            self.setState({ loading: false })
-        });
-        document.dispatchEvent(new CustomEvent("GetSettings", {bubbles: true}))
-    }
-    componentWillUnmount() {
-        document.removeListener("GetSettingsDone");
-    }
     toggleHomepage = () => {
-        document.dispatchEvent(new CustomEvent("SetHompage", {detail: !this.state.homepage, bubbles: true}))
-        if (this.state.homepage === true)
+        this.setState({ loading: true });
+        if (this.props.common.homepage === true) {
+            document.dispatchEvent(new CustomEvent("SetHompage", {detail: false, bubbles: true}));
             this.setState({ homepage: false });
-        else
+            this.props.common.homepage = false;
+        }
+        else {
+            document.dispatchEvent(new CustomEvent("SetHompage", {detail: true, bubbles: true}));
             this.setState({ homepage: true });
+            this.props.common.homepage = true;
+        }
+        this.setState({ loading: false });
     };
     toggleBackground = () => {
-        if (this.state.background === true)
-            this.setState({ background: false });
-        else
-            this.setState({ background: true });
+        this.setState({loading: true});
+        if (this.state.background === true) {
+            this.props.dispatch(setBackgroundPicture({
+                active: false
+            })).then(response => {
+                this.setState({loading: false, errorMessage: '', background: false});
+            }).catch(err => {
+                this.setState({loading: false, errorMessage: err});
+            });
+        }
+        else {
+            this.props.dispatch(setBackgroundPicture({
+                active: true
+            })).then(response => {
+                this.setState({loading: false, errorMessage: '', background: true});
+            }).catch(err => {
+                this.setState({loading: false, errorMessage: err});
+            });
+        }
     };
-
     render() {
         return (
             <Segment>
                 <Header as='h5'>Choose your preferences</Header>
                 <div>
-                    <Checkbox toggle checked={this.state.homepage} onChange={this.toggleHomepage} disabled={this.state.loading} />
+                    <Checkbox toggle checked={this.props.common.homepage} onChange={this.toggleHomepage} disabled={this.state.loading} />
                     <span>Ease.space as Homepage</span>
                 </div>
                 <p>This option allows you to have the Ease.space page when you’ll open a new tab in your browser.</p>
                 <div>
-                    <Checkbox toggle onChange={this.toggleBackground} disabled={this.state.loading} />
+                    <Checkbox toggle checked={this.state.background} onChange={this.toggleBackground} disabled={this.state.loading} />
                     <span>Daily background picture</span>
                 </div>
                 <p>Each day we’ll display a nice background picture, coming from <a href='https://unsplash.com' target='blank'>unsplash.com</a>, behind your Apps.</p>

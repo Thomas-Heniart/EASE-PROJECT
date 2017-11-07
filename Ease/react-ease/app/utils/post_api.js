@@ -898,6 +898,64 @@ module.exports = {
         throw err.response.data;
       })
     },
+    askEditEmail : function(password, new_email){
+      return axios.post('/api/v1/common/AskEditEmail', password, new_email
+      ).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    editEmail : function(password, new_email, digits){
+      return axios.post('/api/v1/common/EditEmail', password, new_email, digits
+      ).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    editPersonalUsername : function(username){
+      return axios.post('/api/v1/common/EditUsername', username
+      ).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    checkPassword : function(password){
+      return axios.post('/api/v1/common/CheckPassword', password
+      ).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    editPassword : function(password, new_password){
+      return axios.post('/api/v1/common/EditPassword', password, new_password
+      ).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    setBackgroundPicture : function(active){
+      return axios.post('/api/v1/common/SetBackgroundPicture', active
+      ).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    deleteAccount : function(password){
+      return axios.post('/api/v1/common/DeleteAccount', {
+        password: cipher(password)
+      }
+      ).then(response => {
+          return response.data;
+      }).catch(err => {
+          throw err.response.data;
+      })
+    },
     askRegistration: function(email){
       return axios.post('/api/v1/common/AskRegistration', {
         email: email
