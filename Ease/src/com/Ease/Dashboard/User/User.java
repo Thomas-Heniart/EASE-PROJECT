@@ -1,9 +1,7 @@
 package com.Ease.Dashboard.User;
 
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.NewDashboard.DashboardManager;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.DashboardManager;
 import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -81,9 +79,6 @@ public class User {
                         teamUser.setDeciphered_teamKey(deciphered_teamKey);
                         teamUser.setDisabled(false);
                         hibernateQuery.saveOrUpdateObject(teamUser);
-                        for (SharedApp sharedApp : teamUser.getSharedApps()) {
-                            sharedApp.setDisableShared(false, db);
-                        }
                     }
                 }
                 hibernateQuery.commit();
@@ -166,8 +161,6 @@ public class User {
         String db_id = request.set().toString();
         SessionSave sessionSave = SessionSave.createSessionSave(keys.getKeyUser(), db_id, db);
         User newUser = new User(db_id, firstName, email, keys, opt, false, false, sessionSave, status);
-        Profile.createPersonnalProfiles(newUser, db);
-        //newUser.initializeDashboardManager(context, db);
         newUser.initializeNotificationManager();
         UserEmail userEmail = UserEmail.createUserEmail(email, newUser, true, db);
         newUser.getUserEmails().put(email, userEmail);
@@ -316,8 +309,12 @@ public class User {
         return this.keys.encrypt(password);
     }
 
-    public String decrypt(String password) throws GeneralException {
-        return this.keys.decrypt(password);
+    public String decrypt(String password) throws HttpServletException {
+        try {
+            return this.keys.decrypt(password);
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     // WebSockets implementation
@@ -363,40 +360,6 @@ public class User {
             return (rs.getString(1));
         else
             throw new GeneralException(ServletManager.Code.ClientError, "This user dosen't exist.");
-    }
-
-    public static int getMostEmptyProfileColumnForUnconnected(String db_id, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        Integer[] columns = new Integer[5];
-        for (int i = 0; i < Profile.MAX_COLUMN; ++i)
-            columns[i] = 0;
-        DatabaseRequest request = db.prepareRequest("SELECT id, column_idx FROM profiles WHERE user_id= ?;");
-        request.setInt(db_id);
-        DatabaseResult rs = request.get();
-        while (rs.next())
-            columns[rs.getInt(2)] += Profile.getSizeForUnconnected(rs.getString(1), sm);
-        int col = 1;
-        int minSize = -1;
-        for (int i = 1; i < Profile.MAX_COLUMN; ++i) {
-            if (minSize == -1 || columns[i] < minSize) {
-                minSize = columns[i];
-                col = i;
-            }
-        }
-        return col;
-    }
-
-    public static int getColumnNextPositionForUnconnected(String db_id, int column_idx, ServletManager sm)
-            throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("SELECT count(*) FROM profiles WHERE user_id= ? AND column_idx= ?;");
-        request.setInt(db_id);
-        request.setInt(column_idx);
-        DatabaseResult rs = request.get();
-        if (rs.next())
-            return rs.getInt(1);
-        else
-            throw new GeneralException(ServletManager.Code.InternError, "Bizare.");
     }
 
     public void removeEmailIfNeeded(String email, ServletManager sm) throws GeneralException {
@@ -635,6 +598,6 @@ public class User {
     }
 
     public void decipherDashboard() throws HttpServletException {
-        this.getDashboardManager().decipher(this.getKeys().getKeyUser());
+        this.getDashboardManager().decipher(this.getKeys().getKeyUser(), this.getTeamUsers());
     }
 }

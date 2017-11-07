@@ -23,7 +23,7 @@ public class ServletFirstAppReceived extends HttpServlet {
             TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
             if (teamUser.getTeamUserStatus().first_app_received())
                 throw new HttpServletException(HttpStatus.BadRequest, "Step already checked.");
-            if (teamUser.getSharedApps().isEmpty())
+            if (teamUser.getTeamCardReceivers().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "You must have at least one app.");
             teamUser.getTeamUserStatus().setFirst_app_received(true);
             sm.saveOrUpdate(teamUser.getTeamUserStatus());

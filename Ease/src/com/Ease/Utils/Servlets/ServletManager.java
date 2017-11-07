@@ -107,8 +107,10 @@ public abstract class ServletManager {
                 this.errorMessage = httpServletException.getMsg();
             System.out.println(this.errorMessage);
             this.logResponse = this.errorMessage;
-            if (httpServletException.getHttpStatus().getValue() == HttpStatus.InternError.getValue())
+            if (httpServletException.getHttpStatus().getValue() == HttpStatus.InternError.getValue()) {
+                e.printStackTrace();
                 this.setInternError();
+            }
             response.setStatus(httpServletException.getHttpStatus().getValue());
         } catch (ClassCastException e1) {
             e.printStackTrace();
@@ -317,8 +319,10 @@ public abstract class ServletManager {
         try {
             if (this.response.getStatus() != HttpStatus.Success.getValue()) {
                 System.out.println("Error code: " + response.getStatus());
-                if (this.errorMessage != null)
+                if (this.errorMessage != null) {
+                    this.response.setCharacterEncoding("UTF-8");
                     response.getWriter().print(this.errorMessage);
+                }
                 else
                     response.sendError(response.getStatus());
             } else {
@@ -326,6 +330,7 @@ public abstract class ServletManager {
                     System.out.println("redirect to " + this.redirectUrl);
                     response.sendRedirect(this.redirectUrl);
                 } else {
+                    this.response.setCharacterEncoding("UTF-8");
                     if (this.jsonArrayResponse == null && this.jsonObjectResponse == null) {
                         response.sendError(HttpStatus.InternError.getValue());
                         try {

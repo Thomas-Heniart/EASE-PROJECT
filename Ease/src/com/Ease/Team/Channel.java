@@ -1,7 +1,5 @@
 package com.Ease.Team;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
@@ -172,10 +170,6 @@ public class Channel {
         jsonObject.put("default", this.isDefault());
         jsonObject.put("room_manager_id", this.getRoom_manager().getDb_id());
         JSONArray apps = new JSONArray();
-        for (ShareableApp shareableApp : this.getTeam().getAppManager().getShareableApps().values()) {
-            if (shareableApp.getChannel() == this)
-                apps.add(((App) shareableApp).getDBid());
-        }
         jsonObject.put("app_ids", apps);
         jsonObject.put("team_id", team.getDb_id());
         return jsonObject;

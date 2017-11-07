@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
@@ -53,28 +52,14 @@ public class ServletConnection extends HttpServlet {
                     user = User.loadUser(email, password, sm.getServletContext(), db);
                     sm.setUser(user);
                     HibernateQuery hibernateQuery = sm.getHibernateQuery();
-                    for (TeamUser teamUser : user.getTeamUsers()) {
-                        if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
-                            teamUser.finalizeRegistration();
-                            hibernateQuery.saveOrUpdateObject(teamUser);
-                        }
-                        if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
-                            String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), user.getKeys().getPrivateKey());
-                            teamUser.setTeamKey(user.encrypt(deciphered_teamKey));
-                            teamUser.setDeciphered_teamKey(deciphered_teamKey);
-                            teamUser.setDisabled(false);
-                            hibernateQuery.saveOrUpdateObject(teamUser);
-                            for (SharedApp sharedApp : teamUser.getSharedApps()) {
-                                sharedApp.setDisableShared(false, sm.getDB());
-                            }
-                        }
-                    }
+                    for (TeamUser teamUser : user.getTeamUsers())
+                        teamUser.cipheringStep(hibernateQuery, db);
                     ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
                     ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                     ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                     sm.setUser(user);
                     user.initializeDashboardManager(hibernateQuery);
-                    user.getDashboardManager().decipher(user.getKeys().getKeyUser());
+                    user.decipherDashboard();
                     removeIpFromDataBase(client_ip, db);
                     JSONObject res = new JSONObject();
                     res.put("user", user.getJson());

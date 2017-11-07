@@ -34,7 +34,6 @@ public class ServletGetTeamUser extends HttpServlet {
             JSONArray channels = new JSONArray();
             for (Channel channel : team.getChannelsForTeamUser(teamUser))
                 channels.add(channel.getDb_id());
-            jsonObject.put("apps", team.getShareableAppsForTeamUser(teamUser_id));
             sm.setSuccess(jsonObject);
         } catch (Exception e) {
             sm.setError(e);

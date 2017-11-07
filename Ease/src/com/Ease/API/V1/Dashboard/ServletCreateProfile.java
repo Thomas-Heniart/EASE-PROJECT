@@ -1,7 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -24,7 +25,13 @@ public class ServletCreateProfile extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name == null || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name");
-            Profile profile = user.getDashboardManager().addProfile(name, "#373B60", sm.getDB());
+            if (name.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
+            Integer column_index = sm.getIntParam("column_index", true, false);
+            Integer position = sm.getIntParam("position", true, false);
+            Profile profile = new Profile(Integer.valueOf(user.getDBid()), column_index, position, new ProfileInformation(name));
+            sm.saveOrUpdate(profile);
+            user.getDashboardManager().addProfile(profile);
             sm.setSuccess(profile.getJson());
         } catch (Exception e) {
             sm.setError(e);

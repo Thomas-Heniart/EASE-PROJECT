@@ -2,11 +2,10 @@ package com.Ease.API.V1.Common;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.LinkApp.LinkApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.NewDashboard.*;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
@@ -78,9 +77,9 @@ public class ServletRegistration extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
-            Profile school_profile = null;
+            //Profile school_profile = null;
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            if (email.endsWith("@iscparis.com")) {
+            /* if (email.endsWith("@iscparis.com")) {
                 school_profile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);
                 Website myIsc = catalog.getWebsiteWithName("My ISC");
                 school_profile.addEmptyApp(myIsc.getName(), myIsc, db);
@@ -124,27 +123,42 @@ public class ServletRegistration extends HttpServlet {
                 school_profile.addEmptyApp("Everyone Print", print, db);
                 Website workplace = catalog.getWebsiteWithName("Workplace");
                 school_profile.addEmptyApp(workplace.getName(), workplace, db);
-            } else {
-                Profile profile_perso = newUser.getDashboardManager().getProfilesList().get(0);
-                Profile profile_pro = newUser.getDashboardManager().addProfile("Pro", "#373B60", db);
-                Website facebook = catalog.getWebsiteWithName("Facebook");
-                Website slack = catalog.getWebsiteWithName("Slack");
-                Website gmail = catalog.getWebsiteWithName("Gmail");
-                Website linkedin = catalog.getWebsiteWithName("LinkedIn");
-                Website sncf = catalog.getWebsiteWithName("Voyages SNCF");
-                Website trello = catalog.getWebsiteWithName("Trello");
-                profile_perso.addEmptyApp(facebook.getName(), facebook, db);
-                profile_perso.addEmptyApp("Gmail perso", gmail, db);
-                profile_perso.addEmptyApp(sncf.getName(), sncf, db);
-                profile_pro.addEmptyApp("Gmail pro", gmail, db);
-                profile_pro.addEmptyApp(slack.getName(), slack, db);
-                profile_pro.addEmptyApp(linkedin.getName(), linkedin, db);
-                profile_pro.addEmptyApp(trello.getName(), trello, db);
-                LinkApp appear_in = LinkApp.createLinkApp(profile_pro, profile_pro.getApps().size(), "Talk to Ease", "https://appear.in/ease.space_chat", "https://logo.clearbit.com/appear.in", db);
-                profile_pro.addApp(appear_in);
-                LinkApp le_monde = LinkApp.createLinkApp(profile_perso, profile_perso.getApps().size(), "Le Monde", "http://www.lemonde.fr/", "https://logo.clearbit.com/lemonde.fr", db);
-                profile_perso.addApp(le_monde);
-            }
+            } else { */
+            newUser.initializeDashboardManager(hibernateQuery);
+            Profile profile_perso = new Profile(Integer.valueOf(newUser.getDBid()), 0, 0, new ProfileInformation("ME"));
+            Profile profile_pro = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, new ProfileInformation("PRO"));
+            sm.saveOrUpdate(profile_perso);
+            sm.saveOrUpdate(profile_pro);
+            newUser.getDashboardManager().addProfile(profile_perso);
+            newUser.getDashboardManager().addProfile(profile_pro);
+            Website facebook = catalog.getWebsiteWithName("Facebook");
+            Website gmail = catalog.getWebsiteWithName("Gmail");
+            Website sncf = catalog.getWebsiteWithName("Voyages SNCF");
+            ClassicApp facebookApp = new ClassicApp(new AppInformation(facebook.getName()), facebook);
+            facebookApp.setProfile(profile_perso);
+            facebookApp.setPosition(0);
+            sm.saveOrUpdate(facebookApp);
+            profile_perso.addApp(facebookApp);
+            ClassicApp gmailApp = new ClassicApp(new AppInformation(gmail.getName()), gmail);
+            gmailApp.setProfile(profile_perso);
+            gmailApp.setPosition(1);
+            sm.saveOrUpdate(gmailApp);
+            profile_perso.addApp(gmailApp);
+            ClassicApp sncfApp = new ClassicApp(new AppInformation(sncf.getName()), sncf);
+            sncfApp.setProfile(profile_perso);
+            sncfApp.setPosition(2);
+            sm.saveOrUpdate(sncfApp);
+            profile_perso.addApp(sncfApp);
+            LinkApp lemonde = new LinkApp(new AppInformation("Le Monde"), new LinkAppInformation("http://www.lemonde.fr/", "https://logo.clearbit.com/lemonde.fr"));
+            lemonde.setProfile(profile_perso);
+            lemonde.setPosition(3);
+            sm.saveOrUpdate(lemonde);
+            profile_perso.addApp(lemonde);
+            newUser.getDashboardManager().addApp(facebookApp);
+            newUser.getDashboardManager().addApp(gmailApp);
+            newUser.getDashboardManager().addApp(sncfApp);
+            newUser.getDashboardManager().addApp(lemonde);
+            //}
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());
 

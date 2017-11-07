@@ -2,10 +2,13 @@ package com.Ease.API.V1.Schools;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.NewDashboard.AppInformation;
+import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -61,7 +64,6 @@ public class ServletRegistrationIeseg extends HttpServlet {
             if (!errors.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, errors);
             DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
             User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
@@ -76,22 +78,34 @@ public class ServletRegistrationIeseg extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
             /* ieseg profile */
-            Profile ieseg_profile = newUser.getDashboardManager().addProfile("IESEG", "#FFC300", db);
+            Profile ieseg_profile = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, new ProfileInformation("IESEG"));
 
             /* ieseg apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website ieseg_online = catalog.getWebsiteWithName("IESEG Online");
-            ieseg_profile.addEmptyApp(ieseg_online.getName(), ieseg_online, db);
-            Website ieseg_network = catalog.getWebsiteWithName("Ieseg Network");
-            ieseg_profile.addEmptyApp(ieseg_network.getName(), ieseg_network, db);
+            ClassicApp ieseg_onlineApp = new ClassicApp(new AppInformation(ieseg_online.getName()), ieseg_online);
+            ieseg_onlineApp.setProfile(ieseg_profile);
+            ieseg_onlineApp.setPosition(0);
+            sm.saveOrUpdate(ieseg_onlineApp);
+            ieseg_profile.addApp(ieseg_onlineApp);
             Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Ieseg");
-            ieseg_profile.addEmptyApp("JobTeaser", jobTeaser, db);
+            ClassicApp jobTeaserApp = new ClassicApp(new AppInformation("JobTeaser"), jobTeaser);
+            jobTeaserApp.setProfile(ieseg_profile);
+            jobTeaserApp.setPosition(1);
+            sm.saveOrUpdate(jobTeaserApp);
+            ieseg_profile.addApp(jobTeaserApp);
             Website unify = catalog.getWebsiteWithName("Unify Iéseg");
-            ieseg_profile.addEmptyApp(unify.getName(), unify, db);
+            ClassicApp unifyApp = new ClassicApp(new AppInformation(unify.getName()), unify);
+            unifyApp.setProfile(ieseg_profile);
+            unifyApp.setPosition(2);
+            sm.saveOrUpdate(unifyApp);
+            ieseg_profile.addApp(unifyApp);
             Website office_mail = catalog.getWebsiteWithName("Office365 Mails");
-            ieseg_profile.addEmptyApp(office_mail.getName(), office_mail, db);
-            
-            db.commitTransaction(transaction);
+            ClassicApp office_mailApp = new ClassicApp(new AppInformation(office_mail.getName()), office_mail);
+            office_mailApp.setProfile(ieseg_profile);
+            office_mailApp.setPosition(3);
+            sm.saveOrUpdate(office_mailApp);
+            ieseg_profile.addApp(office_mailApp);
             sm.setSuccess(newUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -1,8 +1,5 @@
 package com.Ease.API.V1.Schools;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -72,10 +69,10 @@ public class ServletRegistrationEstice extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
-            Profile esticeProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
+            // Profile esticeProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
 
             /* Estice apps in profile */
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            /* Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website chamilo = catalog.getWebsiteWithName("Chamilo");
             esticeProfile.addEmptyApp(chamilo.getName(), chamilo, db);
             Website kwartz = catalog.getWebsiteWithName("Kwartz");
@@ -83,7 +80,7 @@ public class ServletRegistrationEstice extends HttpServlet {
             Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Estice");
             esticeProfile.addEmptyApp("JobTeaser", jobTeaser, db);
             Website buVauban = catalog.getWebsiteWithName("BU Vauban");
-            esticeProfile.addEmptyApp(buVauban.getName(), buVauban, db);
+            esticeProfile.addEmptyApp(buVauban.getName(), buVauban, db); */
 
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());

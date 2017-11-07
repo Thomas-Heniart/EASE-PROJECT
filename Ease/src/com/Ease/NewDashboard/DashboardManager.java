@@ -1,13 +1,10 @@
 package com.Ease.NewDashboard;
 
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -61,9 +58,23 @@ public class DashboardManager {
         this.getAppMap().remove(app.getDb_id());
     }
 
-    public void decipher(String keyUser) throws HttpServletException {
-        for (App app : this.getAppMap().values())
+    public void addProfile(Profile profile) {
+        this.getProfileMap().put(profile.getDb_id(), profile);
+    }
+
+    public void removeProfile(Profile profile) {
+        this.getProfileMap().remove(profile.getDb_id());
+    }
+
+    public void decipher(String keyUser, List<TeamUser> teamUsers) throws HttpServletException {
+        for (App app : this.getAppMap().values()) {
+            if (app.getTeamCardReceiver() != null) {
+                TeamUser teamUser = teamUsers.stream().filter(teamUser1 -> teamUser1.equals(app.getTeamCardReceiver().getTeamUser())).findFirst().get();
+                app.decipher(teamUser.getDeciphered_teamKey());
+                continue;
+            }
             app.decipher(keyUser);
+        }
     }
 
     public JSONArray getProfileListJson() {
@@ -84,70 +95,5 @@ public class DashboardManager {
         JSONArray res = new JSONArray();
         this.getProfileMap().values().forEach(profile -> res.add(profile.getJson()));
         return res;
-    }
-
-    /* JUST for compilation */
-
-    public List<com.Ease.Dashboard.Profile.Profile> getProfilesList() {
-        return new LinkedList<>();
-    }
-
-    public com.Ease.Dashboard.Profile.Profile getProfile(int i) {
-        return null;
-    }
-
-    public com.Ease.Dashboard.Profile.Profile addProfile(String isc_paris, String s, DataBaseConnection db) {
-        return null;
-    }
-
-    public List<com.Ease.Dashboard.App.App> getApps() {
-        return new LinkedList<>();
-    }
-
-    public void removeAppFromCollections(com.Ease.Dashboard.App.App app) {
-    }
-
-    public void addApp(com.Ease.Dashboard.App.WebsiteApp.WebsiteApp app) {
-    }
-
-    public void addApp(com.Ease.Dashboard.App.App newApp) {
-    }
-
-    public void moveApp(int i, int i1, int i2, DataBaseConnection db) {
-    }
-
-    public com.Ease.Dashboard.App.App getAppWithId(int i) {
-        return null;
-    }
-
-    public void removeAppWithId(int i, DataBaseConnection db) {
-    }
-
-    public com.Ease.Dashboard.Profile.Profile getProfileWithId(Integer profile_id) {
-        return null;
-    }
-
-    public JSONObject getJson() {
-        return new JSONObject();
-    }
-
-    public com.Ease.Dashboard.Profile.Profile getProfileFromApp(Integer dBid) {
-        return null;
-    }
-
-    public void replaceApp(ClassicApp newClassicApp) {
-    }
-
-    public void removeProfileWithPassword(int i, String password, ServletManager sm) {
-    }
-
-    public List<ClassicApp> getClassicApps() {
-        return new LinkedList<>();
-    }
-
-    public void replaceApp(com.Ease.Dashboard.App.WebsiteApp.LogwithApp.LogwithApp newLogwithApp) {
-    }
-
-    public void moveProfile(int i, int i1, int i2, ServletManager sm) {
     }
 }

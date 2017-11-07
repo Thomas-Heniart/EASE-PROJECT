@@ -1,8 +1,5 @@
 package com.Ease.Team;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Notification.Notification;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -14,7 +11,6 @@ import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -107,7 +103,7 @@ public class TeamUser {
     @ManyToMany(mappedBy = "pending_teamUsers", fetch = FetchType.EAGER)
     private Set<Channel> pending_channels = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "teamUser_id")
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
 
@@ -184,7 +180,7 @@ public class TeamUser {
         this.username = username;
     }
 
-    public String getDeciphered_teamKey() throws GeneralException {
+    public String getDeciphered_teamKey() throws HttpServletException {
         if (this.deciphered_teamKey == null)
             this.decipher_teamKey();
         return deciphered_teamKey;
@@ -371,10 +367,6 @@ public class TeamUser {
             channel_ids.add(channel.getDb_id());
         res.put("room_ids", channel_ids);
         JSONArray apps = new JSONArray();
-        for (ShareableApp shareableApp : this.getTeam().getAppManager().getShareableApps().values()) {
-            if (shareableApp.getTeamUser_tenants().contains(this))
-                apps.add(((App)shareableApp).getDBid());
-        }
         res.put("app_ids", apps);
         return res;
     }
@@ -423,7 +415,7 @@ public class TeamUser {
         }
     }
 
-    public void decipher_teamKey() throws GeneralException {
+    public void decipher_teamKey() throws HttpServletException {
         this.deciphered_teamKey = this.getDashboard_user().decrypt(this.teamKey);
     }
 
@@ -474,29 +466,12 @@ public class TeamUser {
     }
 
     public void delete(DataBaseConnection db) throws HttpServletException {
-        try {
-            for (Channel channel : this.getChannels())
-                channel.removeTeamUser(this);
-            for (Channel channel : this.getPending_channels())
-                channel.removePendingTeamUser(this);
-            int transaction = db.startTransaction();
-            Team team = this.getTeam();
-            /* @TODO remove this */
-            team.getAppManager().removeSharedAppsForTeamUser(this, db);
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                if (shareableApp.getPendingTeamUsers().containsKey(this.getDb_id()))
-                    shareableApp.removePendingTeamUser(this, db);
-            }
-            db.commitTransaction(transaction);
-            if (this.getDashboard_user() != null)
-                this.getDashboard_user().getTeamUsers().remove(this);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public List<SharedApp> getSharedApps() {
-        return this.getTeam().getAppManager().getSharedAppsForTeamUser(this);
+        for (Channel channel : this.getChannels())
+            channel.removeTeamUser(this);
+        for (Channel channel : this.getPending_channels())
+            channel.removePendingTeamUser(this);
+        if (this.getDashboard_user() != null)
+            this.getDashboard_user().getTeamUsers().remove(this);
     }
 
     public void disconnect() {
@@ -534,9 +509,6 @@ public class TeamUser {
                 this.setDeciphered_teamKey(deciphered_teamKey);
                 this.setDisabled(false);
                 hibernateQuery.saveOrUpdateObject(this);
-                for (SharedApp sharedApp : this.getSharedApps()) {
-                    sharedApp.setDisableShared(false, db);
-                }
             }
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);

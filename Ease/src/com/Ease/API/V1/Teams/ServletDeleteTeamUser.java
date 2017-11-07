@@ -1,8 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -61,7 +58,10 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, message);
             }
             String forEmail = "";
-            for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser_to_delete)) {
+            teamUser_to_delete.getTeamCardReceivers().clear();
+            team.getTeamCardMap().values().stream().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete)));
+            teamUser_to_delete.getChannels().forEach(channel -> channel.getTeamCardMap().values().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete))));
+            /* for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser_to_delete)) {
                 App holder = (App) sharedApp.getHolder();
                 if (holder.isEmpty() || (holder.isClassicApp() && sharedApp.getHolder().getTeamUser_tenants().size() == 1)) {
                     ClassicApp classicApp = (ClassicApp) sharedApp;
@@ -72,15 +72,13 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     forEmail += ", ";
                 }
 
-            }
+            } */
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
                 forEmail = forEmail.substring(0, forEmail.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                 mailJetBuilder.setTemplateId(180165);
                 mailJetBuilder.addTo(teamUser_connected.getEmail());
-                /* mailJetBuilder.setTemplateErrorDeliver();
-                mailJetBuilder.setTemplateErrorReporting(); */
                 mailJetBuilder.addVariable("first_name", teamUser_to_delete.getFirstName());
                 mailJetBuilder.addVariable("last_name", teamUser_to_delete.getLastName());
                 mailJetBuilder.addVariable("team_name", team.getName());

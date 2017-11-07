@@ -4,20 +4,12 @@ import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Category;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessage;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -89,7 +81,7 @@ public class ServletEditWebsite extends HttpServlet {
                 DataBaseConnection db = sm.getDB();
                 for (Team team : teamManager.getTeams()) {
                     int transaction2 = db.startTransaction();
-                    for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
+                    /* for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                         App app = (App) shareableApp;
                         if (!app.isClassicApp() && !app.isEmpty())
                             continue;
@@ -106,7 +98,7 @@ public class ServletEditWebsite extends HttpServlet {
                         JSONObject target = shareableApp.getOrigin();
                         target.put("team_id", team.getDb_id());
                         team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
-                    }
+                    } */
                     db.commitTransaction(transaction2);
                     System.out.println(webSocketMessageList.size() + " messages send");
                     team.getWebSocketManager().sendObjects(webSocketMessageList);

@@ -27,7 +27,7 @@ public class PinTeamCardReceiverToDashboard extends HttpServlet {
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeTeamUserOfTeam(team_id);
             Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            Integer teamCard_receiver_id = sm.getIntParam("teamCard_receiver_id", true, false);
+            Integer teamCard_receiver_id = sm.getIntParam("teamCardReceiver_id", true, false);
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             TeamCard teamCard = team.getTeamCard(teamCard_id);
             if (teamCard.isTeamLinkCard())
@@ -38,17 +38,22 @@ public class PinTeamCardReceiverToDashboard extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
-            Profile profile = sm.getUser().getDashboardManager().getProfile(profile_id);
-            Profile old_profile = sm.getUser().getDashboardManager().getProfile(teamCardReceiver.getApp().getProfile().getDb_id());
+            Profile profile = null;
+            if (profile_id != -1)
+                profile = sm.getUser().getDashboardManager().getProfile(profile_id);
+            Profile old_profile = null;
+            if (teamCardReceiver.getApp().getProfile() != null)
+                old_profile = sm.getUser().getDashboardManager().getProfile(teamCardReceiver.getApp().getProfile().getDb_id());
             if (old_profile != null && !old_profile.equals(profile)) {
                 old_profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
-                teamCardReceiver.getApp().setPosition(profile.getAppMap().size());
+                teamCardReceiver.getApp().setPosition(profile == null ? null : profile.getAppMap().size());
             } else if (old_profile == null)
-                teamCardReceiver.getApp().setPosition(profile.getAppMap().size());
+                teamCardReceiver.getApp().setPosition(profile == null ? null : profile.getAppMap().size());
             teamCardReceiver.getApp().setProfile(profile);
             teamCardReceiver.getApp().getAppInformation().setName(name);
             sm.saveOrUpdate(teamCardReceiver.getApp());
-            profile.addApp(teamCardReceiver.getApp());
+            if (profile != null)
+                profile.addApp(teamCardReceiver.getApp());
             sm.getUser().getDashboardManager().addApp(teamCardReceiver.getApp());
             sm.setSuccess(teamCardReceiver.getApp().getJson());
         } catch (Exception e) {

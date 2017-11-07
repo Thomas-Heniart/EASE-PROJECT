@@ -2,14 +2,12 @@ package com.Ease.Team;
 
 import com.Ease.Catalog.Website;
 import com.Ease.Context.Variables;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.*;
@@ -46,14 +44,6 @@ public class Team {
         HibernateQuery query = new HibernateQuery();
         query.queryString("SELECT t FROM teams t WHERE t.active = true");
         List<Team> teams = query.list();
-        for (Team team : teams) {
-            team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, context, db);
-                shareableApp.setSharedApps(sharedApps);
-                team.getAppManager().addSharedApps(sharedApps);
-            }
-        }
         query.commit();
         return teams;
     }
@@ -101,9 +91,6 @@ public class Team {
 
     @Transient
     protected Map<Integer, TeamUser> teamUsersWaitingForVerification = new ConcurrentHashMap<>();
-
-    @Transient
-    protected AppManager appManager = new AppManager();
 
     @Transient
     private int activeSubscriptions;
@@ -274,10 +261,6 @@ public class Team {
         this.teamWebsites = teamWebsites;
     }
 
-    public AppManager getAppManager() {
-        return appManager;
-    }
-
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
         Channel channel = this.getChannels().get(channel_id);
         if (channel == null)
@@ -386,53 +369,6 @@ public class Team {
         this.name = name;
     }
 
-    public JSONArray getShareableAppsForChannel(Integer channel_id) throws HttpServletException {
-        Channel channel = this.getChannelWithId(channel_id);
-        JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-            if (channel != shareableApp.getChannel())
-                continue;
-            jsonArray.add(shareableApp.getShareableJson());
-        }
-        return jsonArray;
-    }
-
-    public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws HttpServletException {
-        TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
-        JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-            if (!shareableApp.getTeamUser_tenants().contains(teamUser))
-                continue;
-            App app = (App) shareableApp;
-            if (app.isLinkApp()) {
-                SharedApp sharedApp = shareableApp.getSharedAppForTeamUser(teamUser);
-                if (sharedApp == null)
-                    continue;
-                if (sharedApp.isPinned())
-                    jsonArray.add(shareableApp.getShareableJson());
-            } else
-                jsonArray.add(shareableApp.getShareableJson());
-        }
-        return jsonArray;
-    }
-
-    public void decipherApps(String deciphered_teamKey) throws HttpServletException {
-        try {
-            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-                App app = (App) shareableApp;
-                if (app.isClassicApp())
-                    ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
-                    App app1 = (App) sharedApp;
-                    if (app1.isClassicApp())
-                        ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-                }
-            }
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError);
-        }
-    }
-
     public Channel getChannelNamed(String name) {
         for (Map.Entry<Integer, Channel> entry : this.getChannels().entrySet()) {
             Channel channel = entry.getValue();
@@ -456,16 +392,10 @@ public class Team {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
         this.activeSubscriptions = 0;
-        this.getTeamUsers().forEach((id, teamUser) -> {
-            for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
-                if (!((App) sharedApp).isReceived())
-                    continue;
-                teamUser.setActive_subscription(true);
-                break;
-            }
-            if (teamUser.isActive_subscription())
-                activeSubscriptions++;
-        });
+        this.getTeamUsers().values().stream().forEach(teamUser -> teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp() != null && teamCardReceiver.getApp().getProfile() != null).findFirst().ifPresent(teamCardReceiver -> {
+            teamUser.setActive_subscription(true);
+            activeSubscriptions++;
+        }));
         System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
             if (this.getSubscription().getQuantity() != activeSubscriptions) {
@@ -590,14 +520,14 @@ public class Team {
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
             }
-            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
+            /* for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
                 ((App) shareableApp).setDisabled(this.isBlocked(), db);
                 for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
                     if (!this.isBlocked() && sharedApp.getTeamUser_tenant().isDisabled())
                         continue;
                     ((App) sharedApp).setDisabled(this.isBlocked(), db);
                 }
-            }
+            } */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -610,11 +540,11 @@ public class Team {
             for (TeamUser teamUser : this.getTeamUsers().values()) {
                 if (teamUser.getDepartureDate() == null)
                     continue;
-                if (teamUser.isDisabled()) {
+                /* if (teamUser.isDisabled()) {
                     System.out.println(this.getAppManager().getSharedAppsForTeamUser(teamUser).size());
                     for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser))
                         ((App) sharedApp).setDisabled(true, db);
-                }
+                } */
                 if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
                     calendar.setTime(teamUser.getDepartureDate());
                     String suffixe = "th";
@@ -644,10 +574,13 @@ public class Team {
 
     public void decipherTeamCards(String deciphered_teamKey) throws HttpServletException {
         for (TeamCard teamCard : this.getTeamCardMap().values()) {
-            if (!teamCard.isTeamSingleCard())
-                continue;
-            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
-            teamSingleCard.decipher(deciphered_teamKey);
+            if (teamCard.isTeamSingleCard()) {
+                ((TeamSingleCard) teamCard).decipher(deciphered_teamKey);
+            } else if (teamCard.isTeamEnterpriseCard()) {
+                for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
+                    ((TeamEnterpriseCardReceiver) teamCardReceiver).decipher(deciphered_teamKey);
+                }
+            }
         }
     }
 

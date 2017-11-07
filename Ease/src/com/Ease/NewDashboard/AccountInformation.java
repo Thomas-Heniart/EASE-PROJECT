@@ -93,11 +93,6 @@ public class AccountInformation {
 
         AccountInformation that = (AccountInformation) o;
 
-        return db_id.equals(that.db_id);
-    }
-
-    @Override
-    public int hashCode() {
-        return db_id.hashCode();
+        return db_id != null ? db_id.equals(that.db_id) : that.db_id == null;
     }
 }

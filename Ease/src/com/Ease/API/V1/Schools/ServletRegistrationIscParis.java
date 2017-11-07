@@ -1,8 +1,5 @@
 package com.Ease.API.V1.Schools;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -73,10 +70,10 @@ public class ServletRegistrationIscParis extends HttpServlet {
             ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
             /* Isc Paris profile */
-            Profile iscProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);
+            //Profile iscProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);
 
             /* Isc Paris apps in profile */
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            /* Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website mail = catalog.getWebsiteWithName("Gmail");
             iscProfile.addEmptyApp("Mail ISC", mail, db);
             Website myIsc = catalog.getWebsiteWithName("My ISC");
@@ -94,7 +91,7 @@ public class ServletRegistrationIscParis extends HttpServlet {
             Website housing_center = catalog.getWebsiteWithName("Housing Center");
             iscProfile.addEmptyApp(housing_center.getName(), housing_center, db);
             Website centralTest = catalog.getWebsiteWithName("CentralTest");
-            iscProfile.addEmptyApp(centralTest.getName(), centralTest, db);
+            iscProfile.addEmptyApp(centralTest.getName(), centralTest, db); */
 
             db.commitTransaction(transaction);
             sm.setSuccess(newUser.getJson());

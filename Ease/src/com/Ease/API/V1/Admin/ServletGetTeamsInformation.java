@@ -1,9 +1,5 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -57,7 +53,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 int single_number = 0;
                 int enterprise_number = 0;
                 int card_with_password_reminder = 0;
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
+                /* for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                     App app = (App) shareableApp;
                     card_number++;
                     if (app.isClassicApp()) {
@@ -72,7 +68,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                             card_with_password_reminder++;
                     } else
                         link_number++;
-                }
+                } */
                 tmp.put("card_number", card_number);
                 tmp.put("link_number", link_number);
                 tmp.put("single_number", single_number);

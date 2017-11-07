@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Dashboard.App.ShareableApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -19,8 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 @WebServlet("/api/v1/admin/DeleteTeam")
 public class ServletDeleteTeam extends HttpServlet {
@@ -33,12 +30,12 @@ public class ServletDeleteTeam extends HttpServlet {
             Team team;
             try {
                 team = teamManager.getTeamWithId(team_id);
-                List<ShareableApp> shareableAppList = new LinkedList<>();
-                shareableAppList.addAll(team.getAppManager().getShareableApps().values());
                 DataBaseConnection db = sm.getDB();
                 int transaction = db.startTransaction();
+                /* List<ShareableApp> shareableAppList = new LinkedList<>();
+                shareableAppList.addAll(team.getAppManager().getShareableApps().values());
                 for (ShareableApp shareableApp : shareableAppList)
-                    team.getAppManager().removeShareableApp(shareableApp, db);
+                    team.getAppManager().removeShareableApp(shareableApp, db); */
                 DatabaseRequest databaseRequest = db.prepareRequest("DELETE FROM pendingTeamInvitations WHERE team_id = ?");
                 databaseRequest.setInt(team_id);
                 databaseRequest.set();
@@ -72,8 +69,8 @@ public class ServletDeleteTeam extends HttpServlet {
                 team = (Team) hibernateQuery.getSingleResult();
                 DataBaseConnection db = sm.getDB();
                 int transaction = db.startTransaction();
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values())
-                    shareableApp.deleteShareable(db);
+                /* for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values())
+                    shareableApp.deleteShareable(db); */
                 db.commitTransaction(transaction);
                 for (TeamUser teamUser : team.getTeamUsers().values())
                     sm.deleteObject(teamUser);

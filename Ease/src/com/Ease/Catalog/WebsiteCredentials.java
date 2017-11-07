@@ -95,9 +95,4 @@ public class WebsiteCredentials {
 
         return db_id.equals(that.db_id);
     }
-
-    @Override
-    public int hashCode() {
-        return db_id.hashCode();
-    }
 }

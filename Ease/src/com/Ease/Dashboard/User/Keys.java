@@ -1,9 +1,6 @@
 package com.Ease.Dashboard.User;
 
 import com.Ease.Context.Variables;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.Profile.Profile;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.CodeGenerator;
@@ -300,7 +297,7 @@ public class Keys {
             request = db.prepareRequest("SELECT * FROM profiles WHERE user_id= ?;");
             request.setInt(userId);
             rs = request.get();
-            while (rs.next()) {
+            /* while (rs.next()) {
                 request2 = db.prepareRequest("SELECT apps.* FROM apps JOIN profileAndAppMap ON apps.id = profileAndAppMap.app_id WHERE profile_id= ? AND apps.id NOT IN (SELECT id FROM sharedApps WHERE id = apps.id);");
                 request2.setInt(rs.getString(Profile.Data.ID.ordinal()));
                 rs2 = request2.get();
@@ -308,7 +305,7 @@ public class Keys {
                     if (rs2.getString(App.Data.TYPE.ordinal()).equals("websiteApp"))
                         WebsiteApp.Empty(rs2.getString(App.Data.ID.ordinal()), sm);
                 }
-            }
+            } */
             request = db.prepareRequest("SELECT key_id FROM users WHERE id= ?;");
             request.setInt(userId);
             rs = request.get();

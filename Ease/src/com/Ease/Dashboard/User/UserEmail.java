@@ -1,15 +1,12 @@
 package com.Ease.Dashboard.User;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.AccountInformation;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Mail.SendGridMail;
+import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.*;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class UserEmail {
@@ -52,7 +49,6 @@ public class UserEmail {
 
     protected String db_id;
     protected String email;
-    protected List<App> appsUsing;
     protected boolean verified;
     protected User user;
 
@@ -60,7 +56,6 @@ public class UserEmail {
         this.db_id = db_id;
         this.email = email;
         this.verified = verified;
-        this.appsUsing = new LinkedList<App>();
         this.user = user;
     }
 
@@ -104,15 +99,10 @@ public class UserEmail {
             return false;
         if (user.getEmail().equals(this.email))
             return false;
-        for (App app : this.user.getDashboardManager().getApps()) {
+        for (App app : this.user.getDashboardManager().getAppMap().values()) {
             if (app.isClassicApp()) {
-                List<AccountInformation> appInformations = ((ClassicApp) app).getAccount().getAccountInformations();
-                for (AccountInformation accountInformation : appInformations) {
-                    if (accountInformation.getInformationName().toLowerCase().equals("login")) {
-                        if (this.email.equals(accountInformation.getInformationValue()))
-                            return false;
-                    }
-                }
+                if (((ClassicApp) app).getAccount().getAccountInformationSet().stream().anyMatch(accountInformation -> accountInformation.getInformation_name().equals("login") && this.email.equals(accountInformation.getDeciphered_information_value())))
+                    return false;
             }
         }
         DatabaseRequest request = db.prepareRequest("DELETE FROM usersEmails WHERE id = ?;");

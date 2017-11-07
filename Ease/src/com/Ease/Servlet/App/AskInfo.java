@@ -1,6 +1,5 @@
 package com.Ease.Servlet.App;
 
-import com.Ease.Dashboard.App.App;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.Metrics;
@@ -54,14 +53,14 @@ public class AskInfo extends HttpServlet {
             String appId = sm.getServletParam("appId", true);
             if (appId == null || appId.isEmpty())
                 throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong appId.");
-            App app = user.getDashboardManager().getAppWithId(Integer.parseInt(appId));
+            /* App app = user.getDashboardManager().getAppWithId(Integer.parseInt(appId));
             if (app.isDisabled())
                 throw new GeneralException(ServletManager.Code.ClientWarning, "App is disabled");
             String result = app.getJSON(sm).toString();
-            sm.setLogResponse("Info sended for app " + app.getDBid());
+            sm.setLogResponse("Info sended for app " + app.getDBid()); */
             Metrics metrics = (Metrics) sm.getContextAttr("metrics");
             metrics.increaseConnection(sm.getDB());
-            sm.setResponse(ServletManager.Code.Success, result);
+            sm.setResponse(ServletManager.Code.Success, "");
         } catch (GeneralException e) {
             sm.setResponse(e);
         } catch (NumberFormatException e) {

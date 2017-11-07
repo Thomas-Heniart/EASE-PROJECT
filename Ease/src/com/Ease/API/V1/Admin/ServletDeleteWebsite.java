@@ -2,9 +2,6 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -12,10 +9,6 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.DatabaseResult;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,9 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @WebServlet("/api/v1/admin/DeleteWebsite")
@@ -44,7 +35,7 @@ public class ServletDeleteWebsite extends HttpServlet {
             int transaction = db.startTransaction();
             website.setTeams(ConcurrentHashMap.newKeySet());
             for (Team team : teamManager.getTeams()) {
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
+                /* for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                     App app = (App) shareableApp;
                     if (app.isLinkApp())
                         continue;
@@ -56,12 +47,12 @@ public class ServletDeleteWebsite extends HttpServlet {
                     target.put("team_id", team.getDb_id());
                     team.getAppManager().removeShareableApp(shareableApp, db);
                     team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.REMOVED, app_id, target));
-                }
+                } */
             }
             for (Team team : website.getTeams())
                 team.removeTeamWebsite(website);
             for (User user : userMap.values()) {
-                Set<App> appSet = new HashSet<>();
+                /* Set<App> appSet = new HashSet<>();
                 for (App app : user.getDashboardManager().getApps()) {
                     if (app.isLinkApp())
                         continue;
@@ -71,7 +62,7 @@ public class ServletDeleteWebsite extends HttpServlet {
                     appSet.add(app);
                 }
                 for (App app : appSet)
-                    user.getDashboardManager().removeAppWithId(app.getDBid(), db);
+                    user.getDashboardManager().removeAppWithId(app.getDBid(), db); */
             }
             DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM websiteApps WHERE website_id = ?;");
             databaseRequest.setInt(website_id);

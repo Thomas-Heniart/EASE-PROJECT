@@ -1,7 +1,6 @@
 package com.Ease.Servlet;
 
 import com.Ease.Context.Variables;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.Keys;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
@@ -103,8 +102,6 @@ public class ResetPassword extends HttpServlet {
                 teamUser.setDisabledDate(new Date());
                 teamUser.setTeamKey(null);
                 hibernateQuery.saveOrUpdateObject(teamUser);
-                for (SharedApp sharedApp : teamUser.getSharedApps())
-                    sharedApp.setDisableShared(true, sm.getDB());
                 if (teamUser.getAdmin_id() != null)
                     team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id().toString(), "/resources/notifications/user_password_lost.png", new Date(), sm.getDB());
                 mailJetBuilder = new MailJetBuilder();

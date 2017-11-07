@@ -1,11 +1,8 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -52,18 +49,6 @@ public class ServletAddCreditCard extends HttpServlet {
             JSONObject res = (JSONObject) parser.parse(card.toJson());
             team.setCard_entered(true);
             team.setActive(true);
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            for (TeamUser teamUser1 : team.getTeamUsers().values()) {
-                if (teamUser1.isDisabled())
-                    continue;
-                for (SharedApp sharedApp : teamUser1.getSharedApps()) {
-                    App app = (App) sharedApp;
-                    if (app.isDisabled())
-                        sharedApp.setDisableShared(false, db);
-                }
-            }
-            db.commitTransaction(transaction);
             sm.saveOrUpdate(team);
             sm.setSuccess(res);
         } catch (StripeException e) {

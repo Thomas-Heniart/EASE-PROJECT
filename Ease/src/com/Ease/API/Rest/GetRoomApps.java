@@ -1,7 +1,5 @@
 package com.Ease.API.Rest;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -40,14 +38,14 @@ public class GetRoomApps extends HttpServlet {
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             JSONObject res = new JSONObject();
             JSONArray apps = new JSONArray();
-            for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser)) {
+            /* for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser)) {
                 if (sharedApp.getHolder().getChannel() != channel)
                     continue;
                 App holder = (App) sharedApp.getHolder();
                 if (!sharedApp.canSeeInformation() && !holder.isEmpty() && !(holder.isLinkApp() && sharedApp.isPinned()))
                     continue;
                 apps.add(((App) sharedApp).getRestJson());
-            }
+            } */
             res.put("apps", apps);
             sm.setSuccess(res);
         } catch (Exception e) {

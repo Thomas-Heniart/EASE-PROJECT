@@ -39,7 +39,6 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             if (channel.getRoom_manager() == teamUser_to_remove)
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove the room manager.");
-            team.getAppManager().removeSharedAppsForTeamUserInChannel(teamUser_to_remove, channel, sm.getDB());
             channel.removeTeamUser(teamUser_to_remove);
             sm.saveOrUpdate(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));

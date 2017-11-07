@@ -1,11 +1,8 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -48,7 +45,7 @@ public class ServletUnsubscribe extends HttpServlet {
                 customer.getSources().retrieve(default_source).delete();
 
             /* ===== Stripe end ===== */
-            DataBaseConnection db = sm.getDB();
+            /* DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             for (TeamUser teamUser1 : team.getTeamUsers().values()) {
                 if (teamUser1.getDashboard_user() != null)
@@ -60,7 +57,7 @@ public class ServletUnsubscribe extends HttpServlet {
                     sharedApp.setDisableShared(true, db);
                 }
             }
-            db.commitTransaction(transaction);
+            db.commitTransaction(transaction); */
             team.setSubscription_id(null);
             team.setCard_entered(false);
             team.setActive(false);

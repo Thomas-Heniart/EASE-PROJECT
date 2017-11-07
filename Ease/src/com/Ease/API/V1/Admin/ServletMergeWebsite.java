@@ -2,20 +2,15 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
 import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessage;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,33 +40,19 @@ public class ServletMergeWebsite extends HttpServlet {
             Map<String, User> userMap = (Map<String, User>) sm.getContextAttr("users");
             int transaction2 = db.startTransaction();
             for (Team team : teamManager.getTeams()) {
-                int transaction = db.startTransaction();
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                    App app = (App) shareableApp;
-                    if (!app.isClassicApp() && !app.isEmpty())
-                        continue;
-                    WebsiteApp websiteApp = (WebsiteApp) app;
-                    if (website_to_merge != websiteApp.getSite())
-                        continue;
-                    websiteApp.setWebsite(website, db);
-                    app.setName(website.getName(), db);
-                    JSONObject target = shareableApp.getOrigin();
-                    target.put("team_id", team.getDb_id());
-                    webSocketMessageList.add(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
-                }
-                db.commitTransaction(transaction);
                 System.out.println(webSocketMessageList.size() + " messages send");
                 team.getWebSocketManager().sendObjects(webSocketMessageList);
                 webSocketMessageList.clear();
             }
             for (User user : userMap.values()) {
-                for (App app : user.getDashboardManager().getApps()) {
+                for (App app : user.getDashboardManager().getAppMap().values()) {
                     if (!app.isWebsiteApp())
                         continue;
                     WebsiteApp websiteApp = (WebsiteApp) app;
-                    if (website_to_merge != websiteApp.getSite())
+                    if (!website_to_merge.equals(websiteApp.getWebsite()))
                         continue;
-                    websiteApp.setWebsite(website, db);
+                    websiteApp.setWebsite(website);
+                    sm.saveOrUpdate(app);
                 }
             }
             DatabaseRequest databaseRequest = db.prepareRequest("UPDATE websiteApps SET website_id = ? WHERE website_id = ?;");

@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -40,8 +39,6 @@ public class ServletReactivateTeamUser extends HttpServlet {
                 teamUser.setTeamKey(teamUser.getDashboard_user().encrypt(team_key));
                 teamUser.decipher_teamKey();
                 teamUser.setDisabled(false);
-                for (SharedApp sharedApp : teamUser.getSharedApps())
-                    sharedApp.setDisableShared(false, sm.getDB());
             } else {
                 HibernateQuery hibernateQuery = sm.getHibernateQuery();
                 hibernateQuery.querySQLString("SELECT publicKey FROM userKeys JOIN users ON users.key_id = userKeys.id WHERE users.id = ?");

@@ -201,4 +201,11 @@ public class Account {
     public int hashCode() {
         return db_id.hashCode();
     }
+
+    public String getInformationNamed(String information_name) throws HttpServletException {
+        AccountInformation information = this.getAccountInformationSet().stream().filter(accountInformation -> accountInformation.getInformation_name().equals(information_name)).findFirst().orElse(null);
+        if (information == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "No information with this name");
+        return information.getInformation_value();
+    }
 }

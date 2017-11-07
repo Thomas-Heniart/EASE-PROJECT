@@ -37,7 +37,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             if (!teamCard.isTeamEnterpriseCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
             TeamEnterpriseCard teamEnterpriseCard = (TeamEnterpriseCard) teamCard;
-            Integer teamCardReceiver_id = sm.getIntParam("teamCard_receiver_id", true, false);
+            Integer teamCardReceiver_id = sm.getIntParam("teamCardReceiver_id", true, false);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamCardReceiver_id);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             if (!teamUser_connected.equals(teamCardReceiver.getTeamUser()) && !teamUser_connected.isTeamAdmin())

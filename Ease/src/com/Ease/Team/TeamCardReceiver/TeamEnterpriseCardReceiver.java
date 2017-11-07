@@ -5,6 +5,7 @@ import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
 import javax.persistence.Entity;
@@ -40,5 +41,12 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         res.put("account_information", account.getJsonWithoutPassword());
         res.put("last_update", account.getLast_update().getTime());
         return res;
+    }
+
+    public void decipher(String deciphered_teamKey) throws HttpServletException {
+        ClassicApp app = (ClassicApp) this.getApp();
+        if (app.getAccount() == null || app.getAccount().getDeciphered_private_key() != null)
+            return;
+        app.getAccount().decipher(deciphered_teamKey);
     }
 }

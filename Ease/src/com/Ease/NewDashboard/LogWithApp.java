@@ -56,7 +56,7 @@ public class LogWithApp extends WebsiteApp {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("logWithApp_id", this.getLoginWith_app().getDb_id());
+        res.put("logWithApp_id", this.getLoginWith_app() == null ? - 1 : this.getLoginWith_app().getDb_id());
         res.put("logWith_website", this.getLogWith_website().getCatalogJson());
         return res;
     }
