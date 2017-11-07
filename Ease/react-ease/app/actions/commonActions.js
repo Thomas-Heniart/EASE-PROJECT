@@ -108,7 +108,7 @@ export function setWSId(id){
   }
 }
 
-export function askEditEmail(password, new_email){
+export function askEditEmail({password, new_email}){
   return function (dispatch){
     return post_api.common.askEditEmail(password, new_email
     ).then(response => {
@@ -121,7 +121,7 @@ export function askEditEmail(password, new_email){
   }
 }
 
-export function editEmail(password, new_email, digits){
+export function editEmail({password, new_email, digits}){
     return function (dispatch){
         return post_api.common.editEmail(password, new_email, digits
         ).then(response => {
@@ -147,7 +147,7 @@ export function editPersonalUsername(username){
     }
 }
 
-export function checkPassword(password){
+export function checkPassword({password}){
   return function (dispatch){
     return post_api.common.checkPassword(password).then(response => {
       dispatch({type: 'CHECK_PASSWORD_FULFILLED', payload: response});
@@ -159,7 +159,7 @@ export function checkPassword(password){
   }
 }
 
-export function editPassword(password, new_password){
+export function editPassword({password, new_password}){
     return function (dispatch){
         return post_api.common.editPassword(password, new_password)
             .then(response => {
@@ -184,7 +184,7 @@ export function setBackgroundPicture(active){
     }
 }
 
-export function deleteAccount(password){
+export function deleteAccount({password}){
     return function (dispatch){
         return post_api.common.deleteAccount(password).then(response => {
             dispatch({type: 'DELETE_ACCOUNT_FULFILLED', payload: response});

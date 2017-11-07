@@ -34,8 +34,9 @@ class Deactivation extends React.Component {
     };
     confirm = () => {
         this.setState({ loading: true, errorMessage: '' });
-        this.props.dispatch(deleteAccount(this.state.password
-        )).then(response => {
+        this.props.dispatch(deleteAccount({
+                password: this.state.password
+        })).then(response => {
             if (response.msg === 'Account deleted') {
                 this.setState({loading: false});
                 location.reload();

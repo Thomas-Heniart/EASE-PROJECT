@@ -170,6 +170,7 @@ class PersonalInfo extends React.Component {
                                 <Form.Field>
                                     <Form.Input disabled
                                                 type='password'
+                                                error={this.state.modifyingMail === 2}
                                                 className='inputInSegment'
                                                 label='Your Ease.space password' />
                                 </Form.Field>
@@ -178,6 +179,7 @@ class PersonalInfo extends React.Component {
                                                 type='email'
                                                 label='New email'
                                                 name='newEmail'
+                                                error={this.state.modifyingMail === 2}
                                                 value={this.state.newEmail}
                                                 disabled />
                                     <Form.Button content='Resend email'

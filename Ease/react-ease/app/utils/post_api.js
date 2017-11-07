@@ -899,7 +899,11 @@ module.exports = {
       })
     },
     askEditEmail : function(password, new_email){
-      return axios.post('/api/v1/common/AskEditEmail', password, new_email
+      console.log('password: ', password);
+      return axios.post('/api/v1/common/AskEditEmail', {
+        password: password,
+        new_email: new_email
+      }
       ).then(response => {
         return response.data;
       }).catch(err => {
@@ -907,7 +911,11 @@ module.exports = {
       })
     },
     editEmail : function(password, new_email, digits){
-      return axios.post('/api/v1/common/EditEmail', password, new_email, digits
+      return axios.post('/api/v1/common/EditEmail', {
+        password: cipher(password),
+        new_email: new_email,
+        digits: digits
+      }
       ).then(response => {
         return response.data;
       }).catch(err => {
@@ -923,7 +931,9 @@ module.exports = {
       })
     },
     checkPassword : function(password){
-      return axios.post('/api/v1/common/CheckPassword', password
+      return axios.post('/api/v1/common/CheckPassword', {
+        password: cipher(password)
+      }
       ).then(response => {
         return response.data;
       }).catch(err => {
@@ -931,7 +941,10 @@ module.exports = {
       })
     },
     editPassword : function(password, new_password){
-      return axios.post('/api/v1/common/EditPassword', password, new_password
+      return axios.post('/api/v1/common/EditPassword', {
+        password: cipher(password),
+        new_password: cipher(new_password)
+      }
       ).then(response => {
         return response.data;
       }).catch(err => {
