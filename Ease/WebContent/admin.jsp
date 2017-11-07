@@ -30,7 +30,7 @@
 
     <script src="jsMinified.v00022/jquery-3.1.0.js"></script>
     <script src="js/postHandler.js"></script>
-    <script src="js/admin.js"></script>
+    <script src="js/admin.js?0"></script>
 </head>
 
 
