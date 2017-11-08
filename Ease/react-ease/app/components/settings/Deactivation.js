@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Button, Segment, Checkbox, Form, Header, Message } from 'semantic-ui-react';
+import { Button, Segment, Form, Header, Message } from 'semantic-ui-react';
 import {deleteAccount} from "../../actions/commonActions";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
