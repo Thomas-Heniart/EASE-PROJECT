@@ -135,7 +135,7 @@ export const ExtendFillSwitch = ({value, onClick}) => {
              inverted
              trigger={
                <div class="enterprise-extend-switch">
-                 I fill user’s credentials myslef
+                 I fill user’s credentials myself
                  <Checkbox toggle class="enterprise-app-switch" name="fill_in_switch" checked={value} onClick={onClick}/>
                </div>
              }
