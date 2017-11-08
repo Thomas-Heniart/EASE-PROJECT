@@ -13,12 +13,13 @@ class Preferences extends React.Component {
         this.state = {
             homepage: this.props.common.homepage,
             background: this.props.common.user.background_picture,
-            loading: false,
+            loadingHomepage: false,
+            loadingBackground: false,
             errorMessage: ''
         }
     }
     toggleHomepage = () => {
-        this.setState({ loading: true });
+        this.setState({ loadingHomepage: true });
         if (this.props.common.homepage === true) {
             document.dispatchEvent(new CustomEvent("SetHompage", {detail: false, bubbles: true}));
             this.setState({ homepage: false });
@@ -29,26 +30,26 @@ class Preferences extends React.Component {
             this.setState({ homepage: true });
             this.props.common.homepage = true;
         }
-        this.setState({ loading: false });
+        this.setState({ loadingHomepage: false });
     };
     toggleBackground = () => {
-        this.setState({loading: true});
+        this.setState({loadingBackground: true});
         if (this.state.background === true) {
             this.props.dispatch(setBackgroundPicture({
                 active: false
             })).then(response => {
-                this.setState({loading: false, errorMessage: '', background: false});
+                this.setState({loadingBackground: false, errorMessage: '', background: false});
             }).catch(err => {
-                this.setState({loading: false, errorMessage: err});
+                this.setState({loadingBackground: false, errorMessage: err});
             });
         }
         else {
             this.props.dispatch(setBackgroundPicture({
                 active: true
             })).then(response => {
-                this.setState({loading: false, errorMessage: '', background: true});
+                this.setState({loadingBackground: false, errorMessage: '', background: true});
             }).catch(err => {
-                this.setState({loading: false, errorMessage: err});
+                this.setState({loadingBackground: false, errorMessage: err});
             });
         }
     };
@@ -57,12 +58,12 @@ class Preferences extends React.Component {
             <Segment>
                 <Header as='h5'>Choose your preferences</Header>
                 <div>
-                    <Checkbox toggle checked={this.props.common.homepage} onChange={this.toggleHomepage} disabled={this.state.loading} />
+                    <Checkbox toggle checked={this.props.common.homepage} onChange={this.toggleHomepage} disabled={this.state.loadingHomepage} />
                     <span>Ease.space as Homepage</span>
                 </div>
                 <p>This option allows you to have the Ease.space page when you’ll open a new tab in your browser.</p>
                 <div>
-                    <Checkbox toggle checked={this.state.background} onChange={this.toggleBackground} disabled={this.state.loading} />
+                    <Checkbox toggle checked={this.state.background} onChange={this.toggleBackground} disabled={this.state.loadingBackground} />
                     <span>Daily background picture</span>
                 </div>
                 <p>Each day we’ll display a nice background picture, coming from <a href='https://unsplash.com' target='blank'>unsplash.com</a>, behind your Apps.</p>

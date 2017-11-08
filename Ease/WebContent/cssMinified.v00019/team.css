@@ -47,9 +47,7 @@ button.only-text-button {
           color: #eb555c; }
       #personal_settings .grid .segment button {
         margin-top: 25px;
-        background-color: #2987cd;
         color: white;
-        font-weight: 300;
         font-size: 14px; }
       #personal_settings .grid .segment p {
         color: #424242;

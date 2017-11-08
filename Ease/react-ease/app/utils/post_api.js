@@ -899,9 +899,8 @@ module.exports = {
       })
     },
     askEditEmail : function(password, new_email){
-      console.log('password: ', password);
       return axios.post('/api/v1/common/AskEditEmail', {
-        password: password,
+        password: cipher(password),
         new_email: new_email
       }
       ).then(response => {
