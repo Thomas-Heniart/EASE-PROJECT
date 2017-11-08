@@ -3,7 +3,6 @@ var LoadingScreen = require('./LoadingScreen');
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {fetchNotifications} from "../../actions/notificationsActions";
-import {fetchMyInformation} from "../../actions/commonActions";
 import {fetchDashboard} from "../../actions/dashboardActions";
 import {fetchTeams} from "../../actions/teamActions";
 import {fetchMyInformation, setHomepage} from "../../actions/commonActions";
