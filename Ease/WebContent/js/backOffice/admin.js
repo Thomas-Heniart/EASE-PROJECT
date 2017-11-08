@@ -58,8 +58,8 @@ $(document).ready(function () {
                 case "team-segment":
                     ajaxHandler.get("/api/v1/admin/GetTeamsInformation", null, function () {
                     }, function (data) {
-                        data.forEach(function (team) {
-                            addTeamRow(team).appendTo($("#team-manager-body"));
+                        data.forEach(function (team, index) {
+                            addTeamRow(team, index).appendTo($("#team-manager-body"));
                         });
                     });
                     target.removeClass("loading");
@@ -269,8 +269,9 @@ function addCategoryRow(category) {
     return elem;
 }
 
-function addTeamRow(team) {
+function addTeamRow(team, index) {
     var elem = $("<tr>" +
+        "<td>" + (index + 1) + "</td>" +
         "<td>" + team.id + "</td>" +
         "<td>" + team.name + "</td>" +
         "<td>" + team.admin_first_name + "</td>" +
