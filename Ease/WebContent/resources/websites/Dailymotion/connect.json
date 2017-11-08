@@ -1,0 +1,36 @@
+{
+  "name":"Dailymotion",
+  "lastLogin":"",
+  "home":"http://www.dailymotion.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"div[class^='Header__signin___']", "grave":true},
+      {"action":"waitfor", "search":"div[class^='SignIn__emailSignIn___']"},
+      {"action":"trueClick", "search":"div[class^='SignIn__emailSignIn___']", "grave":true},
+      {"action":"waitfor", "search":"#signin_email"},
+      {"action":"waitfor", "search":"#signin_password"},
+      {"action":"waitfor", "search":"a[class^='UserForm__submitButton___']"},
+      {"action":"fill", "what":"login", "search":"#signin_email", "grave":true},
+      {"action":"fill", "what":"password", "search":"#signin_password", "grave":true},
+      {"action":"trueClick", "search":"a[class^='UserForm__submitButton___']", "grave":true}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"trueClick", "search":"div[class^='Header__signin___']", "grave":true},
+      {"action":"waitfor", "search":"button.FBLoginButton"},
+      {"action":"trueClick", "search":"button.FBLoginButton", "grave":true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[class^='Dropdown__element___']", "grave":true},
+      {"action":"waitfor", "search":"div[class^='Header__signin___']"},
+      {"action":"goto", "url":"http://www.dailymotion.com/"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[class^='Dropdown__element___']:last-child(), div[class^='Header__signin___']"},
+    {"search":"a[class^='Dropdown__element___']"}
+  ]
+}
