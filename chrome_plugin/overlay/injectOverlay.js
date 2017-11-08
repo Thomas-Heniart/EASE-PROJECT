@@ -35,9 +35,7 @@ if (window.top === window) {
             this.closer = document.getElementById('ease-closer');
 
             this.closer.onclick = function (){
-                server.post("/api/v1/plugin/ConnectionFail", {
-                    website: window.location.href
-                });
+                extensionLight.runtime.sendMessage("websiteFailure", {website: window.location.href}, function(){});
                 self.hide();
             }
             this.setImage = function(src){

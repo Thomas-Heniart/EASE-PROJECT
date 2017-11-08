@@ -8,6 +8,10 @@ import javax.persistence.*;
 @Table(name = "websiteFailures")
 public class WebsiteFailure {
     @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "url")
     private String url;
 
@@ -25,6 +29,14 @@ public class WebsiteFailure {
     public WebsiteFailure(String url, Long count) {
         this.url = url;
         this.count = count;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUrl() {
