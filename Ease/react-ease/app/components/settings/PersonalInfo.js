@@ -68,6 +68,7 @@ class PersonalInfo extends React.Component {
             new_email: this.state.newEmail,
             digits: this.state.confirmationCode
         })).then(response => {
+            this.props.common.user.email = this.state.newEmail;
             this.setState({ loading: false, modifyingMail: 1, errorMessage: '', confirmationCode: '', email: this.state.newEmail, newEmail: '' });
         }).catch(err => {
             this.setState({ loading: false, errorMessage: err });
@@ -78,6 +79,7 @@ class PersonalInfo extends React.Component {
         this.props.dispatch(editPersonalUsername({
             username: this.state.newUsername
         })).then(response => {
+            this.props.common.user.first_name = this.state.newUsername;
             this.setState({ loading: false, modifyingUsername: false, errorMessage: '', username: this.state.newUsername, newUsername: '' });
         }).catch(err => {
             this.setState({ loading: false, errorMessage: err });

@@ -49,7 +49,6 @@ class Settings extends React.Component {
                                 </Header>
                             </Menu.Item>
                             <Menu.Item name='Personal info'
-                                       index={2}
                                        as={NavLink} to={`/main/settings/personalInfo`}
                                        activeClassName="active"
                                        onClick={e => {this.props.location.pathname !== `/main/settings/personalInfo` && this.resetQuery()}}>
@@ -61,7 +60,6 @@ class Settings extends React.Component {
                                 </Header>
                             </Menu.Item>
                             <Menu.Item name='Password'
-                                       index={3}
                                        as={NavLink} to={`/main/settings/password`}
                                        activeClassName="active"
                                        onClick={e => {this.props.location.pathname !== `/main/settings/password` && this.resetQuery()}}>
@@ -73,7 +71,6 @@ class Settings extends React.Component {
                                 </Header>
                             </Menu.Item>
                             <Menu.Item name='Account activation'
-                                       index={4}
                                        as={NavLink} to={`/main/settings/deactivation`}
                                        activeClassName="active"
                                        onClick={e => {this.props.location.pathname !== `/main/settings/deactivation` && this.resetQuery()}}>
