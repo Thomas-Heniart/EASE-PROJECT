@@ -106,6 +106,7 @@ class PersonalInfo extends React.Component {
                         }
                         {!this.state.modifyingUsername ?
                             <Button content='Modify'
+                                    color={'blue'}
                                     floated={'right'}
                                     size='medium'
                                     onClick={e => this.modify('modifyingUsername')} />
@@ -114,13 +115,14 @@ class PersonalInfo extends React.Component {
                                 <Button type='submit'
                                         disabled={this.state.newUsername.length < 3}
                                         loading={this.state.loading && this.state.modifyingUsername}
+                                        color={'blue'}
                                         content='Save'
                                         floated={'right'}
                                         size='medium' />
                                 <Button content='Cancel'
                                         floated={'right'}
                                         size='medium'
-                                        style={{ backgroundColor: '#e0e1e2', color: '#5a5a5a', marginRight: '10px' }}
+                                        style={{ color: '#5a5a5a', marginRight: '10px' }}
                                         onClick={e => this.cancelModify('modifyingUsername')} />
                             </Form.Field>
                         }
@@ -135,6 +137,7 @@ class PersonalInfo extends React.Component {
                                         label='Email'
                                         value={this.state.email ? this.state.email : this.props.userInfo.email} />
                             <Form.Button onClick={this.modifyEmail}
+                                         color={'blue'}
                                          content='Replace email'
                                          floated={'right'}
                                          size='medium' />
@@ -158,6 +161,7 @@ class PersonalInfo extends React.Component {
                                                 onChange={this.handleInput}
                                                 required />
                                     <Form.Button disabled={!this.state.newEmail}
+                                                 color={'blue'}
                                                  type='submit'
                                                  loading={this.state.loading && this.state.modifyingMail === 2}
                                                  content='Verify new email'
@@ -186,6 +190,7 @@ class PersonalInfo extends React.Component {
                                                 disabled />
                                     <Form.Button content='Resend email'
                                                  size='medium'
+                                                 color={'blue'}
                                                  type='button'
                                                  loading={this.state.loadingResendEmail}
                                                  onClick={this.askEditEmail}
@@ -205,6 +210,7 @@ class PersonalInfo extends React.Component {
                                 <Form.Field>
                                     <Button type='submit'
                                             content='Save'
+                                            color={'blue'}
                                             loading={this.state.loading && this.state.modifyingMail === 3 && !this.state.loadingResendEmail}
                                             floated={'right'}
                                             size='medium'
@@ -212,7 +218,7 @@ class PersonalInfo extends React.Component {
                                     <Button content='Cancel'
                                             floated={'right'}
                                             size='medium'
-                                            style={{ backgroundColor: '#e0e1e2', color: '#5a5a5a', marginRight: '10px' }}
+                                            style={{ color: '#5a5a5a', marginRight: '10px' }}
                                             onClick={e => this.cancelModifyEmail('modifyingEmail')} />
                                 </Form.Field>
                             </Form>
