@@ -154,6 +154,9 @@ class EaseMainNavbar extends React.Component {
                         <Dropdown.Item text="Logout from all apps" onClick={this.logoutFromAllApps}/>
                     </Dropdown.Menu>
                 </Dropdown>
+                <Menu.Item data-tip="Settings" as={NavLink} to={`/main/settings`} activeClassName="active">
+                    <Icon name="setting"/>
+                </Menu.Item>
                 <NotificationList notifications={this.props.notifications} history={this.props.history}
                                   dispatch={this.props.dispatch}/>
                 <TeamsList user={this.props.user}/>

@@ -14,7 +14,7 @@ public class Regex {
             Pattern.compile("^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})(/?)");
     public static final Pattern VALID_PHONE_NUMBER =
             Pattern.compile("^(\\+|[0-9])(?:[0-9] ?){5,13}[0-9]$", Pattern.CASE_INSENSITIVE);
-    public static final Pattern VALID_USERNAME = Pattern.compile("^[a-z0-9_\\-]{3,21}$");
+    public static final Pattern VALID_USERNAME = Pattern.compile("^[a-z0-9_\\-]{3,22}$");
     public static final Pattern VALID_SIMPLE_STRING = Pattern.compile("^[a-zA-Z0-9]{4,20}$");
     public static final Pattern VALID_ROOM_NAME = Pattern.compile("^[a-z0-9_\\-]{1,21}$");
 

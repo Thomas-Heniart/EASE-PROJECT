@@ -132,6 +132,9 @@ class HomeTemporaryNavbar extends React.Component {
   goCatalog(){
     window.location.href = "/teams#/main/catalog";
   }
+  goSettings(){
+      window.location.href = "/teams#/main/settings";
+  }
   componentDidMount(){
     ReactTooltip.rebuild();
   }
@@ -148,7 +151,7 @@ class HomeTemporaryNavbar extends React.Component {
           <Dropdown.Item text="Logout from all apps" onClick={this.logoutFromAllApps}/>
         </Dropdown.Menu>
       </Dropdown>
-      <Menu.Item data-tip="Settings" onClick={e => {goToSettings()}}>
+      <Menu.Item data-tip="Settings" onClick={this.goSettings}>
         <Icon name="setting"/>
         </Menu.Item>
       <NotificationList notifications={this.props.notifications} history={this.props.history} dispatch={this.props.dispatch}/>

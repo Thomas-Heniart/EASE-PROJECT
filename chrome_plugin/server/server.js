@@ -1,8 +1,10 @@
 var server = {
-    serverUrl: "https://ease.space",
-    post: function (url, json, successCallback, errorCallback, async) {
-        if (serverPublicKey !== "")
-            map(json, this.cipher);
+    serverUrl: "https://192.168.0.18:8443",
+    post: function (url, json, successCallback, errorCallback, async, cipher) {
+        if (cipher) {
+            if (serverPublicKey !== "")
+                map(json, this.cipher);
+        }
         var self = this;
         $.ajax({
             type: "POST",
@@ -12,8 +14,10 @@ var server = {
             dataType: "json",
             async: ((async === null) ? true : async),
             success: function (data) {
-                if (serverPublicKey !== "")
-                    map(data, self.decipher);
+                if (cipher) {
+                    if (serverPublicKey !== "")
+                        map(data, self.decipher);
+                }
                 successCallback(data);
             },
             error: errorCallback

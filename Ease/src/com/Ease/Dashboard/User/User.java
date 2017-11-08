@@ -234,13 +234,16 @@ public class User {
         return first_name;
     }
 
-    public void setFirstName(String first_name, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        DatabaseRequest request = db.prepareRequest("UPDATE users set firstName = ? WHERE id = ?;");
-        request.setString(first_name);
-        request.setInt(db_id);
-        request.set();
-        this.first_name = first_name;
+    public void setFirstName(String first_name, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE users set firstName = ? WHERE id = ?;");
+            request.setString(first_name);
+            request.setInt(db_id);
+            request.set();
+            this.first_name = first_name;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public String getEmail() {
@@ -487,15 +490,6 @@ public class User {
         request = db.prepareRequest("DELETE FROM jsonWebTokens WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
-        request = db.prepareRequest("DELETE FROM groupsAndUsersMap WHERE user_id = ?;");
-        request.setInt(db_id);
-        request.set();
-        request = db.prepareRequest("DELETE FROM infrastructuresAdminsMap WHERE user_id = ?;");
-        request.setInt(db_id);
-        request.set();
-        request = db.prepareRequest("DELETE FROM integrateWebsitesAndUsersMap WHERE user_id = ?;");
-        request.setInt(db_id);
-        request.set();
         request = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
         request.setInt(db_id);
         request.set();
@@ -582,6 +576,7 @@ public class User {
         }
         res.put("teams", teams);
         res.put("status", this.getStatus().getJson());
+        res.put("background_picture", this.getOptions().isBackground_picked());
         return res;
     }
 
@@ -595,6 +590,18 @@ public class User {
 
     public void renewJwt(Key secret, DataBaseConnection db) throws HttpServletException {
         this.setJwt(JWToken.renewJWToken(Integer.valueOf(this.getDBid()), this.getKeys().getKeyUser(), this.getEmail(), this.getFirstName(), secret, db));
+    }
+
+    public void setEmail(String email, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE users SET email = ? WHERE id = ?;");
+            request.setString(email);
+            request.setInt(this.getDBid());
+            request.set();
+            this.email = email;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public void decipherDashboard() throws HttpServletException {

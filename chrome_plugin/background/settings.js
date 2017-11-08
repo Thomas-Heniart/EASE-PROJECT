@@ -1,15 +1,22 @@
 extension.runtime.bckgrndOnMessage("setSettings", function (msg, tab, sendResponse) {
-    extension.storage.get("settings", function(res){
-        if(res==null || res==undefined) {res = {}; res.homepage = false;}
+    extension.storage.get("settings", function (res) {
+        if (res == null || res == undefined) {
+            res = {};
+            res.homepage = false;
+        }
         res.homepage = msg.homepage;
-        console.log("-- Ease set as homepage : "+res.homepage + " --");
-        extension.storage.set("settings", res, function(){});
+        console.log("-- Ease set as homepage : " + res.homepage + " --");
+        extension.storage.set("settings", res, function () {
+        });
     });
 });
 
 extension.runtime.bckgrndOnMessage("getSettings", function (msg, tab, sendResponse) {
-    extension.storage.get("settings", function(res){
-        if(res==null || res==undefined) {res = {}; res.homepage = false;}
+    extension.storage.get("settings", function (res) {
+        if (res == null || res == undefined) {
+            res = {};
+            res.homepage = false;
+        }
         sendResponse(res);
     });
 });
@@ -20,4 +27,14 @@ extension.runtime.bckgrndOnMessage("setUser", function (msg, tab, sendResponse) 
 
 extension.runtime.bckgrndOnMessage("resetUser", function (msg, tab, sendResponse) {
     extension.currentUser.reset();
+});
+
+extension.runtime.bckgrndOnMessage("getWebsiteFailures", function (msg, tab, sendResponse) {
+    extension.storage.get("websiteFailures", function (websiteFailures) {
+        sendResponse(websiteFailures);
+    });
+});
+
+extension.runtime.bckgrndOnMessage("cleanWebsiteFailures", function (msg, tab, sendResponse) {
+    extension.storage.set("websiteFailures", null);
 });

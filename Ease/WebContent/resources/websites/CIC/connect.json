@@ -1,0 +1,22 @@
+{
+  "name":"CIC",
+  "lastLogin":"",
+  "home":"https://www.cic.fr/fr/authentification.html",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#bloc_ident #_userid", "grave":true},
+      {"action":"fill", "what":"password", "search":"#bloc_ident #_pwduser", "grave":true},
+      {"action":"trueClick", "search":"#bloc_ident input[name='submit']", "grave":true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a.navbar__Account", "grave":true},
+      {"action":"aclick", "search":"a[href*='logout']", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.navbar__Account, #headcandidatelogin__opener"},
+    {"search":"a.navbar__Account"}
+  ]
+}

@@ -20,7 +20,7 @@
     <link rel="manifest" href="manifest.json">
     <script src="jsMinified.v00022/jquery-3.1.0.js"></script>
     <script src="jsMinified.v00022/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js"></script>
+    <script src="js/backOffice/admin.js?0"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <link rel="stylesheet" type="text/css"
@@ -45,6 +45,7 @@
             <a class="item" data-target="#website-segment">Websites</a>
             <a class="item" data-target="#category-segment">Categories</a>
             <a class="item" data-target="#website-requests-segment">Requests</a>
+            <a class="item" data-target="#website-failures-segment">Website failures</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -59,6 +60,9 @@
         </div>
         <div id="website-requests-segment" class="ui segment loading" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebisteRequests.jsp"%>
+        </div>
+        <div id="website-failures-segment" class="ui segment loading" style="display: none;">
+            <%@include file="templates/backofficeAdmin/WebisteFailures.jsp"%>
         </div>
     </div>
 </div>

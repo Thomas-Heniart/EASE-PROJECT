@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
 public class Status {
 
     public static Status createStatus(DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("INSERT INTO status values (null, 1, 0, 0, 0, default, 0, 1, 0);");
+        DatabaseRequest request = db.prepareRequest("INSERT INTO status values (null, 1, 0, 0, 0, default, 0, 1, 0, NULL, NULL);");
         String db_id = request.set().toString();
-        return new Status(db_id, true, false, false, false, false, true);
+        return new Status(db_id, true, false, false, false, false, true, null, null);
     }
 
     public static Status loadStatus(String db_id, DataBaseConnection db) throws GeneralException {
@@ -25,7 +25,9 @@ public class Status {
         boolean tuto_done = rs.getBoolean("tuto_done");
         boolean team_tuto_done = rs.getBoolean("team_tuto_done");
         boolean terms_reviewed = rs.getBoolean("terms_reviewed");
-        Status loadedStatus = new Status(db_id, first_connection, chrome_scrapping, apps_manually_added, tuto_done, team_tuto_done, terms_reviewed);
+        String edit_email_code = rs.getString("edit_email_code");
+        String email_requested = rs.getString("email_requested");
+        Status loadedStatus = new Status(db_id, first_connection, chrome_scrapping, apps_manually_added, tuto_done, team_tuto_done, terms_reviewed, edit_email_code, email_requested);
         loadedStatus.setTerms_reviewed(rs.getBoolean("terms_reviewed"));
         loadedStatus.updateLastConnection(db);
         return loadedStatus;
@@ -38,8 +40,10 @@ public class Status {
     protected boolean tuto_done;
     protected boolean team_tuto_done;
     protected boolean terms_reviewed;
+    private String edit_email_code;
+    private String email_requested;
 
-    public Status(String db_id, boolean first_connection, boolean chrome_scrapping, boolean apps_manually_added, boolean tuto_done, boolean team_tuto_done, boolean terms_reviewed) {
+    public Status(String db_id, boolean first_connection, boolean chrome_scrapping, boolean apps_manually_added, boolean tuto_done, boolean team_tuto_done, boolean terms_reviewed, String edit_email_code, String email_requested) {
         this.db_id = db_id;
         this.first_connection = first_connection;
         this.chrome_scrapping = chrome_scrapping;
@@ -47,6 +51,8 @@ public class Status {
         this.tuto_done = tuto_done;
         this.team_tuto_done = team_tuto_done;
         this.terms_reviewed = terms_reviewed;
+        this.edit_email_code = edit_email_code;
+        this.email_requested = email_requested;
     }
 
     public String getDbId() {
@@ -129,6 +135,44 @@ public class Status {
         request.setInt(this.getDbId());
         request.set();
         this.setTuto_done(tuto_done);
+    }
+
+    public String getEdit_email_code() {
+        return edit_email_code;
+    }
+
+    public void setEdit_email_code(String edit_email_code, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE status SET edit_email_code = ? WHERE id = ?");
+            if (edit_email_code == null || edit_email_code.equals(""))
+                request.setNull();
+            else
+                request.setString(edit_email_code);
+            request.setInt(this.getDbId());
+            request.set();
+            this.edit_email_code = edit_email_code;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public String getEmail_requested() {
+        return email_requested;
+    }
+
+    public void setEmail_requested(String email_requested, DataBaseConnection db) throws HttpServletException {
+        try {
+            DatabaseRequest request = db.prepareRequest("UPDATE status SET email_requested = ? WHERE id = ?");
+            if (email_requested == null || email_requested.equals(""))
+                request.setNull();
+            else
+                request.setString(email_requested);
+            request.setInt(this.getDbId());
+            request.set();
+            this.email_requested = email_requested;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public JSONObject getJson() {

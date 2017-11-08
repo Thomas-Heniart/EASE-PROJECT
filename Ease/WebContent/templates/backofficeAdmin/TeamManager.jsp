@@ -1,6 +1,7 @@
 <table class="ui compact small celled table">
     <thead>
     <tr>
+        <th>count</th>
         <th>id</th>
         <th>Name</th>
         <th>Admin first name</th>

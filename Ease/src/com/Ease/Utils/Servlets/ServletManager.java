@@ -238,6 +238,7 @@ public abstract class ServletManager {
             try {
                 this.logDb = new DataBaseConnection(LogsDatabase.getConnection());
             } catch (SQLException e) {
+                e.printStackTrace();
                 throw new HttpServletException(HttpStatus.InternError);
             }
         }
