@@ -14,7 +14,8 @@ class Deactivation extends React.Component {
             view: 1,
             accept: false,
             errorMessage: '',
-            password: ''
+            password: '',
+            loading: false
         }
     }
     handleInput = (e, {name, value}) => {
@@ -37,10 +38,8 @@ class Deactivation extends React.Component {
         this.props.dispatch(deleteAccount({
                 password: this.state.password
         })).then(response => {
-            if (response.msg === 'Account deleted') {
-                this.setState({loading: false});
-                location.reload();
-            }
+            this.setState({ loading: false });
+            location.reload();
         }).catch(err => {
             this.setState({ loading: false, errorMessage: err });
         });
@@ -55,8 +54,8 @@ class Deactivation extends React.Component {
                         <p>Deactivating your account implies a permanent loss of all passwords and IDs secured on Ease.space. Once you deactivate your account, you will not be able to step back. </p>
                         <Button floated='right'
                                 color='red'
+                                loading={this.state.loading}
                                 content='Deactivate account'
-                                style={{ backgroundColor: '#df5454'}}
                                 onClick={this.changeView} />
                     </Form>
                     :
@@ -83,14 +82,15 @@ class Deactivation extends React.Component {
                         <Form.Field>
                             <Button type='submit'
                                     content='Deactivate account'
+                                    color={'red'}
                                     floated={'right'}
-                                    style={{ backgroundColor: '#df5454'}}
+                                    loading={this.state.loading}
                                     disabled={!this.state.accept || !this.state.password}
                                     size='medium' />
                             <Button content='Cancel'
                                     floated={'right'}
                                     size='medium'
-                                    style={{ backgroundColor: '#e0e1e2', color: '#5a5a5a', marginRight: '10px' }}
+                                    style={{ color: '#5a5a5a', marginRight: '10px' }}
                                     onClick={this.cancel} />
                         </Form.Field>
                     </Form>
