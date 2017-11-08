@@ -135,12 +135,60 @@ $(document).ready(function () {
                         target.removeClass("loading");
                     });
                     break;
+                case "website-failures-segment":
+                    ajaxHandler.get("/api/v1/admin/GetWebsiteFailures", null, function() {
+
+                    }, function (websiteFailures) {
+                        websiteFailures.forEach(function(websiteFailure) {
+                            createWebsiteFailureRow(websiteFailure).appendTo($("#website-failures-body"));
+                        });
+                        target.removeClass("loading");
+                    });
+                    break;
                 default:
                     break;
             }
         }
     });
 });
+
+function createWebsiteFailureRow(websiteFailure) {
+    var elem = $("<tr>" +
+        "<td class='count'>" +
+        websiteFailure.count +
+        "</td>" +
+        "<td class='url'>" +
+        websiteFailure.url +
+        "</td>" +
+        "<td><a href='#' class='delete'><i class='fa fa-trash'></i></a></td>" +
+        "</tr>");
+    $("a.delete", elem).click(function () {
+        $("a.delete", elem).click(function () {
+            var modal = $("#website-failure-delete");
+            var button = $(".ok", modal);
+            button.click(function () {
+                button.addClass("loading");
+                ajaxHandler.post("/api/v1/admin/DeleteWebsiteFailure", {
+                    url: websiteFailure.url
+                }, function () {
+                }, function () {
+                    button.removeClass("loading");
+                    $(elem).remove();
+                    modal.modal("hide");
+                });
+                button.off("click");
+            });
+            modal
+                .modal({
+                    onHide: function () {
+                        button.off("click");
+                    }
+                })
+                .modal("show");
+        });
+    });
+    return elem;
+}
 
 function createRequestRow(request) {
     var elem = $("<tr website-id='" + request.website_id + "'>" +

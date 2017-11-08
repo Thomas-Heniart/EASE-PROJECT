@@ -35,6 +35,9 @@ if (window.top === window) {
             this.closer = document.getElementById('ease-closer');
 
             this.closer.onclick = function (){
+                server.post("/api/v1/plugin/ConnectionFail", {
+                    website: window.location.href
+                });
                 self.hide();
             }
             this.setImage = function(src){
@@ -110,6 +113,7 @@ function endOverlay(msg){
 }
 
 function errorOverlay(msg){ //quand grave ou fin waitfor
+    extensionLight.runtime.sendMessage("websiteFailure", {website: window.location.href}, function(){});
     easeOverlay.setInfoText("Error !");
     easeOverlay.setImage(msg.detail[msg.bigStep].website.img);
     easeOverlay.show();

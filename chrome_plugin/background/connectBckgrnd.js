@@ -80,6 +80,21 @@ function waitfor(target, callback) {
     }, 300);
 }
 
+extension.runtime.bckgrndOnMessage("websiteFailure", function (msg, senderTab, sendResponse) {
+    var website = msg.website;
+    console.log("Website -- " + website + " -- failed");
+    extension.storage.get("websiteFailures", function (websites) {
+        if (websites === null || websites === undefined)
+            websites = {};
+        var count = websites[website];
+        if (count === null || count === undefined)
+            count = 0;
+        websites[website] = count + 1;
+        extension.storage.set("websiteFailures", websites, function () {
+        });
+    });
+});
+
 extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, sendResponse) {
     msg.todo = "checkAlreadyConnected";
     msg.bigStep = 0;
@@ -172,7 +187,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                                         } else {
                                                             msg.todo = "checkAlreadyConnected";
                                                             msg.result = "Success";
-                                                            setTimeout(function() {
+                                                            setTimeout(function () {
                                                                 if (autfill_on)
                                                                     chrome.privacy.services.autofillEnabled.set({value: true});
                                                                 if (passwordSave_on)
@@ -186,7 +201,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                                 }
                                             } else if (response != undefined) {
                                                 msg.result = "Fail";
-                                                setTimeout(function() {
+                                                setTimeout(function () {
                                                     if (autfill_on)
                                                         chrome.privacy.services.autofillEnabled.set({value: true});
                                                     if (passwordSave_on)
@@ -202,7 +217,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                             });
                         });
                     } else {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             if (autfill_on)
                                 chrome.privacy.services.autofillEnabled.set({value: true});
                             if (passwordSave_on)

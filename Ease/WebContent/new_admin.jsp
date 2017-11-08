@@ -45,6 +45,7 @@
             <a class="item" data-target="#website-segment">Websites</a>
             <a class="item" data-target="#category-segment">Categories</a>
             <a class="item" data-target="#website-requests-segment">Requests</a>
+            <a class="item" data-target="#website-failures-segment">Website failures</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -59,6 +60,9 @@
         </div>
         <div id="website-requests-segment" class="ui segment loading" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebisteRequests.jsp"%>
+        </div>
+        <div id="website-failures-segment" class="ui segment loading" style="display: none;">
+            <%@include file="templates/backofficeAdmin/WebisteFailures.jsp"%>
         </div>
     </div>
 </div>

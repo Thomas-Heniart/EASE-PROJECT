@@ -1,7 +1,9 @@
 package com.Ease.API.V1.Plugin;
 
-import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Catalog.WebsiteFailure;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/api/v1/plugin/ConnectionFail")
 public class ServletConnectionFail extends HttpServlet {
@@ -17,14 +20,21 @@ public class ServletConnectionFail extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            String website = sm.getStringParam("website", true, false);
-            MailJetBuilder mailJetBuilder = new MailJetBuilder();
-            mailJetBuilder.setFrom("contact@ease.space", "Ease support");
-            mailJetBuilder.addTo("thomas@ease.space");
-            mailJetBuilder.setTemplateId(210786);
-            mailJetBuilder.addVariable("website", website);
-            mailJetBuilder.addVariable("email", sm.getUser().getEmail());
-            mailJetBuilder.sendEmail();
+            JSONObject websiteFailures = sm.getJsonParam("websiteFailures", false, false);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            for (Object object : websiteFailures.entrySet()) {
+                Map.Entry<String, Long> entry = (Map.Entry<String, Long>) object;
+                String url = entry.getKey();
+                Long count = entry.getValue();
+                hibernateQuery.queryString("SELECT w FROM WebsiteFailure w WHERE w.url = :url");
+                hibernateQuery.setParameter("url", url);
+                WebsiteFailure websiteFailure = (WebsiteFailure) hibernateQuery.getSingleResult();
+                if (websiteFailure == null)
+                    websiteFailure = new WebsiteFailure(url, count);
+                else
+                    websiteFailure.incrementCount(count);
+                sm.saveOrUpdate(websiteFailure);
+            }
             sm.setSuccess("Email sent");
         } catch (Exception e) {
             sm.setError(e);
