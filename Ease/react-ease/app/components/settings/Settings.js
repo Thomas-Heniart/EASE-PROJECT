@@ -20,13 +20,14 @@ class Settings extends React.Component {
             query: ''
         }
     }
-
+    componentWillMount() {
+        document.title = "Personal Settings"
+    }
     handleItemClick = (e, { index }) => this.setState({ view: index });
     resetQuery = () => {
         this.setState({query: ''});
         // this.main_container.scrollTo(0,0);
     };
-
     render() {
         return (
             <div id="personal_settings">
