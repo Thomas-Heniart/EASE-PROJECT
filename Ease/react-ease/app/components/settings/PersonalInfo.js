@@ -19,6 +19,7 @@ class PersonalInfo extends React.Component {
             modifyingUsername: false,
             modifyingMail: 1,
             loading: false,
+            loadingResendEmail: false,
             errorMessage: '',
             usernameError: false,
             password: ''
@@ -44,21 +45,21 @@ class PersonalInfo extends React.Component {
         this.setState({ modifyingMail: this.state.modifyingMail + 1, modifyingUsername: false, newUsername: '' });
     };
     askEditEmail = () => {
-        this.setState({ loading: true, errorMessage: '' });
+        this.setState({ loading: true, errorMessage: '', loadingResendEmail: true });
         this.props.dispatch(askEditEmail({
             password: this.state.password,
             new_email: this.state.newEmail
         })).then(response => {
-            this.setState({ loading: false, modifyingMail: 3, errorMessage: '' });
+            this.setState({ loading: false, modifyingMail: 3, errorMessage: '', loadingResendEmail: false });
         }).catch(err => {
-            this.setState({ loading: false, errorMessage: err });
+            this.setState({ loading: false, errorMessage: err, loadingResendEmail: false });
         });
     };
     cancelModify = (cancel) => {
-        this.setState({ [cancel]: false, usernameError: false, newUsername: '' })
+        this.setState({ [cancel]: false, usernameError: false, newUsername: '', errorMessage: '' })
     };
     cancelModifyEmail = () => {
-        this.setState({ modifyingMail: 1, confirmationCode: '', newEmail: '' });
+        this.setState({ modifyingMail: 1, confirmationCode: '', newEmail: '', errorMessage: '' });
     };
     confirm = () => {
         this.setState({ loading: true, errorMessage: '' });
@@ -67,8 +68,7 @@ class PersonalInfo extends React.Component {
             new_email: this.state.newEmail,
             digits: this.state.confirmationCode
         })).then(response => {
-            if (response.msg === 'Email edited')
-                this.setState({ loading: false, modifyingMail: 1, errorMessage: '', confirmationCode: '', email: this.state.newEmail, newEmail: '' });
+            this.setState({ loading: false, modifyingMail: 1, errorMessage: '', confirmationCode: '', email: this.state.newEmail, newEmail: '' });
         }).catch(err => {
             this.setState({ loading: false, errorMessage: err });
         });
@@ -78,8 +78,7 @@ class PersonalInfo extends React.Component {
         this.props.dispatch(editPersonalUsername({
             username: this.state.newUsername
         })).then(response => {
-            if (response.msg === 'Username edited')
-                this.setState({ loading: false, modifyingUsername: false, errorMessage: '', username: this.state.newUsername, newUsername: '' });
+            this.setState({ loading: false, modifyingUsername: false, errorMessage: '', username: this.state.newUsername, newUsername: '' });
         }).catch(err => {
             this.setState({ loading: false, errorMessage: err });
         });
@@ -114,6 +113,7 @@ class PersonalInfo extends React.Component {
                             <Form.Field>
                                 <Button type='submit'
                                         disabled={this.state.newUsername.length < 3}
+                                        loading={this.state.loading && this.state.modifyingUsername}
                                         content='Save'
                                         floated={'right'}
                                         size='medium' />
@@ -155,9 +155,11 @@ class PersonalInfo extends React.Component {
                                                 label='New email'
                                                 name='newEmail'
                                                 value={this.state.newEmail}
-                                                onChange={this.handleInput} />
+                                                onChange={this.handleInput}
+                                                required />
                                     <Form.Button disabled={!this.state.newEmail}
                                                  type='submit'
+                                                 loading={this.state.loading && this.state.modifyingMail === 2}
                                                  content='Verify new email'
                                                  size='medium'
                                                  style={{ marginLeft: '15px' }} />
@@ -185,6 +187,7 @@ class PersonalInfo extends React.Component {
                                     <Form.Button content='Resend email'
                                                  size='medium'
                                                  type='button'
+                                                 loading={this.state.loadingResendEmail}
                                                  onClick={this.askEditEmail}
                                                  style={{ marginLeft: '15px' }} />
                                 </Form.Field>
@@ -202,6 +205,7 @@ class PersonalInfo extends React.Component {
                                 <Form.Field>
                                     <Button type='submit'
                                             content='Save'
+                                            loading={this.state.loading && this.state.modifyingMail === 3 && !this.state.loadingResendEmail}
                                             floated={'right'}
                                             size='medium'
                                             disabled={!this.state.confirmationCode} />
