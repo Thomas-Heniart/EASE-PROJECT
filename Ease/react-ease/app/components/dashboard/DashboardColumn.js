@@ -24,15 +24,18 @@ class DashboardColumn extends Component {
   render(){
     const {profile_ids, connectDropTarget, idx} = this.props;
     const {profiles} = this.props.dashboard;
-    const {dragging_profile_id} = this.props.dashboard_dnd;
+    const {dragging_profile_id, dragging_app_id} = this.props.dashboard_dnd;
+    const isFitted = dragging_profile_id === -1 && dragging_app_id === -1 && !profile_ids.length;
 
     return connectDropTarget(
-        <div class={classnames("column display_flex flex_direction_column", (profile_ids.length === 0 && dragging_profile_id === -1) ? 'fitted': null)}>
+        <div class={classnames("column display_flex flex_direction_column", isFitted ? 'fitted': null)}>
           {profile_ids.map(id => {
             return (
                 <Profile profile={profiles[id]} key={id}/>
             )
           })}
+          {dragging_app_id !== -1 &&
+          <ProfileAdder column_idx={idx}/>}
         </div>
     )
   }

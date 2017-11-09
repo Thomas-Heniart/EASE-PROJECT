@@ -34,9 +34,11 @@ class ClassicAppSettingsModal extends Component {
     this.setState({credentials: credentials});
   };
   toggleCredentialEdit = (name) => {
-    const credentials = this.state.credentials.map(item =>  {
+    const credentials = this.state.credentials.map(item => {
       if (item.name === name)
         item.edit = !item.edit;
+      if (!item.edit)
+        item.value = this.props.app.account_information[item.name];
       return item;
     });
     this.setState({credentials: credentials});

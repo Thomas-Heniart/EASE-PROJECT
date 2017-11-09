@@ -4,8 +4,8 @@ import classnames from "classnames";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import { DropTarget, DragSource } from 'react-dnd';
 import {ItemTypes} from "./ItemTypes";
-import {moveProfile, insertAppInProfile, beginProfileDrag,endProfileDrag} from "../../actions/dashboardActions";
-import App from "./App";
+import {handleSemanticInput} from "../../utils/utils";
+import {editProfile, moveProfile, insertAppInProfile, beginProfileDrag,endProfileDrag} from "../../actions/dashboardActions";
 import AppWrapper from "./AppWrapper";
 import flow from 'lodash/flow';
 import {connect} from "react-redux";
@@ -17,6 +17,23 @@ class Profile extends Component {
       name: this.props.profile.name
     }
   }
+  handleInput = handleSemanticInput.bind(this);
+  onNameBlur = () => {
+    if (this.state.name === this.props.profile.name)
+      return;
+    if (!this.state.name.length)
+      this.setState({name: this.props.profile.name});
+    else {
+      this.props.dispatch(editProfile({
+        name: this.state.name,
+        profile_id: this.props.profile.id
+      })).then(profile => {
+        this.setState({name:profile.name});
+      }).catch(err => {
+        this.setState({name: this.props.profile.name});
+      });
+    }
+  };
   render(){
     const {profile,
       dashboard,
@@ -35,7 +52,13 @@ class Profile extends Component {
               </div>
           )}
           <div class="app_group_name">
-            <Input placeholder="name" value={this.state.name}/>
+            <Input
+                placeholder="name"
+                name="name"
+                type="text"
+                onBlur={this.onNameBlur}
+                onChange={this.handleInput}
+                value={this.state.name}/>
           </div>
           <div class="apps_container">
             {profile.app_ids.map(id => {

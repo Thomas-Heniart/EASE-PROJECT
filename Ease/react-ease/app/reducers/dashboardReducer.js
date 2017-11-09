@@ -36,6 +36,37 @@ export const dashboard = createReducer({
       }
     });
   },
+  ['DASHBOARD_PROFILE_REMOVED'](state, action){
+    const profile_id = action.payload.profile_id;
+    const profile = state.profiles[profile_id];
+    const index = state.columns[profile.column_index].indexOf(profile_id);
+
+    return update(state, {
+      columns: {
+        [profile.column_index]: {$splice: [[index, 1]]}
+      }
+    });
+  },
+  ['DASHBOARD_PROFILE_CREATED'](state, action){
+    const profile = action.payload.profile;
+
+    return update(state, {
+      profiles: {
+        [profile.id]: {$set: profile}
+      },
+      columns: {
+        [profile.column_index]: {$push: [profile.id]}
+      }
+    });
+  },
+  ['DASHBOARD_PROFILE_CHANGED'](state, action){
+    const profile = action.payload.profile;
+    return update(state, {
+      profiles: {
+        [profile.id]: {$set: profile}
+      }
+    });
+  },
   ['INSERT_APP'](state, action){
     const {app_id, targetApp_id} = action.payload;
     const app = state.apps[app_id];
@@ -56,8 +87,6 @@ export const dashboard = createReducer({
   ['INSERT_APP_IN_PROFILE'](state, action){
     const {app_id, profile_id} = action.payload;
     const app = state.apps[app_id];
-    if (app.profile_id === profile_id)
-      return state;
     const insert_idx = state.profiles[profile_id].app_ids.length;
     const sourceIdx = state.profiles[app.profile_id].app_ids.indexOf(app_id);
 
@@ -106,8 +135,6 @@ export const dashboard = createReducer({
   ['INSERT_PROFILE_IN_COLUMN'](state, action){
     const {profile_id, column_idx} = action.payload;
     const profile = state.profiles[profile_id];
-    if (profile.column_idx === column_idx)
-      return state;
     const sourceIdx = state.columns[profile.column_idx].indexOf(profile_id);
     const insertIdx = state.columns[column_idx].length;
 
