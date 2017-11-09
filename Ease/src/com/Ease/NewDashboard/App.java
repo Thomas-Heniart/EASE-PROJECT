@@ -98,6 +98,10 @@ abstract public class App {
         return false;
     }
 
+    public boolean isSsoApp() {
+        return false;
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.getDb_id());
