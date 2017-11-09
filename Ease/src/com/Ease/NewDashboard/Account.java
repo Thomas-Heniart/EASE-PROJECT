@@ -206,6 +206,6 @@ public class Account {
         AccountInformation information = this.getAccountInformationSet().stream().filter(accountInformation -> accountInformation.getInformation_name().equals(information_name)).findFirst().orElse(null);
         if (information == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No information with this name");
-        return information.getInformation_value();
+        return information.getDeciphered_information_value();
     }
 }

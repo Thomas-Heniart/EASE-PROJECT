@@ -106,4 +106,8 @@ abstract public class TeamCardReceiver {
     public int hashCode() {
         return db_id.hashCode();
     }
+
+    public boolean isTeamSingleCardReceiver() {
+        return false;
+    }
 }
