@@ -2,6 +2,7 @@ package com.Ease.Team.TeamCard;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 
@@ -68,5 +69,12 @@ public class TeamLinkCard extends TeamCard {
     @Override
     public boolean isTeamLinkCard() {
         return true;
+    }
+
+    @Override
+    public JSONObject getJson() {
+        JSONObject res = super.getJson();
+        res.put("url", this.getUrl());
+        return res;
     }
 }
