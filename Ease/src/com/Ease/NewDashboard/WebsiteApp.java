@@ -1,6 +1,8 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -61,6 +63,15 @@ public class WebsiteApp extends App {
     public JSONObject getJson() {
         JSONObject res = super.getJson();
         res.put("website", this.getWebsite().getCatalogJson());
+        return res;
+    }
+
+    @Override
+    public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        JSONArray res = super.getConnectionJson(public_key);
+        JSONObject website = new JSONObject();
+        website.put("website", this.getWebsite().getConnectionJson());
+        res.add(website);
         return res;
     }
 }

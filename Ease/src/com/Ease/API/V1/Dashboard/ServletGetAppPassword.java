@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/api/v1/dashboard/GetAppPassword")
-public class GetAppPassword extends HttpServlet {
+public class ServletGetAppPassword extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {

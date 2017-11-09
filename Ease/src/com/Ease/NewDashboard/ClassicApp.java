@@ -3,6 +3,7 @@ package com.Ease.NewDashboard;
 import com.Ease.Catalog.Website;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -79,6 +80,17 @@ public class ClassicApp extends WebsiteApp {
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("password_reminder_interval", this.getAccount().getReminder_interval());
         res.put("account_information", this.getAccount().getJson());
+        return res;
+    }
+
+    @Override
+    public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        JSONArray res = super.getConnectionJson(public_key);
+        JSONObject website = (JSONObject) res.get(0);
+        website.put("user", this.getAccount().getCipheredJson(public_key));
+        website.put("type", "ClassicApp");
+        website.put("app_name", this.getAppInformation().getName());
+        website.put("website_name", this.getWebsite().getName());
         return res;
     }
 }
