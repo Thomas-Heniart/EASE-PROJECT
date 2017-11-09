@@ -25,6 +25,8 @@ public class ServletDeleteApp extends HttpServlet {
             User user = sm.getUser();
             Integer app_id = sm.getIntParam("app_id", true, false);
             App app = user.getDashboardManager().getApp(app_id);
+            if (app.getTeamCardReceiver() != null)
+                throw new HttpServletException(HttpStatus.Forbidden);
             if (app.isWebsiteApp()) {
                 if (!((WebsiteApp) app).getLogWithAppSet().isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "You must first delete apps using this app before delete it.");
