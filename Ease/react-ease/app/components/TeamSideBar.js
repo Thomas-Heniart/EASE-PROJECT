@@ -22,7 +22,7 @@ function ChannelList(props){
                 data-place="top"
                 id="new_channel_button"
                 onClick={e => {props.dispatch(teamModalsActions.showAddTeamChannelModal(true))}}>
-          <i className="fa fa-plus-square-o"/>
+          <i className="fa fa-plus-circle"/>
         </button>}
         <NavLink to={`/teams/${props.match.params.teamId}/${props.match.params.itemId}/rooms`} className="section-header">
           <span class="inline-tooltipped" data-tip="Browse all Rooms" data-place="right">
@@ -61,7 +61,7 @@ function UserList(props){
                 data-place="top"
                 id="new_member_button"
                 onClick={e => {props.dispatch(teamModalsActions.showAddTeamUserModal(true))}}>
-          <i className="ease-icon fa fa-plus-square-o"/>
+          <i className="ease-icon fa fa-plus-circle"/>
         </button>}
         <NavLink to={`/teams/${props.match.params.teamId}/${props.match.params.itemId}/members`} className="section-header">
           <span class="inline-tooltipped" data-tip="Open a Desk" data-place="right">

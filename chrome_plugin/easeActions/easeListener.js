@@ -1,5 +1,25 @@
 $('body').prepend('<div id="new_ease_extension" safariversion="2.2.4" style="display:none;">');
 $(".displayedByPlugin").show();
+if (window.location.hostname.indexOf("ease.space") !== -1 /*|| window.location.hostname === "localhost"*/) {
+    extension.runtime.sendMessage("getWebsiteFailures", {}, function (websiteFailures) {
+        if (websiteFailures === null || websiteFailures === undefined || websiteFailures)
+            return;
+        for (var prop in websiteFailures) {
+            if (websiteFailures.hasOwnProperty(prop))
+                return;
+        }
+        if (JSON.stringify(websiteFailures) === JSON.stringify({}))
+            return;
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open("POST", window.location.protocol + "//" + window.location.host + "/api/v1/plugin/ConnectionFail", true);
+        httpRequest.setRequestHeader("Content-type", "application/json;charset=utf-8");
+        httpRequest.onreadystatechange = function () {
+            if (httpRequest.readyState === 4 && httpRequest.status === 200)
+                extension.runtime.sendMessage("cleanWebsiteFailures");
+        };
+        httpRequest.send(JSON.stringify({websiteFailures: websiteFailures}));
+    });
+}
 extension.runtime.sendMessage("getSettings", {}, function (response) {
     if (response.homepage) {
         $("#homePageSwitch").prop("checked", true);

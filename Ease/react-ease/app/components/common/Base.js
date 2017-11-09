@@ -3,9 +3,9 @@ var LoadingScreen = require('./LoadingScreen');
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {fetchNotifications} from "../../actions/notificationsActions";
-import {fetchMyInformation} from "../../actions/commonActions";
 import {fetchDashboard} from "../../actions/dashboardActions";
 import {fetchTeams} from "../../actions/teamActions";
+import {fetchMyInformation, setHomepage} from "../../actions/commonActions";
 import api from "../../utils/api";
 import ReactTooltip from 'react-tooltip';
 import WebsocketClient from './WebsocketClient';
@@ -13,7 +13,8 @@ import ModalsContainer from "./ModalsContainer";
 
 @connect((store)=>{
   return {
-    common: store.common
+    common: store.common,
+    listener: store.listener
   };
 })
 class Base extends React.Component {
@@ -35,6 +36,9 @@ class Base extends React.Component {
         });
       }
     }, 30000);
+  };
+  eventListener = (event) => {
+    this.props.dispatch(setHomepage({ homepage: event.detail }))
   };
   componentDidMount(){
     this.checkConnection();
@@ -60,6 +64,15 @@ class Base extends React.Component {
         this.setState({fetching: false});
       });
     }
+    document.addEventListener("GetSettingsDone", this.eventListener);
+    setTimeout(() => {
+        document.dispatchEvent(new CustomEvent("GetSettings", {bubbles: true}))
+    }, 5);
+  }
+  componentWillUnmount() {
+    setTimeout(() => {
+      document.removeEventListener("GetSettingsDone", this.eventListener);
+    }, 1000);
   }
   render(){
     if (this.state.fetching)

@@ -98,10 +98,10 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00018/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00019/lib/fonts/museo-font.css"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00018/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00018/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00019/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00019/bootstrap.css"/>
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
@@ -312,7 +312,7 @@
         (function () {
             d = document;
             s = d.createElement("script");
-            s.src = "/jsMinified.v00022/thirdParty/crisp.js";
+            s.src = "https://client.crisp.chat/l.js";
             s.async = 1;
             d.getElementsByTagName("head")[0].appendChild(s);
         })();

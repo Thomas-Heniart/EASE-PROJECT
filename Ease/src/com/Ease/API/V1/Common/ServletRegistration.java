@@ -125,8 +125,12 @@ public class ServletRegistration extends HttpServlet {
                 school_profile.addEmptyApp(workplace.getName(), workplace, db);
             } else { */
             newUser.initializeDashboardManager(hibernateQuery);
-            Profile profile_perso = new Profile(Integer.valueOf(newUser.getDBid()), 0, 0, new ProfileInformation("ME"));
-            Profile profile_pro = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, new ProfileInformation("PRO"));
+            ProfileInformation perso_information = new ProfileInformation("Me");
+            sm.saveOrUpdate(perso_information);
+            ProfileInformation pro_information = new ProfileInformation("Pro");
+            sm.saveOrUpdate(pro_information);
+            Profile profile_perso = new Profile(Integer.valueOf(newUser.getDBid()), 0, 0, perso_information);
+            Profile profile_pro = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, pro_information);
             sm.saveOrUpdate(profile_perso);
             sm.saveOrUpdate(profile_pro);
             newUser.getDashboardManager().addProfile(profile_perso);

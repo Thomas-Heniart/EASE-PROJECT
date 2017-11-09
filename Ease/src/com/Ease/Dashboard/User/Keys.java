@@ -230,17 +230,20 @@ public class Keys {
         return Hashing.compare(password, hashed_password);
     }
 
-    public void changePassword(String new_password, ServletManager sm) throws GeneralException {
-        DataBaseConnection db = sm.getDB();
-        String new_hashed_password = Hashing.hash(new_password);
-        String new_crypted_keyUser = AES.encryptUserKey(keyUser, new_password, saltPerso);
-        DatabaseRequest request = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase=null, saltPerso = ?, keyUser = ? WHERE id = ?;");
-        request.setString(new_hashed_password);
-        request.setString(saltPerso);
-        request.setString(new_crypted_keyUser);
-        request.setInt(this.db_id);
-        request.set();
-        this.hashed_password = new_hashed_password;
+    public void changePassword(String new_password, DataBaseConnection db) throws HttpServletException {
+        try {
+            String new_hashed_password = Hashing.hash(new_password);
+            String new_crypted_keyUser = AES.encryptUserKey(keyUser, new_password, saltPerso);
+            DatabaseRequest request = db.prepareRequest("UPDATE userKeys SET password = ?, saltEase=null, saltPerso = ?, keyUser = ? WHERE id = ?;");
+            request.setString(new_hashed_password);
+            request.setString(saltPerso);
+            request.setString(new_crypted_keyUser);
+            request.setInt(this.db_id);
+            request.set();
+            this.hashed_password = new_hashed_password;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public String encrypt(String data) throws GeneralException {
