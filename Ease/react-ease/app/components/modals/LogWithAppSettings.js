@@ -3,8 +3,9 @@ import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {connect} from "react-redux";
 import {List, Segment, Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
-import {handleSemanticInput} from "../../utils/utils";
+import {handleSemanticInput, isAppInformationEmpty} from "../../utils/utils";
 import AppSettingsNameInput from "./AppSettingsNameInput";
+import {editLogWithApp} from "../../actions/dashboardActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 
 @connect(store => ({
@@ -18,10 +19,15 @@ class LogWithAppSettings extends Component {
       view: 'Account',
       appName: this.props.app.name,
       lw_app_id: this.props.app.logWithApp_id,
-      lw_apps: []
+      lw_apps: [],
+      loading: false,
+      errorMessage: ''
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  selectApp = (id) => {
+    this.setState({lw_app_id: id});
+  };
   close = () => {
     this.props.dispatch(showLogWithAppSettingsModal({active: false}));
   };
@@ -30,6 +36,17 @@ class LogWithAppSettings extends Component {
   };
   edit = (e) => {
     e.preventDefault();
+    this.setState({loading: true, errorMessage:''});
+    this.props.dispatch(editLogWithApp({
+      app_id: this.props.app.id,
+      name: this.state.appName,
+      logWithApp_id: this.state.lw_app_id
+    })).then(response => {
+      this.setState({loading: false});
+      this.close();
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
   };
   componentWillMount(){
     const {app, apps} = this.props;
@@ -44,7 +61,19 @@ class LogWithAppSettings extends Component {
     const {app} = this.props;
     const {view} = this.state;
     const lw_name = app.logWith_website.name.toLowerCase();
-
+    const app_list = this.state.lw_apps.map(item => {
+      return (
+          <List.Item
+              key={item.id}
+              as="p"
+              disabled={isAppInformationEmpty(item.account_information)}
+              active={item.id === this.state.lw_app_id}
+              onClick={this.selectApp.bind(null, item.id)}>
+            <Icon name='user circle' />
+            <span>fisun.serge76@gmail.com</span>
+          </List.Item>
+      )
+    });
     return (
         <SimpleModalTemplate
             headerContent={'App settings'}
@@ -58,7 +87,7 @@ class LogWithAppSettings extends Component {
             </div>
             <AppSettingsMenu view={view} onChange={this.handleInput}/>
             {view === 'Account' &&
-            <Form>
+            <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
               <Form.Field>
                 <Segment.Group class={`logwith_app_selectors ${lw_name}`}>
                   <Segment className='first'>
@@ -67,20 +96,21 @@ class LogWithAppSettings extends Component {
                   </Segment>
                   <Segment>
                     <List className="listCategory">
-                      <List.Item key={1} as="p" active={true} onClick={undefined}>
-                        <Icon name='user circle' />
-                        <span>fisun.serge76@gmail.com</span>
-                      </List.Item>
-                      <p class="text-center errorMessage">
-                        You don’t have a {app.logWith_website.name} Account setup yet. Please install one before all.
-                      </p>
+                      {!!app_list.length ?
+                          app_list :
+                          <p class="text-center errorMessage">
+                            You don’t have a {app.logWith_website.name} Account setup yet. Please install one before all.
+                          </p>}
                     </List>
                   </Segment>
                 </Segment.Group>
               </Form.Field>
+              <Message error content={this.state.errorMessage}/>
               <Button
                   type="submit"
                   positive
+                  disabled={this.state.lw_app_id === -1}
+                  loading={this.state.loading}
                   className="modal-button"
                   content="CONFIRM"/>
             </Form>}

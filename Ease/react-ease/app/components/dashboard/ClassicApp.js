@@ -19,7 +19,10 @@ class ClassicApp extends Component {
             <div style={{display: 'none'}} class="app_notification rounded_label">
               <Icon name="filter"/>
             </div>}
-            <EmptyAppIndicator onClick={e => {dispatch(showClassicAppSettingsModal({active: true, app: app}))}}/>
+            {isEmpty &&
+              <EmptyAppIndicator onClick={e => {
+                dispatch(showClassicAppSettingsModal({active: true, app: app}))
+              }}/>}
             <div class="logo_handler">
               <img class="logo" src={app.logo}/>
               <button class="settings_button" onClick={e => {dispatch(showClassicAppSettingsModal({active: true, app: app}))}}>

@@ -22,7 +22,7 @@ class Dashboard extends Component {
     return (
         <div id="dashboard">
           <div class="ui container fluid full_flex display_flex">
-            {columns.map((column,idx) =>  {
+            {columns.map((column,idx) => {
               return (
                   <DashboardColumn idx={idx} key={idx} profile_ids={column}/>
               )
