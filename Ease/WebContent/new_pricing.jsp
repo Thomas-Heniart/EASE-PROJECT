@@ -225,7 +225,7 @@
                     </div>
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
-                            <span class="info"><fmt:message key="pricing.premium.features.tilte"/></span>
+                            <span class="info"><fmt:message key="pricing.premium.features.title"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
