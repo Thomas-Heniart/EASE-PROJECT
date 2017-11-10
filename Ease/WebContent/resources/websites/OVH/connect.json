@@ -11,12 +11,12 @@
     },
     "logout":{
         "todo":[
-          {"action":"clickona", "search":"a#logout"},
+          {"action":"trueClick", "search":"#navbar-account > ul li:last-child() ul.dropdown-menu li:last-child() button"},
           {"action":"waitload"}
         ]
     },
     "checkAlreadyLogged":[
-        {"action":"waitfor", "search":"a#logout, form.pagination-centered"},
-        {"search":"a#logout"}
+        {"action":"waitfor", "search":"#navbar-account, form.pagination-centered"},
+        {"search":"#navbar-account"}
     ]
 }

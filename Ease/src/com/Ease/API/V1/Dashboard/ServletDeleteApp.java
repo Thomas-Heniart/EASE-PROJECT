@@ -3,6 +3,7 @@ package com.Ease.API.V1.Dashboard;
 import com.Ease.Dashboard.User.User;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.SsoApp;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -30,6 +31,8 @@ public class ServletDeleteApp extends HttpServlet {
             if (app.isWebsiteApp()) {
                 if (!((WebsiteApp) app).getLogWithAppSet().isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "You must first delete apps using this app before delete it.");
+                if (app.isSsoApp())
+                    ((SsoApp)app).getSsoGroup().removeSsoApp(app);
             }
             Profile profile = app.getProfile();
             if (profile != null)
