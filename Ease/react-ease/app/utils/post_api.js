@@ -354,19 +354,18 @@ module.exports = {
   },
   teamApps: {
     createSingleApp: ({team_id, channel_id, website_id, description, password_change_interval, account_information, receivers, ws_id}) => {
-      Object.keys(account_information).map(item => {
-        account_information[item] = cipher(account_information[item]);
-      });
-      return axios.post('/api/v1/teams/CreateSingleApp', {
+      // Object.keys(account_information).map(item => {
+      //   account_information[item] = cipher(account_information[item]);
+      // });
+      return axios.post('/api/v1/teams/CreateTeamSingleCard', {
         team_id: team_id,
         channel_id: channel_id,
         website_id:website_id,
-        description: description,
-        password_change_interval: password_change_interval,
+        password_reminder_interval: password_change_interval,
         account_information: account_information,
+        description: description,
         receivers: receivers,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
+        ws_id: ws_id
       }).then(response => {
         return response.data;
       }).catch(err => {
