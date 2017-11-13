@@ -103,13 +103,13 @@ public class DashboardManager {
             Integer old_position = profile.getPosition_index();
             if (old_position.equals(position))
                 return;
-            if (old_position < position) {
-                this.getProfileMap().values().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= position && profile1.getPosition_index() <= position).forEach(profile1 -> {
+            if (position > old_position) {
+                this.getProfileMap().values().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= old_position && profile1.getPosition_index() <= position).forEach(profile1 -> {
                     profile1.setPosition_index(profile1.getPosition_index() - 1);
                     hibernateQuery.saveOrUpdateObject(profile1);
                 });
             } else {
-                this.getProfileMap().values().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= position && profile1.getPosition_index() <= position).forEach(profile1 -> {
+                this.getProfileMap().values().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= position && profile1.getPosition_index() <= old_position).forEach(profile1 -> {
                     profile1.setPosition_index(profile1.getPosition_index() + 1);
                     hibernateQuery.saveOrUpdateObject(profile1);
                 });
@@ -122,8 +122,20 @@ public class DashboardManager {
         } else {
             if (column_index > Profile.MAX_COLUMN_INDEX || column_index < Profile.MIN_COLUMN_INDEX)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid column_index parameter");
-            Integer old_profile_column = profile.getColumn_index();
-            /* @TODO */
+            this.getProfileMap().values().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(profile.getColumn_index()) && profile1.getPosition_index() >= profile.getPosition_index()).forEach(profile1 -> {
+                profile1.setPosition_index(profile1.getPosition_index() - 1);
+                hibernateQuery.saveOrUpdateObject(profile1);
+            });
+            this.getProfileMap().values().stream().filter(profile1 -> !profile.equals(profile1) && profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= position).forEach(profile1 -> {
+                profile1.setPosition_index(profile1.getPosition_index() + 1);
+                hibernateQuery.saveOrUpdateObject(profile1);
+            });
+            profile.setColumn_index(column_index);
+            Profile max_position_profile = this.getProfileMap().values().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index)).max(Comparator.comparingInt(Profile::getPosition_index)).orElse(null);
+            if (max_position_profile == null)
+                profile.setPosition_index(0);
+            else
+                profile.setPosition_index(position > max_position_profile.getPosition_index() ? max_position_profile.getPosition_index() + 1 : position);
         }
         hibernateQuery.saveOrUpdateObject(profile);
     }

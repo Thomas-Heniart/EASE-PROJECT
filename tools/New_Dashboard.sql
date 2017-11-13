@@ -349,9 +349,11 @@ ALTER TABLE websiteApps
 
 CREATE TABLE ssoGroups (
   id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT(10) UNSIGNED NOT NULL,
   sso_id INT(10) UNSIGNED NOT NULL,
   account_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (sso_id) REFERENCES sso(id),
   FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
