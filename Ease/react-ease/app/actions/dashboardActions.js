@@ -90,8 +90,8 @@ export function moveProfile({profile_id, targetProfile_id, hoverClientY, hoverMi
     const store = getState();
     const profile = store.dashboard.profiles[profile_id];
     const hoverProfile = store.dashboard.profiles[targetProfile_id];
-    const dragIndex = store.dashboard.columns[profile.column_idx].indexOf(profile_id);
-    const hoverIndex = store.dashboard.columns[hoverProfile.column_idx].indexOf(targetProfile_id);
+    const dragIndex = store.dashboard.columns[profile.column_index].indexOf(profile_id);
+    const hoverIndex = store.dashboard.columns[hoverProfile.column_index].indexOf(targetProfile_id);
     // Dragging downwards
     if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY)
       return;
@@ -108,16 +108,16 @@ export function moveProfile({profile_id, targetProfile_id, hoverClientY, hoverMi
   };
 }
 
-export function insertProfileIntoColumn({profile_id, column_idx}){
+export function insertProfileIntoColumn({profile_id, column_index}){
   return (dispatch, getState) => {
     const store = getState();
-    if (store.dashboard.profiles[profile_id].column_idx === column_idx)
+    if (store.dashboard.profiles[profile_id].column_index === column_index)
       return;
     dispatch({
       type: 'INSERT_PROFILE_IN_COLUMN',
       payload: {
         profile_id: profile_id,
-        column_idx: column_idx
+        column_index: column_index
       }
     })
   }
@@ -128,7 +128,6 @@ export function createProfile({column_index, name}){
     const profile = {
       app_ids: [],
       column_index: column_index,
-      column_idx: column_index,
       id: -2,
       name:name
     };

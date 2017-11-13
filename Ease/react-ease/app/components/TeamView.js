@@ -150,7 +150,11 @@ class TeamView extends React.Component {
     }
     const me = team.team_users[team.my_team_user_id];
     if (me.phone_number === null && me.role === 3){
-      this.props.dispatch(modalActions.showTeamPhoneNumberModal(true));
+      this.props.dispatch(modalActions.showTeamPhoneNumberModal({
+        active: true,
+        team_id: team.id,
+        team_user_id: me.id
+      }));
     }
   }
   isValidTeamItemId = () => {

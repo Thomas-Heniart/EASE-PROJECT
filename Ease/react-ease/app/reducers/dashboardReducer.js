@@ -11,9 +11,8 @@ export const dashboard = createReducer({
     let profiles = {};
     let apps = {};
 
-    columns = action.payload.columns.map((item, idx) => {
+    columns = action.payload.columns.map(item => {
       return item.map(profile => {
-        profile.column_idx = idx;
         profiles[profile.id] = profile;
         return profile.id;
       });
@@ -110,42 +109,42 @@ export const dashboard = createReducer({
     const {profile_id, targetProfile_id} = action.payload;
     const profile = state.profiles[profile_id];
     const targetProfile = state.profiles[targetProfile_id];
-    const insertIdx = state.columns[targetProfile.column_idx].indexOf(targetProfile_id);
-    const sourceIdx = state.columns[profile.column_idx].indexOf(profile_id);
+    const insertIdx = state.columns[targetProfile.column_index].indexOf(targetProfile_id);
+    const sourceIdx = state.columns[profile.column_index].indexOf(profile_id);
 
-    if (profile.column_idx === targetProfile.column_idx){
+    if (profile.column_index === targetProfile.column_index){
       return update(state, {
         columns: {
-          [profile.column_idx] : {$splice: [[sourceIdx, 1], [insertIdx, 0, profile_id]]}
+          [profile.column_index] : {$splice: [[sourceIdx, 1], [insertIdx, 0, profile_id]]}
         }
       });
     }
     return update(state, {
       columns: {
-        [profile.column_idx]: {$splice: [[sourceIdx, 1]]},
-        [targetProfile.column_idx]: {$splice: [[insertIdx, 0, profile_id]]}
+        [profile.column_index]: {$splice: [[sourceIdx, 1]]},
+        [targetProfile.column_index]: {$splice: [[insertIdx, 0, profile_id]]}
       },
       profiles: {
         [profile_id]:{
-          column_idx: {$set: targetProfile.column_idx}
+          column_index: {$set: targetProfile.column_index}
         }
       }
     });
   },
   ['INSERT_PROFILE_IN_COLUMN'](state, action){
-    const {profile_id, column_idx} = action.payload;
+    const {profile_id, column_index} = action.payload;
     const profile = state.profiles[profile_id];
-    const sourceIdx = state.columns[profile.column_idx].indexOf(profile_id);
-    const insertIdx = state.columns[column_idx].length;
+    const sourceIdx = state.columns[profile.column_index].indexOf(profile_id);
+    const insertIdx = state.columns[column_index].length;
 
     return update(state, {
       columns: {
-        [profile.column_idx]: {$splice: [[sourceIdx, 1]]},
-        [column_idx]: {$splice: [[insertIdx, 0, profile.id]]}
+        [profile.column_index]: {$splice: [[sourceIdx, 1]]},
+        [column_index]: {$splice: [[insertIdx, 0, profile.id]]}
       },
       profiles: {
         [profile_id]: {
-          column_idx: {$set: column_idx}
+          column_index: {$set: column_index}
         }
       }
     });

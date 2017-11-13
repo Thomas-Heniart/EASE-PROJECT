@@ -193,10 +193,10 @@ export function transferTeamOwnership(password, team_user_id){
   }
 }
 
-export function editTeamUserPhone(team_user_id, phone_number){
+export function editTeamUserPhone({team_id, team_user_id, phone_number}){
   return function(dispatch, getState){
     dispatch({type: 'EDIT_TEAM_USER_PHONE_PENDING'});
-    return post_api.teamUser.editPhoneNumber(getState().common.ws_id, getState().team.id, team_user_id, phone_number).then(r => {
+    return post_api.teamUser.editPhoneNumber(getState().common.ws_id, team_id, team_user_id, phone_number).then(r => {
       dispatch({type: 'EDIT_TEAM_USER_PHONE_FULFILLED', payload: {team_user_id: team_user_id, phone: phone_number}});
     }).catch(err => {
       dispatch({type: 'EDIT_TEAM_USER_PHONE_REJECTED', payload: err});
