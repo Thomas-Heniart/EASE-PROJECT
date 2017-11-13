@@ -56,6 +56,9 @@
         <mapping class="com.Ease.Team.TeamCard.TeamSingleCard"/>
         <mapping class="com.Ease.Team.TeamCard.TeamEnterpriseCard"/>
         <mapping class="com.Ease.Team.TeamCard.TeamLinkCard"/>
+        <mapping class="com.Ease.Team.TeamCard.JoinTeamCardRequest"/>
+        <mapping class="com.Ease.Team.TeamCard.JoinTeamSingleCardRequest"/>
+        <mapping class="com.Ease.Team.TeamCard.JoinTeamEnterpriseCardRequest"/>
         <mapping class="com.Ease.Team.TeamCardReceiver.TeamCardReceiver"/>
         <mapping class="com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver"/>
         <mapping class="com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver"/>

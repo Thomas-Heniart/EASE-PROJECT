@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
 @Table(name = "ssoGroups")
-@PrimaryKeyJoinColumn(name = "id")
 public class SsoGroup {
     @Id
     @GeneratedValue

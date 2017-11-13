@@ -33,7 +33,7 @@ public class PinTeamCardReceiverToDashboard extends HttpServlet {
             if (teamCard.isTeamLinkCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
-            if (teamCardReceiver.getTeamUser() != sm.getTeamUserForTeam(team))
+            if (!teamCardReceiver.getTeamUser().equals(sm.getTeamUserForTeam(team)))
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be the receiver to pin");
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)

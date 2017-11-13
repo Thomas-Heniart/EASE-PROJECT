@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamLinkCard;
 
+import com.Ease.Dashboard.User.User;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -30,6 +31,7 @@ public class PinTeamLinkCardToDashboard extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeTeamUserOfTeam(team);
+            User user = sm.getUser();
             TeamUser teamUser = sm.getTeamUserForTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
@@ -45,7 +47,7 @@ public class PinTeamLinkCardToDashboard extends HttpServlet {
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Profile profile = null;
             if (profile_id != -1)
-                profile = sm.getUser().getDashboardManager().getProfile(profile_id);
+                profile = user.getDashboardManager().getProfile(profile_id);
             App app = null;
             if (teamCardReceiver == null && profile != null) {
                 AppInformation appInformation = new AppInformation(name);
@@ -56,6 +58,7 @@ public class PinTeamLinkCardToDashboard extends HttpServlet {
                 teamCardReceiver = new TeamLinkCardReceiver(app, teamCard, teamUser);
                 app.setTeamCardReceiver(teamCardReceiver);
                 sm.saveOrUpdate(teamCardReceiver);
+                user.getDashboardManager().addApp(app);
                 profile.addApp(app);
                 teamCard.addTeamCardReceiver(teamCardReceiver);
             } else if (teamCardReceiver != null) {

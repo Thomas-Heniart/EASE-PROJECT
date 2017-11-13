@@ -1,4 +1,5 @@
-ALTER TABLE linkAppInformations MODIFY `img_url` VARCHAR(2000) NOT NULL;
+ALTER TABLE linkAppInformations
+  MODIFY `img_url` VARCHAR(2000) NOT NULL;
 
 DROP TABLE pendingTeamUserVerifications;
 ALTER TABLE teamUsers
@@ -336,11 +337,20 @@ INSERT INTO teamSingleCardReceivers SELECT
                                         ON sharedApps.shareable_app_id = teamSingleCardReceivers.id;
 
 DELETE FROM sharedApps;
-DELETE FROM classicApps WHERE id IN (SELECT id FROM shareableApps);
-DELETE FROM websiteApps WHERE id IN (SELECT id FROM shareableApps);
-DELETE FROM linkApps WHERE id IN (SELECT id FROM shareableApps);
+DELETE FROM classicApps
+WHERE id IN (SELECT id
+             FROM shareableApps);
+DELETE FROM websiteApps
+WHERE id IN (SELECT id
+             FROM shareableApps);
+DELETE FROM linkApps
+WHERE id IN (SELECT id
+             FROM shareableApps);
 DELETE FROM shareableApps;
-DELETE FROM apps WHERE id NOT IN (SELECT id FROM websiteApps) AND id NOT IN (SELECT id FROM linkApps);
+DELETE FROM apps
+WHERE id NOT IN (SELECT id
+                 FROM websiteApps) AND id NOT IN (SELECT id
+                                                  FROM linkApps);
 
 ALTER TABLE websiteApps
   DROP COLUMN reminderIntervalType;
@@ -348,20 +358,43 @@ ALTER TABLE websiteApps
   DROP COLUMN reminderIntervalValue;
 
 CREATE TABLE ssoGroups (
-  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  user_id INT(10) UNSIGNED NOT NULL,
-  sso_id INT(10) UNSIGNED NOT NULL,
+  id         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id    INT(10) UNSIGNED NOT NULL,
+  sso_id     INT(10) UNSIGNED NOT NULL,
   account_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (sso_id) REFERENCES sso(id),
-  FOREIGN KEY (account_id) REFERENCES accounts(id)
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (sso_id) REFERENCES sso (id),
+  FOREIGN KEY (account_id) REFERENCES accounts (id)
 );
 
 CREATE TABLE ssoApps (
-  id INT(10) UNSIGNED NOT NULL,
+  id          INT(10) UNSIGNED NOT NULL,
   ssoGroup_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
-  FOREIGN KEY (id) REFERENCES  websiteApps(id),
-  FOREIGN KEY (ssoGroup_id) REFERENCES ssoGroups(id)
+  FOREIGN KEY (id) REFERENCES websiteApps (id),
+  FOREIGN KEY (ssoGroup_id) REFERENCES ssoGroups (id)
+);
+
+CREATE TABLE joinTeamCardRequests (
+  id          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  teamCard_id INT(10) UNSIGNED NOT NULL,
+  teamUser_id INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (teamCard_id) REFERENCES teamCards (id),
+  FOREIGN KEY (teamUser_id) REFERENCES teamUsers (id)
+);
+
+CREATE TABLE joinTeamEnterpriseCardRequests (
+  id         INT(10) UNSIGNED NOT NULL,
+  account_id INT(10) UNSIGNED,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES joinTeamCardRequests (id),
+  FOREIGN KEY (account_id) REFERENCES accounts (id)
+);
+
+CREATE TABLE joinTeamSingleCardRequests (
+  id INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES joinTeamCardRequests (id)
 );

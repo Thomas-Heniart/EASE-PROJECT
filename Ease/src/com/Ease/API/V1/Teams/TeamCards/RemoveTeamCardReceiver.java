@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -28,6 +29,11 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             TeamCard teamCard = team.getTeamCard(team_card_id);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
             teamCard.removeTeamCardReceiver(teamCardReceiver);
+            Profile profile = teamCardReceiver.getApp().getProfile();
+            if (profile != null)
+                profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
+            if (teamCardReceiver.getTeamUser().getDashboard_user() != null)
+                teamCardReceiver.getTeamUser().getDashboard_user().getDashboardManager().removeApp(teamCardReceiver.getApp());
             sm.saveOrUpdate(teamCard);
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {

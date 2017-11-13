@@ -43,6 +43,10 @@ abstract public class TeamCard {
     @MapKey(name = "db_id")
     private Map<Integer, TeamCardReceiver> teamCardReceiverMap = new ConcurrentHashMap<>();
 
+    @OneToMany(mappedBy = "teamCard", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "db_id")
+    private Map<Integer, JoinTeamCardRequest> joinTeamCardRequestMap = new ConcurrentHashMap<>();
+
     public TeamCard() {
 
     }
@@ -102,6 +106,14 @@ abstract public class TeamCard {
         this.teamCardReceiverMap = teamCardReceiverMap;
     }
 
+    public Map<Integer, JoinTeamCardRequest> getJoinTeamCardRequestMap() {
+        return joinTeamCardRequestMap;
+    }
+
+    public void setJoinTeamCardRequestMap(Map<Integer, JoinTeamCardRequest> joinTeamCardRequestMap) {
+        this.joinTeamCardRequestMap = joinTeamCardRequestMap;
+    }
+
     public abstract String getName();
 
     public abstract String getLogo();
@@ -118,6 +130,12 @@ abstract public class TeamCard {
         JSONArray receivers = new JSONArray();
         this.getTeamCardReceiverMap().values().stream().sorted(Comparator.comparingInt(TeamCardReceiver::getDb_id)).forEach(c -> receivers.add(c.getCardJson()));
         res.put("receivers", receivers);
+        if (!this.isTeamLinkCard()) {
+            JSONArray requests = new JSONArray();
+            for (JoinTeamCardRequest joinTeamCardRequest : this.getJoinTeamCardRequestMap().values())
+                requests.add(joinTeamCardRequest.getJson());
+            res.put("requests", requests);
+        }
         return res;
     }
 
@@ -160,6 +178,18 @@ abstract public class TeamCard {
 
     public TeamCardReceiver getTeamCardReceiver(TeamUser teamUser) {
         return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> teamCardReceiver1.getTeamUser().equals(teamUser)).findFirst().orElse(null);
+    }
+
+    public JoinTeamCardRequest getJoinTeamCardRequest(TeamUser teamUser) {
+        return this.getJoinTeamCardRequestMap().values().stream().filter(joinTeamCardRequest -> joinTeamCardRequest.getTeamUser().equals(teamUser)).findFirst().orElse(null);
+    }
+
+    public void addJoinTeamCardRequest(JoinTeamCardRequest joinTeamCardRequest) {
+        this.getJoinTeamCardRequestMap().put(joinTeamCardRequest.getDb_id(), joinTeamCardRequest);
+    }
+
+    public void removeJoinTeamCardRequest(JoinTeamCardRequest joinTeamCardRequest) {
+        this.getJoinTeamCardRequestMap().remove(joinTeamCardRequest.getDb_id());
     }
 
     @Override
