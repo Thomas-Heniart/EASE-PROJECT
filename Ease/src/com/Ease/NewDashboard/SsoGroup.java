@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Sso;
+import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class SsoGroup {
     @Column(name = "id")
     protected Integer db_id;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "ssoGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ssoGroup", cascade = CascadeType.ALL)
     @MapKey(name = "db_id")
     private Map<Integer, SsoApp> ssoAppMap = new ConcurrentHashMap<>();
 
@@ -98,6 +99,12 @@ public class SsoGroup {
         if (this.getAccount() != null)
             res.put("account_information", this.getAccount().getJsonWithoutPassword());
         return res;
+    }
+
+    public void decipher(String symmetric_key) throws HttpServletException {
+        if (this.getAccount() == null)
+            return;
+        this.getAccount().decipher(symmetric_key);
     }
 
     @Override

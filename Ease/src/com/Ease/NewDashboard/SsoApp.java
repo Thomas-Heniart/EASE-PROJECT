@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -50,5 +51,12 @@ public class SsoApp extends WebsiteApp {
         JSONObject res = super.getJson();
         res.put("sso_group_id", this.getSsoGroup() == null ? -1 : this.getSsoGroup().getDb_id());
         return res;
+    }
+
+    @Override
+    public void decipher(String symmetric_key) throws HttpServletException {
+        if (this.getAccount() == null)
+            return;
+        this.getAccount().decipher(symmetric_key);
     }
 }
