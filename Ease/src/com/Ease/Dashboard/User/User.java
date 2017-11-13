@@ -1,9 +1,11 @@
 package com.Ease.Dashboard.User;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.DashboardManager;
 import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.RSA;
@@ -552,6 +554,9 @@ public class User {
                 team.decipherTeamCards(teamUser.getDeciphered_teamKey());
                 //team.decipherApps(teamUser.getDeciphered_teamKey());
             }
+            for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
+                App app = teamCardReceiver.getApp();
+            }
         }
     }
 
@@ -606,5 +611,16 @@ public class User {
 
     public void decipherDashboard() throws HttpServletException {
         this.getDashboardManager().decipher(this.getKeys().getKeyUser(), this.getTeamUsers());
+        /* Below code is used to get teamCardReceiver already in cache
+        * It will be removed once we stop use cache like assholes */
+        for (TeamUser teamUser : this.getTeamUsers()) {
+            for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
+                if (teamCardReceiver.getApp().getProfile() == null)
+                    continue;
+                App app = this.getDashboardManager().getApp(teamCardReceiver.getApp().getDb_id());
+                teamCardReceiver.setApp(app);
+                app.setTeamCardReceiver(teamCardReceiver);
+            }
+        }
     }
 }

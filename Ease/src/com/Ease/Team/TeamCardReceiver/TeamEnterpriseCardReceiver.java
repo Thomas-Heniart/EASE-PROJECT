@@ -39,7 +39,7 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         if (account == null)
             return res;
         res.put("account_information", account.getJsonWithoutPassword());
-        res.put("last_update", account.getLast_update().getTime());
+        res.put("last_update_date", account.getLast_update().getTime());
         return res;
     }
 

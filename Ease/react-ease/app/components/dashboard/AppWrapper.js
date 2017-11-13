@@ -7,7 +7,7 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import ClassicApp from "./ClassicApp";
 import LinkApp from "./LinkApp";
 import LogWithApp from "./LogWithApp";
-import {moveApp, beginAppDrag,endAppDrag} from "../../actions/dashboardActions";
+import {moveApp, beginAppDrag,endAppDrag, checkIfProfileEmpty} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 
 class AppWrapper extends Component {
@@ -51,6 +51,7 @@ const appSource = {
   },
   endDrag(props, monitor) {
     props.dispatch(endAppDrag({app_id: props.app.id}));
+    props.dispatch(checkIfProfileEmpty({profile_id: props.app.profile_id}));
   }
 };
 

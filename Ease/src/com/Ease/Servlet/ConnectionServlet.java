@@ -77,8 +77,8 @@ public class ConnectionServlet extends HttpServlet {
                     ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
                     ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                     user.initializeDashboardManager(hibernateQuery);
-                    user.decipherDashboard();
                     hibernateQuery.commit();
+                    user.decipherDashboard();
                     removeIpFromDataBase(client_ip, db);
                     sm.setResponse(ServletManager.Code.Success, "Successfully connected.");
                     //sm.addWebsockets(sessionWebsockets);

@@ -162,6 +162,17 @@ public class Account {
         return res;
     }
 
+    public JSONObject getCipheredJson(String public_key) throws HttpServletException {
+        try {
+            JSONObject res = new JSONObject();
+            for (AccountInformation accountInformation : this.getAccountInformationSet())
+                res.put(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_key));
+            return res;
+        } catch (GeneralException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
     /**
      * @return a JSONObject of account information with information name as key and deciphered information value as value except for the password
      */
@@ -206,6 +217,6 @@ public class Account {
         AccountInformation information = this.getAccountInformationSet().stream().filter(accountInformation -> accountInformation.getInformation_name().equals(information_name)).findFirst().orElse(null);
         if (information == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No information with this name");
-        return information.getInformation_value();
+        return information.getDeciphered_information_value();
     }
 }

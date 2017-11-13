@@ -169,8 +169,9 @@ public class Channel {
         jsonObject.put("join_requests", joinRequests);
         jsonObject.put("default", this.isDefault());
         jsonObject.put("room_manager_id", this.getRoom_manager().getDb_id());
-        JSONArray apps = new JSONArray();
-        jsonObject.put("app_ids", apps);
+        JSONArray teamCards = new JSONArray();
+        this.getTeamCardMap().values().stream().sorted((t1, t2) -> Long.compare(t2.getCreation_date().getTime(), t1.getCreation_date().getTime())).forEach(teamCard -> teamCards.add(teamCard.getDb_id()));
+        jsonObject.put("teamCard_ids", teamCards);
         jsonObject.put("team_id", team.getDb_id());
         return jsonObject;
     }

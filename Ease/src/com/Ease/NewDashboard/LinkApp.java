@@ -1,5 +1,7 @@
 package com.Ease.NewDashboard;
 
+import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -52,5 +54,10 @@ public class LinkApp extends App {
         res.put("url", this.getLinkAppInformation().getUrl());
         res.put("logo", this.getLogo());
         return res;
+    }
+
+    @Override
+    public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        return super.getConnectionJson(public_key);
     }
 }

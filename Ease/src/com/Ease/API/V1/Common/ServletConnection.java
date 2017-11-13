@@ -59,6 +59,7 @@ public class ServletConnection extends HttpServlet {
                     ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                     sm.setUser(user);
                     user.initializeDashboardManager(hibernateQuery);
+                    hibernateQuery.commit();
                     user.decipherDashboard();
                     removeIpFromDataBase(client_ip, db);
                     JSONObject res = new JSONObject();

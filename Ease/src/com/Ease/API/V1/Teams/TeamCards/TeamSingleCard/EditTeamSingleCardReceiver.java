@@ -30,7 +30,7 @@ public class EditTeamSingleCardReceiver extends HttpServlet {
             TeamCard teamCard = team.getTeamCard(teamCard_id);
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
-            Integer teamCardReceiver_id = sm.getIntParam("teamCard_receiver_id", true, false);
+            Integer teamCardReceiver_id = sm.getIntParam("teamCardReceiver_id", true, false);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamCardReceiver_id);
             Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
             TeamSingleCardReceiver teamSingleCardReceiver = (TeamSingleCardReceiver) teamCardReceiver;

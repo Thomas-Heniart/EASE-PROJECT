@@ -36,7 +36,8 @@ export function moveApp({app_id, targetApp_id}) {
 export function insertAppInProfile({app_id, profile_id}){
   return (dispatch, getState) => {
     const store = getState();
-    if (store.dashboard.apps[app_id].profile_id === profile_id)
+    const app = store.dashboard.apps[app_id];
+    if (app.profile_id === profile_id)
       return;
     dispatch({
       type: 'INSERT_APP_IN_PROFILE',
@@ -44,7 +45,7 @@ export function insertAppInProfile({app_id, profile_id}){
         app_id:app_id,
         profile_id: profile_id
       }
-    })
+    });
   }
 }
 
@@ -108,12 +109,77 @@ export function moveProfile({profile_id, targetProfile_id, hoverClientY, hoverMi
 }
 
 export function insertProfileIntoColumn({profile_id, column_idx}){
-  return {
-    type: 'INSERT_PROFILE_IN_COLUMN',
-    payload: {
+  return (dispatch, getState) => {
+    const store = getState();
+    if (store.dashboard.profiles[profile_id].column_idx === column_idx)
+      return;
+    dispatch({
+      type: 'INSERT_PROFILE_IN_COLUMN',
+      payload: {
+        profile_id: profile_id,
+        column_idx: column_idx
+      }
+    })
+  }
+}
+
+export function createProfile({column_index, name}){
+  return (dispatch, getState) => {
+    const profile = {
+      app_ids: [],
+      column_index: column_index,
+      column_idx: column_index,
+      id: -2,
+      name:name
+    };
+    dispatch({
+      type: 'DASHBOARD_PROFILE_CREATED',
+      payload: {
+        profile: profile
+      }
+    });
+    return new Promise((resolve, reject) => {
+      resolve(profile);
+    });
+  }
+}
+
+export function editProfile({profile_id, name}) {
+  return (dispatch, getState) => {
+    return post_api.dashboard.editProfile({
       profile_id: profile_id,
-      column_idx: column_idx
+      name: name
+    }).then(response => {
+      dispatch({type: 'DASHBOARD_PROFILE_CHANGED', payload: {profile: response}});
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function checkIfProfileEmpty({profile_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    if (!store.dashboard.profiles[profile_id].app_ids.length){
+      dispatch({
+        type: 'DASHBOARD_PROFILE_REMOVED',
+        payload: {
+          profile_id:profile_id
+        }
+      })
     }
+  }
+}
+
+export function removeProfile({profile_id}){
+  return (dispatch, getState) => {
+    dispatch({
+      type: 'DASHBOARD_PROFILE_REMOVED',
+      payload: {
+        profile_id: profile_id
+      }
+    })
   }
 }
 

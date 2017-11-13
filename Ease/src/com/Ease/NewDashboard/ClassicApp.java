@@ -1,7 +1,9 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -36,6 +38,10 @@ public class ClassicApp extends WebsiteApp {
         this.account = account;
     }
 
+    public boolean isUpToDate() {
+        return this.getAccount() == null || !DateComparator.isOutdated(this.getAccount().getLast_update(), this.getAccount().getReminder_interval(), 0);
+    }
+
     @Override
     public void decipher(String symmetric_key) throws HttpServletException {
         if (this.getAccount() == null)
@@ -56,9 +62,11 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
+        res.put("empty", this.getAccount() == null);
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
+        res.put("password_reminder_interval", this.getAccount().getReminder_interval());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
         return res;
     }
@@ -66,10 +74,23 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getRestJson() {
         JSONObject res = super.getRestJson();
+        res.put("empty", this.getAccount() == null);
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
+        res.put("password_reminder_interval", this.getAccount().getReminder_interval());
         res.put("account_information", this.getAccount().getJson());
+        return res;
+    }
+
+    @Override
+    public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        JSONArray res = super.getConnectionJson(public_key);
+        JSONObject website = (JSONObject) res.get(0);
+        website.put("user", this.getAccount().getCipheredJson(public_key));
+        website.put("type", "ClassicApp");
+        website.put("app_name", this.getAppInformation().getName());
+        website.put("website_name", this.getWebsite().getName());
         return res;
     }
 }

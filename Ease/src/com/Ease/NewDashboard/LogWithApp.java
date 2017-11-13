@@ -1,6 +1,8 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -56,10 +58,19 @@ public class LogWithApp extends WebsiteApp {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("logWithApp_id", this.getLoginWith_app() == null ? - 1 : this.getLoginWith_app().getDb_id());
+        res.put("logWithApp_id", this.getLoginWith_app() == null ? -1 : this.getLoginWith_app().getDb_id());
         res.put("logWith_website", this.getLogWith_website().getCatalogJson());
         return res;
     }
 
-
+    @Override
+    public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        JSONArray res = this.getLoginWith_app().getConnectionJson(public_key);
+        JSONObject website = (JSONObject) super.getConnectionJson(public_key).get(0);
+        website.put("logWith", this.getLogWith_website().getName());
+        website.put("app_name", this.getAppInformation().getName());
+        website.put("website_name", this.getWebsite().getName());
+        website.put("type", "logWithApp");
+        return res;
+    }
 }

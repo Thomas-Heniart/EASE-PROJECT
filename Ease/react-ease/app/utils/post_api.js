@@ -12,13 +12,16 @@ const basic_post = (url, params) => {
 
 module.exports = {
   dashboard: {
-    createProfile : function({name}) {
-      return axios.post('/api/v1/dashboard/CreateProfile', {
+    createProfile : function({name, column_index}) {
+      return basic_post('/api/v1/dashboard/CreateProfile', {
+        name: name,
+        column_index: column_index
+      });
+    },
+    editProfile: ({profile_id, name}) => {
+      return basic_post('/api/v1/dashboard/EditProfile', {
+        profile_id: profile_id,
         name: name
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
       });
     },
     editClassicApp: ({app_id, name, account_information}) => {
