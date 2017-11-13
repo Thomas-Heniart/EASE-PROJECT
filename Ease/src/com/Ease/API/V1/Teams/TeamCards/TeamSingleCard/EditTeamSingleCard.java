@@ -30,8 +30,8 @@ public class EditTeamSingleCard extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
-            Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
+            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
+            TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);

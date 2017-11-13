@@ -1,8 +1,11 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 
@@ -23,11 +26,19 @@ public class DeleteTeamCard extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
-            Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
+            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
+            TeamCard teamCard = team.getTeamCard(team_card_id);
             Channel channel = teamCard.getChannel();
             channel.removeTeamCard(teamCard);
             team.removeTeamCard(teamCard);
+            for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
+                Profile profile = teamCardReceiver.getApp().getProfile();
+                if (profile != null) {
+                    profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
+                    if (teamCardReceiver.getTeamUser().getDashboard_user() != null)
+                        teamCardReceiver.getTeamUser().getDashboard_user().getDashboardManager().removeApp(teamCardReceiver.getApp());
+                }
+            }
             sm.deleteObject(teamCard);
             sm.setSuccess("Team card deleted");
         } catch (Exception e) {

@@ -1,26 +1,28 @@
 {
     "name":"Netflix",
     "lastLogin":"",
-    "home":"https://www.netflix.com/Login",
+    "home":"https://www.netflix.com/login",
     "connect":{
         "todo":[
-        	{"action":"fill", "what":"login", "search":".login-form input[name='email']", "grave":true},
-            {"action":"fill", "what":"password", "search":".login-form input[name='password']"},
-            {"action":"click", "search":".btn.login-button.btn-submit"}
+        	{"action":"fill", "what":"login", "search":".login-form input#email", "grave":true},
+            {"action":"fill", "what":"password", "search":".login-form input#password", "grave":true},
+            {"action":"trueClick", "search":".login-form .btn.login-button.btn-submit", "grave":true}
          ]
     },
     "Facebook":{
     	"todo":[
-    		{"action":"click", "search":".fb-login"}
+    		{"action":"trueClick", "search":".facebookForm button.btn-submit", "grave":true}
     	]
     },
     "logout":{
         "todo":[
             {"action":"goto", "url":"https://www.netflix.com/SignOut?lnkctr=mL"},
-            {"action":"goto", "url":"https://www.netflix.com/Login"}
+            {"action":"waitload"},
+            {"action":"goto", "url":"https://www.netflix.com/login"}
         ]
     },
     "checkAlreadyLogged":[
-        {"search":".account-menu-item"}
+        {"action":"waitfor", "search":"a[href*='YourAccount'], .choose-profile, .login-form"},
+        {"search":"a[href*='YourAccount'], .choose-profile"}
     ]
 }
