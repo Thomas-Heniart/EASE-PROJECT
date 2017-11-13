@@ -145,7 +145,7 @@ class EaseMainNavbar extends React.Component {
         const user = this.props.user;
         return (
             <Menu id="main_navbar">
-                <Menu.Item onClick={this.goHome} data-tip="Apps Dashboard">
+                <Menu.Item as={NavLink} to='/main/dashboard' data-tip="Apps Dashboard">
                     {user !== null ? user.first_name : '...'}
                 </Menu.Item>
                 <Dropdown icon={<Icon name="log out" data-tip="Logout Menu"/>} item floating id="logout_button">
