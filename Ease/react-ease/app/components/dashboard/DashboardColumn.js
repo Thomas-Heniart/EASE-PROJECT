@@ -46,7 +46,7 @@ const profileTarget = {
     const draggedProfileProps = monitor.getItem();
     props.dispatch(insertProfileIntoColumn({
       profile_id: draggedProfileProps.profile.id,
-      column_idx: props.idx
+      column_index: props.idx
     }));
   }
 };

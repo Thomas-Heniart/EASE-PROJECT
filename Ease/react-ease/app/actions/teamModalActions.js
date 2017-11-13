@@ -167,11 +167,13 @@ export function showTeamTransferOwnershipModal(state, user){
   }
 }
 
-export function showTeamPhoneNumberModal(state) {
+export function showTeamPhoneNumberModal({active, team_id, team_user_id}) {
   return {
     type: 'SHOW_TEAM_PHONE_NUMBER_MODAL',
     payload: {
-      active: state
+      active: active,
+      team_id: team_id,
+      team_user_id: team_user_id
     }
   }
 }

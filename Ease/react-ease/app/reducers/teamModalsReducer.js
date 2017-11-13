@@ -68,7 +68,9 @@ const initialState = {
     user: null
   },
   teamPhoneNumberModal: {
-    active: false
+    active: false,
+    team_id: -1,
+    team_user_id: -1
   },
   requestWebsiteModal: {
     active: false,

@@ -8,6 +8,9 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "./CustomDragLayer";
 import { DropTarget, DragSource } from 'react-dnd';
+import withScrolling from 'react-dnd-scrollzone';
+
+const ScrollingComponent = withScrolling('div');
 
 @connect(store => ({
   dashboard: store.dashboard
@@ -21,13 +24,13 @@ class Dashboard extends Component {
 
     return (
         <div id="dashboard">
-          <div class="ui container fluid full_flex display_flex">
+          <ScrollingComponent class="ui container fluid full_flex display_flex">
             {columns.map((column,idx) => {
               return (
                   <DashboardColumn idx={idx} key={idx} profile_ids={column}/>
               )
             })}
-          </div>
+          </ScrollingComponent>
         </div>
     )
   }
