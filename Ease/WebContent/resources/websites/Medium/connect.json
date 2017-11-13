@@ -1,40 +1,136 @@
 {
-	"name":"Medium",
-	"lastLogin":"",
-	"home":"https://medium.com/",
-	"Facebook":{
-		"todo":[
-			{"action":"clickona", "search":"a[href*='signin']"},
-			{"action":"waitfor", "search":".overlay-dialog--signin"},
-			{"action":"click", "search":".button--facebook"}
-		]
-	},
-	"Twitter":{
-		"todo":[
-			{"action":"clickona", "search":"a[href*='signin']"},
-			{"action":"waitfor", "search":".overlay-dialog--signin"},
-			{"action":"click", "search":".button--twitter"}
-		]
-	},
-	"Google":{
-		"todo":[
-			{"action":"clickona", "search":"a[href*='signin']"},
-			{"action":"waitfor", "search":".overlay-dialog--signin"},
-			{"action":"click", "search":".button--google"}
-		]
-	},
-	"logout":{
-		"todo":[
-			{"action":"click","search":".js-userActions"},
-			{"action":"waitfor", "search":"a[href*='signout']"},
-			{"action":"aclick", "search":"a[href*='signout']"}
-        ]
-	},
-	"checkAlreadyLogged":[
-		{"search":".js-userActions"}
-	],
-	"connect": {
-		"todo": [
-		]
-	}
+  "name": "Medium",
+  "lastLogin": "",
+  "home": "https://medium.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a[href*='operation=login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='email-sign-in-prompt'], button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='email-sign-in-prompt']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='email-sign-in-prompt']",
+        "grave": true
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a[href*='operation=login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='sign-up-prompt'], button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='facebook-auth']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='facebook-auth']",
+        "grave": true
+      }
+    ]
+  },
+  "Twitter": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a[href*='operation=login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='sign-up-prompt'], button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='twitter-auth']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='twitter-auth']",
+        "grave": true
+      }
+    ]
+  },
+  "Google": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a[href*='operation=login']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='sign-up-prompt'], button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='sign-in-prompt']"
+      },
+      {
+        "action": "waitfor",
+        "search": "button[data-action='google-auth']"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[data-action='google-auth']",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".js-userActions",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='signout']"
+      },
+      {
+        "action": "aclick",
+        "search": "a[href*='signout']",
+        "grave": true
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".js-userActions, a[href*='operation=login']"
+    },
+    {
+      "search": ".js-userActions"
+    }
+  ]
 }

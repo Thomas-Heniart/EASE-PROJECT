@@ -1,22 +1,70 @@
 {
-	"name":"Udemy",
-	"lastLogin":"",
-	"home":"https://www.udemy.com/",
-	"connect":{
-		"todo":[
-			{"action":"clickona", "search":".dropdown--login a"},
-			{"action": "waitfor", "search":"#login-form"},
-			{"action":"fill", "what":"login", "search":"#login-form #id_email"},
-			{"action":"fill", "what":"password", "search":"#login-form #id_password"},
-			{"action":"click", "search":"#login-form #submit-id-submit"}
-		]
-	},
-	"logout":{
-		"todo":[
-			{"action":"aclick", "search":"a[href*='logout']"}
-		]
-	},
-	"checkAlreadyLogged":[
-		{"search":"a[href*='logout']"}
-	]
+  "name": "Udemy",
+  "lastLogin": "",
+  "home": "https://www.udemy.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".dropdown--login a",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-form"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-form #id_email",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login-form #id_password",
+        "grave": true
+      },
+      {
+        "action": "click",
+        "search": "#login-form #submit-id-submit",
+        "grave": true
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".dropdown--login a",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "a.social-btn.social-btn--facebook.js-facebook-btn"
+      },
+      {
+        "action": "trueClick",
+        "search": "a.social-btn.social-btn--facebook.js-facebook-btn",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "aclick",
+        "search": "a[href*='logout']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".dropdown--login a, a[href*='logout']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
 }
