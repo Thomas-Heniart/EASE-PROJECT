@@ -36,7 +36,7 @@ public class ServletEditCreditCard extends HttpServlet {
             Map<String, Object> updateParams = new HashMap<>();
             updateParams.put("source", token);
             customer.update(updateParams);
-            sm.setSuccess("Credit card updated");
+            sm.setSuccess(team.getJson());
         } catch (StripeException e) {
             sm.setError(e);
         } catch (Exception e) {

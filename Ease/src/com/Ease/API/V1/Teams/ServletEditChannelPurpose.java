@@ -40,7 +40,7 @@ public class ServletEditChannelPurpose extends HttpServlet {
             channel.editPurpose(purpose);
             sm.saveOrUpdate(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
-            sm.setSuccess("Channel purpose edited.");
+            sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
