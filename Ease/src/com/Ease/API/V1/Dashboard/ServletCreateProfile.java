@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Utils.HttpServletException;
@@ -28,7 +29,13 @@ public class ServletCreateProfile extends HttpServlet {
             if (name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             Integer column_index = sm.getIntParam("column_index", true, false);
-            Integer position = sm.getIntParam("position", true, false);
+            if (column_index > Profile.MAX_COLUMN_INDEX || column_index < Profile.MIN_COLUMN_INDEX)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter column_index");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("SELECT MAX(p.position_index) FROM Profile p WHERE p.user_id = :user_id AND p.column_index = :column_index");
+            hibernateQuery.setParameter("user_id", Integer.valueOf(user.getDBid()));
+            hibernateQuery.setParameter("column_index", column_index);
+            Integer position = (Integer) hibernateQuery.getSingleResult() + 1;
             Profile profile = new Profile(Integer.valueOf(user.getDBid()), column_index, position, new ProfileInformation(name));
             sm.saveOrUpdate(profile);
             user.getDashboardManager().addProfile(profile);

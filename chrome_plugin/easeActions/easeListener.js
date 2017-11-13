@@ -2,14 +2,12 @@ $('body').prepend('<div id="new_ease_extension" safariversion="2.2.4" style="dis
 $(".displayedByPlugin").show();
 if (window.location.hostname.indexOf("ease.space") !== -1 /*|| window.location.hostname === "localhost"*/) {
     extension.runtime.sendMessage("getWebsiteFailures", {}, function (websiteFailures) {
-        if (websiteFailures === null || websiteFailures === undefined || websiteFailures)
+        if (websiteFailures === null || websiteFailures === undefined)
             return;
-        for (var prop in websiteFailures) {
-            if (websiteFailures.hasOwnProperty(prop))
-                return;
-        }
+        console.log(websiteFailures);
         if (JSON.stringify(websiteFailures) === JSON.stringify({}))
             return;
+        console.log(websiteFailures);
         var httpRequest = new XMLHttpRequest();
         httpRequest.open("POST", window.location.protocol + "//" + window.location.host + "/api/v1/plugin/ConnectionFail", true);
         httpRequest.setRequestHeader("Content-type", "application/json;charset=utf-8");

@@ -1,0 +1,32 @@
+{
+  "name":"malt",
+  "lastlogin":"",
+  "home":"https://www.malt.fr/",
+  "connect": {
+    "todo": [
+      {"action":"trueClick", "search":"#signinlink", "grave":true},
+      {"action":"waitfor", "search":"#welcome_j_username"},
+      {"action":"fill", "what":"login","search":"#welcome_j_username", "grave":true},
+      {"action":"fill", "what":"password","search":"#welcomeSignin_password", "grave":true},
+      {"action":"trueClick", "search":"#welcomeBtnSignin", "grave":"true"}
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {"action":"trueClick", "search":"#signinlink", "grave":true},
+      {"action":"waitfor", "search":"form[name='fb_signin'] button.facebook"},
+      {"action":"trueClick", "search":"form[name='fb_signin'] button.facebook", "grave":true}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='logout']", "grave":true},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":".account.connected-link.hide, .not-connected-link.signin-mandatory.jsinit.hide"},
+    {"search":".not-connected-link.signin-mandatory.jsinit.hide"}
+  ]
+
+}

@@ -85,7 +85,7 @@ abstract public class TeamCardReceiver {
         res.put("teamUser_id", this.getTeamUser().getDb_id());
         res.put("teamCard_id", this.getTeamCard().getDb_id());
         res.put("team_id", this.getTeamCard().getTeam().getDb_id());
-        res.put("teamCardReceiver_id", this.getDb_id());
+        res.put("id", this.getDb_id());
         res.put("name", this.getApp().getAppInformation().getName());
         return res;
     }
@@ -105,5 +105,9 @@ abstract public class TeamCardReceiver {
     @Override
     public int hashCode() {
         return db_id.hashCode();
+    }
+
+    public boolean isTeamSingleCardReceiver() {
+        return false;
     }
 }

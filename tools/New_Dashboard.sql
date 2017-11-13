@@ -347,5 +347,21 @@ ALTER TABLE websiteApps
 ALTER TABLE websiteApps
   DROP COLUMN reminderIntervalValue;
 
-ALTER TABLE status ADD COLUMN edit_email_code VARCHAR(6);
-ALTER TABLE status ADD COLUMN email_requested VARCHAR(100);
+CREATE TABLE ssoGroups (
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT(10) UNSIGNED NOT NULL,
+  sso_id INT(10) UNSIGNED NOT NULL,
+  account_id INT(10) UNSIGNED,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (sso_id) REFERENCES sso(id),
+  FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
+
+CREATE TABLE ssoApps (
+  id INT(10) UNSIGNED NOT NULL,
+  ssoGroup_id INT(10) UNSIGNED,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES  websiteApps(id),
+  FOREIGN KEY (ssoGroup_id) REFERENCES ssoGroups(id)
+);

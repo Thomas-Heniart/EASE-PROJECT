@@ -49,6 +49,8 @@
         <mapping class="com.Ease.NewDashboard.ClassicApp"/>
         <mapping class="com.Ease.NewDashboard.Account"/>
         <mapping class="com.Ease.NewDashboard.AccountInformation"/>
+        <mapping class="com.Ease.NewDashboard.SsoApp"/>
+        <mapping class="com.Ease.NewDashboard.SsoGroup"/>
         <mapping class="com.Ease.Team.TeamCard.TeamCard"/>
         <mapping class="com.Ease.Team.TeamCard.TeamWebsiteCard"/>
         <mapping class="com.Ease.Team.TeamCard.TeamSingleCard"/>

@@ -61,4 +61,9 @@ public class TeamSingleCardReceiver extends TeamCardReceiver {
     public String getType() {
         return "teamSingleApp";
     }
+
+    @Override
+    public boolean isTeamSingleCardReceiver() {
+        return true;
+    }
 }

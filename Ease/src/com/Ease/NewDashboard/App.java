@@ -2,6 +2,7 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -97,6 +98,10 @@ abstract public class App {
         return false;
     }
 
+    public boolean isSsoApp() {
+        return false;
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.getDb_id());
@@ -130,5 +135,9 @@ abstract public class App {
     @Override
     public int hashCode() {
         return db_id.hashCode();
+    }
+
+    public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        return new JSONArray();
     }
 }

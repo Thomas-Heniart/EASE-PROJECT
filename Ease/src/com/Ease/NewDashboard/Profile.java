@@ -27,13 +27,16 @@ public class Profile {
     @Column(name = "position_idx")
     private Integer position_index;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_info_id")
     private ProfileInformation profileInformation;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "profile")
     @MapKey(name = "db_id")
     private Map<Integer, App> appMap = new ConcurrentHashMap<>();
+
+    public final static Integer MIN_COLUMN_INDEX = 0;
+    public final static Integer MAX_COLUMN_INDEX = 3;
 
     public Profile() {
 

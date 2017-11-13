@@ -54,8 +54,8 @@ public class ConnectionWithCookies extends HttpServlet {
                 ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
                 HibernateQuery hibernateQuery = new HibernateQuery();
                 user.initializeDashboardManager(hibernateQuery);
-                user.decipherDashboard();
                 hibernateQuery.commit();
+                user.decipherDashboard();
                 success = true;
                 sm.setResponse(ServletManager.Code.Success, "Connected with cookies.");
             }

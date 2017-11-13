@@ -15,13 +15,13 @@ public class DateComparator {
     public final static long millisecondsInDay = 86400000;
     public final static Long millisecondsInMonth = new Long("2629746000");
 
+    private DateComparator() {
+
+    }
+
     public static boolean isOutdated(Date date, int numberOfDays) {
         long now = new Date().getTime();
         return (now - date.getTime()) > (numberOfDays * millisecondsInDay);
-    }
-
-    private DateComparator() {
-
     }
 
     public static boolean isOutdated(Date date, int numberOfMonth, int numberOfDays) {
