@@ -27,7 +27,7 @@ public class ServletCreateSsoApp extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            Integer ssoGroup_id = sm.getIntParam("ssoGroup_id", true, false);
+            Integer ssoGroup_id = sm.getIntParam("sso_group_id", true, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.queryString("SELECT ssoGroup FROM SsoGroup ssoGroup WHERE ssoGroup.id = :id");
             hibernateQuery.setParameter("id", ssoGroup_id);

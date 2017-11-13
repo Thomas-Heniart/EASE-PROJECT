@@ -4,16 +4,20 @@
   "home":"https://console.aws.amazon.com/",
   "connect": {
     "todo": [
-      {"action":"trueClick", "search":"a[href*='console.aws.amazon.com']"},
+      {"action":"aclick", "search":"a[href*='console.aws.amazon.com']"},
+      {"action":"aclick", "search":"#ap_signin1a_notification_row"},
       {"action":"waitfor", "search":"#login_container[style=''] #change_account_link, #login_container[style*='display:none'], #login_container[style*='display: none']"},
       {"action":"trueClick", "search":"#login_container[style=''] #change_account_link"},
       {"action":"waitfor", "search":"#login_container[style*='display:none'], #login_container[style*='display: none']"},
       {"action":"waitfor", "search":"#resolver_container[style*='display: block'], #resolver_container[style*='display:block']"},
       {"action":"fill", "what":"login","search":"#resolver_container #resolving_input", "grave":true},
       {"action":"trueClick", "search":"#next_button", "grave":true},
-      {"action":"waitfor", "search":"#resolver_container[style*='display: none'], #resolver_container[style*='display: none']"},
-      {"action":"fill", "what":"password","search":"#password", "grave":true},
-      {"action":"trueClick", "search":"#signin_button", "grave":true}
+      {"action":"waitfor", "search":"#resolver_container[style*='display: none'], #resolver_container[style*='display: none'], #ap_password"},
+      {"action":"fill", "what":"password","search":"#password"},
+      {"action":"trueClick", "search":"#signin_button"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"password","search":"#ap_password"},
+      {"action":"trueClick", "search":"#signInSubmit-input"}
     ]
   },
   "logout": {

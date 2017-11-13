@@ -29,11 +29,11 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
-            Integer teamUser_id = sm.getIntParam("teamUser_id", true, false);
+            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
             TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
+            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
+            TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "This is not a team single card");
             TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;

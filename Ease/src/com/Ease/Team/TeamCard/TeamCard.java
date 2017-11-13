@@ -131,8 +131,8 @@ abstract public class TeamCard {
         this.getTeamCardReceiverMap().remove(teamCardReceiver.getDb_id());
     }
 
-    public void removeTeamCardReceiver(Integer teamCard_receiver_id) {
-        this.getTeamCardReceiverMap().remove(teamCard_receiver_id);
+    public void removeTeamCardReceiver(Integer team_card_receiver_id) {
+        this.getTeamCardReceiverMap().remove(team_card_receiver_id);
     }
 
     public boolean containsTeamUser(TeamUser teamUser_receiver) {

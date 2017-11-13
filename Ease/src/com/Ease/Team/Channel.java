@@ -162,7 +162,7 @@ public class Channel {
         JSONArray jsonArray = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers())
             jsonArray.add(teamUser.getDb_id());
-        jsonObject.put("user_ids", jsonArray);
+        jsonObject.put("team_user_ids", jsonArray);
         JSONArray joinRequests = new JSONArray();
         for (TeamUser teamUser : this.getPending_teamUsers())
             joinRequests.add(teamUser.getDb_id());
@@ -171,7 +171,7 @@ public class Channel {
         jsonObject.put("room_manager_id", this.getRoom_manager().getDb_id());
         JSONArray teamCards = new JSONArray();
         this.getTeamCardMap().values().stream().sorted((t1, t2) -> Long.compare(t2.getCreation_date().getTime(), t1.getCreation_date().getTime())).forEach(teamCard -> teamCards.add(teamCard.getDb_id()));
-        jsonObject.put("teamCard_ids", teamCards);
+        jsonObject.put("team_card_ids", teamCards);
         jsonObject.put("team_id", team.getDb_id());
         return jsonObject;
     }

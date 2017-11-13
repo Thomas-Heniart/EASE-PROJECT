@@ -368,7 +368,7 @@ public class TeamUser {
         res.put("room_ids", channel_ids);
         JSONArray teamCards = new JSONArray();
         this.getTeamCardReceivers().stream().map(TeamCardReceiver::getTeamCard).sorted((t1, t2) -> Long.compare(t2.getCreation_date().getTime(), t1.getCreation_date().getTime())).distinct().forEach(teamCard -> teamCards.add(teamCard.getDb_id()));
-        res.put("teamCard_ids", teamCards);
+        res.put("team_card_ids", teamCards);
         return res;
     }
 

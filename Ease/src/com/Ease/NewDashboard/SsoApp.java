@@ -48,7 +48,7 @@ public class SsoApp extends WebsiteApp {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("ssoGroup_id", this.getSsoGroup() == null ? -1 : this.getSsoGroup().getDb_id());
+        res.put("sso_group_id", this.getSsoGroup() == null ? -1 : this.getSsoGroup().getDb_id());
         return res;
     }
 }

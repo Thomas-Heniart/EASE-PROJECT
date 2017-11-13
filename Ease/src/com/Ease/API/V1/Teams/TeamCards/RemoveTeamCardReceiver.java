@@ -23,10 +23,10 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team_id);
-            Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            Integer teamCard_receiver_id = sm.getIntParam("teamCardReceiver_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
-            TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamCard_receiver_id);
+            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
+            Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
+            TeamCard teamCard = team.getTeamCard(team_card_id);
+            TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             sm.saveOrUpdate(teamCard);
             sm.setSuccess("Receiver removed");

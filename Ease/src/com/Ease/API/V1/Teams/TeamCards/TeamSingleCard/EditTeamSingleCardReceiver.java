@@ -26,12 +26,12 @@ public class EditTeamSingleCardReceiver extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
-            Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
+            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
+            TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
-            Integer teamCardReceiver_id = sm.getIntParam("teamCardReceiver_id", true, false);
-            TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamCardReceiver_id);
+            Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
+            TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
             Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
             TeamSingleCardReceiver teamSingleCardReceiver = (TeamSingleCardReceiver) teamCardReceiver;
             teamSingleCardReceiver.setAllowed_to_see_password(allowed_to_see_password);

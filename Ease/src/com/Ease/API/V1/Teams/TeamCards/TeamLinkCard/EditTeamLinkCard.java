@@ -28,8 +28,8 @@ public class EditTeamLinkCard extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = teamManager.getTeamWithId(team_id);
             sm.needToBeAdminOfTeam(team);
-            Integer teamCard_id = sm.getIntParam("teamCard_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
+            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
+            TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamLinkCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "You can only edit a team link card");
             TeamLinkCard teamLinkCard = (TeamLinkCard) teamCard;
