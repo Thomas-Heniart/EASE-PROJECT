@@ -85,12 +85,9 @@ public class Team {
     @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
     protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
     private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
-
-    @Transient
-    protected Map<Integer, TeamUser> teamUsersWaitingForVerification = new ConcurrentHashMap<>();
 
     @Transient
     private int activeSubscriptions;
