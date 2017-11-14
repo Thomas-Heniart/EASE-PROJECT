@@ -50,10 +50,10 @@
   "checkAlreadyLogged": [
     {
       "action": "waitfor",
-      "search": "a[href*='login'], a[href*='/likes']"
+      "search": "a[href*='login'], div.ODWzM._1N39c"
     },
     {
-      "search": "a[href*='/likes']"
+      "search": "div.ODWzM._1N39c"
     }
   ]
 }
