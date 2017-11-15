@@ -33,7 +33,7 @@ function TeamHeader(props){
               <div className="channel_header_info">
                 <div className="channel_header_info_item" id="apps_number">
                   <i className="icon_left fa fa-square"/>
-                  <span className="value">{props.item.app_ids.length}</span>
+                  <span className="value">{props.item.team_card_ids.length}</span>
                 </div>
                 {props.item.user_ids &&
                 <div className="channel_header_info_item" id="users_number">

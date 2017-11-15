@@ -198,15 +198,15 @@ export const teams = createReducer({
       [team_id]: {
         rooms: {
           [channel_id]: {
-            app_ids: {$push: app.id}
+            team_card_ids: {$push: [app.id]}
           }
         }
       }
     });
     app.receivers.map(item => {
-      let user = new_state[team_id].team_users[item.teamUser_id];
-      new_state[team_id].team_users[item.teamUser_id] = update(user, {
-        app_ids: {$push: app.id}
+      let user = new_state[team_id].team_users[item.team_user_id];
+      new_state[team_id].team_users[item.team_user_id] = update(user, {
+        team_card_ids: {$push: [app.id]}
       });
     });
     return new_state;
