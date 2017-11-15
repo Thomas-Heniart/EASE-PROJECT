@@ -78,7 +78,7 @@ class TeamAppsContainer extends React.Component{
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
             {!this.state.loading ?
-                item.app_ids.map(id => {
+                item.team_card_ids.map(id => {
                   const item = this.props.team_apps[id];
                   if (item.type === 'simple')
                     return (

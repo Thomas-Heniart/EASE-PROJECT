@@ -1,22 +1,31 @@
 const initialState = {
-  addUserModalActive: false,
-  addChannelModalActive: false,
+  addUserModal: {
+    active: false,
+    team_id: -1
+  },
+  addChannelModal: {
+    active: false,
+    team_id: -1
+  },
   teamSettingsModalActive: false,
   teamAddMultipleUsersModal:{
     active: false
   },
   teamDeleteUserModal: {
     active: false,
-    team_user_id: -1
+    team_user_id: -1,
+    team_id: -1
   },
   teamDeleteChannelModal: {
     active: false,
-    channel_id: -1
+    room_id: -1,
+    team_id: -1
   },
   teamDeleteUserFromChannelModal: {
     active: false,
-    channel_id: -1,
-    team_user_id: -1
+    room_id: -1,
+    team_user_id: -1,
+    team_id: -1
   },
   teamDeleteAppModal: {
     active: false,
@@ -57,15 +66,18 @@ const initialState = {
   },
   verifyTeamUserModal: {
     active: false,
-    user: null
+    team_user_id: -1,
+    team_id: -1
   },
   reactivateTeamUserModal: {
     active: false,
-    user: null
+    team_user_id: -1,
+    team_id: -1
   },
   teamTransferOwnershipModal: {
     active: false,
-    user: null
+    team_id: -1,
+    team_user_id: -1
   },
   teamPhoneNumberModal: {
     active: false,
@@ -79,14 +91,16 @@ const initialState = {
   },
   upgradeTeamPlanModal: {
     active: false,
-    feature_id: null
+    feature_id: -1,
+    team_id: -1
   },
   freeTrialEndModal: {
     active: false
   },
   departureDateEndModal: {
     active: false,
-    user: null
+    team_user_id: -1,
+    team_id: -1
   },
   catalogAddBookmarkModal: {
     active: false,
@@ -110,13 +124,13 @@ export default function reducer(state=initialState, action){
     case 'SHOW_ADD_TEAM_USER_MODAL': {
       return {
         ...initialState,
-        addUserModalActive: action.payload
+        addUserModal: action.payload
       }
     }
     case 'SHOW_ADD_TEAM_CHANNEL_MODAL': {
       return {
         ...initialState,
-        addChannelModalActive: action.payload
+        addChannelModal: action.payload
       }
     }
     case 'SHOW_TEAM_CHANNEL_ADD_USER_MODAL': {

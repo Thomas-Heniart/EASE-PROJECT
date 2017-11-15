@@ -1,0 +1,43 @@
+{
+  "name": "Orange Business Services",
+  "lastLogin": "",
+  "home": "https://m2mexpress.fr.orange-business.com",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#authenValidation #username",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#authenValidation #password",
+        "grave": true
+      },
+      {
+        "action": "click",
+        "search": "#authenValidation .authenSubmitAuthentification",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".mainLink.logout",
+        "grave": true
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "search": "#header-global-actions"
+    }
+  ]
+}

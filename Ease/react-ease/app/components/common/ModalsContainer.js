@@ -33,8 +33,8 @@ import LockedTeamAppModal from "../modals/LockedTeamAppModal";
 import LogWithAppSettings from "../modals/LogWithAppSettings";
 
 @connect(store => ({
-  addUserModalActive: store.teamModals.addUserModalActive,
-  addChannelModalActive: store.teamModals.addChannelModalActive,
+  addUserModal: store.teamModals.addUserModal,
+  addChannelModal: store.teamModals.addChannelModal,
   teamDeleteUserModal: store.teamModals.teamDeleteUserModal,
   teamDeleteChannelModal: store.teamModals.teamDeleteChannelModal,
   teamDeleteUserFromChannelModal: store.teamModals.teamDeleteUserFromChannelModal,
@@ -68,9 +68,9 @@ class ModalsContainer extends Component{
   render() {
     return (
         <div>
-          {this.props.addUserModalActive &&
-          <TeamAddUserModal key="1"/>}
-          {this.props.addChannelModalActive &&
+          {this.props.addUserModal.active &&
+          <TeamAddUserModal/>}
+          {this.props.addChannelModal.active &&
           <TeamAddChannelModal/>}
           {this.props.teamDeleteUserModal.active &&
           <TeamDeleteUserModal/>}

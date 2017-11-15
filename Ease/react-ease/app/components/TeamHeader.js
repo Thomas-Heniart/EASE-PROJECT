@@ -33,14 +33,14 @@ function TeamHeader(props){
               <div className="channel_header_info">
                 <div className="channel_header_info_item" id="apps_number">
                   <i className="icon_left fa fa-square"/>
-                  <span className="value">{props.item.app_ids.length}</span>
+                  <span className="value">{props.item.team_card_ids.length}</span>
                 </div>
-                {props.item.user_ids &&
+                {props.item.team_user_ids &&
                 <div className="channel_header_info_item" id="users_number">
                   <i className="icon_left fa fa-user-o"/>
-                  <span className="value">{props.item.user_ids.length}</span>
+                  <span className="value">{props.item.team_user_ids.length}</span>
                 </div>}
-                {props.item.purpose !== undefined && props.item.purpose.length > 0 &&
+                {!!props.item.purpose && !!props.item.purpose.length &&
                 <div className="channel_header_info_item" id="channel_purpose">
                   <span className="value">{props.item.purpose}</span>
                 </div>}

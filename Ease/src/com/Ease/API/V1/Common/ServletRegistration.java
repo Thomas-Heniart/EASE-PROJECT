@@ -47,7 +47,7 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Newsletter cannot be null");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
-                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations JOIN teamUsers ON pendingTeamInvitations.teamUser_id = teamUsers.id WHERE teamUsers.email = ?");
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = ?");
                 hibernateQuery.setParameter(1, email);
                 String valid_code = (String) hibernateQuery.getSingleResult();
                 if (valid_code == null)
@@ -124,15 +124,13 @@ public class ServletRegistration extends HttpServlet {
                 Website workplace = catalog.getWebsiteWithName("Workplace");
                 school_profile.addEmptyApp(workplace.getName(), workplace, db);
             } else { */
-            newUser.initializeDashboardManager(hibernateQuery);
             ProfileInformation perso_information = new ProfileInformation("Me");
-            sm.saveOrUpdate(perso_information);
             ProfileInformation pro_information = new ProfileInformation("Pro");
-            sm.saveOrUpdate(pro_information);
             Profile profile_perso = new Profile(Integer.valueOf(newUser.getDBid()), 0, 0, perso_information);
             Profile profile_pro = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, pro_information);
             sm.saveOrUpdate(profile_perso);
             sm.saveOrUpdate(profile_pro);
+            newUser.initializeDashboardManager(hibernateQuery);
             newUser.getDashboardManager().addProfile(profile_perso);
             newUser.getDashboardManager().addProfile(profile_pro);
             Website facebook = catalog.getWebsiteWithName("Facebook");

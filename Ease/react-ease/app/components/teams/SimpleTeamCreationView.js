@@ -400,6 +400,7 @@ class SimpleTeamCreationView extends React.Component {
   }
   submitStep8(){
     window.location.href = `/teams#/teams/${this.state.teamId}`;
+    window.location.reload(true);
   }
   handleInput(e, {value , name}){
     this.setState({[name]: value});
