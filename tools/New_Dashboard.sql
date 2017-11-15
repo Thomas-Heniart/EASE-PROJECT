@@ -398,3 +398,7 @@ CREATE TABLE joinTeamSingleCardRequests (
   PRIMARY KEY (id),
   FOREIGN KEY (id) REFERENCES joinTeamCardRequests (id)
 );
+
+DROP TABLE userAndEmailInvitationsMap;
+DROP TABLE usersPrivateExtensions;
+DROP TABLE requestedWebsites;

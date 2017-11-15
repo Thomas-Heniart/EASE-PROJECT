@@ -1,0 +1,24 @@
+{
+  "name":"Orange Pro",
+  "lastLogin":"",
+  "home":"https://espaceclientv3.orange.fr/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"#o-nav-item-login"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login", "search":"#default_f_credential"},
+      {"action":"fill", "what":"password", "search":"#default_f_password"},
+      {"action":"trueClick", "search":"#AuthentForm input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='fermersession']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='fermersession'], #o-nav-item-login"},
+    {"search":"a[href*='fermersession']"}
+  ]
+}
