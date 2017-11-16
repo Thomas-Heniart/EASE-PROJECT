@@ -28,7 +28,7 @@ public class ServletGetTeamUser extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true);
             Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             JSONObject jsonObject = teamUser.getJson();
             JSONArray channels = new JSONArray();

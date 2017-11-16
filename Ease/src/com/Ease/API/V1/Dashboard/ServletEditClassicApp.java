@@ -1,8 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -24,10 +24,8 @@ public class ServletEditClassicApp extends HttpServlet {
             sm.needToBeConnected();
             Integer app_id = sm.getIntParam("app_id", true, false);
             User user = sm.getUser();
-            App app = user.getDashboardManager().getApp(app_id);
+            App app = user.getApp(app_id, sm.getHibernateQuery());
             if (!app.isClassicApp())
-                throw new HttpServletException(HttpStatus.Forbidden);
-            if (app.getTeamCardReceiver() != null)
                 throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)

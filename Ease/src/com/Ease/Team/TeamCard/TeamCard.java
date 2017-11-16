@@ -192,6 +192,10 @@ abstract public class TeamCard {
         this.getJoinTeamCardRequestMap().remove(joinTeamCardRequest.getDb_id());
     }
 
+    public void decipher(String teamKey) throws HttpServletException {
+        return;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

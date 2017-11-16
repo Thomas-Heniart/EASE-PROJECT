@@ -12,20 +12,20 @@ public class WebsiteAttributes {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "addedDate")
     @Temporal(TemporalType.TIMESTAMP)
-    protected Date addedDate = new Date();
+    private Date addedDate = new Date();
 
     @Column(name = "new")
-    protected boolean new_website = true;
+    private boolean new_website = true;
 
     @Column(name = "public")
-    protected boolean public_website;
+    private boolean public_website;
 
     @Column(name = "integrated")
-    protected boolean integrated = false;
+    private boolean integrated = false;
 
     public WebsiteAttributes(Boolean public_website) {
         this.public_website = public_website;

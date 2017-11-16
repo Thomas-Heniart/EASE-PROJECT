@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.User.User;
 import com.Ease.NewDashboard.App;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -22,7 +24,16 @@ public class ServletGetConnection extends HttpServlet {
             sm.needToBeConnected();
             Integer app_id = sm.getIntParam("app_id", true, false);
             User user = sm.getUser();
-            App app = user.getDashboardManager().getApp(app_id);
+            App app = user.getApp(app_id, sm.getHibernateQuery());
+            String symmetric_key;
+            TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
+            if (teamCardReceiver != null) {
+                Team team = teamCardReceiver.getTeamCard().getTeam();
+                sm.needToBeTeamUserOfTeam(team);
+                symmetric_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+            } else
+                symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            app.decipher(symmetric_key);
             if (app.getTeamCardReceiver() != null && app.getTeamCardReceiver().getTeamUser().isDisabled())
                 throw new HttpServletException(HttpStatus.Forbidden);
             String public_key = (String) sm.getContextAttr("publicKey");

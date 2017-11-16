@@ -24,7 +24,7 @@ public class ServletGetInvitationInformation extends HttpServlet {
             if (code == null || code.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing code parameter");
             DataBaseConnection db = sm.getDB();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT team_id, teamUser_id FROM pendingTeamInvitations WHERE code = ?;");
+            DatabaseRequest databaseRequest = db.prepareRequest("SELECT team_id, id FROM teamUsers WHERE invitation_code = ?;");
             databaseRequest.setString(code);
             DatabaseResult rs = databaseRequest.get();
             if (!rs.next())
@@ -32,7 +32,7 @@ public class ServletGetInvitationInformation extends HttpServlet {
             Integer team_id = rs.getInt(1);
             Integer teamUser_id = rs.getInt(2);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             databaseRequest = db.prepareRequest("SELECT id from users where email = ?;");
             databaseRequest.setString(teamUser.getEmail());

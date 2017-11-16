@@ -5,69 +5,41 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.*;
 
-import javax.servlet.ServletContext;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by thomas on 28/04/2017.
  */
 public class TeamManager {
 
-    protected List<Team> teams;
-    private Map<Integer, Team> teamIdMap = new ConcurrentHashMap<>();
-
-    public TeamManager(ServletContext context, DataBaseConnection db) throws HttpServletException {
-        this.teams = Team.loadTeams(context, db);
-        this.teamIdMap = new HashMap<>();
-        for (Team team : this.teams)
-            this.teamIdMap.put(team.getDb_id(), team);
-
+    public TeamManager() {
     }
 
-    public List<Team> getTeams() {
-        return teams;
+    public List<Team> getTeams(HibernateQuery hibernateQuery) {
+        hibernateQuery.queryString("SELECT t FROM Team t WHERE t.db_id = :id");
+        return hibernateQuery.list();
     }
 
-    public Team getTeamWithId(Integer team_id) throws HttpServletException {
-        Team team = this.teamIdMap.get(team_id);
+    public Team getTeam(Integer team_id, HibernateQuery hibernateQuery) throws HttpServletException {
+        hibernateQuery.queryString("SELECT t FROM Team t WHERE t.db_id = :id");
+        hibernateQuery.setParameter("id", team_id);
+        Team team = (Team) hibernateQuery.getSingleResult();
         if (team == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "No such team");
+            throw new HttpServletException(HttpStatus.BadRequest, "This team does not exist.");
         return team;
     }
 
-    public void addTeam(Team team) {
-        this.teams.add(team);
-        this.teamIdMap.put(team.getDb_id(), team);
-    }
-
-    public void removeTeam(Team team) {
-        this.teams.remove(team);
-        this.teamIdMap.remove(team.getDb_id());
-    }
-
-    public void removeTeamWithId(Integer team_id) throws HttpServletException {
-        Team team = this.getTeamWithId(team_id);
-        this.removeTeam(team);
-    }
-
-    public Team getTeamWithName(String team_name) {
-        for (Team team : this.getTeams()) {
-            if (team.getName().equals(team_name))
-                return team;
-        }
-        return null;
-    }
-
     public void updateTeamsSubscriptions() {
-        for (Team team : this.getTeams())
-            team.updateSubscription();
+        /*for (Team team : this.getTeams())
+            team.updateSubscription(); */
     }
 
     public void checkFreeTrialEnd(DataBaseConnection db) {
-        for (Team team : this.getTeams())
-            team.checkFreeTrialEnd(db);
+        /* for (Team team : this.getTeams())
+            team.checkFreeTrialEnd(db); */
     }
 
     public void teamUserNotRegisteredReminder() throws HttpServletException {
@@ -75,7 +47,7 @@ public class TeamManager {
         List<TeamUser> three_days_teamUsers = new LinkedList<>();
         List<TeamUser> eight_days_teamUsers = new LinkedList<>();
         List<TeamUser> twelve_days_teamUsers = new LinkedList<>();
-        for (Team team : this.getTeams()) {
+        /* for (Team team : this.getTeams()) {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.isRegistered())
                     continue;
@@ -86,7 +58,7 @@ public class TeamManager {
                 else if (DateComparator.wasDaysAgo(teamUser.getArrivalDate(), 12))
                     twelve_days_teamUsers.add(teamUser);
             }
-        }
+        } */
         MailJetBuilder mailJetBuilder;
         HibernateQuery hibernateQuery = new HibernateQuery();
         if (!three_days_teamUsers.isEmpty()) {
@@ -165,24 +137,10 @@ public class TeamManager {
         System.out.println("Password reminder start...");
         Date timestamp = new Date();
         HibernateQuery hibernateQuery = new HibernateQuery();
-        DataBaseConnection db = null;
-        try {
-            db = new DataBaseConnection(DataBase.getConnection());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            int transaction = db.startTransaction();
-            for (Team team : this.getTeams()) {
-                
-            }
-            hibernateQuery.commit();
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            e.printStackTrace();
-        }
-        db.close();
+        /* for (Team team : this.getTeams()) {
+
+        } */
+        hibernateQuery.commit();
         System.out.println("Password reminder end...");
     }
 
@@ -198,7 +156,7 @@ public class TeamManager {
         }
         try {
             int transaction = db.startTransaction();
-            for (Team team : this.getTeams()) {
+            /* for (Team team : this.getTeams()) {
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
                     if (teamUser.isDisabled()) {
                         hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
@@ -211,7 +169,7 @@ public class TeamManager {
                     }
 
                 }
-            }
+            } */
             db.commitTransaction(transaction);
             hibernateQuery.commit();
         } catch (GeneralException e) {
@@ -222,8 +180,8 @@ public class TeamManager {
     }
 
     public void checkDepartureDates(DataBaseConnection db) {
-        for (Team team : this.getTeams()) {
+        /* for (Team team : this.getTeams()) {
             team.checkDepartureDates(new Date(), db);
-        }
+        } */
     }
 }

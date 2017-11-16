@@ -1,12 +1,15 @@
 package com.Ease.Utils.Servlets;
 
 import com.Ease.Dashboard.User.JWToken;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.User.NotificationManager;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
+import com.Ease.User.UserFactory;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.StripeException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,8 +26,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.Key;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class ServletManager {
 
@@ -33,10 +40,9 @@ public abstract class ServletManager {
     protected String redirectUrl;
     protected String servletName;
     protected Map<String, String> args = new HashMap<>();
-    protected User user;
-    protected TeamUser teamUser;
     protected DataBaseConnection db;
     private DataBaseConnection logDb;
+    private User user;
     protected boolean saveLogs;
     protected String logResponse;
     protected String socketId;
@@ -54,7 +60,6 @@ public abstract class ServletManager {
         this.servletName = servletName;
         this.request = request;
         this.response = response;
-        this.user = (User) request.getSession().getAttribute("user");
         this.saveLogs = saveLogs;
     }
 
@@ -128,8 +133,25 @@ public abstract class ServletManager {
     }
 
     public void needToBeConnected() throws HttpServletException {
-        if (user == null)
-            user = this.getUserWithToken();
+        Integer user_id = (Integer) this.getSession().getAttribute("user_id");
+        String jwt = this.request.getHeader("Authorization");
+        if (jwt == null && user_id == null)
+            throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+        else if (jwt != null) {
+            Key secret = (Key) this.getContextAttr("secret");
+            this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
+            if (this.user == null)
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            String keyUser = this.user.getJsonWebToken().getKeyUser(jwt, secret);
+            Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
+            userProperties.put("keyUser", keyUser);
+            userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
+                teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
+            }
+        } else
+            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
@@ -284,7 +306,7 @@ public abstract class ServletManager {
             if (this.user == null)
                 request.setNull();
             else
-                request.setInt(this.user.getDBid());
+                request.setInt(this.user.getDb_id());
             request.setString(argsString);
             request.setString(this.logResponse);
             request.set();
@@ -323,8 +345,7 @@ public abstract class ServletManager {
                 if (this.errorMessage != null) {
                     this.response.setCharacterEncoding("UTF-8");
                     response.getWriter().print(this.errorMessage);
-                }
-                else
+                } else
                     response.sendError(response.getStatus());
             } else {
                 if (this.redirectUrl != null) {
@@ -383,37 +404,24 @@ public abstract class ServletManager {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-        this.getSession().setAttribute("user", user);
+    public void setUser(Integer user_id) {
+        this.getSession().setAttribute("user_id", user_id);
     }
 
     public HttpSession getSession() {
         return request.getSession();
     }
 
-    public List<TeamUser> getTeamUsers() {
+    public Set<TeamUser> getTeamUsers() {
         return this.getUser().getTeamUsers();
     }
 
-    public TeamUser getTeamUserForTeam(Team team) throws HttpServletException {
-        for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team && !teamUser.isDisabled())
-                return teamUser;
-        }
-        throw new HttpServletException(HttpStatus.BadRequest);
+    public TeamUser getTeamUser(Team team) throws HttpServletException {
+        return user.getTeamUser(team);
     }
 
-    public TeamUser getTeamUserForTeamId(Integer team_id) throws HttpServletException {
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
-        TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
-        Team team = teamManager.getTeamWithId(team_id);
-        for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team && !teamUser.isDisabled())
-                return teamUser;
-        }
-        return null;
+    public TeamUser getTeamUser(Integer team_id) throws HttpServletException {
+        return user.getTeamUser(team_id);
     }
 
     public Date getTimestamp() throws HttpServletException {
@@ -436,13 +444,62 @@ public abstract class ServletManager {
             String user_email = (String) claimsJws.get("email");
             Long expiration_date = (Long) claimsJws.get("exp");
             JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
-            user = User.loadUserFromJWT(jwToken, this, this.getDB());
+            user = null; //User.loadUserFromJWT(jwToken, this, this.getDB());
             tokenUserMap.put(jwToken.getConnection_token(), user);
         }
-        user.getJwt().checkJwt(claimsJws);
+        /* user.getJwt().checkJwt(claimsJws);
         if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
-            throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired");
+            throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired"); */
         this.user = user;
         return this.user;
+    }
+
+    public Map<String, Object> getUserProperties(Integer user_id) {
+        Map<Integer, Map<String, Object>> userIdMap = (Map<Integer, Map<String, Object>>) this.getContextAttr("userIdMap");
+        Map<String, Object> userProperties = userIdMap.get(user_id);
+        if (userProperties == null) {
+            userProperties = new ConcurrentHashMap<>();
+            userIdMap.put(user_id, userProperties);
+        }
+        return userProperties;
+    }
+
+    public Map<String, Object> getTeamProperties(Integer team_id) {
+        Map<Integer, Map<String, Object>> teamIdMap = (Map<Integer, Map<String, Object>>) this.getContextAttr("teamIdMap");
+        Map<String, Object> teamProperties = teamIdMap.get(team_id);
+        if (teamProperties == null) {
+            teamProperties = new ConcurrentHashMap<>();
+            teamIdMap.put(team_id, teamProperties);
+        }
+        return teamProperties;
+    }
+
+    public WebSocketManager getUserWebSocketManager(Integer user_id) {
+        WebSocketManager webSocketManager = (WebSocketManager) this.getUserProperties(user_id).get("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            this.getUserProperties(user_id).put("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
+    }
+
+    public WebSocketManager getTeamWebSocketManager(Integer team_id) {
+        WebSocketManager webSocketManager = (WebSocketManager) this.getTeamProperties(team_id).get("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            this.getTeamProperties(team_id).put("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
+    }
+
+    public NotificationManager getUserNotificationManager(Integer user_id) {
+        NotificationManager notificationManager = (NotificationManager) this.getUserProperties(user_id).get("notificationManager");
+        if (notificationManager == null)
+            notificationManager = new NotificationManager();
+        return notificationManager;
+    }
+
+    public String getKeyUser() {
+        return (String) this.getUserProperties(this.getUser().getDb_id()).get("keyUser");
     }
 }

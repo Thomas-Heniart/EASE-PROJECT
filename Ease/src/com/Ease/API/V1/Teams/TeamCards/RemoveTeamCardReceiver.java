@@ -22,7 +22,7 @@ public class RemoveTeamCardReceiver extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeAdminOfTeam(team_id);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
@@ -32,8 +32,6 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             Profile profile = teamCardReceiver.getApp().getProfile();
             if (profile != null)
                 profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
-            if (teamCardReceiver.getTeamUser().getDashboard_user() != null)
-                teamCardReceiver.getTeamUser().getDashboard_user().getDashboardManager().removeApp(teamCardReceiver.getApp());
             sm.saveOrUpdate(teamCard);
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {

@@ -22,7 +22,7 @@ public class ServletGetTeams extends HttpServlet {
             sm.needToBeEaseAdmin();
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             JSONArray res = new JSONArray();
-            for (Team team : teamManager.getTeams()) {
+            for (Team team : teamManager.getTeams(sm.getHibernateQuery())) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("id", team.getDb_id());
                 tmp.put("name", team.getName());

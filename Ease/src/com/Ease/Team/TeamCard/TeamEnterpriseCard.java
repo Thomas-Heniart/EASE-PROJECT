@@ -3,6 +3,8 @@ package com.Ease.Team.TeamCard;
 import com.Ease.Catalog.Website;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Utils.HttpServletException;
 
 import javax.persistence.*;
 
@@ -27,5 +29,12 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
     @Override
     public boolean isTeamEnterpriseCard() {
         return true;
+    }
+
+    @Override
+    public void decipher(String teamKey) throws HttpServletException {
+        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
+            teamCardReceiver.getApp().decipher(teamKey);
+        }
     }
 }

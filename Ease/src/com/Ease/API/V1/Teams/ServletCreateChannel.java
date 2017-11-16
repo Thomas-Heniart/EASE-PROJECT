@@ -30,7 +30,7 @@ public class ServletCreateChannel extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             if (team.getChannels().size() >= 4 && !team.isValidFreemium())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 4 rooms.");
             String name = sm.getStringParam("name", true, false);
@@ -43,7 +43,7 @@ public class ServletCreateChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Purpose of room cannot be greater than 250 characters");
             if (team.getChannelNamed(name) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another room");
-            Channel channel = new Channel(team, name, purpose, sm.getTeamUserForTeamId(team_id));
+            Channel channel = new Channel(team, name, purpose, sm.getTeamUser(team_id));
             sm.saveOrUpdate(channel);
             team.addChannel(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.ADDED, channel.getJson(), channel.getOrigin()));

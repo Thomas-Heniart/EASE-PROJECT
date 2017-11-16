@@ -8,8 +8,10 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
-import com.Ease.Utils.*;
-import com.Ease.websocketV1.WebSocketManager;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
@@ -17,7 +19,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import javax.servlet.ServletContext;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by thomas on 10/04/2017.
  */
-@Entity(name = "teams")
+@Entity
+@Table(name = "teams")
 public class Team {
 
     private static final String DEFAULT_CHANNEL_NAME = "openspace";
@@ -38,14 +40,6 @@ public class Team {
         inverse_plansMap.put("FreePlan", 0);
         plansMap.put(1, "EaseFreemium");
         inverse_plansMap.put("EaseFreemium", 1);
-    }
-
-    public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
-        HibernateQuery query = new HibernateQuery();
-        query.queryString("SELECT t FROM teams t WHERE t.active = true");
-        List<Team> teams = query.list();
-        query.commit();
-        return teams;
     }
 
     @Id
@@ -74,15 +68,15 @@ public class Team {
     @Column(name = "active")
     protected boolean active = true;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
     protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
-    @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "teams")
     protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -91,9 +85,6 @@ public class Team {
 
     @Transient
     private int activeSubscriptions;
-
-    @Transient
-    private WebSocketManager webSocketManager = new WebSocketManager();
 
     @Transient
     private Channel default_channel;
@@ -471,10 +462,6 @@ public class Team {
         return null;
     }
 
-    public WebSocketManager getWebSocketManager() {
-        return webSocketManager;
-    }
-
     public Channel createDefaultChannel(TeamUser owner) {
         this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide apps and tools sharing", owner);
         return this.default_channel;
@@ -560,11 +547,11 @@ public class Team {
                         }
                     }
                     String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
-                    this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
+                    //this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
 
                 }
             }
-        } catch (HttpServletException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

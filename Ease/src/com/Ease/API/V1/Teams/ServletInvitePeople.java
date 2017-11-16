@@ -90,10 +90,10 @@ public class ServletInvitePeople extends HttpServlet {
             hibernateQuery.setParameter(3, email2);
             hibernateQuery.setParameter(4, email3);
             hibernateQuery.executeUpdate();
-            Integer money = teamManager.getTeamWithId(team_id).increaseAccountBalance(jackpot, hibernateQuery);
+            Integer money = teamManager.getTeam(team_id, sm.getHibernateQuery()).increaseAccountBalance(jackpot, hibernateQuery);
             String emails[] = new String[]{email1, email2, email3};
             /* Use mailjet api */
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
+            TeamUser teamUser = sm.getTeamUser(team_id);
             MailJetBuilder mailJetBuilder;
             for (String email : emails) {
                 mailJetBuilder = new MailJetBuilder();

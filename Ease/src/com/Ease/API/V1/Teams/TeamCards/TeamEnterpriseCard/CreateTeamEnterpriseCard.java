@@ -32,11 +32,11 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeTeamUserOfTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!channel.getTeamUsers().contains(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             Integer website_id = sm.getIntParam("website_id", true, false);
@@ -44,7 +44,7 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
             if (password_reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             String description = sm.getStringParam("description", true, true);
             if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
@@ -59,8 +59,10 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
                 Account account = null;
-                if (account_information != null && !account_information.isEmpty())
-                    account = AccountFactory.getInstance().createAccountFromMap(account_information, teamUser_connected.getDeciphered_teamKey(), password_reminder_interval);
+                if (account_information != null && !account_information.isEmpty()) {
+                    String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+                    account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, password_reminder_interval);
+                }
                 AppInformation appInformation = new AppInformation(website.getName());
                 App app = new ClassicApp(appInformation, website, account);
                 TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser);

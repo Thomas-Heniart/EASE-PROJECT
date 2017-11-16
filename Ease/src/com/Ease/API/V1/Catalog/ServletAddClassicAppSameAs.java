@@ -2,7 +2,7 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.NewDashboard.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
@@ -33,26 +33,27 @@ public class ServletAddClassicAppSameAs extends HttpServlet {
             if (name.equals("") || name.length() >= 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             Integer app_id = sm.getIntParam("same_app_id", true, false);
-            App same_app = user.getDashboardManager().getApp(app_id);
+            App same_app = user.getApp(app_id, sm.getHibernateQuery());
             if (!same_app.isClassicApp())
                 throw new HttpServletException(HttpStatus.BadRequest, "Please provide a classic app");
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
             Set<AccountInformation> accountInformationSet = new HashSet<>();
-            for (AccountInformation accountInformation : ((ClassicApp)same_app).getAccount().getAccountInformationSet())
+            String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            same_app.decipher(keyUser);
+            for (AccountInformation accountInformation : ((ClassicApp) same_app).getAccount().getAccountInformationSet())
                 accountInformationSet.add(new AccountInformation(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_and_private_key.getKey()), accountInformation.getDeciphered_information_value()));
-            Account account = new Account(((ClassicApp)same_app).getAccount().getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), user.getKeys().getKeyUser()), accountInformationSet, public_and_private_key.getValue());
+            Account account = new Account(((ClassicApp) same_app).getAccount().getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), keyUser), accountInformationSet, public_and_private_key.getValue());
             accountInformationSet.stream().forEach(accountInformation -> accountInformation.setAccount(account));
-            Website website = catalog.getWebsiteWithId(website_id);
-            Profile profile = user.getDashboardManager().getProfile(profile_id);
+            Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
+            Profile profile = user.getProfile(profile_id);
             AppInformation appInformation = new AppInformation(name);
             ClassicApp classicApp = new ClassicApp(appInformation, website, account);
             classicApp.setProfile(profile);
-            classicApp.setPosition(profile.getAppMap().size());
+            classicApp.setPosition(profile.getSize());
             sm.saveOrUpdate(classicApp);
             profile.addApp(classicApp);
-            user.getDashboardManager().addApp(classicApp);
             sm.setSuccess(classicApp.getJson());
         } catch (Exception e) {
             sm.setError(e);

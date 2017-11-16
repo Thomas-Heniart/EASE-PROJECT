@@ -16,7 +16,7 @@ public class ServletValidateNotifications extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            sm.getUser().getNotificationManager().readAllNotifications(sm.getDB());
+            sm.getUserNotificationManager(sm.getUser().getDb_id()).readAllNotifications(sm.getUser(), sm.getHibernateQuery());
             sm.setSuccess("Notifications read");
         } catch (Exception e) {
             sm.setError(e);

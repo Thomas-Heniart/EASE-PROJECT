@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/api/v1/admin/AddCategory")
 public class ServletAddCategory extends HttpServlet {
@@ -21,15 +22,14 @@ public class ServletAddCategory extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             String name = sm.getStringParam("name", true, false);
-            //Integer position = sm.getIntParam("position", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            for (Category category : catalog.getCategories()) {
+            List<Category> categoryList = catalog.getCategories(sm.getHibernateQuery());
+            for (Category category : categoryList) {
                 if (category.getName().equals(name))
                     throw new HttpServletException(HttpStatus.BadRequest, "Already a category with this name.");
             }
-            Category category = new Category(name, (catalog.getCategories().size() + 1) * 10);
+            Category category = new Category(name, (categoryList.size() + 1) * 10);
             sm.saveOrUpdate(category);
-            catalog.addCategory(category);
             sm.setSuccess(category.getJson());
         } catch (Exception e) {
             sm.setError(e);

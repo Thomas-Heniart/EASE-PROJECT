@@ -21,10 +21,12 @@ public class GetTeamCard extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            sm.getUser().getTeamUserForTeam(team);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            sm.getUser().getTeamUser(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            teamCard.decipher(teamKey);
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -16,7 +16,7 @@ public class ServletGetProfileList extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            sm.setSuccess(sm.getUser().getDashboardManager().getProfileListJson());
+            sm.setSuccess(sm.getUser().getProfileListJson());
         } catch (Exception e) {
             sm.setError(e);
         }

@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.SsoApp;
@@ -29,15 +29,12 @@ public class ServletDeleteSsoGroup extends HttpServlet {
             hibernateQuery.queryString("SELECT s FROM SsoGroup s WHERE s.id = :id");
             hibernateQuery.setParameter("id", sso_group_id);
             SsoGroup ssoGroup = (SsoGroup) hibernateQuery.getSingleResult();
-            if (ssoGroup == null || !ssoGroup.getUser_id().equals(Integer.valueOf(user.getDBid())))
+            if (ssoGroup == null || !ssoGroup.getUser().equals(user))
                 throw new HttpServletException(HttpStatus.BadRequest, "No such SsoGroup");
             for (SsoApp ssoApp : ssoGroup.getSsoAppMap().values()) {
                 Profile profile = ssoApp.getProfile();
-                if (profile != null) {
-                    profile = user.getDashboardManager().getProfile(profile.getDb_id());
+                if (profile != null)
                     profile.removeAppAndUpdatePositions(ssoApp, hibernateQuery);
-                }
-                user.getDashboardManager().removeApp(ssoApp);
             }
             sm.deleteObject(ssoGroup);
             sm.setSuccess("SsoGroup deleted");

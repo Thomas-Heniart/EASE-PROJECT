@@ -1,6 +1,6 @@
 package com.Ease.websocketV1;
 
-import com.Ease.Notification.Notification;
+import com.Ease.User.Notification;
 import org.json.simple.JSONObject;
 
 public class WebSocketMessageFactory {

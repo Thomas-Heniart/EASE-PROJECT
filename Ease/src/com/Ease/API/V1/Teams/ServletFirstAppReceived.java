@@ -20,7 +20,7 @@ public class ServletFirstAppReceived extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
+            TeamUser teamUser = sm.getTeamUser(team_id);
             if (teamUser.getTeamUserStatus().first_app_received())
                 throw new HttpServletException(HttpStatus.BadRequest, "Step already checked.");
             if (teamUser.getTeamCardReceivers().isEmpty())

@@ -27,7 +27,7 @@ public class ServletGetWebsites extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             JSONArray res = new JSONArray();
-            for (Website website : catalog.getWebsites()) {
+            for (Website website : catalog.getWebsites(sm.getHibernateQuery())) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("id", website.getDb_id());
                 tmp.put("name", website.getName());

@@ -1,12 +1,8 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.User.User;
-import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Team.TeamUser;
-import com.Ease.Utils.Crypto.RSA;
+import com.Ease.User.User;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +14,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 @WebServlet("/api/v1/common/Connection")
 public class ServletConnection extends HttpServlet {
@@ -43,7 +38,7 @@ public class ServletConnection extends HttpServlet {
                 if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
                 else {
-                    String key = (String) sm.getContextAttr("privateKey");
+                    /* String key = (String) sm.getContextAttr("privateKey");
                     password = RSA.Decrypt(password, key);
                     DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?");
                     databaseRequest.setString(email);
@@ -64,7 +59,8 @@ public class ServletConnection extends HttpServlet {
                     removeIpFromDataBase(client_ip, db);
                     JSONObject res = new JSONObject();
                     res.put("user", user.getJson());
-                    sm.setSuccess(res);
+                    sm.setSuccess(res); */
+                    sm.setSuccess("Done");
                 }
             } else {
                 throw new HttpServletException(HttpStatus.Forbidden, "Too much attempts to connect. Please retry in 5 minutes.");

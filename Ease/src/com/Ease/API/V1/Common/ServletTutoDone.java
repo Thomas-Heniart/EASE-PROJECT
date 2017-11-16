@@ -1,8 +1,6 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
+import com.Ease.User.UserStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -19,11 +17,10 @@ public class ServletTutoDone extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            User user = sm.getUser();
-            if (user.getStatus().tutoIsDone())
-                throw new HttpServletException(HttpStatus.BadRequest, "Tuto already validated.");
-            user.getStatus().setTuto_done(true, sm.getDB());
-            sm.setSuccess(user.getJson());
+            UserStatus userStatus = sm.getUser().getUserStatus();
+            userStatus.setTuto_done(true);
+            sm.saveOrUpdate(userStatus);
+            sm.setSuccess(sm.getUser().getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

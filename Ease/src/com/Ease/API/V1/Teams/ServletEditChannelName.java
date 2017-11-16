@@ -1,5 +1,7 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.User.Notification;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -8,6 +10,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -31,7 +34,7 @@ public class ServletEditChannelName extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
             if (channel.isDefault())
@@ -47,12 +50,15 @@ public class ServletEditChannelName extends HttpServlet {
             }
             String old_name = channel.getName();
             channel.editName(name);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!old_name.equals(channel.getName())) {
                 for (TeamUser teamUser : channel.getTeamUsers()) {
-                    if (teamUser == teamUser_connected)
+                    if (teamUser == teamUser_connected || teamUser.getUser() == null)
                         continue;
-                    teamUser.addNotification("#" + old_name + " has been renamed to #" + channel.getName(), channel.getDb_id().toString(), "/resources/notifications/room_renamed.png", sm.getTimestamp(), sm.getDB());
+                    Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), "#" + old_name + " has been renamed to #" + channel.getName(), "/resources/notifications/room_renamed.png", channel);
+                    sm.saveOrUpdate(notification);
+                    WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());
+                    webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
                 }
             }
             sm.saveOrUpdate(channel);

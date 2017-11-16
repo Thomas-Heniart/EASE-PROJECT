@@ -1,8 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.DashboardManager;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -22,10 +22,10 @@ public class ServletMoveApp extends HttpServlet {
             Integer app_id = sm.getIntParam("app_id", true, false);
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Integer position = sm.getIntParam("position", true, false);
-            DashboardManager dashboardManager = sm.getUser().getDashboardManager();
-            App app = dashboardManager.getApp(app_id);
+            User user = sm.getUser();
+            App app = user.getApp(app_id, sm.getHibernateQuery());
             Profile old_profile = app.getProfile();
-            Profile new_profile = dashboardManager.getProfile(profile_id);
+            Profile new_profile = user.getProfile(profile_id);
             if (old_profile == new_profile)
                 old_profile.updateAppPositions(app, position, sm.getHibernateQuery());
             else {

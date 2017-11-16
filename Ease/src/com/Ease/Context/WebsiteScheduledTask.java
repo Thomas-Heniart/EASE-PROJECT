@@ -26,7 +26,7 @@ public class WebsiteScheduledTask extends TimerTask {
                 Integer id = (Integer) obj;
                 Website website = null;
                 try {
-                    website = catalog.getWebsiteWithId(id);
+                    website = catalog.getWebsiteWithId(id, hibernateQuery);
                     System.out.println(website.getName() + " not new anymore");
                     website.getWebsiteAttributes().setNew_website(false);
                     hibernateQuery.saveOrUpdateObject(website.getWebsiteAttributes());

@@ -14,17 +14,17 @@ public class Category {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "name")
-    protected String name;
+    private String name;
 
     @Column(name = "position")
-    protected Integer position;
+    private Integer position;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category")
     @MapKey(name = "db_id")
-    protected Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
+    private Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
 
     public Category() {
 

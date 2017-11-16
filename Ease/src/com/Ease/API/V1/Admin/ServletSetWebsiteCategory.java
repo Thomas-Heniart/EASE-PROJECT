@@ -22,8 +22,8 @@ public class ServletSetWebsiteCategory extends HttpServlet {
             Integer category_id = sm.getIntParam("category_id", true, false);
             Integer website_id = sm.getIntParam("website_id", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithId(website_id);
-            Category category = catalog.getCategoryWithId(category_id);
+            Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
+            Category category = catalog.getCategoryWithId(category_id, sm.getHibernateQuery());
             website.setCategory(category);
             category.addWebsite(website);
             sm.saveOrUpdate(website);

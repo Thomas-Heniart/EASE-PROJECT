@@ -33,6 +33,10 @@ public class HibernateQuery {
         this.query = this.session.createNativeQuery(query);
     }
 
+    public void setMaxResults(int limit) {
+        this.query.setMaxResults(limit);
+    }
+
     public void setParameter(String parameter, Object value) {
         this.query.setParameter(parameter, value);
     }

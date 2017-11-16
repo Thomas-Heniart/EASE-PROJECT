@@ -22,7 +22,7 @@ public class ServletDeleteWebsiteRequest extends HttpServlet {
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer website_request_id = sm.getIntParam("website_request_id", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             WebsiteRequest websiteRequest = null;
             for (WebsiteRequest websiteRequest1 : website.getWebsiteRequests()) {
                 if (websiteRequest1.getDb_id().equals(website_request_id))

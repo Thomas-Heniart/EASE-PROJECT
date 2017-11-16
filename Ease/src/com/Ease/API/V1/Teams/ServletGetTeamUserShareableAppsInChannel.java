@@ -21,7 +21,7 @@ public class ServletGetTeamUserShareableAppsInChannel extends HttpServlet {
             /* Integer team_id = sm.getIntParam("team_id", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Integer channel_id = sm.getIntParam("channel_id", true);
             Channel channel = team.getChannelWithId(channel_id);
             Integer teamUser_id = sm.getIntParam("team_user_id", true);

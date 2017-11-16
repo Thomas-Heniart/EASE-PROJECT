@@ -27,14 +27,14 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
             if (channel.isDefault())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove user from default channel.");
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_remove = team.getTeamUserWithId(teamUser_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!channel.getTeamUsers().contains(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             if (channel.getRoom_manager() == teamUser_to_remove)

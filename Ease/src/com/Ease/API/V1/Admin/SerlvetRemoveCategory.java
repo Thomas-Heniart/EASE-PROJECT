@@ -21,12 +21,11 @@ public class SerlvetRemoveCategory extends HttpServlet {
             sm.needToBeEaseAdmin();
             Integer category_id = sm.getIntParam("category", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Category category = catalog.getCategoryWithId(category_id);
+            Category category = catalog.getCategoryWithId(category_id, sm.getHibernateQuery());
             for (Website website : category.getWebsiteMap().values()) {
                 website.setCategory(null);
                 sm.saveOrUpdate(website);
             }
-            catalog.removeCategory(category_id);
             sm.deleteObject(category);
             sm.setSuccess("Done");
         } catch (Exception e) {

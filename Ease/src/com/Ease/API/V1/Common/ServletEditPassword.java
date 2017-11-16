@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -27,13 +27,14 @@ public class ServletEditPassword extends HttpServlet {
             String private_key = (String) sm.getContextAttr("privateKey");
             password = RSA.Decrypt(password, private_key);
             new_password = RSA.Decrypt(new_password, private_key);
-            if (!user.getKeys().isGoodPassword(password))
+            if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
-            if (user.getKeys().isGoodPassword(new_password))
+            if (user.getUserKeys().isGoodPassword(new_password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Your new password cannot be as same as your current password");
             if (!Regex.isPassword(new_password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password must be at least 8 characters, one uppercase and one digit.");
-            user.getKeys().changePassword(new_password, sm.getDB());
+            user.getUserKeys().changePassword(new_password, sm.getKeyUser());
+            sm.saveOrUpdate(user);
             sm.setSuccess("Password edited");
         } catch (Exception e) {
             sm.setError(e);

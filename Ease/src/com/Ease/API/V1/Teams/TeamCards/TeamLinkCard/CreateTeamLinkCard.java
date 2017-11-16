@@ -25,11 +25,11 @@ public class CreateTeamLinkCard extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeTeamUserOfTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!channel.getTeamUsers().contains(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             String url = sm.getStringParam("url", true, false);

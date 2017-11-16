@@ -26,10 +26,10 @@ public class ServletEditRoomManager extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
+            TeamUser teamUser = sm.getTeamUser(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Channel channel = team.getChannelWithId(channel_id);
             TeamUser new_room_manager = team.getTeamUserWithId(sm.getIntParam("team_user_id", true, false));
             if (channel.getRoom_manager() != teamUser && !teamUser.isTeamOwner())

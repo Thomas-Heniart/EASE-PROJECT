@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONObject;
 

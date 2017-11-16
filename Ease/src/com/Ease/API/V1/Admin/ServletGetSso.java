@@ -19,7 +19,7 @@ public class ServletGetSso extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            JSONArray res = catalog.getSsoListJson();
+            JSONArray res = catalog.getSsoListJson(sm.getHibernateQuery());
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

@@ -26,9 +26,9 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeTeamUserOfTeam(team);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamEnterpriseCard())
@@ -38,7 +38,8 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
             if (teamCard.getJoinTeamCardRequest(teamUser) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You already ask  to join this card");
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamUser.getDeciphered_teamKey(), ((TeamEnterpriseCard)teamCard).getPassword_reminder_interval());
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, ((TeamEnterpriseCard) teamCard).getPassword_reminder_interval());
             JoinTeamCardRequest joinTeamCardRequest = new JoinTeamEnterpriseCardRequest(teamCard, teamUser, account);
             sm.saveOrUpdate(joinTeamCardRequest);
             teamCard.addJoinTeamCardRequest(joinTeamCardRequest);

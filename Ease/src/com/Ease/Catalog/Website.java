@@ -1,6 +1,7 @@
 package com.Ease.Catalog;
 
 import com.Ease.Context.Variables;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.GeneralException;
@@ -29,52 +30,55 @@ public class Website {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "login_url")
-    protected String login_url;
+    private String login_url;
 
     @Column(name = "website_name")
-    protected String name;
+    private String name;
 
     @Column(name = "folder")
-    protected String folder;
+    private String folder;
 
     @Column(name = "website_homepage")
-    protected String website_homepage;
+    private String website_homepage;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "website_attributes_id")
-    protected WebsiteAttributes websiteAttributes;
+    private WebsiteAttributes websiteAttributes;
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    protected Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    protected Category category;
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "sso")
-    protected Sso sso;
+    private Sso sso;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "signIn_website_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
-    protected Set<Website> signIn_websites = ConcurrentHashMap.newKeySet();
+    private Set<Website> signIn_websites = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "signIn_website_id"))
-    protected Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
+    private Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    protected Set<WebsiteRequest> websiteRequests = ConcurrentHashMap.newKeySet();
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteRequest> websiteRequests = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    protected Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteApp> websiteAppSet = ConcurrentHashMap.newKeySet();
 
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
@@ -201,6 +205,14 @@ public class Website {
         this.websiteCredentials = websiteCredentials;
     }
 
+    public Set<WebsiteApp> getWebsiteAppSet() {
+        return websiteAppSet;
+    }
+
+    public void setWebsiteAppSet(Set<WebsiteApp> websiteAppSet) {
+        this.websiteAppSet = websiteAppSet;
+    }
+
     public void addConnectWith_website(Website website) {
         this.getConnectWith_websites().add(website);
     }
@@ -231,6 +243,14 @@ public class Website {
 
     public void removeWebsiteCredentials(WebsiteCredentials websiteCredentials) {
         this.getWebsiteCredentials().remove(websiteCredentials);
+    }
+
+    public void addWebsiteApp(WebsiteApp websiteApp) {
+        this.getWebsiteAppSet().add(websiteApp);
+    }
+
+    public void removeWebsiteApp(WebsiteApp websiteApp) {
+        this.getWebsiteAppSet().remove(websiteApp);
     }
 
     public String getLogo() {
