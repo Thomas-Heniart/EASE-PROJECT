@@ -218,6 +218,71 @@ header {
   }
 }
 
+.textNotifications {
+  margin: 100px 80px !important;
+  border:none !important;
+  box-shadow:none !important;
+  h2 {
+    width: 100%;
+    margin-right: 470px;
+    font-size: 40px;
+    font-weight: 300;
+    color: #4f5267;
+  }
+  p {
+    margin-right: 70px;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.4;
+    text-align: left;
+    color: #949eb7;
+  }
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+  }
+}
+
+.textMobile {
+  margin: 100px 80px !important;
+  border:none !important;
+  box-shadow:none !important;
+  h2 {
+    margin-top: 25px !important;
+    margin-left: 50px;
+    font-size: 40px;
+    font-weight: 300;
+    color: #4f5267;
+  }
+  p {
+    margin-left: 50px;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.4;
+    text-align: left;
+    color: #949eb7;
+    &.last {
+      margin-bottom: 0 !important;
+    }
+  }
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    margin-top: 39px !important;
+    &.apple {
+      margin: 0 15px 0 50px !important;
+      height: 40px !important;
+      width: 120px !important;
+    }
+    &.google {
+      margin: 0 !important;
+      height: 60px !important;
+      width: 145px !important;
+    }
+  }
+}
+
 
 .comparativeTable {
   margin: 100px 200px !important;
@@ -569,18 +634,14 @@ section#security {
     margin-top: 50px;
   }
 
-  .textControl h2, .textControl p {
-    margin: 0;
+  .textControl h2, .textControl p, .textShare h2, .textShare p, .textNotifications h2, .textNotifications p, .textMobile h2, .textMobile p {
+    margin: 0 !important;
   }
 
-  .textShare {
-    h2 {
-      margin: 0;
-    }
-    p {
-      margin: 0;
-    }
+  .textMobile img.apple {
+      margin: 0 15px 0 0 !important;
   }
+
   .comparativeTable {
     width: 100%;
     margin-left: 0 !important;

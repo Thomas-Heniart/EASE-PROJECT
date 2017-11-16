@@ -945,11 +945,11 @@ header .intro-text .intro-heading {
 }
 
 .rightLanding {
-    position: absolute;
-    background-image: url(/resources/images/macbook.png);
+    //position: absolute;
+    background-image: url(/resources/images/gif_landing.gif);
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: 87%;
     width: 100%;
     left: .1%;
     &:hover {
@@ -964,12 +964,12 @@ header .intro-text .intro-heading {
 .inTheMac {
     position: absolute;
     left: 16%;
-    top: 11%;
-    background-image: url(/resources/images/screen.png);
-    background-position-x: center;
-    background-position-y: center;
-    background-repeat: no-repeat;
-    background-size: 100%;
+    top: 6%;
+    //background-image: url(/resources/images/screen.png);
+    //background-position-x: center;
+    //background-position-y: center;
+    //background-repeat: no-repeat;
+    //background-size: 100%;
     width: 68%;
     height: 70%;
     &:hover {
@@ -984,8 +984,8 @@ header .intro-text .intro-heading {
 
 #discoverButton {
     position: absolute;
-    top: 50%;
-    left: 48.3%;
+    top: 48%;
+    left: 48.1%;
     z-index: 2;
     color: #ffffff;
     background-color: #373b60;

@@ -213,6 +213,35 @@
                 </div>
             </div>
         </div>
+        <div class="ui stackable two column grid textNotifications">
+            <div class="ui row" style="display:inline-block;float:left">
+                <div class="eleven wide column" style="display:inline-block;float:left">
+                    <h2><fmt:message key="product.notifications.title"/></h2>
+                    <p><fmt:message key="product.notifications.text.1"/></p>
+                    <p><fmt:message key="product.notifications.text.2"/></p>
+                </div>
+                <div class="five wide column" style="display:inline-block;float:left">
+                    <img class="ui small right floated image" src="/resources/images/notifications_product.png">
+                </div>
+            </div>
+        </div>
+        <div class="ui stackable two column grid textMobile">
+            <div class="ui mobile reversed row" style="display:inline-block;float:left">
+                <div class="five wide computer only column" style="display:inline-block;float:left">
+                    <img class="ui small left floated image" src="/resources/images/black_phone.png">
+                </div>
+                <div class="eleven wide column" style="display:inline-block;float:left">
+                    <h2><fmt:message key="product.mobile.title"/></h2>
+                    <p><fmt:message key="product.mobile.text.1"/></p>
+                    <p class="last"><fmt:message key="product.mobile.text.2"/></p>
+                    <img class="apple" src="/resources/icons/app_store.badge.svg"/>
+                    <img class="google" src="/resources/icons/google-play-badge.png"/>
+                </div>
+                <div class="five wide mobile only column" style="display:inline-block;float:left">
+                    <img class="ui small left floated image" src="/resources/images/black_phone.png">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="ui divider" style="margin:0;"></div>
     <div class="container">
