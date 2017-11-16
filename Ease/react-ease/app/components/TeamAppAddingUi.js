@@ -12,15 +12,14 @@ class TeamAppAddingUi extends React.Component {
   render(){
     const item = this.props.item;
     const view = this.props.addAppView;
-
     return (
         <div className="add_actions_container" id="app_add_actions">
           {view === 'Simple' &&
-          <SimpleTeamAppAdder item={item}/>}
+          <SimpleTeamAppAdder item={item} />}
           {view === 'Link' &&
-          <LinkTeamAppAdder item={item} dispatch={this.props.dispatch}/>}
+          <LinkTeamAppAdder item={item} dispatch={this.props.dispatch} />}
           {view === 'Multi' &&
-          <EnterpriseTeamAppAdder item={item}/>}
+          <EnterpriseTeamAppAdder item={item} />}
         </div>
     )
   }

@@ -64,7 +64,7 @@ export default function reducer(state={
       }
     }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED": {
-      if(state.type === action.payload.app.origin.type && state.id === action.payload.app.origin.id){
+      if(state.type === action.payload.app.type && state.id === action.payload.app.id){
         var state = {
           ...state
         };
@@ -319,7 +319,7 @@ export default function reducer(state={
     case 'TEAM_APP_ADDED' : {
       let apps = state.apps;
       const app = action.payload.app;
-      if(state.type === app.origin.type && state.id === app.origin.id) {
+      if(state.type === app.type && state.id === app.id) {
         apps.unshift(app);
         return {
           ...state,
