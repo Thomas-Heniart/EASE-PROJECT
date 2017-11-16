@@ -24,7 +24,7 @@ class LinkTeamAppAdder extends React.Component {
         this.state = {
             appName: '',
             url: '',
-            logoSrc: '/resources/icons/link_app.png',
+            logoSrc: 'https://ease.space/resources/icons/link_app.png',
             img_url: '',
             comment: '',
             selectedUsers: [],
@@ -69,7 +69,7 @@ class LinkTeamAppAdder extends React.Component {
             name: this.state.appName,
             description: this.state.comment,
             url: this.state.url,
-            img_url: this.state.img_url
+            img_url: this.state.img_url ? this.state.img_url : this.state.logoSrc
         })).then(response => {
             this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
             this.setState({loading: false});
