@@ -34,7 +34,7 @@ public class ServletEditTeamName extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Team name already taken.");
             team.editName(name);
             sm.saveOrUpdate(team);
-            sm.setSuccess("Team name edited");
+            sm.setSuccess(team.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

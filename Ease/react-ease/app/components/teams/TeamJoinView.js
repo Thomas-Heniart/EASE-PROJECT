@@ -125,54 +125,6 @@ class Step2 extends React.Component{
   }
 }
 
-class StepCGU extends React.Component{
-  constructor(props){
-    super(props);
-  }
-  submit = () => {
-    this.props.onStepValidated();
-  };
-  render() {
-    return (
-        <div class="contents">
-          <Segment>
-            <Header as="h1">
-              Review the General Terms
-            </Header>
-            <Container style={{maxHeight: '300px', overflow:'auto', marginBottom: '1rem', paddingLeft: '0'}}>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet nulla ipsum. Ut tincidunt nisi
-                nec risus scelerisque, in hendrerit ligula blandit. Etiam iaculis dui quis iaculis lobortis. Morbi
-                bibendum fermentum diam, at blandit urna vulputate at. Donec commodo, sapien quis sollicitudin
-                vestibulum, justo augue sagittis lacus, et varius diam nunc a massa. Vivamus et auctor mauris. Nunc ut
-                aliquet massa. In euismod pellentesque urna, vel dictum nibh vulputate et. Phasellus posuere rutrum
-                mauris, vel porta erat vestibulum id. Etiam aliquet fermentum porttitor. Nam fermentum in dolor vitae
-                porta. Vivamus condimentum at urna sodales egestas. Phasellus tristique justo at scelerisque
-                condimentum.</p>
-              <p>Sed varius interdum tincidunt. Cras ac rhoncus nisl. Vestibulum id fringilla risus, in euismod ante.
-                Etiam tristique nunc elit, sed venenatis risus mollis eu. Nulla risus nulla, fermentum eget orci in,
-                bibendum sollicitudin felis. Vivamus eros sem, aliquet a tempus non, blandit eu justo. Suspendisse ut
-                turpis at leo lacinia volutpat. Sed at ante at lacus facilisis porttitor. Vestibulum ante ipsum primis
-                in faucibus orci luctus et ultrices posuere cubilia Curae; Nam risus dui, volutpat nec ipsum eu, viverra
-                scelerisque nulla. Etiam imperdiet tortor finibus tellus faucibus tincidunt. Integer elit purus, dictum
-                ac facilisis vel, sodales et orci. Maecenas egestas gravida</p>
-              <p>Nunc viverra velit in ullamcorper lobortis. In pharetra hendrerit ultricies. Integer et ipsum vel
-                tortor tempus ornare vitae nec libero. Praesent faucibus in dolor sed efficitur. Proin consequat ligula
-                sed neque luctus faucibus. Aenean justo risus, convallis sed lacus ac, rutrum vestibulum quam. Nulla in
-                dapibus lectus. Integer sit amet felis turpis. Pellentesque scelerisque sodales justo at varius. Nulla
-                pulvinar cursus enim vitae lobortis. Mauris eu arcu euismod, dignissim mauris in, vestibulum ante.
-                Aenean congue, tellus sit amet gravida ultricies, dolor lacus vehicula tortor, ut vestibulum elit turpis
-                eu urna. Ut quis urna porttitor, viverra eros tristique, suscipit risus.</p>
-            </Container>
-            <p>
-              By clicking « I Agree », you understand and agree to our General Terms and <a>Privacy Policy</a>.
-            </p>
-            <Button positive fluid loading={this.props.loading} onClick={this.submit}>I Agree</Button>
-          </Segment>
-        </div>
-    )
-  }
-}
-
 class Step3 extends React.Component{
   constructor(props){
     super(props);

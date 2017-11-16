@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 import {
   showTeamDeleteChannelModal,
   showTeamDeleteUserFromChannelModal,
@@ -18,7 +18,7 @@ import {
   selectUserFromListById
 } from "../utils/helperFunctions";
 import {renderUserLabel} from "../utils/renderHelpers";
-import {basicDateFormat, handleSemanticInput, reflect, teamUserRoles, teamUserRoleValues, userNameRuleString} from "../utils/utils";
+import {basicDateFormat, handleSemanticInput, reflect, teamUserRoles, teamUserRoleValues, userNameRuleString, objectToList} from "../utils/utils";
 import {
   Button,
   Dropdown,
@@ -37,22 +37,30 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 
 function ChannelJoinRequestList(props){
-  const users =  props.users;
-  const requests = props.requests;
+  const {room, team} = props;
+  const requests = room.join_requests;
 
   return (
       <List>
         {requests.map(item => {
-          const user = selectUserFromListById(users, item);
+          const user = team.team_users[item];
           return (
               <List.Item key={item}>
                 <Label basic size="mini">
                   <Icon name="user"/>
                   {user.username} would like to access this group.&nbsp;
-                  <a onClick={e => {props.dispatch(channelActions.addTeamUserToChannel(props.channel_id, item))}}>
+                  <a onClick={e => {props.dispatch(channelActions.addTeamUserToChannel({
+                    team_id: team.id,
+                    channel_id: room.id,
+                    team_user_id: item
+                  }))}}>
                     accept</a>
                   &nbsp;or&nbsp;
-                  <a onClick={e => {props.dispatch(channelActions.deleteJoinChannelRequest(props.channel_id, item))}}>
+                  <a onClick={e => {props.dispatch(channelActions.deleteJoinChannelRequest({
+                    team_id: team.id,
+                    room_id: room.id,
+                    team_user_id: item
+                  }))}}>
                     refuse</a> ?
                 </Label>
               </List.Item>
@@ -62,9 +70,7 @@ function ChannelJoinRequestList(props){
   )
 }
 
-@connect(store => ({
-  users: store.users.users
-}))
+@connect()
 class AddMemberToRoomDiv extends React.Component {
   constructor(props){
     super(props);
@@ -81,7 +87,11 @@ class AddMemberToRoomDiv extends React.Component {
     const room = this.props.room;
     this.setState({loading: true});
     const calls = this.state.value.map(item => {
-      return this.props.dispatch(channelActions.addTeamUserToChannel(room.id, item));
+      return this.props.dispatch(channelActions.addTeamUserToChannel({
+        team_id: this.props.team.id,
+        channel_id: room.id,
+        team_user_id: item
+      }));
     });
     Promise.all(calls.map(reflect)).then(results => {
       this.setState({loading: false, modifying:false});
@@ -90,8 +100,10 @@ class AddMemberToRoomDiv extends React.Component {
   setModifying = (state) => {
     if (state){
       const room = this.props.room;
-      const options = this.props.users.filter(item => {
-        return room.userIds.indexOf(item.id) === -1;
+      const team = this.props.team;
+
+      const options = objectToList(team.team_users).filter(item => {
+        return room.team_user_ids.indexOf(item.id) === -1;
       }).map(item => {
         return {
           key: item.id,
@@ -153,9 +165,7 @@ const RoomManagerInfoIcon = () => {
   )
 };
 
-@connect(store => ({
-  team_id: store.team.id
-}))
+@connect()
 class RoomManagerSection extends React.Component {
   constructor(props){
     super(props);
@@ -169,8 +179,8 @@ class RoomManagerSection extends React.Component {
       return;
     this.setState({loading: true, errorMessage: ''});
     this.props.dispatch(channelActions.editRoomManager({
-      team_id: this.props.team_id,
-      channel_id: this.props.room.id,
+      team_id: this.props.team.id,
+      room_id: this.props.room.id,
       team_user_id: id
     })).then(response => {
       this.setState({loading: false});
@@ -180,15 +190,20 @@ class RoomManagerSection extends React.Component {
     });
   };
   render(){
-    const manager = selectItemFromListById(this.props.users, this.props.room.room_manager_id);
-    const me = this.props.me;
+    const {team, room, me} = this.props;
+    const manager = team.team_users[room.room_manager_id];
     return (
         <Grid.Column>
           <h5>Room Manager</h5>
           <div>
             <Label class="display-inline-block" style={{margin: '0 .5em .5em 0'}}><Icon name="user" link class="mrgnRight5"/>{manager.username}</Label>
             {(isOwner(me.role) || me.id === manager.id) &&
-            <AdminsDropdown style={{marginBottom: '.5em'}} value={manager.id} users={this.props.users} onSelect={this.editRoomManager} loading={this.state.loading}/>}
+            <AdminsDropdown
+                style={{marginBottom: '.5em'}}
+                value={manager.id}
+                users={this.props.users}
+                onSelect={this.editRoomManager}
+                loading={this.state.loading}/>}
           </div>
           {this.state.errorMessage.length > 0 &&
           <Message  color="red" content={this.state.errorMessage}/>}
@@ -215,7 +230,6 @@ const AdminsDropdown = ({value, users, onSelect, loading, style}) => {
                 value={value}
                 labeled
                 size="mini"
-                disabled={loading}
                 loading={loading}
                 text="Modify"
                 icon="exchange"
@@ -288,44 +302,75 @@ class RoomNameSection extends React.Component {
   }
 }
 
-class TeamChannelFlexTab extends React.Component{
+class RoomPurposeSection extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      purposeModifying: false,
-      modifiedPurpose: null,
-    };
-    this.handlePurposeInput = this.handlePurposeInput.bind(this);
-    this.setPurposeModifying = this.setPurposeModifying.bind(this);
-    this.confirmPurposeChange = this.confirmPurposeChange.bind(this);
-  }
-  confirmPurposeChange(){
-    this.props.dispatch(channelActions.editTeamChannelPurpose(this.props.item.id, this.state.modifiedPurpose)).then(response => {
-      this.setState({
-        purposeModifying: false
-      });
-    });
-  }
-  handlePurposeInput(event){
-    this.setState({modifiedPurpose: event.target.value})
-  }
-  setPurposeModifying(state){
-    if (state){
-      this.setState({
-        purposeModifying: state,
-        modifiedPurpose: this.props.item.purpose
-      });
-    } else {
-      this.setState({
-        purposeModifying: state
-      });
+      loading: false,
+      purpose: '',
+      errorMessage: '',
+      modifying: false
     }
   }
-  render() {
+  setModifying = (state) => {
+    this.setState({modifying: state, loading: false, purpose:this.props.room.purpose, errorMessage: ''})
+  };
+  handleInput = handleSemanticInput.bind(this);
+  confirm = (e) => {
+    e.preventDefault();
+    this.setState({loading: true, errorMessage: ''});
+    this.props.dispatch(channelActions.editTeamChannelPurpose({
+      team_id: this.props.team_id,
+      room_id: this.props.room.id,
+      purpose: this.state.purpose
+    })).then(response => {
+      this.setModifying(false);
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
+  };
+  render(){
+    const room = this.props.room;
     const me = this.props.me;
-    const team = this.props.team;
-    const channel = this.props.item;
-    const channel_users = channel.user_ids.map(id => {
+    return (
+        <Grid.Column>
+          <h5>Purpose</h5>
+          {!this.state.modifying ?
+              <span>{room.purpose}
+                {isAdmin(me.role) &&
+                <button class="button-unstyle mrgnLeft5 action_button"
+                        onClick={this.setModifying.bind(null, true)}>
+                  <i class="fa fa-pencil mrgnLeft5"/>
+                </button>}
+                  </span>
+              :
+              <Form as="div">
+                <Form.Field>
+                          <TextArea style={{fontSize: '.8em'}}
+                                    size="mini"
+                                    type="text"
+                                    name="purpose"
+                                    value={this.state.purpose}
+                                    onChange={this.handleInput}/>
+                </Form.Field>
+                <Form.Field>
+                  <Button basic size="mini" onClick={this.setModifying.bind(null,false)}>Cancel</Button>
+                  <Button primary size="mini" onClick={this.confirm}>Save</Button>
+                </Form.Field>
+              </Form>
+          }
+        </Grid.Column>
+    )
+  }
+}
+
+class TeamChannelFlexTab extends React.Component{
+  constructor(props){
+    super(props);
+  }
+  render() {
+    const {me, team, channel} = this.props;
+    const channel_users = channel.team_user_ids.map(id => {
       return team.team_users[id];
     });
     return (
@@ -343,44 +388,31 @@ class TeamChannelFlexTab extends React.Component{
           <div className="tab_content_body">
             <Grid container celled="internally" columns={1} padded>
               <Grid.Row>
-                <RoomNameSection dispatch={this.props.dispatch} room={channel} me={me} team_id={team.id}/>
+                <RoomNameSection
+                    dispatch={this.props.dispatch}
+                    room={channel}
+                    me={me}
+                    team_id={team.id}/>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column>
-                  <h5>Purpose</h5>
-                  {!this.state.purposeModifying ?
-                      <span>{this.props.item.purpose}
-                        {isAdmin(me.role) &&
-                        <button class="button-unstyle mrgnLeft5 action_button"
-                                onClick={this.setPurposeModifying.bind(null, true)}>
-                          <i class="fa fa-pencil mrgnLeft5"/>
-                        </button>}
-                  </span>
-                      :
-                      <Form as="div">
-                        <Form.Field>
-                          <TextArea style={{fontSize: '.8em'}}
-                                    size="mini"
-                                    type="text" name="name"
-                                    value={this.state.modifiedPurpose}
-                                    onChange={this.handlePurposeInput}/>
-                        </Form.Field>
-                        <Form.Field>
-                          <Button basic size="mini" onClick={this.setPurposeModifying.bind(null, false)}>Cancel</Button>
-                          <Button primary size="mini" onClick={this.confirmPurposeChange}>Save</Button>
-                        </Form.Field>
-                      </Form>
-                  }
-                </Grid.Column>
+                <RoomPurposeSection
+                    dispatch={this.props.dispatch}
+                    room={channel}
+                    me={me}
+                    team_id={team.id}/>
               </Grid.Row>
               <Grid.Row>
-                <RoomManagerSection me={this.props.me} room={channel} users={channel_users}/>
+                <RoomManagerSection
+                    me={me}
+                    team={team}
+                    room={channel}
+                    users={channel_users}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column class="users">
                   <Header as="h5">
-                    {isAdmin(me.role) && this.props.item.join_requests.length > 0 ?
-                        <Label circular color="red" size="mini">{this.props.item.join_requests.length}</Label>: null}
+                    {isAdmin(me.role) && channel.join_requests.length > 0 ?
+                        <Label circular color="red" size="mini">{channel.join_requests.length}</Label>: null}
                     Members :
                   </Header>
                   {channel_users.map(user => {
@@ -389,20 +421,28 @@ class TeamChannelFlexTab extends React.Component{
                           <Icon name="user"/>
                           {user.username}
                           {isAdmin(me.role) && !channel.default &&
-                          <Icon name="delete" link
-                                onClick={e => {
-                                  this.props.dispatch(showTeamDeleteUserFromChannelModal(true, this.props.item.id, user.id))
-                                }}/>}
-                        </Label>)}, this)}
+                          <Icon
+                              name="delete"
+                              link
+                              onClick={e => {
+                                this.props.dispatch(showTeamDeleteUserFromChannelModal({
+                                  active: true,
+                                  room_id:channel.id,
+                                  team_user_id: user.id,
+                                  team_id: team.id
+                                }))
+                              }}/>}
+                        </Label>)})}
                   {isAdmin(me.role) &&
                   <ChannelJoinRequestList
-                      channel_id={this.props.item.id}
-                      users={this.props.users}
-                      requests={this.props.item.join_requests}
+                      room={channel}
+                      team={team}
                       dispatch={this.props.dispatch}/>}
                   <div>
                     {isAdmin(me.role) && !channel.default &&
-                    <AddMemberToRoomDiv room={channel}/>}
+                    <AddMemberToRoomDiv
+                        team={team}
+                        room={channel}/>}
                   </div>
                 </Grid.Column>
               </Grid.Row>
@@ -410,7 +450,11 @@ class TeamChannelFlexTab extends React.Component{
               <Grid.Row>
                 <Grid.Column>
                   <Button basic color="red" size="mini"
-                          onClick={e => {this.props.dispatch(showTeamDeleteChannelModal(true, this.props.item.id))}}>
+                          onClick={e => {this.props.dispatch(showTeamDeleteChannelModal({
+                            active: true,
+                            room_id: channel.id,
+                            team_id: team.id
+                          }))}}>
                     Delete this room
                   </Button>
                 </Grid.Column>
@@ -422,7 +466,7 @@ class TeamChannelFlexTab extends React.Component{
   }
 }
 
-
+@connect()
 class UsernameModifier extends React.Component {
   constructor(props){
     super(props);
@@ -442,9 +486,13 @@ class UsernameModifier extends React.Component {
   };
   validate = (e) => {
     e.preventDefault();
-    const user = this.props.user;
+    const {team, user} = this.props;
     this.setState({loading: true, error: false});
-    this.props.dispatch(userActions.editTeamUserUsername(user.id, this.state.username)).then(response => {
+    this.props.dispatch(userActions.editTeamUserUsername({
+      team_id: team.id,
+      team_user_id: user.id,
+      username: this.state.username
+    })).then(response => {
       this.setModifying(false);
     }).catch(err => {
       this.setState({error: true, loading: false});
@@ -475,7 +523,7 @@ class UsernameModifier extends React.Component {
                 </Form.Field>
                 <Form.Field>
                   <Button basic size="mini" type="button" onClick={this.setModifying.bind(null, false)}>Cancel</Button>
-                  <Button primary size="mini">Save</Button>
+                  <Button primary size="mini" loading={this.state.loading}>Save</Button>
                 </Form.Field>
               </Form>}
         </Grid.Column>
@@ -483,6 +531,7 @@ class UsernameModifier extends React.Component {
   }
 }
 
+@connect()
 class TeamUserRole extends React.Component {
   constructor(props){
     super(props);
@@ -493,8 +542,12 @@ class TeamUserRole extends React.Component {
     }
   }
   handleInput = (e,{name, value}) =>{
-    if (this.props.plan_id === 0 && value === 2){
-      this.props.dispatch(showUpgradeTeamPlanModal(true, 3));
+    if (this.props.team.plan_id === 0 && value === 2){
+      this.props.dispatch(showUpgradeTeamPlanModal({
+        active: true,
+        feature_id: 3,
+        team_id: this.props.team.id
+      }));
       return;
     }
     this.setState({[name]: value});
@@ -506,12 +559,20 @@ class TeamUserRole extends React.Component {
     e.preventDefault();
     this.setState({errorMessage: ''});
     if (this.state.role === 3){
-      this.props.dispatch(showTeamTransferOwnershipModal(true, this.props.user));
+      this.props.dispatch(showTeamTransferOwnershipModal({
+        active: true,
+        team_id: this.props.team.id,
+        team_user_id: this.props.user.id
+      }));
       this.setState({edit: false});
       return;
     }
     if (this.state.role !== this.props.user.role){
-      this.props.dispatch(userActions.editTeamUserRole(this.props.user.id, this.state.role)).then(response => {
+      this.props.dispatch(userActions.editTeamUserRole({
+        team_id: this.props.team.id,
+        team_user_id: this.props.user.id,
+        role: this.state.role
+      })).then(response => {
         this.setEdit(false);
       }).catch(err => {
         this.setState({errorMessage: err});
@@ -520,15 +581,14 @@ class TeamUserRole extends React.Component {
       this.setEdit(false);
   };
   render(){
-    const user = this.props.user;
-    const me = this.props.me;
+    const {user, me, team} = this.props;
     const userRoles = teamUserRoleValues.filter(item => {
       return item.value <= me.role;
     });
     let adminRole = userRoles.find(item => (item.value === 2));
 
     if (adminRole !== undefined){
-      adminRole.content = <span>Admin{this.props.plan_id === 0 && <img style={{height: '14px', paddingLeft: '2px'}} src="/resources/images/upgrade.png"/>}</span>;
+      adminRole.content = <span>Admin{team.plan_id === 0 && <img style={{height: '14px', paddingLeft: '2px'}} src="/resources/images/upgrade.png"/>}</span>;
     }
     return (
         <Grid.Column>
@@ -545,9 +605,139 @@ class TeamUserRole extends React.Component {
                                 onChange={this.handleInput}/>
                        <Icon link name="delete" onClick={this.setEdit.bind(null, false)}/>
                        <Icon link name="checkmark" onClick={this.confirm}/>
-                {this.state.errorMessage.length > 0 &&
+                {!!this.state.errorMessage.length &&
                 <Message color="red" content={this.state.errorMessage}/>}
                         </span>}
+        </Grid.Column>
+    )
+  }
+}
+
+@connect()
+class FirstLastNameSection extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false,
+      first_name: '',
+      last_name: '',
+      edit: false
+    }
+  }
+  handleInput = handleSemanticInput.bind(this);
+  setEdit = (state) => {
+    const {user} = this.props;
+    this.setState({loading: false, first_name: user.first_name, last_name: user.last_name, edit:state});
+  };
+  confirm = (e) => {
+    e.preventDefault();
+    const {dispatch, team, me, user} = this.props;
+    const calls = [
+      dispatch(userActions.editTeamUserFirstName({
+        team_id: team.id,
+        team_user_id: user.id,
+        first_name: this.state.first_name
+      })),
+      dispatch(userActions.editTeamUserLastName({
+        team_id: team.id,
+        team_user_id: user.id,
+        last_name: this.state.last_name
+      }))
+    ];
+    this.setState({loading: true});
+    Promise.all(calls.map(reflect)).then(response => {
+      this.setState({loading: false});
+      this.setEdit(false);
+    });
+  };
+  render(){
+    const {team, me, user} = this.props;
+
+    return (
+        <Grid.Column>
+          {!this.state.edit ?
+              <h4>
+                {user.first_name} {user.last_name}
+                {isSuperiorOrMe(user, me) &&
+                <Icon link name="pencil" class="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
+              </h4> :
+              <Form onSubmit={this.confirm}>
+                <Form.Input
+                    size="mini"
+                    placeholder="First name"
+                    type="text" name="first_name" fluid
+                    value={this.state.first_name}
+                    onChange={this.handleInput}/>
+                <Form.Input
+                    size="mini"
+                    placeholder="Last name"
+                    type="text" name="last_name" fluid
+                    value={this.state.last_name}
+                    onChange={this.handleInput}/>
+                <Form.Field>
+                  <Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>
+                  <Button primary size="mini" loading={this.state.loading}>Save</Button>
+                </Form.Field>
+              </Form>}
+        </Grid.Column>
+    )
+  }
+}
+
+@connect()
+class DepartureDateSection extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      edit: false,
+      departure_date: '',
+      loading: false
+    }
+  }
+  handleInput = handleSemanticInput.bind(this);
+  setEdit = (state) => {
+    const {user} = this.props;
+    this.setState({
+      departure_date: !!user.departure_date ? moment(user.departure_date).format('YYYY-MM-DD') : '',
+      edit: state,
+      loading: false
+    });
+  };
+  confirm = (e) => {
+    e.preventDefault();
+    const {team, dispatch, user} = this.props;
+    this.setState({loading: true});
+    dispatch(userActions.editTeamUserDepartureDate({
+      team_id: team.id,
+      team_user_id: user.id,
+      departure_date: !!this.state.departure_date.length ? new Date(this.state.departure_date).getTime() : null
+    })).then(response => {
+      this.setEdit(false);
+    }).catch(err => {
+      this.setState({loading: false});
+    });
+  };
+  render(){
+    const {team, user, me} = this.props;
+    return (
+        <Grid.Column>
+          <strong>Departure date: </strong>
+          {!this.state.edit ?
+              <span>
+                      {user.departure_date !== null ? basicDateFormat(user.departure_date) : 'not planned'}
+                {isSuperior(user, me) && me.id !== user.id &&
+                <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
+                {isSuperior(user, me) && me.id !== user.id && team.plan_id === 0 &&
+                <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
+                        </span> :
+              <Input type="date" size="mini"
+                     fluid action name="departure_date"
+                     value={this.state.departure_date}
+                     onChange={this.handleInput}>
+                <input/>
+                <Button icon="delete" basic size="mini" onClick={this.setEdit.bind(null, false)}/>
+                <Button icon="checkmark" primary size="mini" loading={this.state.loading} onClick={this.confirm}/>
+              </Input>}
         </Grid.Column>
     )
   }
@@ -556,121 +746,9 @@ class TeamUserRole extends React.Component {
 class TeamUserFlexTab extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
-      first_name: null,
-      last_name: null,
-      firstNameLastNameModifying: false,
-      username: null,
-      usernameModifying: false,
-      role: null,
-      roleModifying: false,
-      departureDate:'',
-      departureDateModifying: false
-    };
-    this.setFirstLastNameModifying = this.setFirstLastNameModifying.bind(this);
-    this.setUsernameModifying = this.setUsernameModifying.bind(this);
-    this.setRoleModifying = this.setRoleModifying.bind(this);
-    this.setDepartureDateModifying = this.setDepartureDateModifying.bind(this);
-    this.handleInput = this.handleInput.bind(this);
-    this.confirmUsernameChange = this.confirmUsernameChange.bind(this);
-    this.confirmUserLastFirstNameChange = this.confirmUserLastFirstNameChange.bind(this);
-    this.confirmUserRoleChange = this.confirmUserRoleChange.bind(this);
-    this.confirmUserDepartureDateChange = this.confirmUserDepartureDateChange.bind(this);
-  }
-  handleInput(e, {name, value}){
-    this.setState({[name]: value});
-  }
-  setDepartureDateModifying(state){
-    if (this.props.plan_id === 0){
-      this.props.dispatch(showUpgradeTeamPlanModal(true, 5));
-      return;
-    }
-    if (state){
-      this.setState({
-        departureDateModifying: true,
-        departureDate: this.props.item.departureDate !== null ? moment(this.props.item.departure_date).format('YYYY-MM-DD') : ''
-      });
-    }else {
-      this.setState({
-        departureDateModifying: false
-      });
-    }
-  }
-  setRoleModifying(state){
-    if (state){
-      this.setState({
-        roleModifying: true,
-        role: this.props.item.role
-      });
-    }else {
-      this.setState({
-        roleModifying: false
-      });
-    }
-  }
-  setFirstLastNameModifying(state){
-    if (state){
-      this.setState({
-        firstNameLastNameModifying: true,
-        first_name: this.props.item.first_name,
-        last_name: this.props.item.last_name
-      });
-    }else {
-      this.setState({
-        firstNameLastNameModifying: false
-      });
-    }
-  }
-  setUsernameModifying(state){
-    if (state){
-      this.setState({
-        usernameModifying: true,
-        username: this.props.item.username,
-      });
-    }else {
-      this.setState({
-        usernameModifying: false
-      });
-    }
-  }
-  confirmUsernameChange(){
-    if (this.state.username !== this.props.item.username){
-      this.props.dispatch(userActions.editTeamUserUsername(this.props.item.id, this.state.username)).then(response => {
-        this.setState({usernameModifying: false});
-      });
-    }
-  }
-  confirmUserLastFirstNameChange(){
-    this.props.dispatch(userActions.editTeamUserFirstName(this.props.item.id, this.state.first_name)).then(response => {
-      this.setState({firstNameLastNameModifying: false});
-    });
-    this.props.dispatch(userActions.editTeamUserLastName(this.props.item.id, this.state.last_name)).then(response => {
-      this.setState({firstNameLastNameModifying: false});
-    });
-  }
-  confirmUserRoleChange(){
-    if (this.state.role === 3){
-      this.props.dispatch(showTeamTransferOwnershipModal(true, this.props.item));
-      this.setState({roleModifying: false});
-      return;
-    }
-    if (this.state.role !== this.props.item.role){
-      this.props.dispatch(userActions.editTeamUserRole(this.props.item.id, this.state.role)).then(response => {
-        this.setState({roleModifying: false});
-      });
-    }else
-      this.setState({roleModifying: false});
-  }
-  confirmUserDepartureDateChange(){
-    if (this.state.departureDate !== this.props.item.departureDate){
-      this.props.dispatch(userActions.editTeamUserDepartureDate(this.props.item.id, this.state.departureDate.length > 0 ? new Date(this.state.departureDate).getTime() : null)).then(response => {
-        this.setState({departureDateModifying: false});
-      });
-    }
   }
   render() {
-    const {me, team} = this.props;
-    const user = this.props.item;
+    const {me, team, user} = this.props;
 
     return (
         <div className="flex_contents_panel active" id="team_user_tab">
@@ -687,35 +765,16 @@ class TeamUserFlexTab extends React.Component{
           <div className="tab_content_body">
             <Grid container celled="internally" columns={1} padded>
               <Grid.Row>
-                <Grid.Column>
-                  {!this.state.firstNameLastNameModifying ?
-                      <h4>
-                        {user.first_name} {user.last_name}
-                        {isSuperiorOrMe(user, me) &&
-                        <Icon link name="pencil" class="mrgnLeft5" onClick={this.setFirstLastNameModifying.bind(null, true)}/>}
-                      </h4> :
-                      <Form as="div">
-                        <Form.Input
-                            size="mini"
-                            placeholder="First name"
-                            type="text" name="first_name" fluid
-                            value={this.state.first_name}
-                            onChange={this.handleInput}/>
-                        <Form.Input
-                            size="mini"
-                            placeholder="Last name"
-                            type="text" name="last_name" fluid
-                            value={this.state.last_name}
-                            onChange={this.handleInput}/>
-                        <Form.Field>
-                          <Button basic size="mini" onClick={this.setFirstLastNameModifying.bind(null, false)}>Cancel</Button>
-                          <Button primary size="mini" onClick={this.confirmUserLastFirstNameChange}>Save</Button>
-                        </Form.Field>
-                      </Form>}
-                </Grid.Column>
+                <FirstLastNameSection
+                    team={team}
+                    me={me}
+                    user={user}/>
               </Grid.Row>
               <Grid.Row>
-                <UsernameModifier dispatch={this.props.dispatch} user={user} me={me}/>
+                <UsernameModifier
+                    team={team}
+                    user={user}
+                    me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
@@ -724,7 +783,10 @@ class TeamUserFlexTab extends React.Component{
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <TeamUserRole plan_id={this.props.plan_id} dispatch={this.props.dispatch} user={user} me={me}/>
+                <TeamUserRole
+                    team={team}
+                    user={user}
+                    me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
@@ -733,25 +795,10 @@ class TeamUserFlexTab extends React.Component{
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column>
-                  <strong>Departure date: </strong>
-                  {!this.state.departureDateModifying ?
-                      <span>
-                      {user.departure_date !== null ? basicDateFormat(user.departure_date) : 'not planned'}
-                        {isSuperior(user, me) && me.id !== user.id &&
-                        <Icon link name="pencil" className="mrgnLeft5" onClick={this.setDepartureDateModifying.bind(null, true)}/>}
-                        {isSuperior(user, me) && me.id !== user.id && this.props.plan_id === 0 &&
-                        <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
-                        </span> :
-                      <Input type="date" size="mini"
-                             fluid action name="departureDate"
-                             value={this.state.departureDate}
-                             onChange={this.handleInput}>
-                        <input/>
-                        <Button icon="delete" basic size="mini" onClick={this.setDepartureDateModifying.bind(null, false)}/>
-                        <Button icon="checkmark" primary size="mini" onClick={this.confirmUserDepartureDateChange}/>
-                      </Input>}
-                </Grid.Column>
+                <DepartureDateSection
+                    team={team}
+                    user={user}
+                    me={me}/>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column class="rooms">
@@ -764,7 +811,12 @@ class TeamUserFlexTab extends React.Component{
                           {room.name}
                           {isAdmin(me.role) && !room.default &&
                           <Icon name="delete" link
-                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal(true, room.id, user.id))}}/>}
+                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal({
+                                  active: true,
+                                  team_id: team.id,
+                                  room_id: room.id,
+                                  team_user_id: user.id
+                                }))}}/>}
                         </Label>
                     )
                   }, this)}
@@ -774,7 +826,11 @@ class TeamUserFlexTab extends React.Component{
               <Grid.Row>
                 <Grid.Column>
                   <Button basic color="red" size="mini"
-                          onClick={e => {this.props.dispatch(showTeamDeleteUserModal(true, this.props.item.id))}}>
+                          onClick={e => {this.props.dispatch(showTeamDeleteUserModal({
+                            active: true,
+                            team_id: team.id,
+                            team_user_id: user.id
+                          }))}}>
                     Delete this user
                   </Button>
                 </Grid.Column>
@@ -810,7 +866,7 @@ class FlexPanels extends React.Component {
           {item.purpose !== undefined &&
           <TeamChannelFlexTab
               me={me}
-              item={item}
+              channel={item}
               team={team}
               toggleFlexFunc={this.closePanel}
               plan_id={team.plan_id}
@@ -818,7 +874,7 @@ class FlexPanels extends React.Component {
           {item.username !== undefined &&
           <TeamUserFlexTab
               me={me}
-              item={item}
+              user={item}
               team={team}
               toggleFlexFunc={this.closePanel}
               plan_id={team.plan_id}

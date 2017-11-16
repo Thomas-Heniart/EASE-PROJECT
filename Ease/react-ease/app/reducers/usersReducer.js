@@ -5,7 +5,7 @@ export default function reducer(state={
   users: [],
   me: null
 },action){
-  switch (action.type){
+/*  switch (action.type){
     case "FETCH_USERS_FULFILLED": {
       var users = action.payload.users;
       var myTeamId = action.payload.myTeamUserId;
@@ -257,6 +257,6 @@ export default function reducer(state={
         users: users
       }
     }
-  }
+  }*/
   return state;
 }

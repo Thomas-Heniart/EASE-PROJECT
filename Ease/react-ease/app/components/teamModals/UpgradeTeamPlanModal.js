@@ -9,10 +9,9 @@ import {proFeaturesDesc, proFeatures} from "../../utils/teamPlans";
 import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
 
 @connect(store => ({
-  team_id: store.team.id,
+  team_id: store.teamModals.upgradeTeamPlanModal.team_id,
   feature_id: store.teamModals.upgradeTeamPlanModal.feature_id,
-  myId: store.team.myTeamUserId,
-  users: store.users.users
+  teams: store.teams
 }))
 class UpgradeTeamPlanModal extends Component {
   constructor(props){
@@ -28,7 +27,8 @@ class UpgradeTeamPlanModal extends Component {
   };
   confirm = (e) => {
     e.preventDefault();
-    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const team = this.props.teams[this.props.team_id];
+    const me = team.team_users[team.my_team_user_id];
     const meOwner = isOwner(me.role);
     this.setState({loading: true, errorMessage: ''});
     if (meOwner) {
@@ -37,14 +37,14 @@ class UpgradeTeamPlanModal extends Component {
         plan_id: 1
       })).then(response => {
         this.setState({loading: false});
-        this.props.dispatch(showUpgradeTeamPlanModal(false));
+        this.props.dispatch(showUpgradeTeamPlanModal({active: false}));
       }).catch(err => {
         this.setState({loading: false, errorMessage: err});
       });
     } else {
       post_api.teams.askOwnerToUpgrade({team_id: this.props.team_id}).then(response => {
         this.setState({loading: false});
-        this.props.dispatch(showUpgradeTeamPlanModal(false));
+        this.props.dispatch(showUpgradeTeamPlanModal({active: false}));
       }).catch(err => {
         this.setState({loading: false, errorMessage: err});
       });
@@ -52,9 +52,10 @@ class UpgradeTeamPlanModal extends Component {
   };
   render(){
     const feature_id = this.props.feature_id;
-    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const team = this.props.teams[this.props.team_id];
+    const me = team.team_users[team.my_team_user_id];
     const meOwner = isOwner(me.role);
-    const teamOwner = this.props.users.find(item => (isOwner(item.role)));
+    const teamOwner = Object.keys(team.team_users).map(id => (team.team_users[id])).find(item => (isOwner(item.role)));
     const featuresList = proFeatures.map((item, idx) => {
       if (!this.state.show_more && idx > 2)
         return null;
@@ -69,7 +70,7 @@ class UpgradeTeamPlanModal extends Component {
     });
     return (
         <SimpleModalTemplate
-            onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal(false))}}
+            onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal({active: false}))}}
             headerContent={'Try Pro now!'}>
           <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
             <Form.Field>

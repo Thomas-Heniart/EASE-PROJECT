@@ -7,21 +7,27 @@ import {basicDateFormat} from "../../utils/utils";
 import {connect} from "react-redux";
 
 @connect(store => ({
-  user: store.teamModals.departureDateEndModal.user
+  team: store.teams[store.teamModals.reactivateTeamUserModal.team_id],
+  team_user_id: store.teamModals.reactivateTeamUserModal.team_user_id
 }))
 class DepartureDateEndModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      errorMessage: ''
+      errorMessage: '',
+      user: this.props.team.team_users[this.props.team_user_id]
     }
   }
   unfreeze = () => {
     this.setState({loading: true, errorMessage: ''});
-    this.props.dispatch(editTeamUserDepartureDate(this.props.user.id, null)).then(() => {
+    this.props.dispatch(editTeamUserDepartureDate({
+      team_id: this.props.team.id,
+      team_user_id: this.state.user.id,
+      departure_date: null
+    })).then(() => {
       this.setState({loading: false});
-      this.props.dispatch(showDepartureDateEndModal(false));
+      this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     });
@@ -29,22 +35,27 @@ class DepartureDateEndModal extends Component {
   confirm = (e) => {
     e.preventDefault();
     this.setState({loading: true, errorMessage: ''});
-    this.props.dispatch(deleteTeamUser(this.props.user.id)).then(() => {
+    this.props.dispatch(deleteTeamUser({
+      team_id: this.props.team.id,
+      team_user_id: this.state.user.id
+    })).then(() => {
       this.setState({loading: false});
-      this.props.dispatch(showDepartureDateEndModal(false));
+      this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     });
   };
+  close = () => {
+    this.props.dispatch(showDepartureDateEndModal({active: false}));
+  };
   render() {
-    const user = this.props.user;
+    const user = this.state.user;
+
     return (
         <SimpleModalTemplate
-            onClose={e => {
-              this.props.dispatch(showDepartureDateEndModal(false))
-            }}
+            onClose={this.close}
             headerContent={`${user.username}'s account is frozen`}>
-          <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm}>
+          <Form class="container" error={!!this.state.errorMessage.length} onSubmit={this.confirm}>
             <Form.Field>
               <strong class="capitalize">{user.username}</strong>’s account has been frozen because the
               departure date was set on {basicDateFormat(user.departure_date)}. You can now decide to unfreeze the account or
@@ -55,11 +66,9 @@ class DepartureDateEndModal extends Component {
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button
-                attached='bottom'
                 type="submit"
                 positive
                 loading={this.state.loading}
-                onClick={this.confirm}
                 class="modal-button uppercase"
                 content={'CONFIRM DEPARTURE'}/>
           </Form>
