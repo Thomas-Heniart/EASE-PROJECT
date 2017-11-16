@@ -1,5 +1,7 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -17,7 +19,17 @@ public class ServletCheckConnection extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             JSONObject res = new JSONObject();
-            res.put("connected", sm.getUser() != null);
+            try {
+                sm.needToBeConnected();
+                res.put("connected", true);
+                sm.setSuccess(res);
+            } catch (HttpServletException e) {
+                if (e.getHttpStatus() == HttpStatus.AccessDenied) {
+                    res.put("connected", false);
+                    sm.setSuccess(res);
+                } else
+                    throw e;
+            }
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
