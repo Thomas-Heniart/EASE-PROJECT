@@ -24,8 +24,7 @@ public class ServletGetInvitationInformation extends HttpServlet {
             if (code == null || code.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing code parameter");
             DataBaseConnection db = sm.getDB();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT team_id, id FROM teamUsers WHERE invitation_code = ?;");
-            databaseRequest.setString(code);
+            DatabaseRequest databaseRequest = db.prepareRequest("SELECT team_id, id FROM teamUsers WHERE invitation_code = ?;");            databaseRequest.setString(code);
             DatabaseResult rs = databaseRequest.get();
             if (!rs.next())
                 throw new HttpServletException(HttpStatus.BadRequest, "Please provide a valid code.");

@@ -75,7 +75,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (job_index == (jobRoles.length - 1) && (job_details == null || job_details.equals("")))
                 throw new HttpServletException(HttpStatus.BadRequest, "It would be awesome to know more about your work!");
             HibernateQuery query = sm.getHibernateQuery();
-            query.querySQLString("SELECT id, team_id FROM teamUsers WHERE code = ?");
+            query.querySQLString("SELECT id, team_id FROM teamUsers WHERE invitation_code = ?");
             query.setParameter(1, code);
             Object idTeamAndTeamUserObj = query.getSingleResult();
             if (idTeamAndTeamUserObj == null)

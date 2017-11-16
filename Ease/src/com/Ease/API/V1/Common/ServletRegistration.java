@@ -50,7 +50,7 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Newsletter cannot be null");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
-                hibernateQuery.querySQLString("SELECT invitation_code teamUsers WHERE teamUsers.email = ?");
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = ?");
                 hibernateQuery.setParameter(1, email);
                 String valid_code = (String) hibernateQuery.getSingleResult();
                 if (valid_code == null)

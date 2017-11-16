@@ -35,7 +35,7 @@ class PreviewStep extends React.Component {
                         onChange={(e, values) => {this.props.editField(idx, values)}}/>
           </Form.Group>
             {item.error.length > 0 &&
-            <Label pointing fluid class="fluid" style={{textAlign: 'center'}} content={item.error} color="red" basic/>}
+            <Label pointing class="fluid" style={{textAlign: 'center'}} content={item.error} color="red" basic/>}
           </Form.Field>
       )
     });
@@ -101,8 +101,8 @@ class EmailListStep extends React.Component {
 }
 
 @connect(store => ({
-  users: store.users.users,
-  plan_id: store.team.plan_id
+  teams: store.teams,
+  team_id: store.teamModals.teamAddMultipleUsersModal.team_id
 }))
 class TeamAddMultipleUsersModal extends React.Component {
   constructor(props){
@@ -127,9 +127,10 @@ class TeamAddMultipleUsersModal extends React.Component {
   };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();
-
+    const team = this.props.teams[this.props.team_id];
+    const users_length = Object.keys(team.team_users).length;
     invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
-    if (invitations.length + this.props.users.length > 30 && this.props.plan_id === 0){
+    if (invitations.length + users_length > 30 && team.plan_id === 0){
       this.setState({
         errorMessage:
             <span>
@@ -139,7 +140,15 @@ class TeamAddMultipleUsersModal extends React.Component {
       return;
     }
     let calls = invitations.map(item => {
-      return this.props.dispatch(createTeamUser('','',item.email, item.username, null, 1));
+      return this.props.dispatch(createTeamUser({
+        team_id: this.props.team_id,
+        first_name: '',
+        last_name: '',
+        email: item.email,
+        username: item.username,
+        departure_date: null,
+        role: 1
+      }));
     });
     this.setState({loading: true, errorMessage: null});
     Promise.all(calls.map(reflect)).then(results => {
@@ -151,7 +160,7 @@ class TeamAddMultipleUsersModal extends React.Component {
       });
       invitations = invitations.filter(item => (item.error.length > 0));
       if (invitations.length === 0){
-        this.props.dispatch(showTeamAddMultipleUsersModal(false));
+        this.props.dispatch(showTeamAddMultipleUsersModal({active: false}));
         return;
       }
       this.setState({loading: false, invitations: invitations, validateButtonText:'Resend invitations', cancelButtonText: "Ok, I'm done"});

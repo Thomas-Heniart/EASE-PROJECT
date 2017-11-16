@@ -8,6 +8,15 @@ export const teams = createReducer({
       ...action.payload.teams
     }
   },
+  ['UPGRADE_TEAM_PLAN_FULFILLED'](state, action){
+    const team = action.payload.team;
+
+    return update(state, {
+      [team.id]: {
+        plan_id: {$set: team.plan_id}
+      }
+    });
+  },
   ['EDIT_TEAM_NAME_FULFILLED'](state, action){
     const teamId = action.payload.team_id;
     const name = action.payload.name;
@@ -38,12 +47,31 @@ export const teams = createReducer({
   ['TEAM_REMOVED'](state, action){
     const team_id = action.payload.team_id;
     const new_state = update(state, {
-      [team_id] : undefined
+      [team_id] : {$set: undefined}
     });
     return new_state;
   },
+  ['TEAM_TRANSFER_OWNERSHIP'](state, action){
+    const {team_id, team_user_id} = action.payload;
+    const team = state[team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const user = team.team_users[team_user_id];
+
+    return update(state, {
+      [team_id]: {
+        team_users: {
+          [me.id]: {
+            role: {$set: team.plan_id === 1 ? 2 : 1}
+          },
+          [user.id]: {
+            role: {$set: 3}
+          }
+        }
+      }
+    });
+  },
   ['TEAM_ROOM_CHANGED'](state, action){
-    const room = action.payload.room;
+    const {room} = action.payload;
     const team_id = room.team_id;
 
     return update(state, {
@@ -57,30 +85,63 @@ export const teams = createReducer({
   ['TEAM_ROOM_CREATED'](state, action){
     const room = action.payload.room;
     const team_id = room.team_id;
-
     return update(state, {
       [team_id]: {
         rooms: {
-          [room.id]: room
+          [room.id]: {$set: room}
         }
       }
     });
   },
   ['TEAM_ROOM_REMOVED'](state, action){
     const {team_id,room_id} = action.payload;
+    const room = state[team_id].rooms[room_id];
 
-    return  update(state, {
+    let new_state = update(state, {
+      [team_id]: {
+        rooms: {$unset: [room_id]}
+      }
+    });
+    room.team_user_ids.map(id => {
+      let user = new_state[team_id].team_users[id];
+      new_state[team_id].team_users[id] = update(user, {
+        room_ids: {$splice: [[user.room_ids.indexOf(room.id), 1]]}
+      });
+    });
+    return new_state;
+  },
+  ['TEAM_ROOM_REQUEST_CREATED'](state, action){
+    const {team_id, room_id, team_user_id} = action.payload;
+
+    return update(state, {
       [team_id]: {
         rooms: {
-          [room_id]: {$set: undefined}
+          [room_id]: {
+            join_requests: {$push: [team_user_id]}
+          }
         }
       }
     });
   },
-  ['TEAM_USER_CHANGED'](state, action){
-    const team_user = action.payload.user;
-    const team_id = team_user.team_id;
+  ['TEAM_ROOM_REQUEST_REMOVED'](state, action){
+    const {team_id, room_id, team_user_id} = action.payload;
 
+    const room = state[team_id].rooms[room_id];
+    const request_idx = room.join_requests.indexOf(team_user_id);
+    if (request_idx !== -1)
+      return update(state, {
+        [team_id]: {
+          rooms: {
+            [room_id]:{
+              join_requests: {$splice: [[request_idx, 1]]}
+            }
+          }
+        }
+      });
+    return state;
+  },
+  ['TEAM_USER_CHANGED'](state, action){
+    const {team_id, team_user} = action.payload;
 
     return update(state, {
       [team_id]: {
@@ -91,28 +152,41 @@ export const teams = createReducer({
     });
   },
   ['TEAM_USER_CREATED'](state, action){
-    const team_user = action.payload.user;
-    const team_id = team_user.team_id;
+    const {team_user, team_id} = action.payload;
 
-    return update(state, {
+    let new_state = update(state, {
       [team_id]: {
         team_users: {
           [team_user.id]: {$set: team_user}
         }
       }
     });
-  },
-  ['TEAM_USER_REMOVED'](state, action){
-    const team_user = action.payload.user;
-    const team_id = team_user.team_id;
-
-    return update(state, {
-      [team_id]: {
-        team_users: {
-          [team_user.id]: {$set: undefined}
-        }
+    Object.keys(new_state[team_id].rooms).map(id => {
+      const room = new_state[team_id].rooms[id];
+      if (room.default){
+        new_state[team_id].rooms[id] = update(room, {
+          team_user_ids: {$push: [team_user.id]}
+        });
       }
     });
+    return new_state;
+  },
+  ['TEAM_USER_REMOVED'](state, action){
+    const {team_id, team_user_id} = action.payload;
+    const team_user = state[team_id].team_users[team_user_id];
+
+    let new_state = update(state, {
+      [team_id]: {
+        team_users: {$unset: [team_user_id]}
+      }
+    });
+    team_user.room_ids.map(id => {
+      let room = new_state[team_id].rooms[id];
+      new_state[team_id].rooms[id] = update(room, {
+        team_user_ids: {$splice: [[room.team_user_ids.indexOf(team_user_id), 1]]}
+      });
+    });
+    return new_state;
   },
   ['TEAM_ROOM_MEMBER_CREATED'](state, action){
     const {team_id, team_user_id, room_id} = action.payload;
@@ -120,10 +194,11 @@ export const teams = createReducer({
     let room = state[team_id].rooms[room_id];
 
     team_user = update(team_user, {
-      room_ids: {$push: room_id}
+      room_ids: {$push: [room_id]}
     });
     room = update(room, {
-      user_ids: {$push: team_user_id}
+      team_user_ids: {$push: [team_user_id]},
+      join_requests: {$splice: [[room.join_requests.indexOf(team_user_id), 1]]}
     });
     return update(state, {
       [team_id]: {
@@ -145,7 +220,7 @@ export const teams = createReducer({
       room_ids: {$splice: [[team_user.room_ids.indexOf(room_id), 1]]}
     });
     room = update(room, {
-      user_ids: {$splice: [[room.user_ids.indexOf(team_user_id), 1]]}
+      team_user_ids: {$splice: [[room.team_user_ids.indexOf(team_user_id), 1]]}
     });
     return update(state, {
       [team_id]: {
@@ -160,10 +235,10 @@ export const teams = createReducer({
   },
   ['TEAM_APP_RECEIVER_CREATED'](state, action){
     const {team_id, app_id, receiver} = action.payload;
-    let team_user = state[team_id].team_users[receiver.teamUser_id];
+    let team_user = state[team_id].team_users[receiver.team_user_id];
 
     team_user = update(team_user, {
-      app_ids: {$push: app_id}
+      team_card_ids: {$push: app_id}
     });
     return update(state, {
       [team_id]:{
@@ -176,9 +251,9 @@ export const teams = createReducer({
   ['TEAM_APP_RECEIVER_REMOVED'](state, action){
     const {team_id, app_id, receiver} = action.payload;
 
-    let team_user = state[team_id].team_users[receiver.teamUser_id];
+    let team_user = state[team_id].team_users[receiver.team_user_id];
     team_user = update(team_user, {
-      app_ids: {$splice: [[team_user.app_ids.indexOf(app_id), 1]]}
+      team_card_ids: {$splice: [[team_user.team_card_ids.indexOf(app_id), 1]]}
     });
     return update(state, {
       [team_id]:{
@@ -193,20 +268,19 @@ export const teams = createReducer({
     const team_id = app.team_id;
     const channel_id = app.channel_id;
 
-
     let new_state = update(state, {
       [team_id]: {
         rooms: {
           [channel_id]: {
-            app_ids: {$push: app.id}
+            team_card_ids: {$push: [app.id]}
           }
         }
       }
     });
     app.receivers.map(item => {
-      let user = new_state[team_id].team_users[item.teamUser_id];
-      new_state[team_id].team_users[item.teamUser_id] = update(user, {
-        app_ids: {$push: app.id}
+      let user = new_state[team_id].team_users[item.team_user_id];
+      new_state[team_id].team_users[item.team_user_id] = update(user, {
+        team_card_ids: {$push: [app.id]}
       });
     });
     return new_state;
@@ -220,16 +294,16 @@ export const teams = createReducer({
       [team_id]: {
         rooms: {
           [room_id]: {
-            app_ids: {$splice: [[room.app_ids.indexOf(app_id), 1]]}
+            team_card_ids: {$splice: [[room.team_card_ids.indexOf(app_id), 1]]}
           }
         }
       }
     });
     app.receivers.map(item => {
-      let user = new_state[team_id].team_users[item.teamUser_id];
-      const idx = user.app_ids.indexOf(app.id);
-      new_state[team_id].team_users[item.teamUser_id] = update(user, {
-        app_ids: {$splice: [[idx, 1]]}
+      let user = new_state[team_id].team_users[item.team_user_id];
+      const idx = user.team_card_ids.indexOf(app.id);
+      new_state[team_id].team_users[item.team_user_id] = update(user, {
+        team_card_ids: {$splice: [[idx, 1]]}
       });
     });
     return new_state;

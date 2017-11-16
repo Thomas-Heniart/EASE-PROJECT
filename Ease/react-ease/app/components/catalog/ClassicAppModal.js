@@ -8,6 +8,8 @@ import {handleSemanticInput,
   credentialIconType} from "../../utils/utils";
 import {selectItemFromListById} from "../../utils/helperFunctions";
 import {reduxActionBinder} from "../../actions/index";
+import ChooseAppLocationModal from './ChooseAppLocationModal';
+import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {connect} from "react-redux";
 var api = require('../../utils/api');
 
@@ -259,7 +261,7 @@ class SecondStep extends Component {
   constructor(props){
     super(props);
     this.state = {
-      bookmark: false
+      bookmark: false,
     }
   }
   confirm = (e) => {
@@ -269,7 +271,8 @@ class SecondStep extends Component {
   render(){
     const {
       website,
-      appName
+      appName,
+      handleInput
     } = this.props;
     return (
         <Form as="div" class="container">
@@ -277,7 +280,12 @@ class SecondStep extends Component {
             <div class="squared_image_handler">
               <img src={website.logo} alt="Website logo"/>
             </div>
-            <span class="app_name">{appName}</span>
+            <span class="app_name"><Input size="mini" type="text" placeholder="App name..."
+                                          name="name"
+                                          class="input_unstyle modal_input name_input"
+                                          autoFocus={true}
+                                          value={appName}
+                                          onChange={handleInput}/></span>
           </Form.Field>
           <Form.Field>
             <p style={{ display: 'inline-block', fontSize: '20px', color: '#414141' }}><strong>Add as Bookmark</strong></p>
@@ -389,6 +397,8 @@ class ClassicAppModal extends React.Component {
       url: this.props.modal.website.landing_url,
       profiles: [],
       selectedProfile: -1,
+      selectedTeam: -1,
+      selectedRoom: -1,
       view: 1,
       loading: false
     }
@@ -429,7 +439,10 @@ class ClassicAppModal extends React.Component {
     this.setState({credentials: credentials});
   };
   selectProfile = (id) => {
-    this.setState({selectedProfile: id});
+    this.setState({ selectedProfile: id, selectedTeam: -1, selectedRoom: -1 });
+  };
+  selectRoom = (teamId, roomId) => {
+    this.setState({ selectedTeam: teamId, selectedRoom: roomId, selectedProfile: -1 });
   };
   addProfile = (profile) => {
     let profiles = this.state.profiles.slice();
@@ -437,7 +450,10 @@ class ClassicAppModal extends React.Component {
     this.setState({profiles: profiles, selectedProfile: profile.id});
   };
   changeView = (view) => {
-    this.setState({view: view});
+    if (this.state.selectedProfile !== -1)
+      this.setState({view: view});
+    else
+      this.setState({view: 4});
   };
   close = () => {
     this.props.showCatalogAddAppModal({active: false});
@@ -448,16 +464,18 @@ class ClassicAppModal extends React.Component {
             onClose={this.close}
             headerContent={'Setup your App'}>
           {this.state.view === 1 &&
-          <ProfileChooseStep
+          <ChooseAppLocationModal
               website={this.state.website}
               appName={this.state.name}
               loading={this.state.loading}
               profiles={this.state.profiles}
               handleInput={this.handleInput}
               selectedProfile={this.state.selectedProfile}
+              selectedRoom={this.state.selectedRoom}
               addProfile={this.addProfile}
               confirm={this.changeView.bind(null, 2)}
-              selectProfile={this.selectProfile}/>}
+              selectProfile={this.selectProfile}
+              selectRoom={this.selectRoom} />}
           {this.state.view === 2 &&
           <SecondStep
               {...this.props}
@@ -479,6 +497,14 @@ class ClassicAppModal extends React.Component {
               profile_id={this.state.selectedProfile}
               goBack={this.changeView.bind(null, 2)}
               logWithWebsite={this.state.choosenLogWithWebsite}/>}
+          {this.state.view === 4 &&
+          <ChooseTypeAppModal
+              {...this.props}
+              website={this.state.website}
+              appName={this.state.name}
+              team_id={this.state.selectedTeam}
+              room_id={this.state.selectedRoom}
+              close={this.close} />}
         </SimpleModalTemplate>
     )
   }

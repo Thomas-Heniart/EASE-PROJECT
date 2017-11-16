@@ -9,10 +9,7 @@ import {withRouter} from "react-router-dom";
 import {isOwner, selectItemFromListById} from "../../utils/helperFunctions";
 
 @connect(store => ({
-  team_id: store.team.id,
-  feature_id: store.teamModals.upgradeTeamPlanModal.feature_id,
-  myId: store.team.myTeamUserId,
-  users: store.users.users
+  teams: store.teams
 }))
 class StaticUpgradeTeamPlanModal extends Component {
   constructor(props){
@@ -20,7 +17,7 @@ class StaticUpgradeTeamPlanModal extends Component {
     this.state = {
       show_more : false,
       loading: false,
-      errorMesage: ''
+      errorMessage: ''
     }
   }
   showMore = (state) => {
@@ -31,31 +28,32 @@ class StaticUpgradeTeamPlanModal extends Component {
   };
   confirm = (e) => {
     e.preventDefault();
-    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const team = this.props.teams[this.props.match.params.teamId];
+    const me = team.team_users[team.my_team_user_id];
     const meOwner = isOwner(me.role);
-    this.setState({loading: true, errorMesage: ''});
+    this.setState({loading: true, errorMessage: ''});
     if (meOwner) {
       this.props.dispatch(upgradePlan({
-        team_id: this.props.team_id,
+        team_id: team.id,
         plan_id: 1
       })).then(response => {
         this.setState({loading: false});
           this.close();
       }).catch(err => {
-        this.setState({loading: false, errorMesage: err});
+        this.setState({loading: false, errorMessage: err});
       });
     } else {
-      post_api.teams.askOwnerToUpgrade({team_id: this.props.team_id}).then(response => {
+      post_api.teams.askOwnerToUpgrade({team_id: team.id}).then(response => {
         this.setState({loading: false});
           this.close();
       });
     }
   };
   render(){
-//    const feature_id = this.props.feature_id;
-    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const team = this.props.teams[this.props.match.params.teamId];
+    const me = team.team_users[team.my_team_user_id];
     const meOwner = isOwner(me.role);
-    const teamOwner = this.props.users.find(item => (isOwner(item.role)));
+    const teamOwner = Object.keys(team.team_users).map(id => (team.team_users[id])).find(item => (isOwner(item.role)));
     const featuresList = proFeatures.map((item, idx) => {
       if (!this.state.show_more && idx > 2)
         return null;
@@ -72,7 +70,7 @@ class StaticUpgradeTeamPlanModal extends Component {
         <SimpleModalTemplate
             onClose={this.close}
             headerContent={'Try Pro now!'}>
-          <Form class="container" error={this.state.errorMesage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
+          <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
               <Form.Field>
                   One of your team members would like to access paying features.
               </Form.Field>
@@ -92,7 +90,7 @@ class StaticUpgradeTeamPlanModal extends Component {
                   `After trial Pro is billed 3,99€ per month per active user. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade.Want to send a request ?`
               }
             </Form.Field>
-            <Message error content={this.state.errorMesage}/>
+            <Message error content={this.state.errorMessage}/>
             <Button
                 attached='bottom'
                 type="submit"

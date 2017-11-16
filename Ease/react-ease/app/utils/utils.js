@@ -33,6 +33,12 @@ export function handleSemanticInput(e, {name, value, checked}){
   this.setState({[name]: value});
 }
 
+export function objectToList(obj){
+  return Object.keys(obj).map(id => {
+    return obj[id]
+  });
+}
+
 export function transformCredentialsListIntoObject(credentials){
   return credentials.reduce((prev, curr) =>{
     return {...prev, [curr.name]: curr.value}
@@ -168,7 +174,7 @@ export const passwordChangeOptions = [
 ];
 
 export const teamUserRoleValues = [
-  {key: '1', text: 'member', value:1},
-  {key: '2', text: 'admin', value:2},
-  {key: '3', text: 'owner', value:3}
+  {key: 1, text: 'member', value:1},
+  {key: 2, text: 'admin', value:2},
+  {key: 3, text: 'owner', value:3}
 ];

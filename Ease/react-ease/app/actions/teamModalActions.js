@@ -1,44 +1,53 @@
-export function showAddTeamUserModal(state){
+export function showAddTeamUserModal({active, team_id}){
   return {
     type:'SHOW_ADD_TEAM_USER_MODAL',
-    payload: state
+    payload: {
+      active: active,
+      team_id: team_id
+    }
   }
 }
 
-export function showAddTeamChannelModal(state){
+export function showAddTeamChannelModal({active, team_id}){
   return {
     type: 'SHOW_ADD_TEAM_CHANNEL_MODAL',
-    payload: state
+    payload: {
+      active: active,
+      team_id: team_id
+    }
   }
 }
 
-export function showTeamDeleteUserModal(state, team_user_id){
+export function showTeamDeleteUserModal({active,team_id, team_user_id}){
   return {
     type: 'SHOW_TEAM_DELETE_USER_MODAL',
     payload: {
-      active: state,
-      team_user_id: team_user_id
+      active: active,
+      team_user_id: team_user_id,
+      team_id: team_id
     }
   }
 }
 
-export function showTeamDeleteChannelModal(state, channel_id){
+export function showTeamDeleteChannelModal({active,team_id, room_id}){
   return {
     type: 'SHOW_TEAM_DELETE_CHANNEL_MODAL',
     payload: {
-      active: state,
-      channel_id: channel_id
+      active: active,
+      room_id: room_id,
+      team_id: team_id
     }
   }
 }
 
-export function showTeamDeleteUserFromChannelModal(state, channel_id, team_user_id){
+export function showTeamDeleteUserFromChannelModal({active, team_id, room_id, team_user_id}){
   return {
     type: 'SHOW_TEAM_DELETE_USER_FROM_CHANNEL_MODAL',
     payload: {
-      active: state,
-      channel_id: channel_id,
-      team_user_id: team_user_id
+      active: active,
+      room_id: room_id,
+      team_user_id: team_user_id,
+      team_id: team_id
     }
   }
 }
@@ -117,7 +126,7 @@ export function showTeamEditEnterpriseAppModal(state, user, app){
   }
 }
 
-export function showTeamAskJoinMultiAppModal(state, user, app){
+export function showTeamAskJoinMultiAppModal(state, user, app) {
   return {
     type: 'SHOW_TEAM_ASK_JOIN_ENTERPRISE_APP_MODAL',
     payload: {
@@ -137,32 +146,35 @@ export function showTeamSettingsModal(state){
   }
 }
 
-export function showVerifyTeamUserModal(state, user){
+export function showVerifyTeamUserModal({active, team_user_id,team_id}){
   return {
     type: 'SHOW_VERIFY_TEAM_USER_MODAL',
     payload: {
-      active: state,
-      user: user
+      active: active,
+      team_user_id: team_user_id,
+      team_id: team_id
     }
   }
 }
 
-export function showReactivateTeamUserModal(state, user){
+export function showReactivateTeamUserModal({active, team_id, team_user_id}){
   return {
     type: 'SHOW_REACTIVATE_TEAM_USER_MODAL',
     payload: {
-      active: state,
-      user: user
+      active: active,
+      team_user_id: team_user_id,
+      team_id: team_id
     }
   }
 }
 
-export function showTeamTransferOwnershipModal(state, user){
+export function showTeamTransferOwnershipModal({active, team_id, team_user_id}){
   return {
     type: 'SHOW_TEAM_TRANSFER_OWNERSHIP_MODAL',
     payload: {
-      active: state,
-      user: user
+      active: active,
+      team_id: team_id,
+      team_user_id: team_user_id
     }
   }
 }
@@ -195,21 +207,23 @@ export function showRequestWebsiteModal(state, resolve, reject){
   }
 }
 
-export function showTeamAddMultipleUsersModal(state){
+export function showTeamAddMultipleUsersModal({active, team_id}){
   return {
     type: 'SHOW_TEAM_ADD_MULTIPLE_USERS_MODAL',
     payload: {
-      active: state
+      active: active,
+      team_id: team_id
     }
   }
 }
 
-export function showUpgradeTeamPlanModal(state, feature_id) {
+export function showUpgradeTeamPlanModal({active, feature_id,team_id}) {
   return {
     type: 'SHOW_UPGRADE_TEAM_PLAN_MODAL',
     payload: {
-      active: state,
-      feature_id: feature_id
+      active: active,
+      feature_id: feature_id,
+      team_id: team_id
     }
   }
 }
@@ -223,12 +237,13 @@ export function showFreeTrialEndModal(state){
   }
 }
 
-export function showDepartureDateEndModal(state, user) {
-    return {
-        type: 'DEPARTURE_DATE_END_MODAL',
-        payload: {
-            active: state,
-            user: user
-        }
+export function showDepartureDateEndModal({active, team_user_id, team_id}) {
+  return {
+    type: 'DEPARTURE_DATE_END_MODAL',
+    payload: {
+      active: active,
+      team_user_id: team_user_id,
+      team_id: team_id
     }
+  }
 }

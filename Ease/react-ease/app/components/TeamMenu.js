@@ -9,20 +9,18 @@ import {withRouter, NavLink} from "react-router-dom";
 class TeamMenu extends React.Component {
   constructor(props){
     super(props);
-    this.hideIt = this.hideIt.bind(this);
-    this.goToPersonalSpace = this.goToPersonalSpace.bind(this);
   }
-  hideIt(){
+  hideIt = () => {
     this.props.closeMenu();
 //    this.props.dispatch(showTeamMenu(false));
-  }
-  goToPersonalSpace(){
+  };
+  goToPersonalSpace = () => {
     const team = this.props.team;
     const me = this.props.me;
 
     this.props.history.push(`/teams/${team.id}/@${me.id}/flexPanel`);
     this.hideIt();
-  }
+  };
   render(){
     const me = this.props.me;
     const team = this.props.team;
@@ -48,7 +46,7 @@ class TeamMenu extends React.Component {
               {isAdmin(me.role) &&
               <div class="dropdown_row flex_direction_column section team">
                 <strong class="teamName">{team.name}</strong>
-                <span class="selectable" onClick={e => {this.props.dispatch(showAddTeamUserModal(true)); this.hideIt();}}>
+                <span class="selectable" onClick={e => {this.props.dispatch(showAddTeamUserModal({active: true, team_id: team.id})); this.hideIt();}}>
                   Invite new members
                 </span>
                 {isOwner(me.role) &&

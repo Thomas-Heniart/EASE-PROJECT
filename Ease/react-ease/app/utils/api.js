@@ -274,10 +274,9 @@ module.exports = {
       });
     },
     fetchTeamApp: ({team_id, app_id}) => {
-      return basic_get('/api/v1/teams/GetShareableApp', {
+      return basic_get('/api/v1/teams/GetTeamCard', {
         team_id: team_id,
-        app_id: app_id,
-        timestamp: new Date().getTime()
+        team_card_id: app_id,
       })
     },
     getInvitationInformation : function({code}){

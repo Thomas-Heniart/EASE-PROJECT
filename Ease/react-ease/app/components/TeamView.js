@@ -11,6 +11,7 @@ var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var TeamAppAddingUi = require('./TeamAppAddingUi');
 var TeamAppsContainer = require('./TeamAppsContainer');
 var TeamSettings = require('./teamModals/TeamSettings');
+import queryString from "query-string";
 import TeamBrowsePeopleModal from "./teamModals/TeamBrowsePeopleModal";
 import TeamBrowseRoomsModal from "./teamModals/TeamBrowseRoomsModal";
 import FreeTrialEndModal from "./teamModals/FreeTrialEndModal";
@@ -18,7 +19,9 @@ import StaticUpgradeTeamPlanModal from "./teamModals/StaticUpgradeTeamPlanModal"
 import * as teamActions from "../actions/teamActions"
 import * as modalActions from "../actions/teamModalActions"
 import {OpacityTransition} from "../utils/transitions";
-import {selectChannelFromListById, selectUserFromListById, selectItemFromListById} from "../utils/helperFunctions";
+import {teamUserState} from "../utils/utils";
+import {isAdmin} from "../utils/helperFunctions";
+import {showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateEndModal} from "../actions/teamModalActions";
 import {Route, Switch, withRouter} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
 import {connect} from "react-redux";
@@ -27,7 +30,8 @@ var api = require('../utils/api');
 
 @connect((store)=>({
   teams: store.teams,
-  common: store.common
+  common: store.common,
+  card: store.teamCard
 }))
 class TeamView extends React.Component {
   constructor(props){
@@ -47,82 +51,6 @@ class TeamView extends React.Component {
   componentWillMount() {
     document.title = "Team Space"
   }
-  /*  componentWillReceiveProps(nextProps){
-      const itemId = nextProps.match.params.itemId;
-      if (this.props !== nextProps) {
-        if (this.props.match.params.teamId !== nextProps.match.params.teamId) {
-          this.setState({loadingInfo: true});
-          this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(nextProps.match.params.teamId)).then(() => {
-            this.setState({loadingInfo: false});
-            if (this.isValidTeamItemId(itemId)) {
-              this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
-            } else
-              this.autoSelectItem();
-          }).catch(err => {
-            window.location.href = '/';
-          });
-        }
-        else if (this.props.match.params.itemId !== itemId) {
-          if (this.isValidTeamItemId(itemId)) {
-            this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
-          } else
-            this.autoSelectItem();
-        }
-      }
-    }*/
-  /*  componentDidUpdate(){
-      if (!this.state.loadingInfo && !this.isValidTeamItemId(this.props.match.params.itemId)) {
-        this.autoSelectItem();
-      }
-    }*/
-  /*  componentDidMount(){
-      const itemId = this.props.match.params.itemId;
-      if (!this.props.common.authenticated){
-        this.props.history.push('/login');
-        return;
-      }
-      this.props.dispatch(teamActions.fetchTeamAndUsersAndChannels(this.props.match.params.teamId)).then(()=>{
-        this.setState({loadingInfo: false});
-        const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
-        if (me.phone_number === null && me.role === 3){
-          this.props.dispatch(modalActions.showTeamPhoneNumberModal(true));
-        }
-        if (this.isValidTeamItemId(itemId)) {
-          this.props.dispatch(teamActions.fetchTeamItemApps(itemId));
-        }else
-          this.autoSelectItem();
-      }).catch(err => {
-        console.log('error !');
-        console.log(err);
-        window.location.href = '/';
-      });
-    };*/
-  /*  isValidTeamItemId(itemId){
-      if (itemId === undefined)
-        return false;
-      const me = selectUserFromListById(this.props.users, this.props.team.myTeamUserId);
-      if (itemId[0] !== '@' && me.channel_ids.indexOf(Number(itemId)) !== -1)
-        return true;
-      if (selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length))) !== null)
-        return true;
-      return false;
-    }
-    autoSelectItem(){
-      const teamId = this.props.match.params.teamId;
-
-      const defaultRoom = this.props.channels.find(item => (item.default));
-      this.props.history.replace(`/teams/${teamId}/${defaultRoom.id}`);
-    }
-    getSelectedItem(){
-      const itemId = this.props.match.params.itemId;
-      if (itemId === undefined)
-        return null;
-      let item = (itemId[0] === '@') ?
-          selectUserFromListById(this.props.users, Number(itemId.slice(1, itemId.length)))
-          :
-          selectChannelFromListById(this.props.channels, Number(itemId));
-      return item;
-    }*/
   componentDidUpdate(){
     if (!this.state.loadingInfo && !this.isValidTeamItemId(this.props.match.params.itemId)) {
       this.autoSelectItem();
@@ -144,7 +72,6 @@ class TeamView extends React.Component {
     }
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
-      return;
     }
     const me = team.team_users[team.my_team_user_id];
     if (me.phone_number === null && me.role === 3){
@@ -168,13 +95,15 @@ class TeamView extends React.Component {
     const me = team.team_users[team.my_team_user_id];
     if (itemId[0] !== '@' && me.room_ids.indexOf(Number(itemId)) !== -1)
       return true;
-    if (team.team_users[Number(itemId.slice(1, itemId.length))] !== undefined)
+    const team_user = team.team_users[Number(itemId.slice(1, itemId.length))];
+    if (!!team_user) {
+      this.checkUser(team_user);
       return true;
+    }
     return false;
   };
   autoSelectItem = () => {
     const teamId = this.props.match.params.teamId;
-
     const rooms = this.props.teams[teamId].rooms;
     const defaultRoom = Object.keys(rooms).map(id => {
       return rooms[id];
@@ -192,6 +121,34 @@ class TeamView extends React.Component {
         :
         team.rooms[Number(itemId)];
     return item !== undefined ? item : null;
+  };
+  chosenApp = () => {
+    const query = queryString.parse(this.props.location.search);
+    if (query.website_id !== undefined && query.website_id.length !== 0)
+      return Number(query.website_id);
+  };
+  checkUser = (teamUser) => {
+    const team = this.props.teams[this.props.match.params.teamId];
+    const me = team.team_users[team.my_team_user_id];
+    const dispatch = this.props.dispatch;
+    if (teamUser.state === teamUserState.registered && isAdmin(me.role) && teamUser.id !== me.id)
+      dispatch(showVerifyTeamUserModal({
+        active: true,
+        team_user_id: teamUser.id,
+        team_id: team.id
+      }));
+    else if (teamUser.disabled && isAdmin(me.role) && teamUser.id !== me.id)
+      dispatch(showReactivateTeamUserModal({
+        active:true,
+        team_user_id: teamUser.id,
+        team_id: team.id
+      }));
+    else if (teamUser.departure_date !== null && new Date().getTime() > teamUser.departure_date && isAdmin(me.role) && teamUser.id !== me.id)
+      dispatch(showDepartureDateEndModal({
+        active: true,
+        team_user_id: teamUser.id,
+        team_id: team.id
+      }));
   };
   render(){
     const team = this.props.teams[this.props.match.params.teamId];
@@ -220,13 +177,18 @@ class TeamView extends React.Component {
                   dispatch={this.props.dispatch}/>
               <div className="team_client_body bordered_scrollbar">
                 <OpacityTransition appear={true}>
-                  {this.props.common.user !== null && !this.props.common.user.status.team_tuto_done &&
+                  {!!this.props.common.user && !this.props.common.user.status.team_tuto_done &&
                   <TeamsTutorial/>}
                 </OpacityTransition>
                 <div id="col_main">
-                  <TeamAppAddingUi
-                      addAppView={this.state.addAppView}
-                      item={selectedItem}/>
+                  {/*<Route path={`${this.props.match.url}/SingleApp`} render={(props) => <TeamAppAddingUi addAppView='Simple' item={selectedItem} website_id={this.chosenApp()} />} />*/}
+                  {/*<Route path={`${this.props.match.url}/EnterpriseApp`} render={(props) => <TeamAppAddingUi addAppView='Multi' item={selectedItem} website_id={this.chosenApp()} />} />*/}
+                  {/*<Route path={`${this.props.match.url}/LinkApp`} render={(props) => <TeamAppAddingUi addAppView='Link' item={selectedItem} website_id={this.chosenApp()} />} />*/}
+                    {this.props.card.app &&
+                    <TeamAppAddingUi
+                      addAppView={this.props.card.type}
+                      item={selectedItem}
+                      website={this.props.card.app} />}
                   <TeamAppsContainer team={team} item={selectedItem}/>
                 </div>
                 <div id="col_flex">
