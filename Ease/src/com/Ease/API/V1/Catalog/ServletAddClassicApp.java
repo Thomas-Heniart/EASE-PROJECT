@@ -39,10 +39,10 @@ public class ServletAddClassicApp extends HttpServlet {
             Profile profile = user.getProfile(profile_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             String private_key = (String) sm.getContextAttr("privateKey");
-            /* for (Object entry : account_information.entrySet()) {
+            for (Object entry : account_information.entrySet()) {
                 Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
                 account_information.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
-            } */
+            }
             Map<String, String> information = website.getInformationNeeded(account_information);
             Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
             Set<AccountInformation> accountInformationSet = new HashSet<>();
