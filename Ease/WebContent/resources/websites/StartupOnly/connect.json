@@ -1,0 +1,26 @@
+{
+  "name":"StartupOnly",
+  "lastLogin":"",
+  "home":"https://startuponly.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"#headcandidatelogin__opener", "grave":true},
+      {"action":"waitfor", "search":"button[data-target='#headstartuplogin__container']", "grave":true},
+      {"action":"trueClick", "search":"button[data-target='#headstartuplogin__container']", "grave":true},
+      {"action":"waitfor", "search":"#headstartuplogin__email"},
+      {"action":"fill", "what":"login", "search":"#headstartuplogin__email", "grave":true},
+      {"action":"fill", "what":"password", "search":"#headstartuplogin__password", "grave":true},
+      {"action":"trueClick", "search":"#headstartuplogin__form .modal__confirmButton--login", "grave":true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a.navbar__Account", "grave":true},
+      {"action":"aclick", "search":"a[href*='logout']", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.navbar__Account, #headcandidatelogin__opener"},
+    {"search":"a.navbar__Account"}
+  ]
+}

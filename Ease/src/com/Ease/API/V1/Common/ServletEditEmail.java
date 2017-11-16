@@ -36,7 +36,7 @@ public class ServletEditEmail extends HttpServlet {
             if (!new_email.equals(user.getStatus().getEmail_requested()))
                 throw new HttpServletException(HttpStatus.BadRequest, "This is not the email you requested.");
             if (!digits.equals(user.getStatus().getEdit_email_code()))
-                throw new HttpServletException(HttpStatus.BadRequest, "This is not the code we provide you");
+                throw new HttpServletException(HttpStatus.BadRequest, "This code isn't valid.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             DatabaseRequest databaseRequest = db.prepareRequest("SELECT id FROM users WHERE email = ?");

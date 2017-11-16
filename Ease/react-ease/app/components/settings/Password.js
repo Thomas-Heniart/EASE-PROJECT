@@ -51,7 +51,7 @@ class Password extends React.Component {
     confirm = () => {
         this.setState({ loading: true, errorMessage: '' });
         if (this.state.newPassword !== this.state.confirmNewPassword)
-            this.setState({ loading: false, errorMessage: 'Password do not match' });
+            this.setState({ loading: false, errorMessage: 'Passwords do not match' });
         else {
             this.props.dispatch(editPassword({
                 password: this.state.currentPassword,
