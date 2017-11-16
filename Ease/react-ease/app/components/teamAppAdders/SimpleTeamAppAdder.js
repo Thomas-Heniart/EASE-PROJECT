@@ -130,6 +130,7 @@ class SimpleTeamAppAdder extends Component {
     });
     this.setState({credentials: credentials});
   };
+  handleSearchChange = (e, { searchQuery }) => this.setState({ searchQuery });
   setDashboardApp = (app) => {
     getDashboardApp(app.id).then(app => {
       fetchWebsiteInfo(app.website_id).then(info => {
@@ -249,6 +250,7 @@ class SimpleTeamAppAdder extends Component {
                           name="selected_users"
                           options={this.state.users}
                           onChange={this.handleInput}
+                          onSearchChange={this.handleSearchChange}
                           value={this.state.selected_users}
                           selection={true}
                           renderLabel={renderSimpleAppAddUserLabel}
