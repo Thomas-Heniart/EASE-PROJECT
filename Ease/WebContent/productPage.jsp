@@ -155,7 +155,7 @@
         </div>
     </div>
     <div id="more" class="ui top attached tabular menu">
-        <a class="item centered" data-tab="first" style="font-size:20px;font-weight:bold;line-height:1.35;color:#4990e2;"><u><fmt:message key="product.showMore"/></u></a>
+        <a class="item centered" data-tab="first" style="margin-top:10px;font-size:20px;font-weight:bold;line-height:1.35;color:#4990e2;"><u><fmt:message key="product.showMore"/></u></a>
     </div>
     <div class="container">
         <div class="ui two column stackable grid textDistrib">
