@@ -130,7 +130,6 @@ class SimpleTeamAppAdder extends Component {
     });
     this.setState({credentials: credentials});
   };
-  handleSearchChange = (e, { searchQuery }) => this.setState({ searchQuery });
   setDashboardApp = (app) => {
     getDashboardApp(app.id).then(app => {
       fetchWebsiteInfo(app.website_id).then(info => {
@@ -211,7 +210,6 @@ class SimpleTeamAppAdder extends Component {
     const credentialsInputs = this.state.credentials.map(item => {
       return <TeamAppCredentialInput key={item.priority} onChange={this.handleCredentialInput} item={item}/>
     });
-
     return (
         <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
           {this.state.app === null &&
@@ -245,14 +243,13 @@ class SimpleTeamAppAdder extends Component {
                     <div>
                       <Dropdown
                           class="mini"
-                          search={true}
+                          search
                           fluid
                           name="selected_users"
                           options={this.state.users}
                           onChange={this.handleInput}
-                          onSearchChange={this.handleSearchChange}
                           value={this.state.selected_users}
-                          selection={true}
+                          selection
                           renderLabel={renderSimpleAppAddUserLabel}
                           multiple
                           placeholder="Tag your team members here..."/>

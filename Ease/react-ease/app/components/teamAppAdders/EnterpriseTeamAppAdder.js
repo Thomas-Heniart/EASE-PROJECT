@@ -169,7 +169,6 @@ class EnterpriseTeamAppAdder extends Component {
     });
     this.setState({users: users});
   };
-  handleSearchChange = (e, { searchQuery }) => this.setState({ searchQuery });
   setApp = (app) => {
     if (app.request){
       requestWebsite(this.props.dispatch).then(app => {
@@ -263,14 +262,13 @@ class EnterpriseTeamAppAdder extends Component {
                     <div>
                       <Dropdown
                           class="mini users-dropdown"
-                          search={true}
+                          search
                           fluid
                           name="selected_users"
                           options={this.state.users}
                           onChange={this.handleInput}
-                          onSearchChange={this.handleSearchChange}
                           value={this.state.selected_users}
-                          selection={true}
+                          selection
                           multiple
                           placeholder="Tag your team members here..."/>
                     </div>
