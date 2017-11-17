@@ -166,16 +166,16 @@ class Step4 extends React.Component{
               <Form.Field required error={this.state.usernameError}>
                 <label>Username</label>
                 <Input type="text"
-                       onChange={this.props.handleInput}
+                       onChange={this.props.handleUsernameInput}
                        value={this.props.username}
                        name="username"
-                       placeholder="Username"
+                       placeholder="username"
                        required/>
-                <Label pointing basic={this.state.usernameError} color={this.state.usernameError ? 'red': null}>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.</Label>
+                <Label pointing basic={this.props.usernameError} color={this.props.usernameError ? 'red': null}>Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.</Label>
               </Form.Field>
               <Message error content={this.state.errorMessage}/>
               <Form.Field>
-                <Button positive fluid type="submit">Next</Button>
+                <Button positive fluid type="submit" disabled={this.props.username.length < 3}>Next</Button>
               </Form.Field>
             </Form>
           </Segment>
@@ -329,6 +329,7 @@ class SimpleTeamCreationView extends React.Component {
       teamName: '',
       teamId: -1,
       plan_id: 0,
+      usernameError: false,
       invitations: [{email: '', username: ''},{email: '', username: ''},{email: '', username: ''}]
     };
     this.incrementStep = this.incrementStep.bind(this);
@@ -361,6 +362,16 @@ class SimpleTeamCreationView extends React.Component {
     info[e.target.name] = e.target.value;
     this.setState({companyInformation: info});
   }
+  handleUsernameInput = (e, {name, value}) => {
+    if (value && value.match(/[a-zA-Z0-9\s_\-]/gi)) {
+      if (value.match(/[a-zA-Z0-9\s_\-]/gi).length === value.length && value.length <= 22)
+        this.setState({ [name]: value.toLowerCase().replace(/\s/gi, '_'), usernameError: false });
+      else
+        this.setState({ usernameError: true });
+    }
+    else
+      this.setState({ [name]: '', usernameError: true });
+  };
   addInvitationField(){
     var invitations = this.state.invitations;
     invitations.push({email:'', username:''});
@@ -431,7 +442,9 @@ class SimpleTeamCreationView extends React.Component {
                       lname={this.state.lname}
                       fname={this.state.fname}
                       username={this.state.username}
+                      usernameError={this.state.usernameError}
                       handleInput={this.handleInput}
+                      handleUsernameInput={this.handleUsernameInput}
                       key="4"/>);
     steps.push(<Step5 incStep={this.incrementStep}
                       plan_id={this.state.plan_id}
