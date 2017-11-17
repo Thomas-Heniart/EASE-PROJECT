@@ -455,7 +455,7 @@ button.only-text-button {
   margin: 0 !important; }
 
 .ui.dropdown .menu > .item {
-  padding: 0.78571em 1.14286em !important; }
+  padding: 0.78571429em 1.14285714em !important; }
 
 #team_menu_options .popover_mask {
   z-index: 99; }
@@ -1169,7 +1169,7 @@ button.action_text_button {
   padding: 5px;
   border: 1px solid #414141;
   border-radius: 5px;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0);
   transition: background-color .3s; }
   .team_app .requestAppButton .onHover {
     color: white;

@@ -463,8 +463,7 @@ section#security {
     width: 101%;
     height: 700px;
     background-position: right 200px;
-    background-size: 100%;
-    background-repeat: no-repeat; }
+    background-size: 100%; }
 
   .goodbye {
     display: inline-block;
