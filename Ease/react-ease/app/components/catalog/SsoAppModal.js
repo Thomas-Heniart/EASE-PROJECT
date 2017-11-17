@@ -8,6 +8,8 @@ import {connect} from "react-redux";
 import {dashboard} from "../../utils/post_api";
 var api = require('../../utils/api');
 import {reflect} from "../../utils/utils";
+import ChooseAppLocationModal from './ChooseAppLocationModal';
+import ChooseTypeAppModal from './ChooseTypeAppModal';
 
 @connect(store => ({
     catalog: store.catalog,
@@ -17,6 +19,7 @@ class SsoAppModal extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            website: this.props.modal.website,
             name: this.props.modal.website.name,
             errorMessage: '',
             url: this.props.modal.website.landing_url,
@@ -29,6 +32,8 @@ class SsoAppModal extends React.Component {
             profiles: [],
             profileName: '',
             selectedProfile: -1,
+            selectedTeam: -1,
+            selectedRoom: -1,
             addingProfile: false,
             view: 1,
             multipleApps: [],
@@ -54,8 +59,8 @@ class SsoAppModal extends React.Component {
                 let website = selectItemFromListById(this.props.catalog.websites, item);
                 let apps = [];
                 profiles.map(item => {
-                    item.apps.map(app => {
-                        if (app.website_id === website.id)
+                    item.app_ids.map(app => {
+                        if (app === website.id)
                             apps.push(app);
                     });
                 });
@@ -88,10 +93,6 @@ class SsoAppModal extends React.Component {
 
     addGoogleAccount = () => {
       this.setState({ addGoogleAccount: true, accountGoogleSelected: '' });
-    };
-
-    selectProfile = (id) => {
-        this.setState({ selectedProfile: id });
     };
 
     checkActive = (id) => {
@@ -245,7 +246,10 @@ class SsoAppModal extends React.Component {
 
     confirm = () => {
         if (this.state.view === 1) {
-            this.addMainAppToSSOSelected();
+            if (this.state.selectedProfile !== -1)
+                this.addMainAppToSSOSelected();
+            else
+                this.setState({ view: 4 })
         }
         else if (this.state.addGoogleAccount) {
             this.setState({ accountGoogleSelected: this.state.login, view: 3, addGoogleAccount: false });
@@ -320,32 +324,45 @@ class SsoAppModal extends React.Component {
         });
     };
 
+    selectProfile = (id) => {
+        this.setState({ selectedProfile: id, selectedTeam: -1, selectedRoom: -1 });
+    };
+    selectRoom = (teamId, roomId) => {
+        this.setState({ selectedTeam: teamId, selectedRoom: roomId, selectedProfile: -1 });
+    };
+
+    addProfile = (profile) => {
+        let profiles = this.state.profiles.slice();
+        profiles.push(profile);
+        this.setState({profiles: profiles, selectedProfile: profile.id});
+    };
+
+    close = () => {
+        this.props.showCatalogAddSSOAppModal({active: false});
+    };
+
     render() {
-        const profiles = this.state.profiles.map(profile => {
-            return (
-                <List.Item as="a"
-                           key={profile.id}
-                           class="display_flex"
-                           active={this.state.selectedProfile === profile.id}
-                           onClick={e => this.selectProfile(profile.id)}>
-                    <strong>{profile.name}</strong>
-                    &nbsp;&nbsp;
-                    <em class="overflow-ellipsis">
-                        {
-                            profile.apps.map(function(app, idx){
-                                var ret = app.name;
-                                ret += (idx === profile.apps.length - 1) ? '' : ', ';
-                                return (ret)
-                            }, this)
-                        }
-                    </em>
-                </List.Item>
-            )
-        });
-        const ssoList = this.props.catalog.websites.filter(item => {
-            if (item.id !== this.props.modal.website.id)
-                return item.sso_id === this.props.modal.website.sso_id;
-        });
+        // const profiles = this.state.profiles.map(profile => {
+        //     return (
+        //         <List.Item as="a"
+        //                    key={profile.id}
+        //                    class="display_flex"
+        //                    active={this.state.selectedProfile === profile.id}
+        //                    onClick={e => this.selectProfile(profile.id)}>
+        //             <strong>{profile.name}</strong>
+        //             &nbsp;&nbsp;
+        //             <em class="overflow-ellipsis">
+        //                 {
+        //                     profile.apps.map(function(app, idx){
+        //                         var ret = app.name;
+        //                         ret += (idx === profile.apps.length - 1) ? '' : ', ';
+        //                         return (ret)
+        //                     }, this)
+        //                 }
+        //             </em>
+        //         </List.Item>
+        //     )
+        // });
 
         let double = [];
 
@@ -356,50 +373,18 @@ class SsoAppModal extends React.Component {
                 }}
                 headerContent={'Setup your App'}>
                 {this.state.view === 1 ?
-                    <Form class="container" id="add_bookmark_form" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
-                        <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-                            <div class="squared_image_handler">
-                                <img src={this.props.modal.website.logo} alt="Website logo"/>
-                            </div>
-                            <span class="app_name">
-                                <Input size="mini" type="text" placeholder="App name..."
-                                       name="name"
-                                       class="input_unstyle modal_input name_input"
-                                       autoFocus={true}
-                                       value={this.state.name}
-                                       onChange={this.handleInput} />
-                            </span>
-                        </Form.Field>
-                        <Form.Field>
-                            <div style={{marginBottom: '10px'}}>App location (you can always change it later)</div>
-                            <Container class="profiles">
-                                <List link>
-                                    {profiles}
-                                </List>
-                                <form ref={(ref) => {this.form = ref}} style={{marginBottom: 0}} onSubmit={this.createProfile}>
-                                    <Input
-                                        loading={this.state.addingProfile}
-                                        value={this.state.profileName}
-                                        name="profileName"
-                                        required
-                                        transparent
-                                        onChange={this.handleInput}
-                                        class="create_profile_input"
-                                        icon={<Icon name="plus square" link onClick={this.createProfile}/>}
-                                        placeholder='Create new group'
-                                    />
-                                </form>
-                            </Container>
-                        </Form.Field>
-                        <Message error content={this.state.errorMessage}/>
-                        <Button
-                            type="submit"
-                            loading={this.state.loading}
-                            positive
-                            disabled={this.state.selectedProfile === -1 || this.state.loading || !this.state.name}
-                            className="modal-button"
-                            content="NEXT"/>
-                    </Form>
+                    <ChooseAppLocationModal
+                        website={this.state.website}
+                        appName={this.state.name}
+                        loading={this.state.loading}
+                        profiles={this.state.profiles}
+                        handleInput={this.handleInput}
+                        selectedProfile={this.state.selectedProfile}
+                        selectedRoom={this.state.selectedRoom}
+                        addProfile={this.addProfile}
+                        confirm={this.confirm}
+                        selectProfile={this.selectProfile}
+                        selectRoom={this.selectRoom} />
                     :  this.state.view === 2 ?
                 <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm}>
                     <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
@@ -491,7 +476,7 @@ class SsoAppModal extends React.Component {
                             class="modal-button uppercase"
                             content={'CONFIRM'} />
                 </Form>
-                    :
+                    : this.state.view === 3 ?
                     <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm}>
                         <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
                             <div className="squared_image_handler">
@@ -567,6 +552,14 @@ class SsoAppModal extends React.Component {
                             class="modal-button uppercase"
                             content={'CONFIRM'} />
                     </Form>
+                    :
+                    <ChooseTypeAppModal
+                    {...this.props}
+                    website={this.state.website}
+                    appName={this.state.name}
+                    team_id={this.state.selectedTeam}
+                    room_id={this.state.selectedRoom}
+                    close={this.close} />
                 }
             </SimpleModalTemplate>
         )

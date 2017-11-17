@@ -29,8 +29,8 @@ public class ServletEditTeamUserLastName extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            TeamUser teamUser = sm.getTeamUser(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if  (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))

@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.User.User;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.SsoApp;
@@ -25,19 +26,23 @@ public class ServletDeleteApp extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             Integer app_id = sm.getIntParam("app_id", true, false);
-            App app = user.getDashboardManager().getApp(app_id);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("SELECT app FROM App app WHERE app.db_id = :id");
+            hibernateQuery.setParameter("id", app_id);
+            App app = (App) hibernateQuery.getSingleResult();
+            Profile profile = app.getProfile();
+            if (profile != null && !profile.getUser().equals(user))
+                throw new HttpServletException(HttpStatus.Forbidden);
             if (app.getTeamCardReceiver() != null)
                 throw new HttpServletException(HttpStatus.Forbidden);
             if (app.isWebsiteApp()) {
                 if (!((WebsiteApp) app).getLogWithAppSet().isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "You must first delete apps using this app before delete it.");
                 if (app.isSsoApp())
-                    ((SsoApp)app).getSsoGroup().removeSsoApp(app);
+                    ((SsoApp) app).getSsoGroup().removeSsoApp(app);
             }
-            Profile profile = app.getProfile();
             if (profile != null)
-                profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
-            user.getDashboardManager().removeApp(app);
+                profile.removeAppAndUpdatePositions(app, hibernateQuery);
             sm.deleteObject(app);
             sm.setSuccess("App deleted");
         } catch (Exception e) {

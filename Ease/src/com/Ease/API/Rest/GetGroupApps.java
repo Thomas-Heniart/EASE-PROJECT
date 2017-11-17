@@ -1,6 +1,6 @@
 package com.Ease.API.Rest;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -26,7 +26,7 @@ public class GetGroupApps extends HttpServlet {
             Integer profile_id = sm.getIntParam("group_id", true);
             if (profile_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Group id cannot be null");
-            user.getDashboardManager().getProfile(profile_id).getApps().forEach(app -> {
+            user.getProfile(profile_id).getApps().forEach(app -> {
                 if (app.isLinkApp() || app.isClassicApp())
                     apps.add(app.getRestJson());
             });

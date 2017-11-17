@@ -1,7 +1,9 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Context.Variables;
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.Notification;
+import com.Ease.User.NotificationFactory;
+import com.Ease.User.User;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -10,6 +12,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -34,11 +37,11 @@ public class ServletTransferOwnership extends HttpServlet {
             sm.needToBeOwnerOfTeam(team_id);
             User user = sm.getUser();
             String password = sm.getStringParam("password", false, false);
-            if (!user.getKeys().isGoodPassword(password))
+            if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            TeamUser teamUser = sm.getTeamUser(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser new_teamUser_owner = team.getTeamUserWithId(teamUser_id);
             if (!new_teamUser_owner.isVerified() || new_teamUser_owner.isDisabled())
@@ -50,7 +53,10 @@ public class ServletTransferOwnership extends HttpServlet {
                     sm.saveOrUpdate(channel);
                 }
             }
-            new_teamUser_owner.addNotification(teamUser.getUsername() + " changed your role to Owner", "@" + new_teamUser_owner.getDb_id(), "/resources/notifications/user_role_changed.png", sm.getTimestamp(), sm.getDB());
+            Notification notification = NotificationFactory.getInstance().createNotification(new_teamUser_owner.getUser(), teamUser.getUsername() + " changed your role to Owner", "/resources/notifications/user_role_changed.png", new_teamUser_owner);
+            sm.saveOrUpdate(notification);
+            WebSocketManager webSocketManager = sm.getUserWebSocketManager(new_teamUser_owner.getUser().getDb_id());
+            webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
             new_teamUser_owner.setDepartureDate(null);
             sm.saveOrUpdate(new_teamUser_owner);
             sm.saveOrUpdate(teamUser);

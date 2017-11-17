@@ -27,9 +27,9 @@ public class ServletEditTeamUserPhoneNumber extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
-            TeamUser teamUser_connected = sm.getTeamUserForTeamId(team_id);
+            TeamUser teamUser_connected = sm.getTeamUser(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             if (!teamUser_connected.isSuperior(teamUser) && teamUser != teamUser_connected)
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot edit this user.");

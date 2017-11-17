@@ -30,7 +30,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeTeamUserOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
@@ -39,7 +39,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             TeamEnterpriseCard teamEnterpriseCard = (TeamEnterpriseCard) teamCard;
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.equals(teamCardReceiver.getTeamUser()) && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
@@ -51,7 +51,8 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
             ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
             if (classicApp.getAccount() == null) {
-                Account account = AccountFactory.getInstance().createAccountFromJson(account_information, sm.getTeamUserForTeam(team).getDeciphered_teamKey(), teamEnterpriseCard.getPassword_reminder_interval());
+                String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+                Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
                 classicApp.setAccount(account);
             } else
                 classicApp.getAccount().edit(account_information);

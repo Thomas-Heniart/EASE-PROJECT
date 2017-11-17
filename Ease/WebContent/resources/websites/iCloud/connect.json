@@ -1,24 +1,75 @@
 {
-  "name":"iCloud",
-  "lastlogin":"",
-  "home":"https://www.icloud.com/",
+  "name": "iCloud",
+  "lastlogin": "",
+  "home": "https://www.icloud.com/",
   "connect": {
     "todo": [
-      {"action":"fill", "what":"login", "search":"#appleId"},
-      {"action":"fill", "what":"password", "search":"#pwd"},
-      {"action":"click", "search":"#sign-in"}
+      {
+        "action": "enterFrame",
+        "search": ".apple-auth-frame iframe#auth-frame"
+      },
+      {
+        "action": "waitfor",
+        "search": "#appleId"
+      },
+      {
+        "action": "waitfor",
+        "search": "#pwd"
+      },
+      {
+        "action": "waitfor",
+        "search": "#sign-in"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#appleId"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#pwd"
+      },
+      {
+        "action": "trueClick",
+        "search": "#sign-in"
+      },
+      {
+        "action": "exitFrame"
+      }
     ]
   },
   "logout": {
     "todo": [
-      {"action":"clickona", "search":"a[data-zcqa='signOut']"},
-      {"action":"waitload"},
-      {"action":"waitfor", "search":"a.signin"},
-      {"action":"goto", "url":"https://crm.zoho.com"}
+      {
+        "action": "trueClick",
+        "search": ".account-menu.cos-account-menu .account-menu[role='button']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[role='menu'] .sc-container-view div[role='menuitem']:last-child() a"
+      },
+      {
+        "action": "trueClick",
+        "search": "div[role='menu'] .sc-container-view div[role='menuitem']:last-child() a"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "waitfor",
+        "search": ".apple-auth-frame iframe#auth-frame"
+      }
     ]
   },
   "checkAlreadyLogged": [
-    {"action":"waitfor", "search":"a[data-zcqa='signOut'], #signin"},
-    {"search":"a[data-zcqa='signOut']"}
+    {
+      "action": "waitfor",
+      "search": "div[style*='z-index: 90'][style*='display: none']"
+    },
+    {
+      "search": ".apple-auth-frame iframe#auth-frame",
+      "type": "absent"
+    }
   ]
 }

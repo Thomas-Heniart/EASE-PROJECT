@@ -27,12 +27,12 @@ public class ServletSearchTeamCatalogApps extends HttpServlet {
             String search = sm.getParam("q", true);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONArray jsonArray = new JSONArray();
             if (search == null)
                 search = "";
-            for (Website website : catalog.getWebsites()) {
+            for (Website website : catalog.getWebsites(sm.getHibernateQuery())) {
                 if (website.getWebsiteInformationList().isEmpty())
                     continue;
                 if (search.equals("") || (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.getWebsiteAttributes().isIntegrated())) {

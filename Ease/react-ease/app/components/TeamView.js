@@ -10,6 +10,7 @@ var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var TeamAppAddingUi = require('./TeamAppAddingUi');
 var TeamAppsContainer = require('./TeamAppsContainer');
 var TeamSettings = require('./teamModals/TeamSettings');
+import queryString from "query-string";
 import TeamBrowsePeopleModal from "./teamModals/TeamBrowsePeopleModal";
 import TeamBrowseRoomsModal from "./teamModals/TeamBrowseRoomsModal";
 import FreeTrialEndModal from "./teamModals/FreeTrialEndModal";
@@ -29,7 +30,8 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 @connect((store)=>({
   teams: store.teams,
-  common: store.common
+  common: store.common,
+  card: store.teamCard
 }))
 class TeamView extends React.Component {
   constructor(props){
@@ -116,6 +118,11 @@ class TeamView extends React.Component {
         team.rooms[Number(itemId)];
     return item !== undefined ? item : null;
   };
+  chosenApp = () => {
+    const query = queryString.parse(this.props.location.search);
+    if (query.website_id !== undefined && query.website_id.length !== 0)
+      return Number(query.website_id);
+  };
   checkUser = (teamUser) => {
     const team = this.props.teams[this.props.match.params.teamId];
     const me = team.team_users[team.my_team_user_id];
@@ -169,9 +176,14 @@ class TeamView extends React.Component {
                   <TeamsTutorial/>}
                 </OpacityTransition>
                 <div id="col_main">
-                  <TeamAppAddingUi
-                      addAppView={this.state.addAppView}
-                      item={selectedItem}/>
+                  {/*<Route path={`${this.props.match.url}/SingleApp`} render={(props) => <TeamAppAddingUi addAppView='Simple' item={selectedItem} website_id={this.chosenApp()} />} />*/}
+                  {/*<Route path={`${this.props.match.url}/EnterpriseApp`} render={(props) => <TeamAppAddingUi addAppView='Multi' item={selectedItem} website_id={this.chosenApp()} />} />*/}
+                  {/*<Route path={`${this.props.match.url}/LinkApp`} render={(props) => <TeamAppAddingUi addAppView='Link' item={selectedItem} website_id={this.chosenApp()} />} />*/}
+                    {this.props.card.app &&
+                    <TeamAppAddingUi
+                      addAppView={this.props.card.type}
+                      item={selectedItem}
+                      website={this.props.card.app} />}
                   <TeamAppsContainer team={team} item={selectedItem}/>
                 </div>
                 <div id="col_flex">

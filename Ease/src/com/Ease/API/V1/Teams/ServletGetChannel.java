@@ -25,7 +25,7 @@ public class ServletGetChannel extends HttpServlet {
             Integer room_id = sm.getIntParam("channel_id", true, false);
             sm.needToBeTeamUserOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Channel channel = team.getChannelWithId(room_id);
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {

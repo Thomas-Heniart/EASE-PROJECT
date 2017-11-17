@@ -20,7 +20,7 @@ public class GetAllWebsites extends HttpServlet {
             sm.needToBeConnected();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONObject res = new JSONObject();
-            res.put("websites", catalog.getCatalogWebsites());
+            res.put("websites", catalog.getCatalogWebsites(sm.getHibernateQuery()));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

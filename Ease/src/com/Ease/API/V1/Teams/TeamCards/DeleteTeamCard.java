@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -24,7 +23,7 @@ public class DeleteTeamCard extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
@@ -33,11 +32,8 @@ public class DeleteTeamCard extends HttpServlet {
             team.removeTeamCard(teamCard);
             for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                 Profile profile = teamCardReceiver.getApp().getProfile();
-                if (profile != null) {
+                if (profile != null)
                     profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
-                    if (teamCardReceiver.getTeamUser().getDashboard_user() != null)
-                        teamCardReceiver.getTeamUser().getDashboard_user().getDashboardManager().removeApp(teamCardReceiver.getApp());
-                }
             }
             sm.deleteObject(teamCard);
             sm.setSuccess("Team card deleted");

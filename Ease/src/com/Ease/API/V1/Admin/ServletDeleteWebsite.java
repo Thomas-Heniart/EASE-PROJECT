@@ -2,7 +2,7 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.DataBaseConnection;
@@ -30,11 +30,11 @@ public class ServletDeleteWebsite extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Map<String, User> userMap = (Map<String, User>) sm.getContextAttr("users");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Website website = catalog.getWebsiteWithId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();
             website.setTeams(ConcurrentHashMap.newKeySet());
-            for (Team team : teamManager.getTeams()) {
+            for (Team team : teamManager.getTeams(sm.getHibernateQuery())) {
                 /* for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
                     App app = (App) shareableApp;
                     if (app.isLinkApp())
@@ -106,7 +106,6 @@ public class ServletDeleteWebsite extends HttpServlet {
                 }
             }
             db.commitTransaction(transaction);
-            catalog.removeWebsite(website_id);
             sm.deleteObject(website);
             sm.setSuccess("Done");
         } catch (Exception e) {

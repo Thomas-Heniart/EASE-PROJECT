@@ -20,11 +20,11 @@ abstract public class TeamCardReceiver {
     @JoinColumn(name = "app_id")
     private App app;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "teamCard_id")
     private TeamCard teamCard;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "teamUser_id")
     private TeamUser teamUser;
 

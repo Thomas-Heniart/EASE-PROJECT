@@ -4,8 +4,9 @@ import {handleSemanticInput,
   transformCredentialsListIntoObject,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
-import {selectUserFromListById} from "../../utils/helperFunctions";
+import {selectUserFromListById, newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
+import {showChooseAppCredentialsModal} from "../../actions/modalActions";
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
@@ -14,6 +15,7 @@ import {
     renderSimpleAppAddUserLabel
 } from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {reduxActionBinder} from "../../actions/index";
 
 const AppResultRenderer = ({name, logo, request, profile_name, login}) => {
   if (request)
@@ -95,9 +97,11 @@ const TeamAppCredentialInput = ({item, onChange}) => {
 @connect(store => ({
   team_id: store.team.id,
   myId: store.team.myTeamUserId,
-  users: store.users.users,
-  plan_id: store.team.plan_id
-}))
+  teams: store.teams,
+  plan_id: store.team.plan_id,
+  card: store.teamCard,
+  modal: store.modals
+}), reduxActionBinder)
 class SimpleTeamAppAdder extends Component {
   constructor(props){
     super(props);
@@ -111,6 +115,9 @@ class SimpleTeamAppAdder extends Component {
       users: [],
       selected_users: []
     };
+  };
+  componentWillMount() {
+    this.setState({ app: this.props.card.app });
   };
   handleInput = handleSemanticInput.bind(this);
   toggleCanSeeInformation = (id) => {
@@ -161,63 +168,80 @@ class SimpleTeamAppAdder extends Component {
       this.setState({app: app, credentials: credentials});
     });
   };
+  chooseAllUsers = () => {
+    let selected = [];
+    this.state.users.map(user => {
+      if (selected.length) {
+        selected.splice(selected.length + 1, 0, user.id);
+      }
+      else {
+        selected.splice(0, 0, user.id);
+      }
+    });
+    this.setState({ selected_users: selected });
+  };
   componentDidMount(){
-    let users = this.props.item.userIds.map(item => {
-      const user = selectUserFromListById(this.props.users, item);
+    let users = this.props.item.team_user_ids.map(item => {
+      const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
       return {
         key: item,
         text: setUserDropdownText(user),
         value: item,
         id: item,
+        role: user.role,
         username: user.username,
         can_see_information: false,
         toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
       }
     });
-    const room_manager_name = selectUserFromListById(this.props.users, this.props.item.room_manager_id).username;
+    const room_manager_name = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, this.props.item.room_manager_id).username;
     this.setState({users: users, room_manager_name: room_manager_name});
   }
   send = (e) => {
     e.preventDefault();
-    this.setState({loading: true});
-    const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
+    // this.setState({loading: true});
+    // const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
     const receivers = this.state.users
-        .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
-        .map(item => ({
-          team_user_id: item.id,
-          can_see_information: item.can_see_information
-        }));
-    this.props.dispatch(teamCreateSingleApp({
-      team_id: this.props.team_id,
-      channel_id: this.props.item.id,
-      website_id: this.state.app.id,
+        .filter(item => (this.state.selected_users.indexOf(item.id) !== -1));
+        // .map(item => ({
+        //   [item.id]: {allowed_to_see_password: item.can_see_information}
+        // }));
+    // const newReceivers = receivers.reduce(function(result, item) {
+    //     result = Object.assign(result, item);
+    //     return result;
+    //   }, {});
+    this.props.dispatch(showChooseAppCredentialsModal({
+      active: true,
+      receivers: receivers,
       description: this.state.description,
-      password_change_interval: this.state.password_change_interval,
-      account_information: transformCredentialsListIntoObject(this.state.credentials),
-      receivers: receivers
-    })).then(response => {
-      if (meReceiver)
-        this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
-      this.setState({loading: false});
-      this.close();
-    });
+      password_change_interval: this.state.password_change_interval }));
+      /*this.props.dispatch(teamCreateSingleApp({
+        team_id: this.props.card.team_id,
+        channel_id: this.props.item.id,
+        website_id: this.state.app.id,
+        description: this.state.description,
+        password_change_interval: this.state.password_change_interval,
+        // account_information: transformCredentialsListIntoObject(this.state.credentials),
+        account_information: {login: 'salut', password: 'salut'},
+        receivers: newReceivers
+      })).then(response => {
+        if (meReceiver)
+          this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
+        this.setState({loading: false});
+        this.close();
+      });*/
   };
   close = () => {
-    this.props.dispatch(closeAppAddUI());
+    this.props.resetTeamCard();
+    // this.props.dispatch(closeAppAddUI());
   };
   render(){
     const app = this.state.app;
-    const credentialsInputs = this.state.credentials.map(item => {
-      return <TeamAppCredentialInput key={item.priority} onChange={this.handleCredentialInput} item={item}/>
-    });
-
+    // const credentialsInputs = this.state.credentials.map(item => {
+    //   return <TeamAppCredentialInput key={item.priority} onChange={this.handleCredentialInput} item={item}/>
+    // });
     return (
         <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
-          {this.state.app === null &&
-          <div class="display-flex align_items_center">
-            <SimpleTeamAppSearch team_id={this.props.team_id} select_app_func={this.setApp}/>
-            <Button type="button" icon="delete" style={{margin: '0 0 0 .6rem'}} size="mini" class="close" onClick={this.close} color="grey"/>
-          </div>}
           <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
             {this.state.app !== null &&
             <div>
@@ -234,7 +258,6 @@ class SimpleTeamAppAdder extends Component {
                   </div>
                   <div class="main_column">
                     <div class="credentials">
-                      {credentialsInputs}
                       <div class="display-inline-flex">
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>
                         {this.state.password_change_interval !== 0 &&
@@ -270,7 +293,14 @@ class SimpleTeamAppAdder extends Component {
                   </div>
                 </div>
               </Segment>
-              <Button icon="send" content="Send" loading={this.state.loading} disabled={this.state.loading} floated="right" class="mrgn0" positive size="mini"/>
+              <Button
+                  icon="arrow right"
+                  content="Next"
+                  loading={this.state.loading}
+                  disabled={this.state.loading}
+                  floated="right"
+                  class="mrgn0 next_button"
+                  positive size="mini"/>
             </div>}
           </Transition>
         </Container>

@@ -21,6 +21,9 @@ export const modals = createReducer({
   },
   lockedTeamApp: {
     active: false
+  },
+  chooseAppCredentials: {
+    active: false
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -57,6 +60,12 @@ export const modals = createReducer({
     return {
         ...state,
       logWithAppSettings: action.payload
+    };
+  },
+  ['SHOW_CHOOSE_APP_CREDENTIALS_MODAL'](state, action){
+    return {
+      ...state,
+      chooseAppCredentials: action.payload
     };
   }
 });

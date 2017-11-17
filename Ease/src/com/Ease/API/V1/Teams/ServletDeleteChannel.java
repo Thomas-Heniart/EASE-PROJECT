@@ -31,8 +31,8 @@ public class ServletDeleteChannel extends HttpServlet {
             sm.needToBeAdminOfTeam(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            TeamUser teamUser = sm.getTeamUser(team);
             Channel channel = team.getChannelWithId(channel_id);
             if (!teamUser.isTeamOwner() && channel.getRoom_manager() != teamUser)
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");

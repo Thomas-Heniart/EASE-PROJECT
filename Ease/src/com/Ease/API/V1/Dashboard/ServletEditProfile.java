@@ -20,7 +20,7 @@ public class ServletEditProfile extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = sm.getUser().getDashboardManager().getProfile(profile_id);
+            Profile profile = sm.getUser().getProfile(profile_id);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");

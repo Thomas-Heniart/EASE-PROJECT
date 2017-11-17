@@ -35,10 +35,10 @@ public class ServletDeleteTeamUser extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             Integer team_user_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_delete = team.getTeamUserWithId(team_user_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
             List<Channel> channelList = new LinkedList<>();
@@ -101,8 +101,8 @@ public class ServletDeleteTeamUser extends HttpServlet {
             sm.deleteObject(teamUser_to_delete);
             WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, team_user_id, teamUser_to_delete.getOrigin());
             sm.addWebSocketMessage(webSocketMessage);
-            if (teamUser_to_delete.getDashboard_user() != null)
-                teamUser_to_delete.getDashboard_user().getWebSocketManager().sendObject(webSocketMessage);
+            /* if (teamUser_to_delete.getDashboard_user() != null)
+                teamUser_to_delete.getDashboard_user().getWebSocketManager().sendObject(webSocketMessage); */
             sm.setSuccess("TeamUser deleted");
         } catch (Exception e) {
             sm.setError(e);

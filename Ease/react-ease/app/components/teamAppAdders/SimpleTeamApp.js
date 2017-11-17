@@ -53,7 +53,7 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
 
 const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = findMeInReceivers(app.receivers, me.id);
-  const asked = app.sharing_requests.indexOf(me.id) !== -1;
+  const asked = app.requests.indexOf(me.id) !== -1;
   return (
       <div class="team_app_actions_holder">
         {meReceiver === null &&
@@ -172,7 +172,7 @@ class SimpleTeamApp extends Component {
       loading: false,
       edit: false,
       credentials: [],
-      password_change_interval: 0,
+      password_reminder_interval: 0,
       description: '',
       users: [],
       selected_users: []
@@ -202,7 +202,7 @@ class SimpleTeamApp extends Component {
     this.props.dispatch(teamEditSingleApp({
       app_id: this.props.app.id,
       description: this.state.description,
-      password_change_interval: this.state.password_change_interval,
+      password_reminder_interval: this.state.password_reminder_interval,
       account_information: transformCredentialsListIntoObject(this.state.credentials)
     })).then(response => {
       const app = response;
@@ -241,9 +241,9 @@ class SimpleTeamApp extends Component {
     });
   };
   setupUsers = () => {
-    const channel = selectItemFromListById(this.props.channels, this.props.app.origin.id);
+    const channel = selectItemFromListById(this.props.channels, this.props.app.id);
     let selected_users = [];
-    const users = channel.userIds.map(item => {
+    const users = channel.team_user_ids.map(item => {
       const user = selectItemFromListById(this.props.users, item);
       return {
         key: item,
@@ -278,7 +278,7 @@ class SimpleTeamApp extends Component {
       const app = this.props.app;
       let credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
       this.setupUsers();
-      this.setState({credentials:credentials, password_change_interval: app.password_change_interval, description: app.description});
+      this.setState({credentials:credentials, password_reminder_interval: app.password_reminder_interval, description: app.description});
     }
     this.setState({edit: state, loading: false});
   };
@@ -309,7 +309,7 @@ class SimpleTeamApp extends Component {
   render(){
     const app = this.props.app;
     const me = this.props.me;
-    const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.origin.id).room_manager_id);
+    const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
@@ -332,7 +332,7 @@ class SimpleTeamApp extends Component {
               {website.name}
               {meReceiver !== null && meReceiver.accepted &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
-              {app.sharing_requests.length > 0 && isAdmin(me.role) &&
+              {app.requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
             </Header>
             {meReceiver !== null && !meReceiver.accepted &&
@@ -356,9 +356,9 @@ class SimpleTeamApp extends Component {
                   <SingleAppCopyPasswordButton team_id={this.props.team_id} app_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
-                        <PasswordChangeHolder value={app.password_change_interval}/> :
-                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
-                    {((!this.state.edit && app.password_change_interval !== 0) || (this.state.edit && this.state.password_change_interval !== 0)) &&
+                        <PasswordChangeHolder value={app.password_reminder_interval}/> :
+                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput}/>}
+                    {((!this.state.edit && app.password_reminder_interval !== 0) || (this.state.edit && this.state.password_reminder_interval !== 0)) &&
                     <PasswordChangeManagerLabel username={room_manager.username}/>}
                   </div>
                 </div>

@@ -32,7 +32,7 @@ public class ServletAskWebsite extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeTeamUserOfTeam(team_id);
             if (url.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
@@ -71,7 +71,6 @@ public class ServletAskWebsite extends HttpServlet {
             WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt(login, serverPublicKey.getPublicKey()), RSA.Encrypt(password, serverPublicKey.getPublicKey()), website, serverPublicKey);
             website.addWebsiteCredentials(websiteCredentials);
             sm.saveOrUpdate(websiteCredentials);
-            catalog.addWebsite(website);
             JSONObject res = website.getCatalogJson();
             res.put("id", website.getDb_id());
             sm.setSuccess(res);

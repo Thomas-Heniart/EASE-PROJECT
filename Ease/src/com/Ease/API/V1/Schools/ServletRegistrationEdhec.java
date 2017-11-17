@@ -2,14 +2,17 @@ package com.Ease.API.V1.Schools;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.AppInformation;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
-import com.Ease.Utils.*;
+import com.Ease.User.User;
+import com.Ease.User.UserFactory;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
 import org.json.simple.JSONObject;
@@ -21,7 +24,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/api/v1/common/RegistrationEdhec")
 public class ServletRegistrationEdhec extends HttpServlet {
@@ -29,8 +31,6 @@ public class ServletRegistrationEdhec extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             User user = sm.getUser();
-            if (user != null)
-                user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
             String username = sm.getStringParam("username", true, true);
             String email = sm.getStringParam("email", true, true);
             String password = sm.getStringParam("password", false, true);
@@ -60,64 +60,59 @@ public class ServletRegistrationEdhec extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             if (!errors.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, errors);
-            DataBaseConnection db = sm.getDB();
-            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
+            User newUser = UserFactory.getInstance().createUser(email, username, password);
+            sm.saveOrUpdate(newUser);
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
                 mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
-                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getFirstName());
+                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getUsername());
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
-            sm.setUser(newUser);
-            ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
-            ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-            ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
+            sm.setUser(newUser.getDb_id());
 
-            Profile edhecProfile = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, new ProfileInformation("EDHEC"));
+            Profile edhecProfile = new Profile(newUser, 1, 0, new ProfileInformation("EDHEC"));
             sm.saveOrUpdate(edhecProfile);
             /* Edhec apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website aurion = catalog.getWebsiteWithName("Aurion");
+            Website aurion = catalog.getWebsiteWithName("Aurion", hibernateQuery);
             ClassicApp aurionApp = new ClassicApp(new AppInformation(aurion.getName()), aurion);
             aurionApp.setProfile(edhecProfile);
             aurionApp.setPosition(0);
             sm.saveOrUpdate(aurionApp);
             edhecProfile.addApp(aurionApp);
-            Website blackboard = catalog.getWebsiteWithName("Blackboard");
+            Website blackboard = catalog.getWebsiteWithName("Blackboard", hibernateQuery);
             ClassicApp blackboardApp = new ClassicApp(new AppInformation(blackboard.getName()), blackboard);
             blackboardApp.setProfile(edhecProfile);
             blackboardApp.setPosition(1);
             sm.saveOrUpdate(blackboardApp);
             edhecProfile.addApp(blackboardApp);
-            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Edhec");
+            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Edhec", hibernateQuery);
             ClassicApp jobTeaserApp = new ClassicApp(new AppInformation("JobTeaser"), jobTeaser);
             jobTeaserApp.setProfile(edhecProfile);
             jobTeaserApp.setPosition(2);
             sm.saveOrUpdate(jobTeaserApp);
             edhecProfile.addApp(jobTeaserApp);
-            Website officeMail = catalog.getWebsiteWithName("Office365 Mails");
+            Website officeMail = catalog.getWebsiteWithName("Office365 Mails", hibernateQuery);
             ClassicApp officeMailApp = new ClassicApp(new AppInformation(officeMail.getName()), officeMail);
             officeMailApp.setPosition(3);
             officeMailApp.setProfile(edhecProfile);
             sm.saveOrUpdate(officeMailApp);
             edhecProfile.addApp(officeMailApp);
-            Website print = catalog.getWebsiteWithName("Everyon Print");
+            Website print = catalog.getWebsiteWithName("Everyon Print", hibernateQuery);
             ClassicApp printApp = new ClassicApp(new AppInformation("Everyone Print"), print);
             printApp.setProfile(edhecProfile);
             printApp.setPosition(4);
             sm.saveOrUpdate(printApp);
             edhecProfile.addApp(printApp);
-            Website workplace = catalog.getWebsiteWithName("Workplace");
+            Website workplace = catalog.getWebsiteWithName("Workplace", hibernateQuery);
             ClassicApp workplaceApp = new ClassicApp(new AppInformation(workplace.getName()), workplace);
             workplaceApp.setProfile(edhecProfile);
             workplaceApp.setPosition(5);
             sm.saveOrUpdate(workplaceApp);
             edhecProfile.addApp(workplaceApp);
-            user.getDashboardManager().addProfile(edhecProfile);
+            //user.getDashboardManager().addProfile(edhecProfile);
             sm.setSuccess(newUser.getJson());
-        } catch (GeneralException e) {
-            sm.setError(new HttpServletException(HttpStatus.BadRequest, e.getMsg()));
         } catch (Exception e) {
             sm.setError(e);
         }

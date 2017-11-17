@@ -31,6 +31,7 @@ import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
 import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
 import LockedTeamAppModal from "../modals/LockedTeamAppModal";
 import LogWithAppSettings from "../modals/LogWithAppSettings";
+import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -132,6 +133,8 @@ class ModalsContainer extends Component{
           <LockedTeamAppModal/>}
           {this.props.modals.logWithAppSettings.active &&
           <LogWithAppSettings/>}
+          {this.props.modals.chooseAppCredentials.active &&
+          <ChooseAppCredentialsModal/>}
         </div>
     )
   }

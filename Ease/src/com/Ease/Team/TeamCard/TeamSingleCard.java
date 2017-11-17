@@ -63,6 +63,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
         return true;
     }
 
+    @Override
     public void decipher(String symmetric_key) throws HttpServletException {
         if (this.getAccount() == null || this.getAccount().getDeciphered_private_key() != null)
             return;

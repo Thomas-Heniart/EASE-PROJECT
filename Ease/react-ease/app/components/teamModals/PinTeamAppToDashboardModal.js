@@ -3,6 +3,7 @@ var classnames = require('classnames');
 var api = require('../../utils/api');
 import {dashboard} from "../../utils/post_api";
 import {showPinTeamAppToDashboardModal} from "../../actions/teamModalActions"
+import {selectItemFromListById} from "../../utils/helperFunctions";
 import {teamAppPinToDashboard, teamAcceptSharedApp, teamPinLinkApp} from "../../actions/appsActions"
 import {findMeInReceivers} from "../../utils/helperFunctions"
 import {connect} from "react-redux"
@@ -10,8 +11,9 @@ import {connect} from "react-redux"
 @connect((store)=>{
   return {
     modal: store.teamModals.pinTeamAppToDashboardModal,
-    me: store.users.me,
-    team_id: store.team.id
+    teams: store.teams,
+    team_id: store.teamModals.pinTeamAppToDashboardModal.app.team_id,
+    profiles: store.dashboard.profiles
   };
 })
 class PinTeamAppToDashboardModal extends React.Component {
@@ -24,7 +26,7 @@ class PinTeamAppToDashboardModal extends React.Component {
       profileName: '',
       selectedProfile: -2
     };
-    const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
+    const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.teams[this.props.team_id].my_team_user_id);
     if (meReceiver !== null && meReceiver.profile_id > -1)
       this.state.selectedProfile = meReceiver.profile_id;
     this.handleInput = this.handleInput.bind(this);
@@ -42,7 +44,7 @@ class PinTeamAppToDashboardModal extends React.Component {
     });
   };
   confirmModal(){
-    const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.me.id);
+    const meReceiver = findMeInReceivers(this.props.modal.app.receivers, this.props.teams[this.props.team_id].my_team_user_id);
     this.props.dispatch(teamAcceptSharedApp({
         team_id: this.props.team_id,
         app_id: this.props.modal.app.id,
@@ -82,30 +84,21 @@ class PinTeamAppToDashboardModal extends React.Component {
     this.setState({[e.target.name]: e.target.value});
   }
   componentWillMount(){
-    api.dashboard.fetchProfiles().then(response => {
-      this.setState({profiles: response});
-    });
+    this.setState({profiles: this.props.profiles});
   }
   render(){
     const app = this.props.modal.app;
-    const profiles = this.state.profiles.map(function (profile) {
-      return (
-          <span key={profile.id}
-                class={classnames('display-flex', 'align_items_center', 'profile', this.state.selectedProfile === profile.id ? 'active':null)}
-                onClick={this.selectProfile.bind(null, profile.id)}>
-            <strong class="mrgnRight5 name">{profile.name}</strong>
-            <em class="overflow-ellipsis">
-              {
-                profile.apps.map(function(app, idx){
-                  var ret = app.name;
-                  ret += (idx === profile.apps.length - 1) ? '' : ', ';
-                  return (ret)
-                }, this)
-              }
-            </em>
-          </span>
-      )
-    }, this);
+    const profiles = Object.entries(this.state.profiles).map((profile_entries) => (
+        profile_entries.map(profile => (
+            profile.id &&
+                <span key={profile.id}
+                      class={classnames('display-flex', 'align_items_center', 'profile', this.state.selectedProfile === profile.id ? 'active' : null)}
+                      onClick={this.selectProfile.bind(null, profile.id)}>
+                    <strong class="mrgnRight5 name">{profile.name}</strong>
+                    &nbsp;&nbsp;
+                </span>
+        )
+    )));
     return (
         <div class="popupHandler myshow">
           <div class="popover_mask" onClick={e => {this.props.dispatch(showPinTeamAppToDashboardModal(false))}}></div>

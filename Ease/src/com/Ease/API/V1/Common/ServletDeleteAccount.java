@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -27,16 +28,18 @@ public class ServletDeleteAccount extends HttpServlet {
             String key = (String) sm.getContextAttr("privateKey");
             password = RSA.Decrypt(password, key);
             User user = sm.getUser();
-            if (!user.getKeys().isGoodPassword(password))
+            if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password does not match.");
             if (!user.getTeamUsers().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "It is not possible to delete your account as long as you are part of a team. Please delete your team (or ask your admin to be deleted of your team) before deleting your personal Ease.space account.");
-            user.deleteFromDb(sm.getDB());
-            user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
-            Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-            users.remove(user.getEmail());
-            sm.setSuccess("Account deleted");
+            ((Map<Integer, Map<String, Object>>) sm.getContextAttr("userIdMap")).remove(user.getDb_id());
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
+            hibernateQuery.setParameter("id", user.getDb_id());
+            hibernateQuery.executeUpdate();
+            sm.deleteObject(user);
             sm.getSession().invalidate();
+            sm.setSuccess("Account deleted");
         } catch (Exception e) {
             sm.setError(e);
         }

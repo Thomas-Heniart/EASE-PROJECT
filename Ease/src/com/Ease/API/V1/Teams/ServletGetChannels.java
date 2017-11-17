@@ -25,8 +25,8 @@ public class ServletGetChannels extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            sm.getUser().getTeamUserForTeam(team);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            sm.getUser().getTeamUser(team);
             JSONArray jsonArray = new JSONArray();
             for (Channel channel : team.getChannels().values())
                 jsonArray.add(channel.getSimpleJson());

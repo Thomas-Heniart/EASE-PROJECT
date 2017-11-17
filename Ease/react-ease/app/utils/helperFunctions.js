@@ -15,11 +15,18 @@ export function selectItemFromListById(list, id){
 }
 
 export function selectUserFromListById(user_list, user_id){
-  for (var i = 0; i < user_list.length; i++){
-    if (user_list[i].id === user_id)
-      return user_list[i];
+    for (var i = 0; i < user_list.length; i++){
+      if (user_list[i].id === user_id) {
+        return user_list[i];
+    }
   }
   return null;
+}
+
+export function newSelectUserFromListById(user_list, user_id){
+    if (user_list[user_id])
+      return user_list[user_id];
+    return null;
 }
 
 export function selectAppFromListById(app_list, app_id){

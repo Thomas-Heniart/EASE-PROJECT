@@ -25,7 +25,7 @@ class TeamAppsContainer extends React.Component{
         const {item, team} = nextProps;
         this.props.dispatch(fetchTeamAppList({
           team_id: team.id,
-          ids: item.app_ids
+          ids: item.team_card_ids
         })).then(response => {
           this.setState({loading: false});
         }).catch(err => {
@@ -38,7 +38,7 @@ class TeamAppsContainer extends React.Component{
     const {item, team} = this.props;
     this.props.dispatch(fetchTeamAppList({
       team_id: team.id,
-      ids: item.app_ids
+      ids: item.team_card_ids
     })).then(response => {
       this.setState({loading: false});
     }).catch(err => {
@@ -74,13 +74,13 @@ class TeamAppsContainer extends React.Component{
     const me = team.team_users[team.my_team_user_id];
     const plan_id = team.plan_id;
 
-    return (
+      return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
             {!this.state.loading ?
                 item.team_card_ids.map(id => {
-                  const item = this.props.team_apps[id];
-                  if (item.type === 'simple')
+                    const item = this.props.team_apps[id];
+                    if (item.type === 'teamSingleCard')
                     return (
                         <SimpleTeamApp
                             app={item}

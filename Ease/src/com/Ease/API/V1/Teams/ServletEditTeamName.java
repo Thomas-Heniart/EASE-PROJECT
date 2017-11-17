@@ -25,13 +25,10 @@ public class ServletEditTeamName extends HttpServlet {
             Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true, false));
             sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             String name = (String) sm.getParam("name", true, true);
             if (name == null || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
-            Team otherTeam = teamManager.getTeamWithName(name);
-            if (otherTeam != null && otherTeam != team)
-                throw new HttpServletException(HttpStatus.BadRequest, "Team name already taken.");
             team.editName(name);
             sm.saveOrUpdate(team);
             sm.setSuccess(team.getJson());

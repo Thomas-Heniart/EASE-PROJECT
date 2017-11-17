@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -21,8 +21,8 @@ public class ServletMoveProfile extends HttpServlet {
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Integer column_index = sm.getIntParam("column_index", true, false);
             Integer position = sm.getIntParam("position", true, false);
-            user.getDashboardManager().moveProfile(profile_id, column_index, position, sm.getHibernateQuery());
-            sm.setSuccess(user.getDashboardManager().getProfile(profile_id).getJson());
+            user.moveProfile(profile_id, column_index, position, sm.getHibernateQuery());
+            sm.setSuccess(user.getProfile(profile_id).getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -22,10 +22,10 @@ public class ServletDeleteProfile extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = user.getDashboardManager().getProfile(profile_id);
-            if (!profile.getAppMap().isEmpty())
+            Profile profile = user.getProfile(profile_id);
+            if (!profile.getAppSet().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "You can only delete a profile without apps");
-            user.getDashboardManager().removeProfileAndUpdatePositions(profile, sm.getHibernateQuery());
+            user.removeProfileAndUpdatePositions(profile, sm.getHibernateQuery());
             sm.setSuccess("Profile deleted");
         } catch (Exception e) {
             sm.setError(e);

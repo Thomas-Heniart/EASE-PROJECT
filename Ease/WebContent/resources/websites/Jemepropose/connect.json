@@ -1,0 +1,65 @@
+{
+  "name": "Jemepropose",
+  "lastlogin": "",
+  "home": "https://www.jemepropose.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#connexion"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password"
+      },
+      {
+        "action": "trueClick",
+        "search": "#valider"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#connexion"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "trueClick",
+        "search": "#facebook_button"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#deconnexion"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#connexion, #deconnexion"
+    },
+    {
+      "search": "#deconnexion"
+    }
+  ]
+}

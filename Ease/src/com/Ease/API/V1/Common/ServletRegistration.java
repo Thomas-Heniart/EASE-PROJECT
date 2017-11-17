@@ -2,11 +2,14 @@ package com.Ease.API.V1.Common;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.*;
-import com.Ease.Utils.*;
+import com.Ease.User.User;
+import com.Ease.User.UserFactory;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
 
@@ -26,7 +29,7 @@ public class ServletRegistration extends HttpServlet {
         try {
             User user = sm.getUser();
             if (user != null)
-                user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
+                sm.setUser(null);
             String username = sm.getStringParam("username", true, false);
             String email = sm.getStringParam("email", true, false);
             String password = sm.getStringParam("password", false, false);
@@ -63,109 +66,50 @@ public class ServletRegistration extends HttpServlet {
                 if (!db_digits.equals(digits))
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             }
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
-            if (send_news) {
-                MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
-                mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
-                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getFirstName());
-                mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
-                mailJetBuilder.post();
-            }
-            sm.setUser(newUser);
-            ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
-            ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-            ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
-            //Profile school_profile = null;
+            User newUser = UserFactory.getInstance().createUser(email, username, password);
+
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            /* if (email.endsWith("@iscparis.com")) {
-                school_profile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);
-                Website myIsc = catalog.getWebsiteWithName("My ISC");
-                school_profile.addEmptyApp(myIsc.getName(), myIsc, db);
-                Website moodle = catalog.getWebsiteWithName("Moodle");
-                school_profile.addEmptyApp(moodle.getName(), moodle, db);
-                Website jobTeaser = catalog.getWebsiteWithName("JobTeaser ISC");
-                school_profile.addEmptyApp("JobTeaser", jobTeaser, db);
-                Website iagora = catalog.getWebsiteWithName("Iagora");
-                school_profile.addEmptyApp(iagora.getName(), iagora, db);
-                Website talentoday = catalog.getWebsiteWithName("Talentoday");
-                school_profile.addEmptyApp(talentoday.getName(), talentoday, db);
-                Website scholarvox = catalog.getWebsiteWithName("Scholarvox");
-                school_profile.addEmptyApp(scholarvox.getName(), scholarvox, db);
-                Website housing_center = catalog.getWebsiteWithName("Housing Center");
-                school_profile.addEmptyApp(housing_center.getName(), housing_center, db);
-                Website centralTest = catalog.getWebsiteWithName("CentralTest");
-                school_profile.addEmptyApp(centralTest.getName(), centralTest, db);
-            } else if (email.endsWith("@ieseg.fr")) {
-                school_profile = newUser.getDashboardManager().addProfile("IESEG", "#FFC300", db);
-                Website ieseg_online = catalog.getWebsiteWithName("IESEG Online");
-                school_profile.addEmptyApp(ieseg_online.getName(), ieseg_online, db);
-                Website ieseg_network = catalog.getWebsiteWithName("Ieseg Network");
-                school_profile.addEmptyApp(ieseg_network.getName(), ieseg_network, db);
-                Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Ieseg");
-                school_profile.addEmptyApp("JobTeaser", jobTeaser, db);
-                Website unify = catalog.getWebsiteWithName("Unify Iéseg");
-                school_profile.addEmptyApp(unify.getName(), unify, db);
-                Website office_mail = catalog.getWebsiteWithName("Office365 Mails");
-                school_profile.addEmptyApp(office_mail.getName(), office_mail, db);
-            } else if (email.endsWith("@edhec.com")) {
-                school_profile = newUser.getDashboardManager().addProfile("EDHEC", "#A51B35", db);
-                Website aurion = catalog.getWebsiteWithName("Aurion");
-                school_profile.addEmptyApp(aurion.getName(), aurion, db);
-                Website blackboard = catalog.getWebsiteWithName("Blackboard");
-                school_profile.addEmptyApp(blackboard.getName(), blackboard, db);
-                Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Edhec");
-                school_profile.addEmptyApp("JobTeaser", jobTeaser, db);
-                Website officeMail = catalog.getWebsiteWithName("Office365 Mails");
-                school_profile.addEmptyApp(officeMail.getName(), officeMail, db);
-                Website print = catalog.getWebsiteWithName("Everyon Print");
-                school_profile.addEmptyApp("Everyone Print", print, db);
-                Website workplace = catalog.getWebsiteWithName("Workplace");
-                school_profile.addEmptyApp(workplace.getName(), workplace, db);
-            } else { */
-            ProfileInformation perso_information = new ProfileInformation("Me");
-            ProfileInformation pro_information = new ProfileInformation("Pro");
-            Profile profile_perso = new Profile(Integer.valueOf(newUser.getDBid()), 0, 0, perso_information);
-            Profile profile_pro = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, pro_information);
-            sm.saveOrUpdate(profile_perso);
-            sm.saveOrUpdate(profile_pro);
-            newUser.initializeDashboardManager(hibernateQuery);
-            newUser.getDashboardManager().addProfile(profile_perso);
-            newUser.getDashboardManager().addProfile(profile_pro);
-            Website facebook = catalog.getWebsiteWithName("Facebook");
-            Website gmail = catalog.getWebsiteWithName("Gmail");
-            Website sncf = catalog.getWebsiteWithName("Voyages SNCF");
+            Profile profile_perso = new Profile(user, 0, 0, new ProfileInformation("Me"));
+            Profile profile_pro = new Profile(user, 1, 0, new ProfileInformation("Pro"));
+            user.addProfile(profile_perso);
+            user.addProfile(profile_pro);
+            Website facebook = catalog.getWebsiteWithName("Facebook", hibernateQuery);
+            Website gmail = catalog.getWebsiteWithName("Gmail", hibernateQuery);
+            Website sncf = catalog.getWebsiteWithName("Voyages SNCF", hibernateQuery);
             ClassicApp facebookApp = new ClassicApp(new AppInformation(facebook.getName()), facebook);
             facebookApp.setProfile(profile_perso);
             facebookApp.setPosition(0);
-            sm.saveOrUpdate(facebookApp);
             profile_perso.addApp(facebookApp);
             ClassicApp gmailApp = new ClassicApp(new AppInformation(gmail.getName()), gmail);
             gmailApp.setProfile(profile_perso);
             gmailApp.setPosition(1);
-            sm.saveOrUpdate(gmailApp);
             profile_perso.addApp(gmailApp);
             ClassicApp sncfApp = new ClassicApp(new AppInformation(sncf.getName()), sncf);
             sncfApp.setProfile(profile_perso);
             sncfApp.setPosition(2);
-            sm.saveOrUpdate(sncfApp);
             profile_perso.addApp(sncfApp);
             LinkApp lemonde = new LinkApp(new AppInformation("Le Monde"), new LinkAppInformation("http://www.lemonde.fr/", "https://logo.clearbit.com/lemonde.fr"));
             lemonde.setProfile(profile_perso);
             lemonde.setPosition(3);
-            sm.saveOrUpdate(lemonde);
             profile_perso.addApp(lemonde);
-            newUser.getDashboardManager().addApp(facebookApp);
-            newUser.getDashboardManager().addApp(gmailApp);
-            newUser.getDashboardManager().addApp(sncfApp);
-            newUser.getDashboardManager().addApp(lemonde);
-            //}
-            db.commitTransaction(transaction);
+            sm.saveOrUpdate(newUser);
+            sm.setUser(newUser.getDb_id());
+            String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
+            String privateKey = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            Map<String, Object> userProperties = sm.getUserProperties(user.getDb_id());
+            userProperties.put("keyUser", keyUser);
+            userProperties.put("privateKey", privateKey);
+            if (send_news) {
+                MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
+                mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
+                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getUsername());
+                mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
+                mailJetBuilder.post();
+            }
+            /* ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
+            ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
+            ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser); */
             sm.setSuccess(newUser.getJson());
-
-        } catch (GeneralException e) {
-            sm.setError(new HttpServletException(HttpStatus.BadRequest, e.getMsg()));
         } catch (Exception e) {
             sm.setError(e);
         }

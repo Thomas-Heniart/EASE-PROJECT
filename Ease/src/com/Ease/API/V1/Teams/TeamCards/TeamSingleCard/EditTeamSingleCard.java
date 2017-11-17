@@ -28,7 +28,7 @@ public class EditTeamSingleCard extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
@@ -45,12 +45,13 @@ public class EditTeamSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             teamSingleCard.setPassword_reminder_interval(password_reminder_interval);
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             if (teamSingleCard.getAccount() == null) {
-                Account account = AccountFactory.getInstance().createAccountFromJson(account_information, sm.getTeamUserForTeam(team).getDeciphered_teamKey(), teamSingleCard.getPassword_reminder_interval());
+                Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval());
                 teamSingleCard.setAccount(account);
                 for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {
                     ClassicApp classicApp = (ClassicApp) teamCardReceiver.getApp();
-                    classicApp.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, sm.getTeamUserForTeam(team).getDeciphered_teamKey(), teamSingleCard.getPassword_reminder_interval()));
+                    classicApp.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval()));
                 }
             } else {
                 teamSingleCard.getAccount().edit(account_information);

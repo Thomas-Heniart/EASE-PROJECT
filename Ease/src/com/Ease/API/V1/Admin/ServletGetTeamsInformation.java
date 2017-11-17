@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 @WebServlet("/api/v1/admin/GetTeamsInformation")
@@ -27,10 +26,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
             sm.needToBeEaseAdmin();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            List<Team> teamList = new LinkedList<>();
-            teamList.addAll(teamManager.getTeams());
-            hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active = false");
-            teamList.addAll(hibernateQuery.list());
+            List<Team> teamList = teamManager.getTeams(sm.getHibernateQuery());
             JSONArray res = new JSONArray();
             for (Team team : teamList) {
                 JSONObject tmp = new JSONObject();

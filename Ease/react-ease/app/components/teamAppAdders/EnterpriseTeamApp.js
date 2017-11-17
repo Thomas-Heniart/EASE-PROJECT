@@ -227,7 +227,7 @@ class EnterpriseTeamApp extends Component {
     this.state = {
       loading: false,
       edit: false,
-      password_change_interval: 0,
+      password_reminder_interval: 0,
       description: '',
       users: [],
       selected_users: [],
@@ -331,7 +331,7 @@ class EnterpriseTeamApp extends Component {
       }
       const app = this.props.app;
       this.setupUsers();
-      this.setState({password_change_interval: app.password_change_interval, description: app.description, fill_in_switch: app.fill_in_switch});
+      this.setState({password_reminder_interval: app.password_reminder_interval, description: app.description, fill_in_switch: app.fill_in_switch});
     }
     this.setState({edit: state, loading: false, show_more: false});
   };
@@ -342,7 +342,7 @@ class EnterpriseTeamApp extends Component {
       team_id: this.props.team_id,
       app_id: this.props.app.id,
       description: this.state.description,
-      password_change_interval: this.state.password_change_interval,
+      password_reminder_interval: this.state.password_reminder_interval,
       fill_in_switch:this.state.fill_in_switch
     })).then(response => {
       const app = response;
@@ -445,8 +445,8 @@ class EnterpriseTeamApp extends Component {
                 <div class="credentials">
                   <div class="display-inline-flex align_items_center">
                     {!this.state.edit ?
-                        <PasswordChangeHolder value={app.password_change_interval}/> :
-                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
+                        <PasswordChangeHolder value={app.password_reminder_interval}/> :
+                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput}/>}
                     {this.state.edit &&
                     <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}
                     {this.state.edit && this.props.plan_id === 0 &&

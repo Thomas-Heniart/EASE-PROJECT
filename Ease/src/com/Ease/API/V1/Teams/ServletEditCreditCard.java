@@ -26,7 +26,7 @@ public class ServletEditCreditCard extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeOwnerOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             if (team.getCustomer_id() == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You don't have credit card registered on Ease.space.");
             String token = sm.getStringParam("token", false, false);

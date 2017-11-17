@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.App;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -19,7 +20,14 @@ public class ServletGetApp extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             Integer app_id = sm.getIntParam("app_id", true, false);
-            sm.setSuccess(user.getDashboardManager().getApp(app_id).getJson());
+            App app = user.getApp(app_id, sm.getHibernateQuery());
+            String symmetric_key;
+            if (app.getTeamCardReceiver() != null)
+                symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+            else
+                symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            app.decipher(symmetric_key);
+            sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

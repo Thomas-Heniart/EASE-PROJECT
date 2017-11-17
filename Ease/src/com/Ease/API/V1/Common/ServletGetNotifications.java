@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Notification.NotificationManager;
-import com.Ease.Utils.DataBaseConnection;
+import com.Ease.User.NotificationManager;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -19,13 +19,10 @@ public class ServletGetNotifications extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer offset = sm.getIntParam("offset", true);
-            NotificationManager notificationManager = sm.getUser().getNotificationManager();
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
+            User user = sm.getUser();
+            NotificationManager notificationManager = sm.getUserNotificationManager(user.getDb_id());
             int limit = offset + 10;
-            notificationManager.loadNextNotifications(limit, db);
-            db.commitTransaction(transaction);
-            sm.setSuccess(notificationManager.getJson(offset, limit));
+            sm.setSuccess(notificationManager.getJson(limit, user, sm.getHibernateQuery()));
         } catch (Exception e) {
             sm.setError(e);
         }

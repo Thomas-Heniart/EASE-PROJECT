@@ -2,7 +2,7 @@ package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.AppInformation;
 import com.Ease.NewDashboard.Profile;
@@ -32,25 +32,24 @@ public class ServletCreateSsoApp extends HttpServlet {
             hibernateQuery.queryString("SELECT ssoGroup FROM SsoGroup ssoGroup WHERE ssoGroup.id = :id");
             hibernateQuery.setParameter("id", ssoGroup_id);
             SsoGroup ssoGroup = (SsoGroup) hibernateQuery.getSingleResult();
-            if (ssoGroup == null || !ssoGroup.getUser_id().equals(Integer.valueOf(user.getDBid())))
+            if (ssoGroup == null || !ssoGroup.getUser().equals(user))
                 throw new HttpServletException(HttpStatus.BadRequest, "No such SsoGroup");
             Integer website_id = sm.getIntParam("website_id", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             if (!ssoGroup.getSso().equals(website.getSso()))
                 throw new HttpServletException(HttpStatus.BadRequest, "This website is not part of the sso");
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = user.getDashboardManager().getProfile(profile_id);
+            Profile profile = user.getProfile(profile_id);
             SsoApp ssoApp = new SsoApp(new AppInformation(name), website, ssoGroup);
             ssoApp.setProfile(profile);
-            ssoApp.setPosition(profile.getAppMap().size());
+            ssoApp.setPosition(profile.getSize());
+            profile.addApp(ssoApp);
             sm.saveOrUpdate(ssoApp);
             ssoGroup.addSsoApp(ssoApp);
-            user.getDashboardManager().addApp(ssoApp);
-            profile.addApp(ssoApp);
             sm.setSuccess(ssoApp.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -141,12 +141,12 @@ public class PostServletManager extends ServletManager {
                 return;
             Integer team_id = this.getIntParam("team_id", false, true);
             if (team_id != null) {
-                Team team = this.getTeamUserForTeamId(team_id).getTeam();
+                Team team = this.getTeamUser(team_id).getTeam();
                 System.out.println("WebSocketMessage to team " + team_id);
-                team.getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
+                this.getTeamWebSocketManager(team.getDb_id()).sendObjects(this.webSocketMessages, ws_id);
             } else {
-                if (this.user != null)
-                    this.user.getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
+                if (this.getUser() != null)
+                    this.getUserWebSocketManager(this.getUser().getDb_id()).sendObjects(this.webSocketMessages, ws_id);
             }
         } catch (HttpServletException e) {
             e.printStackTrace();

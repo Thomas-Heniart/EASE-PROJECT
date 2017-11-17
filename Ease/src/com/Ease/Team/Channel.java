@@ -1,7 +1,6 @@
 package com.Ease.Team;
 
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -13,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by thomas on 10/04/2017.
  */
-@Entity(name = "channels")
+@Entity
+@Table(name = "channels")
 public class Channel {
     @Id
     @GeneratedValue
@@ -34,20 +34,17 @@ public class Channel {
     @JoinColumn(name = "creator_id")
     private TeamUser room_manager;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "team_user_id"))
     protected Set<TeamUser> teamUsers = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "pendingJoinChannelRequests", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "teamUser_id"))
     private Set<TeamUser> pending_teamUsers = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "channel", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
     private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
-
-    @Transient
-    private WebSocketManager webSocketManager = new WebSocketManager();
 
     public Channel(Team team, String name, String purpose, TeamUser room_manager) {
         this.team = team;
@@ -203,14 +200,6 @@ public class Channel {
         JSONObject origin = new JSONObject();
         origin.put("team_id", this.getTeam().getDb_id());
         return origin;
-    }
-
-    public WebSocketManager getWebSocketManager() {
-        return webSocketManager;
-    }
-
-    public void setWebSocketManager(WebSocketManager webSocketManager) {
-        this.webSocketManager = webSocketManager;
     }
 
     public void addTeamCard(TeamCard teamCard) {

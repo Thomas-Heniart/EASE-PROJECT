@@ -4,13 +4,14 @@ import {handleSemanticInput,
   transformCredentialsListIntoObject,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
-import {selectUserFromListById} from "../../utils/helperFunctions";
+import {selectUserFromListById, newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite, showPinTeamAppToDashboardModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {teamCreateSingleApp, teamCreateEnterpriseApp} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
 import {ExtendFillSwitch, setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {reduxActionBinder} from "../../actions/index";
 
 const AppResultRenderer = ({name, logo, request}) => {
   if (request)
@@ -129,8 +130,10 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
   team_id: store.team.id,
   users: store.users.users,
   myId: store.team.myTeamUserId,
-  plan_id: store.team.plan_id
-}))
+  plan_id: store.team.plan_id,
+  teams: store.teams,
+  card: store.teamCard
+}), reduxActionBinder)
 class EnterpriseTeamAppAdder extends Component {
   constructor(props){
     super(props);
@@ -144,6 +147,9 @@ class EnterpriseTeamAppAdder extends Component {
       fill_in_switch: false
     }
   }
+  componentWillMount() {
+    this.setState({ app: this.props.card.app });
+  };
   handleInput = handleSemanticInput.bind(this);
   changeFillInSwitch = (e, {checked}) => {
     if (this.props.plan_id === 0 && !checked){
@@ -182,9 +188,23 @@ class EnterpriseTeamAppAdder extends Component {
       this.setState({app: app});
     });
   };
+  componentDidMount(){
+    let users = this.props.item.team_user_ids.map(item => {
+      const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
+      return {
+        key: item,
+        text: setUserDropdownText(user),
+        value: item,
+        id: item,
+        credentials: transformWebsiteInfoIntoList(this.props.card.app.information),
+        username: user.username
+      }
+    });
+    this.setState({users: users});
+  }
   setUsers = (app) => {
-    let users = this.props.item.userIds.map(item => {
-      const user = selectUserFromListById(this.props.users, item);
+    let users = this.props.item.user_ids.map(item => {
+      const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
       return {
         key: item,
         text: setUserDropdownText(user),
@@ -222,7 +242,7 @@ class EnterpriseTeamAppAdder extends Component {
     });
   };
   close = () => {
-    this.props.dispatch(closeAppAddUI());
+    this.props.resetTeamCard();
   };
   render(){
     const app = this.state.app;
@@ -230,11 +250,6 @@ class EnterpriseTeamAppAdder extends Component {
 
     return (
         <Container fluid id='enterprise-app-adder' class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
-          {this.state.app === null &&
-          <div class="display-flex align_items_center">
-            <TeamAppSearch team_id={this.props.team_id} select_app_func={this.setApp}/>
-            <Button type="button" icon="delete" style={{margin: '0 0 0 .6rem'}} size="mini" class="close" onClick={this.close} color="grey"/>
-          </div>}
           <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
             {this.state.app !== null &&
             <div>
@@ -258,7 +273,7 @@ class EnterpriseTeamAppAdder extends Component {
                         <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
                       </div>
                     </div>
-                    <Receivers extended={this.state.fill_in_switch} myId={this.props.myId} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
+                    <Receivers extended={this.state.fill_in_switch} myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
                     <div>
                       <Dropdown
                           class="mini users-dropdown"

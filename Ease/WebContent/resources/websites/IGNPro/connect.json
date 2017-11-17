@@ -1,0 +1,51 @@
+{
+  "name": "IGN",
+  "lastLogin": "",
+  "home": "http://professionnels.ign.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "goto",
+        "url": "http://professionnels.ign.fr/user/"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#edit-name",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#edit-pass",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "#edit-submit",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "goto",
+        "url": "http://professionnels.ign.fr/user/logout/"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='register']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='logout'], a[href*='register']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
+}

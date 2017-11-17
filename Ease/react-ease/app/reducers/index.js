@@ -12,12 +12,14 @@ import * as catalog from "./catalogReducer";
 import * as teams from "./teamsReducer";
 import * as modals from "./modalReducer";
 import * as dashboard from "./dashboardReducer";
+import * as teamCard from "./teamCardReducer";
 
 const reducers = Object.assign(
     catalog,
     teams,
     modals,
-    dashboard
+    dashboard,
+    teamCard
 );
 
 export default combineReducers({

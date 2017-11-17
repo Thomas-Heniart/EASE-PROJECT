@@ -8,6 +8,76 @@ button.only-text-button {
   }
 }
 
+.next_button {
+  i {
+    margin-left: 0 !important;
+    margin-right: 5px !important;
+  }
+}
+
+.show_team {
+  .app {
+    margin-bottom: 7px;
+  }
+  .team {
+    margin-bottom: 4px;
+    font-size: 16px;
+    white-space: nowrap;
+    font-weight: 300;
+    span {
+      background-color: #363b60;
+      color: white;
+      border-radius: 3px;
+      padding: 2px;
+      padding-right: 10px;
+      overflow: hidden;
+      display: inline-block;
+      max-width: 250px;
+      text-overflow: ellipsis;
+      i {
+        font-size: 13px;
+        margin-right: 10px;
+        margin-left: 4px;
+      }
+    }
+  }
+  .room {
+    font-size: 16px;
+    color: #414141;
+    margin-bottom: 0;
+    white-space: nowrap;
+    span {
+      overflow: hidden;
+      display: inline-block;
+
+      max-width: 250px;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+#popup_team_single_card {
+  .segment {
+    padding: 15px 30px 0 30px !important;
+    max-height: 200px;
+    height: auto;
+    .checkbox {
+      width: 100%;
+      margin: 0 0 15px 0;
+      label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #939eb7;
+      }
+      &.checked {
+        label {
+          color: #45c997;
+        }
+      }
+    }
+  }
+}
+
 #personal_settings {
   height: 100%;
   .grid {

@@ -398,3 +398,14 @@ CREATE TABLE joinTeamSingleCardRequests (
   PRIMARY KEY (id),
   FOREIGN KEY (id) REFERENCES joinTeamCardRequests (id)
 );
+
+DROP TABLE userAndEmailInvitationsMap;
+DROP TABLE usersPrivateExtensions;
+DROP TABLE requestedWebsites;
+
+ALTER TABLE users
+  ADD COLUMN jwt_id INT(10) UNSIGNED;
+ALTER TABLE users
+  ADD FOREIGN KEY (jwt_id) REFERENCES jsonWebTokens (id);
+ALTER TABLE jsonWebTokens DROP FOREIGN KEY jsonWebTokens_ibfk_1;
+ALTER TABLE jsonWebTokens DROP COLUMN user_id;

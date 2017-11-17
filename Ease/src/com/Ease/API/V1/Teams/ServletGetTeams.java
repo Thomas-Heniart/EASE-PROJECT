@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by thomas on 05/05/2017.
@@ -28,9 +27,8 @@ public class ServletGetTeams extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            List<TeamUser> teamUserList = sm.getTeamUsers();
             JSONArray res = new JSONArray();
-            for (TeamUser teamUser : teamUserList) {
+            for (TeamUser teamUser : sm.getTeamUsers()) {
                 JSONObject tmp = teamUser.getTeam().getJson();
                 tmp.put("my_team_user_id", teamUser.getDb_id());
                 res.add(tmp);
