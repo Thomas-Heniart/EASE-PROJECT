@@ -98,7 +98,7 @@ class TeamAddChannelModal extends React.Component {
                         <label>
                           Name
                         </label>
-                        <Input onChange={this.nameChange} icon="hashtag" iconPosition="left" placeholder="Name" type="text" name="name"/>
+                        <Input onChange={this.nameChange} icon="hashtag" iconPosition="left" placeholder="name" type="text" name="name"/>
                         <p className="advice">Ex: marketing, dev, sales, administrators, social_media, product</p>
                       </Form.Field>
                       <Form.Input label="Purpose (optional)" onChange={this.inputChange} placeholder="Purpose" type="text" name="purpose"/>

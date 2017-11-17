@@ -128,7 +128,7 @@ class TeamAddUserModal extends React.Component {
                 <Form.Input label="Username" type="text" name="username"
                             onChange={this.usernameInput}
                             required
-                            placeholder="Username" width={6}/>
+                            placeholder="username" width={6}/>
                 <Form.Select
                     style={{minWidth: '0px'}}
                     name="role"

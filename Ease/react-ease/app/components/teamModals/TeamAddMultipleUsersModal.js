@@ -30,7 +30,7 @@ class PreviewStep extends React.Component {
             <Form.Input width={7}
                         type="text"
                         name="username"
-                        placeholder="Username"
+                        placeholder="username"
                         value={item.username}
                         onChange={(e, values) => {this.props.editField(idx, values)}}/>
           </Form.Group>
