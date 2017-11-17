@@ -29,7 +29,7 @@ public class ServletAskOwnerForBilling extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             sm.needToBeConnected();
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             TeamUser teamUser = sm.getUser().getTeamUser(team);
             if (teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden);

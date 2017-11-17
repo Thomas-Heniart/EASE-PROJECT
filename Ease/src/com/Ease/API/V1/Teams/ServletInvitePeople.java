@@ -2,7 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Team.TeamManager;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -28,8 +28,8 @@ public class ServletInvitePeople extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeOwnerOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
+            Team team = sm.getTeam(team_id);
+            sm.needToBeOwnerOfTeam(team);
             String email1 = sm.getStringParam("email1", true, false);
             String email2 = sm.getStringParam("email2", true, false);
             String email3 = sm.getStringParam("email3", true, false);
@@ -90,7 +90,7 @@ public class ServletInvitePeople extends HttpServlet {
             hibernateQuery.setParameter(3, email2);
             hibernateQuery.setParameter(4, email3);
             hibernateQuery.executeUpdate();
-            Integer money = teamManager.getTeam(team_id, sm.getHibernateQuery()).increaseAccountBalance(jackpot, hibernateQuery);
+            Integer money = team.increaseAccountBalance(jackpot, hibernateQuery);
             String emails[] = new String[]{email1, email2, email3};
             /* Use mailjet api */
             TeamUser teamUser = sm.getTeamUser(team_id);

@@ -2,6 +2,7 @@ package com.Ease.Utils.Servlets;
 
 import com.Ease.Dashboard.User.JWToken;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.TeamManager;
 import com.Ease.User.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
@@ -10,7 +11,9 @@ import com.Ease.User.UserFactory;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.websocketV1.WebSocketManager;
-import com.stripe.exception.StripeException;
+import com.stripe.exception.*;
+import com.stripe.model.Customer;
+import com.stripe.model.Subscription;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.json.simple.JSONArray;
@@ -163,18 +166,6 @@ public abstract class ServletManager {
             throw new HttpServletException(HttpStatus.Forbidden);
     }
 
-    public void needToBeTeamUserOfTeam(Integer team_id) throws HttpServletException {
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
-        this.needToBeTeamUser();
-        this.timestamp = this.getCurrentTime();
-        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
-                return;
-        }
-        throw new HttpServletException(HttpStatus.Forbidden);
-    }
-
     public void needToBeTeamUserOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
         this.timestamp = this.getCurrentTime();
@@ -195,35 +186,11 @@ public abstract class ServletManager {
         throw new HttpServletException(HttpStatus.Forbidden);
     }
 
-    public void needToBeAdminOfTeam(Integer team_id) throws HttpServletException {
-        this.needToBeTeamUser();
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
-        this.timestamp = this.getCurrentTime();
-        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
-                return;
-        }
-        throw new HttpServletException(HttpStatus.Forbidden);
-    }
-
     public void needToBeOwnerOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             this.timestamp = this.getCurrentTime();
             if (!teamUser.getTeam().isBlocked() && teamUser.getTeam() == team && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
-                return;
-        }
-        throw new HttpServletException(HttpStatus.Forbidden);
-    }
-
-    public void needToBeOwnerOfTeam(Integer team_id) throws HttpServletException {
-        this.needToBeTeamUser();
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
-        this.timestamp = this.getCurrentTime();
-        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -497,6 +464,32 @@ public abstract class ServletManager {
         if (notificationManager == null)
             notificationManager = new NotificationManager();
         return notificationManager;
+    }
+
+    public Team getTeam(Integer id) throws HttpServletException {
+        TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
+        Team team = teamManager.getTeam(id, this.getHibernateQuery());
+        this.initializeTeamWithContext(team);
+        return team;
+    }
+
+    public void initializeTeamWithContext(Team team) throws HttpServletException {
+        try {
+            Customer customer = (Customer) this.getTeamProperties(team.getDb_id()).get("customer");
+            if (customer == null) {
+                customer = Customer.retrieve(team.getCustomer_id());
+                this.getTeamProperties(team.getDb_id()).put("customer", customer);
+            }
+            Subscription subscription = (Subscription) this.getTeamProperties(team.getDb_id()).get("subscription");
+            if (subscription == null) {
+                subscription = Subscription.retrieve(team.getSubscription_id());
+                this.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+            }
+            team.setCustomer(customer);
+            team.setSubscription(subscription);
+        } catch (StripeException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
     }
 
     public String getKeyUser() {

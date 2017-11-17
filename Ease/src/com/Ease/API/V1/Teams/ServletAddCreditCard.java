@@ -30,7 +30,7 @@ public class ServletAddCreditCard extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             TeamUser teamUser = sm.getUser().getTeamUser(team);
             if (!teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");

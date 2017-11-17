@@ -4,7 +4,6 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
@@ -37,9 +36,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             if (team.getTeamUsers().size() >= 30 && !team.isValidFreemium())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 30 members.");
             TeamUser adminTeamUser = sm.getTeamUser(team);

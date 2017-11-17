@@ -1,25 +1,108 @@
 {
-	"name":"Office",
-	"lastLogin":"",
-	"home":"https://login.microsoftonline.com",
-	"connect":{
-		"todo":[
-			{"action":"click", "search":"#use_another_account"},
-			{"action":"fill", "what":"login", "search":"#cred_userid_inputtext,#userNameInput", "grave":true},
-			{"action":"fill", "what":"password", "search":"#cred_password_inputtext,#passwordInput", "grave":true},
-			{"action":"submit", "search":"#credentials,#loginForm", "grave":true}
-			]
-	},
-	"logout":{
-		"todo":[
-			{"action":"waitfor", "search":"div[role='banner'] div.o365cs-nav-topItem:last-child() button"},
-			{"action":"aclick", "search":"div[role='banner'] div.o365cs-nav-topItem:last-child() button"},
-			{"action":"waitfor", "search":"a[href*='logout']"},
-			{"action":"aclick", "search":"a[href*='logout']"}
-			]
-	},
-	"checkAlreadyLogged":[
-		{"search":"#O365_MainLink_Logo"}
-	]
-	
+  "name": "Office",
+  "lastLogin": "",
+  "home": "https://www.office.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "goto",
+        "url": "https://login.microsoftonline.com/"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=12], div[data-viewid=1]"
+      },
+      {
+        "action": "trueClick",
+        "search": "#otherTile"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=1] input[name='loginfmt']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=1] input[type='submit']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "div[data-viewid=1] input[name='loginfmt']",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "input[type='submit']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=2] input[name='passwd'], div[data-viewid=7] #aadTile[data-bind*='hasFocus: true'][role='button']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=2] input[name='passwd'], div[data-viewid=7] #aadTile[data-bind*='hasFocus: true'][role='button']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=2] input[name='passwd'], div[data-viewid=7] #aadTile[data-bind*='hasFocus: true'][role='button']"
+      },
+      {
+        "action": "trueClick",
+        "search": "div[data-viewid=7] #aadTile"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=2] input[name='passwd']"
+      },
+      {
+        "action": "waitfor",
+        "search": "div[data-viewid=2] input[type='submit']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "div[data-viewid=2] input[name='passwd']",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "input[type='submit']"
+      },
+      {
+        "action": "trueClick",
+        "search": "input[type='submit']",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "div[role='banner'] div.o365cs-nav-topItem:last-child() button"
+      },
+      {
+        "action": "aclick",
+        "search": "div[role='banner'] div.o365cs-nav-topItem:last-child() button"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "aclick",
+        "search": "a[href*='logout']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#meControl, #O365_MeFlexPane_ButtonID"
+    },
+    {
+      "search": "#O365_MeFlexPane_ButtonID"
+    }
+  ]
 }

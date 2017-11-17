@@ -86,7 +86,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (sm.getTeamUser(team_id) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot have two accounts in a team.");
             Integer teamUser_id = (Integer) idTeamAndTeamUser[0];
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);

@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -23,6 +24,8 @@ public class ServletGetMyInformation extends HttpServlet {
             try {
                 sm.needToBeConnected();
                 User user = sm.getUser();
+                for (TeamUser teamUser : user.getTeamUsers())
+                    sm.initializeTeamWithContext(teamUser.getTeam());
                 res.put("user", user.getJson());
                 sm.setSuccess(res);
             } catch (HttpServletException e) {

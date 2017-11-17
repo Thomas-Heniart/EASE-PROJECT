@@ -25,7 +25,7 @@ public class JoinTeamSingleCard extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);

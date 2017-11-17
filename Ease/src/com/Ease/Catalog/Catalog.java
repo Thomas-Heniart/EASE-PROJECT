@@ -75,12 +75,12 @@ public class Catalog {
     }
 
     private Collection<Sso> getSsoList(HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT s FROM Sso");
+        hibernateQuery.queryString("SELECT s FROM Sso s");
         return hibernateQuery.list();
     }
 
     public Sso getSsoWithId(Integer id, HibernateQuery hibernateQuery) throws HttpServletException {
-        hibernateQuery.queryString("SELECT s FROM Sso where s.db_id = :id");
+        hibernateQuery.queryString("SELECT s FROM Sso s where s.db_id = :id");
         hibernateQuery.setParameter("id", id);
         Sso sso = (Sso) hibernateQuery.getSingleResult();
         if (sso == null)

@@ -4,7 +4,6 @@ import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -24,9 +23,8 @@ public class PinTeamCardReceiverToDashboard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
-            sm.needToBeTeamUserOfTeam(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             User user = sm.getUser();
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);

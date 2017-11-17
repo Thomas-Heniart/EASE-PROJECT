@@ -27,6 +27,7 @@ public class HibernateQuery {
 
     public void queryString(String query) {
         this.query = this.session.createQuery(query);
+        this.query.setCacheable(true);
     }
 
     public void querySQLString(String query) {

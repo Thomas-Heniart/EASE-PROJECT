@@ -3,7 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Catalog.*;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -31,9 +30,8 @@ public class ServletAskWebsite extends HttpServlet {
             String login = sm.getStringParam("login", false, false);
             String password = sm.getStringParam("password", false, false);
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
-            sm.needToBeTeamUserOfTeam(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             if (url.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url.");
             if (url.length() >= 255)

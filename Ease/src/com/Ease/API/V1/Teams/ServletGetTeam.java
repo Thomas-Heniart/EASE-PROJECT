@@ -29,7 +29,7 @@ public class ServletGetTeam extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "No team id");
             TeamUser teamUser = sm.getTeamUser(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             JSONObject res = team.getJson();
             res.put("myTeamUserId", teamUser.getDb_id());
             sm.setSuccess(res);

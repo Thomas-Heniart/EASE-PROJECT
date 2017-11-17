@@ -2,11 +2,10 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Context.Variables;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.Notification;
 import com.Ease.User.NotificationFactory;
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
-import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -27,9 +26,8 @@ public class ServletAskOwnerToUpgrade extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             if (team.isValidFreemium())
                 throw new HttpServletException(HttpStatus.Forbidden);
             if (team.isFreemium())

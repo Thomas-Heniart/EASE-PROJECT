@@ -53,38 +53,38 @@ public class TeamUser {
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
-    protected Team team;
+    private Team team;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamUserRole_id")
-    protected TeamUserRole teamUserRole;
+    private TeamUserRole teamUserRole;
 
     @Column(name = "username")
-    protected String username;
+    private String username;
 
     @Column(name = "arrivalDate")
     @Temporal(TemporalType.TIMESTAMP)
-    protected Date arrivalDate;
+    private Date arrivalDate;
 
     @Column(name = "departureDate")
     @Temporal(TemporalType.TIMESTAMP)
-    protected Date departureDate;
+    private Date departureDate;
 
     @Column(name = "jobTitle")
-    protected String jobTitle;
+    private String jobTitle;
 
     @Column(name = "disabled")
     private boolean disabled;
 
     @Column(name = "admin_id")
-    protected Integer admin_id;
+    private Integer admin_id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id")
-    protected TeamUserStatus teamUserStatus;
+    private TeamUserStatus teamUserStatus;
 
     @Column(name = "phone_number")
-    protected String phone_number;
+    private String phone_number;
 
     @Column(name = "disabled_date")
     @Temporal(TemporalType.TIMESTAMP)

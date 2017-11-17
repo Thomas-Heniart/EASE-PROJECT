@@ -45,55 +45,55 @@ public class Team {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "name")
-    protected String name;
+    private String name;
 
     @Column(name = "customer_id")
-    protected String customer_id;
+    private String customer_id;
 
     @Column(name = "subscription_id")
-    protected String subscription_id;
+    private String subscription_id;
 
     @Column(name = "subscription_date")
-    protected Date subscription_date;
+    private Date subscription_date;
 
     @Column(name = "card_entered")
-    protected boolean card_entered = false;
+    private boolean card_entered = false;
 
     @Column(name = "invite_people")
-    protected boolean invite_people = false;
+    private boolean invite_people = false;
 
     @Column(name = "active")
-    protected boolean active = true;
+    private boolean active = true;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
-    protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
+    private Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
-    protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
+    private Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
     @ManyToMany(mappedBy = "teams")
-    protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
+    private Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
     private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
 
     @Transient
-    private int activeSubscriptions;
-
-    @Transient
-    private Channel default_channel;
+    private Customer customer;
 
     @Transient
     private Subscription subscription;
 
     @Transient
-    private Customer customer;
+    private int activeSubscriptions;
+
+    @Transient
+    private Channel default_channel;
 
     public Team(String name) {
         this.name = name;
@@ -134,30 +134,6 @@ public class Team {
         this.subscription_id = subscription_id;
     }
 
-    public Subscription getSubscription() throws HttpServletException {
-        try {
-            if (subscription == null)
-                subscription = Subscription.retrieve(this.getSubscription_id());
-            return subscription;
-        } catch (StripeException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
-    }
-
-    public Customer getCustomer() throws HttpServletException {
-        try {
-            if (customer == null)
-                customer = Customer.retrieve(this.getCustomer_id());
-            return customer;
-        } catch (StripeException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
     public boolean isCard_entered() {
         return card_entered;
     }
@@ -196,6 +172,22 @@ public class Team {
 
     public void setTeamCardMap(Map<Integer, TeamCard> teamCardMap) {
         this.teamCardMap = teamCardMap;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
     }
 
     public TeamCard getTeamCard(Integer id) throws HttpServletException {
