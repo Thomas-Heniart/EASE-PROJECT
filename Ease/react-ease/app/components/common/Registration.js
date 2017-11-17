@@ -49,11 +49,11 @@ class Step1 extends React.Component {
                 <Input
                     required
                     type="text"
-                    placeholder="Username"
+                    placeholder="username"
                     name="username"
                     value={this.props.username}
-                    onChange={this.props.handleInput}/>
-                <Label pointing color={this.state.usernameError ? 'red':null} basic={this.state.usernameError}>{userNameRuleString}</Label>
+                    onChange={this.props.handleUsernameInput}/>
+                <Label pointing color={this.props.usernameError ? 'red':null } basic={this.props.usernameError}>{userNameRuleString}</Label>
               </Form.Field>
               <Form.Input
                   required
@@ -69,7 +69,7 @@ class Step1 extends React.Component {
                              onClick={this.props.handleInput}/>
               <Message error content={this.state.errorMessage}/>
               <Form.Field>
-                <Button positive fluid loading={this.state.loading} type="submit">Next</Button>
+                <Button positive fluid loading={this.state.loading} type="submit" disabled={this.props.username.length < 3}>Next</Button>
               </Form.Field>
             </Form>
           </Segment>
@@ -258,10 +258,21 @@ class Registration extends React.Component {
       digits: '',
       password: '',
       confirmPassword: '',
-      currentStep: 0
+      currentStep: 0,
+      usernameError: false
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  handleUsernameInput = (e, {name, value}) => {
+    if (value && value.match(/[a-zA-Z0-9\s_\-]/gi)) {
+      if (value.match(/[a-zA-Z0-9\s_\-]/gi).length === value.length && value.length <= 22)
+        this.setState({ [name]: value.toLowerCase().replace(/\s/gi, '_'), usernameError: false });
+      else
+        this.setState({ usernameError: true });
+    }
+    else
+      this.setState({ [name]: '', usernameError: true });
+  };
   incrementStep = () => {
     this.setState({currentStep: this.state.currentStep + 1});
   };
@@ -281,8 +292,10 @@ class Registration extends React.Component {
     steps.push(<Step1 key="1"
                       onStepValidated={this.incrementStep}
                       handleInput={this.handleInput}
+                      handleUsernameInput={this.handleUsernameInput}
                       username={this.state.username}
                       email={this.state.email}
+                      usernameError={this.state.usernameError}
                       newsletter={this.state.newsletter}/>);
     steps.push(<Step2 onStepValidated={this.incrementStep}
                       digits={this.state.digits}

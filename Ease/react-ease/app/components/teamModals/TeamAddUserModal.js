@@ -32,7 +32,8 @@ class TeamAddUserModal extends React.Component {
       defaultRooms: [],
       value: [],
       loading: false,
-      errorMessage: ''
+      errorMessage: '',
+      usernameError: false
     };
     this.state.options = this.props.channels.map(item => {
       return {
@@ -52,9 +53,19 @@ class TeamAddUserModal extends React.Component {
     this.state.defaultRooms = this.state.value.slice();
   }
   handleInput = handleSemanticInput.bind(this);
-  usernameInput = (e) => {
-      e.target.value = e.target.value.replace(" ", "_").toLowerCase();
-      this.setState({[e.target.name] : e.target.value});
+  // usernameInput = (e) => {
+  //     e.target.value = e.target.value.replace(" ", "_").toLowerCase();
+  //     this.setState({[e.target.name] : e.target.value});
+  // };
+  handleUsernameInput = (e, {name, value}) => {
+    if (value && value.match(/[a-zA-Z0-9\s_\-]/gi)) {
+      if (value.match(/[a-zA-Z0-9\s_\-]/gi).length === value.length && value.length <= 22)
+        this.setState({ [name]: value.toLowerCase().replace(/\s/gi, '_'), usernameError: false });
+      else
+        this.setState({ usernameError: true });
+    }
+    else
+      this.setState({ [name]: '', usernameError: true });
   };
   userRoleInput = (e, {value}) => {
     if (this.props.plan_id === 0 && value === 2) {
@@ -126,7 +137,8 @@ class TeamAddUserModal extends React.Component {
               </Form.Group>
               <Form.Group>
                 <Form.Input label="Username" type="text" name="username"
-                            onChange={this.usernameInput}
+                            onChange={this.handleUsernameInput}
+                            value={this.state.username}
                             required
                             placeholder="username" width={6}/>
                 <Form.Select
@@ -150,6 +162,8 @@ class TeamAddUserModal extends React.Component {
                          placeholder="Optional" width={6}/>
                 </Form.Field>
               </Form.Group>
+              {this.state.usernameError &&
+              <Message color="red" content={'Please choose a username that is all lowercase, containing, only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.'}/>}
               <Form.Dropdown
                   search={true}
                   fluid
@@ -164,6 +178,7 @@ class TeamAddUserModal extends React.Component {
               <Message error content={this.state.errorMessage}/>
               <Form.Field class="overflow-hidden">
                 <Button
+                    disabled={this.state.username.length < 3}
                     positive
                     floated='right'
                     loading={this.state.loading}
