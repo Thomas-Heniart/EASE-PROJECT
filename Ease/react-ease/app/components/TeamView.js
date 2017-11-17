@@ -3,7 +3,6 @@ var classnames = require('classnames');
 var ReactRouter = require('react-router-dom');
 var LoadingScreen = require('./common/LoadingScreen');
 var TeamMenu = require('./TeamMenu');
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 var TeamSideBar = require('./TeamSideBar');
 var TeamHeader = require('./TeamHeader');
 var FlexPanels = require('./TeamFlexPanels');
@@ -26,6 +25,7 @@ import TeamsTutorial from "./teams/TeamsTutorial";
 import {connect} from "react-redux";
 var EaseHeader = require('./common/EaseHeader');
 var api = require('../utils/api');
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 @connect((store)=>({
   teams: store.teams,
@@ -64,10 +64,6 @@ class TeamView extends React.Component {
     const teamId = this.props.match.params.teamId;
     const team = this.props.teams[Number(teamId)];
 
-    if (!this.props.common.authenticated){
-      this.props.history.push('/login');
-      return;
-    }
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
     }
@@ -151,10 +147,9 @@ class TeamView extends React.Component {
         <div id="teamsHandler">
           <div className="team_view" id="team_view">
             {!this.state.loadingInfo && team.payment_required &&
-            <FreeTrialEndModal/>}
+            <FreeTrialEndModal team_id={team.id}/>}
             {this.state.loadingInfo && <LoadingScreen/>}
-            {!this.state.loadingInfo &&
-            <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>}
+            <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
             {this.state.teamMenuActive &&
             <TeamMenu
                 closeMenu={this.setTeamMenu.bind(null, false)}

@@ -2402,9 +2402,6 @@ button.action_text_button {
                 @include flex(1);
                 overflow: auto;
                 font-size: .8rem;
-                border-top: .25rem solid transparent;
-                border-right: .25rem solid transparent;
-                border-bottom: .25rem solid transparent;
               }
             }
             #team_tab {
@@ -3220,32 +3217,32 @@ button.big-button {
 }
 
 .slideLeft-enter {
-  transition: all 400ms ease-in;
+  transition: all 200ms ease-in;
   transform: translateX(-100%);
 }
 
 .slideLeft-enter.slideLeft-enter-active {
-  transition: all 400ms ease-in;
+  transition: all 200ms ease-in;
   transform: translateX(0);
 }
 
 .slideLeft-appear {
-  transition: all 400ms ease-in;
+  transition: all 200ms ease-in;
   transform: translateX(-100%);
 }
 
 .slideLeft-appear.slideLeft-appear-active {
-  transition: all 400ms ease-in;
+  transition: all 200ms ease-in;
   transform: translateX(0);
 }
 
 .slideLeft-leave {
-  transition: all 400ms ease-in;
+  transition: all 200ms ease-in;
   transform: translateX(0);
 }
 
 .slideLeft-leave.slideLeft-leave-active {
-  transition: all 400ms ease-in;
+  transition: all 200ms ease-in;
   transform: translateX(100%);
 }
 

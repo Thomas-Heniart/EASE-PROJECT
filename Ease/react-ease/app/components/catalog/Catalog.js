@@ -37,7 +37,7 @@ class Catalog extends React.Component {
   };
   render() {
     return (
-        <div id="catalog">
+        <div id="catalog" class="bordered_scrollbar">
           <header>
             <div className="container">
               <div>

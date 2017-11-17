@@ -60,22 +60,22 @@ module.exports = {
       });
     },
     addClassicAppSameAs: ({website_id, name, same_app_id, profile_id}) => {
-        return basic_post('/api/v1/catalog/AddClassicAppSameAs', {
-            website_id: website_id,
-            name: name,
-            same_app_id: same_app_id,
-            profile_id: profile_id
-        });
+      return basic_post('/api/v1/catalog/AddClassicAppSameAs', {
+        website_id: website_id,
+        name: name,
+        same_app_id: same_app_id,
+        profile_id: profile_id
+      });
     },
     addMultipleClassicApp: ({profile_id, apps_to_add, account_information}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
       return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
-          profile_id: profile_id,
-          apps_to_add: apps_to_add,
-          account_information: account_information
-        });
+        profile_id: profile_id,
+        apps_to_add: apps_to_add,
+        account_information: account_information
+      });
     },
     addBookmark: ({name, profile_id, url, img_url}) => {
       return basic_post('/api/v1/catalog/AddBookmark', {
@@ -925,9 +925,9 @@ module.exports = {
     },
     askEditEmail : function(password, new_email){
       return axios.post('/api/v1/common/AskEditEmail', {
-        password: cipher(password),
-        new_email: new_email
-      }
+            password: cipher(password),
+            new_email: new_email
+          }
       ).then(response => {
         return response.data;
       }).catch(err => {
@@ -936,10 +936,10 @@ module.exports = {
     },
     editEmail : function(password, new_email, digits){
       return axios.post('/api/v1/common/EditEmail', {
-        password: cipher(password),
-        new_email: new_email,
-        digits: digits
-      }
+            password: cipher(password),
+            new_email: new_email,
+            digits: digits
+          }
       ).then(response => {
         return response.data;
       }).catch(err => {
@@ -956,8 +956,8 @@ module.exports = {
     },
     checkPassword : function(password){
       return axios.post('/api/v1/common/CheckPassword', {
-        password: cipher(password)
-      }
+            password: cipher(password)
+          }
       ).then(response => {
         return response.data;
       }).catch(err => {
@@ -966,17 +966,19 @@ module.exports = {
     },
     editPassword : function(password, new_password){
       return axios.post('/api/v1/common/EditPassword', {
-        password: cipher(password),
-        new_password: cipher(new_password)
-      }
+            password: cipher(password),
+            new_password: cipher(new_password)
+          }
       ).then(response => {
         return response.data;
       }).catch(err => {
         throw err.response.data;
       })
     },
-    setBackgroundPicture : function(active){
-      return axios.post('/api/v1/common/SetBackgroundPicture', active
+    setBackgroundPicture : function({active}){
+      return axios.post('/api/v1/common/SetBackgroundPicture', {
+            active: active
+          }
       ).then(response => {
         return response.data;
       }).catch(err => {
@@ -985,12 +987,12 @@ module.exports = {
     },
     deleteAccount : function(password){
       return axios.post('/api/v1/common/DeleteAccount', {
-        password: cipher(password)
-      }
+            password: cipher(password)
+          }
       ).then(response => {
-          return response.data;
+        return response.data;
       }).catch(err => {
-          throw err.response.data;
+        throw err.response.data;
       })
     },
     askRegistration: function(email){

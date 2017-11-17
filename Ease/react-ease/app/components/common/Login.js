@@ -4,7 +4,7 @@ import {withCookies, Cookies } from 'react-cookie';
 var base64 = require('base-64');
 import post_api from '../../utils/post_api';
 import {connect} from "react-redux";
-import {setLoginRedirectUrl, fetchMyInformation} from "../../actions/commonActions"
+import {setLoginRedirectUrl, fetchMyInformation, processConnection} from "../../actions/commonActions"
 
 class UnknownUserForm extends React.Component{
   constructor(props){
@@ -25,12 +25,16 @@ class UnknownUserForm extends React.Component{
     e.preventDefault();
     this.setState({error: false});
     this.props.setView('loading');
-    post_api.common.connect(this.state.email, this.state.password).then(r => {
+
+    this.props.dispatch(processConnection({
+      email:this.state.email,
+      password:this.state.password
+    })).then(response => {
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
       this.props.setView('unknown');
-    })
+    });
   }
   render() {
     return (
@@ -96,12 +100,15 @@ class KnownUserForm extends React.Component{
     e.preventDefault();
     this.setState({error: false});
     this.props.setView('loading');
-    post_api.common.connect(this.props.email, this.state.password).then(r => {
+    this.props.dispatch(processConnection({
+      email:this.props.email,
+      password:this.state.password
+    })).then(response => {
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
       this.props.setView('known');
-    })
+    });
   }
   render() {
     return (
@@ -257,13 +264,10 @@ class Login extends React.Component {
     }
   }
   finishLoggingIn(){
-    if (this.state.redirect.length > 0){
-      this.props.dispatch(fetchMyInformation()).then(response => {
-        this.props.history.push(this.state.redirect);
-      });
-    }else {
+    if (this.state.redirect.length > 0)
+      this.props.history.push(this.state.redirect);
+    else
       window.location.href = "/home";
-    }
   }
   setView(name){
     this.setState({lastActive: this.state.activeView, activeView: name});
@@ -283,11 +287,13 @@ class Login extends React.Component {
             {this.state.activeView === 'loading' &&
             <Loader/>}
             <UnknownUserForm setView={this.setView}
+                             dispatch={this.props.dispatch}
                              activeView={this.state.activeView}
                              knownFname={this.state.knownFname}
                              knownUser={this.state.knownUser}
-                              finishLogin={this.finishLoggingIn}/>
+                             finishLogin={this.finishLoggingIn}/>
             <KnownUserForm setView={this.setView}
+                           dispatch={this.props.dispatch}
                            activeView={this.state.activeView}
                            fname={this.state.knownFname}
                            email={this.state.knownEmail}
