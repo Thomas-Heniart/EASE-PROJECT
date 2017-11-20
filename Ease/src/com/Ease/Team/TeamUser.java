@@ -1,6 +1,8 @@
 package com.Ease.Team;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.User;
 import com.Ease.Utils.Crypto.AES;
@@ -102,6 +104,10 @@ public class TeamUser {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamUser_id")
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
@@ -222,6 +228,14 @@ public class TeamUser {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public boolean isActive_subscription() {
@@ -475,6 +489,42 @@ public class TeamUser {
             }
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    /**
+     * if you have a team profile, it returns it
+     * if you don't and you didn't already had one, create it
+     * if you don't have any profile, create it
+     * if you don't and you already had one, returns any profile of you team space
+     * @param hibernateQuery
+     * @return Profile profile
+     * @throws HttpServletException
+     */
+    public Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+        if (this.getUser() == null)
+            throw new HttpServletException(HttpStatus.InternError);
+        Profile profile = null;
+        if (!this.getTeamUserStatus().isProfile_created()) {
+            int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
+            profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
+            hibernateQuery.saveOrUpdateObject(profile);
+            this.getUser().moveProfile(profile.getDb_id(), 2, 0, hibernateQuery);
+            this.setProfile(profile);
+            this.getTeamUserStatus().setProfile_created(true);
+            hibernateQuery.saveOrUpdateObject(this);
+            return this.getProfile();
+        } else {
+            if (this.getUser().getProfileSet().isEmpty()) {
+                profile = new Profile(this.getUser(), 2, 0, new ProfileInformation(this.getTeam().getName()));
+                hibernateQuery.saveOrUpdateObject(profile);
+                this.setProfile(profile);
+                hibernateQuery.saveOrUpdateObject(this);
+                return this.getProfile();
+            } else if (this.getProfile() == null) {
+                return this.getUser().getProfileSet().stream().findAny().get();
+            } else
+                return this.getProfile();
         }
     }
 

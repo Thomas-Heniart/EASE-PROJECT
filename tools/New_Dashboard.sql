@@ -190,11 +190,13 @@ CREATE TABLE teamWebsiteCards (
 );
 
 CREATE TABLE teamSingleCards (
-  id         INT(10) UNSIGNED NOT NULL,
-  account_id INT(10) UNSIGNED,
+  id                 INT(10) UNSIGNED NOT NULL,
+  account_id         INT(10) UNSIGNED,
+  teamUser_filler_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
   FOREIGN KEY (id) REFERENCES teamWebsiteCards (id),
-  FOREIGN KEY (account_id) REFERENCES accounts (id)
+  FOREIGN KEY (account_id) REFERENCES accounts (id),
+  FOREIGN KEY (teamUser_filler_id) REFERENCES teamUsers (id)
 );
 
 CREATE TABLE teamEnterpriseCards (
@@ -300,7 +302,8 @@ INSERT INTO teamEnterpriseCards SELECT apps.id
 
 INSERT INTO teamSingleCards SELECT
                               apps.id,
-                              classicApps.account_id
+                              classicApps.account_id,
+                              NULL
                             FROM shareableApps
                               JOIN apps ON shareableApps.id = apps.id
                               JOIN appsInformations ON apps.app_info_id = appsInformations.id
@@ -420,3 +423,8 @@ ALTER TABLE teamUserStatus
   ADD COLUMN invitation_sent TINYINT(1) NOT NULL;
 UPDATE teamUserStatus
 SET invitation_sent = 1;
+
+ALTER TABLE teamUsers
+  ADD COLUMN profile_id INT(10) UNSIGNED;
+ALTER TABLE teamUserStatus
+  ADD COLUMN profile_created TINYINT(1) NOT NULL DEFAULT 0;

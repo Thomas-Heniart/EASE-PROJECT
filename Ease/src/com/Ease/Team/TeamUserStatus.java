@@ -15,16 +15,19 @@ public class TeamUserStatus {
     protected Integer db_id;
 
     @Column(name = "reminder_three_days_sended")
-    protected Boolean reminder_three_days_sended = false;
+    private Boolean reminder_three_days_sended = false;
 
     @Column(name = "first_app_received")
-    protected Boolean first_app_received = false;
+    private Boolean first_app_received = false;
 
     @Column(name = "tuto_done")
-    protected Boolean tuto_done = false;
+    private Boolean tuto_done = false;
 
     @Column(name = "invitation_sent")
     private boolean invitation_sent = false;
+
+    @Column(name = "profile_created")
+    private boolean profile_created = false;
 
     public TeamUserStatus() {
     }
@@ -67,6 +70,14 @@ public class TeamUserStatus {
 
     public void setInvitation_sent(boolean invitation_sent) {
         this.invitation_sent = invitation_sent;
+    }
+
+    public boolean isProfile_created() {
+        return profile_created;
+    }
+
+    public void setProfile_created(boolean profile_created) {
+        this.profile_created = profile_created;
     }
 
     @Override

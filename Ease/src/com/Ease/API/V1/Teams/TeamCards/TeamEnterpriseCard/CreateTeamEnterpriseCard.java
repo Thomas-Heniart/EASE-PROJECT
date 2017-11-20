@@ -10,6 +10,7 @@ import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -43,10 +44,13 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
+            String name = sm.getStringParam("name", true, false);
+            if (name.equals("") || name.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             String description = sm.getStringParam("description", true, true);
             if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
-            TeamCard teamCard = new TeamEnterpriseCard(team, channel, description, website, password_reminder_interval);
+            TeamCard teamCard = new TeamEnterpriseCard(name, team, channel, description, website, password_reminder_interval);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.entrySet()) {
@@ -64,9 +68,16 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                 AppInformation appInformation = new AppInformation(website.getName());
                 App app = new ClassicApp(appInformation, website, account);
                 TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser);
+                User user = teamUser.getUser();
+                if (user != null) {
+                    Profile profile = teamUser.getOrCreateProfile(sm.getHibernateQuery());
+                    app.setProfile(profile);
+                    app.setPosition(profile.getSize());
+                }
                 sm.saveOrUpdate(teamCardReceiver);
                 teamCard.addTeamCardReceiver(teamCardReceiver);
             }
+
             team.addTeamCard(teamCard);
             channel.addTeamCard(teamCard);
             sm.setSuccess(teamCard.getJson());

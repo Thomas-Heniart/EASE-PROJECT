@@ -5,6 +5,7 @@ import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
@@ -19,13 +20,18 @@ public class TeamSingleCard extends TeamWebsiteCard {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teamUser_filler_id")
+    private TeamUser teamUser_filler;
+
     public TeamSingleCard() {
 
     }
 
-    public TeamSingleCard(String name, Team team, Channel channel, String description, Website website, Integer password_reminder_interval, Account account) {
+    public TeamSingleCard(String name, Team team, Channel channel, String description, Website website, Integer password_reminder_interval, Account account, TeamUser teamUser_filler) {
         super(name, team, channel, description, website, password_reminder_interval);
         this.account = account;
+        this.teamUser_filler = teamUser_filler;
     }
 
     public Account getAccount() {
@@ -34,6 +40,14 @@ public class TeamSingleCard extends TeamWebsiteCard {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public TeamUser getTeamUser_filler() {
+        return teamUser_filler;
+    }
+
+    public void setTeamUser_filler(TeamUser teamUser_filler) {
+        this.teamUser_filler = teamUser_filler;
     }
 
     public void decipherAccount(String symmetric_key) throws HttpServletException {
@@ -51,6 +65,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJson());
+        res.put("team_user_filler_id", this.getTeamUser_filler() == null ? -1 : this.getTeamUser_filler().getDb_id());
         return res;
     }
 

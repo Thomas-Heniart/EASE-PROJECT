@@ -228,16 +228,21 @@ public class User {
 
     public JSONArray getProfileListJson() {
         JSONArray res = new JSONArray();
-        List<List<Profile>> profiles = new LinkedList<>();
-        for (int i = 0; i < MAX_PROFILE; i++)
-            profiles.add(new LinkedList<>());
-        this.getProfileSet().stream().forEach(profile -> profiles.get(profile.getColumn_index()).add(profile));
-        profiles.forEach(profiles1 -> {
+
+        this.getProfileList().forEach(profiles1 -> {
             JSONArray tmp = new JSONArray();
             profiles1.stream().sorted(Comparator.comparingInt(Profile::getPosition_index)).forEach(profile -> tmp.add(profile.getJson()));
             res.add(tmp);
         });
         return res;
+    }
+
+    public List<List<Profile>> getProfileList() {
+        List<List<Profile>> profiles = new LinkedList<>();
+        for (int i = 0; i < MAX_PROFILE; i++)
+            profiles.add(new LinkedList<>());
+        this.getProfileSet().stream().forEach(profile -> profiles.get(profile.getColumn_index()).add(profile));
+        return profiles;
     }
 
     public JSONArray getProfilesJson() {
