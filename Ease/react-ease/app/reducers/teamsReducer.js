@@ -13,7 +13,17 @@ export const teams = createReducer({
 
     return update(state, {
       [team.id]: {
-        plan_id: {$set: team.plan_id}
+        plan_id: {$set: team.plan_id},
+        payment_required: {$set: team.payment_required}
+      }
+    });
+  },
+  ['TEAM_ADD_CREDIT_CARD_FULFILLED'](state, action){
+    const {team_id} = action.payload;
+
+    return update(state, {
+      [team_id]: {
+        payment_required: {$set: false}
       }
     });
   },
@@ -399,20 +409,49 @@ const default_payment = {
 };
 
 export const team_payments = createReducer({
-
+  data: {
+    card: null,
+    credit: 0,
+    people_invited: false,
+    business_vat_id: ""
+  },
+  loading: true
 }, {
-  ['FETCH_TEAMS_FULFILLED'](state, action) {
-    const teams = action.payload.teams;
-    let payments = {};
-    Object.keys(teams).map(id => {
-      payments[id] = {
-        ...default_payment
+  ['FETCH_TEAM_PAYMENT_INFORMATION_PENDING'](state,action) {
+    return update(state, {
+      loading: {$set: true}
+    })
+  },
+  ["FETCH_TEAM_PAYMENT_INFORMATION_REJECTED"](state, action){
+    return update(state, {
+      loading: {$set: false}
+    })
+  },
+  ['FETCH_TEAM_PAYMENT_INFORMATION_FULFILLED'](state, action){
+    return update(state, {
+      data: {$set: action.payload.data},
+      loading: {$set: false}
+    });
+  },
+  ['TEAM_UPDATE_BILLING_INFORMATION_FULFILLED'](state, action){
+    return update(state, {
+      data: {$set: action.payload.data}
+    });
+  },
+  ['TEAM_ADD_CREDIT_CARD_FULFILLED'](state, action){
+    return update(state, {
+      data:{
+        card: {$set: action.payload.card}
       }
     });
-    return payments;
   },
-  ['FETCH_TEAM_PAYMENT_INFORMATION_PENDING'](state,action) {
-
+  ['TEAM_INVITE_FRIENDS_FULFILLED'](state, action){
+    return update(state, {
+      data: {
+        credit: {$set: action.payload.credit},
+        people_invited: {$set: true}
+      }
+    });
   }
 });
 

@@ -510,6 +510,7 @@ class TeamCreationView extends React.Component {
   }
   submitStep8(){
     window.location.href = '/';
+    window.location.reload(true);
   }
   handleInput(e, {value , name}){
     this.setState({[name]: value});

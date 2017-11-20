@@ -1,6 +1,7 @@
 import React from 'react';
 import {editTeamName} from '../../actions/teamActions';
 import { Header, Container, Menu, Segment, Comment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import {StripeProvider} from 'react-stripe-elements';
 import {connect} from "react-redux";
 import {fetchTeamPaymentInformation, teamInviteFriends, teamUpdateBillingInformation, unsubscribe} from "../../actions/teamActions";
 import countryValues from "../../utils/countrySelectList";
@@ -18,18 +19,15 @@ class TeamInformations extends React.Component {
       teamName: '',
       loading: false
     };
-    this.setModifying = this.setModifying.bind(this);
-    this.handleInput = this.handleInput.bind(this);
-    this.submit = this.submit.bind(this);
   }
-  handleInput(e, {name, value}){
+  handleInput = (e, {name, value}) => {
     this.setState({[name]: value});
-  }
-  setModifying(state){
+  };
+  setModifying = (state) => {
     const team = this.props.teams[this.props.match.params.teamId];
     this.setState({modifying: state, teamName: team.name});
-  }
-  submit(){
+  };
+  submit = () => {
     const team = this.props.teams[this.props.match.params.teamId];
     this.setState({loading: true});
     this.props.dispatch(editTeamName({
@@ -39,7 +37,7 @@ class TeamInformations extends React.Component {
       this.setState({loading: false});
       this.setModifying(false);
     });
-  }
+  };
   render(){
     const team = this.props.teams[this.props.match.params.teamId];
     return (
@@ -97,30 +95,28 @@ function CreditCardPreview({card}){
   )
 }
 
-@connect((store)=>{
-  return {
-    payment : store.team.payment
-  }})
+@connect((store)=>({
+  payment : store.team_payments
+}))
 class PaymentMethod extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       modifying: false
     };
-    this.setModifying = this.setModifying.bind(this);
-    this.cardTokenCallback = this.cardTokenCallback.bind(this);
   }
-  setModifying(state){
+  setModifying = (state) => {
     this.setState({modifying: state});
-  }
-  cardTokenCallback(token){
+  };
+  cardTokenCallback = (token) => {
     //do stuff with token;
     //console.log(token);
     this.setModifying(false);
-  }
+  };
   render(){
     const payment = this.props.payment;
     const card = payment.data.card;
+    const team_id = Number(this.props.match.params.teamId);
 
     return (
         <div class="team_settings_section">
@@ -143,18 +139,20 @@ class PaymentMethod extends React.Component {
               <Button primary size="mini" content={card !== null ? 'Replace this card' : 'Add credit card'} floated="right" onClick={this.setModifying.bind(null, true)}/>
             </div>}
             {this.state.modifying &&
-            <MyStoreCheckout cancel={this.setModifying.bind(null, false)} validate={this.cardTokenCallback}/>}
+            <MyStoreCheckout
+                team_id={team_id}
+                cancel={this.setModifying.bind(null, false)}
+                validate={this.cardTokenCallback}/>}
           </Segment>
-          <FriendInvitations/>
+          {<FriendInvitations team_id={team_id}/>}
         </div>
     )
   }
 }
 
-@connect((store)=>{
-  return {
-    payment : store.team.payment
-  }})
+@connect((store)=>({
+  payment : store.team_payments
+}))
 class FriendInvitations extends React.Component {
   constructor(props){
     super(props);
@@ -176,7 +174,12 @@ class FriendInvitations extends React.Component {
   sendInvitations = (e) => {
     e.preventDefault();
     this.setState({loading: true, errorMessage:''});
-    this.props.dispatch(teamInviteFriends(this.state.email1, this.state.email2, this.state.email3)).then(response => {
+    this.props.dispatch(teamInviteFriends({
+      team_id: this.props.team_id,
+      email1: this.state.email1,
+      email2: this.state.email2,
+      email3: this.state.email3
+    })).then(response => {
       this.setState({loading: false});
       this.setModifying(false);
     }).catch(err => {
@@ -262,9 +265,11 @@ class BillingInformation extends React.Component {
     this.setState({modifying: false});
   };
   submit = (e) =>{
+    const teamId = Number(this.props.match.params.teamId);
     e.preventDefault();
     this.setState({errorMessage: '', loading: true});
     this.props.dispatch(teamUpdateBillingInformation({
+      team_id: teamId,
       address_country: this.state.address_country,
       address_city: this.state.address_city,
       address_line1: this.state.address_line1,
@@ -285,8 +290,7 @@ class BillingInformation extends React.Component {
       this.setState({[e.target.name]: e.target.value});
   };
   componentWillReceiveProps(nextProps){
-    const teamId = nextProps.match.params.teamId;
-    const team_payment = nextProps.payments[teamId];
+    const team_payment = nextProps.payments;
     if (this.props !== nextProps && !team_payment.loading && team_payment.data.card !== null){
       const card = team_payment.data.card;
       this.setState({
@@ -301,8 +305,7 @@ class BillingInformation extends React.Component {
     }
   }
   componentDidMount(){
-    const teamId = this.props.match.params.teamId;
-    const team_payment = this.props.payments[teamId];
+    const team_payment = this.props.payments;
 
     if (!team_payment.loading && team_payment.data.card !== null){
       const card = team_payment.data.card;
@@ -318,7 +321,7 @@ class BillingInformation extends React.Component {
     }
   }
   render(){
-    const payment = this.props.payments[this.props.match.params.teamId];
+    const payment = this.props.payments;
     const card = payment.data.card;
     return (
         <div class="team_settings_section">
@@ -405,7 +408,7 @@ class BillingInformation extends React.Component {
     )
   }
 }
-const BillingInformationWithRouter  = withRouter(BillingInformation);
+const BillingInformationWithRouter = withRouter(BillingInformation);
 
 @connect()
 class TeamAccount extends React.Component {
@@ -418,33 +421,30 @@ class TeamAccount extends React.Component {
       loading: false,
       errorMessage: ''
     };
-    this.setModifying = this.setModifying.bind(this);
-    this.handleInput = this.handleInput.bind(this);
-    this.submit = this.submit.bind(this);
-    this.check = this.check.bind(this);
   }
-  handleInput(e, {name, value}){
+  handleInput = (e, {name, value}) => {
     this.setState({[name]: value});
-  }
-  check(){
+  };
+  check = () => {
     this.setState({checked: !this.state.checked});
-  }
-  setModifying(state){
+  };
+  setModifying = (state) => {
     this.setState({modifying: state, password:'', checked: false});
-  }
-  submit(e){
+  };
+  submit = (e) => {
     e.preventDefault();
-    const team_id = this.props.match.params.teamId;
+    const team_id = Number(this.props.match.params.teamId);
     this.setState({errorMessage: '', loading: true});
     this.props.dispatch(unsubscribe({
       team_id: team_id,
       password:this.state.password
     })).then(response => {
       window.location.href = "/";
+      window.location.reload(true);
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
     });
-  }
+  };
   render(){
     return (
         <div class="team_settings_section">
@@ -537,19 +537,18 @@ function SettingsMenu(props){
   )
 }
 
-@connect((store)=>{
-  return {
-    teams : store.teams
-  };
-})
+const stripe_api_key = window.location.hostname === 'ease.space' ? 'pk_live_lPfbuzvll7siv1CM3ncJ22Bu' : 'pk_test_95DsYIUHWlEgZa5YWglIJHXd';
+
+@connect((store)=>({
+  teams : store.teams
+}))
 class TeamSettings extends React.Component {
   constructor(props) {
     super(props);
-    this.close = this.close.bind(this);
   }
-  close(){
+  close = () => {
     this.props.history.replace(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/`);
-  }
+  };
   componentDidMount(){
     this.props.dispatch(fetchTeamPaymentInformation({team_id: this.props.match.params.teamId}));
     if (this.props.match.isExact)
@@ -557,6 +556,7 @@ class TeamSettings extends React.Component {
   }
   render() {
     return (
+        <StripeProvider apiKey={stripe_api_key}>
         <div className="ease_modal" id="team_settings_modal">
           <div className="modal-background"/>
           <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={this.close}>
@@ -587,6 +587,7 @@ class TeamSettings extends React.Component {
             </div>
           </div>
         </div>
+        </StripeProvider>
     )
   }
 }

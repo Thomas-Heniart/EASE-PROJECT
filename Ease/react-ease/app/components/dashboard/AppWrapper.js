@@ -7,6 +7,9 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import ClassicApp from "./ClassicApp";
 import LinkApp from "./LinkApp";
 import LogWithApp from "./LogWithApp";
+import TeamEnterpriseApp from "./TeamEnterpriseApp";
+import TeamSingleApp from "./TeamSingleApp";
+import TeamLinkApp from "./TeamLinkApp";
 import {moveApp, beginAppDrag,endAppDrag, checkIfProfileEmpty} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 
@@ -29,6 +32,12 @@ class AppWrapper extends Component {
         return <LinkApp app={app} dispatch={dispatch}/>;
       case 'logWithApp':
         return <LogWithApp app={app} dispatch={dispatch}/>;
+      case 'teamLinkApp':
+        return <TeamLinkApp app={app} dispatch={dispatch}/>;
+      case 'teamSingleApp':
+        return <TeamSingleApp app={app} dispatch={dispatch}/>;
+      case 'teamEnterpriseApp':
+        return <TeamEnterpriseApp app={app} dispatch={dispatch}/>;
       default:
         return null;
     }
