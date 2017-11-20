@@ -19,7 +19,7 @@ class TeamAddChannelModal extends React.Component {
       purpose: '',
       options: [],
       value: [],
-      errorMessage: ''
+      errorMessage: '',
     };
     const team = this.props.team;
     this.state.options = Object.keys(team.team_users).map(id => {
