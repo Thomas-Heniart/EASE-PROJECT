@@ -13,6 +13,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import javax.servlet.http.Cookie;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -357,5 +358,18 @@ public class User {
 
     public UserEmail getUserEmail(String email) {
         return this.getUserEmailSet().stream().filter(userEmail -> userEmail.getEmail().equals(email)).findAny().orElse(null);
+    }
+
+    public List<Cookie> getCookies() {
+        List<Cookie> cookies = new ArrayList<>();
+        Cookie cookie = new Cookie("email", this.getEmail());
+        Cookie cookie1 = new Cookie("fname", this.getUsername());
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, 1);
+        cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
+        cookie1.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
+        cookies.add(cookie);
+        cookies.add(cookie1);
+        return cookies;
     }
 }

@@ -68,6 +68,7 @@ public class ServletConnection extends HttpServlet {
                     sm.saveOrUpdate(user.getJsonWebToken());
                 }
             }
+            removeIpFromDataBase(client_ip, db);
             String jwt = user.getJsonWebToken().getJwt(keyUser);
             Cookie cookie = new Cookie("JWT", jwt);
             Calendar calendar = Calendar.getInstance();
@@ -78,6 +79,7 @@ public class ServletConnection extends HttpServlet {
             calendar.set(Calendar.MILLISECOND, 0);
             cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
             response.addCookie(cookie);
+            user.getCookies().forEach(response::addCookie);
             sm.setUser(user);
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
