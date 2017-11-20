@@ -2,6 +2,7 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -35,6 +36,12 @@ public class Account {
 
     @Column(name = "mustBeReciphered")
     private boolean must_be_reciphered = false;
+
+    @Column(name = "passwordMustBeUpdated")
+    private boolean password_must_be_updated = false;
+
+    @Column(name = "adminNotified")
+    private boolean admin_notified = false;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountInformation> accountInformationSet = ConcurrentHashMap.newKeySet();
@@ -117,6 +124,22 @@ public class Account {
 
     public void setAccountInformationSet(Set<AccountInformation> accountInformationSet) {
         this.accountInformationSet = accountInformationSet;
+    }
+
+    public boolean isPassword_must_be_updated() {
+        return password_must_be_updated;
+    }
+
+    public void setPassword_must_be_updated(boolean password_must_be_updated) {
+        this.password_must_be_updated = password_must_be_updated;
+    }
+
+    public boolean isAdmin_notified() {
+        return admin_notified;
+    }
+
+    public void setAdmin_notified(boolean admin_notified) {
+        this.admin_notified = admin_notified;
     }
 
     /**
@@ -218,5 +241,9 @@ public class Account {
         if (information == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No information with this name");
         return information.getDeciphered_information_value();
+    }
+
+    public boolean mustUpdatePassword() {
+        return this.getReminder_interval() != 0 && new Date().getTime() <= this.getLast_update().getTime() + this.getReminder_interval() * DateComparator.millisecondsInMonth;
     }
 }

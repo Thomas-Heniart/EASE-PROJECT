@@ -1,11 +1,8 @@
 package com.Ease.Context;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.HttpServletException;
 
-import java.util.Date;
 import java.util.TimerTask;
 
 /**
@@ -13,16 +10,22 @@ import java.util.TimerTask;
  */
 public class StripeScheduledTask extends TimerTask {
 
-    Date now;
-    TeamManager teamManager;
+    private TeamManager teamManager;
 
-    public StripeScheduledTask(TeamManager teamManager) {
+    StripeScheduledTask(TeamManager teamManager) {
         super();
         this.teamManager = teamManager;
     }
 
     @Override
     public void run() {
-        teamManager.updateTeamsSubscriptions();
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        try {
+            teamManager.updateTeamsSubscriptions(hibernateQuery);
+            hibernateQuery.commit();
+        } catch (Exception e) {
+            hibernateQuery.rollback();
+            e.printStackTrace();
+        }
     }
 }

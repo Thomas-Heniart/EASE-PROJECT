@@ -66,7 +66,7 @@ public class ServletLogin extends HttpServlet {
             calendar.set(Calendar.MILLISECOND, 0);
             cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
             response.addCookie(cookie);
-            sm.setUser(user.getDb_id());
+            sm.setUser(user);
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
             sm.setSuccess(res);

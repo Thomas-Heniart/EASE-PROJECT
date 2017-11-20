@@ -371,8 +371,9 @@ public abstract class ServletManager {
         return user;
     }
 
-    public void setUser(Integer user_id) {
-        this.getSession().setAttribute("user_id", user_id);
+    public void setUser(User user) {
+        this.getSession().setAttribute("is_admin", user.isAdmin());
+        this.getSession().setAttribute("user_id", user.getDb_id());
     }
 
     public HttpSession getSession() {

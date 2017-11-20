@@ -69,7 +69,7 @@ public class ServletRegistrationEdhec extends HttpServlet {
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
-            sm.setUser(newUser.getDb_id());
+            sm.setUser(newUser);
 
             Profile edhecProfile = new Profile(newUser, 1, 0, new ProfileInformation("EDHEC"));
             sm.saveOrUpdate(edhecProfile);

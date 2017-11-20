@@ -6,8 +6,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
 <html xmlns="http://w3.org/1999/xhtml">
 <head>
-    <% User user = (User) (session.getAttribute("user"));
-        if (session.getAttribute("user") == null || !((User) session.getAttribute("user")).isAdmin()) {
+    <%
+        if (session.getAttribute("is_admin") == null || !((Boolean) session.getAttribute("is_admin"))) {
     %>
     <script>
         window.location.replace("/");

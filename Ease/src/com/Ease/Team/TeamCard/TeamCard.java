@@ -98,7 +98,7 @@ abstract public class TeamCard {
         this.creation_date = creation_date;
     }
 
-    public Map<Integer, TeamCardReceiver> getTeamCardReceiverMap() {
+    public synchronized Map<Integer, TeamCardReceiver> getTeamCardReceiverMap() {
         return teamCardReceiverMap;
     }
 
@@ -106,7 +106,7 @@ abstract public class TeamCard {
         this.teamCardReceiverMap = teamCardReceiverMap;
     }
 
-    public Map<Integer, JoinTeamCardRequest> getJoinTeamCardRequestMap() {
+    public synchronized Map<Integer, JoinTeamCardRequest> getJoinTeamCardRequestMap() {
         return joinTeamCardRequestMap;
     }
 

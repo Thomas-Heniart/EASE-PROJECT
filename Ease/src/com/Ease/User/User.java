@@ -69,6 +69,9 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Notification> notificationSet = ConcurrentHashMap.newKeySet();
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private Administrator administrator;
+
     public User() {
 
     }
@@ -153,7 +156,7 @@ public class User {
         this.userEmailSet = userEmailSet;
     }
 
-    public Set<Profile> getProfileSet() {
+    public synchronized Set<Profile> getProfileSet() {
         return profileSet;
     }
 
@@ -185,8 +188,16 @@ public class User {
         this.notificationSet = notificationSet;
     }
 
+    public Administrator getAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(Administrator administrator) {
+        this.administrator = administrator;
+    }
+
     public boolean isAdmin() {
-        return false;
+        return this.getAdministrator() != null;
     }
 
     public JSONObject getJson() throws HttpServletException {

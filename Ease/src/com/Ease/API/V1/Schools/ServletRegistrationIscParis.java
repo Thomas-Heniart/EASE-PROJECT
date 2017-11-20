@@ -63,7 +63,7 @@ public class ServletRegistrationIscParis extends HttpServlet {
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
-            sm.setUser(newUser.getDb_id());
+            sm.setUser(newUser);
 
             /* Isc Paris profile */
             //Profile iscProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#7D0056", db);

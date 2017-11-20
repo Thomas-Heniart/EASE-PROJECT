@@ -96,11 +96,11 @@ public class Channel {
         this.room_manager = room_manager;
     }
 
-    public Set<TeamUser> getTeamUsers() {
+    public synchronized Set<TeamUser> getTeamUsers() {
         return teamUsers;
     }
 
-    public Set<TeamUser> getPending_teamUsers() {
+    public synchronized Set<TeamUser> getPending_teamUsers() {
         return pending_teamUsers;
     }
 
@@ -112,7 +112,7 @@ public class Channel {
         this.pending_teamUsers = pending_teamUsers;
     }
 
-    public Map<Integer, TeamCard> getTeamCardMap() {
+    public synchronized Map<Integer, TeamCard> getTeamCardMap() {
         return teamCardMap;
     }
 

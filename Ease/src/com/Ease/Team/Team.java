@@ -5,9 +5,6 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCard.TeamSingleCard;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
@@ -166,7 +163,7 @@ public class Team {
         this.active = active;
     }
 
-    public Map<Integer, TeamCard> getTeamCardMap() {
+    public synchronized Map<Integer, TeamCard> getTeamCardMap() {
         return teamCardMap;
     }
 
@@ -233,7 +230,7 @@ public class Team {
         this.channels = channels;
     }
 
-    public Set<Website> getTeamWebsites() {
+    public synchronized Set<Website> getTeamWebsites() {
         return teamWebsites;
     }
 
@@ -372,7 +369,7 @@ public class Team {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
         this.activeSubscriptions = 0;
-        this.getTeamUsers().values().stream().forEach(teamUser -> teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp() != null && teamCardReceiver.getApp().getProfile() != null).findFirst().ifPresent(teamCardReceiver -> {
+        this.getTeamUsers().values().forEach(teamUser -> teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp() != null && teamCardReceiver.getApp().getProfile() != null).findFirst().ifPresent(teamCardReceiver -> {
             teamUser.setActive_subscription(true);
             activeSubscriptions++;
         }));
@@ -382,17 +379,8 @@ public class Team {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
                 this.getSubscription().update(updateParams);
+                this.getSubscription().setQuantity(activeSubscriptions);
             }
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-        } catch (CardException e) {
-            e.printStackTrace();
-        } catch (APIException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -545,18 +533,6 @@ public class Team {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public void decipherTeamCards(String deciphered_teamKey) throws HttpServletException {
-        for (TeamCard teamCard : this.getTeamCardMap().values()) {
-            if (teamCard.isTeamSingleCard()) {
-                ((TeamSingleCard) teamCard).decipher(deciphered_teamKey);
-            } else if (teamCard.isTeamEnterpriseCard()) {
-                for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
-                    ((TeamEnterpriseCardReceiver) teamCardReceiver).decipher(deciphered_teamKey);
-                }
-            }
         }
     }
 
