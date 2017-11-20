@@ -409,3 +409,6 @@ ALTER TABLE users
   ADD FOREIGN KEY (jwt_id) REFERENCES jsonWebTokens (id);
 ALTER TABLE jsonWebTokens DROP FOREIGN KEY jsonWebTokens_ibfk_1;
 ALTER TABLE jsonWebTokens DROP COLUMN user_id;
+
+ALTER TABLE teamUserStatus ADD COLUMN invitation_sent TINYINT(1) NOT NULL;
+UPDATE teamUserStatus SET invitation_sent = 1;

@@ -23,6 +23,9 @@ public class TeamUserStatus {
     @Column(name = "tuto_done")
     protected Boolean tuto_done = false;
 
+    @Column(name = "invitation_sent")
+    private boolean invitation_sent = false;
+
     public TeamUserStatus() {
     }
 
@@ -56,6 +59,14 @@ public class TeamUserStatus {
 
     public void setTuto_done(Boolean tuto_done) {
         this.tuto_done = tuto_done;
+    }
+
+    public boolean isInvitation_sent() {
+        return invitation_sent;
+    }
+
+    public void setInvitation_sent(boolean invitation_sent) {
+        this.invitation_sent = invitation_sent;
     }
 
     @Override

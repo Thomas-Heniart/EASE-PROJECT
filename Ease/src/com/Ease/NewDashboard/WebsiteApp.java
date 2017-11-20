@@ -38,7 +38,7 @@ public class WebsiteApp extends App {
         this.website = website;
     }
 
-    public Set<LogWithApp> getLogWithAppSet() {
+    public synchronized Set<LogWithApp> getLogWithAppSet() {
         return logWithAppSet;
     }
 

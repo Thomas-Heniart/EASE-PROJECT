@@ -60,7 +60,7 @@ public class Profile {
         this.db_id = db_id;
     }
 
-    public User getUser() {
+    public synchronized User getUser() {
         return user;
     }
 
@@ -92,7 +92,7 @@ public class Profile {
         this.profileInformation = profileInformation;
     }
 
-    public Set<App> getAppSet() {
+    public synchronized Set<App> getAppSet() {
         return appSet;
     }
 
