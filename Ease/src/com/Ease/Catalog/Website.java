@@ -261,11 +261,8 @@ public class Website {
         Map<String, String> res = new ConcurrentHashMap<>();
         for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
             String value = (String) information.get(websiteInformation.getInformation_name());
-            if (value == null || value.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + websiteInformation.getInformation_name());
-            if (value.length() >= 255)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + websiteInformation.getInformation_name());
-            res.put(websiteInformation.getInformation_name(), value);
+            if (value != null && !value.equals("") && value.length() <= 255)
+                res.put(websiteInformation.getInformation_name(), value);
         }
         return res;
     }

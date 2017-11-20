@@ -53,9 +53,11 @@ public class CreateTeamSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             Integer teamUser_filler_id = sm.getIntParam("team_user_filler_id", true, true);
             TeamUser teamUser_filler = null;
+            Map<String, String> account_information = website.getInformationNeeded(account_information_obj);
             if (teamUser_filler_id != null && !teamUser_filler_id.equals(-1))
                 teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
-            Map<String, String> account_information = website.getInformationNeeded(account_information_obj);
+            else if (account_information.isEmpty())
+                throw new HttpServletException(HttpStatus.BadRequest, "You must fill the or choose someone to fill it");
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             Account account = null;
             if (account_information != null && !account_information.isEmpty())
