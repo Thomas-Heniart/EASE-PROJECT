@@ -3,8 +3,10 @@ package com.Ease.API.V1.Teams.TeamCards.TeamEnterpriseCard;
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamCard.*;
-import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamCard.JoinTeamCardRequest;
+import com.Ease.Team.TeamCard.JoinTeamEnterpriseCardRequest;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -25,7 +27,6 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);

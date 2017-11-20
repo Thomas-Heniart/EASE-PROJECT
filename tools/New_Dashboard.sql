@@ -164,6 +164,7 @@ CREATE TABLE teamCards (
   id            INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   team_id       INT(10) UNSIGNED NOT NULL,
   channel_id    INT(10) UNSIGNED NOT NULL,
+  name          VARCHAR(255)     NOT NULL,
   description   VARCHAR(255),
   creation_date DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -173,7 +174,6 @@ CREATE TABLE teamCards (
 
 CREATE TABLE teamLinkCards (
   id      INT(10) UNSIGNED NOT NULL,
-  name    VARCHAR(255),
   url     VARCHAR(2000),
   img_url VARCHAR(2000),
   PRIMARY KEY (id),
@@ -219,10 +219,11 @@ ALTER TABLE websiteApps
   DROP COLUMN type;
 
 CREATE TABLE teamCardReceivers (
-  id          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  teamCard_id INT(10) UNSIGNED NOT NULL,
-  teamUser_id INT(10) UNSIGNED NOT NULL,
-  app_id      INT(10) UNSIGNED,
+  id           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  teamCard_id  INT(10) UNSIGNED NOT NULL,
+  teamUser_id  INT(10) UNSIGNED NOT NULL,
+  app_id       INT(10) UNSIGNED,
+  sharing_date DATETIME         NOT NULL DEFAULT current_timestamp,
   PRIMARY KEY (id),
   FOREIGN KEY (teamCard_id) REFERENCES teamCards (id),
   FOREIGN KEY (teamUser_id) REFERENCES teamUsers (id),
@@ -261,15 +262,17 @@ UPDATE profiles
 SET column_idx = column_idx - 1;
 
 INSERT INTO teamCards SELECT
-                        id,
+                        shareableApps.id,
                         team_id,
                         channel_id,
+                        name,
                         CURRENT_TIMESTAMP,
                         description
-                      FROM shareableApps;
+                      FROM shareableApps
+                        JOIN apps ON shareableApps.id = apps.id
+                        JOIN appsInformations ON apps.app_info_id = appsInformations.id;
 INSERT INTO teamLinkCards SELECT
                             apps.id,
-                            appsInformations.name,
                             linkAppInformations.url,
                             linkAppInformations.img_url
                           FROM shareableApps
@@ -309,7 +312,8 @@ INSERT INTO teamCardReceivers SELECT
                                 sharedApps.id,
                                 sharedApps.shareable_app_id,
                                 sharedApps.teamUser_tenant_id,
-                                apps.id
+                                apps.id,
+                                CURDATE()
                               FROM sharedApps
                                 JOIN apps ON sharedApps.id = apps.id;
 
@@ -407,8 +411,12 @@ ALTER TABLE users
   ADD COLUMN jwt_id INT(10) UNSIGNED;
 ALTER TABLE users
   ADD FOREIGN KEY (jwt_id) REFERENCES jsonWebTokens (id);
-ALTER TABLE jsonWebTokens DROP FOREIGN KEY jsonWebTokens_ibfk_1;
-ALTER TABLE jsonWebTokens DROP COLUMN user_id;
+ALTER TABLE jsonWebTokens
+  DROP FOREIGN KEY jsonWebTokens_ibfk_1;
+ALTER TABLE jsonWebTokens
+  DROP COLUMN user_id;
 
-ALTER TABLE teamUserStatus ADD COLUMN invitation_sent TINYINT(1) NOT NULL;
-UPDATE teamUserStatus SET invitation_sent = 1;
+ALTER TABLE teamUserStatus
+  ADD COLUMN invitation_sent TINYINT(1) NOT NULL;
+UPDATE teamUserStatus
+SET invitation_sent = 1;

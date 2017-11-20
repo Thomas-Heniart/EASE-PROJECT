@@ -5,7 +5,6 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -24,13 +23,17 @@ public class EditTeamEnterpriseCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamEnterpriseCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
+            String description = sm.getStringParam("description", true, true);
+            if (description == null)
+                description = "";
+            if (description.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");

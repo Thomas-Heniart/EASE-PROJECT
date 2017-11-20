@@ -32,6 +32,9 @@ abstract public class TeamCard {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "description")
     private String description;
 
@@ -51,7 +54,8 @@ abstract public class TeamCard {
 
     }
 
-    public TeamCard(Team team, Channel channel, String description) {
+    public TeamCard(String name, Team team, Channel channel, String description) {
+        this.name = name;
         this.team = team;
         this.channel = channel;
         this.description = description;
@@ -64,6 +68,14 @@ abstract public class TeamCard {
 
     public void setDb_id(Integer db_id) {
         this.db_id = db_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Team getTeam() {
@@ -114,8 +126,6 @@ abstract public class TeamCard {
         this.joinTeamCardRequestMap = joinTeamCardRequestMap;
     }
 
-    public abstract String getName();
-
     public abstract String getLogo();
 
     public JSONObject getJson() {
@@ -127,6 +137,7 @@ abstract public class TeamCard {
         res.put("creation_date", this.getCreation_date().getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("channel_id", this.getChannel().getDb_id());
+        res.put("description", this.getDescription());
         JSONArray receivers = new JSONArray();
         this.getTeamCardReceiverMap().values().stream().sorted(Comparator.comparingInt(TeamCardReceiver::getDb_id)).forEach(c -> receivers.add(c.getCardJson()));
         res.put("receivers", receivers);

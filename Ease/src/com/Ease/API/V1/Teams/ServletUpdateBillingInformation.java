@@ -10,6 +10,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Card;
 import com.stripe.model.Customer;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -71,7 +72,8 @@ public class ServletUpdateBillingInformation extends HttpServlet {
                 vat_id = "";
             res.put("business_vat_id", vat_id);
             res.put("people_invited", team.invite_people());
-            res.put("card", card.toJson());
+            JSONParser parser = new JSONParser();
+            res.put("card", parser.parse(card.toJson()));
             sm.setSuccess(res);
         } catch (StripeException e) {
             sm.setError(e);

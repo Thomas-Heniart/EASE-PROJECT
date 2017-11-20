@@ -23,8 +23,8 @@ public abstract class TeamWebsiteCard extends TeamCard {
 
     }
 
-    public TeamWebsiteCard(Team team, Channel channel, String description, Website website, Integer password_reminder_interval) {
-        super(team, channel, description);
+    public TeamWebsiteCard(String name, Team team, Channel channel, String description, Website website, Integer password_reminder_interval) {
+        super(name, team, channel, description);
         this.website = website;
         this.password_reminder_interval = password_reminder_interval;
     }
@@ -43,11 +43,6 @@ public abstract class TeamWebsiteCard extends TeamCard {
 
     public void setPassword_reminder_interval(Integer password_reminder_interval) {
         this.password_reminder_interval = password_reminder_interval;
-    }
-
-    @Override
-    public String getName() {
-        return this.getWebsite().getName();
     }
 
     @Override

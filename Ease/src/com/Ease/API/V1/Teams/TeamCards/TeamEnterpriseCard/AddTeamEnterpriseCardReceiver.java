@@ -6,7 +6,6 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -27,7 +26,6 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);

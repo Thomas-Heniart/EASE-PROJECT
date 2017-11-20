@@ -5,7 +5,6 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -22,7 +21,6 @@ public class DeleteTeamCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
