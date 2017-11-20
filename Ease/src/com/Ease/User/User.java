@@ -369,10 +369,8 @@ public class User {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookie = new Cookie("email", this.getEmail());
         Cookie cookie1 = new Cookie("fname", this.getUsername());
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, 1);
-        cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
-        cookie1.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
+        cookie.setMaxAge(Integer.MAX_VALUE);
+        cookie1.setMaxAge(Integer.MAX_VALUE);
         cookies.add(cookie);
         cookies.add(cookie1);
         return cookies;
