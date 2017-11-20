@@ -509,6 +509,7 @@ public class TeamUser {
             int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
             profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
             hibernateQuery.saveOrUpdateObject(profile);
+            this.getUser().addProfile(profile);
             this.getUser().moveProfile(profile.getDb_id(), 2, 0, hibernateQuery);
             this.setProfile(profile);
             this.getTeamUserStatus().setProfile_created(true);
@@ -518,6 +519,7 @@ public class TeamUser {
             if (this.getUser().getProfileSet().isEmpty()) {
                 profile = new Profile(this.getUser(), 2, 0, new ProfileInformation(this.getTeam().getName()));
                 hibernateQuery.saveOrUpdateObject(profile);
+                this.getUser().addProfile(profile);
                 this.setProfile(profile);
                 hibernateQuery.saveOrUpdateObject(this);
                 return this.getProfile();
