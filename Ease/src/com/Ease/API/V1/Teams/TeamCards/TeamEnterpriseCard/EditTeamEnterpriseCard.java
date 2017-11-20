@@ -34,6 +34,9 @@ public class EditTeamEnterpriseCard extends HttpServlet {
                 description = "";
             if (description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
+            String name = sm.getStringParam("name", true, false);
+            if (name.equals("") || name.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");

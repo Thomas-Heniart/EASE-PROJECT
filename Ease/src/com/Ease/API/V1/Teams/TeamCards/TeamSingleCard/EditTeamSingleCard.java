@@ -37,6 +37,9 @@ public class EditTeamSingleCard extends HttpServlet {
                 description = "";
             if (description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
+            String name = sm.getStringParam("name", true, false);
+            if (name.equals("") || name.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             teamCard.setDescription(description);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             /* String private_key = (String) sm.getContextAttr("privateKey");
