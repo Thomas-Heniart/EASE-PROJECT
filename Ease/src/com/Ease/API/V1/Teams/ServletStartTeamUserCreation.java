@@ -93,7 +93,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             mailJetBuilder.addVariable("first_name", adminTeamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", adminTeamUser.getLastName());
             mailJetBuilder.addVariable("email", adminTeamUser.getEmail());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teamJoin/" + code);
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teamJoin/" + code);
             mailJetBuilder.sendEmail();
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.ADDED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());

@@ -113,7 +113,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("user_pseudo", teamUser.getUsername());
             mailJetBuilder.addVariable("user_email", teamUser.getEmail());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
             mailJetBuilder.sendEmail();
             sm.getUser().addTeamUser(teamUser);
             sm.setParam("team_id", team_id.longValue());

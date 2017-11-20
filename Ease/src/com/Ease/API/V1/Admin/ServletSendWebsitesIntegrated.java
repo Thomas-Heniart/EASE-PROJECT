@@ -39,7 +39,7 @@ public class ServletSendWebsitesIntegrated extends HttpServlet {
                 mailJetBuilder.addTo(email);
                 mailJetBuilder.setTemplateId(237392);
                 mailJetBuilder.addVariable("app_name", website_names);
-                mailJetBuilder.addVariable("url", Variables.URL_PATH + "teams#/main/catalog");
+                mailJetBuilder.addVariable("url", Variables.URL_PATH + "#/main/catalog");
                 mailJetBuilder.sendEmail();
             }
             sm.setSuccess("Done");

@@ -51,7 +51,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.addVariable("teamUser", teamUser.getUsername());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
             mailJetBuilder.sendEmail();
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());
