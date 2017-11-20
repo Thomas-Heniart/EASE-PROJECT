@@ -208,6 +208,18 @@ input[type=number]::-webkit-inner-spin-button {
   font-weight: normal !important;
 }
 
+.full_screen_view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10vh 2rem 2rem;
+  color: $themeDarkGrayTextColor;
+}
+
 .ui.search.inverted {
   .ui.icon.input > input {
     padding: .67857143em 1em !important;
@@ -293,10 +305,10 @@ html {
 }
 
 #single_ease_logo_handler {
-  position: absolute;
+  position: fixed;
   top:0;
   left: 0;
-  height: 43px;
+  height: 75px;
   z-index: 1;
 }
 

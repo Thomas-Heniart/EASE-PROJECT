@@ -1,7 +1,9 @@
 var React = require('react');
 var LoadingScreen = require('./LoadingScreen');
 import {connect} from "react-redux";
+import queryString from "query-string";
 import {withRouter} from "react-router-dom";
+import {withCookies, Cookies } from 'react-cookie';
 import {fetchNotifications} from "../../actions/notificationsActions";
 import {fetchDashboard} from "../../actions/dashboardActions";
 import {fetchTeams} from "../../actions/teamActions";
@@ -60,6 +62,11 @@ class Base extends React.Component {
       document.removeEventListener("GetSettingsDone", this.eventListener);
     }, 1000);
   }
+  componentWillMount(){
+    const query = queryString.parse(this.props.location.search);
+    if (query.skipLanding !== undefined)
+      this.props.cookies.set('skipLanding', true);
+  }
   render(){
     if (this.state.fetching)
       return (<LoadingScreen/>);
@@ -88,4 +95,4 @@ class Base extends React.Component {
   }
 }
 
-module.exports = withRouter(Base);
+module.exports = withCookies(withRouter(Base));

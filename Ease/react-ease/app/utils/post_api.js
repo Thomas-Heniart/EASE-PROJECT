@@ -933,6 +933,13 @@ module.exports = {
         throw err.response.data;
       })
     },
+    renewPassword: ({email, code, password}) => {
+      return basic_post('/api/v1/common/ResetPassword', {
+        email: email,
+        code: code,
+        password: password
+      });
+    },
     editEmail : function(password, new_email, digits){
       return axios.post('/api/v1/common/EditEmail', {
             password: cipher(password),

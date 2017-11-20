@@ -229,12 +229,10 @@ function Loader(props){
   )
 }
 
-@connect((store)=>{
-  return {
-    authenticated: store.common.authenticated,
-    redirect: store.common.loginRedirectUrl
-  };
-})
+@connect((store)=>({
+  authenticated: store.common.authenticated,
+  redirect: store.common.loginRedirectUrl
+}))
 class Login extends React.Component {
   constructor(props){
     super(props);
@@ -247,8 +245,8 @@ class Login extends React.Component {
       redirect : ''
     };
     if (this.props.authenticated)
-      window.location.href = "/home";
-    this.state.knownUser = this.state.knownFname !== undefined && this.state.knownEmail !== undefined;
+      this.props.history.replace('/main/dashboard');
+    this.state.knownUser = !!this.state.knownFname && !!this.state.knownEmail;
     if (this.state.knownUser) {
       this.state.knownFname = base64.decode(this.state.knownFname);
       this.state.activeView = 'known';
@@ -265,9 +263,9 @@ class Login extends React.Component {
   }
   finishLoggingIn(){
     if (this.state.redirect.length > 0)
-      this.props.history.push(this.state.redirect);
+      this.props.history.replace(this.state.redirect);
     else
-      window.location.href = "/home";
+      this.props.history.replace('/main/dashboard');
   }
   setView(name){
     this.setState({lastActive: this.state.activeView, activeView: name});
