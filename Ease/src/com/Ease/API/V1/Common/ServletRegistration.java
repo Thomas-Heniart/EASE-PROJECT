@@ -69,8 +69,8 @@ public class ServletRegistration extends HttpServlet {
             User newUser = UserFactory.getInstance().createUser(email, username, password);
             sm.saveOrUpdate(newUser);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Profile profile_perso = new Profile(user, 0, 0, new ProfileInformation("Me"));
-            Profile profile_pro = new Profile(user, 1, 0, new ProfileInformation("Pro"));
+            Profile profile_perso = new Profile(newUser, 0, 0, new ProfileInformation("Me"));
+            Profile profile_pro = new Profile(newUser, 1, 0, new ProfileInformation("Pro"));
             sm.saveOrUpdate(profile_perso);
             sm.saveOrUpdate(profile_pro);
             newUser.addProfile(profile_perso);

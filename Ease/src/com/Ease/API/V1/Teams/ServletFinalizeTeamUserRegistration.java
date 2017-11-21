@@ -77,7 +77,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot be part of this team");
             Object[] idTeamAndTeamUser = (Object[]) idTeamAndTeamUserObj;
             Integer team_id = (Integer) idTeamAndTeamUser[1];
-            if (sm.getTeamUser(team_id) != null)
+            if (user.getTeamUserOrNull(team_id) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot have two accounts in a team.");
             Integer teamUser_id = (Integer) idTeamAndTeamUser[0];
             Team team = sm.getTeam(team_id);
@@ -102,6 +102,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
+            e.printStackTrace();
             sm.setError(e);
         }
         sm.sendResponse();
