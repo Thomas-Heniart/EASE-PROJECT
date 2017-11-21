@@ -148,6 +148,7 @@ public class ServletCreateTeam extends HttpServlet {
             else if (!userEmail.isVerified())
                 userEmail.setVerified(true);
             sm.saveOrUpdate(userEmail);
+            sm.initializeTeamWithContext(team);
             sm.setSuccess(team.getJson());
         } catch (StripeException e) {
             sm.setError(e);
