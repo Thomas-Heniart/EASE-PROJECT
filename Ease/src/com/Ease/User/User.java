@@ -35,7 +35,7 @@ public class User {
 
     @Column(name = "registration_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date registration_date;
+    private Date registration_date = new Date();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "key_id")

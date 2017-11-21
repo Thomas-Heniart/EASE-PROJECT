@@ -67,36 +67,41 @@ public class ServletRegistration extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             }
             User newUser = UserFactory.getInstance().createUser(email, username, password);
-
+            sm.saveOrUpdate(newUser);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Profile profile_perso = new Profile(user, 0, 0, new ProfileInformation("Me"));
             Profile profile_pro = new Profile(user, 1, 0, new ProfileInformation("Pro"));
-            user.addProfile(profile_perso);
-            user.addProfile(profile_pro);
+            sm.saveOrUpdate(profile_perso);
+            sm.saveOrUpdate(profile_pro);
+            newUser.addProfile(profile_perso);
+            newUser.addProfile(profile_pro);
             Website facebook = catalog.getWebsiteWithName("Facebook", hibernateQuery);
             Website gmail = catalog.getWebsiteWithName("Gmail", hibernateQuery);
             Website sncf = catalog.getWebsiteWithName("Voyages SNCF", hibernateQuery);
             ClassicApp facebookApp = new ClassicApp(new AppInformation(facebook.getName()), facebook);
             facebookApp.setProfile(profile_perso);
             facebookApp.setPosition(0);
+            sm.saveOrUpdate(facebookApp);
             profile_perso.addApp(facebookApp);
             ClassicApp gmailApp = new ClassicApp(new AppInformation(gmail.getName()), gmail);
             gmailApp.setProfile(profile_perso);
             gmailApp.setPosition(1);
+            sm.saveOrUpdate(gmailApp);
             profile_perso.addApp(gmailApp);
             ClassicApp sncfApp = new ClassicApp(new AppInformation(sncf.getName()), sncf);
             sncfApp.setProfile(profile_perso);
             sncfApp.setPosition(2);
+            sm.saveOrUpdate(sncfApp);
             profile_perso.addApp(sncfApp);
             LinkApp lemonde = new LinkApp(new AppInformation("Le Monde"), new LinkAppInformation("http://www.lemonde.fr/", "https://logo.clearbit.com/lemonde.fr"));
             lemonde.setProfile(profile_perso);
             lemonde.setPosition(3);
+            sm.saveOrUpdate(lemonde);
             profile_perso.addApp(lemonde);
-            sm.saveOrUpdate(newUser);
             sm.setUser(newUser);
-            String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
-            String privateKey = user.getUserKeys().getDecipheredPrivateKey(keyUser);
-            Map<String, Object> userProperties = sm.getUserProperties(user.getDb_id());
+            String keyUser = newUser.getUserKeys().getDecipheredKeyUser(password);
+            String privateKey = newUser.getUserKeys().getDecipheredPrivateKey(keyUser);
+            Map<String, Object> userProperties = sm.getUserProperties(newUser.getDb_id());
             userProperties.put("keyUser", keyUser);
             userProperties.put("privateKey", privateKey);
             if (send_news) {

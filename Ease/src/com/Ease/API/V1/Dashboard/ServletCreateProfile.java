@@ -35,7 +35,11 @@ public class ServletCreateProfile extends HttpServlet {
             hibernateQuery.queryString("SELECT MAX(p.position_index) FROM Profile p WHERE p.user = :user AND p.column_index = :column_index");
             hibernateQuery.setParameter("user", user);
             hibernateQuery.setParameter("column_index", column_index);
-            Integer position = (Integer) hibernateQuery.getSingleResult() + 1;
+            Integer position = (Integer) hibernateQuery.getSingleResult();
+            if (position == null)
+                position = 0;
+            else
+                position++;
             Profile profile = new Profile(user, column_index, position, new ProfileInformation(name));
             sm.saveOrUpdate(profile);
             user.addProfile(profile);
