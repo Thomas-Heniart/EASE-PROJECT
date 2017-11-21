@@ -151,7 +151,11 @@ public abstract class ServletManager {
             userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
             for (TeamUser teamUser : user.getTeamUsers()) {
                 Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
-                teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
+                String teamKey = (String) teamProperties.get("teamKey");
+                if (teamUser.getTeamKey() != null && teamKey != null)
+                    teamUser.lastRegistrationStep(keyUser, teamKey, this.getHibernateQuery());
+                else if (teamUser.getTeamKey() != null)
+                    teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
             }
         } else
             this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
