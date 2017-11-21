@@ -74,10 +74,16 @@ function UserList(props){
             user_list.map(function(user){
               return (
                   <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
-                    <div className="primary_action channel_name">
-                      <i className="fa fa-user prefix"/>
-                      <span className="overflow-ellipsis">{user.username}</span>
-                    </div>
+                    {user.state >= 1 ?
+                      <div className="primary_action channel_name">
+                        <i className="fa fa-user prefix"/>
+                        <span className="overflow-ellipsis">{user.username}</span>
+                      </div>
+                    :
+                      <div className="primary_action channel_name">
+                        <i className="fa fa-user-o prefix"/>
+                        <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
+                      </div>}
                   </NavLink>
               )
             }, this)

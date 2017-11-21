@@ -329,7 +329,7 @@ class SimpleTeamApp extends Component {
           <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
             <Header as="h4">
-              {website.name}
+              {app.name}
               {meReceiver !== null && meReceiver.accepted &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.requests.length > 0 && isAdmin(me.role) &&

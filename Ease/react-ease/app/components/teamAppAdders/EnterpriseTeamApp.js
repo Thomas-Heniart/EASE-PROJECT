@@ -31,7 +31,7 @@ import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} f
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = findMeInReceivers(app.receivers, me.id);
-  const asked = app.sharing_requests.indexOf(me.id) !== -1;
+  const asked = app.requests.indexOf(me.id) !== -1;
   return (
       <div class="team_app_actions_holder">
         {meReceiver === null &&
@@ -137,7 +137,9 @@ const SimpleCredentialsInput = ({receiver, me, team_id}) => {
       <div class="receiver align_items_center">
         <EnterpriseAppReceiverLabel username={receiver.username} up_to_date={!receiver.password_must_be_updated} accepted={receiver.accepted}/>
         {receiver.credentials.map(item => {
-          return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true} receiver_id={receiver.id} key={item.priority} onChange={null} item={item}/>
+          return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true}
+                                                 receiver_id={receiver.id} key={item.priority} onChange={null}
+                                                 item={item}/>
         })}
         {receiver.id === me.id &&
         <CopyPasswordButton team_id={team_id} shared_app_id={receiver.shared_app_id}/>}
@@ -290,7 +292,7 @@ class EnterpriseTeamApp extends Component {
     const app = this.props.app;
     let selected_users = [];
 
-    const users = channel.userIds.map(item => {
+    const users = channel.team_user_ids.map(item => {
       const user = selectItemFromListById(this.props.users, item);
       return {
         key: item,
@@ -412,7 +414,7 @@ class EnterpriseTeamApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.website;
     const users = this.getUsers();
-
+    console.log('app: ', app);
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
                    onSubmit={this.modify}>
@@ -420,14 +422,14 @@ class EnterpriseTeamApp extends Component {
           <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
             <Header as="h4">
-              {website.name}
+              {app.name}
               {meReceiver !== null && meReceiver.accepted &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
-              {app.sharing_requests.length > 0 && isAdmin(me.role) &&
+              {app.requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
             </Header>
             {meReceiver !== null && !meReceiver.accepted &&
-            <div class="overlay"/>}
+             <div class="overlay"/>}
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}
                                         me={me}
