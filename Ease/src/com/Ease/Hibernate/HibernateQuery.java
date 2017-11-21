@@ -27,10 +27,15 @@ public class HibernateQuery {
 
     public void queryString(String query) {
         this.query = this.session.createQuery(query);
+        this.query.setCacheable(true);
     }
 
     public void querySQLString(String query) {
         this.query = this.session.createNativeQuery(query);
+    }
+
+    public void setMaxResults(int limit) {
+        this.query.setMaxResults(limit);
     }
 
     public void setParameter(String parameter, Object value) {

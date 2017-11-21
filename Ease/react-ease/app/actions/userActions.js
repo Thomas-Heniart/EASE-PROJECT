@@ -229,13 +229,14 @@ export function reactivateTeamUser({team_id, team_user_id}){
 
 export function transferTeamOwnership({team_id, password, team_user_id}){
   return function (dispatch, getState){
-    console.log(team_id);
+    const my_id = getState().teams[team_id].my_team_user_id;
     return post_api.teamUser.transferTeamOwnership(getState().common.ws_id, team_id, password, team_user_id).then(r => {
       dispatch({
         type: 'TEAM_TRANSFER_OWNERSHIP',
         payload: {
           team_id: team_id,
-          team_user_id: team_user_id
+          team_user_id: team_user_id,
+          owner_id: my_id
         }
       });
     }).catch(err => {

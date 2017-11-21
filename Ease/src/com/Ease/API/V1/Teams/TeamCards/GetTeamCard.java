@@ -2,7 +2,6 @@ package com.Ease.API.V1.Teams.TeamCards;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -20,11 +19,12 @@ public class GetTeamCard extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            sm.getUser().getTeamUserForTeam(team);
+            Team team = sm.getTeam(team_id);
+            sm.getUser().getTeamUser(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            teamCard.decipher(teamKey);
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

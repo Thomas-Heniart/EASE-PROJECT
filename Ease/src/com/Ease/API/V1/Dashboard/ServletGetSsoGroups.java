@@ -1,8 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.SsoGroup;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 @WebServlet("/api/v1/dashboard/GetSsoGroups")
 public class ServletGetSsoGroups extends HttpServlet {
@@ -23,12 +22,10 @@ public class ServletGetSsoGroups extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             JSONArray res = new JSONArray();
-            HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT s FROM SsoGroup s WHERE s.user_id = :user_id");
-            hibernateQuery.setParameter("user_id", Integer.valueOf(user.getDBid()));
-            List<SsoGroup> ssoGroups = hibernateQuery.list();
+            Set<SsoGroup> ssoGroups = user.getSsoGroupSet();
             for (SsoGroup ssoGroup : ssoGroups) {
-                ssoGroup.decipher(user.getKeys().getKeyUser());
+                String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+                ssoGroup.decipher(keyUser);
                 res.add(ssoGroup.getJson());
             }
             sm.setSuccess(res);

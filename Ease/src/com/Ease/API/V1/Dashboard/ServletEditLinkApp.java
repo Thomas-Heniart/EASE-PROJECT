@@ -1,8 +1,9 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.LinkApp;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -23,10 +24,13 @@ public class ServletEditLinkApp extends HttpServlet {
             sm.needToBeConnected();
             Integer app_id = sm.getIntParam("app_id", true, false);
             User user = sm.getUser();
-            App app = user.getDashboardManager().getApp(app_id);
-            if (!app.isLinkApp())
+            App app = user.getApp(app_id, sm.getHibernateQuery());
+            if (app == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "This app does not exist");
+            Profile profile = app.getProfile();
+            if (app.getTeamCardReceiver() != null || (profile != null && !profile.getUser().equals(user)))
                 throw new HttpServletException(HttpStatus.Forbidden);
-            if (app.getTeamCardReceiver() != null)
+            if (!app.isLinkApp())
                 throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)

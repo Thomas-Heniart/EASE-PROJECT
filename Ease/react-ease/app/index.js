@@ -11,7 +11,8 @@ var MainView = require('./components/common/MainView');
 var TeamJoinView = require('./components/teams/TeamJoinView');
 var Login = require('./components/common/Login');
 var Base = require('./components/common/Base.js');
-import Tmp from "./Tmp";
+import Root from "./components/common/Root";
+import RenewPassword from "./components/common/RenewPassword";
 import Registration from './components/common/Registration';
 import HomeTemporaryHeader from './components/common/HomeTemporaryHeader';
 import {requireAuthentication} from "./components/common/requireAuthentication";
@@ -23,14 +24,14 @@ class App extends React.Component {
         <StripeProvider apiKey={stripe_api_key}>
           <HashRouter>
             <Base>
-              <Route exact path={"/"} component={HomeTemporaryHeader}/>
+              <Route exact path={"/"} component={Root}/>
               <Route path="/teamCreation" component={TeamCreationView}/>
               <Route path="/main" component={requireAuthentication(MainView)}/>
               <Route path="/teamJoin/:code" component={TeamJoinView}/>
-              <Route path="/teams/:teamId/:itemId?" component={TeamView}/>
-              <Route path="/tmp" component={Tmp}/>
+              <Route path="/teams/:teamId/:itemId?" component={requireAuthentication(TeamView)}/>
               <Route path="/login" component={Login}/>
               <Route path="/registration" component={Registration}/>
+              <Route path="/recover/:email/:code" component={RenewPassword}/>
             </Base>
           </HashRouter>
         </StripeProvider>

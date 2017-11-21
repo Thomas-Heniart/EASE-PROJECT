@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @PrimaryKeyJoinColumn(name = "id")
 public class WebsiteApp extends App {
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "website_id")
     private Website website;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "loginWith_app")
+    @OneToMany(mappedBy = "loginWith_app")
     private Set<LogWithApp> logWithAppSet = ConcurrentHashMap.newKeySet();
 
     public WebsiteApp() {
@@ -38,7 +38,7 @@ public class WebsiteApp extends App {
         this.website = website;
     }
 
-    public Set<LogWithApp> getLogWithAppSet() {
+    public synchronized Set<LogWithApp> getLogWithAppSet() {
         return logWithAppSet;
     }
 

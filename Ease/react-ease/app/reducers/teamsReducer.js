@@ -52,15 +52,15 @@ export const teams = createReducer({
     return new_state;
   },
   ['TEAM_TRANSFER_OWNERSHIP'](state, action){
-    const {team_id, team_user_id} = action.payload;
+    const {team_id, team_user_id, owner_id} = action.payload;
     const team = state[team_id];
-    const me = team.team_users[team.my_team_user_id];
+    const owner = team.team_users[owner_id];
     const user = team.team_users[team_user_id];
 
     return update(state, {
       [team_id]: {
         team_users: {
-          [me.id]: {
+          [owner.id]: {
             role: {$set: team.plan_id === 1 ? 2 : 1}
           },
           [user.id]: {

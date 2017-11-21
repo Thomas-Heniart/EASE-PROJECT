@@ -1,11 +1,13 @@
 package com.Ease.Team;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Notification.Notification;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.User.User;
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
-import com.Ease.websocketV1.WebSocketMessageFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -17,7 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by thomas on 10/04/2017.
  */
-@Entity(name = "teamUsers")
+@Entity
+@Table(name = "teamUsers")
 public class TeamUser {
 
     @Id
@@ -25,11 +28,9 @@ public class TeamUser {
     @Column(name = "id")
     protected Integer db_id;
 
-    @Transient
-    private transient com.Ease.Dashboard.User.User dashboard_user;
-
-    @Column(name = "user_id")
-    protected String user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "firstName")
     protected String firstName;
@@ -52,43 +53,40 @@ public class TeamUser {
     @Transient
     private transient boolean active_subscription = false;
 
-    @Transient
-    private transient String deciphered_teamKey;
-
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
-    protected Team team;
+    private Team team;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamUserRole_id")
-    protected TeamUserRole teamUserRole;
+    private TeamUserRole teamUserRole;
 
     @Column(name = "username")
-    protected String username;
+    private String username;
 
     @Column(name = "arrivalDate")
     @Temporal(TemporalType.TIMESTAMP)
-    protected Date arrivalDate;
+    private Date arrivalDate;
 
     @Column(name = "departureDate")
     @Temporal(TemporalType.TIMESTAMP)
-    protected Date departureDate;
+    private Date departureDate;
 
     @Column(name = "jobTitle")
-    protected String jobTitle;
+    private String jobTitle;
 
     @Column(name = "disabled")
     private boolean disabled;
 
     @Column(name = "admin_id")
-    protected Integer admin_id;
+    private Integer admin_id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id")
-    protected TeamUserStatus teamUserStatus;
+    private TeamUserStatus teamUserStatus;
 
     @Column(name = "phone_number")
-    protected String phone_number;
+    private String phone_number;
 
     @Column(name = "disabled_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -97,15 +95,19 @@ public class TeamUser {
     @Column(name = "invitation_code")
     private String invitation_code;
 
-    @ManyToMany(mappedBy = "teamUsers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "teamUsers")
     private Set<Channel> channels = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(mappedBy = "pending_teamUsers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "pending_teamUsers")
     private Set<Channel> pending_channels = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "teamUser_id")
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) {
         this.firstName = firstName;
@@ -132,20 +134,12 @@ public class TeamUser {
         this.db_id = db_id;
     }
 
-    public String getUser_id() {
-        return this.user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-    }
-
-    public com.Ease.Dashboard.User.User getDashboard_user() {
-        return dashboard_user;
-    }
-
-    public void setDashboard_user(com.Ease.Dashboard.User.User dashboard_user) {
-        this.dashboard_user = dashboard_user;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getFirstName() {
@@ -178,16 +172,6 @@ public class TeamUser {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getDeciphered_teamKey() throws HttpServletException {
-        if (this.deciphered_teamKey == null)
-            this.decipher_teamKey();
-        return deciphered_teamKey;
-    }
-
-    public void setDeciphered_teamKey(String deciphered_teamKey) {
-        this.deciphered_teamKey = deciphered_teamKey;
     }
 
     public String getTeamKey() {
@@ -244,6 +228,14 @@ public class TeamUser {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public boolean isActive_subscription() {
@@ -406,18 +398,21 @@ public class TeamUser {
         }
     }
 
-    public void finalizeRegistration() throws HttpServletException {
+    public void finalizeRegistration(String userKey, String userPrivateKey, HibernateQuery hibernateQuery) throws HttpServletException {
         try {
-            this.deciphered_teamKey = RSA.Decrypt(this.teamKey, this.getDashboard_user().getKeys().getPrivateKey());
-            this.teamKey = this.getDashboard_user().encrypt(this.deciphered_teamKey);
-            this.state = 2;
+            String teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
+            this.setTeamKey(AES.encrypt(teamKey, userKey));
+            this.setState(2);
+            hibernateQuery.saveOrUpdateObject(this);
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
 
-    public void decipher_teamKey() throws HttpServletException {
-        this.deciphered_teamKey = this.getDashboard_user().decrypt(this.teamKey);
+    public String getDecipheredTeamKey(String userKey) throws HttpServletException {
+        if (this.getState() == 2 && !this.isDisabled())
+            return AES.decrypt(this.getTeamKey(), userKey);
+        throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to decipher the team key");
     }
 
     public boolean isVerified() {
@@ -451,7 +446,7 @@ public class TeamUser {
     }
 
     public boolean isRegistered() {
-        return (this.getUser_id() != null && !this.getUser_id().equals(""));
+        return this.getUser() != null;
     }
 
     public boolean isSuperior(TeamUser teamUserToModify) {
@@ -471,13 +466,8 @@ public class TeamUser {
             channel.removeTeamUser(this);
         for (Channel channel : this.getPending_channels())
             channel.removePendingTeamUser(this);
-        if (this.getDashboard_user() != null)
-            this.getDashboard_user().getTeamUsers().remove(this);
-    }
-
-    public void disconnect() {
-        this.dashboard_user = null;
-        this.deciphered_teamKey = null;
+        if (this.getUser() != null)
+            this.getUser().getTeamUsers().remove(this);
     }
 
     public JSONObject getOrigin() {
@@ -486,33 +476,57 @@ public class TeamUser {
         return res;
     }
 
-    public void addNotification(String content, String url, String icon, Date timestamp, DataBaseConnection db) throws HttpServletException {
-        if (this.dashboard_user == null && this.getUser_id() == null)
-            return;
-        String team_url = "/teams/" + this.getTeam().getDb_id() + "/" + url;
-        if (this.dashboard_user == null)
-            Notification.createNotification(content, team_url, icon, this.getUser_id(), timestamp, db);
-        else {
-            Notification notification = this.dashboard_user.getNotificationManager().addNotification(content, team_url, icon, timestamp, db);
-            this.dashboard_user.getWebSocketManager().sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
-        }
-
-    }
-
-    public void cipheringStep(HibernateQuery hibernateQuery, DataBaseConnection db) throws HttpServletException {
+    public void cipheringStep(String userKey, String userPrivateKey, HibernateQuery hibernateQuery) throws HttpServletException {
         try {
             if (this.getState() == 1) {
-                this.finalizeRegistration();
+                this.finalizeRegistration(userKey, userPrivateKey, hibernateQuery);
                 hibernateQuery.saveOrUpdateObject(this);
             } else if (this.getState() == 2 && this.isDisabled()) {
-                String deciphered_teamKey = RSA.Decrypt(this.getTeamKey(), this.getDashboard_user().getKeys().getPrivateKey());
-                this.setTeamKey(this.getDashboard_user().encrypt(deciphered_teamKey));
-                this.setDeciphered_teamKey(deciphered_teamKey);
+                String deciphered_teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
+                this.setTeamKey(AES.encrypt(deciphered_teamKey, userKey));
                 this.setDisabled(false);
                 hibernateQuery.saveOrUpdateObject(this);
             }
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    /**
+     * if you have a team profile, it returns it
+     * if you don't and you didn't already had one, create it
+     * if you don't have any profile, create it
+     * if you don't and you already had one, returns any profile of you team space
+     * @param hibernateQuery
+     * @return Profile profile
+     * @throws HttpServletException
+     */
+    public Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+        if (this.getUser() == null)
+            throw new HttpServletException(HttpStatus.InternError);
+        Profile profile = null;
+        if (!this.getTeamUserStatus().isProfile_created()) {
+            int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
+            profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
+            hibernateQuery.saveOrUpdateObject(profile);
+            this.getUser().addProfile(profile);
+            this.getUser().moveProfile(profile.getDb_id(), 2, 0, hibernateQuery);
+            this.setProfile(profile);
+            this.getTeamUserStatus().setProfile_created(true);
+            hibernateQuery.saveOrUpdateObject(this);
+            return this.getProfile();
+        } else {
+            if (this.getUser().getProfileSet().isEmpty()) {
+                profile = new Profile(this.getUser(), 2, 0, new ProfileInformation(this.getTeam().getName()));
+                hibernateQuery.saveOrUpdateObject(profile);
+                this.getUser().addProfile(profile);
+                this.setProfile(profile);
+                hibernateQuery.saveOrUpdateObject(this);
+                return this.getProfile();
+            } else if (this.getProfile() == null) {
+                return this.getUser().getProfileSet().stream().findAny().get();
+            } else
+                return this.getProfile();
         }
     }
 

@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.App;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -20,7 +21,15 @@ public class ServletGetApps extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             JSONArray res = new JSONArray();
-            user.getDashboardManager().getAppMap().values().stream().forEach(app -> res.add(app.getJson()));
+            for (App app : user.getApps()) {
+                String symmetric_key;
+                if (app.getTeamCardReceiver() != null)
+                    symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+                else
+                    symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+                app.decipher(symmetric_key);
+                res.add(app.getJson());
+            }
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

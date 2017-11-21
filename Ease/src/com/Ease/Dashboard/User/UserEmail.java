@@ -1,8 +1,6 @@
 package com.Ease.Dashboard.User;
 
 import com.Ease.Mail.SendGridMail;
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.*;
 
@@ -99,12 +97,12 @@ public class UserEmail {
             return false;
         if (user.getEmail().equals(this.email))
             return false;
-        for (App app : this.user.getDashboardManager().getAppMap().values()) {
+        /* for (App app : this.user.getDashboardManager().getAppMap().values()) {
             if (app.isClassicApp()) {
                 if (((ClassicApp) app).getAccount().getAccountInformationSet().stream().anyMatch(accountInformation -> accountInformation.getInformation_name().equals("login") && this.email.equals(accountInformation.getDeciphered_information_value())))
                     return false;
             }
-        }
+        } */
         DatabaseRequest request = db.prepareRequest("DELETE FROM usersEmails WHERE id = ?;");
         request.setInt(db_id);
         request.set();

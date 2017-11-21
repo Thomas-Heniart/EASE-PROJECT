@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -23,15 +22,11 @@ public class ServletEditTeamName extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = Math.toIntExact((Long) sm.getParam("team_id", true, false));
-            sm.needToBeOwnerOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeOwnerOfTeam(team);
             String name = (String) sm.getParam("name", true, true);
             if (name == null || name.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
-            Team otherTeam = teamManager.getTeamWithName(name);
-            if (otherTeam != null && otherTeam != team)
-                throw new HttpServletException(HttpStatus.BadRequest, "Team name already taken.");
             team.editName(name);
             sm.saveOrUpdate(team);
             sm.setSuccess(team.getJson());

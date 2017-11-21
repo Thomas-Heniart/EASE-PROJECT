@@ -3,6 +3,8 @@ package com.Ease.Team.TeamCard;
 import com.Ease.Catalog.Website;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Utils.HttpServletException;
 
 import javax.persistence.*;
 
@@ -15,8 +17,8 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
 
     }
 
-    public TeamEnterpriseCard(Team team, Channel channel, String description, Website website, Integer password_reminder_interval) {
-        super(team, channel, description, website, password_reminder_interval);
+    public TeamEnterpriseCard(String name, Team team, Channel channel, String description, Website website, Integer password_reminder_interval) {
+        super(name, team, channel, description, website, password_reminder_interval);
     }
 
     @Override
@@ -27,5 +29,12 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
     @Override
     public boolean isTeamEnterpriseCard() {
         return true;
+    }
+
+    @Override
+    public void decipher(String teamKey) throws HttpServletException {
+        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
+            teamCardReceiver.getApp().decipher(teamKey);
+        }
     }
 }

@@ -2,7 +2,8 @@ import createReducer from  "./createReducer";
 
 export const modals = createReducer({
   classicAppSettings: {
-    active: false
+    active: false,
+    app: null
   },
   linkAppSettings: {
     active: false,

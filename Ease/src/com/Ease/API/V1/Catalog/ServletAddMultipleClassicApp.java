@@ -2,7 +2,7 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.NewDashboard.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
@@ -29,7 +29,7 @@ public class ServletAddMultipleClassicApp extends HttpServlet {
             if (user == null)
                 user = sm.getUserWithToken();
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = user.getDashboardManager().getProfile(profile_id);
+            Profile profile = user.getProfile(profile_id);
             JSONArray apps_to_add = sm.getArrayParam("apps_to_add", false, false);
             JSONArray apps = new JSONArray();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
@@ -45,23 +45,22 @@ public class ServletAddMultipleClassicApp extends HttpServlet {
                 JSONObject websiteAndName = (JSONObject) app_to_add;
                 String name = (String) websiteAndName.get("name");
                 Integer website_id = Math.toIntExact((Long) websiteAndName.get("website_id"));
-                Website website = catalog.getPublicWebsiteWithId(website_id);
+                Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), user.getTeams());
                 Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
                 Set<AccountInformation> accountInformationSet = new HashSet<>();
                 Map<String, String> information = website.getInformationNeeded(account_information);
                 for (Map.Entry<String, String> entry : information.entrySet())
                     accountInformationSet.add(new AccountInformation(entry.getKey(), RSA.Encrypt(entry.getValue(), public_and_private_key.getKey()), entry.getValue()));
-                Account account = new Account(0, public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), user.getKeys().getKeyUser()), accountInformationSet, public_and_private_key.getValue());
+                String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+                Account account = new Account(0, public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), keyUser), accountInformationSet, public_and_private_key.getValue());
                 accountInformationSet.stream().forEach(accountInformation -> accountInformation.setAccount(account));
                 AppInformation appInformation = new AppInformation(name);
                 com.Ease.NewDashboard.ClassicApp classicApp = new com.Ease.NewDashboard.ClassicApp(appInformation, website, account);
                 classicApp.setProfile(profile);
-                classicApp.setPosition(profile.getAppMap().size());
+                classicApp.setPosition(profile.getSize());
                 sm.saveOrUpdate(classicApp);
                 profile.addApp(classicApp);
-                user.getDashboardManager().addApp(classicApp);
                 appList.add(classicApp);
-
             }
             for (App app : appList)
                 apps.add(app.getJson());

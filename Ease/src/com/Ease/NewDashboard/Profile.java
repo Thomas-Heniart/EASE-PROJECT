@@ -1,12 +1,16 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.Comparator;
-import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -18,8 +22,9 @@ public class Profile {
     @Column(name = "id")
     private Integer db_id;
 
-    @Column(name = "user_id")
-    private Integer user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "column_idx")
     private Integer column_index;
@@ -31,9 +36,11 @@ public class Profile {
     @JoinColumn(name = "profile_info_id")
     private ProfileInformation profileInformation;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "profile")
-    @MapKey(name = "db_id")
-    private Map<Integer, App> appMap = new ConcurrentHashMap<>();
+    @OneToMany(mappedBy = "profile")
+    private Set<App> appSet = ConcurrentHashMap.newKeySet();
+
+    @OneToOne(mappedBy = "profile")
+    private TeamUser teamUser;
 
     public final static Integer MIN_COLUMN_INDEX = 0;
     public final static Integer MAX_COLUMN_INDEX = 3;
@@ -42,8 +49,8 @@ public class Profile {
 
     }
 
-    public Profile(Integer user_id, Integer column_index, Integer position_index, ProfileInformation profileInformation) {
-        this.user_id = user_id;
+    public Profile(User user, Integer column_index, Integer position_index, ProfileInformation profileInformation) {
+        this.user = user;
         this.column_index = column_index;
         this.position_index = position_index;
         this.profileInformation = profileInformation;
@@ -57,12 +64,12 @@ public class Profile {
         this.db_id = db_id;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public synchronized User getUser() {
+        return user;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Integer getColumn_index() {
@@ -89,16 +96,24 @@ public class Profile {
         this.profileInformation = profileInformation;
     }
 
-    public Map<Integer, App> getAppMap() {
-        return appMap;
+    public synchronized Set<App> getAppSet() {
+        return appSet;
     }
 
-    public void setAppMap(Map<Integer, App> appMap) {
-        this.appMap = appMap;
+    public void setAppSet(Set<App> appSet) {
+        this.appSet = appSet;
+    }
+
+    public TeamUser getTeamUser() {
+        return teamUser;
+    }
+
+    public void setTeamUser(TeamUser teamUser) {
+        this.teamUser = teamUser;
     }
 
     public void addApp(App app) {
-        this.getAppMap().put(app.getDb_id(), app);
+        this.getAppSet().add(app);
     }
 
     /**
@@ -108,7 +123,7 @@ public class Profile {
         JSONObject res = new JSONObject();
         res.put("id", this.getDb_id());
         JSONArray app_ids = new JSONArray();
-        this.getAppMap().values().stream().sorted(Comparator.comparingInt(App::getPosition)).forEach(app -> app_ids.add(app.getDb_id()));
+        this.getAppSet().stream().sorted(Comparator.comparingInt(App::getPosition)).forEach(app -> app_ids.add(app.getDb_id()));
         res.put("app_ids", app_ids);
         res.put("name", this.getProfileInformation().getName());
         res.put("column_index", this.getColumn_index());
@@ -116,16 +131,23 @@ public class Profile {
     }
 
     public Stream<App> getApps() {
-        return this.getAppMap().values().stream().sorted(Comparator.comparingInt(App::getPosition));
+        return this.getAppSet().stream().sorted(Comparator.comparingInt(App::getPosition));
+    }
+
+    public App getApp(Integer app_id) throws HttpServletException {
+        App app = this.getAppSet().stream().filter(app1 -> app1.getDb_id().equals(app_id)).findFirst().orElse(null);
+        if (app == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "No such app");
+        return app;
     }
 
     public void removeAppAndUpdatePositions(App app, HibernateQuery hibernateQuery) {
         int position = app.getPosition();
-        this.getAppMap().values().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
+        this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
             app1.setPosition(app1.getPosition() - 1);
             hibernateQuery.saveOrUpdateObject(app1);
         });
-        this.getAppMap().remove(app.getDb_id());
+        this.getAppSet().remove(app);
     }
 
     public void updateAppPositions(App app, Integer position, HibernateQuery hibernateQuery) {
@@ -142,18 +164,26 @@ public class Profile {
                 hibernateQuery.saveOrUpdateObject(app1);
             });
         }
-        app.setPosition(position >= this.getAppMap().size() ? this.getAppMap().size() - 1 : position);
+        app.setPosition(position >= this.getAppSet().size() ? this.getAppSet().size() - 1 : position);
         hibernateQuery.saveOrUpdateObject(app);
     }
 
     public void addAppAndUpdatePositions(App app, Integer position, HibernateQuery hibernateQuery) {
         this.addApp(app);
-        this.getAppMap().values().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
+        this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
             app1.setPosition(app1.getPosition() + 1);
             hibernateQuery.saveOrUpdateObject(app1);
         });
-        app.setPosition(position >= this.getAppMap().size() ? this.getAppMap().size() - 1 : position);
+        app.setPosition(position >= this.getAppSet().size() ? this.getAppSet().size() - 1 : position);
         hibernateQuery.saveOrUpdateObject(app);
+    }
+
+    public int getSize() {
+        return this.getAppSet().size();
+    }
+
+    public boolean isTeamProfile() {
+        return this.getTeamUser() != null;
     }
 
     @Override

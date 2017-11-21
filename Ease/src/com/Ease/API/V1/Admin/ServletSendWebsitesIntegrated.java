@@ -31,7 +31,7 @@ public class ServletSendWebsitesIntegrated extends HttpServlet {
                 String website_names = "";
                 for (Object object1 : websiteIds) {
                     Integer id = Math.toIntExact((Long) object1);
-                    website_names += catalog.getWebsiteWithId(id).getName() + ", ";
+                    website_names += catalog.getWebsiteWithId(id, sm.getHibernateQuery()).getName() + ", ";
                 }
                 website_names = website_names.substring(0, website_names.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
@@ -39,7 +39,7 @@ public class ServletSendWebsitesIntegrated extends HttpServlet {
                 mailJetBuilder.addTo(email);
                 mailJetBuilder.setTemplateId(237392);
                 mailJetBuilder.addVariable("app_name", website_names);
-                mailJetBuilder.addVariable("url", Variables.URL_PATH + "teams#/main/catalog");
+                mailJetBuilder.addVariable("url", Variables.URL_PATH + "#/main/catalog");
                 mailJetBuilder.sendEmail();
             }
             sm.setSuccess("Done");

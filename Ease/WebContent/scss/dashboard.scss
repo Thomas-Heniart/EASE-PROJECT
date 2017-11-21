@@ -116,6 +116,7 @@
           position: relative;
         }
         .logo_handler {
+          background-color: white;
           position: relative;
           width: 100%;
           overflow: hidden;
@@ -195,9 +196,20 @@
   width: 60px;
   height: 60px;
   border-radius: 5px;
+  background-color: white;
 }
 
-.empty_app_indicator {
+.ui.label.new_app_label {
+  position: absolute;
+  z-index: 2;
+  top: -10px;
+  right: -12px;
+  background-color: #eb555c;
+  font-size: 12px;
+  color: white;
+}
+
+.app_overlay_indicator {
   @include display-flex();
   @include align-items(center);
   @include justify-content(center);
@@ -210,7 +222,14 @@
   cursor: pointer;
   border-radius: 5px;
   background-color: rgba(55, 59, 96, 0.8);
+  &.red {
+    background-color: rgba(235, 85,92, 0.8);
+  }
+  &.grey {
+    background-color: rgba(65,65,65,0.8);
+  }
   i {
     color:white;
   }
 }
+

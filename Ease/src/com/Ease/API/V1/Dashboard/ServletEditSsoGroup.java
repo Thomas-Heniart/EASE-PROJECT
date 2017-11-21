@@ -1,12 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.AccountFactory;
-import com.Ease.NewDashboard.SsoApp;
 import com.Ease.NewDashboard.SsoGroup;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
 
@@ -26,16 +22,10 @@ public class ServletEditSsoGroup extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             Integer sso_group_id = sm.getIntParam("sso_group_id", true, false);
-            HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT s FROM SsoGroup s WHERE s.id = :id");
-            hibernateQuery.setParameter("id", sso_group_id);
-            SsoGroup ssoGroup = (SsoGroup) hibernateQuery.getSingleResult();
-            if (ssoGroup == null || !ssoGroup.getUser_id().equals(Integer.valueOf(user.getDBid())))
-                throw new HttpServletException(HttpStatus.BadRequest, "No such SsoGroup");
+            SsoGroup ssoGroup = user.getSsoGroup(sso_group_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
-            ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, user.getKeys().getKeyUser(), 0));
-            for (SsoApp ssoApp : ssoGroup.getSsoAppMap().values())
-                ((SsoApp) user.getDashboardManager().getApp(ssoApp.getDb_id())).setSsoGroup(ssoGroup);
+            String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0));
             sm.saveOrUpdate(ssoGroup);
             sm.setSuccess(ssoGroup.getJson());
         } catch (Exception e) {

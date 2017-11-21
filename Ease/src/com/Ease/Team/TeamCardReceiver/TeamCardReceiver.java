@@ -6,6 +6,7 @@ import com.Ease.Team.TeamUser;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "teamCardReceivers")
@@ -16,15 +17,19 @@ abstract public class TeamCardReceiver {
     @Column(name = "id")
     protected Integer db_id;
 
+    @Column(name = "sharing_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date sharing_date = new Date();
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "app_id")
     private App app;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "teamCard_id")
     private TeamCard teamCard;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "teamUser_id")
     private TeamUser teamUser;
 
@@ -54,6 +59,14 @@ abstract public class TeamCardReceiver {
         this.app = app;
     }
 
+    public Date getSharing_date() {
+        return sharing_date;
+    }
+
+    public void setSharing_date(Date sharing_date) {
+        this.sharing_date = sharing_date;
+    }
+
     public TeamCard getTeamCard() {
         return teamCard;
     }
@@ -76,6 +89,7 @@ abstract public class TeamCardReceiver {
         res.put("team_card_id", this.getTeamCard().getDb_id());
         res.put("team_id", this.getTeamCard().getTeam().getDb_id());
         res.put("team_card_receiver_id", this.getDb_id());
+        res.put("sharing_date", this.getSharing_date().getTime());
         res.put("type", this.getType());
         return res;
     }
@@ -86,6 +100,7 @@ abstract public class TeamCardReceiver {
         res.put("team_card_id", this.getTeamCard().getDb_id());
         res.put("team_id", this.getTeamCard().getTeam().getDb_id());
         res.put("id", this.getDb_id());
+        res.put("sharing_date", this.getSharing_date().getTime());
         res.put("name", this.getApp().getAppInformation().getName());
         return res;
     }

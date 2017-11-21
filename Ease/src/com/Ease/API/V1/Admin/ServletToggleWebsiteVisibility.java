@@ -21,7 +21,7 @@ public class ServletToggleWebsiteVisibility extends HttpServlet {
             Integer website_id = sm.getIntParam("id", true, false);
             Boolean is_private = sm.getBooleanParam("private", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            WebsiteAttributes websiteAttributes = catalog.getWebsiteWithId(website_id).getWebsiteAttributes();
+            WebsiteAttributes websiteAttributes = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery()).getWebsiteAttributes();
             websiteAttributes.setPublic_website(!is_private);
             sm.saveOrUpdate(websiteAttributes);
             sm.setSuccess("Catalog edited");

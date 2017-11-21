@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -24,9 +23,8 @@ public class ServletUpgradePlan extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeOwnerOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeOwnerOfTeam(team);
             Integer plan_id = sm.getIntParam("plan_id", true, false);
             if (plan_id <= team.getPlan_id())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot downgrade your plan");

@@ -5,11 +5,10 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCard.TeamSingleCard;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
-import com.Ease.Utils.*;
-import com.Ease.websocketV1.WebSocketManager;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
@@ -17,7 +16,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import javax.servlet.ServletContext;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by thomas on 10/04/2017.
  */
-@Entity(name = "teams")
+@Entity
+@Table(name = "teams")
 public class Team {
 
     private static final String DEFAULT_CHANNEL_NAME = "openspace";
@@ -40,69 +39,58 @@ public class Team {
         inverse_plansMap.put("EaseFreemium", 1);
     }
 
-    public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
-        HibernateQuery query = new HibernateQuery();
-        query.queryString("SELECT t FROM teams t WHERE t.active = true");
-        List<Team> teams = query.list();
-        query.commit();
-        return teams;
-    }
-
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "name")
-    protected String name;
+    private String name;
 
     @Column(name = "customer_id")
-    protected String customer_id;
+    private String customer_id;
 
     @Column(name = "subscription_id")
-    protected String subscription_id;
+    private String subscription_id;
 
     @Column(name = "subscription_date")
-    protected Date subscription_date;
+    private Date subscription_date;
 
     @Column(name = "card_entered")
-    protected boolean card_entered = false;
+    private boolean card_entered = false;
 
     @Column(name = "invite_people")
-    protected boolean invite_people = false;
+    private boolean invite_people = false;
 
     @Column(name = "active")
-    protected boolean active = true;
+    private boolean active = true;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
-    protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
+    private Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
-    protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
+    private Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
-    @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
-    protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
+    @ManyToMany(mappedBy = "teams")
+    private Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
     private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
 
     @Transient
-    private int activeSubscriptions;
-
-    @Transient
-    private WebSocketManager webSocketManager = new WebSocketManager();
-
-    @Transient
-    private Channel default_channel;
+    private Customer customer;
 
     @Transient
     private Subscription subscription;
 
     @Transient
-    private Customer customer;
+    private int activeSubscriptions;
+
+    @Transient
+    private Channel default_channel;
 
     public Team(String name) {
         this.name = name;
@@ -143,30 +131,6 @@ public class Team {
         this.subscription_id = subscription_id;
     }
 
-    public Subscription getSubscription() throws HttpServletException {
-        try {
-            if (subscription == null)
-                subscription = Subscription.retrieve(this.getSubscription_id());
-            return subscription;
-        } catch (StripeException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
-    }
-
-    public Customer getCustomer() throws HttpServletException {
-        try {
-            if (customer == null)
-                customer = Customer.retrieve(this.getCustomer_id());
-            return customer;
-        } catch (StripeException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
     public boolean isCard_entered() {
         return card_entered;
     }
@@ -199,12 +163,28 @@ public class Team {
         this.active = active;
     }
 
-    public Map<Integer, TeamCard> getTeamCardMap() {
+    public synchronized Map<Integer, TeamCard> getTeamCardMap() {
         return teamCardMap;
     }
 
     public void setTeamCardMap(Map<Integer, TeamCard> teamCardMap) {
         this.teamCardMap = teamCardMap;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
     }
 
     public TeamCard getTeamCard(Integer id) throws HttpServletException {
@@ -250,7 +230,7 @@ public class Team {
         this.channels = channels;
     }
 
-    public Set<Website> getTeamWebsites() {
+    public synchronized Set<Website> getTeamWebsites() {
         return teamWebsites;
     }
 
@@ -389,7 +369,7 @@ public class Team {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
         this.activeSubscriptions = 0;
-        this.getTeamUsers().values().stream().forEach(teamUser -> teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp() != null && teamCardReceiver.getApp().getProfile() != null).findFirst().ifPresent(teamCardReceiver -> {
+        this.getTeamUsers().values().forEach(teamUser -> teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp() != null && teamCardReceiver.getApp().getProfile() != null).findFirst().ifPresent(teamCardReceiver -> {
             teamUser.setActive_subscription(true);
             activeSubscriptions++;
         }));
@@ -399,17 +379,8 @@ public class Team {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
                 this.getSubscription().update(updateParams);
+                this.getSubscription().setQuantity(activeSubscriptions);
             }
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-        } catch (CardException e) {
-            e.printStackTrace();
-        } catch (APIException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -471,10 +442,6 @@ public class Team {
         return null;
     }
 
-    public WebSocketManager getWebSocketManager() {
-        return webSocketManager;
-    }
-
     public Channel createDefaultChannel(TeamUser owner) {
         this.default_channel = new Channel(this, DEFAULT_CHANNEL_NAME, "Company-wide apps and tools sharing", owner);
         return this.default_channel;
@@ -496,7 +463,7 @@ public class Team {
         try {
             if (!this.isFreemium())
                 return;
-            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
+            String link = Variables.URL_PATH + "#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
@@ -560,24 +527,12 @@ public class Team {
                         }
                     }
                     String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
-                    this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
+                    //this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
 
                 }
             }
-        } catch (HttpServletException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public void decipherTeamCards(String deciphered_teamKey) throws HttpServletException {
-        for (TeamCard teamCard : this.getTeamCardMap().values()) {
-            if (teamCard.isTeamSingleCard()) {
-                ((TeamSingleCard) teamCard).decipher(deciphered_teamKey);
-            } else if (teamCard.isTeamEnterpriseCard()) {
-                for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
-                    ((TeamEnterpriseCardReceiver) teamCardReceiver).decipher(deciphered_teamKey);
-                }
-            }
         }
     }
 

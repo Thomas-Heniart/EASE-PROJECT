@@ -9,10 +9,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
-import com.Ease.websocketV1.WebSocketMessage;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
+import com.Ease.websocketV1.*;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -96,14 +93,14 @@ public class ResetPassword extends HttpServlet {
             while (rs.next()) {
                 Integer team_user_id = rs.getInt(1);
                 Integer admin_id = rs.getInt(3);
-                Team team = teamManager.getTeamWithId(rs.getInt(2));
+                Team team = teamManager.getTeam(rs.getInt(2), hibernateQuery);
                 TeamUser teamUser = team.getTeamUserWithId(team_user_id);
                 teamUser.setDisabled(true);
                 teamUser.setDisabledDate(new Date());
                 teamUser.setTeamKey(null);
                 hibernateQuery.saveOrUpdateObject(teamUser);
-                if (teamUser.getAdmin_id() != null)
-                    team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id().toString(), "/resources/notifications/user_password_lost.png", new Date(), sm.getDB());
+                /* if (teamUser.getAdmin_id() != null)
+                    team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification(teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id().toString(), "/resources/notifications/user_password_lost.png", new Date(), sm.getDB()); */
                 mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                 if (admin_id == null || admin_id == 0) {
@@ -123,13 +120,13 @@ public class ResetPassword extends HttpServlet {
                     mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
                     mailJetBuilder.addVariable("last_name", teamUser.getLastName());
                     mailJetBuilder.addVariable("team_name", team.getName());
-                    mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
+                    mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
                 }
                 mailJetBuilder.sendEmail();
                 JSONObject target = new JSONObject();
                 target.put("team_id", team.getDb_id());
                 WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), target);
-                team.getWebSocketManager().sendObject(webSocketMessage);
+                //team.getWebSocketManager().sendObject(webSocketMessage);
             }
             databaseRequest = db.prepareRequest("DELETE FROM passwordLost WHERE user_id = ?;");
             databaseRequest.setInt(userId);

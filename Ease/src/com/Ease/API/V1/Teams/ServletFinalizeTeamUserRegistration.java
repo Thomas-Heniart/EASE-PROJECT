@@ -3,13 +3,19 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.User.Notification;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -51,6 +57,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
+            User user = sm.getUser();
             String firstName = sm.getStringParam("first_name", true, true);
             String lastName = sm.getStringParam("last_name", true, true);
             String username = sm.getStringParam("username", true, true);
@@ -75,27 +82,29 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             Object idTeamAndTeamUserObj = query.getSingleResult();
             if (idTeamAndTeamUserObj == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot be part of this team");
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Object[] idTeamAndTeamUser = (Object[]) idTeamAndTeamUserObj;
             Integer team_id = (Integer) idTeamAndTeamUser[1];
-            if (sm.getTeamUserForTeamId(team_id) != null)
+            if (sm.getTeamUser(team_id) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot have two accounts in a team.");
             Integer teamUser_id = (Integer) idTeamAndTeamUser[0];
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);
             teamUser.setUsername(username);
             teamUser.setJobTitle(jobRoles[job_index]);
-            teamUser.setUser_id(sm.getUser().getDBid());
-            teamUser.setDashboard_user(sm.getUser());
+            teamUser.setUser(user);
             teamUser.setInvitation_code(null);
             teamUser.setState(1);
             sm.saveOrUpdate(teamUser);
             if (teamUser.getAdmin_id() == null || teamUser.getAdmin_id() == 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "The user must be invited by an admin");
+            /* @TODO remove notification and email */
             TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
-            teamUser_admin.addNotification(teamUser.getUsername() + " is ready to join your team. Give your final approval to give the access.", "@" + teamUser.getDb_id().toString(), "/resources/notifications/flag.png", sm.getTimestamp(), sm.getDB());
+            Notification notification = NotificationFactory.getInstance().createNotification(teamUser_admin.getUser(), teamUser.getUsername() + " is ready to join your team. Give your final approval to give the access.", "/resources/notifications/flag.png", teamUser);
+            sm.saveOrUpdate(notification);
+            WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser_admin.getUser().getDb_id());
+            webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setTemplateId(180141);
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
@@ -105,8 +114,16 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("user_pseudo", teamUser.getUsername());
             mailJetBuilder.addVariable("user_email", teamUser.getEmail());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
             mailJetBuilder.sendEmail();
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            Profile profile = teamUser.getOrCreateProfile(hibernateQuery);
+            teamUser.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
+                app.setProfile(profile);
+                app.setPosition(profile.getSize());
+                hibernateQuery.saveOrUpdateObject(app);
+                profile.addApp(app);
+            });
             sm.getUser().addTeamUser(teamUser);
             sm.setParam("team_id", team_id.longValue());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
@@ -130,7 +147,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (teamAndTeamUserId == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Your code is invalid.");
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId((Integer) teamAndTeamUserId[0]);
+            Team team = teamManager.getTeam((Integer) teamAndTeamUserId[0], sm.getHibernateQuery());
             TeamUser teamUser = team.getTeamUserWithId((Integer) teamAndTeamUserId[1]);
             JSONObject res = teamUser.getJson();
             res.put("team_id", team.getDb_id());

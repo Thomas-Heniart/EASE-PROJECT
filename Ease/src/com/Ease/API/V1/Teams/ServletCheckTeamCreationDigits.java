@@ -32,12 +32,6 @@ public class ServletCheckTeamCreationDigits extends HttpServlet {
             DatabaseResult rs = databaseRequest.get();
             if (!rs.next())
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid code or email.");
-            /* String dateString = rs.getString(1);
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date expiration_date = dateFormat.parse(dateString);
-            Date now = new Date();
-            if (now.compareTo(expiration_date) > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Your code has expired."); */
             sm.setSuccess("Code is valid");
         } catch (Exception e) {
             sm.setError(e);

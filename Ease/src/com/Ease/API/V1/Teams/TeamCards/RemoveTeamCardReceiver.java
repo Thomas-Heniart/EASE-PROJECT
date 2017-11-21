@@ -4,7 +4,8 @@ import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -21,19 +22,18 @@ public class RemoveTeamCardReceiver extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            sm.needToBeAdminOfTeam(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
+            if (teamCard.isTeamLinkCard())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must call PinTeamLinkCard");
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             Profile profile = teamCardReceiver.getApp().getProfile();
             if (profile != null)
                 profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
-            if (teamCardReceiver.getTeamUser().getDashboard_user() != null)
-                teamCardReceiver.getTeamUser().getDashboard_user().getDashboardManager().removeApp(teamCardReceiver.getApp());
             sm.saveOrUpdate(teamCard);
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {

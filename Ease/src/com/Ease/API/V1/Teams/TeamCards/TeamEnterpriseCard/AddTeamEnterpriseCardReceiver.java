@@ -6,7 +6,6 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -27,12 +26,10 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             JSONObject account_information = sm.getJsonParam("account_information", true, true);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamEnterpriseCard())
@@ -42,8 +39,10 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
             Account account = null;
-            if (account_information != null && !account_information.isEmpty())
-                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamUser_connected.getDeciphered_teamKey(), teamEnterpriseCard.getPassword_reminder_interval());
+            if (account_information != null && !account_information.isEmpty()) {
+                String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
+            }
             AppInformation appInformation = new AppInformation(teamEnterpriseCard.getName());
             App app = new ClassicApp(appInformation, teamEnterpriseCard.getWebsite(), account);
             TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser_receiver);

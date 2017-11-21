@@ -6,7 +6,6 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -26,12 +25,10 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamSingleCard())
@@ -40,7 +37,10 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
-            Account account = AccountFactory.getInstance().createAccountFromAccount(teamSingleCard.getAccount(), teamUser_connected.getDeciphered_teamKey());
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            if (teamSingleCard.getAccount() != null)
+                teamSingleCard.getAccount().decipher(teamKey);
+            Account account = AccountFactory.getInstance().createAccountFromAccount(teamSingleCard.getAccount(), teamKey);
             AppInformation appInformation = new AppInformation(teamSingleCard.getName());
             App app = new ClassicApp(appInformation, teamSingleCard.getWebsite(), account);
             TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser_receiver, allowed_to_see_password);

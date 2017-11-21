@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Sso;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
@@ -20,8 +21,9 @@ public class SsoGroup {
     @MapKey(name = "db_id")
     private Map<Integer, SsoApp> ssoAppMap = new ConcurrentHashMap<>();
 
-    @Column(name = "user_id")
-    private Integer user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "sso_id")
@@ -31,13 +33,12 @@ public class SsoGroup {
     @JoinColumn(name = "account_id")
     private Account account;
 
-
     public SsoGroup() {
 
     }
 
-    public SsoGroup(Integer user_id, Sso sso, Account account) {
-        this.user_id = user_id;
+    public SsoGroup(User user, Sso sso, Account account) {
+        this.user = user;
         this.sso = sso;
         this.account = account;
     }
@@ -58,12 +59,12 @@ public class SsoGroup {
         this.ssoAppMap = ssoAppMap;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Sso getSso() {
@@ -95,8 +96,12 @@ public class SsoGroup {
         res.put("id", this.getDb_id());
         res.put("sso_id", this.getSso().getDb_id());
         res.put("empty", this.getAccount() == null);
-        if (this.getAccount() != null)
+        res.put("account_information", new JSONObject());
+        if (this.getAccount() != null) {
             res.put("account_information", this.getAccount().getJsonWithoutPassword());
+            res.put("last_update_date", this.getAccount().getLast_update().getTime());
+        }
+
         return res;
     }
 

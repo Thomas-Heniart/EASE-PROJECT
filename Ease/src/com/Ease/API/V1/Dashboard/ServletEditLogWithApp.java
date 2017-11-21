@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.User.User;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.WebsiteApp;
@@ -24,17 +26,24 @@ public class ServletEditLogWithApp extends HttpServlet {
             sm.needToBeConnected();
             Integer app_id = sm.getIntParam("app_id", true, false);
             User user = sm.getUser();
-            App app = user.getDashboardManager().getApp(app_id);
-            if (!app.isLogWithApp())
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            App app = user.getApp(app_id, hibernateQuery);
+            if (app == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "This app does not exist");
+            Profile profile = app.getProfile();
+            if (app.getTeamCardReceiver() != null || (profile != null && !profile.getUser().equals(user)))
                 throw new HttpServletException(HttpStatus.Forbidden);
-            if (app.getTeamCardReceiver() != null)
+            if (!app.isLogWithApp())
                 throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             LogWithApp logWithApp = (LogWithApp) app;
             Integer logWith_app_id = sm.getIntParam("logWithApp_id", true, false);
-            App connectWith_app = user.getDashboardManager().getApp(logWith_app_id);
+            App connectWith_app = user.getApp(logWith_app_id, hibernateQuery);
+            Profile profile1 = app.getProfile();
+            if ((profile1 != null && !profile1.getUser().equals(user)))
+                throw new HttpServletException(HttpStatus.Forbidden);
             if (!connectWith_app.isWebsiteApp())
                 throw new HttpServletException(HttpStatus.Forbidden);
             if (((WebsiteApp) connectWith_app).getWebsite() != logWithApp.getLogWith_website())

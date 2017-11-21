@@ -1,3 +1,4 @@
+import update from 'immutability-helper';
 
 const initialState = {
   user : null,
@@ -14,7 +15,7 @@ export default function reducer(state=initialState, action) {
       return {
           ...state,
           user : action.payload.user,
-          authenticated : action.payload.user !== null
+          authenticated : !!action.payload.user
       }
     }
     case 'CONNECTION_FULFILLED': {
@@ -93,6 +94,14 @@ export default function reducer(state=initialState, action) {
           ...state,
         user: user
       }
+    }
+    case 'SET_BACKGROUND_FULFILLED': {
+      const {background_picture} = action.payload;
+      return update(state, {
+        user: {
+          background_picture: {$set: background_picture}
+        }
+      })
     }
     case 'SET_HOMEPAGE': {
       return {

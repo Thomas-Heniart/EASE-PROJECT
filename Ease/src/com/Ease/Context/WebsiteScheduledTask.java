@@ -12,21 +12,22 @@ public class WebsiteScheduledTask extends TimerTask {
 
     private Catalog catalog;
 
-    public WebsiteScheduledTask(Catalog catalog) {
+    WebsiteScheduledTask(Catalog catalog) {
+        super();
         this.catalog = catalog;
     }
 
     @Override
     public void run() {
+        HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            HibernateQuery hibernateQuery = new HibernateQuery();
             hibernateQuery.querySQLString("SELECT websites.id FROM websites JOIN websiteAttributes ON (websites.website_attributes_id = websiteAttributes.id) WHERE addedDate <= CURRENT_TIMESTAMP - INTERVAL 4 DAY AND new = 1;");
             List<Object> rs = hibernateQuery.list();
             rs.forEach((Object obj) -> {
                 Integer id = (Integer) obj;
-                Website website = null;
+                Website website;
                 try {
-                    website = catalog.getWebsiteWithId(id);
+                    website = catalog.getWebsiteWithId(id, hibernateQuery);
                     System.out.println(website.getName() + " not new anymore");
                     website.getWebsiteAttributes().setNew_website(false);
                     hibernateQuery.saveOrUpdateObject(website.getWebsiteAttributes());
@@ -36,6 +37,7 @@ public class WebsiteScheduledTask extends TimerTask {
             });
             hibernateQuery.commit();
         } catch (Exception e) {
+            hibernateQuery.rollback();
             e.printStackTrace();
         }
     }

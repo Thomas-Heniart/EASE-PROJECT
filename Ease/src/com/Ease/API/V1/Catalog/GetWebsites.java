@@ -20,7 +20,7 @@ public class GetWebsites extends HttpServlet {
             sm.needToBeConnected();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONObject res = new JSONObject();
-            res.put("websites", sm.getUser().isAdmin() ? catalog.getCatalogWebsites() : catalog.getPublicCatalogWebsites());
+            res.put("websites", sm.getUser().isAdmin() ? catalog.getCatalogWebsites(sm.getHibernateQuery()) : catalog.getPublicCatalogWebsites(sm.getHibernateQuery()));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

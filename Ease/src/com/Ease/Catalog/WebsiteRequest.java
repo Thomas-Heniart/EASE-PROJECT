@@ -25,7 +25,7 @@ public class WebsiteRequest {
 
     @ManyToOne
     @JoinColumn(name = "website_id", nullable = false)
-    protected Website website;
+    private Website website;
 
     public WebsiteRequest() {
 

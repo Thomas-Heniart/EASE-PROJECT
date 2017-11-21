@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by thomas on 05/05/2017.
@@ -28,10 +28,11 @@ public class ServletGetTeams extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            List<TeamUser> teamUserList = sm.getTeamUsers();
             JSONArray res = new JSONArray();
-            for (TeamUser teamUser : teamUserList) {
-                JSONObject tmp = teamUser.getTeam().getJson();
+            for (TeamUser teamUser : sm.getTeamUsers()) {
+                Team team = teamUser.getTeam();
+                sm.initializeTeamWithContext(team);
+                JSONObject tmp = team.getJson();
                 tmp.put("my_team_user_id", teamUser.getDb_id());
                 res.add(tmp);
             }

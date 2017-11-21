@@ -1,0 +1,51 @@
+{
+  "name": "Hidden.market",
+  "lastLogin": "",
+  "home": "https://up.hidden.market/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "form #email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "form #password"
+      },
+      {
+        "action": "trueClick",
+        "search": "form button[type='submit']"
+      }
+    ]
+  },
+  "Linkedin": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".button--linkedin"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='deconnexion'], form #email"
+    },
+    {
+      "search": "a[href*='deconnexion']"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='deconnexion']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}

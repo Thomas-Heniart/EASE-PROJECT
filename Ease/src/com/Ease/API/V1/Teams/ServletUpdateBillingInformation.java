@@ -10,6 +10,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Card;
 import com.stripe.model.Customer;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,8 +30,8 @@ public class ServletUpdateBillingInformation extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
+            Team team = sm.getTeam(team_id);
+            TeamUser teamUser = sm.getUser().getTeamUser(team);
             if (!teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
             Customer customer = Customer.retrieve(team.getCustomer_id());
@@ -71,7 +72,8 @@ public class ServletUpdateBillingInformation extends HttpServlet {
                 vat_id = "";
             res.put("business_vat_id", vat_id);
             res.put("people_invited", team.invite_people());
-            res.put("card", card.toJson());
+            JSONParser parser = new JSONParser();
+            res.put("card", parser.parse(card.toJson()));
             sm.setSuccess(res);
         } catch (StripeException e) {
             sm.setError(e);

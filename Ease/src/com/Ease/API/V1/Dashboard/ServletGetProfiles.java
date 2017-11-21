@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -18,7 +18,7 @@ public class ServletGetProfiles extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            sm.setSuccess(user.getDashboardManager().getProfilesJson());
+            sm.setSuccess(user.getProfilesJson());
         } catch (Exception e) {
             sm.setError(e);
         }

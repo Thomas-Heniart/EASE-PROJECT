@@ -1,10 +1,9 @@
 package com.Ease.API.Rest;
 
-import com.Ease.Dashboard.User.User;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -31,11 +30,10 @@ public class GetRoomApps extends HttpServlet {
             Integer room_id = sm.getIntParam("room_id", true);
             if (room_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter room_id");
-            sm.needToBeTeamUserOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             Channel channel = team.getChannelWithId(room_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             JSONObject res = new JSONObject();
             JSONArray apps = new JSONArray();
             /* for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser)) {

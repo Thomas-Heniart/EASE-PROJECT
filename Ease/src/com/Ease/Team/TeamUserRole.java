@@ -10,7 +10,8 @@ import java.util.Map;
 /**
  * Created by thomas on 10/04/2017.
  */
-@Entity(name = "teamUserRoles")
+@Entity
+@Table(name = "teamUserRoles")
 public class TeamUserRole {
 
     private static final Map<Integer, Role> roleMap = new HashMap<Integer, Role>() {{

@@ -1,9 +1,12 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.User.Notification;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Team.*;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -27,10 +30,9 @@ public class ServletEditTeamUserRole extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))
@@ -59,8 +61,12 @@ public class ServletEditTeamUserRole extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, message);
             }
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
-            if (teamUser != teamUserToModify)
-                teamUserToModify.addNotification(teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "@" + teamUserToModify.getDb_id() + "/flexPanel", "/resources/notifications/user_role_changed.png", sm.getTimestamp(), sm.getDB());
+            if (teamUser != teamUserToModify && teamUserToModify.getUser() != null) {
+                Notification notification = NotificationFactory.getInstance().createNotification(teamUserToModify.getUser(), teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "/resources/notifications/user_role_changed.png", teamUserToModify, true);
+                sm.saveOrUpdate(notification);
+                WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUserToModify.getUser().getDb_id());
+                webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+            }
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
             sm.setSuccess("TeamUser role edited.");

@@ -2,14 +2,14 @@ package com.Ease.API.V1.Schools;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.AppInformation;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
-import com.Ease.Utils.DataBaseConnection;
+import com.Ease.User.User;
+import com.Ease.User.UserFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/api/v1/common/RegistrationIeseg")
 public class ServletRegistrationIeseg extends HttpServlet {
@@ -32,8 +31,6 @@ public class ServletRegistrationIeseg extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             User user = sm.getUser();
-            if (user != null)
-                user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
             String username = sm.getStringParam("username", true, true);
             String email = sm.getStringParam("email", true, true);
             String password = sm.getStringParam("password", false, true);
@@ -63,44 +60,40 @@ public class ServletRegistrationIeseg extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             if (!errors.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, errors);
-            DataBaseConnection db = sm.getDB();
-            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
+            User newUser = UserFactory.getInstance().createUser(email, username, password);
+            sm.saveOrUpdate(newUser);
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
                 mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
-                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getFirstName());
+                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getUsername());
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
             sm.setUser(newUser);
-            ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
-            ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-            ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
-
             /* ieseg profile */
-            Profile ieseg_profile = new Profile(Integer.valueOf(newUser.getDBid()), 1, 0, new ProfileInformation("IESEG"));
+            Profile ieseg_profile = new Profile(newUser, 1, 0, new ProfileInformation("IESEG"));
 
             /* ieseg apps in profile */
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website ieseg_online = catalog.getWebsiteWithName("IESEG Online");
+            Website ieseg_online = catalog.getWebsiteWithName("IESEG Online", hibernateQuery);
             ClassicApp ieseg_onlineApp = new ClassicApp(new AppInformation(ieseg_online.getName()), ieseg_online);
             ieseg_onlineApp.setProfile(ieseg_profile);
             ieseg_onlineApp.setPosition(0);
             sm.saveOrUpdate(ieseg_onlineApp);
             ieseg_profile.addApp(ieseg_onlineApp);
-            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Ieseg");
+            Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Ieseg", hibernateQuery);
             ClassicApp jobTeaserApp = new ClassicApp(new AppInformation("JobTeaser"), jobTeaser);
             jobTeaserApp.setProfile(ieseg_profile);
             jobTeaserApp.setPosition(1);
             sm.saveOrUpdate(jobTeaserApp);
             ieseg_profile.addApp(jobTeaserApp);
-            Website unify = catalog.getWebsiteWithName("Unify Iéseg");
+            Website unify = catalog.getWebsiteWithName("Unify Iéseg", hibernateQuery);
             ClassicApp unifyApp = new ClassicApp(new AppInformation(unify.getName()), unify);
             unifyApp.setProfile(ieseg_profile);
             unifyApp.setPosition(2);
             sm.saveOrUpdate(unifyApp);
             ieseg_profile.addApp(unifyApp);
-            Website office_mail = catalog.getWebsiteWithName("Office365 Mails");
+            Website office_mail = catalog.getWebsiteWithName("Office365 Mails", hibernateQuery);
             ClassicApp office_mailApp = new ClassicApp(new AppInformation(office_mail.getName()), office_mail);
             office_mailApp.setProfile(ieseg_profile);
             office_mailApp.setPosition(3);

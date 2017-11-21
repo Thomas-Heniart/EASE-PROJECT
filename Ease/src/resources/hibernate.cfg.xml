@@ -24,6 +24,10 @@
         <property name="hibernate.c3p0.idle_test_period">3000</property>
         <property name="hibernate.id.new_generator_mappings">false</property>
         <property name="hibernate.enable_lazy_load_no_trans">true</property>
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
+        </property>
+        <property name="hibernate.cache.use_query_cache">true</property>
         <mapping class="com.Ease.Team.Team"/>
         <mapping class="com.Ease.Team.Channel"/>
         <mapping class="com.Ease.Team.TeamUser"/>
@@ -33,10 +37,10 @@
         <mapping class="com.Ease.Catalog.WebsiteInformation"/>
         <mapping class="com.Ease.Catalog.WebsiteFailure"/>
         <mapping class="com.Ease.Catalog.Sso"/>
-        <mapping class="com.Ease.Catalog.Category" />
-        <mapping class="com.Ease.Catalog.WebsiteRequest" />
-        <mapping class="com.Ease.Catalog.WebsiteCredentials" />
-        <mapping class="com.Ease.Catalog.ServerPublicKey" />
+        <mapping class="com.Ease.Catalog.Category"/>
+        <mapping class="com.Ease.Catalog.WebsiteRequest"/>
+        <mapping class="com.Ease.Catalog.WebsiteCredentials"/>
+        <mapping class="com.Ease.Catalog.ServerPublicKey"/>
         <mapping class="com.Ease.Team.TeamUserStatus"/>
         <mapping class="com.Ease.NewDashboard.Profile"/>
         <mapping class="com.Ease.NewDashboard.ProfileInformation"/>
@@ -63,5 +67,13 @@
         <mapping class="com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver"/>
         <mapping class="com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver"/>
         <mapping class="com.Ease.Team.TeamCardReceiver.TeamLinkCardReceiver"/>
+        <mapping class="com.Ease.User.User"/>
+        <mapping class="com.Ease.User.Administrator"/>
+        <mapping class="com.Ease.User.UserStatus"/>
+        <mapping class="com.Ease.User.UserEmail"/>
+        <mapping class="com.Ease.User.UserKeys"/>
+        <mapping class="com.Ease.User.Options"/>
+        <mapping class="com.Ease.User.Notification"/>
+        <mapping class="com.Ease.User.JsonWebToken"/>
     </session-factory>
 </hibernate-configuration>

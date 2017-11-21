@@ -16,13 +16,13 @@ public class Sso {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "name")
-    protected String name;
+    private String name;
 
     @Column(name = "img_path")
-    protected String imgPath;
+    private String imgPath;
 
     @OneToMany(mappedBy = "sso", fetch = FetchType.EAGER, orphanRemoval = true)
     @MapKey(name = "db_id")

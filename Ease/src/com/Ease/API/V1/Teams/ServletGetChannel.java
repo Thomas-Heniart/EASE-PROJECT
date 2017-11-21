@@ -2,7 +2,6 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -23,9 +22,8 @@ public class ServletGetChannel extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Integer room_id = sm.getIntParam("channel_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             Channel channel = team.getChannelWithId(room_id);
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {

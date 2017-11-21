@@ -23,7 +23,7 @@ public class ServletSendLoveMoney extends HttpServlet {
             sm.needToBeEaseAdmin();
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
             Integer credit = sm.getIntParam("credit", true, false);
             if (credit < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Don't be an asshole ^^ ");

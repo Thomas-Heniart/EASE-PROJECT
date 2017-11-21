@@ -13,22 +13,22 @@ public class WebsiteInformation {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "information_name")
-    protected String information_name;
+    private String information_name;
 
     @Column(name = "information_type")
-    protected String information_type;
+    private String information_type;
 
     @Column(name = "priority")
-    protected Integer priority;
+    private Integer priority;
 
     @Column(name = "placeholder")
-    protected String placeholder;
+    private String placeholder;
 
     @Column(name = "placeholder_icon")
-    protected String placeholder_icon;
+    private String placeholder_icon;
 
     @ManyToOne
     @JoinColumn(name = "website_id")

@@ -7,7 +7,7 @@
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="java.util.Base64" %>
 
-<% User user = (User) (session.getAttribute("user"));%>
+<% User user = (User)(session.getAttribute("user"));%>
 
 <% if (user != null) {%>
 <c:redirect url="/home"/>
@@ -104,29 +104,29 @@
     <link rel="stylesheet" href="/cssMinified.v00019/bootstrap.css"/>
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript">
-        (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
-        ;r.type="text/javascript";r.async=true
-        ;r.src="/js/thirdParty/new_amplitude_analytics.js?0"
-        ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
-            e.amplitude.runQueuedFunctions()}else{
-            console.log("[Amplitude] Error: could not load SDK")}}
-        ;var i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)
-        ;function s(e,t){e.prototype[t]=function(){
-            this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
-            var o=function(){this._q=[];return this}
-            ;var a=["add","append","clearAll","prepend","set","setOnce","unset"]
-            ;for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[]
-                ;return this}
-            ;var l=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
-            ;for(var p=0;p<l.length;p++){s(c,l[p])}n.Revenue=c
-            ;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","logEventWithTimestamp","logEventWithGroups","setSessionId"]
-            ;function v(e){function t(t){e[t]=function(){
-                e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
-                for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){
-                e=(!e||e.length===0?"$default_instance":e).toLowerCase()
-                ;if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]}
-            ;e.amplitude=n})(window,document);
-        amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
+      (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
+      ;r.type="text/javascript";r.async=true
+      ;r.src="/js/thirdParty/new_amplitude_analytics.js?0"
+      ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
+        e.amplitude.runQueuedFunctions()}else{
+        console.log("[Amplitude] Error: could not load SDK")}}
+      ;var i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)
+      ;function s(e,t){e.prototype[t]=function(){
+        this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
+        var o=function(){this._q=[];return this}
+        ;var a=["add","append","clearAll","prepend","set","setOnce","unset"]
+        ;for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[]
+            ;return this}
+        ;var l=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
+        ;for(var p=0;p<l.length;p++){s(c,l[p])}n.Revenue=c
+        ;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","logEventWithTimestamp","logEventWithGroups","setSessionId"]
+        ;function v(e){function t(t){e[t]=function(){
+          e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
+          for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){
+          e=(!e||e.length===0?"$default_instance":e).toLowerCase()
+          ;if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]}
+        ;e.amplitude=n})(window,document);
+      amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
     </script>
 </head>
 
@@ -291,32 +291,32 @@
 <script src="/jsMinified.v00022/ajaxHandler.js" async></script>
 <script src="/jsMinified.v00022/jsencrypt.js" async></script>
 <script>
-    window.addEventListener('load', function () {
-        $.ajaxSetup({cache: true});
-        easeTracker.trackEvent("LoginPageVisit");
-    });
+  window.addEventListener('load', function () {
+    $.ajaxSetup({cache: true});
+    easeTracker.trackEvent("LoginPageVisit");
+  });
 </script>
 <script>
-    window.addEventListener('load', function () {
-        setTimeout(function () {
-            var event = new CustomEvent("NewEaseUser", {"detail": "anonymous"});
-            document.dispatchEvent(event);
-        }, 500);
-    });
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      var event = new CustomEvent("NewEaseUser", {"detail": "anonymous"});
+      document.dispatchEvent(event);
+    }, 500);
+  });
 </script>
 <!--================ THIRD PARTY APIS ========= -->
 <script type="text/javascript">
-    window.addEventListener('load', function () {
-        $crisp = [];
-        CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
-        (function () {
-            d = document;
-            s = d.createElement("script");
-            s.src = "https://client.crisp.chat/l.js";
-            s.async = 1;
-            d.getElementsByTagName("head")[0].appendChild(s);
-        })();
-    });
+  window.addEventListener('load', function () {
+    $crisp = [];
+    CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
+    (function () {
+      d = document;
+      s = d.createElement("script");
+      s.src = "https://client.crisp.chat/l.js";
+      s.async = 1;
+      d.getElementsByTagName("head")[0].appendChild(s);
+    })();
+  });
 </script>
 </body>
 </html>

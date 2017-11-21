@@ -27,12 +27,12 @@ public class ServletUnsubscribe extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
+            Team team = sm.getTeam(team_id);
+            TeamUser teamUser = sm.getUser().getTeamUser(team);
             if (!teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
             String password = sm.getStringParam("password", false, false);
-            if (!sm.getUser().getKeys().isGoodPassword(password))
+            if (!sm.getUser().getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
 
             /* ==== Stripe start ==== */
@@ -62,7 +62,6 @@ public class ServletUnsubscribe extends HttpServlet {
             team.setCard_entered(false);
             team.setActive(false);
             sm.saveOrUpdate(team);
-            teamManager.removeTeamWithId(team_id);
             sm.setSuccess("Subscription ended");
         } catch (StripeException e) {
             sm.setError(e);

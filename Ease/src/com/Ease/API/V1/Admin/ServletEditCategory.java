@@ -22,7 +22,7 @@ public class ServletEditCategory extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             Integer position = sm.getIntParam("position", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Category category = catalog.getCategoryWithId(category_id);
+            Category category = catalog.getCategoryWithId(category_id, sm.getHibernateQuery());
             category.setName(name);
             category.setPosition(position);
             sm.saveOrUpdate(category);

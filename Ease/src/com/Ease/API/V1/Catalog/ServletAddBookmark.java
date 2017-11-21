@@ -4,7 +4,7 @@ import com.Ease.NewDashboard.AppInformation;
 import com.Ease.NewDashboard.LinkApp;
 import com.Ease.NewDashboard.LinkAppInformation;
 import com.Ease.NewDashboard.Profile;
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -34,15 +34,14 @@ public class ServletAddBookmark extends HttpServlet {
             if (img_url.length() > 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = user.getDashboardManager().getProfile(profile_id);
+            Profile profile = user.getProfile(profile_id);
             AppInformation appInformation = new AppInformation(name);
             LinkAppInformation linkAppInformation = new LinkAppInformation(url, img_url);
             LinkApp linkApp = new LinkApp(appInformation, linkAppInformation);
             linkApp.setProfile(profile);
-            linkApp.setPosition(profile.getAppMap().size());
+            linkApp.setPosition(profile.getSize());
             sm.saveOrUpdate(linkApp);
             profile.addApp(linkApp);
-            user.getDashboardManager().addApp(linkApp);
             sm.setSuccess(linkApp.getJson());
         } catch (Exception e) {
             sm.setError(e);

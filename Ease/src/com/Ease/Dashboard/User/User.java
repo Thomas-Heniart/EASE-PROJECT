@@ -1,8 +1,6 @@
 package com.Ease.Dashboard.User;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.DashboardManager;
 import com.Ease.Notification.NotificationManager;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -72,13 +70,11 @@ public class User {
                 HibernateQuery hibernateQuery = new HibernateQuery();
                 for (TeamUser teamUser : newUser.getTeamUsers()) {
                     if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
-                        teamUser.finalizeRegistration();
                         hibernateQuery.saveOrUpdateObject(teamUser);
                     }
                     if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
                         String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), newUser.getKeys().getPrivateKey());
                         teamUser.setTeamKey(newUser.encrypt(deciphered_teamKey));
-                        teamUser.setDeciphered_teamKey(deciphered_teamKey);
                         teamUser.setDisabled(false);
                         hibernateQuery.saveOrUpdateObject(teamUser);
                     }
@@ -190,7 +186,6 @@ public class User {
 
     protected SessionSave sessionSave;
     private JWToken jwt;
-    protected DashboardManager dashboardManager;
     protected List<TeamUser> teamUsers = new LinkedList<>();
 
     protected NotificationManager notificationManager;
@@ -215,7 +210,7 @@ public class User {
     } */
 
     public void initializeDashboardManager(HibernateQuery hibernateQuery) {
-        this.dashboardManager = new DashboardManager(hibernateQuery, Integer.valueOf(this.getDBid()));
+        //this.dashboardManager = new DashboardManager(hibernateQuery, Integer.valueOf(this.getDBid()));
     }
 
     private void initializeNotificationManager() {
@@ -258,10 +253,6 @@ public class User {
 
     public Option getOptions() {
         return opt;
-    }
-
-    public DashboardManager getDashboardManager() {
-        return this.dashboardManager;
     }
 
     public NotificationManager getNotificationManager() {
@@ -344,8 +335,6 @@ public class User {
             Map<String, User> users = (Map<String, User>) context.getAttribute("users");
             if (sessionIdUserMap.containsValue(this))
                 return;
-            for (TeamUser teamUser : this.getTeamUsers())
-                teamUser.disconnect();
             users.remove(this.getEmail());
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
@@ -529,7 +518,6 @@ public class User {
         request.setInt(teamUser.getDb_id());
         request.set();
         this.teamUsers.add(teamUser);
-        teamUser.setDashboard_user(this);
     }
 
     public void addTeamUser(TeamUser teamUser) {
@@ -545,18 +533,6 @@ public class User {
         while (rs.next()) {
             Integer teamUser_id = rs.getInt(1);
             Integer team_id = rs.getInt(2);
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            this.teamUsers.add(teamUser);
-            teamUser.setDashboard_user(this);
-            if (teamUser.isVerified() && !teamUser.isDisabled()) {
-                teamUser.decipher_teamKey();
-                team.decipherTeamCards(teamUser.getDeciphered_teamKey());
-                //team.decipherApps(teamUser.getDeciphered_teamKey());
-            }
-            for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
-                App app = teamCardReceiver.getApp();
-            }
         }
     }
 
@@ -610,16 +586,12 @@ public class User {
     }
 
     public void decipherDashboard() throws HttpServletException {
-        this.getDashboardManager().decipher(this.getKeys().getKeyUser(), this.getTeamUsers());
         /* Below code is used to get teamCardReceiver already in cache
         * It will be removed once we stop use cache like assholes */
         for (TeamUser teamUser : this.getTeamUsers()) {
             for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
                 if (teamCardReceiver.getApp().getProfile() == null)
                     continue;
-                App app = this.getDashboardManager().getApp(teamCardReceiver.getApp().getDb_id());
-                teamCardReceiver.setApp(app);
-                app.setTeamCardReceiver(teamCardReceiver);
             }
         }
     }

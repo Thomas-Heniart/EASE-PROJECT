@@ -32,6 +32,9 @@ abstract public class TeamCard {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "description")
     private String description;
 
@@ -51,7 +54,8 @@ abstract public class TeamCard {
 
     }
 
-    public TeamCard(Team team, Channel channel, String description) {
+    public TeamCard(String name, Team team, Channel channel, String description) {
+        this.name = name;
         this.team = team;
         this.channel = channel;
         this.description = description;
@@ -64,6 +68,14 @@ abstract public class TeamCard {
 
     public void setDb_id(Integer db_id) {
         this.db_id = db_id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Team getTeam() {
@@ -98,7 +110,7 @@ abstract public class TeamCard {
         this.creation_date = creation_date;
     }
 
-    public Map<Integer, TeamCardReceiver> getTeamCardReceiverMap() {
+    public synchronized Map<Integer, TeamCardReceiver> getTeamCardReceiverMap() {
         return teamCardReceiverMap;
     }
 
@@ -106,15 +118,13 @@ abstract public class TeamCard {
         this.teamCardReceiverMap = teamCardReceiverMap;
     }
 
-    public Map<Integer, JoinTeamCardRequest> getJoinTeamCardRequestMap() {
+    public synchronized Map<Integer, JoinTeamCardRequest> getJoinTeamCardRequestMap() {
         return joinTeamCardRequestMap;
     }
 
     public void setJoinTeamCardRequestMap(Map<Integer, JoinTeamCardRequest> joinTeamCardRequestMap) {
         this.joinTeamCardRequestMap = joinTeamCardRequestMap;
     }
-
-    public abstract String getName();
 
     public abstract String getLogo();
 
@@ -127,6 +137,7 @@ abstract public class TeamCard {
         res.put("creation_date", this.getCreation_date().getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("channel_id", this.getChannel().getDb_id());
+        res.put("description", this.getDescription());
         JSONArray receivers = new JSONArray();
         this.getTeamCardReceiverMap().values().stream().sorted(Comparator.comparingInt(TeamCardReceiver::getDb_id)).forEach(c -> receivers.add(c.getCardJson()));
         res.put("receivers", receivers);
@@ -184,12 +195,23 @@ abstract public class TeamCard {
         return this.getJoinTeamCardRequestMap().values().stream().filter(joinTeamCardRequest -> joinTeamCardRequest.getTeamUser().equals(teamUser)).findFirst().orElse(null);
     }
 
+    public JoinTeamCardRequest getJoinTeamCardRequest(Integer id) throws HttpServletException {
+        JoinTeamCardRequest joinTeamCardRequest = this.getJoinTeamCardRequestMap().get(id);
+        if (joinTeamCardRequest == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "No such request");
+        return joinTeamCardRequest;
+    }
+
     public void addJoinTeamCardRequest(JoinTeamCardRequest joinTeamCardRequest) {
         this.getJoinTeamCardRequestMap().put(joinTeamCardRequest.getDb_id(), joinTeamCardRequest);
     }
 
     public void removeJoinTeamCardRequest(JoinTeamCardRequest joinTeamCardRequest) {
         this.getJoinTeamCardRequestMap().remove(joinTeamCardRequest.getDb_id());
+    }
+
+    public void decipher(String teamKey) throws HttpServletException {
+        return;
     }
 
     @Override

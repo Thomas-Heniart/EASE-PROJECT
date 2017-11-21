@@ -3,8 +3,10 @@ package com.Ease.API.V1.Teams.TeamCards.TeamEnterpriseCard;
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamCard.*;
-import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamCard.JoinTeamCardRequest;
+import com.Ease.Team.TeamCard.JoinTeamEnterpriseCardRequest;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/api/v1/teams/JoinTeamEnterpriseCard")
 public class JoinTeamEnterpriseCard extends HttpServlet {
@@ -25,10 +28,9 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
             sm.needToBeTeamUserOfTeam(team);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamEnterpriseCard())
@@ -38,7 +40,9 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
             if (teamCard.getJoinTeamCardRequest(teamUser) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You already ask  to join this card");
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamUser.getDeciphered_teamKey(), ((TeamEnterpriseCard)teamCard).getPassword_reminder_interval());
+            Map<String, String> accountInformation = ((TeamEnterpriseCard) teamCard).getWebsite().getInformationNeeded(account_information);
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, ((TeamEnterpriseCard) teamCard).getPassword_reminder_interval());
             JoinTeamCardRequest joinTeamCardRequest = new JoinTeamEnterpriseCardRequest(teamCard, teamUser, account);
             sm.saveOrUpdate(joinTeamCardRequest);
             teamCard.addJoinTeamCardRequest(joinTeamCardRequest);

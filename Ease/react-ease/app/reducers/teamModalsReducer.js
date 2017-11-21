@@ -9,7 +9,8 @@ const initialState = {
   },
   teamSettingsModalActive: false,
   teamAddMultipleUsersModal:{
-    active: false
+    active: false,
+    team_id: -1
   },
   teamDeleteUserModal: {
     active: false,

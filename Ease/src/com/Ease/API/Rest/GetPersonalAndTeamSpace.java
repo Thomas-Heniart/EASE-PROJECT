@@ -1,6 +1,6 @@
 package com.Ease.API.Rest;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.TeamUser;
@@ -24,7 +24,7 @@ public class GetPersonalAndTeamSpace extends HttpServlet {
             User user = sm.getUserWithToken();
             JSONObject res = new JSONObject();
             JSONArray personnalSpace = new JSONArray();
-            for (Profile profile : user.getDashboardManager().getProfileMap().values()) {
+            for (Profile profile : user.getProfileSet()) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("name", profile.getProfileInformation().getName());
                 jsonObject.put("id", profile.getDb_id());

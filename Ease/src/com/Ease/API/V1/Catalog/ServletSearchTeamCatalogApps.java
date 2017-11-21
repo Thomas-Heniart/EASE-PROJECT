@@ -3,7 +3,6 @@ package com.Ease.API.V1.Catalog;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -25,14 +24,13 @@ public class ServletSearchTeamCatalogApps extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true);
             String search = sm.getParam("q", true);
-            sm.needToBeTeamUserOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONArray jsonArray = new JSONArray();
             if (search == null)
                 search = "";
-            for (Website website : catalog.getWebsites()) {
+            for (Website website : catalog.getWebsites(sm.getHibernateQuery())) {
                 if (website.getWebsiteInformationList().isEmpty())
                     continue;
                 if (search.equals("") || (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.getWebsiteAttributes().isIntegrated())) {
