@@ -70,11 +70,12 @@ public class ServletRegistration extends HttpServlet {
             sm.saveOrUpdate(newUser);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Profile profile_perso = new Profile(newUser, 0, 0, new ProfileInformation("Me"));
-            Profile profile_pro = new Profile(newUser, 1, 0, new ProfileInformation("Pro"));
-            sm.saveOrUpdate(profile_perso);
+            /* Profile profile_pro = new Profile(newUser, 1, 0, new ProfileInformation("Pro"));
             sm.saveOrUpdate(profile_pro);
+            newUser.addProfile(profile_pro); */
+            sm.saveOrUpdate(profile_perso);
+
             newUser.addProfile(profile_perso);
-            newUser.addProfile(profile_pro);
             Website facebook = catalog.getWebsiteWithName("Facebook", hibernateQuery);
             Website gmail = catalog.getWebsiteWithName("Gmail", hibernateQuery);
             Website sncf = catalog.getWebsiteWithName("Voyages SNCF", hibernateQuery);

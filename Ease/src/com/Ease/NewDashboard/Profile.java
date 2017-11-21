@@ -169,13 +169,14 @@ public class Profile {
     }
 
     public void addAppAndUpdatePositions(App app, Integer position, HibernateQuery hibernateQuery) {
-        this.addApp(app);
         this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
             app1.setPosition(app1.getPosition() + 1);
             hibernateQuery.saveOrUpdateObject(app1);
         });
         app.setPosition(position >= this.getAppSet().size() ? this.getAppSet().size() - 1 : position);
+        app.setProfile(this);
         hibernateQuery.saveOrUpdateObject(app);
+        this.addApp(app);
     }
 
     public int getSize() {

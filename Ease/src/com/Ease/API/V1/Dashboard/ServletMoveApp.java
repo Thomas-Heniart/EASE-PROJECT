@@ -26,7 +26,9 @@ public class ServletMoveApp extends HttpServlet {
             App app = user.getApp(app_id, sm.getHibernateQuery());
             Profile old_profile = app.getProfile();
             Profile new_profile = user.getProfile(profile_id);
-            if (old_profile == new_profile)
+            System.out.println(old_profile.equals(new_profile));
+
+            if (old_profile.equals(new_profile))
                 old_profile.updateAppPositions(app, position, sm.getHibernateQuery());
             else {
                 old_profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
