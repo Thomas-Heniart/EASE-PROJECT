@@ -74,6 +74,7 @@ export function endAppDrag({app_id}){
         app_id: app_id
       }
     });
+    console.log('avant check profile empty');
     dispatch(checkIfProfileEmpty({
       profile_id: app.profile_id
     }));
@@ -195,7 +196,9 @@ export function editProfile({profile_id, name}) {
 export function checkIfProfileEmpty({profile_id}){
   return (dispatch, getState) => {
     const store = getState();
+    console.log('dans le check');
     if (!store.dashboard.profiles[profile_id].app_ids.length){
+      console.log('dans le if du check');
       post_api.dashboard.deleteProfile({
         profile_id: profile_id
       });
