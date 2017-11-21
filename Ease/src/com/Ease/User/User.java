@@ -375,4 +375,8 @@ public class User {
         cookies.add(cookie1);
         return cookies;
     }
+
+    public Set<Team> getTeams() {
+        return this.getTeamUsers().stream().map(TeamUser::getTeam).collect(Collectors.toSet());
+    }
 }
