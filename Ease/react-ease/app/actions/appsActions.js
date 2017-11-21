@@ -14,7 +14,7 @@ export function teamCreateMultiApp(app){
   }
 }
 
-export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, description, password_change_interval, receivers,fill_in_switch}){
+export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, description, password_change_interval, receivers}){
   return (dispatch, getState) => {
     return post_api.teamApps.createEnterpriseApp({
       team_id: team_id,
@@ -23,7 +23,6 @@ export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, 
       name: name,
       description: description,
       password_change_interval: password_change_interval,
-      fill_in_switch:fill_in_switch,
       receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(app => {
@@ -35,14 +34,13 @@ export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, 
   }
 }
 
-export function teamEditEnterpriseApp({team_id, app_id, description, password_change_interval,fill_in_switch}) {
+export function teamEditEnterpriseApp({team_id, app_id, description, password_change_interval}) {
   return (dispatch, getState) => {
     return post_api.teamApps.editEnterpriseApp({
       team_id: team_id,
       app_id: app_id,
       description: description,
       password_change_interval: password_change_interval,
-      fill_in_switch:fill_in_switch,
       ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
@@ -120,12 +118,13 @@ export function teamEditEnterpriseAppReceiver({team_id, app_id, shared_app_id, a
   }
 }
 
-export function teamCreateSingleApp({team_id, channel_id, website_id, description, password_change_interval, account_information, receivers}) {
+export function teamCreateSingleApp({team_id, channel_id, website_id, name, description, password_change_interval, account_information, receivers}) {
   return (dispatch, getState) => {
     return post_api.teamApps.createSingleApp({
       team_id: team_id,
       channel_id: channel_id,
       website_id:website_id,
+      name: name,
       description: description,
       password_change_interval: password_change_interval,
       account_information: account_information,
@@ -259,9 +258,9 @@ export function teamCreateLinkApp(app){
   }
 }
 
-export function teamDeleteApp(app_id){
+export function teamDeleteApp(app_id, team_id){
   return function (dispatch, getState){
-    return post_api.teamApps.deleteApp(getState().common.ws_id, getState().team.id, app_id).then(response => {
+    return post_api.teamApps.deleteApp(getState().common.ws_id, team_id, app_id).then(response => {
       dispatch({type: 'TEAM_APP_REMOVED', payload:{app_id: app_id}});
       return response;
     }).catch(err => {

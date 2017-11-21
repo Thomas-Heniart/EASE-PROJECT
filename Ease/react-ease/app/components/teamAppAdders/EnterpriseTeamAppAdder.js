@@ -127,7 +127,7 @@ const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
 };
 
 @connect(store => ({
-  team_id: store.team.id,
+  team_id: store.teamCard.team_id,
   users: store.users.users,
   myId: store.team.myTeamUserId,
   plan_id: store.team.plan_id,
@@ -139,7 +139,8 @@ class EnterpriseTeamAppAdder extends Component {
     super(props);
     this.state = {
       loading: false,
-      app: null,
+      app: this.props.card.app,
+      app_name: this.props.card.app.name,
       password_change_interval: 0,
       description: '',
       users: [],
@@ -147,9 +148,6 @@ class EnterpriseTeamAppAdder extends Component {
       fill_in_switch: false
     }
   }
-  componentWillMount() {
-    this.setState({ app: this.props.card.app });
-  };
   handleInput = handleSemanticInput.bind(this);
   changeFillInSwitch = (e, {checked}) => {
     if (this.props.plan_id === 0 && !checked){
@@ -219,26 +217,27 @@ class EnterpriseTeamAppAdder extends Component {
   send = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
     const receivers = this.state.users
-        .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
-        .map(item => ({
-          team_user_id: item.id,
-          account_information: transformCredentialsListIntoObject(item.credentials)
-        }));
+      .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
+      .map(item => ({
+        [item.id]: {account_information: transformCredentialsListIntoObject(item.credentials)}
+      }));
+    const newReceivers = receivers.reduce(function (result, item) {
+      result = Object.assign(result, item);
+      return result;
+    }, {});
     this.props.dispatch(teamCreateEnterpriseApp({
       team_id: this.props.team_id,
       channel_id: this.props.item.id,
       website_id: this.state.app.id,
+      name: this.state.app_name,
       description: this.state.description,
       password_change_interval: this.state.password_change_interval,
-      fill_in_switch: this.state.fill_in_switch,
-      receivers: receivers
+      receivers: newReceivers
     })).then(response => {
-      if (meReceiver)
-        this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
       this.setState({loading: false});
       this.close();
+      this.props.resetTeamCard();
     });
   };
   close = () => {
@@ -254,8 +253,21 @@ class EnterpriseTeamAppAdder extends Component {
             {this.state.app !== null &&
             <div>
               <Segment>
-                <Header as="h4">
-                  {app.name}
+                <Header as="h5">
+                  <div className="display_flex margin_b5rem">
+                    <div>
+                      <Input className="team-app-input"
+                             placeholder="Name your card"
+                             name="app_name"
+                             value={this.state.app_name}
+                             autoComplete="off"
+                             onChange={this.handleInput}
+                             size="mini"
+                             label={<Label><Icon name="home"/></Label>}
+                             labelPosition="left"
+                             required/>
+                    </div>
+                  </div>
                 </Header>
                 <Button icon="delete" type="button" size="mini" class="close" onClick={this.close}/>
                 <div class="display_flex">
