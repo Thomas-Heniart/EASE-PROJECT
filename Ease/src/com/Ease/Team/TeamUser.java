@@ -350,6 +350,7 @@ public class TeamUser {
         res.put("username", this.username);
         res.put("disabled", this.disabled);
         res.put("role", this.teamUserRole.getRoleValue());
+        res.put("invitation_sent", this.getTeamUserStatus().isInvitation_sent());
         res.put("arrival_date", arrivalDate.getTime());
         res.put("departure_date", (departureDate == null) ? null : departureDate.getTime());
         res.put("state", this.state);
@@ -497,6 +498,7 @@ public class TeamUser {
      * if you don't and you didn't already had one, create it
      * if you don't have any profile, create it
      * if you don't and you already had one, returns any profile of you team space
+     *
      * @param hibernateQuery
      * @return Profile profile
      * @throws HttpServletException

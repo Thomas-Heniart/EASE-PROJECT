@@ -36,9 +36,7 @@ public class TeamManager {
     }
 
     public Team getTeam(Integer team_id, HibernateQuery hibernateQuery) throws HttpServletException {
-        hibernateQuery.queryString("SELECT t FROM Team t WHERE t.db_id = :id");
-        hibernateQuery.setParameter("id", team_id);
-        Team team = (Team) hibernateQuery.getSingleResult();
+        Team team = (Team) hibernateQuery.get(Team.class, team_id);
         if (team == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This team does not exist.");
         return team;

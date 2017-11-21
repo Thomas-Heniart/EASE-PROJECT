@@ -1,7 +1,8 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -26,7 +27,6 @@ public class ServletUnsubscribe extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             TeamUser teamUser = sm.getUser().getTeamUser(team);
             if (!teamUser.isTeamOwner())
@@ -58,6 +58,16 @@ public class ServletUnsubscribe extends HttpServlet {
                 }
             }
             db.commitTransaction(transaction); */
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
+                Profile profile = teamCardReceiver.getApp().getProfile();
+                if (profile != null) {
+                    profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), hibernateQuery);
+                    teamCardReceiver.getApp().setProfile(null);
+                    teamCardReceiver.getApp().setPosition(null);
+                }
+
+            });
             team.setSubscription_id(null);
             team.setCard_entered(false);
             team.setActive(false);
