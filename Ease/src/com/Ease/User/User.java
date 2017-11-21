@@ -347,6 +347,14 @@ public class User {
         return teamUser;
     }
 
+    public TeamUser getTeamUserOrNull(Team team) {
+        return this.getTeamUsers().stream().filter(teamUser1 -> teamUser1.getTeam().equals(team)).findAny().orElse(null);
+    }
+
+    public TeamUser getTeamUserOrNull(Integer team_id) {
+        return this.getTeamUsers().stream().filter(teamUser1 -> teamUser1.getTeam().getDb_id().equals(team_id)).findAny().orElse(null);
+    }
+
     public void addTeamUser(TeamUser teamUser) {
         this.getTeamUsers().add(teamUser);
     }
