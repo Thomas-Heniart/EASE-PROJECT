@@ -96,8 +96,12 @@ public class SsoGroup {
         res.put("id", this.getDb_id());
         res.put("sso_id", this.getSso().getDb_id());
         res.put("empty", this.getAccount() == null);
-        if (this.getAccount() != null)
+        res.put("account_information", new JSONObject());
+        if (this.getAccount() != null) {
             res.put("account_information", this.getAccount().getJsonWithoutPassword());
+            res.put("last_update_date", this.getAccount().getLast_update().getTime());
+        }
+
         return res;
     }
 
