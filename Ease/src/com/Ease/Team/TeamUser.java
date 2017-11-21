@@ -410,6 +410,19 @@ public class TeamUser {
         }
     }
 
+    public void lastRegistrationStep(String keyUser, String teamKey, HibernateQuery hibernateQuery) throws HttpServletException {
+        this.setTeamKey(AES.encrypt(teamKey, keyUser));
+        this.setState(2);
+        hibernateQuery.saveOrUpdateObject(this);
+        Profile profile = this.getOrCreateProfile(hibernateQuery);
+        this.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
+            app.setProfile(profile);
+            app.setPosition(profile.getSize());
+            hibernateQuery.saveOrUpdateObject(app);
+            profile.addApp(app);
+        });
+    }
+
     public String getDecipheredTeamKey(String userKey) throws HttpServletException {
         if (this.getState() == 2 && !this.isDisabled())
             return AES.decrypt(this.getTeamKey(), userKey);

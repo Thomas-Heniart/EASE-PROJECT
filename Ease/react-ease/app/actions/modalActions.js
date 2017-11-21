@@ -86,11 +86,12 @@ export function showLockedTeamAppModal({active}){
   }
 }
 
-export function showChooseAppCredentialsModal({active, receivers, description, password_change_interval}){
+export function showChooseAppCredentialsModal({active, card_name, receivers, description, password_change_interval}){
   return {
     type: 'SHOW_CHOOSE_APP_CREDENTIALS_MODAL',
     payload: {
       active: active,
+      card_name: card_name,
       receivers: receivers,
       description: description,
       password_change_interval: password_change_interval

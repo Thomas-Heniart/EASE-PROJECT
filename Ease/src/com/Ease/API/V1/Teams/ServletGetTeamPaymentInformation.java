@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -28,7 +27,6 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             TeamUser teamUser = sm.getUser().getTeamUser(team);
             if (!teamUser.isTeamOwner())
@@ -36,7 +34,7 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
             HashMap<String, Object> cardParams = new HashMap<>();
             cardParams.put("object", "card");
             JSONObject res = new JSONObject();
-            Customer customer = Customer.retrieve(team.getCustomer_id());
+            Customer customer = team.getCustomer();
             res.put("credit", (float) -customer.getAccountBalance() / 100);
             JSONObject card = null;
             String default_source = customer.getDefaultSource();

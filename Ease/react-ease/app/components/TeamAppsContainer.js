@@ -73,47 +73,46 @@ class TeamAppsContainer extends React.Component{
     });
     const me = team.team_users[team.my_team_user_id];
     const plan_id = team.plan_id;
-
       return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
             {!this.state.loading ?
                 item.team_card_ids.map(id => {
-                    const item = this.props.team_apps[id];
-                    if (item.type === 'teamSingleCard')
+                  const item = this.props.team_apps[id];
+                  if (item.type === 'teamSingleCard')
                     return (
-                        <SimpleTeamApp
-                            app={item}
-                            users={users}
-                            channels={channels}
-                            me={me}
-                            key={item.id}
-                            plan_id={plan_id}
-                            team_id={team.id}
-                            dispatch={this.props.dispatch}/>
+                      <SimpleTeamApp
+                        app={item}
+                        users={users}
+                        channels={channels}
+                        me={me}
+                        key={item.id}
+                        plan_id={plan_id}
+                        team_id={team.id}
+                        dispatch={this.props.dispatch}/>
                     );
-                  if (item.type === 'link')
+                  if (item.type === 'teamLinkCard')
                     return (
-                        <TeamLinkApp
-                            app={item}
-                            users={users}
-                            channels={channels}
-                            me={me}
-                            key={item.id}
-                            team_id={team.id}
-                            dispatch={this.props.dispatch}/>
+                      <TeamLinkApp
+                        app={item}
+                        users={users}
+                        channels={channels}
+                        me={me}
+                        key={item.id}
+                        team_id={team.id}
+                        dispatch={this.props.dispatch}/>
                     );
-                  if (item.type === 'multi')
+                  if (item.type === 'teamEnterpriseCard')
                     return (
-                        <EnterpriseTeamApp
-                            app={item}
-                            users={users}
-                            channels={channels}
-                            me={me}
-                            key={item.id}
-                            plan_id={plan_id}
-                            team_id={team.id}
-                            dispatch={this.props.dispatch}/>
+                      <EnterpriseTeamApp
+                        app={item}
+                        users={users}
+                        channels={channels}
+                        me={me}
+                        key={item.id}
+                        plan_id={plan_id}
+                        team_id={team.id}
+                        dispatch={this.props.dispatch}/>
                     );
                 }) :
                 <Loader active />

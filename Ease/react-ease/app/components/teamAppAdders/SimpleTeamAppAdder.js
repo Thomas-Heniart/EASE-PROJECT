@@ -106,8 +106,9 @@ class SimpleTeamAppAdder extends Component {
   constructor(props){
     super(props);
     this.state = {
+      app_name: this.props.card.app.name,
       loading: false,
-      app: null,
+      app: this.props.card.app,
       credentials: [],
       password_change_interval: 0,
       description: '',
@@ -115,9 +116,6 @@ class SimpleTeamAppAdder extends Component {
       users: [],
       selected_users: []
     };
-  };
-  componentWillMount() {
-    this.setState({ app: this.props.card.app });
   };
   handleInput = handleSemanticInput.bind(this);
   toggleCanSeeInformation = (id) => {
@@ -180,6 +178,11 @@ class SimpleTeamAppAdder extends Component {
     });
     this.setState({ selected_users: selected });
   };
+  chooseUser = (user) => {
+    let selected = this.state.selected_users;
+    selected.splice(selected.length + 1, 0, user.id);
+    this.setState({ selected_users: selected });
+  };
   componentDidMount(){
     let users = this.props.item.team_user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
@@ -212,6 +215,7 @@ class SimpleTeamAppAdder extends Component {
     //   }, {});
     this.props.dispatch(showChooseAppCredentialsModal({
       active: true,
+      card_name: this.state.app_name,
       receivers: receivers,
       description: this.state.description,
       password_change_interval: this.state.password_change_interval }));
@@ -246,8 +250,21 @@ class SimpleTeamAppAdder extends Component {
             {this.state.app !== null &&
             <div>
               <Segment>
-                <Header as="h4">
-                  {app.name}
+                <Header as="h5">
+                  <div className="display_flex margin_b5rem">
+                    <div>
+                      <Input className="team-app-input"
+                             placeholder="Name your card"
+                             name="app_name"
+                             value={this.state.app_name}
+                             autoComplete="off"
+                             onChange={this.handleInput}
+                             size="mini"
+                             label={<Label><Icon name="home"/></Label>}
+                             labelPosition="left"
+                             required/>
+                    </div>
+                  </div>
                 </Header>
                 <Button icon="delete" type="button" size="mini" class="close" onClick={this.close}/>
                 <div class="display_flex">
@@ -267,13 +284,13 @@ class SimpleTeamAppAdder extends Component {
                     <div>
                       <Dropdown
                           class="mini"
-                          search={true}
+                          search
                           fluid
                           name="selected_users"
                           options={this.state.users}
                           onChange={this.handleInput}
                           value={this.state.selected_users}
-                          selection={true}
+                          selection
                           renderLabel={renderSimpleAppAddUserLabel}
                           multiple
                           placeholder="Tag your team members here..."/>

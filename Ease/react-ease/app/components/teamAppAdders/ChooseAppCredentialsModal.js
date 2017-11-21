@@ -93,6 +93,7 @@ class ChoosePersonWhoHasCredentials extends React.Component {
       receivers,
       userSelected,
       website,
+      appName,
       loading,
       change,
       confirm
@@ -103,7 +104,7 @@ class ChoosePersonWhoHasCredentials extends React.Component {
               <div className="squared_image_handler">
                   <img src={website.logo} alt="Website logo"/>
               </div>
-              <span className="app_name">{website.name}</span>
+              <span className="app_name">{appName}</span>
           </Form.Field>
           <Form.Field>
               <p>Who will enter app credentials?</p>
@@ -115,18 +116,6 @@ class ChoosePersonWhoHasCredentials extends React.Component {
                             name='checkboxRadioGroup'
                             value={me.id}
                             checked={userSelected === me.id}
-                            onChange={change}/>
-                  <Checkbox radio
-                            label={`vico (Owner)`}
-                            name='checkboxRadioGroup'
-                            value={256}
-                            checked={userSelected === 256}
-                            onChange={change}/>
-                  <Checkbox radio
-                            label={`ben (Admin)`}
-                            name='checkboxRadioGroup'
-                            value={255}
-                            checked={userSelected === 255}
                             onChange={change}/>
                 {receivers.map(user => (
                   user.id !== me.id &&
@@ -224,6 +213,7 @@ class ChooseAppCredentialsModal extends React.Component {
         team_id: this.props.card.team_id,
         channel_id: this.props.card.channel_id,
         website_id: this.props.card.app.id,
+        name: this.props.settingsCard.card_name,
         description: this.props.settingsCard.description,
         password_change_interval: this.props.settingsCard.password_change_interval,
         account_information: transformCredentialsListIntoObject(this.state.credentials),
@@ -245,6 +235,7 @@ class ChooseAppCredentialsModal extends React.Component {
         headerContent={'App Credentials'}>
         {this.state.view === 1 &&
         <ChoosePersonWhoHasCredentials website={this.props.card.app}
+                                       appName={this.props.settingsCard.card_name}
                                        me={this.state.me}
                                        users={this.state.users}
                                        receivers={this.props.receivers}
@@ -256,7 +247,7 @@ class ChooseAppCredentialsModal extends React.Component {
         <AddCardForm credentials={this.state.credentials}
                      handleCredentialInput={this.handleCredentialInput}
                      website={this.props.card.app}
-                     appName={this.props.card.app.name}
+                     appName={this.props.settingsCard.card_name}
                      confirm={this.confirm} />}
       </SimpleModalTemplate>
     )
