@@ -63,6 +63,7 @@ public class ClassicApp extends WebsiteApp {
     public JSONObject getJson() {
         JSONObject res = super.getJson();
         res.put("empty", this.getAccount() == null);
+        res.put("account_information", new JSONObject());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
