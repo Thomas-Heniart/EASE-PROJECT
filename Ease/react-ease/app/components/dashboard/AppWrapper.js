@@ -10,7 +10,7 @@ import LogWithApp from "./LogWithApp";
 import TeamEnterpriseApp from "./TeamEnterpriseApp";
 import TeamSingleApp from "./TeamSingleApp";
 import TeamLinkApp from "./TeamLinkApp";
-import {moveApp, beginAppDrag,endAppDrag, checkIfProfileEmpty} from "../../actions/dashboardActions";
+import {createProfileAndInsertApp, moveApp, beginAppDrag,endAppDrag, checkIfProfileEmpty} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 
 class AppWrapper extends Component {
@@ -60,9 +60,18 @@ const appSource = {
   },
   endDrag(props, monitor) {
     const result = monitor.getDropResult();
+    const app_id = props.app.id;
 
-    if (!result.createProfile)
+    console.log(result);
+    if (!result.newProfile)
       props.dispatch(endAppDrag({app_id: props.app.id}));
+    else {
+      props.dispatch(createProfileAndInsertApp({
+        column_index: result.column_idx,
+        name: result.name,
+        app_id: app_id
+      }));
+    }
   }
 };
 

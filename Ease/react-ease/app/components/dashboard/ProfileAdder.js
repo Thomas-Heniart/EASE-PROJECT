@@ -32,13 +32,11 @@ const appTarget = {
     const draggedAppProps = monitor.getItem();
     const {column_idx} = props;
 
-    draggedAppProps.dispatch(createProfileAndInsertApp({
-      column_index: column_idx,
+    return {
+      newProfile: true,
+      column_idx: column_idx,
       name: 'New Group',
       app_id: draggedAppProps.app.id
-    }));
-    return {
-      createProfile: true
     }
   }
 };

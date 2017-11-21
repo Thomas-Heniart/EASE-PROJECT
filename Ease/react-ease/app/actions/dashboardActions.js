@@ -163,7 +163,7 @@ export function createProfileAndInsertApp({column_index, name, app_id}){
 
 export function createProfile({column_index, name}) {
   return (dispatch, getState) => {
-    post_api.dashboard.createProfile({
+    return post_api.dashboard.createProfile({
       name: name,
       column_index: column_index
     }).then(profile => {
@@ -177,26 +177,6 @@ export function createProfile({column_index, name}) {
     });
   };
 }
-
-/*export function createProfile({column_index, name}){
-  return (dispatch, getState) => {
-    const profile = {
-      app_ids: [],
-      column_index: column_index,
-      id: -2,
-      name:name
-    };
-    dispatch({
-      type: 'DASHBOARD_PROFILE_CREATED',
-      payload: {
-        profile: profile
-      }
-    });
-    return new Promise((resolve, reject) => {
-      resolve(profile);
-    });
-  }
-}*/
 
 export function editProfile({profile_id, name}) {
   return (dispatch, getState) => {
