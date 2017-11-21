@@ -24,6 +24,7 @@ public class ServletEditUsername extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid username.");
             sm.getUser().setUsername(username);
             sm.saveOrUpdate(sm.getUser());
+            sm.getUser().getCookies().forEach(response::addCookie);
             sm.setSuccess("Username edited");
         } catch (Exception e) {
             sm.setError(e);

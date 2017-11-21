@@ -42,6 +42,7 @@ public class ServletLogin extends HttpServlet {
             String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
             sm.getUserProperties(user.getDb_id()).put("keyUser", keyUser);
             for (TeamUser teamUser : user.getTeamUsers()) {
+                sm.initializeTeamWithContext(teamUser.getTeam());
                 String teamKey = teamUser.getDecipheredTeamKey(keyUser);
                 sm.getTeamProperties(teamUser.getTeam().getDb_id()).put("teamKey", teamKey);
             }
@@ -64,8 +65,9 @@ public class ServletLogin extends HttpServlet {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
             cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
+            user.getCookies().forEach(response::addCookie);
             response.addCookie(cookie);
-            sm.setUser(user.getDb_id());
+            sm.setUser(user);
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
             sm.setSuccess(res);

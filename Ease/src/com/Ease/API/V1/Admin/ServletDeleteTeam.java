@@ -28,7 +28,7 @@ public class ServletDeleteTeam extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team;
             try {
-                team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+                team = sm.getTeam(team_id);
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
                     teamUser.setAdmin_id(null);
                     sm.saveOrUpdate(teamUser);

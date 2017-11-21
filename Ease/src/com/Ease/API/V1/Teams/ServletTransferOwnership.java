@@ -1,14 +1,13 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Context.Variables;
-import com.Ease.User.Notification;
-import com.Ease.User.NotificationFactory;
-import com.Ease.User.User;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.Notification;
+import com.Ease.User.NotificationFactory;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -34,13 +33,12 @@ public class ServletTransferOwnership extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeOwnerOfTeam(team_id);
             User user = sm.getUser();
+            Team team = sm.getTeam(team_id);
+            sm.needToBeOwnerOfTeam(team);
             String password = sm.getStringParam("password", false, false);
             if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
             TeamUser teamUser = sm.getTeamUser(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser new_teamUser_owner = team.getTeamUserWithId(teamUser_id);
@@ -67,7 +65,7 @@ public class ServletTransferOwnership extends HttpServlet {
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams/" + team.getDb_id());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id());
             mailJetBuilder.sendEmail();
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, new_teamUser_owner.getJson(), new_teamUser_owner.getOrigin()));

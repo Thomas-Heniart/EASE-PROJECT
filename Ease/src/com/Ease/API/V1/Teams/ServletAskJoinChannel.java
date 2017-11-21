@@ -2,12 +2,11 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Context.Variables;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.User.Notification;
-import com.Ease.User.NotificationFactory;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.Notification;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
@@ -31,10 +30,9 @@ public class ServletAskJoinChannel extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
             Channel channel = team.getChannelWithId(channel_id);
             channel.addPendingTeamUser(teamUser);
@@ -53,7 +51,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.addVariable("teamUser", teamUser.getUsername());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
             mailJetBuilder.sendEmail();
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());

@@ -17,7 +17,7 @@ public class NotificationManager {
         hibernateQuery.setParameter("user", user);
     }
 
-    public List<Notification> getNotifications(int limit, User user, HibernateQuery hibernateQuery) {
+    private List<Notification> getNotifications(int limit, User user, HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT n FROM Notification n WHERE n.user = :user ORDER BY n.creation_date DESC");
         hibernateQuery.setParameter("user", user);
         hibernateQuery.setMaxResults(limit);

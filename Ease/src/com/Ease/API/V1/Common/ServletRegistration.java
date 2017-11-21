@@ -93,7 +93,7 @@ public class ServletRegistration extends HttpServlet {
             lemonde.setPosition(3);
             profile_perso.addApp(lemonde);
             sm.saveOrUpdate(newUser);
-            sm.setUser(newUser.getDb_id());
+            sm.setUser(newUser);
             String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
             String privateKey = user.getUserKeys().getDecipheredPrivateKey(keyUser);
             Map<String, Object> userProperties = sm.getUserProperties(user.getDb_id());

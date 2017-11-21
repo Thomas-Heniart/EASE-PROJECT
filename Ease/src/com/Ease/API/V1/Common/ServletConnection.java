@@ -54,6 +54,7 @@ public class ServletConnection extends HttpServlet {
             String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
             sm.getUserProperties(user.getDb_id()).put("keyUser", keyUser);
             for (TeamUser teamUser : user.getTeamUsers()) {
+                sm.initializeTeamWithContext(teamUser.getTeam());
                 String teamKey = teamUser.getDecipheredTeamKey(keyUser);
                 sm.getTeamProperties(teamUser.getTeam().getDb_id()).put("teamKey", teamKey);
             }
@@ -67,6 +68,7 @@ public class ServletConnection extends HttpServlet {
                     sm.saveOrUpdate(user.getJsonWebToken());
                 }
             }
+            removeIpFromDataBase(client_ip, db);
             String jwt = user.getJsonWebToken().getJwt(keyUser);
             Cookie cookie = new Cookie("JWT", jwt);
             Calendar calendar = Calendar.getInstance();
@@ -77,7 +79,8 @@ public class ServletConnection extends HttpServlet {
             calendar.set(Calendar.MILLISECOND, 0);
             cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
             response.addCookie(cookie);
-            sm.setUser(user.getDb_id());
+            user.getCookies().forEach(response::addCookie);
+            sm.setUser(user);
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
             sm.setSuccess(res);

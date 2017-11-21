@@ -1,10 +1,7 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Team.TeamUserRole;
 import com.Ease.Utils.Crypto.CodeGenerator;
@@ -37,9 +34,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             if (team.getTeamUsers().size() >= 30 && !team.isValidFreemium())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 30 members.");
             TeamUser adminTeamUser = sm.getTeamUser(team);
@@ -87,16 +83,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             team.addTeamUser(teamUser);
             team.getDefaultChannel().addTeamUser(teamUser);
             sm.saveOrUpdate(team.getDefaultChannel());
-            MailJetBuilder mailJetBuilder = new MailJetBuilder();
-            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-            mailJetBuilder.setTemplateId(179023);
-            mailJetBuilder.addTo(email);
-            mailJetBuilder.addVariable("team_name", team.getName());
-            mailJetBuilder.addVariable("first_name", adminTeamUser.getFirstName());
-            mailJetBuilder.addVariable("last_name", adminTeamUser.getLastName());
-            mailJetBuilder.addVariable("email", adminTeamUser.getEmail());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teamJoin/" + code);
-            mailJetBuilder.sendEmail();
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.ADDED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

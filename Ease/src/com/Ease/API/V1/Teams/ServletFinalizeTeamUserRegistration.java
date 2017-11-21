@@ -86,7 +86,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             if (sm.getTeamUser(team_id) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot have two accounts in a team.");
             Integer teamUser_id = (Integer) idTeamAndTeamUser[0];
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);
@@ -113,7 +113,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("user_pseudo", teamUser.getUsername());
             mailJetBuilder.addVariable("user_email", teamUser.getEmail());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
             mailJetBuilder.sendEmail();
             sm.getUser().addTeamUser(teamUser);
             sm.setParam("team_id", team_id.longValue());

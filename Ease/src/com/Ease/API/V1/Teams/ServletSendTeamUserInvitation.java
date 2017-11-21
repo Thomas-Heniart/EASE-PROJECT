@@ -1,14 +1,12 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Context.Variables;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/teams/EditTeamUserPhoneNumber")
-public class ServletEditTeamUserPhoneNumber extends HttpServlet {
+@WebServlet("/api/v1/teams/SendTeamUserInvitation")
+public class ServletSendTeamUserInvitation extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -27,16 +25,22 @@ public class ServletEditTeamUserPhoneNumber extends HttpServlet {
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
-            TeamUser teamUser_connected = sm.getTeamUser(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            if (!teamUser_connected.isSuperior(teamUser) && teamUser != teamUser_connected)
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot edit this user.");
-            String phone_number = sm.getStringParam("phone_number", true, false);
-            if (phone_number.equals("") || !Regex.isPhoneNumber(phone_number))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number.");
-            teamUser.setPhone_number(phone_number);
+            if (teamUser.getState() != 0)
+                throw new HttpServletException(HttpStatus.BadRequest, "This teamUser has already created his account");
+            TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.setTemplateId(179023);
+            mailJetBuilder.addTo(teamUser.getEmail());
+            mailJetBuilder.addVariable("team_name", team.getName());
+            mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+            mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+            mailJetBuilder.addVariable("email", teamUser_admin.getEmail());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code());
+            mailJetBuilder.sendEmail();
+            teamUser.getTeamUserStatus().setInvitation_sent(true);
             sm.saveOrUpdate(teamUser);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

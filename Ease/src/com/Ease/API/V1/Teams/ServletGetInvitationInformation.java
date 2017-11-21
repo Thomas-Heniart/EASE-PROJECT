@@ -31,7 +31,7 @@ public class ServletGetInvitationInformation extends HttpServlet {
             Integer team_id = rs.getInt(1);
             Integer teamUser_id = rs.getInt(2);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             databaseRequest = db.prepareRequest("SELECT id from users where email = ?;");
             databaseRequest.setString(teamUser.getEmail());

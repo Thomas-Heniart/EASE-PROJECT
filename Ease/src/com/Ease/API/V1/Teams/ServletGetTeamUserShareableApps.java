@@ -19,9 +19,9 @@ public class ServletGetTeamUserShareableApps extends HttpServlet {
         try {
             throw new HttpServletException(HttpStatus.Forbidden, "This servlet shouldn't be used anymore.");
             /* Integer team_id = sm.getIntParam("team_id", true);
-            sm.needToBeTeamUserOfTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             JSONArray shareableApps = new JSONArray();

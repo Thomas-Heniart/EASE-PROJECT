@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -38,6 +39,9 @@ public class Profile {
     @OneToMany(mappedBy = "profile")
     private Set<App> appSet = ConcurrentHashMap.newKeySet();
 
+    @OneToOne(mappedBy = "profile")
+    private TeamUser teamUser;
+
     public final static Integer MIN_COLUMN_INDEX = 0;
     public final static Integer MAX_COLUMN_INDEX = 3;
 
@@ -60,7 +64,7 @@ public class Profile {
         this.db_id = db_id;
     }
 
-    public User getUser() {
+    public synchronized User getUser() {
         return user;
     }
 
@@ -92,12 +96,20 @@ public class Profile {
         this.profileInformation = profileInformation;
     }
 
-    public Set<App> getAppSet() {
+    public synchronized Set<App> getAppSet() {
         return appSet;
     }
 
     public void setAppSet(Set<App> appSet) {
         this.appSet = appSet;
+    }
+
+    public TeamUser getTeamUser() {
+        return teamUser;
+    }
+
+    public void setTeamUser(TeamUser teamUser) {
+        this.teamUser = teamUser;
     }
 
     public void addApp(App app) {
@@ -168,6 +180,10 @@ public class Profile {
 
     public int getSize() {
         return this.getAppSet().size();
+    }
+
+    public boolean isTeamProfile() {
+        return this.getTeamUser() != null;
     }
 
     @Override

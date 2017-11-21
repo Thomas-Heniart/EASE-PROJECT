@@ -92,6 +92,7 @@ public class ServletCreateTeam extends HttpServlet {
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             Date arrivalDate = new Date(sm.getLongParam("timestamp", true, false));
             TeamUser owner = TeamUser.createOwner(firstName, lastName, email, username, arrivalDate, AES.encrypt(teamKey, keyUser), team);
+            owner.getTeamUserStatus().setInvitation_sent(true);
             String jobTitle;
             if (job_index < jobRoles.length - 1)
                 jobTitle = jobRoles[job_index];

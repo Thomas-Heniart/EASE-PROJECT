@@ -47,6 +47,7 @@ public class ServletEditEmail extends HttpServlet {
             user.getUserStatus().setEmail_requested(null);
             user.getUserStatus().setEdit_email_code(null);
             sm.saveOrUpdate(user);
+            sm.getUser().getCookies().forEach(response::addCookie);
             sm.setSuccess("Email edited");
         } catch (Exception e) {
             sm.setError(e);

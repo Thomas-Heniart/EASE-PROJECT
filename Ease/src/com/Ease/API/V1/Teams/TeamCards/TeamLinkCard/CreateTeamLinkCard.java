@@ -4,7 +4,6 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -24,8 +23,7 @@ public class CreateTeamLinkCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
             sm.needToBeTeamUserOfTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
@@ -44,7 +42,7 @@ public class CreateTeamLinkCard extends HttpServlet {
             String description = sm.getStringParam("description", true, true);
             if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
-            TeamCard teamCard = new TeamLinkCard(team, channel, description, name, url, img_url);
+            TeamCard teamCard = new TeamLinkCard(name, team, channel, description, url, img_url);
             sm.saveOrUpdate(teamCard);
             channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);

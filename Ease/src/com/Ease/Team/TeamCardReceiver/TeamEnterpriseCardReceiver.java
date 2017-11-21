@@ -36,6 +36,7 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
     public JSONObject getCardJson() {
         JSONObject res = super.getCardJson();
         Account account = ((ClassicApp)this.getApp()).getAccount();
+        res.put("account_information", new JSONObject());
         if (account == null)
             return res;
         res.put("account_information", account.getJsonWithoutPassword());

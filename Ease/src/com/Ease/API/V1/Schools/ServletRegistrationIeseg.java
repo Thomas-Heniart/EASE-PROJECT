@@ -69,7 +69,7 @@ public class ServletRegistrationIeseg extends HttpServlet {
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
-            sm.setUser(newUser.getDb_id());
+            sm.setUser(newUser);
             /* ieseg profile */
             Profile ieseg_profile = new Profile(newUser, 1, 0, new ProfileInformation("IESEG"));
 

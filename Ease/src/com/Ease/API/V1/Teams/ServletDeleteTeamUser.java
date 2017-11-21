@@ -33,9 +33,9 @@ public class ServletDeleteTeamUser extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeam(team_id, sm.getHibernateQuery());
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             Integer team_user_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_delete = team.getTeamUserWithId(team_user_id);
             TeamUser teamUser_connected = sm.getTeamUser(team);

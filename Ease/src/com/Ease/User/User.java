@@ -8,16 +8,19 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import javax.servlet.http.Cookie;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
     public static final int MAX_PROFILE = 4;
 
@@ -66,6 +69,9 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Notification> notificationSet = ConcurrentHashMap.newKeySet();
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private Administrator administrator;
 
     public User() {
 
@@ -151,7 +157,7 @@ public class User {
         this.userEmailSet = userEmailSet;
     }
 
-    public Set<Profile> getProfileSet() {
+    public synchronized Set<Profile> getProfileSet() {
         return profileSet;
     }
 
@@ -183,8 +189,16 @@ public class User {
         this.notificationSet = notificationSet;
     }
 
+    public Administrator getAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(Administrator administrator) {
+        this.administrator = administrator;
+    }
+
     public boolean isAdmin() {
-        return false;
+        return this.getAdministrator() != null;
     }
 
     public JSONObject getJson() throws HttpServletException {
@@ -214,16 +228,21 @@ public class User {
 
     public JSONArray getProfileListJson() {
         JSONArray res = new JSONArray();
-        List<List<Profile>> profiles = new LinkedList<>();
-        for (int i = 0; i < MAX_PROFILE; i++)
-            profiles.add(new LinkedList<>());
-        this.getProfileSet().stream().forEach(profile -> profiles.get(profile.getColumn_index()).add(profile));
-        profiles.forEach(profiles1 -> {
+
+        this.getProfileList().forEach(profiles1 -> {
             JSONArray tmp = new JSONArray();
             profiles1.stream().sorted(Comparator.comparingInt(Profile::getPosition_index)).forEach(profile -> tmp.add(profile.getJson()));
             res.add(tmp);
         });
         return res;
+    }
+
+    public List<List<Profile>> getProfileList() {
+        List<List<Profile>> profiles = new LinkedList<>();
+        for (int i = 0; i < MAX_PROFILE; i++)
+            profiles.add(new LinkedList<>());
+        this.getProfileSet().stream().forEach(profile -> profiles.get(profile.getColumn_index()).add(profile));
+        return profiles;
     }
 
     public JSONArray getProfilesJson() {
@@ -344,5 +363,16 @@ public class User {
 
     public UserEmail getUserEmail(String email) {
         return this.getUserEmailSet().stream().filter(userEmail -> userEmail.getEmail().equals(email)).findAny().orElse(null);
+    }
+
+    public List<Cookie> getCookies() {
+        List<Cookie> cookies = new ArrayList<>();
+        Cookie cookie = new Cookie("email", this.getEmail());
+        Cookie cookie1 = new Cookie("fname", this.getUsername());
+        cookie.setMaxAge(Integer.MAX_VALUE);
+        cookie1.setMaxAge(Integer.MAX_VALUE);
+        cookies.add(cookie);
+        cookies.add(cookie1);
+        return cookies;
     }
 }

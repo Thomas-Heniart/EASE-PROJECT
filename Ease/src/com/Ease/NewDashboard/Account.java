@@ -2,6 +2,7 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -9,6 +10,7 @@ import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,6 +37,12 @@ public class Account {
 
     @Column(name = "mustBeReciphered")
     private boolean must_be_reciphered = false;
+
+    @Column(name = "passwordMustBeUpdated")
+    private boolean password_must_be_updated = false;
+
+    @Column(name = "adminNotified")
+    private boolean admin_notified = false;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountInformation> accountInformationSet = ConcurrentHashMap.newKeySet();
@@ -119,6 +127,22 @@ public class Account {
         this.accountInformationSet = accountInformationSet;
     }
 
+    public boolean isPassword_must_be_updated() {
+        return password_must_be_updated;
+    }
+
+    public void setPassword_must_be_updated(boolean password_must_be_updated) {
+        this.password_must_be_updated = password_must_be_updated;
+    }
+
+    public boolean isAdmin_notified() {
+        return admin_notified;
+    }
+
+    public void setAdmin_notified(boolean admin_notified) {
+        this.admin_notified = admin_notified;
+    }
+
     /**
      * This method is used to decipher the account
      * For example: after user connection
@@ -184,7 +208,24 @@ public class Account {
 
     public void edit(JSONObject account_information) throws HttpServletException {
         try {
-            for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            for (Object object : account_information.entrySet()) {
+                Map.Entry<String, Object> entry = (Map.Entry<String, Object>) object;
+                String key = entry.getKey();
+                String value = (String) entry.getValue();
+                AccountInformation accountInformation = this.getInformationNamed(key);
+                String old_value = null;
+                if (accountInformation == null) {
+                    accountInformation = new AccountInformation(key, RSA.Encrypt(value, this.getPublic_key()), value);
+                    this.getAccountInformationSet().add(accountInformation);
+                } else {
+                    old_value = accountInformation.getDeciphered_information_value();
+                    accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
+                    accountInformation.setDeciphered_information_value(value);
+                }
+                if (key.equals("password") && !value.equals(old_value))
+                    this.setLast_update(new Date());
+            }
+            /* for (AccountInformation accountInformation : this.getAccountInformationSet()) {
                 String value = (String) account_information.get(accountInformation.getInformation_name());
                 if (value == null || value.equals(""))
                     continue;
@@ -192,7 +233,7 @@ public class Account {
                     this.setLast_update(new Date());
                 accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
                 accountInformation.setDeciphered_information_value(value);
-            }
+            } */
         } catch (GeneralException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
@@ -213,10 +254,14 @@ public class Account {
         return db_id.hashCode();
     }
 
-    public String getInformationNamed(String information_name) throws HttpServletException {
+    public AccountInformation getInformationNamed(String information_name) {
         AccountInformation information = this.getAccountInformationSet().stream().filter(accountInformation -> accountInformation.getInformation_name().equals(information_name)).findFirst().orElse(null);
         if (information == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "No information with this name");
-        return information.getDeciphered_information_value();
+            return null;
+        return information;
+    }
+
+    public boolean mustUpdatePassword() {
+        return this.getReminder_interval() != 0 && new Date().getTime() <= this.getLast_update().getTime() + this.getReminder_interval() * DateComparator.millisecondsInMonth;
     }
 }

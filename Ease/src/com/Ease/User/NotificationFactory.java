@@ -17,12 +17,12 @@ public class NotificationFactory {
     }
 
     public Notification createNotification(User user, String content, String icon, Channel channel) {
-        String url = base_url + "teams#/teams/" + channel.getTeam().getDb_id() + "/" + channel.getDb_id();
+        String url = base_url + "#/teams/" + channel.getTeam().getDb_id() + "/" + channel.getDb_id();
         return new Notification(content, url, icon, user);
     }
 
     public Notification createNotification(User user, String content, String icon, TeamUser teamUser) {
-        String url = base_url + "teams#/teams/" + teamUser.getTeam().getDb_id() + "/@" + teamUser.getDb_id();
+        String url = base_url + "#/teams/" + teamUser.getTeam().getDb_id() + "/@" + teamUser.getDb_id();
         return new Notification(content, url, icon, user);
     }
 
