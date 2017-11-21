@@ -31,7 +31,7 @@ public class TeamManager {
     }
 
     public List<Team> getTeams(HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT t FROM Team t");
+        hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active = true");
         return hibernateQuery.list();
     }
 

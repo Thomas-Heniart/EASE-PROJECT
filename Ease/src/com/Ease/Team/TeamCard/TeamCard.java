@@ -195,6 +195,13 @@ abstract public class TeamCard {
         return this.getJoinTeamCardRequestMap().values().stream().filter(joinTeamCardRequest -> joinTeamCardRequest.getTeamUser().equals(teamUser)).findFirst().orElse(null);
     }
 
+    public JoinTeamCardRequest getJoinTeamCardRequest(Integer id) throws HttpServletException {
+        JoinTeamCardRequest joinTeamCardRequest = this.getJoinTeamCardRequestMap().get(id);
+        if (joinTeamCardRequest == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "No such request");
+        return joinTeamCardRequest;
+    }
+
     public void addJoinTeamCardRequest(JoinTeamCardRequest joinTeamCardRequest) {
         this.getJoinTeamCardRequestMap().put(joinTeamCardRequest.getDb_id(), joinTeamCardRequest);
     }

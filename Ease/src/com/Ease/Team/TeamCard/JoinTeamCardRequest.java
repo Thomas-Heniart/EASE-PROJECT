@@ -1,6 +1,9 @@
 package com.Ease.Team.TeamCard;
 
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -77,4 +80,6 @@ abstract public class JoinTeamCardRequest {
     public int hashCode() {
         return db_id.hashCode();
     }
+
+    public abstract TeamCardReceiver accept(String symmetric_key, HibernateQuery hibernateQuery) throws HttpServletException;
 }
