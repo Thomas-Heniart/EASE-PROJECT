@@ -2,8 +2,8 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.User.User;
 import com.Ease.NewDashboard.*;
+import com.Ease.User.User;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
@@ -35,7 +35,7 @@ public class ServletAddClassicApp extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery());
+            Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), user.getTeams());
             Profile profile = user.getProfile(profile_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             String private_key = (String) sm.getContextAttr("privateKey");

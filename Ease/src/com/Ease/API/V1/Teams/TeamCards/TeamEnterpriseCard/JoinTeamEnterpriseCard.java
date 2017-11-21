@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/api/v1/teams/JoinTeamEnterpriseCard")
 public class JoinTeamEnterpriseCard extends HttpServlet {
@@ -39,8 +40,9 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
             if (teamCard.getJoinTeamCardRequest(teamUser) != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "You already ask  to join this card");
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            Map<String, String> accountInformation = ((TeamEnterpriseCard) teamCard).getWebsite().getInformationNeeded(account_information);
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-            Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, ((TeamEnterpriseCard) teamCard).getPassword_reminder_interval());
+            Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, ((TeamEnterpriseCard) teamCard).getPassword_reminder_interval());
             JoinTeamCardRequest joinTeamCardRequest = new JoinTeamEnterpriseCardRequest(teamCard, teamUser, account);
             sm.saveOrUpdate(joinTeamCardRequest);
             teamCard.addJoinTeamCardRequest(joinTeamCardRequest);

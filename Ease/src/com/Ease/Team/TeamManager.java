@@ -31,14 +31,12 @@ public class TeamManager {
     }
 
     public List<Team> getTeams(HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT t FROM Team t");
+        hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active = true");
         return hibernateQuery.list();
     }
 
     public Team getTeam(Integer team_id, HibernateQuery hibernateQuery) throws HttpServletException {
-        hibernateQuery.queryString("SELECT t FROM Team t WHERE t.db_id = :id");
-        hibernateQuery.setParameter("id", team_id);
-        Team team = (Team) hibernateQuery.getSingleResult();
+        Team team = (Team) hibernateQuery.get(Team.class, team_id);
         if (team == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This team does not exist.");
         return team;

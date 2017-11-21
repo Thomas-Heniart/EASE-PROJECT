@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/api/v1/teams/EditTeamEnterpriseCardReceiver")
 public class EditTeamEnterpriseCardReceiver extends HttpServlet {
@@ -46,11 +47,12 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
                 Map.Entry<String, String> entry = (Map.Entry<String, String>) object;
                 account_information.put(entry.getKey(), RSA.Decrypt(entry.getValue(), private_key));
             } */
+            Map<String, String> accountInformation = teamEnterpriseCard.getWebsite().getInformationFromJson(account_information);
             TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
             ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
             if (classicApp.getAccount() == null) {
                 String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-                Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
+                Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
                 classicApp.setAccount(account);
             } else
                 classicApp.getAccount().edit(account_information);

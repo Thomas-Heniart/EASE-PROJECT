@@ -1,0 +1,43 @@
+{
+  "name": "1CRM",
+  "lastLogin": "",
+  "home": "https://actemis1crm.3acrm.info/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login_user"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login_pass"
+      },
+      {
+        "action": "trueClick",
+        "search": "#login_button"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='deconnexion'], form #email"
+    },
+    {
+      "search": "a[href*='deconnexion']"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='deconnexion']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}

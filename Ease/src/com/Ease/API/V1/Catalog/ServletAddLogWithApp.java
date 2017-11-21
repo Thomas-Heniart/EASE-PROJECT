@@ -30,7 +30,7 @@ public class ServletAddLogWithApp extends HttpServlet {
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Integer logWith_app_id = sm.getIntParam("logWith_app_id", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery());
+            Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), user.getTeams());
             Profile profile = user.getProfile(profile_id);
             App logWithApp = user.getApp(logWith_app_id, sm.getHibernateQuery());
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");

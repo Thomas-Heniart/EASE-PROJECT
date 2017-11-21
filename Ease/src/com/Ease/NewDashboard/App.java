@@ -30,6 +30,9 @@ abstract public class App {
     @OneToOne(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
     private TeamCardReceiver teamCardReceiver;
 
+    @Column(name = "new")
+    private boolean newApp = true;
+
     public App() {
 
     }
@@ -78,6 +81,14 @@ abstract public class App {
         this.teamCardReceiver = teamCardReceiver;
     }
 
+    public boolean isNewApp() {
+        return newApp;
+    }
+
+    public void setNewApp(boolean newApp) {
+        this.newApp = newApp;
+    }
+
     public abstract String getLogo();
 
     public abstract String getType();
@@ -108,6 +119,7 @@ abstract public class App {
         res.put("logo", this.getLogo());
         res.put("name", this.getAppInformation().getName());
         res.put("type", this.getType());
+        res.put("new", this.isNewApp());
         res.put("profile_id", this.getProfile() == null ? -1 : this.getProfile().getDb_id());
         if (this.getTeamCardReceiver() != null)
             res.putAll(this.getTeamCardReceiver().getJson());

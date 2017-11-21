@@ -1,12 +1,14 @@
 package com.Ease.Catalog;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONArray;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by thomas on 24/04/2017.
@@ -97,9 +99,9 @@ public class Catalog {
         return category;
     }
 
-    public Website getPublicWebsiteWithId(Integer id, HibernateQuery hibernateQuery) throws HttpServletException {
+    public Website getPublicWebsiteWithId(Integer id, HibernateQuery hibernateQuery, Set<Team> teams) throws HttpServletException {
         Website website = this.getWebsiteWithId(id, hibernateQuery);
-        if (!website.getWebsiteAttributes().isPublic_website())
+        if (!website.getWebsiteAttributes().isPublic_website() && website.getTeams().stream().noneMatch(teams::contains))
             throw new HttpServletException(HttpStatus.BadRequest, "This website is not public");
         return website;
     }

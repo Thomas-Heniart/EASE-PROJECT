@@ -8,7 +8,6 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User {
     public static final int MAX_PROFILE = 4;
 
@@ -374,5 +372,9 @@ public class User {
         cookies.add(cookie);
         cookies.add(cookie1);
         return cookies;
+    }
+
+    public Set<Team> getTeams() {
+        return this.getTeamUsers().stream().map(TeamUser::getTeam).collect(Collectors.toSet());
     }
 }

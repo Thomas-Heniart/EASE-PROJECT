@@ -170,7 +170,7 @@ public abstract class ServletManager {
         this.needToBeTeamUser();
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam() == team && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -180,7 +180,7 @@ public abstract class ServletManager {
         this.needToBeTeamUser();
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam() == team && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -190,7 +190,7 @@ public abstract class ServletManager {
         this.needToBeTeamUser();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             this.timestamp = this.getCurrentTime();
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam() == team && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);

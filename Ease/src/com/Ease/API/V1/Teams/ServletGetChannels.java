@@ -2,7 +2,6 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -24,7 +23,6 @@ public class ServletGetChannels extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             sm.getUser().getTeamUser(team);
             JSONArray jsonArray = new JSONArray();

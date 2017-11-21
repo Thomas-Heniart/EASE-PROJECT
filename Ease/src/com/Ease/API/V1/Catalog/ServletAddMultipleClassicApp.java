@@ -45,7 +45,7 @@ public class ServletAddMultipleClassicApp extends HttpServlet {
                 JSONObject websiteAndName = (JSONObject) app_to_add;
                 String name = (String) websiteAndName.get("name");
                 Integer website_id = Math.toIntExact((Long) websiteAndName.get("website_id"));
-                Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery());
+                Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), user.getTeams());
                 Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
                 Set<AccountInformation> accountInformationSet = new HashSet<>();
                 Map<String, String> information = website.getInformationNeeded(account_information);
