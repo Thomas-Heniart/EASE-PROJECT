@@ -122,11 +122,6 @@ class TeamView extends React.Component {
         team.rooms[Number(itemId)];
     return item !== undefined ? item : null;
   };
-  chosenApp = () => {
-    const query = queryString.parse(this.props.location.search);
-    if (query.website_id !== undefined && query.website_id.length !== 0)
-      return Number(query.website_id);
-  };
   checkUser = (teamUser) => {
     const team = this.props.teams[this.props.match.params.teamId];
     const me = team.team_users[team.my_team_user_id];
@@ -184,7 +179,7 @@ class TeamView extends React.Component {
                   {/*<Route path={`${this.props.match.url}/SingleApp`} render={(props) => <TeamAppAddingUi addAppView='Simple' item={selectedItem} website_id={this.chosenApp()} />} />*/}
                   {/*<Route path={`${this.props.match.url}/EnterpriseApp`} render={(props) => <TeamAppAddingUi addAppView='Multi' item={selectedItem} website_id={this.chosenApp()} />} />*/}
                   {/*<Route path={`${this.props.match.url}/LinkApp`} render={(props) => <TeamAppAddingUi addAppView='Link' item={selectedItem} website_id={this.chosenApp()} />} />*/}
-                    {this.props.card.app &&
+                    {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
                     <TeamAppAddingUi
                       addAppView={this.props.card.type}
                       item={selectedItem}

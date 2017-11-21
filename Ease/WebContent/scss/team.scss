@@ -1,5 +1,6 @@
 @import 'variables';
 @import 'mixins';
+@import 'dashboard';
 
 button.only-text-button {
   color: $themeDarkGrayTextColor;
@@ -2153,6 +2154,11 @@ button.action_text_button {
                     margin-right: 5px;
                     font-size: .7em;
                     opacity: .8;
+                  }
+                  .userNotAccepted {
+                    font-style: italic;
+                    color: rgba(232, 232, 232, 0.6);
+                    width: 100%;
                   }
                 }
               }
