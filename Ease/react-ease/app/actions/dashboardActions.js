@@ -59,12 +59,25 @@ export function beginAppDrag({app_id}){
 }
 
 export function endAppDrag({app_id}){
-  return {
-    type: 'END_APP_DRAG',
-    payload: {
-      app_id: app_id
-    }
-  }
+  return (dispatch, getState) => {
+    const store = getState();
+    const app = store.dashboard.apps[app_id];
+    const index = store.dashboard.profiles[app.profile_id].app_ids.indexOf(app_id);
+    post_api.dashboard.moveApp({
+      app_id: app_id,
+      profile_id: app.profile_id,
+      position: index
+    });
+    dispatch({
+      type: 'END_APP_DRAG',
+      payload: {
+        app_id: app_id
+      }
+    });
+    dispatch(checkIfProfileEmpty({
+      profile_id: app.profile_id
+    }));
+  };
 }
 
 export function beginProfileDrag({profile_id}){
@@ -77,12 +90,22 @@ export function beginProfileDrag({profile_id}){
 }
 
 export function endProfileDrag({profile_id}){
-  return {
-    type: 'END_PROFILE_DRAG',
-    payload: {
-      profile_id: profile_id
-    }
-  }
+  return (dispatch, getState) => {
+    const store = getState();
+    const profile = store.dashboard.profiles[profile_id];
+    const index = store.dashboard.columns[profile.column_index].indexOf(profile_id);
+    post_api.dashboard.moveProfile({
+      profile_id: profile_id,
+      column_index: profile.column_index,
+      position: index
+    });
+    dispatch({
+      type: 'END_PROFILE_DRAG',
+      payload: {
+        profile_id: profile_id
+      }
+    });
+  };
 }
 
 export function moveProfile({profile_id, targetProfile_id, hoverClientY, hoverMiddleY}){
@@ -123,7 +146,39 @@ export function insertProfileIntoColumn({profile_id, column_index}){
   }
 }
 
-export function createProfile({column_index, name}){
+export function createProfileAndInsertApp({column_index, name, app_id}){
+  return (dispatch, getState) => {
+    dispatch(createProfile({
+      column_index: column_index,
+      name: name
+    })).then(profile => {
+      dispatch(insertAppInProfile({
+        app_id: app_id,
+        profile_id: profile.id
+      }));
+      dispatch(endAppDrag({app_id: app_id}));
+    });
+  };
+}
+
+export function createProfile({column_index, name}) {
+  return (dispatch, getState) => {
+    post_api.dashboard.createProfile({
+      name: name,
+      column_index: column_index
+    }).then(profile => {
+      dispatch({
+        type: 'DASHBOARD_PROFILE_CREATED',
+        payload: {
+          profile: profile
+        }
+      });
+      return profile;
+    });
+  };
+}
+
+/*export function createProfile({column_index, name}){
   return (dispatch, getState) => {
     const profile = {
       app_ids: [],
@@ -141,7 +196,7 @@ export function createProfile({column_index, name}){
       resolve(profile);
     });
   }
-}
+}*/
 
 export function editProfile({profile_id, name}) {
   return (dispatch, getState) => {
@@ -161,6 +216,9 @@ export function checkIfProfileEmpty({profile_id}){
   return (dispatch, getState) => {
     const store = getState();
     if (!store.dashboard.profiles[profile_id].app_ids.length){
+      post_api.dashboard.deleteProfile({
+        profile_id: profile_id
+      });
       dispatch({
         type: 'DASHBOARD_PROFILE_REMOVED',
         payload: {

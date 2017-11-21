@@ -59,8 +59,10 @@ const appSource = {
     return props;
   },
   endDrag(props, monitor) {
-    props.dispatch(endAppDrag({app_id: props.app.id}));
-    props.dispatch(checkIfProfileEmpty({profile_id: props.app.profile_id}));
+    const result = monitor.getDropResult();
+
+    if (!result.createProfile)
+      props.dispatch(endAppDrag({app_id: props.app.id}));
   }
 };
 
