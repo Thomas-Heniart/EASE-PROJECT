@@ -16,6 +16,10 @@ export function reflect(promise){
       function(e){ return {data:e, error: true }});
 }
 
+export function teamUserDepartureDatePassed(departure_date){
+  return !!departure_date && new Date().getTime() > departure_date;
+}
+
 export function isAppInformationEmpty(information){
   let empty_params = 0;
   Object.keys(information).map(item => {

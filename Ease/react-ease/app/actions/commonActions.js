@@ -59,7 +59,8 @@ export function processConnection({email, password}){
   return (dispatch) => {
     return post_api.common.connect(email, password).then(infos => {
       return dispatch(fetchCriticalParts()).then(response => {
-        dispatch({type: 'CONNECTION_FULFILLED', payload: infos});
+        dispatch({type: 'CONNECTION_FULFILLED', payload: {user:infos}});
+        return infos;
       });
     }).catch(err => {
       throw err;

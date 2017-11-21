@@ -68,7 +68,7 @@ export function fetchTeamApp({team_id, app_id}){
 }
 
 export function fetchTeam(id) {
-  return function(dispatch){
+  return (dispatch) => {
     dispatch({type:'FETCH_TEAM_PENDING', payload:id});
     return api.fetchTeam(id).then((response) => {
       dispatch({type: "FETCH_TEAM_FULFILLED", payload: response});
@@ -89,36 +89,31 @@ export function fetchTeamAndUsersAndChannels(team_id){
   }
 }
 
-export function teamInviteFriends(email1, email2, email3){
+export function teamInviteFriends({team_id, email1, email2, email3}){
   return (dispatch, getState) => {
-    dispatch({type:'TEAM_INVITE_FRIENDS_PENDING'});
-    return post_api.teams.inviteFriends(getState().team.id, email1, email2, email3).then(response => {
+    return post_api.teams.inviteFriends(team_id, email1, email2, email3).then(response => {
       dispatch({type: 'TEAM_INVITE_FRIENDS_FULFILLED', payload: response});
       return response;
     }).catch(err => {
-      dispatch({type: 'TEAM_INVITE_FRIENDS_REJECTED', payload:err});
       throw err;
     });
   }
 }
 
-export function teamAddCreditCard({cardToken}){
+export function teamAddCreditCard({team_id, cardToken}){
   return (dispatch, getState) => {
-    dispatch({type: 'TEAM_ADD_CREDIT_CARD_PENDING'});
-    return post_api.teams.addCreditCard({team_id: getState().team.id, cardToken: cardToken}).then(response => {
-      dispatch({type: 'TEAM_ADD_CREDIT_CARD_FULFILLED', payload: {card: response}});
+    return post_api.teams.addCreditCard({team_id: team_id, cardToken: cardToken}).then(response => {
+      dispatch({type: 'TEAM_ADD_CREDIT_CARD_FULFILLED', payload: {card: response, team_id: team_id}});
     }).catch(err => {
-      dispatch({type: 'TEAM_ADD_CREDIT_CARD_REJECTED', payload: err});
       throw err;
     });
   }
 }
 
-export function teamUpdateBillingInformation({address_city, address_country, address_line1, address_line2, address_state, address_zip, business_vat_id}){
+export function teamUpdateBillingInformation({team_id, address_city, address_country, address_line1, address_line2, address_state, address_zip, business_vat_id}){
   return (dispatch, getState) => {
-    dispatch({type: 'TEAM_UPDATE_BILLING_INFORMATION_PENDING'});
     return post_api.teams.updateBillingInformation({
-      team_id: getState().team.id,
+      team_id: team_id,
       address_city: address_city,
       address_country: address_country,
       address_line1: address_line1,
@@ -128,8 +123,8 @@ export function teamUpdateBillingInformation({address_city, address_country, add
       business_vat_id: business_vat_id
     }).then(response => {
       dispatch({type: 'TEAM_UPDATE_BILLING_INFORMATION_FULFILLED', payload:{data: response}});
+      return response;
     }).catch(err => {
-      dispatch({type: 'TEAM_UPDATE_BILLING_INFORMATION_REJECTED', payload:err});
       throw err;
     });
   }
@@ -150,12 +145,10 @@ export function fetchTeamPaymentInformation({team_id}){
 
 export function unsubscribe({team_id,password}){
   return (dispatch, getState) => {
-    dispatch({type: 'TEAM_UNSUBSCRIBE_PENDING'});
     return post_api.teams.unsubscribe({team_id: team_id, password: password}).then(response => {
       dispatch({type:'TEAM_REMOVED', payload: {team_id: team_id}});
       return response;
     }).catch(err => {
-      dispatch({type: 'TEAM_UNSUBSCRIBE_REJECTED', payload: err});
       throw err;
     });
   }

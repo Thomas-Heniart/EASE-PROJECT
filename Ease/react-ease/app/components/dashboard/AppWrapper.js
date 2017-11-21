@@ -7,7 +7,10 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import ClassicApp from "./ClassicApp";
 import LinkApp from "./LinkApp";
 import LogWithApp from "./LogWithApp";
-import {moveApp, beginAppDrag,endAppDrag, checkIfProfileEmpty} from "../../actions/dashboardActions";
+import TeamEnterpriseApp from "./TeamEnterpriseApp";
+import TeamSingleApp from "./TeamSingleApp";
+import TeamLinkApp from "./TeamLinkApp";
+import {createProfileAndInsertApp, moveApp, beginAppDrag,endAppDrag, checkIfProfileEmpty} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 
 class AppWrapper extends Component {
@@ -29,6 +32,12 @@ class AppWrapper extends Component {
         return <LinkApp app={app} dispatch={dispatch}/>;
       case 'logWithApp':
         return <LogWithApp app={app} dispatch={dispatch}/>;
+      case 'teamLinkApp':
+        return <TeamLinkApp app={app} dispatch={dispatch}/>;
+      case 'teamSingleApp':
+        return <TeamSingleApp app={app} dispatch={dispatch}/>;
+      case 'teamEnterpriseApp':
+        return <TeamEnterpriseApp app={app} dispatch={dispatch}/>;
       default:
         return null;
     }
@@ -50,8 +59,19 @@ const appSource = {
     return props;
   },
   endDrag(props, monitor) {
-    props.dispatch(endAppDrag({app_id: props.app.id}));
-    props.dispatch(checkIfProfileEmpty({profile_id: props.app.profile_id}));
+    const result = monitor.getDropResult();
+    const app_id = props.app.id;
+
+    console.log(result);
+    if (!result.newProfile)
+      props.dispatch(endAppDrag({app_id: props.app.id}));
+    else {
+      props.dispatch(createProfileAndInsertApp({
+        column_index: result.column_idx,
+        name: result.name,
+        app_id: app_id
+      }));
+    }
   }
 };
 

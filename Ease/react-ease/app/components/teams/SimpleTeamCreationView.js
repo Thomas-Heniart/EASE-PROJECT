@@ -399,7 +399,7 @@ class SimpleTeamCreationView extends React.Component {
     this.setState({newsletter: !this.state.newsletter});
   }
   submitStep8(){
-    window.location.href = `/teams#/teams/${this.state.teamId}`;
+    window.location.href = `/#/teams/${this.state.teamId}`;
     window.location.reload(true);
   }
   handleInput(e, {value , name}){

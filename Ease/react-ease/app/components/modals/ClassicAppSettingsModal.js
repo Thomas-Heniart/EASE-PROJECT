@@ -46,9 +46,6 @@ class ClassicAppSettingsModal extends Component {
   close = () => {
     this.props.dispatch(showClassicAppSettingsModal({active: false}));
   };
-  changeView = (e, {name}) => {
-    this.setState({view: name});
-  };
   remove = () => {
     return new Promise((resolve, reject) => {
       resolve();

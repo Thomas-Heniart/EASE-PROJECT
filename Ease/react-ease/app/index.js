@@ -21,7 +21,6 @@ const stripe_api_key = window.location.hostname === 'ease.space' ? 'pk_live_lPfb
 class App extends React.Component {
   render(){
     return (
-        <StripeProvider apiKey={stripe_api_key}>
           <HashRouter>
             <Base>
               <Route exact path={"/"} component={Root}/>
@@ -34,7 +33,6 @@ class App extends React.Component {
               <Route path="/recover/:email/:code" component={RenewPassword}/>
             </Base>
           </HashRouter>
-        </StripeProvider>
     )
   }
 }

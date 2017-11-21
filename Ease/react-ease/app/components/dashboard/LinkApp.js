@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 
@@ -11,7 +12,7 @@ class LinkApp extends Component {
     return (
         <div class='app'>
           <div class="logo_area">
-            <div style={{display:'none'}} class="app_notification rounded_label"><Icon name="filter"/></div>
+            <NewAppLabel/>
             <div class="logo_handler">
               <img class="logo" src={app.logo}/>
               <button class="settings_button" onClick={e => {this.props.dispatch(showLinkAppSettingsModal({active: true, app:app}))}}>Settings</button>

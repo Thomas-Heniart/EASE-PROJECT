@@ -115,15 +115,14 @@ class EaseMainNavbar extends React.Component {
   }
   processLogout = () => {
     this.props.dispatch(processLogout()).then(response => {
-      window.location.href = "/#/login";
-//      this.props.history.push('/login');
+      this.props.history.push('/login');
     })
   };
   logoutFromAllApps = () => {
     this.props.dispatch(processLogout()).then(response => {
       let event = new CustomEvent("Logout");
       document.dispatchEvent(event);
-      window.location.href = "/login";
+      this.props.history.push('/login');
     });
   };
   render() {
