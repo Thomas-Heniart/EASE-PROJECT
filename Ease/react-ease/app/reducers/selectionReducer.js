@@ -262,6 +262,30 @@ export default function reducer(state={
         apps: apps
       }
     }
+    case 'TEAM_SINGLE_CARD_JOIN_FULFILLED': {
+      var apps = state.apps;
+      var app = selectAppFromListById(apps, action.payload.team_card_id);
+
+      if (app !== null && app.requests.indexOf(action.payload.team_user_id) === -1){
+        app.requests.push(action.payload.team_user_id);
+        return {
+          ...state,
+          apps: apps
+        }
+      }
+    }
+    case 'TEAM_ENTERPRISE_CARD_JOIN_FULFILLED': {
+      var apps = state.apps;
+      var app = selectAppFromListById(apps, action.payload.team_card_id);
+
+      if (app !== null && app.requests.indexOf(action.payload.team_user_id) === -1){
+        app.requests.push(action.payload.team_user_id);
+        return {
+          ...state,
+          apps: apps
+        }
+      }
+    }
     case 'TEAM_APP_ASK_JOIN_FULFILLED': {
       var apps = state.apps;
       var app = selectAppFromListById(apps, action.payload.app_id);
@@ -287,13 +311,13 @@ export default function reducer(state={
       }
     }
     case 'TEAM_USER_REMOVED': {
-      const user_id = action.payload.user.id;
+      const user_id = action.payload.team_user_id;
       let apps = state.apps.map(item => {
         item.receivers = item.receivers.filter(item => {
           return item.team_user_id !== user_id;
         });
-        item.sharing_requests = item.sharing_requests.filter(item => {
-          return item !== user_id;
+        item.requests = item.requests.filter(item => {
+          return item.team_user_id !== user_id;
         });
         return item;
       });
@@ -328,7 +352,7 @@ export default function reducer(state={
       }
     }
     case 'TEAM_APP_REMOVED' : {
-      const apps = state.apps.filter(app => (app.id !== action.payload.app_id));
+      const apps = state.apps.filter(app => (app.id !== action.payload.team_card_id));
       return {
         ...state,
         apps: apps

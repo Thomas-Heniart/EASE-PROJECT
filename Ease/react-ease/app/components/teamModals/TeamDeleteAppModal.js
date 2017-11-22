@@ -27,7 +27,7 @@ class TeamDeleteAppModal extends React.Component {
     this.confirmModal = this.confirmModal.bind(this);
   }
   confirmModal(){
-    this.props.dispatch(teamDeleteApp(this.props.modal.app.id)).then(response => {
+    this.props.dispatch(teamDeleteApp(this.props.modal.app.id, this.props.modal.app.team_id)).then(response => {
       this.props.dispatch(showTeamDeleteAppModal(false));
     });
   }
