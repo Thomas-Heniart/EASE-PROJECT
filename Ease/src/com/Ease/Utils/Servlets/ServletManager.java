@@ -2,16 +2,16 @@ package com.Ease.Utils.Servlets;
 
 import com.Ease.Dashboard.User.JWToken;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Team.TeamManager;
-import com.Ease.User.NotificationManager;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationManager;
 import com.Ease.User.User;
 import com.Ease.User.UserFactory;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.websocketV1.WebSocketManager;
-import com.stripe.exception.*;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import io.jsonwebtoken.Claims;
@@ -149,16 +149,17 @@ public abstract class ServletManager {
             Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
             userProperties.put("keyUser", keyUser);
             userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
-            for (TeamUser teamUser : user.getTeamUsers()) {
-                Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
-                String teamKey = (String) teamProperties.get("teamKey");
-                if (teamUser.getTeamKey() == null && !teamUser.isDisabled()  && teamKey != null)
-                    teamUser.lastRegistrationStep(keyUser, teamKey, this.getHibernateQuery());
-                else if (teamUser.getTeamKey() != null)
-                    teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
-            }
         } else
             this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+        String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
+        for (TeamUser teamUser : user.getTeamUsers()) {
+            Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
+            String teamKey = (String) teamProperties.get("teamKey");
+            if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null)
+                teamUser.lastRegistrationStep(keyUser, teamKey, this.getHibernateQuery());
+            else if (teamUser.getTeamKey() != null)
+                teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
+        }
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
