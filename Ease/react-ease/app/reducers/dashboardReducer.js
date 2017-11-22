@@ -35,6 +35,19 @@ export const dashboard = createReducer({
       }
     });
   },
+  ['DASHBOARD_APP_REMOVED'](state, action){
+    const app_id = action.payload.app_id;
+    const app = state.apps[app_id];
+
+    return update(state, {
+      apps: {$unset: [app_id]},
+      profiles: {
+        [app.profile_id]: {
+          app_ids: {$splice: [[app_id, 1]]}
+        }
+      }
+    });
+  },
   ['DASHBOARD_PROFILE_REMOVED'](state, action){
     const profile_id = action.payload.profile_id;
     const profile = state.profiles[profile_id];

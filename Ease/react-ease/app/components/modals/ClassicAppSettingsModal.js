@@ -6,7 +6,7 @@ import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editClassicApp} from "../../actions/dashboardActions";
+import {editClassicApp, deleteApp} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 
@@ -48,9 +48,12 @@ class ClassicAppSettingsModal extends Component {
     this.props.dispatch(showClassicAppSettingsModal({active: false}));
   };
   remove = () => {
-    return new Promise((resolve, reject) => {
-      resolve();
+    return this.props.dispatch(deleteApp({
+      app_id: this.props.app.id
+    })).then(response => {
       this.close();
+    }).catch(err => {
+      throw err;
     });
   };
   edit = (e) => {
