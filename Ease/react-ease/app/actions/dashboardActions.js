@@ -41,6 +41,24 @@ export function validateApp({app_id}) {
   }
 }
 
+export function deleteApp({app_id}){
+  return (dispatch, getState) => {
+    return post_api.dashboard.deleteApp({
+      app_id: app_id
+    }).then(response => {
+      dispatch({
+        type: 'DASHBOARD_APP_REMOVED',
+        payload: {
+          app_id: app_id
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function moveApp({app_id, targetApp_id}) {
   return {
     type: 'INSERT_APP',
