@@ -59,6 +59,11 @@ public class OnStart implements ServletContextListener {
 
                 context.setAttribute("metrics", new Metrics(db));
 
+                Map<Integer, Map<String, Object>> userIdMap = new ConcurrentHashMap<>();
+                Map<Integer, Map<String, Object>> teamIdMap = new ConcurrentHashMap<>();
+                context.setAttribute("userIdMap", userIdMap);
+                context.setAttribute("teamIdMap", teamIdMap);
+
                 Timer time = new Timer();
                 Calendar delay = Calendar.getInstance();
                 int hour = delay.get(Calendar.HOUR_OF_DAY);
@@ -68,17 +73,12 @@ public class OnStart implements ServletContextListener {
                 delay.set(Calendar.HOUR_OF_DAY, 10);
                 delay.set(Calendar.MINUTE, 30);
                 long next_clock = delay.getTimeInMillis() - new Date().getTime();
-                StripeScheduledTask st = new StripeScheduledTask(teamManager);
+                StripeScheduledTask st = new StripeScheduledTask(teamManager, teamIdMap);
                 time.schedule(st, 0, 12 * 60 * 60 * 1000);
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager, context);
                 time.schedule(reminders, next_clock, 24 * 60 * 60 * 1000);
-
-                Map<Integer, Map<String, Object>> userIdMap = new ConcurrentHashMap<>();
-                Map<Integer, Map<String, Object>> teamIdMap = new ConcurrentHashMap<>();
-                context.setAttribute("userIdMap", userIdMap);
-                context.setAttribute("teamIdMap", teamIdMap);
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));

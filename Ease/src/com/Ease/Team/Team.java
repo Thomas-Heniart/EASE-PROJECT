@@ -365,7 +365,7 @@ public class Team {
         return res;
     }
 
-    public void updateSubscription() {
+    public void updateSubscription(Map<String, Object> teamProperties) {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
         this.activeSubscriptions = 0;
@@ -375,7 +375,12 @@ public class Team {
         }));
         System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
-
+            Subscription subscription = (Subscription) teamProperties.get("subscription");
+            if (subscription == null) {
+                subscription = Subscription.retrieve(this.getSubscription_id());
+                teamProperties.put("subscription", subscription);
+            }
+            this.setSubscription(subscription);
             if (this.getSubscription().getQuantity() != activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
