@@ -40,9 +40,7 @@ public class UserFactory {
         String connection_token = (String) claims.get("tok");
         Long expiration_date = (Long) claims.get("exp");
         Integer user_id = (Integer) claims.get("id");
-        hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id = :id");
-        hibernateQuery.setParameter("id", user_id);
-        User user = (User) hibernateQuery.getSingleResult();
+        User user = this.loadUser(user_id, hibernateQuery);
         if (user == null)
             return null;
         JsonWebToken jsonWebToken = user.getJsonWebToken();
@@ -52,8 +50,6 @@ public class UserFactory {
     }
 
     public User loadUser(Integer user_id, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id = :id");
-        hibernateQuery.setParameter("id", user_id);
-        return (User) hibernateQuery.getSingleResult();
+        return (User) hibernateQuery.get(User.class, user_id);
     }
 }

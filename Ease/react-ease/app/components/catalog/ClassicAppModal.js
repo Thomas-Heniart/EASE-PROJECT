@@ -416,7 +416,7 @@ class ClassicAppModal extends React.Component {
         let website = selectItemFromListById(this.props.catalog.websites, item);
         let apps = [];
         profiles.map(item => {
-          item.apps.map(app => {
+          item.app_ids.map(app => {
             if (app.website_id === website.id && (app.type === 'classicApp' || app.type === 'logWithApp'))
               apps.push(app);
           });

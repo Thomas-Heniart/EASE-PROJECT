@@ -66,7 +66,7 @@ export default function reducer(state=initialState, action) {
         user: user
       }
     }
-    case 'TEAM_REMOVED': {
+/*    case 'TEAM_REMOVED': {
       if (!state.user)
         break;
       let user = state.user;
@@ -80,7 +80,7 @@ export default function reducer(state=initialState, action) {
         }
       }
       break;
-    }
+    }*/
     case 'TEAM_CHANGED': {
       if (!state.user)
         break;

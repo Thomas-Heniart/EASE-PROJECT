@@ -18,15 +18,6 @@ export function showLogWithAppSettingsModal({active, app}){
   }
 }
 
-export function showExtensionDownloadModal({active}){
-  return {
-    type: 'SHOW_EXTENSION_DOWNLOAD_MODAL',
-    payload: {
-      active: active
-    }
-  }
-}
-
 export function showLinkAppSettingsModal({active, app}){
   return {
     type: 'SHOW_LINK_APP_SETTINGS_MODAL',
@@ -36,6 +27,46 @@ export function showLinkAppSettingsModal({active, app}){
     }
   }
 }
+
+export function showTeamLinkAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_LINK_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showTeamSingleAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_SINGLE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showTeamEnterpriseAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_ENTERPRISE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showExtensionDownloadModal({active}){
+  return {
+    type: 'SHOW_EXTENSION_DOWNLOAD_MODAL',
+    payload: {
+      active: active
+    }
+  }
+}
+
 
 export function showPasswordLostInformationModal({active}){
   return {

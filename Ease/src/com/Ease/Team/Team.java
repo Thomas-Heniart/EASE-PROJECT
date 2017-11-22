@@ -375,6 +375,7 @@ public class Team {
         }));
         System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
+
             if (this.getSubscription().getQuantity() != activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);

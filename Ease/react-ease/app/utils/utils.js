@@ -16,6 +16,10 @@ export function reflect(promise){
       function(e){ return {data:e, error: true }});
 }
 
+export function teamUserDepartureDatePassed(departure_date){
+  return !!departure_date && new Date().getTime() > departure_date;
+}
+
 export function isAppInformationEmpty(information){
   let empty_params = 0;
   Object.keys(information).map(item => {
@@ -60,7 +64,7 @@ export function transformWebsiteInfoIntoList(informations){
 
 export function transformWebsiteInfoIntoListAndSetValues(information, values){
   return transformWebsiteInfoIntoList(information).map(item => {
-    item.value = values[item.name];
+    item.value = !!values[item.name] ? values[item.name] : '';
     return item;
   });
 }

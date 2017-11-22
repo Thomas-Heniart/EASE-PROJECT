@@ -6,7 +6,8 @@ import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editClassicApp} from "../../actions/dashboardActions";
+import {editClassicApp, deleteApp} from "../../actions/dashboardActions";
+import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 
 @connect(store => ({
@@ -19,7 +20,7 @@ class ClassicAppSettingsModal extends Component {
       appName: this.props.app.name,
       view: 'Account',
       credentials: [],
-      isEmpty: isAppInformationEmpty(this.props.app.account_information),
+      isEmpty: this.props.app.empty,
       loading: false,
       errorMessage:''
     };
@@ -46,13 +47,13 @@ class ClassicAppSettingsModal extends Component {
   close = () => {
     this.props.dispatch(showClassicAppSettingsModal({active: false}));
   };
-  changeView = (e, {name}) => {
-    this.setState({view: name});
-  };
   remove = () => {
-    return new Promise((resolve, reject) => {
-      resolve();
+    return this.props.dispatch(deleteApp({
+      app_id: this.props.app.id
+    })).then(response => {
       this.close();
+    }).catch(err => {
+      throw err;
     });
   };
   edit = (e) => {
@@ -81,6 +82,7 @@ class ClassicAppSettingsModal extends Component {
   }
   render(){
     const {view, credentials} = this.state;
+    const app = this.props.app;
     const inputs = credentials.map((item,idx) => {
       if (item.name === 'password')
         return (
@@ -101,14 +103,15 @@ class ClassicAppSettingsModal extends Component {
                     labelPosition='left'>
                   <Label><Icon name="lock"/></Label>
                   <input/>
-                  <Icon name="copy" link/>
+                  {!app.empty &&
+                  <CopyPasswordIcon app_id={app.id}/>}
                 </Input>
                 {!this.state.isEmpty &&
-                  <Icon
-                      name="pencil"
-                      onClick={this.toggleCredentialEdit.bind(null, item.name)}
-                      fitted link
-                      style={{paddingLeft: '15px'}}/>}
+                <Icon
+                    name="pencil"
+                    onClick={this.toggleCredentialEdit.bind(null, item.name)}
+                    fitted link
+                    style={{paddingLeft: '15px'}}/>}
               </div>
             </Form.Field>
         );
@@ -130,11 +133,11 @@ class ClassicAppSettingsModal extends Component {
                   placeholder={item.placeholder}
                   labelPosition='left'/>
               {!this.state.isEmpty &&
-                <Icon
-                    name="pencil"
-                    onClick={this.toggleCredentialEdit.bind(null, item.name)}
-                    fitted link
-                    style={{paddingLeft: '15px'}}/>}
+              <Icon
+                  name="pencil"
+                  onClick={this.toggleCredentialEdit.bind(null, item.name)}
+                  fitted link
+                  style={{paddingLeft: '15px'}}/>}
             </div>
           </Form.Field>
       )

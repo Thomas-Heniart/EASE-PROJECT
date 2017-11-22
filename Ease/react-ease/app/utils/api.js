@@ -237,6 +237,16 @@ module.exports = {
     },
     fetchApps: function() {
       return basic_get('/api/v1/dashboard/GetApps');
+    },
+    getAppPassword: ({app_id}) => {
+      return basic_get('/api/v1/dashboard/GetAppPassword', {
+        app_id: app_id
+      });
+    },
+    getAppConnectionInformation: ({app_id}) => {
+      return basic_get('/api/v1/dashboard/GetConnection', {
+        app_id: app_id
+      });
     }
   },
   teamApps: {

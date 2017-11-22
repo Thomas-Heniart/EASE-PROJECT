@@ -1,5 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
+import com.Ease.NewDashboard.Account;
+import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.User.User;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/api/v1/dashboard/EditClassicApp")
 public class ServletEditClassicApp extends HttpServlet {
@@ -37,7 +40,14 @@ public class ServletEditClassicApp extends HttpServlet {
                 account_information.put(entry.getKey(), RSA.Decrypt(entry.getValue(), private_key));
             } */
             ClassicApp classicApp = (ClassicApp) app;
-            classicApp.getAccount().edit(account_information);
+            Account account = classicApp.getAccount();
+            if (account == null) {
+                String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+                Map<String, String> accountInformation = classicApp.getWebsite().getInformationNeeded(account_information);
+                account = AccountFactory.getInstance().createAccountFromMap(accountInformation, keyUser, 0);
+                classicApp.setAccount(account);
+            } else
+                account.edit(account_information);
             app.getAppInformation().setName(name);
             sm.saveOrUpdate(app);
             sm.setSuccess(app.getJson());

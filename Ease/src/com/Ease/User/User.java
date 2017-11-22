@@ -35,7 +35,7 @@ public class User {
 
     @Column(name = "registration_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date registration_date;
+    private Date registration_date = new Date();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "key_id")
@@ -345,6 +345,14 @@ public class User {
         if (teamUser == null)
             throw new HttpServletException(HttpStatus.BadRequest, "You are not part of this team");
         return teamUser;
+    }
+
+    public TeamUser getTeamUserOrNull(Team team) {
+        return this.getTeamUsers().stream().filter(teamUser1 -> teamUser1.getTeam().equals(team)).findAny().orElse(null);
+    }
+
+    public TeamUser getTeamUserOrNull(Integer team_id) {
+        return this.getTeamUsers().stream().filter(teamUser1 -> teamUser1.getTeam().getDb_id().equals(team_id)).findAny().orElse(null);
     }
 
     public void addTeamUser(TeamUser teamUser) {

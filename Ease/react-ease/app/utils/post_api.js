@@ -24,6 +24,35 @@ module.exports = {
         name: name
       });
     },
+    moveProfile: ({profile_id, column_index, position}) => {
+      return basic_post('/api/v1/dashboard/MoveProfile', {
+        profile_id: profile_id,
+        column_index: column_index,
+        position: position
+      });
+    },
+    deleteProfile: ({profile_id}) => {
+      return basic_post('/api/v1/dashboard/DeleteProfile', {
+        profile_id: profile_id
+      })
+    },
+    deleteApp: ({app_id}) => {
+      return basic_post('/api/v1/dashboard/DeleteApp', {
+        app_id: app_id
+      });
+    },
+    moveApp: ({app_id, profile_id, position}) => {
+      return basic_post('/api/v1/dashboard/MoveApp', {
+        app_id: app_id,
+        profile_id: profile_id,
+        position: position
+      });
+    },
+    validateApp: ({app_id}) => {
+      return basic_post('/api/v1/dashboard/ValidateApp', {
+        app_id: app_id
+      });
+    },
     editClassicApp: ({app_id, name, account_information}) => {
       return basic_post('/api/v1/dashboard/EditClassicApp', {
         app_id: app_id,

@@ -46,7 +46,7 @@ public class ServletGetAppPassword extends HttpServlet {
                 symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             classicApp.decipher(symmetric_key);
             /* @TODO cipher password with server private key */
-            res.put("password", classicApp.getAccount().getInformationNamed("password"));
+            res.put("password", classicApp.getAccount().getInformationNamed("password").getDeciphered_information_value());
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

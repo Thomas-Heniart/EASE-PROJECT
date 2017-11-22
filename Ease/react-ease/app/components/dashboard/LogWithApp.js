@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {EmptyAppIndicator} from "./utils";
+import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 
@@ -14,9 +14,8 @@ class LogWithApp extends Component {
     return (
         <div class='app'>
           <div class="logo_area">
-            <div style={{display: 'none'}} class="app_notification rounded_label">
-              <Icon name="filter"/>
-            </div>
+            {app.new &&
+            <NewAppLabel/>}
             {isEmpty &&
             <EmptyAppIndicator onClick={e => {dispatch(showLogWithAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">
