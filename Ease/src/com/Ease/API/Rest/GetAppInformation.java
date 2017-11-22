@@ -36,7 +36,7 @@ public class GetAppInformation extends HttpServlet {
                 symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             classicApp.decipher(symmetric_key);
             JSONObject res = new JSONObject();
-            res.put(information_name, classicApp.getAccount().getInformationNamed(information_name));
+            res.put(information_name, classicApp.getAccount().getInformationNamed(information_name).getDeciphered_information_value());
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
