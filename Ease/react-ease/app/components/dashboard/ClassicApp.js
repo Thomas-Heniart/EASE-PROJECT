@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
-import {isAppInformationEmpty} from "../../utils/utils";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 
 class ClassicApp extends Component {
@@ -10,16 +9,16 @@ class ClassicApp extends Component {
   }
   render(){
     const {app, dispatch} = this.props;
-    const isEmpty = isAppInformationEmpty(app.account_information);
 
     return (
         <div class='app'>
           <div class="logo_area">
-            {isEmpty &&
+            {app.empty &&
             <EmptyAppIndicator onClick={e => {
               dispatch(showClassicAppSettingsModal({active: true, app: app}))
             }}/>}
-            <NewAppLabel/>
+            {app.new &&
+            <NewAppLabel/>}
             <div class="logo_handler">
               <img class="logo" src={app.logo}/>
               <button class="settings_button" onClick={e => {dispatch(showClassicAppSettingsModal({active: true, app: app}))}}>

@@ -64,7 +64,7 @@ export function transformWebsiteInfoIntoList(informations){
 
 export function transformWebsiteInfoIntoListAndSetValues(information, values){
   return transformWebsiteInfoIntoList(information).map(item => {
-    item.value = values[item.name];
+    item.value = !!values[item.name] ? values[item.name] : '';
     return item;
   });
 }

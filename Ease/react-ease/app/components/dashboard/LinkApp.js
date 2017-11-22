@@ -8,14 +8,15 @@ class LinkApp extends Component {
     super(props);
   }
   render(){
-    const {app} = this.props;
+    const {app, dispatch} = this.props;
     return (
         <div class='app'>
           <div class="logo_area">
-            <NewAppLabel/>
+            {app.new &&
+            <NewAppLabel/>}
             <div class="logo_handler">
               <img class="logo" src={app.logo}/>
-              <button class="settings_button" onClick={e => {this.props.dispatch(showLinkAppSettingsModal({active: true, app:app}))}}>Settings</button>
+              <button class="settings_button" onClick={e => {dispatch(showLinkAppSettingsModal({active: true, app:app}))}}>Settings</button>
             </div>
           </div>
           <span class="app_name overflow-ellipsis">{app.name}</span>
