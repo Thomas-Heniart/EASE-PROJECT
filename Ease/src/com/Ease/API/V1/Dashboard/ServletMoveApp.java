@@ -1,8 +1,11 @@
 package com.Ease.API.V1.Dashboard;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.User.User;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -26,14 +29,11 @@ public class ServletMoveApp extends HttpServlet {
             App app = user.getApp(app_id, sm.getHibernateQuery());
             Profile old_profile = app.getProfile();
             Profile new_profile = user.getProfile(profile_id);
-            System.out.println(old_profile.equals(new_profile));
-
-            if (old_profile.equals(new_profile))
-                old_profile.updateAppPositions(app, position, sm.getHibernateQuery());
-            else {
-                old_profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
-                new_profile.addAppAndUpdatePositions(app, position, sm.getHibernateQuery());
-            }
+            if (position < 0 || position > new_profile.getSize())
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter position");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            old_profile.removeAppAndUpdatePositions(app, hibernateQuery);
+            new_profile.addAppAndUpdatePositions(app, position, hibernateQuery);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);
