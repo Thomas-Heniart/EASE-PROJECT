@@ -668,11 +668,10 @@ module.exports = {
       });
     },
     acceptSharedApp: function({ws_id, team_id, shared_app_id}){
-      return axios.post('/api/v1/teams/AcceptSharedApp', {
+      return axios.post('/api/v1/teams/AcceptJoinTeamCard', {
         ws_id: ws_id,
         team_id: team_id,
-        shared_app_id: shared_app_id,
-        timestamp: new Date().getTime()
+        team_card_id: shared_app_id
       }).then(response => {
         return response.data;
       }).catch(err => {
@@ -702,6 +701,29 @@ module.exports = {
         return response.data;
       })
     },
+    joinTeamSingleCard : function(ws_id, team_id, team_card_id){
+      return axios.post('/api/v1/teams/JoinTeamSingleCard', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_card_id: team_card_id
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    joinTeamEnterpriseCard : function(ws_id, team_id, team_card_id, account_information){
+      return axios.post('/api/v1/teams/JoinTeamEnterpriseCard', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_card_id: team_card_id,
+        account_information: account_information
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
     askJoinApp: function(ws_id, team_id, app_id){
       return axios.post('/api/v1/teams/AskJoinApp', {
         ws_id: ws_id,
@@ -714,12 +736,11 @@ module.exports = {
       })
     },
     deleteJoinAppRequest: function(ws_id, team_id, app_id, team_user_id){
-      return axios.post('/api/v1/teams/DeleteJoinAppRequest', {
+      return axios.post('/api/v1/teams/DeleteJoinTeamCard', {
         ws_id: ws_id,
         team_id: team_id,
-        app_id: app_id,
-        team_user_id: team_user_id,
-        timestamp: new Date().getTime()
+        team_card_id: app_id,
+        team_user_id: team_user_id
       }).then(r => {
         return r.data;
       }).catch(err => {
