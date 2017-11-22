@@ -1,5 +1,7 @@
 import React, {Component} from "react";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
+import api from "../../utils/api";
+import {copyTextToClipboard} from "../../utils/utils";
+import {Loader, Input, Label,Icon, Popup} from 'semantic-ui-react';
 
 export const EmptyAppIndicator = (props) => {
   return (
@@ -36,3 +38,41 @@ export const NewAppLabel = (props) => {
       <Label circular class="new_app_label">New</Label>
   )
 };
+
+export class CopyPasswordIcon extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false,
+      popupText: 'loading...',
+      app_id: this.props.app_id
+    };
+    this.password = '';
+  }
+  componentWillMount(){
+    api.dashboard.getAppPassword({
+      app_id: this.state.app_id
+    }).then(response => {
+      this.password = response.password;
+      this.setState({loading: false, popupText: 'Copy'});
+    });
+  }
+  copyPassword = () => {
+    copyTextToClipboard(this.password);
+    this.setState({popupText: 'Copied!'});
+    setTimeout(() => {
+      this.setState({popupText: 'Copy'});
+    }, 2000);
+  };
+  render(){
+    return (
+        <Popup size="mini"
+               position="top center"
+               inverted
+               trigger={
+                 <Icon name='copy' loading={this.state.loading} link/>
+               }
+               content={this.state.popupText}/>
+    )
+  }
+}

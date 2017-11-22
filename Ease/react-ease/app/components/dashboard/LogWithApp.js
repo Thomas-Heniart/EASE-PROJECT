@@ -14,7 +14,8 @@ class LogWithApp extends Component {
     return (
         <div class='app'>
           <div class="logo_area">
-            <NewAppLabel/>
+            {app.new &&
+            <NewAppLabel/>}
             {isEmpty &&
             <EmptyAppIndicator onClick={e => {dispatch(showLogWithAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">

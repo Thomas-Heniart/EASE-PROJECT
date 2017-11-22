@@ -23,6 +23,24 @@ export function fetchDashboard(){
   }
 }
 
+export function validateApp({app_id}) {
+  return (dispatch, getState) => {
+    post_api.dashboard.validateApp({
+      app_id: app_id
+    }).then(app => {
+      dispatch({
+        type: 'DASHBOARD_APP_CHANGED',
+        payload: {
+          app: app
+        }
+      });
+      return app;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function moveApp({app_id, targetApp_id}) {
   return {
     type: 'INSERT_APP',
@@ -74,10 +92,6 @@ export function endAppDrag({app_id}){
         app_id: app_id
       }
     });
-    console.log('avant check profile empty');
-    dispatch(checkIfProfileEmpty({
-      profile_id: app.profile_id
-    }));
   };
 }
 
@@ -147,7 +161,7 @@ export function insertProfileIntoColumn({profile_id, column_index}){
   }
 }
 
-export function createProfileAndInsertApp({column_index, name, app_id}){
+export function createProfileAndInsertApp({column_index, name, app_id, last_profile_id}){
   return (dispatch, getState) => {
     dispatch(createProfile({
       column_index: column_index,
@@ -158,6 +172,7 @@ export function createProfileAndInsertApp({column_index, name, app_id}){
         profile_id: profile.id
       }));
       dispatch(endAppDrag({app_id: app_id}));
+      dispatch(checkIfProfileEmpty({profile_id: last_profile_id}));
     });
   };
 }
@@ -196,9 +211,7 @@ export function editProfile({profile_id, name}) {
 export function checkIfProfileEmpty({profile_id}){
   return (dispatch, getState) => {
     const store = getState();
-    console.log('dans le check');
     if (!store.dashboard.profiles[profile_id].app_ids.length){
-      console.log('dans le if du check');
       post_api.dashboard.deleteProfile({
         profile_id: profile_id
       });
