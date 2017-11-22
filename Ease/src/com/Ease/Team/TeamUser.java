@@ -414,6 +414,8 @@ public class TeamUser {
         this.setTeamKey(AES.encrypt(teamKey, keyUser));
         this.setState(2);
         hibernateQuery.saveOrUpdateObject(this);
+        if (this.getTeamCardReceivers().isEmpty())
+            return;
         Profile profile = this.getOrCreateProfile(hibernateQuery);
         this.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
             app.setProfile(profile);
@@ -424,7 +426,7 @@ public class TeamUser {
     }
 
     public String getDecipheredTeamKey(String userKey) throws HttpServletException {
-        if (this.getState() == 2 && !this.isDisabled())
+        if (this.isVerified() && !this.isDisabled())
             return AES.decrypt(this.getTeamKey(), userKey);
         throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to decipher the team key");
     }

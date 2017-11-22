@@ -152,7 +152,7 @@ public abstract class ServletManager {
             for (TeamUser teamUser : user.getTeamUsers()) {
                 Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
                 String teamKey = (String) teamProperties.get("teamKey");
-                if (teamUser.getTeamKey() != null && teamKey != null)
+                if (teamUser.getTeamKey() == null && !teamUser.isDisabled()  && teamKey != null)
                     teamUser.lastRegistrationStep(keyUser, teamKey, this.getHibernateQuery());
                 else if (teamUser.getTeamKey() != null)
                     teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
