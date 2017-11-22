@@ -43,7 +43,21 @@ export const dashboard = createReducer({
       apps: {$unset: [app_id]},
       profiles: {
         [app.profile_id]: {
-          app_ids: {$splice: [[app_id, 1]]}
+          app_ids: {$splice: [[state.profiles[app.profile_id].app_ids.indexOf(app_id), 1]]}
+        }
+      }
+    });
+  },
+  ['DASHBOARD_APP_ADDED'](state, action){
+    const {app} = action.payload;
+
+    return update(state, {
+      apps: {
+        [app.id]: {$set: app}
+      },
+      profiles: {
+        [app.profile_id]: {
+          app_ids: {$push: [app.id]}
         }
       }
     });

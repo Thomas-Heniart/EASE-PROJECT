@@ -382,6 +382,7 @@ class AddLogWithAppForm extends Component {
 }
 
 @connect(store => ({
+  dashboard: store.dashboard,
   catalog: store.catalog,
   modal: store.teamModals.catalogAddAppModal
 }), reduxActionBinder)
@@ -410,17 +411,19 @@ class ClassicAppModal extends React.Component {
   };
   componentWillMount(){
     this.setState({loading: true});
+    const dashboard_apps = this.props.dashboard.apps;
     api.dashboard.fetchProfiles().then(profiles => {
       this.setState({profiles: profiles});
       let logwith = this.props.modal.website.connectWith_websites.map(item => {
         let website = selectItemFromListById(this.props.catalog.websites, item);
         let apps = [];
         profiles.map(item => {
-          item.app_ids.map(app => {
-            if (app.website_id === website.id && (app.type === 'classicApp' || app.type === 'logWithApp'))
+          item.app_ids.map(id => {
+            const app = dashboard_apps[id];
+            if (app.website.id === website.id && (app.type === 'classicApp' || app.type === 'logWithApp'))
               apps.push(app);
-          });
-        });
+          }, this);
+        }, this);
         website.personal_apps = apps;
         return website;
       });
