@@ -15,6 +15,7 @@ import {
 } from "./common";
 import {
     askJoinTeamApp,
+    joinTeamSingleCard,
     teamAppDeleteReceiver,
     teamEditSingleApp,
     teamEditSingleAppReceiver,
@@ -283,11 +284,9 @@ class SimpleTeamApp extends Component {
     this.setState({edit: state, loading: false});
   };
   selfJoinApp = () => {
-    this.props.dispatch(teamShareSingleApp({
+    this.props.dispatch(joinTeamSingleCard({
       team_id : this.props.team_id,
-      app_id: this.props.app.id,
-      team_user_id: this.props.me.id,
-      can_see_information:true
+      team_card_id: this.props.app.id
     })).then(() => {
       this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, this.props.app));
     });
@@ -325,18 +324,18 @@ class SimpleTeamApp extends Component {
         });
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
-          {meReceiver !== null && !meReceiver.accepted &&
-          <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
+          {/*{meReceiver !== null && !meReceiver.accepted &&*/}
+          {/*<AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}*/}
           <Segment>
             <Header as="h4">
               {app.name}
-              {meReceiver !== null && meReceiver.accepted &&
+              {meReceiver !== null &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
             </Header>
-            {meReceiver !== null && !meReceiver.accepted &&
-            <div class="overlay"/>}
+            {/*{meReceiver !== null &&*/}
+            {/*<div class="overlay"/>}*/}
             {!this.state.edit &&
             <TeamSimpleAppButtonSet app={app}
                                     me={me}

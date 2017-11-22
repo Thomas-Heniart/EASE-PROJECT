@@ -363,6 +363,32 @@ export function teamAppPinToDashboard(shared_app_id, profile_id, app_name, app_i
   }
 }
 
+export function joinTeamSingleCard({team_id, team_card_id}) {
+  return function (dispatch, getState) {
+    dispatch({type: 'TEAM_SINGLE_CARD_JOIN_PENDING'});
+    return post_api.teamApps.joinTeamSingleCard(getState().common.ws_id, team_id, team_card_id).then(response => {
+      dispatch({type: 'TEAM_SINGLE_CARD_JOIN_FULFILLED', payload: {team_card_id: team_card_id, team_user_id: response.team_user_id}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'TEAM_SINGLE_CARD_JOIN_REJECTED', payload: err});
+      throw err;
+    })
+  }
+}
+
+export function joinTeamEnterpriseCard(team_id, team_card_id, account_information) {
+  return function (dispatch, getState) {
+    dispatch({type: 'TEAM_ENTERPRISE_CARD_JOIN_PENDING'});
+    return post_api.teamApps.joinTeamEnterpriseCard(getState().common.ws_id, team_id, team_card_id, account_information).then(response => {
+      dispatch({type: 'TEAM_ENTERPRISE_CARD_JOIN_FULFILLED', payload: {team_card_id: team_card_id}});
+      return response;
+    }).catch(err => {
+      dispatch({type: 'TEAM_ENTERPRISE_CARD_JOIN_REJECTED', payload: err});
+      throw err;
+    })
+  }
+}
+
 export function askJoinTeamApp(app_id) {
   return function (dispatch, getState) {
     dispatch({type: 'TEAM_APP_ASK_JOIN_PENDING'});

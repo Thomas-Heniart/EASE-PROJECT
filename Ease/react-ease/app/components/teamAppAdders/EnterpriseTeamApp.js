@@ -414,22 +414,21 @@ class EnterpriseTeamApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.website;
     const users = this.getUsers();
-    console.log('app: ', app);
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
                    onSubmit={this.modify}>
-          {meReceiver !== null && !meReceiver.accepted &&
-          <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
+          {/*{meReceiver !== null && !meReceiver.accepted &&*/}
+          {/*<AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}*/}
           <Segment>
             <Header as="h4">
               {app.name}
-              {meReceiver !== null && meReceiver.accepted &&
+              {meReceiver !== null &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
             </Header>
-            {meReceiver !== null && !meReceiver.accepted &&
-             <div class="overlay"/>}
+            {/*{meReceiver !== null && !meReceiver.accepted &&*/}
+             {/*<div class="overlay"/>}*/}
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}
                                         me={me}
