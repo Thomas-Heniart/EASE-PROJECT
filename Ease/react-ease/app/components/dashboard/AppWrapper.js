@@ -62,18 +62,15 @@ const appSource = {
     const result = monitor.getDropResult();
     const app_id = props.app.id;
 
-    if (!result.newProfile) {
-      props.dispatch(endAppDrag({app_id: props.app.id}));
-      props.dispatch(checkIfProfileEmpty({profile_id: props.app.profile_id}));
-    }
-    else {
+    if (!!result && result.newProfile){
       props.dispatch(createProfileAndInsertApp({
         column_index: result.column_idx,
         name: result.name,
         app_id: app_id,
         last_profile_id: props.app.profile_id
       }));
-    }
+    } else
+      props.dispatch(endAppDrag());
   }
 };
 

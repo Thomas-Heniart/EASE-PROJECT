@@ -5,7 +5,7 @@ import {List, Segment, Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, C
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
 import {handleSemanticInput, isAppInformationEmpty} from "../../utils/utils";
 import AppSettingsNameInput from "./AppSettingsNameInput";
-import {editLogWithApp} from "../../actions/dashboardActions";
+import {editLogWithApp, deleteApp} from "../../actions/dashboardActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 
 @connect(store => ({
@@ -32,7 +32,13 @@ class LogWithAppSettings extends Component {
     this.props.dispatch(showLogWithAppSettingsModal({active: false}));
   };
   remove = () => {
-
+    return this.props.dispatch(deleteApp({
+      app_id: this.props.app.id
+    })).then(response => {
+      this.close();
+    }).catch(err => {
+      throw err;
+    });
   };
   edit = (e) => {
     e.preventDefault();
@@ -61,16 +67,16 @@ class LogWithAppSettings extends Component {
     const {app} = this.props;
     const {view} = this.state;
     const lw_name = app.logWith_website.name.toLowerCase();
-    const app_list = this.state.lw_apps.map(item => {
+    const app_list = this.state.lw_apps.map(app => {
       return (
           <List.Item
-              key={item.id}
+              key={app.id}
               as="p"
-              disabled={isAppInformationEmpty(item.account_information)}
-              active={item.id === this.state.lw_app_id}
-              onClick={this.selectApp.bind(null, item.id)}>
+              disabled={app.empty}
+              active={app.id === this.state.lw_app_id}
+              onClick={this.selectApp.bind(null, app.id)}>
             <Icon name='user circle' />
-            <span>fisun.serge76@gmail.com</span>
+            <span>{app.account_information.login}</span>
           </List.Item>
       )
     });

@@ -11,6 +11,10 @@ export function fetchDashboard(){
     return Promise.all(calls).then(response => {
       const columns = response[0];
       const apps = response[1];
+      const team_app_calls = [];
+      apps.map(app => {
+
+      });
       dispatch({type: 'FETCH_DASHBOARD_FULFILLED', payload: {
         columns: columns,
         apps: apps
@@ -43,6 +47,10 @@ export function validateApp({app_id}) {
 
 export function deleteApp({app_id}){
   return (dispatch, getState) => {
+    const store = getState();
+    const app = store.dashboard.apps[app_id];
+    const profile = store.dashboard.profiles[app.profile_id];
+    const isEmpty = profile.app_ids.length === 1;
     return post_api.dashboard.deleteApp({
       app_id: app_id
     }).then(response => {
@@ -52,6 +60,10 @@ export function deleteApp({app_id}){
           app_id: app_id
         }
       });
+      if (isEmpty)
+        dispatch(removeProfile({
+          profile_id: profile.id
+        }));
       return response;
     }).catch(err => {
       throw err;
@@ -86,29 +98,51 @@ export function insertAppInProfile({app_id, profile_id}){
 }
 
 export function beginAppDrag({app_id}){
-  return {
-    type: 'BEGIN_APP_DRAG',
-    payload: {
-      app_id: app_id
-    }
-  }
-}
-
-export function endAppDrag({app_id}){
   return (dispatch, getState) => {
     const store = getState();
     const app = store.dashboard.apps[app_id];
-    const index = store.dashboard.profiles[app.profile_id].app_ids.indexOf(app_id);
-    post_api.dashboard.moveApp({
-      app_id: app_id,
-      profile_id: app.profile_id,
-      position: index
+    dispatch({
+      type: 'BEGIN_APP_DRAG',
+      payload: {
+        app_id: app_id,
+        profile_id: app.profile_id
+      }
     });
+  };
+}
+
+export function endAppDrag(){
+  return (dispatch, getState) => {
+    const store = getState();
+    const app_id = store.dashboard_dnd.dragging_app_id;
+    const app = store.dashboard.apps[app_id];
+    const index = store.dashboard.profiles[app.profile_id].app_ids.indexOf(app_id);
+    const source_profile_id = store.dashboard_dnd.dragging_app_source_profile_id;
+    const last_profile = store.dashboard.profiles[source_profile_id];
+    const is_last_profile_empty = !last_profile.app_ids.length;
+
     dispatch({
       type: 'END_APP_DRAG',
       payload: {
         app_id: app_id
       }
+    });
+    if (is_last_profile_empty)
+      dispatch({
+        type: 'DASHBOARD_PROFILE_REMOVED',
+        payload: {
+          profile_id: source_profile_id
+        }
+      });
+    post_api.dashboard.moveApp({
+      app_id: app_id,
+      profile_id: app.profile_id,
+      position: index
+    }).then(response => {
+      if (is_last_profile_empty)
+        post_api.dashboard.deleteProfile({
+          profile_id: source_profile_id
+        });
     });
   };
 }
@@ -179,7 +213,7 @@ export function insertProfileIntoColumn({profile_id, column_index}){
   }
 }
 
-export function createProfileAndInsertApp({column_index, name, app_id, last_profile_id}){
+export function createProfileAndInsertApp({column_index, name, app_id}){
   return (dispatch, getState) => {
     dispatch(createProfile({
       column_index: column_index,
@@ -189,8 +223,7 @@ export function createProfileAndInsertApp({column_index, name, app_id, last_prof
         app_id: app_id,
         profile_id: profile.id
       }));
-      dispatch(endAppDrag({app_id: app_id}));
-      dispatch(checkIfProfileEmpty({profile_id: last_profile_id}));
+      dispatch(endAppDrag());
     });
   };
 }
@@ -250,7 +283,10 @@ export function removeProfile({profile_id}){
       payload: {
         profile_id: profile_id
       }
-    })
+    });
+    return post_api.dashboard.deleteProfile({
+      profile_id: profile_id
+    });
   }
 }
 

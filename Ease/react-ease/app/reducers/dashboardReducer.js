@@ -43,7 +43,21 @@ export const dashboard = createReducer({
       apps: {$unset: [app_id]},
       profiles: {
         [app.profile_id]: {
-          app_ids: {$splice: [[app_id, 1]]}
+          app_ids: {$splice: [[state.profiles[app.profile_id].app_ids.indexOf(app_id), 1]]}
+        }
+      }
+    });
+  },
+  ['DASHBOARD_APP_ADDED'](state, action){
+    const {app} = action.payload;
+
+    return update(state, {
+      apps: {
+        [app.id]: {$set: app}
+      },
+      profiles: {
+        [app.profile_id]: {
+          app_ids: {$push: [app.id]}
         }
       }
     });
@@ -166,16 +180,19 @@ export const dashboard = createReducer({
 
 export const dashboard_dnd = createReducer({
   dragging_app_id: -1,
+  dragging_app_source_profile_id: -1,
   dragging_profile_id: -1
 }, {
   ['BEGIN_APP_DRAG'](state, action){
     return update(state, {
-      dragging_app_id: {$set: action.payload.app_id}
+      dragging_app_id: {$set: action.payload.app_id},
+      dragging_app_source_profile_id: {$set: action.payload.profile_id}
     })
   },
   ['END_APP_DRAG'](state, action){
     return update(state, {
-      dragging_app_id: {$set: -1}
+      dragging_app_id: {$set: -1},
+      dragging_app_source_profile_id: {$set: -1}
     })
   },
   ['BEGIN_PROFILE_DRAG'](state, action){
