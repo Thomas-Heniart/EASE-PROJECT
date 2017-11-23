@@ -779,7 +779,7 @@
 	visibility: hidden;
 	z-index: -1;
 	pointer-events: none;
-	position: fixed;
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -787,7 +787,7 @@
 	background-color: rgba(0, 0, 0, 0);
 	overflow: auto;
 	&.myshow {
-		z-index: 10000;
+		z-index: 100;
 		transition: background-color .3s, z-index 0s 0s, visibility 0s 0s;
 		background-color: rgba(0,0,0, 0.5);
 		visibility: visible;

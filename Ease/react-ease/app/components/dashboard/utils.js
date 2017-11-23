@@ -45,7 +45,8 @@ export class CopyPasswordIcon extends Component {
     this.state = {
       loading: false,
       popupText: 'loading...',
-      app_id: this.props.app_id
+      app_id: this.props.app_id,
+      open: undefined
     };
     this.password = '';
   }
@@ -59,18 +60,20 @@ export class CopyPasswordIcon extends Component {
   }
   copyPassword = () => {
     copyTextToClipboard(this.password);
-    this.setState({popupText: 'Copied!'});
+    this.setState({popupText: 'Copied!', open: true});
     setTimeout(() => {
-      this.setState({popupText: 'Copy'});
-    }, 2000);
+      this.setState({popupText: 'Copy', open: undefined});
+    }, 1000);
   };
   render(){
     return (
         <Popup size="mini"
                position="top center"
+               className="bite"
                inverted
+               open={this.state.open}
                trigger={
-                 <Icon name='copy' loading={this.state.loading} link/>
+                 <Icon name='copy' loading={this.state.loading} link onClick={this.state.loading ? null : this.copyPassword}/>
                }
                content={this.state.popupText}/>
     )
