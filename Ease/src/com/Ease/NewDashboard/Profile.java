@@ -141,10 +141,10 @@ public class Profile {
         return app;
     }
 
-    public void removeAppAndUpdatePositions(App app, HibernateQuery hibernateQuery) {
+    public synchronized void removeAppAndUpdatePositions(App app, HibernateQuery hibernateQuery) {
         int position = app.getPosition();
         this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
-            app1.setPosition(app1.getPosition() - 1);
+            app1.setPosition((app1.getPosition() != null && app1.getPosition() > 0) ? (app1.getPosition() - 1) : 0);
             hibernateQuery.saveOrUpdateObject(app1);
         });
         this.getAppSet().remove(app);
@@ -179,7 +179,7 @@ public class Profile {
         hibernateQuery.saveOrUpdateObject(app);
     }
 
-    public int getSize() {
+    public synchronized int getSize() {
         return this.getAppSet().size();
     }
 

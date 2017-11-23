@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamLinkCard;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.LinkApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -23,11 +24,13 @@ public class EditTeamLinkCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(team_card_id);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            TeamCard teamCard = (TeamCard) hibernateQuery.get(TeamLinkCard.class, team_card_id);
+            if (teamCard == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "No such team link card");
+            Team team = teamCard.getTeam();
+            sm.needToBeAdminOfTeam(team);
             if (!teamCard.isTeamLinkCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "You can only edit a team link card");
             TeamLinkCard teamLinkCard = (TeamLinkCard) teamCard;

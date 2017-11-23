@@ -46,6 +46,11 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             AppInformation appInformation = new AppInformation(teamEnterpriseCard.getName());
             App app = new ClassicApp(appInformation, teamEnterpriseCard.getWebsite(), account);
             TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser_receiver);
+            if (teamUser_receiver.isVerified()) {
+                Profile profile = teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery());
+                app.setProfile(profile);
+                app.setPosition(profile.getSize());
+            }
             sm.saveOrUpdate(teamCardReceiver);
             teamCard.addTeamCardReceiver(teamCardReceiver);
             sm.setSuccess(teamCardReceiver.getCardJson());

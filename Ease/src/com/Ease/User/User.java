@@ -261,13 +261,11 @@ public class User {
     }
 
     public App getApp(Integer app_id, HibernateQuery hibernateQuery) throws HttpServletException {
-        hibernateQuery.queryString("SELECT a FROM App a WHERE a.db_id = :id");
-        hibernateQuery.setParameter("id", app_id);
-        App app = (App) hibernateQuery.getSingleResult();
+        App app = (App) hibernateQuery.get(App.class, app_id);
         if (app == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No such app");
         Profile profile = app.getProfile();
-        if ((app.getTeamCardReceiver() != null && this.getTeamUsers().contains(app.getTeamCardReceiver().getTeamUser())) || (profile != null && !profile.getUser().equals(this)))
+        if ((app.getTeamCardReceiver() != null && !this.getTeamUsers().contains(app.getTeamCardReceiver().getTeamUser())) || (profile != null && !profile.getUser().equals(this)))
             throw new HttpServletException(HttpStatus.Forbidden);
         return app;
     }

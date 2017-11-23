@@ -518,7 +518,7 @@ public class TeamUser {
      * @return Profile profile
      * @throws HttpServletException
      */
-    public Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+    public synchronized Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
         if (this.getUser() == null)
             throw new HttpServletException(HttpStatus.InternError);
         Profile profile = null;

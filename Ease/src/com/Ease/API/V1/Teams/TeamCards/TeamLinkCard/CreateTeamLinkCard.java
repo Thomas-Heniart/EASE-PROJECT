@@ -1,13 +1,17 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamLinkCard;
 
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamCardReceiver.TeamLinkCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.simple.JSONArray;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -42,8 +46,24 @@ public class CreateTeamLinkCard extends HttpServlet {
             String description = sm.getStringParam("description", true, true);
             if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
+            JSONArray receivers = sm.getArrayParam("receivers", false, false);
             TeamCard teamCard = new TeamLinkCard(name, team, channel, description, url, img_url);
             sm.saveOrUpdate(teamCard);
+            for (Object receiver : receivers) {
+                Integer teamUser_id = Math.toIntExact((Long) receiver);
+                TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
+                App app;
+                if (teamUser_receiver.isVerified())
+                    app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url, teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery()));
+                else
+                    app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url);
+                Profile profile = teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery());
+                app.setProfile(profile);
+                app.setPosition(profile.getSize());
+                TeamCardReceiver teamCardReceiver = new TeamLinkCardReceiver(app, teamCard, teamUser_receiver);
+                sm.saveOrUpdate(teamCardReceiver);
+                teamCard.addTeamCardReceiver(teamCardReceiver);
+            }
             channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);
             sm.setSuccess(teamCard.getJson());

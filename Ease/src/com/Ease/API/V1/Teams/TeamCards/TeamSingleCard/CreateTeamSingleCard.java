@@ -10,7 +10,6 @@ import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -75,14 +74,13 @@ public class CreateTeamSingleCard extends HttpServlet {
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
-                Account account1 = null;
+                App app;
                 if (account != null)
-                    account1 = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, reminder_interval);
-                AppInformation appInformation = new AppInformation(website.getName());
-                App app = new ClassicApp(appInformation, website, account1);
+                    app = AppFactory.getInstance().createClassicApp(name, website, teamKey, account_information, reminder_interval);
+                else
+                    app = AppFactory.getInstance().createClassicApp(name, website);
                 TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser, allowed_to_see_password);
-                User user = teamUser.getUser();
-                if (user != null) {
+                if (teamUser.isVerified()) {
                     Profile profile = teamUser.getOrCreateProfile(sm.getHibernateQuery());
                     app.setProfile(profile);
                     app.setPosition(profile.getSize());

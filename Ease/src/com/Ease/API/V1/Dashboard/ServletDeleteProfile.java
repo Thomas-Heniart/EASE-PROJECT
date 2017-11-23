@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -19,13 +21,22 @@ public class ServletDeleteProfile extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
-            User user = sm.getUser();
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = user.getProfile(profile_id);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            Profile profile = (Profile) hibernateQuery.get(Profile.class, profile_id);
+            User user = profile.getUser();
+            sm.needToBeConnected();
+            if (!user.equals(sm.getUser()))
+                throw new HttpServletException(HttpStatus.Forbidden);
             if (!profile.getAppSet().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "You can only delete a profile without apps");
-            user.removeProfileAndUpdatePositions(profile, sm.getHibernateQuery());
+            TeamUser teamUser = profile.getTeamUser();
+            if (teamUser != null) {
+                teamUser.setProfile(null);
+                profile.setTeamUser(null);
+                sm.saveOrUpdate(teamUser);
+            }
+            user.removeProfileAndUpdatePositions(profile, hibernateQuery);
             sm.setSuccess("Profile deleted");
         } catch (Exception e) {
             sm.setError(e);
