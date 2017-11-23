@@ -1,5 +1,6 @@
 import api from "../utils/api";
 import post_api from "../utils/post_api";
+import {fetchTeamApp} from "./teamActions";
 
 export function fetchDashboard(){
   return (dispatch, getState) => {
@@ -13,13 +14,19 @@ export function fetchDashboard(){
       const apps = response[1];
       const team_app_calls = [];
       apps.map(app => {
-
+        if (!!app.team_id)
+          team_app_calls.push(dispatch(fetchTeamApp({
+            team_id: app.team_id,
+            app_id: app.team_card_id
+          })));
       });
-      dispatch({type: 'FETCH_DASHBOARD_FULFILLED', payload: {
-        columns: columns,
-        apps: apps
-      }});
-      return response;
+      return Promise.all(team_app_calls).then(response => {
+        dispatch({type: 'FETCH_DASHBOARD_FULFILLED', payload: {
+          columns: columns,
+          apps: apps
+        }});
+        return response;
+      });
     }).catch(err => {
       dispatch({type: 'FETCH_DASHBOARD_REJECTED', payload: err});
       throw err;
