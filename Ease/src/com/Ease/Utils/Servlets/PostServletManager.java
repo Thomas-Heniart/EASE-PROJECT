@@ -4,6 +4,7 @@ import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketMessage;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,6 +27,11 @@ public class PostServletManager extends ServletManager {
 
     public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         super(servletName, request, response, saveLogs);
+        if (ServletFileUpload.isMultipartContent(request))
+            return;
+        String contentType = request.getHeader("Content-Type");
+        if (contentType == null || !contentType.contains("application/json"))
+            return;
         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = "";
         String buffer;

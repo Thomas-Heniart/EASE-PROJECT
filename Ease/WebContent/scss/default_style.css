@@ -5782,7 +5782,7 @@ span.input label {
   background-size: cover;
   width: 100%;
   height: 100%;
-  background-image: url(../backgrounds/background.jpeg);
+  background-image: url(../resources/backgrounds/background.jpeg);
   background-position: 50% 50%; }
 
 #mobileBody {
@@ -5921,7 +5921,7 @@ span.input label {
       background-color: #373b60; }
 
 #lostPasswordBody {
-  background: url(../backgrounds/background.jpeg);
+  background: url(../resources/backgrounds/background.jpeg);
   background-size: cover;
   background-position: 50% 50%; }
   #lostPasswordBody .logo {
@@ -7583,7 +7583,7 @@ body {
   left: 0; }
 
 .picBckgrnd::before {
-  background-image: url(../backgrounds/background.jpeg);
+  background-image: url(../resources/backgrounds/background.jpeg);
   background-position: 50% 50%;
   background-size: cover;
   -webkit-transition: opacity 1000ms linear;

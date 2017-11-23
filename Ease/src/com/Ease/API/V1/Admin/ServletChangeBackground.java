@@ -19,8 +19,6 @@ import java.util.List;
 
 @WebServlet("/changeBackground")
 public class ServletChangeBackground extends HttpServlet {
-    //private static final String UPLOAD_DIRECTORY = "/usr/share/tomcat8/webapps/backgrounds";
-    private static final String UPLOAD_DIRECTORY = "./resources/backgrounds";
 
     // upload settings
     private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3; // 3MB
@@ -52,7 +50,7 @@ public class ServletChangeBackground extends HttpServlet {
 
             // constructs the directory path to store upload file
             // this path is relative to application's directory
-            String uploadPath = UPLOAD_DIRECTORY;
+            String uploadPath = getServletContext().getRealPath("resources/backgrounds");
 
             // parses the request's content to extract file data
             List<FileItem> formItems = upload.parseRequest(request);
@@ -64,15 +62,19 @@ public class ServletChangeBackground extends HttpServlet {
                         File storeFile;
                         filePath = uploadPath + "/" + "background.jpeg";
                         storeFile = new File(filePath);
+                        System.out.println(storeFile.getAbsoluteFile());
+                        System.out.println(storeFile.getCanonicalPath());
                         if (storeFile.exists()) {
                             String newPathName = uploadPath + "/" + "background_old";
                             File temp = new File(newPathName + ".jpeg");
                             storeFile.renameTo(temp);
-                        }
+                        } else
+                            storeFile.createNewFile();
                         item.write(storeFile);
                     }
                 }
             }
+            sm.getHibernateQuery().commit();
             sm.setRedirectUrl("/admin");
             sm.setSuccess("Background changed");
         } catch (Exception e) {

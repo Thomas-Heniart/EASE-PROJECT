@@ -5,6 +5,7 @@ import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -37,7 +38,8 @@ public class ServletGetAppPassword extends HttpServlet {
             TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
             String symmetric_key;
             if (teamCardReceiver != null) {
-                if (teamCardReceiver.isTeamSingleCardReceiver() && !((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password())
+                TeamUser teamUser = sm.getTeamUser(teamCardReceiver.getTeamCard().getTeam());
+                if (teamCardReceiver.isTeamSingleCardReceiver() && (!((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password() || !teamUser.isTeamAdmin()))
                     throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to see the password");
                 Team team = teamCardReceiver.getTeamCard().getTeam();
                 sm.needToBeTeamUserOfTeam(team);
