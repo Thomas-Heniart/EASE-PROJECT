@@ -31,6 +31,8 @@ public class ServletGetTeams extends HttpServlet {
             JSONArray res = new JSONArray();
             for (TeamUser teamUser : sm.getTeamUsers()) {
                 Team team = teamUser.getTeam();
+                if (!team.isActive())
+                    continue;
                 sm.initializeTeamWithContext(team);
                 JSONObject tmp = team.getJson();
                 tmp.put("my_team_user_id", teamUser.getDb_id());
