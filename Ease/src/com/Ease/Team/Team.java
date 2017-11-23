@@ -542,6 +542,10 @@ public class Team {
         }
     }
 
+    public synchronized boolean hasTeamUserWithUsername(String username) {
+        return this.getTeamUsers().values().stream().anyMatch(teamUser -> teamUser.getUsername().equals(username));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -28,7 +27,6 @@ import java.util.Date;
  */
 @WebServlet("/api/v1/teams/StartTeamUserCreation")
 public class ServletStartTeamUserCreation extends HttpServlet {
-    private static final SimpleDateFormat departure_format = new SimpleDateFormat("yyyy-MM-dd");
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
@@ -40,12 +38,22 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 30 members.");
             TeamUser adminTeamUser = sm.getTeamUser(team);
             String email = sm.getStringParam("email", true, false);
-            String username = sm.getStringParam("username", true, false);
+            String username = sm.getStringParam("username", true, true);
             Integer role = sm.getIntParam("role", true, false);
             if (!team.isValidFreemium() && role != TeamUserRole.Role.MEMBER.getValue())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have multiple admins.");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
+            if (username == null || username.equals("")) {
+                username = email.substring(0, email.indexOf("@"));
+                username = username.replaceAll("\\W", "_");
+                if (team.hasTeamUserWithUsername(username)) {
+                    int suffixe = 1;
+                    while (team.hasTeamUserWithUsername(username + suffixe))
+                        suffixe++;
+                    username += suffixe;
+                }
+            }
             checkUsernameIntegrity(username);
             if (role == null || !TeamUserRole.isInferiorToOwner(role) || !TeamUserRole.isValidValue(role))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
