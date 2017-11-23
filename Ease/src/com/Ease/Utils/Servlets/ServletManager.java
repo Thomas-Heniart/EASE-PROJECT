@@ -481,18 +481,22 @@ public abstract class ServletManager {
 
     public void initializeTeamWithContext(Team team) throws HttpServletException {
         try {
-            Customer customer = (Customer) this.getTeamProperties(team.getDb_id()).get("customer");
-            if (customer == null) {
-                customer = Customer.retrieve(team.getCustomer_id());
-                this.getTeamProperties(team.getDb_id()).put("customer", customer);
+            if (team.getCustomer_id() != null) {
+                Customer customer = (Customer) this.getTeamProperties(team.getDb_id()).get("customer");
+                if (customer == null) {
+                    customer = Customer.retrieve(team.getCustomer_id());
+                    this.getTeamProperties(team.getDb_id()).put("customer", customer);
+                }
+                team.setCustomer(customer);
             }
-            Subscription subscription = (Subscription) this.getTeamProperties(team.getDb_id()).get("subscription");
-            if (subscription == null) {
-                subscription = Subscription.retrieve(team.getSubscription_id());
-                this.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+            if (team.getSubscription_id() != null) {
+                Subscription subscription = (Subscription) this.getTeamProperties(team.getDb_id()).get("subscription");
+                if (subscription == null) {
+                    subscription = Subscription.retrieve(team.getSubscription_id());
+                    this.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+                }
+                team.setSubscription(subscription);
             }
-            team.setCustomer(customer);
-            team.setSubscription(subscription);
         } catch (StripeException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

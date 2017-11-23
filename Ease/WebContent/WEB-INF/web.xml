@@ -102,6 +102,14 @@
         <url-pattern>/equipe/*</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>landing</servlet-name>
+        <jsp-file>/landingPage.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>landing</servlet-name>
+        <url-pattern>/discover</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>privacy.jsp</servlet-name>
         <jsp-file>/privacy.jsp</jsp-file>
     </servlet>

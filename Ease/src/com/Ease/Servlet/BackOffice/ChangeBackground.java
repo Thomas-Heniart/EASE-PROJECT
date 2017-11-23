@@ -1,8 +1,12 @@
 package com.Ease.Servlet.BackOffice;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import com.Ease.Dashboard.User.User;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.GeneralException;
+import com.Ease.Utils.ServletManager;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,20 +15,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.ServletManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Servlet implementation class ChangeBackground
  */
-@WebServlet("/changeBackground")
+@WebServlet("/old_changeBackground")
 public class ChangeBackground extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
