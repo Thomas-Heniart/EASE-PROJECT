@@ -3,6 +3,8 @@ package com.Ease.Team.TeamCard;
 import com.Ease.Catalog.Website;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "teamWebsiteCards")
 @PrimaryKeyJoinColumn(name = "id")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public abstract class TeamWebsiteCard extends TeamCard {
 
     @ManyToOne

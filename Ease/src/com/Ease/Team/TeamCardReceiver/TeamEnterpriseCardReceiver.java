@@ -6,6 +6,8 @@ import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.json.simple.JSONObject;
 
 import javax.persistence.Entity;
@@ -15,6 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "teamEnterpriseCardReceivers")
 @PrimaryKeyJoinColumn(name = "id")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
 
 

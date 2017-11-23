@@ -431,3 +431,11 @@ ALTER TABLE teamUserStatus
 
 ALTER TABLE apps ADD COLUMN new TINYINT(1) NOT NULL DEFAULT 1;
 UPDATE apps SET new = 0;
+
+INSERT INTO classicApps SELECT
+                          id,
+                          NULL
+                        FROM websiteApps
+                        WHERE id NOT IN (SELECT id
+                                         FROM classicApps) AND id NOT IN (SELECT id
+                                                                          FROM logWithApps);

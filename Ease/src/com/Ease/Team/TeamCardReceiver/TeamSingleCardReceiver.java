@@ -3,6 +3,8 @@ package com.Ease.Team.TeamCardReceiver;
 import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamUser;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.json.simple.JSONObject;
 
 import javax.persistence.Column;
@@ -13,6 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "teamSingleCardReceivers")
 @PrimaryKeyJoinColumn(name = "id")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class TeamSingleCardReceiver extends TeamCardReceiver {
 
     @Column(name = "allowed_to_see_password")

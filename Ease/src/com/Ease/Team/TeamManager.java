@@ -42,9 +42,16 @@ public class TeamManager {
         return team;
     }
 
-    public void updateTeamsSubscriptions(HibernateQuery hibernateQuery) {
-        for (Team team : this.getTeams(hibernateQuery))
-            team.updateSubscription();
+    public void updateTeamsSubscriptions(HibernateQuery hibernateQuery, Map<Integer, Map<String, Object>> teamIdMap) {
+        for (Team team : this.getTeams(hibernateQuery)) {
+            Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
+            if (teamProperties == null) {
+                teamProperties = new ConcurrentHashMap<>();
+                teamIdMap.put(team.getDb_id(), teamProperties);
+            }
+            team.updateSubscription(teamProperties);
+        }
+
     }
 
     public void checkFreeTrialEnd(DataBaseConnection db) {

@@ -6,6 +6,8 @@ import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -14,6 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "joinTeamSingleCardRequests")
 @PrimaryKeyJoinColumn(name = "id")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class JoinTeamSingleCardRequest extends JoinTeamCardRequest {
 
     public JoinTeamSingleCardRequest(TeamCard teamCard, TeamUser teamUser) {

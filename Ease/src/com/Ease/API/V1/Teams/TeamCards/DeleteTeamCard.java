@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
 import com.Ease.NewDashboard.Profile;
-import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -20,14 +19,11 @@ public class DeleteTeamCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(team_card_id);
-            Channel channel = teamCard.getChannel();
-            channel.removeTeamCard(teamCard);
-            team.removeTeamCard(teamCard);
+            TeamCard teamCard = (TeamCard) sm.getHibernateQuery().get(TeamCard.class, team_card_id);
+            Team team = teamCard.getTeam();
+            sm.initializeTeamWithContext(team);
+            sm.needToBeAdminOfTeam(teamCard.getTeam());
             for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null)
