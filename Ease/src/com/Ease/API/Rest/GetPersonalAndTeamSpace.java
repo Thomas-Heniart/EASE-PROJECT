@@ -35,7 +35,7 @@ public class GetPersonalAndTeamSpace extends HttpServlet {
             for (TeamUser teamUser : user.getTeamUsers()) {
                 if (teamUser.isDisabled() || (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() <= sm.getTimestamp().getTime()))
                     continue;
-                if (teamUser.getTeam().getPlan_id() == null)
+                if (!teamUser.getTeam().isActive())
                     continue;
                 JSONObject team = new JSONObject();
                 team.put("name", teamUser.getTeam().getName());
