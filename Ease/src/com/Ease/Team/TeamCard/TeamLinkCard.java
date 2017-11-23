@@ -2,6 +2,8 @@ package com.Ease.Team.TeamCard;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "teamLinkCards")
 @PrimaryKeyJoinColumn(name = "id")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class TeamLinkCard extends TeamCard {
 
     @Column(name = "url")

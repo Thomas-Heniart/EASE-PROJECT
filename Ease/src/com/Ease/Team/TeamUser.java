@@ -561,4 +561,8 @@ public class TeamUser {
     public int hashCode() {
         return db_id.hashCode();
     }
+
+    public void removeTeamCardReceiver(TeamCardReceiver teamCardReceiver) {
+        this.getTeamCardReceivers().remove(teamCardReceiver);
+    }
 }

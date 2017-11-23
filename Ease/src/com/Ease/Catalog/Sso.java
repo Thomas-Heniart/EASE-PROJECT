@@ -24,7 +24,7 @@ public class Sso {
     @Column(name = "img_path")
     private String imgPath;
 
-    @OneToMany(mappedBy = "sso", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "sso", orphanRemoval = true)
     @MapKey(name = "db_id")
     private Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
 
