@@ -43,6 +43,7 @@ class AddCardForm extends React.Component {
       credentials,
       confirm,
       appName,
+      loading,
       handleCredentialInput
     } = this.props;
     const credentialsInputs = credentials.map(item => {
@@ -60,8 +61,8 @@ class AddCardForm extends React.Component {
           <Message error content={this.state.errorMessage}/>
           <Button
             type="submit"
-            loading={this.state.loading}
-            disabled={this.state.loading}
+            loading={loading}
+            disabled={loading}
             onClick={confirm}
             positive
             className="modal-button uppercase"
@@ -245,6 +246,7 @@ class ChooseAppCredentialsModal extends React.Component {
                                        confirm={this.confirm} />}
         {this.state.view === 2 &&
         <AddCardForm credentials={this.state.credentials}
+                     loading={this.state.loading}
                      handleCredentialInput={this.handleCredentialInput}
                      website={this.props.card.app}
                      appName={this.props.settingsCard.card_name}
