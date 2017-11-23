@@ -209,6 +209,22 @@
   color: white;
 }
 
+.team_app_settings_name {
+  .name_input {
+    input {
+      padding: 0 10px;
+    }
+  }
+  .team_name {
+    background-color: $themeColor;
+    color: white;
+    margin-top: 5px;
+  }
+  .room_name {
+    margin-top: 5px;
+  }
+}
+
 .app_overlay_indicator {
   @include display-flex();
   @include align-items(center);

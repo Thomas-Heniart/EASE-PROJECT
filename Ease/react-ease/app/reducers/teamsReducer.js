@@ -259,11 +259,11 @@ export const teams = createReducer({
     });
   },
   ['TEAM_APP_RECEIVER_REMOVED'](state, action){
-    const {team_id, app_id, receiver} = action.payload;
+    const {team_id, team_card_id, receiver} = action.payload;
 
     let team_user = state[team_id].team_users[receiver.team_user_id];
     team_user = update(team_user, {
-      team_card_ids: {$splice: [[team_user.team_card_ids.indexOf(app_id), 1]]}
+      team_card_ids: {$splice: [[team_user.team_card_ids.indexOf(team_card_id), 1]]}
     });
     return update(state, {
       [team_id]:{
@@ -343,14 +343,14 @@ export const team_apps = createReducer({
     return state;
   },
   ['TEAM_APP_RECEIVER_REMOVED'](state, action){
-    const {team_id, app_id, receiver} = action.payload;
+    const {team_id, team_card_id, receiver} = action.payload;
 
-    if (!!state[app_id]){
-      const app = state[app_id];
+    if (!!state[team_card_id]){
+      const app = state[team_card_id];
       const _receiver = app.receivers.find(item => (item.id === receiver.id));
       const idx = app.receivers.indexOf(_receiver);
       return update(state, {
-        [app_id]: {
+        [team_card_id]: {
           receivers: {$splice: [[idx, 1]]}
         }
       });

@@ -758,21 +758,9 @@
 
 .popupHandler {
 	font-family: $defaultFont;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -moz-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-align: center;
-	-webkit-align-items: center;
-	-moz-box-align: center;
-	-ms-flex-align: center;
-	align-items: center;
-	-webkit-box-pack: center;
-	-webkit-justify-content: center;
-	-moz-box-pack: center;
-	-ms-flex-pack: center;
-	justify-content: center;
+	@include display-flex();
+	@include justify-content(center);
+	@include align-items(flex-start);
 	min-height: 100vh;
 	min-width: 100vw;
 	transition: background-color .3s, z-index 0s .3s, visibility 0s .3s;
@@ -784,6 +772,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
+	padding: 15vh 0;
 	background-color: rgba(0, 0, 0, 0);
 	overflow: auto;
 	&.myshow {
@@ -817,7 +806,6 @@
 }
 .easePopup {
 	transition: opacity .3s, overflow 0s .3s, visibility 0s .3s;
-	margin: auto;
 	opacity: 0;
 	visibility: hidden;
 	pointer-events: none;

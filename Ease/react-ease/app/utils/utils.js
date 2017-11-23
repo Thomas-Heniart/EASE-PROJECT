@@ -69,6 +69,15 @@ export function transformWebsiteInfoIntoListAndSetValues(information, values){
   });
 }
 
+export function isCredentialsMatch(prev, next){
+  let changed = true;
+  Object.keys(prev).map(key => {
+    if (prev[key] !== next[key])
+      changed = false;
+  });
+  return changed;
+}
+
 export function getTeamAppPasswordAndCopyToClipboard({team_id, shared_app_id}){
   let loading = true;
   let password = '';

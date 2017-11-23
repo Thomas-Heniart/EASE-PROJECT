@@ -13,9 +13,7 @@ export const EmptyAppIndicator = (props) => {
 
 export const WaitingTeamApproveIndicator = (props) => {
   return (
-      <div class="app_overlay_indicator" {...props}>
-        <Icon name="hourglass half" fitted size="large"/>
-      </div>
+      <div class="app_overlay_indicator grey" {...props}/>
   )
 };
 
@@ -29,7 +27,15 @@ export const EmptyTeamAppIndicator = (props) => {
 
 export const DisabledAppIndicator = (props) => {
   return (
-      <div class="app_overlay_indicator grey" {...props}/>
+      <Popup size="mini"
+             position="top center"
+             inverted
+             trigger={
+               <div class="app_overlay_indicator" {...props}>
+                 <Icon name="hourglass half" fitted size="large"/>
+               </div>
+             }
+             content={`${props.filler_name} will setup this app soon.`}/>
   )
 };
 
@@ -69,7 +75,6 @@ export class CopyPasswordIcon extends Component {
     return (
         <Popup size="mini"
                position="top center"
-               className="bite"
                inverted
                open={this.state.open}
                trigger={

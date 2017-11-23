@@ -74,6 +74,12 @@ module.exports = {
         url: url,
         img_url: img_url
       })
+    },
+    editAppName: ({app_id, name}) => {
+      return basic_post('/api/v1/dashboard/EditAppName', {
+        app_id: app_id,
+        name: name
+      });
     }
   },
   catalog: {
@@ -419,17 +425,17 @@ module.exports = {
         throw err.response.data;
       });
     },
-    editSingleApp: ({team_id, app_id, description, account_information, password_change_interval, ws_id}) => {
+    editSingleApp: ({team_id, app_id, description, account_information, password_change_interval, name}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
       return axios.post('/api/v1/teams/EditTeamSingleCard', {
         team_id: team_id,
         team_card_id: app_id,
+        name: name,
         description: description,
         account_information: account_information,
-        password_reminder_interval: password_change_interval,
-        ws_id: ws_id
+        password_reminder_interval: password_change_interval
       }).then(response => {
         return response.data;
       }).catch(err => {
@@ -681,6 +687,13 @@ module.exports = {
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;
+      });
+    },
+    removeTeamCardReceiver: ({team_id, team_card_id, team_card_receiver_id}) => {
+      return basic_post('/api/v1/teams/RemoveTeamCardReceiver', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: team_card_receiver_id
       });
     },
     editReceiver: function(ws_id, team_id, app_id, receiver_info){

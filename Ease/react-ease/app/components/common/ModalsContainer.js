@@ -28,6 +28,9 @@ import SsoAppModal from "../catalog/SsoAppModal";
 import ClassicAppSettingsModal from "../modals/ClassicAppSettingsModal";
 import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
 import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
+import TeamSingleAppSettingsModal from "../modals/TeamSingleAppSettingsModal";
+import TeamEnterpriseAppSettingsModa from "../modals/TeamEnterpriseAppSettingsModal";
+import TeamLinkAppSettingsModal from "../modals/TeamLinkAppSettingsModal";
 import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
 import LockedTeamAppModal from "../modals/LockedTeamAppModal";
 import LogWithAppSettings from "../modals/LogWithAppSettings";
@@ -135,6 +138,12 @@ class ModalsContainer extends Component{
           <LogWithAppSettings/>}
           {this.props.modals.chooseAppCredentials.active &&
           <ChooseAppCredentialsModal/>}
+          {this.props.modals.teamSingleAppSettings.active &&
+          <TeamSingleAppSettingsModal/>}
+          {this.props.modals.teamEnterpriseAppSettings.active &&
+          <TeamEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamLinkAppSettings.active &&
+          <TeamLinkAppSettingsModal/>}
         </div>
     )
   }

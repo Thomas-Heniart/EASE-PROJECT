@@ -139,11 +139,11 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
   }
 }
 
-export function teamEditSingleApp({app_id, description, account_information, password_change_interval}){
+export function teamEditSingleApp({team_id, app_id, description, account_information, password_change_interval, name}){
   return function (dispatch, getState){
     return post_api.teamApps.editSingleApp({
-      team_id: getState().team.id,
-      ws_id: getState().common.ws_id,
+      team_id: team_id,
+      name: name,
       app_id: app_id,
       description: description,
       account_information: account_information,
@@ -303,6 +303,49 @@ export function teamAppEditReceiver(app_id,user_app_id, receiver_info){
       dispatch({type: 'TEAM_APP_EDIT_RECEIVER_REJECTED', payload: err});
       throw err;
     })
+  }
+}
+
+export function removeTeamCardReceiverAction({team_id, team_card_id, team_card_receiver_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[team_id];
+    const receiver = store.team_apps[team_card_id].receivers.find(item => (item.id === team_card_receiver_id));
+    if (team.my_team_user_id === receiver.team_user_id){
+      dispatch({
+        type: 'DASHBOARD_APP_REMOVED',
+        payload: {
+          app_id: receiver.app_id
+        }
+      })
+    }
+    dispatch({
+      type: 'TEAM_APP_RECEIVER_REMOVED',
+      payload: {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        receiver: receiver
+      }
+    });
+  }
+}
+
+export function removeTeamCardReceiver({team_id, team_card_id, team_card_receiver_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.removeTeamCardReceiver({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      team_card_receiver_id: team_card_receiver_id
+    }).then(response => {
+      dispatch(removeTeamCardReceiverAction({
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: team_card_receiver_id
+      }));
+      return response;
+    }).catch(err => {
+      throw err;
+    });
   }
 }
 
