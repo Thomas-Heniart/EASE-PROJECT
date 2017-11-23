@@ -46,6 +46,7 @@ public class ServletPasswordLost extends HttpServlet {
             mailJetBuilder.addTo(email);
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "resetPassword?email=" + email + "&code=" + code);
             mailJetBuilder.sendEmail();
+            sm.setSuccess("Email sent");
         } catch (Exception e) {
             sm.setError(e);
         }
