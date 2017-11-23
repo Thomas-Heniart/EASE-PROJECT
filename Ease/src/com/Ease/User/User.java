@@ -205,7 +205,10 @@ public class User {
         res.put("first_name", this.getUsername());
         JSONArray teams = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers()) {
-            JSONObject teamObject = teamUser.getTeam().getSimpleJson();
+            Team team = teamUser.getTeam();
+            if (team.getPlan_id() == null)
+                continue;
+            JSONObject teamObject = team.getSimpleJson();
             teamObject.put("disabled", teamUser.isDisabled() || teamUser.getState() == 1 || (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() <= new Date().getTime()));
             teamObject.put("state", teamUser.getState());
             teams.add(teamObject);
