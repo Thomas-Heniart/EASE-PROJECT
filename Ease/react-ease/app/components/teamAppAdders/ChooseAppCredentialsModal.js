@@ -37,6 +37,19 @@ class AddCardForm extends React.Component {
     }
   }
 
+  checkValueInput = () => {
+    let i = 0;
+    let j = 0;
+    this.props.credentials.filter(item => {
+      i++;
+      if (item.value.length > 0) {
+        j++;
+        return item;
+      }
+    });
+    return j === i;
+  };
+
   render() {
     const {
       website,
@@ -62,7 +75,7 @@ class AddCardForm extends React.Component {
           <Button
             type="submit"
             loading={loading}
-            disabled={loading}
+            disabled={loading || !this.checkValueInput()}
             onClick={confirm}
             positive
             className="modal-button uppercase"
