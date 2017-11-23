@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Form, Checkbox, Button, Icon } from 'semantic-ui-react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter} from 'react-router-dom';
 import {handleSemanticInput} from "../../utils/utils";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
@@ -26,7 +26,7 @@ class ChooseTypeAppModal extends React.Component {
       website: this.state.website,
       type: this.state.value
     });
-    window.location.href = `/teams#/teams/${team_id}/${room_id}`;
+    this.props.history.push(`/teams/${team_id}/${room_id}`);
   };
   handleChange = (e, {value}) => this.setState({value});
   render() {
@@ -82,4 +82,4 @@ class ChooseTypeAppModal extends React.Component {
   }
 }
 
-export default ChooseTypeAppModal;
+export default withRouter(ChooseTypeAppModal);

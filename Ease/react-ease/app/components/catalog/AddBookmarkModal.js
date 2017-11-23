@@ -5,6 +5,7 @@ import {handleSemanticInput} from "../../utils/utils";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import {Button,List, Form,Input, Loader, Icon, Message, Container} from 'semantic-ui-react';
+import { Switch, Route, withRouter} from 'react-router-dom';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 
@@ -71,7 +72,7 @@ class AddBookmarkModal extends Component {
       name: this.state.name,
       url: this.state.url
     });
-    window.location.href = `/teams#/teams/${team_id}/${room_id}`;
+    this.props.history.push(`/teams/${team_id}/${room_id}`);
   };
   confirm = (e) => {
     e.preventDefault();
@@ -187,4 +188,4 @@ class AddBookmarkModal extends Component {
   }
 }
 
-export default AddBookmarkModal;
+export default withRouter(AddBookmarkModal);
