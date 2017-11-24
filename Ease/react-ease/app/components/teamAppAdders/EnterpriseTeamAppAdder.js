@@ -173,6 +173,18 @@ class EnterpriseTeamAppAdder extends Component {
     });
     this.setState({users: users});
   };
+  chooseAllUsers = () => {
+    let selected = [];
+    this.state.users.map(user => {
+      if (selected.length) {
+        selected.splice(selected.length + 1, 0, user.id);
+      }
+      else {
+        selected.splice(0, 0, user.id);
+      }
+    });
+    this.setState({ selected_users: selected });
+  };
   setApp = (app) => {
     if (app.request){
       requestWebsite(this.props.dispatch).then(app => {
@@ -186,7 +198,7 @@ class EnterpriseTeamAppAdder extends Component {
       this.setState({app: app});
     });
   };
-  componentDidMount(){
+  componentWillMount(){
     let users = this.props.item.team_user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
       return {
@@ -199,7 +211,10 @@ class EnterpriseTeamAppAdder extends Component {
       }
     });
     this.setState({users: users});
-  }
+  };
+  componentDidMount(){
+    this.chooseAllUsers();
+  };
   setUsers = (app) => {
     let users = this.props.item.user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
@@ -289,13 +304,13 @@ class EnterpriseTeamAppAdder extends Component {
                     <div>
                       <Dropdown
                           class="mini users-dropdown"
-                          search={true}
+                          search
                           fluid
                           name="selected_users"
                           options={this.state.users}
                           onChange={this.handleInput}
                           value={this.state.selected_users}
-                          selection={true}
+                          selection
                           multiple
                           placeholder="Tag your team members here..."/>
                     </div>

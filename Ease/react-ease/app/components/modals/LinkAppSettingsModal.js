@@ -5,7 +5,7 @@ import {getLogo} from "../../utils/api";
 import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {handleSemanticInput} from "../../utils/utils";
-import {editLinkApp, validateApp} from "../../actions/dashboardActions";
+import {editLinkApp, validateApp, deleteApp} from "../../actions/dashboardActions";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 
@@ -40,7 +40,13 @@ class LinkAppSettingsModal extends Component {
     this.props.dispatch(showLinkAppSettingsModal({active:false}));
   };
   remove = () => {
-    this.close();
+    return this.props.dispatch(deleteApp({
+      app_id: this.props.app.id
+    })).then(response => {
+      this.close();
+    }).catch(err => {
+      throw err;
+    });
   };
   edit = (e) => {
     e.preventDefault();

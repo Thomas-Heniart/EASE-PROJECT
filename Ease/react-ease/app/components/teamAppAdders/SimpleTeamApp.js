@@ -62,12 +62,12 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
-        {meReceiver !== null && meReceiver.accepted &&
+        {meReceiver !== null &&
         <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
-        <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal(true, app))}}/>}
+        <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
       </div>
   )
 };
@@ -80,7 +80,7 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
              flowing
              hideOnScroll={true}
              trigger={
-               <Label class={classnames("user-label static", accepted ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
+               <Label class={classnames("user-label static accepted", can_see_information ? 'can_see_information' : null)}>
                  {username}
                  {admin &&
                  <Icon name={can_see_information ? 'unhide' : 'hide'}/>}&nbsp;
@@ -90,8 +90,8 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
              }
              content={
                <div>
-                 {!accepted && <span>App acceptation pending...</span>}
-                 {accepted && can_see_information &&
+                 {/*{!accepted && <span>App acceptation pending...</span>}*/}
+                 {/*{accepted && can_see_information &&
                  <span>Mobile access: on</span>}
                  {accepted && !can_see_information &&
                  <span>Mobile access: off</span>}
@@ -99,6 +99,16 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
                  {accepted && can_see_information &&
                  <span>Password copy: on</span>}
                  {accepted && !can_see_information &&
+                 <span>Password copy: off</span>}*/}
+
+                 {can_see_information &&
+                 <span>Mobile access: on</span>}
+                 {!can_see_information &&
+                 <span>Mobile access: off</span>}
+                 <br/>
+                 {can_see_information &&
+                 <span>Password copy: on</span>}
+                 {!can_see_information &&
                  <span>Password copy: off</span>}
                </div>}/>
   )
