@@ -18,6 +18,7 @@ class TeamSingleApp extends Component {
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
+    const filler = team.team_users[team_app.team_user_filler_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
 
@@ -30,7 +31,7 @@ class TeamSingleApp extends Component {
             {team_app.empty && team_app.team_user_filler_id === meReceiver.id &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}/>}
             {team_app.empty && team_app.team_user_filler_id !== meReceiver.id &&
-            <DisabledAppIndicator/>}
+            <DisabledAppIndicator filler_name={filler.username}/>}
             <div class="logo_handler">
               <img class="logo" src={team_app.logo}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}>

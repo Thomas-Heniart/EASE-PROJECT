@@ -342,3 +342,21 @@ export function editLinkApp({app_id, name, url, img_url}) {
     })
   }
 }
+
+export function editAppName({app_id, name}) {
+  return (dispatch, getState) => {
+    return post_api.dashboard.editAppName({
+      app_id: app_id,
+      name: name
+    }).then(app => {
+      dispatch({
+        type: 'DASHBOARD_APP_CHANGED',
+        payload: {
+          app: app
+        }
+      });
+    }).catch(err => {
+      throw err;
+    });
+  }
+}

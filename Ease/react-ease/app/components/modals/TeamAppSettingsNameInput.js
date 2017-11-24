@@ -14,9 +14,9 @@ class TeamAppSettingsNameInput extends Component {
   render(){
     const {value, onChange, team_name, room_name} = this.props;
     return (
-        <div class="display_flex flex_direction_column">
+        <div class="display_flex flex_direction_column team_app_settings_name">
           {!this.state.modifying ?
-              <span class="app_name">{value}<Icon link style={{marginLeft: '5px'}} name="pencil"
+              <span class="app_name">{value}<Icon link style={{marginLeft: '5px'}} size="small" name="pencil"
                                                   onClick={this.setModifying}/></span>
               :
               <Input
@@ -27,8 +27,10 @@ class TeamAppSettingsNameInput extends Component {
                   autoFocus={true}
                   value={value}
                   onChange={onChange}/>}
-          <Label icon='users' content={team_name}/>
-          <span># {room_name}</span>
+          <div>
+            <Label class="team_name" icon={<Icon name="users" class="mrgnRight5"/>} size="tiny" content={team_name}/>
+          </div>
+          <span class="room_name"># {room_name}</span>
         </div>
     )
   }
