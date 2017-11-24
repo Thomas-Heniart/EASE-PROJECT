@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.Profile;
@@ -8,15 +10,15 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.PasswordLost;
-import com.Ease.User.User;
-import com.Ease.User.UserKeys;
+import com.Ease.User.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
+import com.Ease.websocketV1.WebSocketMessageFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -66,6 +68,7 @@ public class ServletResetPassword extends HttpServlet {
                 user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret);
                 sm.saveOrUpdate(user.getJsonWebToken());
             }
+            MailJetBuilder mailJetBuilder;
             for (TeamUser teamUser : user.getTeamUsers()) {
                 teamUser.setDisabled(true);
                 teamUser.setDisabledDate(new Date());
@@ -85,6 +88,33 @@ public class ServletResetPassword extends HttpServlet {
                         }
                         sm.saveOrUpdate(teamCard);
                     }
+                } else if (teamUser.isTeamOwner()) {
+                    mailJetBuilder = new MailJetBuilder();
+                    mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                    mailJetBuilder.setTemplateId(211068);
+                    mailJetBuilder.addTo("benjamin@ease.space");
+                    mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+                    mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+                    mailJetBuilder.addVariable("team_name", team.getName());
+                    mailJetBuilder.addVariable("team_email", teamUser.getEmail());
+                    mailJetBuilder.addVariable("email", email);
+                    mailJetBuilder.addVariable("phone_number", teamUser.getPhone_number());
+                    mailJetBuilder.sendEmail();
+                } else {
+                    TeamUser admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                    mailJetBuilder = new MailJetBuilder();
+                    mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                    mailJetBuilder.addTo(admin.getEmail());
+                    mailJetBuilder.setTemplateId(211034);
+                    mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
+                    mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+                    mailJetBuilder.addVariable("team_name", team.getName());
+                    mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
+                    mailJetBuilder.sendEmail();
+                    Notification notification = NotificationFactory.getInstance().createNotification(admin.getUser(), teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "/resources/notifications/user_role_changed.png", teamUser, true);
+                    sm.saveOrUpdate(notification);
+                    WebSocketManager webSocketManager = sm.getUserWebSocketManager(admin.getUser().getDb_id());
+                    webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
                 }
             }
             user.getProfileSet().stream().flatMap(Profile::getApps).forEach(app -> {
