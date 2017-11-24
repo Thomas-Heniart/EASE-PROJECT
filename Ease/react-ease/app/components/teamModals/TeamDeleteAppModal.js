@@ -1,41 +1,47 @@
 var React = require('react');
 var classnames = require('classnames');
+import SimpleModalTemplate from "../common/SimpleModalTemplate";
+import {Button, Form, Message} from 'semantic-ui-react';
 import {showTeamDeleteAppModal} from "../../actions/teamModalActions"
-import {teamDeleteApp} from "../../actions/appsActions"
+import {deleteTeamCard} from "../../actions/appsActions"
 
 import {
-    selectChannelFromListById,
-    selectUserFromListById
+  selectChannelFromListById,
+  selectUserFromListById
 } from "../../utils/helperFunctions"
 
 import {connect} from "react-redux"
 
-@connect((store)=>{
-  return {
-    modal: store.teamModals.teamDeleteAppModal,
-    channels: store.channels.channels,
-    users: store.users.users
-  };
-})
+@connect((store)=>({
+  app_id: store.teamModals.teamDeleteAppModal.app_id,
+  team_apps: store.team_apps
+}))
 class TeamDeleteAppModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      confirmed: false
+      confirmed: false,
+      app: this.props.team_apps[this.props.app_id]
     };
-    this.confirm = this.confirm.bind(this);
-    this.confirmModal = this.confirmModal.bind(this);
   }
-  confirmModal(){
-    this.props.dispatch(teamDeleteApp(this.props.modal.app.id, this.props.modal.app.team_id)).then(response => {
-      this.props.dispatch(showTeamDeleteAppModal(false));
+  confirmModal = (e) => {
+    e.preventDefault();
+    const app = this.state.app;
+    this.props.dispatch(deleteTeamCard({
+      team_id: app.team_id,
+      team_card_id: app.id
+    })).then(response => {
+      this.close();
     });
-  }
-  confirm(){
+  };
+  confirm = () => {
     this.setState({confirmed: !this.state.confirmed});
-  }
+  };
+  close = () => {
+    this.props.dispatch(showTeamDeleteAppModal({active: false}));
+  };
   render(){
-    const app = this.props.modal.app;
+    const app = this.state.app;
     return (
         <div class="popupHandler myshow">
           <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamDeleteAppModal(false))}}></div>

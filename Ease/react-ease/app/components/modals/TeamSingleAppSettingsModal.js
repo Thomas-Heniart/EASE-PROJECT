@@ -56,11 +56,11 @@ class TeamSingleAppSettingsModal extends Component{
     this.props.dispatch(showTeamSingleAppSettingsModal({active: false}));
   };
   remove = () => {
-    return removeTeamCardReceiver({
+    return this.props.dispatch(removeTeamCardReceiver({
       team_id: this.props.app.team_id,
       team_card_id: this.props.app.team_card_id,
-      team_card_receiver_id: this.props.team_card_receiver_id
-    }).then(response => {
+      team_card_receiver_id: this.props.app.team_card_receiver_id
+    })).then(response => {
       this.close();
     }).catch(err => {
       throw err;

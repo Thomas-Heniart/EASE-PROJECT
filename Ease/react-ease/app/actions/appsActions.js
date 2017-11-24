@@ -1,5 +1,6 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
+import {deleteAppAction} from "./dashboardActions";
 
 export function teamCreateMultiApp(app){
   return function (dispatch, getState){
@@ -312,12 +313,9 @@ export function removeTeamCardReceiverAction({team_id, team_card_id, team_card_r
     const team = store.teams[team_id];
     const receiver = store.team_apps[team_card_id].receivers.find(item => (item.id === team_card_receiver_id));
     if (team.my_team_user_id === receiver.team_user_id){
-      dispatch({
-        type: 'DASHBOARD_APP_REMOVED',
-        payload: {
-          app_id: receiver.app_id
-        }
-      })
+      dispatch(deleteAppAction({
+        app_id: receiver.app_id
+      }));
     }
     dispatch({
       type: 'TEAM_APP_RECEIVER_REMOVED',
@@ -341,6 +339,45 @@ export function removeTeamCardReceiver({team_id, team_card_id, team_card_receive
         team_id: team_id,
         team_card_id: team_card_id,
         team_card_receiver_id: team_card_receiver_id
+      }));
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function deleteTeamCardAction({team_id, team_card_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const app = store.team_apps[team_card_id];
+
+    app.receivers.map(item => {
+      dispatch(removeTeamCardReceiverAction({
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: item.id
+      }));
+    });
+    dispatch({
+      type: 'TEAM_APP_REMOVED',
+      payload: {
+        app: app
+      }
+    });
+  }
+}
+
+export function deleteTeamCard({team_id, team_card_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.deleteApp({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch(deleteTeamCardAction({
+        team_id: team_id,
+        team_card_id: team_card_id
       }));
       return response;
     }).catch(err => {

@@ -266,13 +266,29 @@ export function editProfile({profile_id, name}) {
   }
 }
 
+export function deleteAppAction({app_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const app = store.dashboard.apps[app_id];
+    dispatch({
+      type: 'DASHBOARD_APP_REMOVED',
+      payload: {
+        app_id: app.id
+      }
+    });
+    dispatch(checkIfProfileEmpty({
+      profile_id: app.profile_id
+    }));
+  }
+}
+
 export function checkIfProfileEmpty({profile_id}){
   return (dispatch, getState) => {
     const store = getState();
     if (!store.dashboard.profiles[profile_id].app_ids.length){
-      post_api.dashboard.deleteProfile({
+/*      post_api.dashboard.deleteProfile({
         profile_id: profile_id
-      });
+      });*/
       dispatch({
         type: 'DASHBOARD_PROFILE_REMOVED',
         payload: {
