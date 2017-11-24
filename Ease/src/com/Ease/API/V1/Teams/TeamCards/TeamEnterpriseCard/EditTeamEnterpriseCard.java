@@ -2,7 +2,6 @@ package com.Ease.API.V1.Teams.TeamCards.TeamEnterpriseCard;
 
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Utils.HttpServletException;
@@ -22,13 +21,12 @@ public class EditTeamEnterpriseCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(team_card_id);
-            if (!teamCard.isTeamEnterpriseCard())
+            TeamEnterpriseCard teamCard = (TeamEnterpriseCard) sm.getHibernateQuery().get(TeamEnterpriseCard.class, team_card_id);
+            if (teamCard == null)
                 throw new HttpServletException(HttpStatus.Forbidden);
+            Team team = teamCard.getTeam();
+            sm.needToBeAdminOfTeam(team);
             String description = sm.getStringParam("description", true, true);
             if (description == null)
                 description = "";

@@ -4,7 +4,6 @@ import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.HttpServletException;
@@ -25,13 +24,12 @@ public class EditTeamSingleCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(team_card_id);
-            if (!teamCard.isTeamSingleCard())
+            TeamSingleCard teamCard = (TeamSingleCard) sm.getHibernateQuery().get(TeamSingleCard.class, team_card_id);
+            if (teamCard == null)
                 throw new HttpServletException(HttpStatus.Forbidden);
+            Team team = teamCard.getTeam();
+            sm.needToBeAdminOfTeam(team);
             String description = sm.getStringParam("description", true, true);
             if (description == null)
                 description = "";
@@ -52,7 +50,7 @@ public class EditTeamSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             teamSingleCard.setPassword_reminder_interval(password_reminder_interval);
-            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
             if (teamSingleCard.getAccount() == null) {
                 Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval());
                 teamSingleCard.setAccount(account);
