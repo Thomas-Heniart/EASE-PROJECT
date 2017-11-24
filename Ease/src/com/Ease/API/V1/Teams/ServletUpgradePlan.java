@@ -50,6 +50,7 @@ public class ServletUpgradePlan extends HttpServlet {
             Subscription subscription = Subscription.create(params);
             team.setSubscription_id(subscription.getId());
             team.setSubscription(subscription);
+            sm.getTeamProperties(team_id).put("subscription", subscription);
             sm.saveOrUpdate(team);
             sm.setSuccess(team.getSimpleJson());
         } catch (StripeException e) {
