@@ -32,8 +32,12 @@ public class ServletMoveApp extends HttpServlet {
             if (position < 0 || position > new_profile.getSize())
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter position");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            old_profile.removeAppAndUpdatePositions(app, hibernateQuery);
-            new_profile.addAppAndUpdatePositions(app, position, hibernateQuery);
+            if (old_profile.equals(new_profile))
+                old_profile.updateAppPositions(app, position, hibernateQuery);
+            else {
+                old_profile.removeAppAndUpdatePositions(app, hibernateQuery);
+                new_profile.addAppAndUpdatePositions(app, position, hibernateQuery);
+            }
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

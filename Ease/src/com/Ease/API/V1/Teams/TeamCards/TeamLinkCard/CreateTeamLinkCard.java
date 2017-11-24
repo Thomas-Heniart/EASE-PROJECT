@@ -57,9 +57,6 @@ public class CreateTeamLinkCard extends HttpServlet {
                     app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url, teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery()));
                 else
                     app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url);
-                Profile profile = teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery());
-                app.setProfile(profile);
-                app.setPosition(profile.getSize());
                 TeamCardReceiver teamCardReceiver = new TeamLinkCardReceiver(app, teamCard, teamUser_receiver);
                 sm.saveOrUpdate(teamCardReceiver);
                 teamCard.addTeamCardReceiver(teamCardReceiver);

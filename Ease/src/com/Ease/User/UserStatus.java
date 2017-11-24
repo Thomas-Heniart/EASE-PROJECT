@@ -44,6 +44,9 @@ public class UserStatus {
     @Column(name = "email_requested")
     private String email_requested;
 
+    @Column(name = "new_feature_seen")
+    private boolean new_feature_seen = false;
+
     public UserStatus() {
 
     }
@@ -134,6 +137,14 @@ public class UserStatus {
 
     public void setEmail_requested(String email_requested) {
         this.email_requested = email_requested;
+    }
+
+    public boolean isNew_feature_seen() {
+        return new_feature_seen;
+    }
+
+    public void setNew_feature_seen(boolean new_feature_seen) {
+        this.new_feature_seen = new_feature_seen;
     }
 
     @Override

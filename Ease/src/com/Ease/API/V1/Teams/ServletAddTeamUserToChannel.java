@@ -37,7 +37,7 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
             channel.addTeamUser(teamUser);
             sm.saveOrUpdate(channel);
             TeamUser teamUser_connected = sm.getTeamUser(team);
-            if (teamUser != teamUser_connected) {
+            if (teamUser != teamUser_connected && teamUser.getUser() != null) {
                 Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " added you in #" + channel.getName(), "/resources/notifications/channel.png", channel);
                 sm.saveOrUpdate(notification);
                 WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());
