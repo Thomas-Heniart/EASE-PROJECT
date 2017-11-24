@@ -8,9 +8,15 @@ public class TeamWebSocketMessage extends WebSocketMessage {
         super("UPDATE_CLIENT", new JSONObject());
         JSONObject thisData = (JSONObject) this.getData();
         thisData.put("data", data);
-        thisData.put("type", data_type);
-        thisData.put("action", action);
+        thisData.put("action", data_type + "_" + action);
         thisData.put("target", target);
+    }
+
+    public TeamWebSocketMessage(String data_type, String action, JSONObject data) {
+        super("UPDATE_CLIENT", new JSONObject());
+        JSONObject thisData = (JSONObject) this.getData();
+        thisData.put("data", data);
+        thisData.put("action", data_type + "_" + action);
     }
 
     public TeamWebSocketMessage(String data_type, String action, Integer id, JSONObject target) {
@@ -19,8 +25,7 @@ public class TeamWebSocketMessage extends WebSocketMessage {
         data.put("id", id);
         JSONObject thisData = (JSONObject) this.getData();
         thisData.put("data", data);
-        thisData.put("type", data_type);
-        thisData.put("action", action);
+        thisData.put("action", data_type + "_" + action);
         thisData.put("target", target);
     }
 }

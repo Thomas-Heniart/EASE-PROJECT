@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamLinkCard;
 
-import com.Ease.NewDashboard.*;
+import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.AppFactory;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -11,6 +12,9 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONArray;
 
 import javax.servlet.RequestDispatcher;
@@ -61,6 +65,7 @@ public class CreateTeamLinkCard extends HttpServlet {
                 sm.saveOrUpdate(teamCardReceiver);
                 teamCard.addTeamCardReceiver(teamCardReceiver);
             }
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CREATED, teamCard.getJson()));
             channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);
             sm.setSuccess(teamCard.getJson());
