@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "ssoApps")
+@PrimaryKeyJoinColumn(name = "id")
 public class SsoApp extends WebsiteApp {
 
     @ManyToOne

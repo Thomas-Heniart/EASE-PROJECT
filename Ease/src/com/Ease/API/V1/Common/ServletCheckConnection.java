@@ -16,25 +16,31 @@ import java.io.IOException;
 @WebServlet("/bz")
 public class ServletCheckConnection extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            JSONObject res = new JSONObject();
+            PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
             try {
-                sm.needToBeConnected();
-                res.put("connected", true);
-                sm.setSuccess(res);
-            } catch (HttpServletException e) {
-                if (e.getHttpStatus() == HttpStatus.AccessDenied) {
-                    res.put("connected", false);
+                JSONObject res = new JSONObject();
+                try {
+                    sm.needToBeConnected();
+                    res.put("connected", true);
                     sm.setSuccess(res);
-                } else
-                    throw e;
+                } catch (HttpServletException e) {
+                    if (e.getHttpStatus() == HttpStatus.AccessDenied) {
+                        res.put("connected", false);
+                        sm.setSuccess(res);
+                    } else
+                        throw e;
+                }
+                sm.setSuccess(res);
+            } catch (Exception e) {
+                e.printStackTrace();
+                sm.setError(e);
             }
-            sm.setSuccess(res);
+            sm.sendResponse();
         } catch (Exception e) {
-            sm.setError(e);
+            e.printStackTrace();
         }
-        sm.sendResponse();
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
