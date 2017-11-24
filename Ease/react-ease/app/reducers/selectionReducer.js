@@ -73,7 +73,7 @@ export default function reducer(state={
       }
     }
     case "TEAM_CREATE_LINK_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
+      if(state.type === action.payload.app.type && state.id === action.payload.app.id){
         var state = {
           ...state
         };
@@ -82,7 +82,7 @@ export default function reducer(state={
       }
     }
     case "TEAM_CREATE_MULTI_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
+      if(state.type === action.payload.app.type && state.id === action.payload.app.id){
         var state = {
           ...state
         };
@@ -249,7 +249,7 @@ export default function reducer(state={
       for (var i = 0; i < apps.length; i++){
         if (apps[i].id === action.payload.app_id){
           for (var j = 0; j < apps[i].receivers.length; j++){
-            if (apps[i].receivers[j].shared_app_id === action.payload.shared_app_id){
+            if (apps[i].receivers[j].id === action.payload.id){
               apps[i].receivers[j].profile_id = action.payload.profile_id;
               break;
             }
