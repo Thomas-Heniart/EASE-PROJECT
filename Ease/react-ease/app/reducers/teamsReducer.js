@@ -296,11 +296,13 @@ export const teams = createReducer({
     return new_state;
   },
   ['TEAM_APP_REMOVED'](state, action){
-    const {team_id, room_id, app} = action.payload;
+    const app = action.payload.app;
     const app_id = app.id;
+    const team_id = app.team_id;
+    const room_id = app.channel_id;
     const room = state[team_id].rooms[room_id];
 
-    let new_state = update(state, {
+    return update(state, {
       [team_id]: {
         rooms: {
           [room_id]: {
@@ -309,14 +311,14 @@ export const teams = createReducer({
         }
       }
     });
-    app.receivers.map(item => {
-      let user = new_state[team_id].team_users[item.team_user_id];
-      const idx = user.team_card_ids.indexOf(app.id);
-      new_state[team_id].team_users[item.team_user_id] = update(user, {
-        team_card_ids: {$splice: [[idx, 1]]}
-      });
-    });
-    return new_state;
+    /*    app.receivers.map(item => {
+          let user = new_state[team_id].team_users[item.team_user_id];
+          const idx = user.team_card_ids.indexOf(app.id);
+          new_state[team_id].team_users[item.team_user_id] = update(user, {
+            team_card_ids: {$splice: [[idx, 1]]}
+          });
+        });*/
+//    return new_state;
   }
 });
 
@@ -389,12 +391,8 @@ export const team_apps = createReducer({
   },
   ['TEAM_APP_REMOVED'](state, action) {
     const app = action.payload.app;
-    if (state[app.id] !== undefined)
-      return {
-        ...state,
-        [app.id]: undefined
-      };
-    return state;
+
+    return update(state, {$unset: [app.id]});
   }
 });
 

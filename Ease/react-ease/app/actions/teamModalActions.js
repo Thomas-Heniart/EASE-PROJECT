@@ -52,12 +52,12 @@ export function showTeamDeleteUserFromChannelModal({active, team_id, room_id, te
   }
 }
 
-export function showTeamDeleteAppModal(state, teamApp){
+export function showTeamDeleteAppModal({active, app_id}){
   return {
     type: 'SHOW_TEAM_DELETE_APP_MODAL',
     payload: {
-      active: state,
-      app: teamApp
+      active: active,
+      app_id: app_id
     }
   }
 }

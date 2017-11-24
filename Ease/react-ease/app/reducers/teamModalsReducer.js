@@ -30,7 +30,7 @@ const initialState = {
   },
   teamDeleteAppModal: {
     active: false,
-    app: null
+    app_id: -1
   },
   pinTeamAppToDashboardModal: {
     active: false,

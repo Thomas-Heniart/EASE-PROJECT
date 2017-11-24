@@ -628,14 +628,12 @@ module.exports = {
         return response.data;
       });
     },
-    deleteApp: function (ws_id, team_id, app_id) {
-      return axios.post('/api/v1/teams/DeleteTeamCard', {
-        ws_id: ws_id,
+    deleteApp: function ({team_id, team_card_id, ws_id}) {
+      return basic_post('/api/v1/teams/DeleteTeamCard', {
         team_id: team_id,
-        team_card_id: app_id,
-      }).then(response => {
-        return response.data;
-      })
+        team_card_id: team_card_id,
+        ws_id: ws_id
+      });
     },
     shareMultiApp: function(ws_id, team_id, app_id, user_info){
       return axios.post('/api/v1/teams/ShareApp', {
