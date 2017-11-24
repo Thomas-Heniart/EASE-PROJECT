@@ -579,20 +579,14 @@ module.exports = {
         return err.response.data;
       });
     },
-    editLinkAppNew: ({team_id, app_id, name, description, url, img_url, ws_id}) => {
-      return axios.post('/api/v1/teams/EditLinkApp', {
-        team_id: team_id,
-        app_id: app_id,
+    editLinkAppNew: ({team_card_id, name, description, url, img_url, ws_id}) => {
+      return basic_post('/api/v1/teams/EditTeamLinkCard', {
+        team_card_id: team_card_id,
         name : name,
         description: description,
         url: url,
         img_url: img_url,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        return err.response.data;
+        ws_id: ws_id
       });
     },
     pinLinkApp : ({team_id, app_id, app_name, profile_id, ws_id}) => {

@@ -53,19 +53,19 @@ public class User {
     @JoinColumn(name = "jwt_id")
     private JsonWebToken jsonWebToken;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<UserEmail> userEmailSet = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Profile> profileSet = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<SsoGroup> ssoGroupSet = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<TeamUser> teamUsers = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Notification> notificationSet = ConcurrentHashMap.newKeySet();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
@@ -329,7 +329,7 @@ public class User {
         Integer old_position = profile.getPosition_index();
         this.removeProfile(profile);
         this.getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= old_position).forEach(profile1 -> {
-            profile1.setPosition_index(profile1.getPosition_index() - 1);
+            profile1.setPosition_index(profile1.getPosition_index() != null && profile1.getPosition_index() > 0 ? profile1.getPosition_index() - 1 : 0);
             hibernateQuery.saveOrUpdateObject(profile1);
         });
         hibernateQuery.deleteObject(profile);

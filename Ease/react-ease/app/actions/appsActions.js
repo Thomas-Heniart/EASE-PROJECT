@@ -211,11 +211,10 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
   }
 }
 
-export function teamEditLinkAppNew({team_id, app_id, name, description, url, img_url})  {
+export function teamEditLinkAppNew({team_card_id, name, description, url, img_url}) {
   return (dispatch, getState) => {
     return post_api.teamApps.editLinkAppNew({
-      team_id: team_id,
-      app_id: app_id,
+      team_card_id: team_card_id,
       name : name,
       description: description,
       url: url,
