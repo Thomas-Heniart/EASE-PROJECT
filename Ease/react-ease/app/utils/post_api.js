@@ -553,7 +553,7 @@ module.exports = {
         throw err.response.data;
       });
     },
-    createLinkAppNew: ({team_id, channel_id, name, description, url, img_url, ws_id}) => {
+    createLinkAppNew: ({team_id, channel_id, name, description, url, img_url, ws_id, receivers}) => {
       return axios.post('/api/v1/teams/CreateTeamLinkCard', {
         team_id: team_id,
         channel_id: channel_id,
@@ -562,7 +562,7 @@ module.exports = {
         url: url,
         img_url: img_url,
         ws_id: ws_id,
-        timestamp: new Date().getTime()
+        receivers: receivers
       }).then(response => {
         return response.data;
       }).catch(err => {
