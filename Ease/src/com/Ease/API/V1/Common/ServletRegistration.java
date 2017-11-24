@@ -6,6 +6,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.*;
 import com.Ease.User.User;
+import com.Ease.User.UserEmail;
 import com.Ease.User.UserFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -68,6 +69,9 @@ public class ServletRegistration extends HttpServlet {
             }
             User newUser = UserFactory.getInstance().createUser(email, username, password);
             sm.saveOrUpdate(newUser);
+            UserEmail userEmail = new UserEmail(email, true);
+            sm.saveOrUpdate(userEmail);
+            newUser.addUserEmail(userEmail);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Profile profile_perso = new Profile(newUser, 0, 0, new ProfileInformation("Me"));
             /* Profile profile_pro = new Profile(newUser, 1, 0, new ProfileInformation("Pro"));

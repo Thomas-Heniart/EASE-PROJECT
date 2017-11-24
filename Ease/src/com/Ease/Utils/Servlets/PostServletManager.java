@@ -73,6 +73,8 @@ public class PostServletManager extends ServletManager {
     }
 
     public Object getParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
+        if (params == null)
+            return null;
         Object param = params.get(paramName);
         if (param == null && !canBeNull)
             throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter: " + paramName);
@@ -99,7 +101,10 @@ public class PostServletManager extends ServletManager {
 
     public String getStringParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return (String) this.getParam(paramName, saveInLogs, canBeNull);
+            if (params == null)
+                return request.getParameter(paramName);
+            else
+                return (String) this.getParam(paramName, saveInLogs, canBeNull);
         } catch (ClassCastException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
         }
