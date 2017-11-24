@@ -60,6 +60,7 @@ public class ServletResetPassword extends HttpServlet {
             userKeys.setPublicKey(publicAndPrivateKey.getKey());
             userKeys.setHashed_password(Hashing.hash(password));
             sm.saveOrUpdate(userKeys);
+            ((Map<Integer, Map<String, Object>>) sm.getContextAttr("userIdMap")).remove(user.getDb_id());
             if (user.getJsonWebToken() != null) {
                 Key secret = (Key) sm.getContextAttr("secret");
                 user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret);
@@ -126,6 +127,7 @@ public class ServletResetPassword extends HttpServlet {
             databaseRequest.setInt(userId);
             databaseRequest.setString(code);
             DatabaseResult rs = databaseRequest.get();
+            hibernateQuery.commit();
             if (rs.next())
                 sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
             else
