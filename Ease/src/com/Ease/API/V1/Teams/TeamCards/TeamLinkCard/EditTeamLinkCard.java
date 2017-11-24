@@ -30,6 +30,7 @@ public class EditTeamLinkCard extends HttpServlet {
             if (teamCard == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "No such team link card");
             Team team = teamCard.getTeam();
+            sm.initializeTeamWithContext(team);
             sm.needToBeAdminOfTeam(team);
             if (!teamCard.isTeamLinkCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "You can only edit a team link card");
