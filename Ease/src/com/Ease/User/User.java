@@ -329,7 +329,7 @@ public class User {
         Integer old_position = profile.getPosition_index();
         this.removeProfile(profile);
         this.getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= old_position).forEach(profile1 -> {
-            profile1.setPosition_index(profile1.getPosition_index() - 1);
+            profile1.setPosition_index(profile1.getPosition_index() != null && profile1.getPosition_index() > 0 ? profile1.getPosition_index() - 1 : 0);
             hibernateQuery.saveOrUpdateObject(profile1);
         });
         hibernateQuery.deleteObject(profile);
