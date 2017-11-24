@@ -108,6 +108,33 @@ export const renderSimpleAppAddUserLabel = (label, index, props) => {
     )
 };
 
+export const renderLinkAppAddUserLabel = (label, index, props) => {
+  const {username, can_see_information} = label;
+  return (
+    <Popup size="mini"
+           position="bottom center"
+           inverted
+           flowing
+           hideOnScroll={true}
+           trigger={
+             <Label class={classnames("user-label static", can_see_information ? 'can_see_information' : null)}>
+               {username}
+               {can_see_information &&
+               <Icon name='mobile'/>}
+               <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
+             </Label>
+           }
+           content={
+             <div>
+               {can_see_information &&
+               <span>Mobile access: on</span>}
+               {!can_see_information &&
+               <span>Mobile access: off</span>}
+               <br/>
+             </div>}/>
+  )
+};
+
 export const PasswordChangeDropdown = ({value, onChange, disabled}) => {
   return (
       <Popup size="mini"
