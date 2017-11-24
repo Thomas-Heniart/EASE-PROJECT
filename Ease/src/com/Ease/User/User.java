@@ -216,6 +216,7 @@ public class User {
         res.put("teams", teams);
         res.put("status", this.getUserStatus().getJson());
         res.put("background_picture", this.getOptions().isBackground_picked());
+        res.put("new_feature_seen", this.getUserStatus().isNew_feature_seen());
         return res;
     }
 

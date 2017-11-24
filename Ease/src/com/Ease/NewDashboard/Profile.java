@@ -148,23 +148,24 @@ public class Profile {
             hibernateQuery.saveOrUpdateObject(app1);
         });
         this.getAppSet().remove(app);
+        if (this.getAppSet().isEmpty())
+            hibernateQuery.deleteObject(this);
     }
 
     public synchronized void updateAppPositions(App app, Integer position, HibernateQuery hibernateQuery) {
-        if (app.getPosition().equals(position))
-            return;
-        if (app.getPosition() < position) {
-            this.getApps().filter(app1 -> !app.equals(app1) && app1.getPosition() > app.getPosition() && app1.getPosition() <= position).forEach(app1 -> {
-                app1.setPosition(app1.getPosition() - 1);
-                hibernateQuery.saveOrUpdateObject(app1);
-            });
-        } else {
-            this.getApps().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position && app1.getPosition() < app.getPosition()).forEach(app1 -> {
-                app1.setPosition(app1.getPosition() + 1);
-                hibernateQuery.saveOrUpdateObject(app1);
-            });
-        }
-        app.setPosition(position >= this.getAppSet().size() ? this.getAppSet().size() - 1 : position);
+        int appPosition = app.getPosition();
+        this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= appPosition).forEach(app1 -> {
+            app1.setPosition((app1.getPosition() != null && app1.getPosition() > 0) ? (app1.getPosition() - 1) : 0);
+            hibernateQuery.saveOrUpdateObject(app1);
+        });
+        this.getAppSet().remove(app);
+        this.addApp(app);
+        this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
+            app1.setPosition(app1.getPosition() + 1);
+            hibernateQuery.saveOrUpdateObject(app1);
+        });
+        app.setPosition(appPosition > this.getAppSet().size() ? this.getAppSet().size() - 1 : position);
+        app.setProfile(this);
         hibernateQuery.saveOrUpdateObject(app);
     }
 

@@ -439,3 +439,6 @@ INSERT INTO classicApps SELECT
                         WHERE id NOT IN (SELECT id
                                          FROM classicApps) AND id NOT IN (SELECT id
                                                                           FROM logWithApps);
+
+ALTER TABLE status ADD COLUMN new_feature_seen TINYINT(1) NOT NULL DEFAULT 1;
+UPDATE status SET new_feature_seen = 0;
