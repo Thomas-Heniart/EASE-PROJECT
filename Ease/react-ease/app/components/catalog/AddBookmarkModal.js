@@ -80,7 +80,7 @@ class AddBookmarkModal extends Component {
     if (this.state.selectedRoom === -1) {
       this.props.catalogAddBookmark({
         name: this.state.name,
-        profile_id: this.state.profile_id,
+        profile_id: this.state.selectedProfile,
         url: this.state.url,
         img_url: this.state.img_url
       }).then(app => {
