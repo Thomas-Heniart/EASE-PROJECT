@@ -13,7 +13,6 @@ import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./util
   app: store.modals.linkAppSettings.app
 }))
 class LinkAppSettingsModal extends Component {
-
   constructor(props){
     super(props);
     this.state = {
