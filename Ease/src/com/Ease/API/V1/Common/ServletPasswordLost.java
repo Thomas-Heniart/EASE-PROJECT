@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
-@WebServlet("/api/v1/common/PasswordLost")
+@WebServlet("/passwordLost")
 public class ServletPasswordLost extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
@@ -40,6 +40,7 @@ public class ServletPasswordLost extends HttpServlet {
             else
                 passwordLost.setCode(code);
             passwordLost.setRequest_date(new Date());
+            sm.saveOrUpdate(passwordLost);
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setTemplateId(178530);
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");

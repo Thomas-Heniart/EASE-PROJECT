@@ -4,8 +4,16 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.PasswordLost;
 import com.Ease.User.User;
+import com.Ease.User.UserKeys;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.Hashing;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -16,15 +24,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
-@WebServlet("/api/v1/common/ResetPassword")
+@WebServlet("/resetPassword")
 public class ServletResetPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             String email = sm.getStringParam("email", true, false);
-            String code = sm.getStringParam("code", true, false);
+            String code = sm.getStringParam("linkCode", true, false);
             String password = sm.getStringParam("password", false, false);
             if (!Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
@@ -38,10 +48,44 @@ public class ServletResetPassword extends HttpServlet {
             hibernateQuery.setParameter("id", user.getDb_id());
             hibernateQuery.setParameter("code", code);
             PasswordLost passwordLost = (PasswordLost) hibernateQuery.getSingleResult();
-            user.getTeamUsers().forEach(teamUser -> {
+            if (passwordLost == null)
+                throw new HttpServletException(HttpStatus.BadRequest);
+            String keyUser = AES.keyGenerator();
+            String salt = AES.generateSalt();
+            UserKeys userKeys = user.getUserKeys();
+            userKeys.setKeyUser(AES.encryptUserKey(keyUser, password, salt));
+            userKeys.setSaltPerso(salt);
+            Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+            userKeys.setPrivateKey(AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
+            userKeys.setPublicKey(publicAndPrivateKey.getKey());
+            userKeys.setHashed_password(Hashing.hash(password));
+            sm.saveOrUpdate(userKeys);
+            if (user.getJsonWebToken() != null) {
+                Key secret = (Key) sm.getContextAttr("secret");
+                user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret);
+                sm.saveOrUpdate(user.getJsonWebToken());
+            }
+            for (TeamUser teamUser : user.getTeamUsers()) {
                 teamUser.setDisabled(true);
                 teamUser.setDisabledDate(new Date());
-            });
+                sm.saveOrUpdate(teamUser);
+                Team team = teamUser.getTeam();
+                if (teamUser.isTeamOwner() && team.getTeamUsers().size() == 1) {
+                    String teamKey = AES.keyGenerator();
+                    teamUser.setTeamKey(AES.encrypt(teamKey, keyUser));
+                    teamUser.setDisabled(false);
+                    sm.saveOrUpdate(teamUser);
+                    for (TeamCard teamCard : team.getTeamCardMap().values()) {
+                        if (teamCard.isTeamSingleCard()) {
+                            ((TeamSingleCard) teamCard).setAccount(null);
+                            teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> ((ClassicApp) teamCardReceiver.getApp()).setAccount(null));
+                        } else if (teamCard.isTeamEnterpriseCard()) {
+                            teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> ((ClassicApp) teamCardReceiver.getApp()).setAccount(null));
+                        }
+                        sm.saveOrUpdate(teamCard);
+                    }
+                }
+            }
             user.getProfileSet().stream().flatMap(Profile::getApps).forEach(app -> {
                 if (app.getTeamCardReceiver() != null) {
 

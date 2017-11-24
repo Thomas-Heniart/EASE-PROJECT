@@ -6,14 +6,11 @@ import java.util.Date;
 @Entity
 @Table(name = "passwordLost")
 public class PasswordLost {
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Integer db_id;
 
-    @Column(name = "code")
+    @Column(name = "linkCode")
     private String code;
 
+    @Id
     @Column(name = "user_id")
     private Integer user_id;
 
@@ -28,14 +25,6 @@ public class PasswordLost {
     public PasswordLost(String code, Integer user_id) {
         this.code = code;
         this.user_id = user_id;
-    }
-
-    public Integer getDb_id() {
-        return db_id;
-    }
-
-    public void setDb_id(Integer db_id) {
-        this.db_id = db_id;
     }
 
     public String getCode() {

@@ -33,6 +33,12 @@ public class UserEmail {
         this.verified = verified;
     }
 
+    public UserEmail(String email, boolean verified, User user) {
+        this.email = email;
+        this.verified = verified;
+        this.user = user;
+    }
+
     public Integer getDb_id() {
         return db_id;
     }

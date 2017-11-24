@@ -220,6 +220,14 @@ public class User {
         return res;
     }
 
+    public void addUserEmail(UserEmail userEmail) {
+        this.getUserEmailSet().add(userEmail);
+    }
+
+    public void removeUserEmail(UserEmail userEmail) {
+        this.getUserEmailSet().remove(userEmail);
+    }
+
     public void addProfile(Profile profile) {
         this.getProfileSet().add(profile);
     }

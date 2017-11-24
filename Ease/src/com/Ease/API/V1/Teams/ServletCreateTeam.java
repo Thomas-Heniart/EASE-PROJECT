@@ -144,7 +144,7 @@ public class ServletCreateTeam extends HttpServlet {
             sm.saveOrUpdate(channel);
             UserEmail userEmail = user.getUserEmail(email);
             if (userEmail == null)
-                userEmail = new UserEmail(email, true);
+                userEmail = new UserEmail(email, true, user);
             else if (!userEmail.isVerified())
                 userEmail.setVerified(true);
             sm.saveOrUpdate(userEmail);
