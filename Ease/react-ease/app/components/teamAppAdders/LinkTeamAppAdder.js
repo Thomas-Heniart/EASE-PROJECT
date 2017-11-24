@@ -4,17 +4,31 @@ import {handleSemanticInput,
     transformWebsiteInfoIntoList,
     passwordChangeOptions,
     credentialIconType} from "../../utils/utils";
-import {selectUserFromListById} from "../../utils/helperFunctions";
+import {selectUserFromListById, newSelectUserFromListById} from "../../utils/helperFunctions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {teamCreateLinkAppNew} from "../../actions/appsActions";
 import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
 import {connect} from "react-redux";
-import { Label, Container, Icon, Segment, Input, Button } from 'semantic-ui-react';
+import { Label, Container, Icon, Segment, Input, Button, Dropdown } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
+import { setUserDropdownText, renderLinkAppAddUserLabel} from "./common";
+
+const AppResultRenderer = ({name, logo, request, profile_name, login}) => {
+  if (request)
+    return (<div><Icon name="gift" color="red"/><strong>Didn't found your website? Request it!</strong></div>);
+  return (
+    <div>
+      <img src={logo} class="logo"/>
+      {name}
+      {profile_name !== undefined &&
+      <span class="text-muted">&nbsp;- from {profile_name} - {login}</span>}
+    </div>
+  )
+};
 
 @connect(store => ({
   team_id: store.team.id,
-  users: store.users.users,
+  teams: store.teams,
   selectedItem: store.selection,
   card: store.teamCard
 }), reduxActionBinder)
@@ -30,28 +44,61 @@ class LinkTeamAppAdder extends React.Component {
       selectedUsers: [],
       loading: false,
       users: [],
+      selected_users: []
     };
     this.handleAppNameChange = this.handleAppNameChange.bind(this);
     this.handleUrlInput = this.handleUrlInput.bind(this);
     this.handleComment = this.handleComment.bind(this);
   }
+  componentWillMount() {
+    console.log('item: ', this.props.item);
+    let users = this.props.item.team_user_ids.map(item => {
+      const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
+      return {
+        key: item,
+        text: setUserDropdownText(user),
+        value: item,
+        id: item,
+        role: user.role,
+        username: user.username,
+        can_see_information: true
+      }
+    });
+    const room_manager_name = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, this.props.item.room_manager_id).username;
+    this.setState({users: users, room_manager_name: room_manager_name});
+    // if (this.props.item.id) {
+    //   this.props.item.team_user_ids.map(item => {
+    //     let user = selectUserFromListById(this.props.teams[this.props.item.team_id].rooms[this.props.item.id].team_user_ids, item);
+    //     user.selected = false;
+    //     user.removable = true;
+    //     this.state.users.push(user);
+    //   });
+    // } else {
+    //   var item = this.props.item;
+    //   item.selected = false;
+    //   item.removable = false;
+    //   this.state.users.push(item);
+    //   // this.handleUserSelect(item.id);
+    // }
+  };
   componentDidMount() {
     this.getLogo();
-    if (this.props.selectedItem.type === 'channel') {
-      this.props.item.user_ids.map(function (item) {
-        var user = selectUserFromListById.bind(this.props.users, item);
-        user.selected = false;
-        user.removable = true;
-        this.state.users.push(user);
-      }, this);
-    } else {
-      var item = this.props.item;
-      item.selected = false;
-      item.removable = false;
-      this.state.users.push(item);
-      // this.handleUserSelect(item.id);
-    }
-  }
+    this.chooseAllUsers();
+  };
+  chooseAllUsers = () => {
+    let selected = [];
+    this.state.users.map(user => {
+      if (selected.length) {
+        selected.splice(selected.length + 1, 0, user.id);
+      }
+      else {
+        selected.splice(0, 0, user.id);
+      }
+    });
+    this.setState({ selected_users: selected });
+
+  };
+  handleInput = handleSemanticInput.bind(this);
   getLogo = () => {
     getClearbitLogo(this.state.url).then(response => {
       this.setState({img_url: response});
@@ -64,14 +111,15 @@ class LinkTeamAppAdder extends React.Component {
     e.preventDefault();
     this.setState({loading: true});
     this.props.dispatch(teamCreateLinkAppNew({
-      team_id: this.props.team_id,
-      channel_id: this.props.item.id,
+      team_id: this.props.card.team_id,
+      channel_id: this.props.card.channel_id,
       name: this.state.appName,
       description: this.state.comment,
       url: this.state.url,
-      img_url: this.state.img_url
+      receivers: this.state.selected_users,
+      img_url: this.state.img_url ? this.state.img_url : this.state.logoSrc
     })).then(response => {
-      this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
+      // this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
       this.setState({loading: false});
       this.close();
     });
@@ -129,6 +177,20 @@ class LinkTeamAppAdder extends React.Component {
                                  labelPosition="left"
                                  required/>
                       </div>
+                    <div>
+                      <Dropdown
+                        class="mini"
+                        search
+                        fluid
+                        name="selected_users"
+                        options={this.state.users}
+                        onChange={this.handleInput}
+                        value={this.state.selected_users}
+                        selection
+                        renderLabel={renderLinkAppAddUserLabel}
+                        multiple
+                        placeholder="Tag your team members here..."/>
+                    </div>
                       <div>
                           <Input size="mini"
                                  fluid

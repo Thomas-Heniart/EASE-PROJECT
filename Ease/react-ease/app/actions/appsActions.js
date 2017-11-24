@@ -190,7 +190,7 @@ export function teamShareSingleApp({team_id, app_id, team_user_id, can_see_infor
   }
 }
 
-export function teamCreateLinkAppNew({team_id, channel_id, name, description, url, img_url}) {
+export function teamCreateLinkAppNew({team_id, channel_id, name, description, url, img_url, receivers}) {
   return (dispatch, getState) => {
     return post_api.teamApps.createLinkAppNew({
       team_id: team_id,
@@ -199,6 +199,7 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
       description: description,
       url: url,
       img_url: img_url,
+      receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({type: 'TEAM_APP_ADDED', payload: {app:app}});
