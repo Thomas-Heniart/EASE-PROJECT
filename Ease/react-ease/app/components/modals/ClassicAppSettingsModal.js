@@ -6,7 +6,7 @@ import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editClassicApp, deleteApp} from "../../actions/dashboardActions";
+import {editClassicApp, deleteApp, validateApp} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 
@@ -78,6 +78,10 @@ class ClassicAppSettingsModal extends Component {
         edit: false
       }
     });
+    if (this.props.app.new)
+      this.props.dispatch(validateApp({
+        app_id: this.props.app.id
+      }));
     this.setState({credentials: credentials});
   }
   render(){

@@ -5,7 +5,7 @@ import {List, Segment, Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, C
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
 import {handleSemanticInput, isAppInformationEmpty} from "../../utils/utils";
 import AppSettingsNameInput from "./AppSettingsNameInput";
-import {editLogWithApp, deleteApp} from "../../actions/dashboardActions";
+import {editLogWithApp, deleteApp, validateApp} from "../../actions/dashboardActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 
 @connect(store => ({
@@ -61,6 +61,10 @@ class LogWithAppSettings extends Component {
     }).filter(item => {
       return item.type === 'classicApp' && item.website.id === app.logWith_website.id
     });
+    if (this.props.app.new)
+      this.props.dispatch(validateApp({
+        app_id: this.props.app.id
+      }));
     this.setState({lw_apps: lw_apps});
   };
   render(){

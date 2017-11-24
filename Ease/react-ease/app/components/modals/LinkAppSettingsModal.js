@@ -5,7 +5,7 @@ import {getLogo} from "../../utils/api";
 import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {handleSemanticInput} from "../../utils/utils";
-import {editLinkApp} from "../../actions/dashboardActions";
+import {editLinkApp, validateApp} from "../../actions/dashboardActions";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 
@@ -57,6 +57,12 @@ class LinkAppSettingsModal extends Component {
       this.setState({loading: false, errorMessage: err});
     });
   };
+  componentWillMount(){
+    if (this.props.app.new)
+      this.props.dispatch(validateApp({
+        app_id: this.props.app.id
+      }));
+  }
   render(){
     const {view, logo} = this.state;
 
