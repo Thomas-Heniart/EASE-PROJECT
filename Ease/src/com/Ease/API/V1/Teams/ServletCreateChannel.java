@@ -44,7 +44,7 @@ public class ServletCreateChannel extends HttpServlet {
             Channel channel = new Channel(team, name, purpose, sm.getTeamUser(team_id));
             sm.saveOrUpdate(channel);
             team.addChannel(channel);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.ADDED, channel.getJson(), channel.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CREATED, channel.getJson(), channel.getOrigin()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);
