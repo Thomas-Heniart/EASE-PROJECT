@@ -148,8 +148,15 @@ public class Profile {
             hibernateQuery.saveOrUpdateObject(app1);
         });
         this.getAppSet().remove(app);
-        if (this.getAppSet().isEmpty())
-            hibernateQuery.deleteObject(this);
+        if (this.getAppSet().isEmpty()) {
+            TeamUser teamUser = this.getTeamUser();
+            if (teamUser != null) {
+                teamUser.setProfile(null);
+                hibernateQuery.saveOrUpdateObject(teamUser);
+            }
+            this.getUser().removeProfileAndUpdatePositions(this, hibernateQuery);
+        }
+
     }
 
     public synchronized void updateAppPositions(App app, Integer position, HibernateQuery hibernateQuery) {
