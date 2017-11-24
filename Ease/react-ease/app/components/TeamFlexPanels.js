@@ -696,6 +696,14 @@ class DepartureDateSection extends React.Component {
   }
   handleInput = handleSemanticInput.bind(this);
   setEdit = (state) => {
+    if (this.props.team.plan_id === 0) {
+      this.props.dispatch(showUpgradeTeamPlanModal({
+        active: true,
+        feature_id: 5,
+        team_id: this.props.team.id
+      }));
+      return;
+    }
     const {user} = this.props;
     this.setState({
       departure_date: !!user.departure_date ? moment(user.departure_date).format('YYYY-MM-DD') : '',
