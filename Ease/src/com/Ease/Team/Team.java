@@ -359,7 +359,7 @@ public class Team {
         int res = 0;
         for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
             TeamUser teamUser = entry.getValue();
-            if (teamUser.isActive_subscription())
+            if (teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty())
                 res++;
         }
         return res;
@@ -368,11 +368,7 @@ public class Team {
     public void updateSubscription(Map<String, Object> teamProperties) {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
-        this.activeSubscriptions = 0;
-        this.getTeamUsers().values().forEach(teamUser -> teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp() != null && teamCardReceiver.getApp().getProfile() != null).findFirst().ifPresent(teamCardReceiver -> {
-            teamUser.setActive_subscription(true);
-            activeSubscriptions++;
-        }));
+        activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
         System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
             Subscription subscription = (Subscription) teamProperties.get("subscription");
@@ -381,7 +377,7 @@ public class Team {
                 teamProperties.put("subscription", subscription);
             }
             this.setSubscription(subscription);
-            if (this.getSubscription().getQuantity() != activeSubscriptions) {
+            if (this.getSubscription().getQuantity() <= activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
                 this.getSubscription().update(updateParams);
