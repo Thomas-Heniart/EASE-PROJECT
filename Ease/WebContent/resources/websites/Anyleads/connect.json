@@ -1,0 +1,24 @@
+{
+  "name":"Anyleads",
+  "lastlogin":"",
+  "home":"https://anyleads.com/search/dashboard",
+  "connect": {
+    "todo": [
+      {"action": "goto", "url": "https://anyleads.com/login"},
+      {"action":"fill", "what":"login","search":"#emaill", "grave":"true"},
+      {"action":"fill", "what":"password","search":"#passwordl", "grave":"true"},
+      {"action":"trueClick", "search":"#send_login_f"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action": "waitfor", "search": "a[href*='logout']"},
+      {"action":"trueClick", "url":"a[href*='logout']"},
+      {"action": "waitload"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action": "waitfor", "search":"#dd-user-menu, a[href*='login']"},
+    {"search":"#dd-user-menu"}
+  ]
+}
