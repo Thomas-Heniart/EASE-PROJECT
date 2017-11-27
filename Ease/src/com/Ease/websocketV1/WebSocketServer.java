@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
+import com.Ease.Utils.HttpServletException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -44,6 +45,13 @@ public class WebSocketServer {
         HibernateQuery hibernateQuery = new HibernateQuery();
         hibernateQuery.get(User.class, user_id);
         User user = (User) hibernateQuery.getSingleResult();
+        try {
+            hibernateQuery.commit();
+        } catch (HttpServletException e) {
+            hibernateQuery.rollback();
+            e.printStackTrace();
+            return;
+        }
         if (user == null)
             return;
         WebSocketSession webSocketSession = new WebSocketSession(session);
