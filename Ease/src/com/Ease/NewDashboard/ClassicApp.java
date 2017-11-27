@@ -62,7 +62,7 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("empty", this.getAccount() == null);
+        res.put("empty", this.getAccount() == null || !this.getAccount().satisfyWebsite(this.getWebsite()));
         res.put("account_information", new JSONObject());
         if (this.getAccount() == null)
             return res;
