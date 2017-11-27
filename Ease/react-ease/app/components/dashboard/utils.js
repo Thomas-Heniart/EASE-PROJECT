@@ -41,7 +41,15 @@ export const DisabledAppIndicator = (props) => {
 
 export const NewAppLabel = (props) => {
   return (
-      <Label circular class="new_app_label">New</Label>
+      <Label circular class="app_corner_indicator">New</Label>
+  )
+};
+
+export const UpdatePasswordLabel = (props)=> {
+  return (
+      <Label circular class="app_corner_indicator">
+        <Icon name="unlock alternate"/>
+      </Label>
   )
 };
 

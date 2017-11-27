@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
-import {showTeamEnterpriseAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
+import {UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {showTeamEnterpriseAppSettingsModal, showLockedTeamAppModal, showUpdateAppPasswordModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
-import {teamUserDepartureDatePassed} from "../../utils/utils";
+import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
 import {connect} from "react-redux";
 
 @connect(store => ({
@@ -20,12 +20,16 @@ class TeamEnterpriseApp extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
+    const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
 
     return (
         <div class='app'>
           <div class="logo_area">
-            <NewAppLabel/>
-            {(meReceiver.disabled || teamUserDepartureDatePassed(meReceiver.departure_date)) &&
+            {app.new &&
+            <NewAppLabel/>}
+            {password_update &&
+            <UpdatePasswordLabel/>}
+            {(me.disabled || teamUserDepartureDatePassed(me.departure_date)) &&
               <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
             {meReceiver.empty &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}

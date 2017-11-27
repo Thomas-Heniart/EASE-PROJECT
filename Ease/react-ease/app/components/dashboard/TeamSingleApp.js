@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showTeamSingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
-import {teamUserDepartureDatePassed} from "../../utils/utils";
+import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
 import {connect} from "react-redux";
 
 @connect(store => ({
@@ -21,16 +21,19 @@ class TeamSingleApp extends Component {
     const filler = team.team_users[team_app.team_user_filler_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
-
+    const password_update = !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
     return (
         <div class='app'>
           <div class="logo_area">
-            <NewAppLabel/>
-            {(meReceiver.disabled || teamUserDepartureDatePassed(meReceiver.departure_date)) &&
+            {app.new &&
+            <NewAppLabel/>}
+            {password_update &&
+            <UpdatePasswordLabel/>}
+            {(me.disabled || teamUserDepartureDatePassed(me.departure_date)) &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
-            {team_app.empty && team_app.team_user_filler_id === meReceiver.id &&
+            {team_app.empty && team_app.team_user_filler_id === me.id &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}/>}
-            {team_app.empty && team_app.team_user_filler_id !== meReceiver.id &&
+            {team_app.empty && team_app.team_user_filler_id !== me.id &&
             <DisabledAppIndicator filler_name={filler.username}/>}
             <div class="logo_handler">
               <img class="logo" src={team_app.logo}/>

@@ -98,3 +98,13 @@ export function showChooseAppCredentialsModal({active, card_name, receivers, des
     }
   }
 }
+
+export function showUpdateAppPasswordModal({active, app}) {
+  return {
+    type: 'SHOW_UPDATE_APP_PASSWORD_PASSWORD',
+    payload: {
+      active: active,
+      app: app
+    }
+  }
+}

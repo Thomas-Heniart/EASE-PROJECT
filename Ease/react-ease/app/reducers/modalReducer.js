@@ -36,6 +36,10 @@ export const modals = createReducer({
   },
   chooseAppCredentials: {
     active: false
+  },
+  updateAppPassword: {
+    active: false,
+    app: null
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -96,6 +100,12 @@ export const modals = createReducer({
     return {
       ...state,
       teamEnterpriseAppSettings: action.payload
+    }
+  },
+  ['SHOW_UPDATE_APP_PASSWORD_PASSWORD'](state, action){
+    return {
+        ...state,
+      updateAppPassword: action.payload
     }
   }
 });
