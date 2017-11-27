@@ -114,13 +114,13 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnl
   )
 };
 
-const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
+const Receivers = ({receivers, onChange, onDelete, myId}) => {
   return (
       <div class="receivers">
         {receivers.map(item => {
-          if (extended || item.id === myId)
-            return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} extended={extended} receiver={item} onChange={onChange} onDelete={onDelete}/>
-          return <ReceiverCredentialsInput key={item.id} extended={extended} receiver={item} onChange={onChange} onDelete={onDelete}/>
+          // if (item.id === myId)
+            return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete}/>;
+          // return <ReceiverCredentialsInput key={item.id} receiver={item} onChange={onChange} onDelete={onDelete}/>
         })}
       </div>
   )
@@ -295,12 +295,12 @@ class EnterpriseTeamAppAdder extends Component {
                     <div class="credentials">
                       <div class="display-inline-flex align_items_center">
                         <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>
-                        <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>
-                        {this.props.plan_id === 0 &&
-                        <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
+                        {/*<ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>*/}
+                        {/*{this.props.plan_id === 0 &&*/}
+                        {/*<img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}*/}
                       </div>
                     </div>
-                    <Receivers extended={this.state.fill_in_switch} myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
+                    <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
                     <div>
                       <Dropdown
                           class="mini users-dropdown"
