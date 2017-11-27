@@ -12,17 +12,6 @@ DELETE t1
 FROM classicApps AS t1, classicApps AS t2
 WHERE t1.website_app_id = t2.website_app_id AND t1.id <> t2.id;
 
-DELETE FROM websiteApps
-WHERE type LIKE 'logWithApp' AND id IN (SELECT website_app_id
-                                        FROM classicApps);
-DELETE FROM logWithApps
-WHERE logWith_website_app_id IN (SELECT id
-                                 FROM websiteApps
-                                 WHERE type LIKE 'classicApp' AND id NOT IN (SELECT website_app_id
-                                                                             FROM classicApps));
-DELETE FROM websiteApps
-WHERE type LIKE 'classicApp' AND id NOT IN (SELECT website_app_id
-                                            FROM classicApps);
 DELETE FROM classicApps
 WHERE website_app_id IN (SELECT id
                          FROM websiteApps
@@ -31,31 +20,6 @@ WHERE website_app_id IN (SELECT id
 DELETE FROM websiteApps
 WHERE type LIKE 'websiteApp' AND id IN (SELECT website_app_id
                                         FROM classicApps);
-DELETE FROM websiteApps
-WHERE type LIKE 'logWithApp' AND id NOT IN (SELECT website_app_id
-                                            FROM logWithApps);
-DELETE FROM profileAndAppMap
-WHERE app_id IN (SELECT id
-                 FROM apps
-                 WHERE type LIKE 'websiteApp' AND id NOT IN (SELECT app_id
-                                                             FROM websiteApps));
-DELETE FROM sharedApps
-WHERE shareable_app_id IN (SELECT id
-                           FROM shareableApps
-                           WHERE id IN (SELECT id
-                                        FROM apps
-                                        WHERE type LIKE 'websiteApp' AND id NOT IN (SELECT app_id
-                                                                                    FROM websiteApps)));
-DELETE FROM sharedApps
-WHERE id IN (SELECT id
-             FROM apps
-             WHERE type LIKE 'websiteApp' AND id NOT IN (SELECT app_id
-                                                         FROM websiteApps));
-DELETE FROM shareableApps
-WHERE id IN (SELECT id
-             FROM apps
-             WHERE type LIKE 'websiteApp' AND id NOT IN (SELECT app_id
-                                                         FROM websiteApps));
 DELETE FROM apps
 WHERE type LIKE 'websiteApp' AND id NOT IN (SELECT app_id
                                             FROM websiteApps);
@@ -70,6 +34,7 @@ WHERE account_id IN (SELECT id
                      FROM accounts
                      WHERE id NOT IN (SELECT account_id
                                       FROM classicApps));
+
 DROP TABLE sharedKeys, tmpSharedApps;
 DELETE FROM accounts
 WHERE id NOT IN (SELECT account_id
@@ -97,8 +62,8 @@ UPDATE logWithApps t
   JOIN websiteApps t1 ON t.website_app_id = t1.id
 SET t.id = t1.app_id;
 UPDATE logWithApps t
-  JOIN websiteApps t1 ON t.logWith_website_app_id = t1.app_id
-SET t.logWith_website_app_id = t1.id;
+  JOIN websiteApps t1 ON t.logWith_website_app_id = t1.id
+SET t.logWith_website_app_id = t1.app_id;
 
 ALTER TABLE websiteApps
   DROP FOREIGN KEY websiteapps_ibfk_1;
@@ -121,7 +86,7 @@ ALTER TABLE classicApps
   ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
 ALTER TABLE logWithApps
   ADD FOREIGN KEY (id) REFERENCES websiteApps (id);
-ALTER TABLE ease.logWithApps
+ALTER TABLE logWithApps
   ADD FOREIGN KEY (logWith_website_app_id) REFERENCES websiteApps (id);
 ALTER TABLE websiteApps
   ADD PRIMARY KEY (id);
@@ -211,7 +176,9 @@ DELETE FROM profileInfo
 WHERE id NOT IN (SELECT profile_info_id
                  FROM profiles);
 
-INSERT INTO classicApps SELECT (id, NULL)
+INSERT INTO classicApps SELECT
+                          id,
+                          NULL
                         FROM websiteApps
                         WHERE type = 'websiteApp';
 
@@ -240,7 +207,6 @@ CREATE TABLE teamLinkCardReceivers (
 
 CREATE TABLE teamEnterpriseCardReceivers (
   id INT(10) UNSIGNED NOT NULL,
-
   PRIMARY KEY (id),
   FOREIGN KEY (id) REFERENCES teamCardReceivers (id)
 );
@@ -268,8 +234,8 @@ INSERT INTO teamCards SELECT
                         team_id,
                         channel_id,
                         name,
-                        CURRENT_TIMESTAMP,
-                        description
+                        description,
+                        NOW()
                       FROM shareableApps
                         JOIN apps ON shareableApps.id = apps.id
                         JOIN appsInformations ON apps.app_info_id = appsInformations.id;
@@ -282,6 +248,8 @@ INSERT INTO teamLinkCards SELECT
                             JOIN appsInformations ON apps.app_info_id = appsInformations.id
                             JOIN linkApps ON apps.id = linkApps.id
                             JOIN linkAppInformations ON linkApps.link_app_info_id = linkAppInformations.id;
+
+UPDATE websiteApps SET reminderIntervalValue = 0 WHERE reminderIntervalValue IS NULL;
 
 INSERT INTO teamWebsiteCards SELECT
                                apps.id,
@@ -316,7 +284,7 @@ INSERT INTO teamCardReceivers SELECT
                                 sharedApps.shareable_app_id,
                                 sharedApps.teamUser_tenant_id,
                                 apps.id,
-                                CURDATE()
+                                NOW()
                               FROM sharedApps
                                 JOIN apps ON sharedApps.id = apps.id;
 
@@ -340,8 +308,8 @@ INSERT INTO teamSingleCardReceivers SELECT
                                       JOIN apps ON sharedApps.id = apps.id
                                       JOIN websiteApps ON apps.id = websiteApps.id
                                       JOIN classicApps ON websiteApps.id = classicApps.id
-                                      JOIN teamEnterpriseCards
-                                        ON sharedApps.shareable_app_id = teamSingleCardReceivers.id;
+                                      JOIN teamSingleCards
+                                        ON sharedApps.shareable_app_id = teamSingleCards.id;
 
 DELETE FROM sharedApps;
 DELETE FROM classicApps
@@ -353,7 +321,7 @@ WHERE id IN (SELECT id
 DELETE FROM linkApps
 WHERE id IN (SELECT id
              FROM shareableApps);
-DELETE FROM shareableApps;
+DROP TABLE enterpriseAppAttributes, enterpriseAppRequests, pendingJoinAppRequests, sharedApps, shareableApps;
 DELETE FROM apps
 WHERE id NOT IN (SELECT id
                  FROM websiteApps) AND id NOT IN (SELECT id
@@ -429,8 +397,10 @@ ALTER TABLE teamUsers
 ALTER TABLE teamUserStatus
   ADD COLUMN profile_created TINYINT(1) NOT NULL DEFAULT 0;
 
-ALTER TABLE apps ADD COLUMN new TINYINT(1) NOT NULL DEFAULT 1;
-UPDATE apps SET new = 0;
+ALTER TABLE apps
+  ADD COLUMN new TINYINT(1) NOT NULL DEFAULT 1;
+UPDATE apps
+SET new = 0;
 
 INSERT INTO classicApps SELECT
                           id,
@@ -440,5 +410,7 @@ INSERT INTO classicApps SELECT
                                          FROM classicApps) AND id NOT IN (SELECT id
                                                                           FROM logWithApps);
 
-ALTER TABLE status ADD COLUMN new_feature_seen TINYINT(1) NOT NULL DEFAULT 1;
-UPDATE status SET new_feature_seen = 0;
+ALTER TABLE status
+  ADD COLUMN new_feature_seen TINYINT(1) NOT NULL DEFAULT 1;
+UPDATE status
+SET new_feature_seen = 0;
