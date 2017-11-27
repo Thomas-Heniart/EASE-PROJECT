@@ -261,7 +261,17 @@ module.exports = {
         username: username,
         departure_date: departure_date,
         role: role,
-        timestamp: new Date().getTime()
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    sendTeamUserInvitation: function(ws_id, team_id, team_user_id){
+      return axios.post('/api/v1/teams/SendTeamUserInvitation', {
+        team_id: team_id,
+        team_user_id: team_user_id,
+        ws_id: ws_id
       }).then(response => {
         return response.data;
       }).catch(err => {
