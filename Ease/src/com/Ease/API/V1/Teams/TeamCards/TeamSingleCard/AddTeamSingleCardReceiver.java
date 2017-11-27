@@ -7,6 +7,7 @@ import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -42,13 +43,16 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
                 teamSingleCard.getAccount().decipher(teamKey);
             Account account = AccountFactory.getInstance().createAccountFromAccount(teamSingleCard.getAccount(), teamKey);
             App app = AppFactory.getInstance().createClassicApp(teamSingleCard.getName(), teamSingleCard.getWebsite(), teamKey, account);
+            TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser_receiver, allowed_to_see_password);
             if (teamUser_receiver.isVerified()) {
                 Profile profile = teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery());
                 app.setProfile(profile);
                 app.setPosition(profile.getSize());
             }
-            TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser_receiver, allowed_to_see_password);
             sm.saveOrUpdate(teamCardReceiver);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (teamUser_receiver.isVerified() && !teamUser_receiver.equals(teamUser_connected))
+                NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {

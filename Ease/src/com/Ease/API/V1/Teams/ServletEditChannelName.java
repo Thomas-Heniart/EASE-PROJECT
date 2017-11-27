@@ -53,10 +53,7 @@ public class ServletEditChannelName extends HttpServlet {
                 for (TeamUser teamUser : channel.getTeamUsers()) {
                     if (teamUser == teamUser_connected || teamUser.getUser() == null)
                         continue;
-                    Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), "#" + old_name + " has been renamed to #" + channel.getName(), "/resources/notifications/room_renamed.png", channel);
-                    sm.saveOrUpdate(notification);
-                    WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());
-                    webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+                    NotificationFactory.getInstance().createEditRoomNameNotification(teamUser, channel, old_name, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()),  sm.getHibernateQuery());
                 }
             }
             sm.saveOrUpdate(channel);

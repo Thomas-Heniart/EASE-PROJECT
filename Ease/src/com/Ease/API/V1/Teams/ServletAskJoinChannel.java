@@ -37,10 +37,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             channel.addPendingTeamUser(teamUser);
             sm.saveOrUpdate(channel);
-            Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser.getUsername() + " would like to join #" + channel.getName(), "/resources/notifications/channel.png", channel);
-            sm.saveOrUpdate(notification);
-            WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());
-            webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+            NotificationFactory.getInstance().createAskJoinChannelNotification(teamUser, channel, sm.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id()), sm.getHibernateQuery());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             TeamUser room_manager = channel.getRoom_manager();
