@@ -50,9 +50,6 @@ public class TeamUser {
     @Column(name = "active")
     protected boolean active;
 
-    @Transient
-    private transient boolean active_subscription = false;
-
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
@@ -236,14 +233,6 @@ public class TeamUser {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
-    }
-
-    public boolean isActive_subscription() {
-        return active_subscription;
-    }
-
-    public void setActive_subscription(boolean active_subscription) {
-        this.active_subscription = active_subscription;
     }
 
     public boolean isDisabled() {
