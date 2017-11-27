@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Dashboard;
+package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Sso;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/dashboard/CreateSsoGroup")
+@WebServlet("/api/v1/catalog/CreateSsoGroup")
 public class ServletCreateSsoGroup extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);

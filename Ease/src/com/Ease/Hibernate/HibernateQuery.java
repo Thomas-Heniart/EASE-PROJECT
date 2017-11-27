@@ -51,7 +51,6 @@ public class HibernateQuery {
 
     public void commit() throws HttpServletException {
         try {
-            //this.session.flush();
             if (!this.transaction.isActive())
                 return;
             this.transaction.commit();
@@ -60,12 +59,7 @@ public class HibernateQuery {
             System.out.println("Hibernate transaction rollback");
             this.transaction.rollback();
             throw new HttpServletException(HttpStatus.InternError, e);
-        } /* finally {
-            if (this.session != null) {
-                System.out.println("Hibernate close session.");
-                this.session.close();
-            }
-        } */
+        }
     }
 
     public Object load(Class c, Serializable s) {
@@ -82,7 +76,11 @@ public class HibernateQuery {
 
     public Object getSingleResult() {
         try {
-            return this.query.getSingleResult();
+            List rs = this.query.list();
+            if (rs.isEmpty())
+                return null;
+            else
+                return this.query.list().get(0);
         } catch (NoResultException e) {
             return null;
         }

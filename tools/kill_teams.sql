@@ -1,49 +1,56 @@
-DELETE FROM enterpriseAppAttributes;
-DELETE FROM pendingJoinAppRequests;
-DELETE classicApps FROM classicApps
-  JOIN websiteApps ON classicApps.website_app_id = websiteApps.id
-  JOIN apps ON websiteApps.app_id = apps.id
-  JOIN sharedApps ON apps.id = sharedApps.id;
-DELETE websiteApps FROM websiteApps
-  JOIN apps ON websiteApps.app_id = apps.id
-  JOIN sharedApps ON apps.id = sharedApps.id;
-DELETE linkApps FROM linkApps
-  JOIN apps ON linkApps.app_id = apps.id
-  JOIN sharedApps ON apps.id = sharedApps.id;
-DELETE classicApps FROM classicApps
-  JOIN websiteApps ON classicApps.website_app_id = websiteApps.id
-  JOIN apps ON websiteApps.app_id = apps.id
-  JOIN shareableApps ON apps.id = shareableApps.id;
-DELETE websiteApps FROM websiteApps
-  JOIN apps ON websiteApps.app_id = apps.id
-  JOIN shareableApps ON apps.id = shareableApps.id;
-DELETE linkApps FROM linkApps
-  JOIN apps ON linkApps.app_id = apps.id
-  JOIN shareableApps ON apps.id = shareableApps.id;
-DELETE FROM sharedApps;
-DELETE FROM shareableApps;
-DELETE FROM profileAndAppMap
-WHERE app_id IN (SELECT id
-                 FROM apps
-                 WHERE type LIKE 'websiteApp' AND id NOT IN (SELECT app_id
-                                                             FROM websiteApps));
-DELETE FROM profileAndAppMap
-WHERE app_id IN (SELECT id
-                 FROM apps
-                 WHERE type LIKE 'linkApp' AND id NOT IN (SELECT app_id
-                                                          FROM websiteApps));
+USE ease;
+DELETE FROM logWithApps
+WHERE logWithWebsite_id IN (SELECT app_id
+                            FROM teamCardReceivers);
+DELETE FROM classicApps
+WHERE id IN (SELECT app_id
+             FROM teamCardReceivers);
+DELETE FROM linkApps
+WHERE id IN (SELECT app_id
+             FROM teamCardReceivers);
+DELETE FROM teamSingleCardReceivers;
+DELETE FROM teamEnterpriseCardReceivers;
+DELETE FROM teamLinkCardReceivers;
+DELETE FROM teamCardReceivers;
+DELETE FROM websiteApps
+WHERE id NOT IN (SELECT id
+                 FROM classicApps) AND id NOT IN (SELECT id
+                                                  FROM logWithApps) AND id NOT IN (SELECT logWith_website_app_id
+                                                                                   FROM logWithApps);
 DELETE FROM apps
-WHERE type LIKE 'linkApp' AND id NOT IN (SELECT app_id
-                                         FROM linkApps);
-DELETE FROM apps
-WHERE type LIKE 'websiteApp' AND id NOT IN (SELECT app_id
-                                            FROM ease.websiteApps);
+WHERE id NOT IN (SELECT id
+                 FROM websiteApps) AND id NOT IN (SELECT id
+                                                  FROM linkApps);
+DELETE FROM accountsInformations
+WHERE account_id NOT IN (SELECT id
+                         FROM accounts
+                         WHERE id NOT IN (SELECT account_id
+                                          FROM classicApps) AND id NOT IN (SELECT account_id
+                                                                           FROM teamSingleCards) AND
+                               id NOT IN (SELECT account_id
+                                          FROM joinTeamEnterpriseCardRequests));
+DELETE FROM accounts
+WHERE id NOT IN (SELECT account_id
+                 FROM classicApps) AND id NOT IN (SELECT account_id
+                                                  FROM teamSingleCards) AND id NOT IN (SELECT account_id
+                                                                                       FROM
+                                                                                         joinTeamEnterpriseCardRequests);
+DELETE FROM appsInformations
+WHERE id NOT IN (SELECT app_info_id
+                 FROM apps);
+DELETE FROM linkAppInformations
+WHERE id NOT IN (SELECT link_app_info_id
+                 FROM linkApps);
 DELETE FROM pendingJoinChannelRequests;
-DELETE FROM pendingJoinTeamRequests;
+DELETE FROM joinTeamEnterpriseCardRequests;
+DELETE FROM joinTeamEnterpriseCardRequests;
+DELETE FROM joinTeamCardRequests;
+DELETE FROM teamSingleCards;
+DELETE FROM teamEnterpriseCards;
+DELETE FROM teamLinkCards;
+DELETE FROM teamWebsiteCards;
+DELETE FROM teamCards;
 DELETE FROM pendingTeamCreations;
-DELETE FROM pendingteamuserverifications;
-DELETE FROM pendingTeamInvitations;
-DELETE FROM userAndEmailInvitationsMap;
 DELETE FROM notifications;
 DELETE FROM channelAndTeamUserMap;
 DELETE FROM teamAndWebsiteMap;

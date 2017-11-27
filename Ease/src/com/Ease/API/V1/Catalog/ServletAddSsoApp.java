@@ -47,8 +47,8 @@ public class ServletAddSsoApp extends HttpServlet {
             SsoApp ssoApp = new SsoApp(new AppInformation(name), website, ssoGroup);
             ssoApp.setProfile(profile);
             ssoApp.setPosition(profile.getSize());
-            profile.addApp(ssoApp);
             sm.saveOrUpdate(ssoApp);
+            profile.addApp(ssoApp);
             ssoGroup.addSsoApp(ssoApp);
             sm.setSuccess(ssoApp.getJson());
         } catch (Exception e) {
