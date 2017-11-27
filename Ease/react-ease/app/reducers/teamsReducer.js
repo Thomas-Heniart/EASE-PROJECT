@@ -181,6 +181,46 @@ export const teams = createReducer({
     });
     return new_state;
   },
+  ['TEAM_USER_INVITATION'](state, action){
+    const {team_user, team_id} = action.payload;
+
+    let new_state = update(state, {
+      [team_id]: {
+        team_users: {
+          [team_user.id]: {$set: team_user}
+        }
+      }
+    });
+    Object.keys(new_state[team_id].rooms).map(id => {
+      const room = new_state[team_id].rooms[id];
+      if (room.default){
+        new_state[team_id].rooms[id] = update(room, {
+          team_user_ids: {$push: [team_user.id]}
+        });
+      }
+    });
+    return new_state;
+  },
+  ['TEAM_USER_CREATED_AND_INVITATION_SENT'](state, action){
+    const {team_user, team_id} = action.payload;
+
+    let new_state = update(state, {
+      [team_id]: {
+        team_users: {
+          [team_user.id]: {$set: team_user}
+        }
+      }
+    });
+    Object.keys(new_state[team_id].rooms).map(id => {
+      const room = new_state[team_id].rooms[id];
+      if (room.default){
+        new_state[team_id].rooms[id] = update(room, {
+          team_user_ids: {$push: [team_user.id]}
+        });
+      }
+    });
+    return new_state;
+  },
   ['TEAM_USER_REMOVED'](state, action){
     const {team_id, team_user_id} = action.payload;
     const team_user = state[team_id].team_users[team_user_id];

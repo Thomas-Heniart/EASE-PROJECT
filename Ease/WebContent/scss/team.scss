@@ -2185,6 +2185,28 @@ button.action_text_button {
       ::-webkit-scrollbar-thumb:window-inactive {
         background: #d9d9de;
       }
+      #invitation {
+        padding: .3rem 1.3rem 0 .6rem;
+        .segment {
+          padding: 12px;
+          &.resend {
+            background-color: #ff9a00;
+          }
+          &.send {
+            background-color: #eb555c;
+          }
+          span {
+            text-decoration: underline;
+            cursor: pointer;
+            &.right {
+              float: right;
+            }
+            .icon {
+              text-decoration: none;
+            }
+          }
+        }
+      }
       #client_header {
         @include flex-basis(60px);
         border-bottom:1px solid #E6E6E6;
