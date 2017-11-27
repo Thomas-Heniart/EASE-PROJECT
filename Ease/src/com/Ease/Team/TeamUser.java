@@ -4,10 +4,12 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.User.NotificationFactory;
 import com.Ease.User.User;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
+import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -399,7 +401,7 @@ public class TeamUser {
         }
     }
 
-    public void lastRegistrationStep(String keyUser, String teamKey, HibernateQuery hibernateQuery) throws HttpServletException {
+    public void lastRegistrationStep(String keyUser, String teamKey, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
         this.setTeamKey(AES.encrypt(teamKey, keyUser));
         this.setState(2);
         hibernateQuery.saveOrUpdateObject(this);
@@ -412,6 +414,7 @@ public class TeamUser {
             hibernateQuery.saveOrUpdateObject(app);
             profile.addApp(app);
         });
+        NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
     }
 
     public String getDecipheredTeamKey(String userKey) throws HttpServletException {
