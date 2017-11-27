@@ -368,7 +368,7 @@ export const team_apps = createReducer({
       const idx = app.receivers.indexOf(_receiver);
       return update(state, {
         [app_id]: {
-          receivers: {$splice: [[idx, 1], [idx, 0, _receiver]]}
+          receivers: {$splice: [[idx, 1], [idx, 0, receiver]]}
         }
       })
     }
@@ -395,16 +395,6 @@ export const team_apps = createReducer({
     return update(state, {$unset: [app.id]});
   }
 });
-
-const default_payment = {
-  data: {
-    card: null,
-    credit: 0,
-    people_invited: false,
-    business_vat_id: ""
-  },
-  loading: true
-};
 
 export const team_payments = createReducer({
   data: {

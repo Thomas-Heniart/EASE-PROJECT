@@ -103,15 +103,17 @@ export function teamJoinEnterpriseApp({team_id, app_id, account_information}){
   }
 }
 
-export function teamEditEnterpriseAppReceiver({team_id, app_id, shared_app_id, account_information}){
+
+export function teamEditEnterpriseCardReceiver({team_id, team_card_id, team_card_receiver_id, account_information}){
   return (dispatch, getState) => {
-    return post_api.teamApps.editEnterpriseAppReceiver({
+    return post_api.teamApps.editEnterpriseCardReceiver({
       team_id: team_id,
-      shared_app_id: shared_app_id,
+      team_card_id: team_card_id,
+      team_card_receiver_id: team_card_receiver_id,
       account_information: account_information,
       ws_id: getState().common.ws_id
     }).then(receiver => {
-      dispatch({type: 'TEAM_APP_RECEIVER_CHANGED', payload: {app_id: app_id, receiver: receiver}});
+      dispatch({type: 'TEAM_APP_RECEIVER_CHANGED', payload: {app_id: team_card_id, receiver: receiver}});
       return receiver;
     }).catch(err => {
       throw err;

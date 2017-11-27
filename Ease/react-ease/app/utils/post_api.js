@@ -537,20 +537,16 @@ module.exports = {
         throw err.response.data;
       });
     },
-    editEnterpriseAppReceiver: ({team_id, shared_app_id, account_information, ws_id}) => {
-      Object.keys(account_information).map(item => {
+    editEnterpriseCardReceiver: ({team_id, team_card_id, team_card_receiver_id, account_information, ws_id}) => {
+/*      Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
-      });
-      return axios.post('/api/v1/teams/EditEnterpriseAppReceiver', {
+      });*/
+      return basic_post('/api/v1/teams/EditTeamEnterpriseCardReceiver',{
         team_id: team_id,
-        shared_app_id: shared_app_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: team_card_receiver_id,
         account_information: account_information,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
+        ws_id: ws_id
       });
     },
     createLinkAppNew: ({team_id, channel_id, name, description, url, img_url, ws_id, receivers}) => {

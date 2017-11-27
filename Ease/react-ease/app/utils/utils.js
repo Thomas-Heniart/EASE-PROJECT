@@ -4,7 +4,7 @@ export const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*
 export const urlRegexp = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 export const usernameRegexp = /^[a-z0-9_\-]{3,21}$/;
 export const roomNameRegexp = /^[a-z0-9_\-]{1,21}$/;
-
+export const monthInMs = 2629746000;
 export const userNameRuleString = 'Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.';
 
 export function isUrl(url){
@@ -14,6 +14,10 @@ export function isUrl(url){
 export function reflect(promise){
   return promise.then(function(v){ return {data:v, error: false }},
       function(e){ return {data:e, error: true }});
+}
+
+export function needPasswordUpdate(last_update, interval){
+  return last_update + monthInMs * interval < new Date().getTime();
 }
 
 export function teamUserDepartureDatePassed(departure_date){

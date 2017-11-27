@@ -29,12 +29,13 @@ import ClassicAppSettingsModal from "../modals/ClassicAppSettingsModal";
 import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
 import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
 import TeamSingleAppSettingsModal from "../modals/TeamSingleAppSettingsModal";
-import TeamEnterpriseAppSettingsModa from "../modals/TeamEnterpriseAppSettingsModal";
+import TeamEnterpriseAppSettingsModal from "../modals/TeamEnterpriseAppSettingsModal";
 import TeamLinkAppSettingsModal from "../modals/TeamLinkAppSettingsModal";
 import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
 import LockedTeamAppModal from "../modals/LockedTeamAppModal";
 import LogWithAppSettings from "../modals/LogWithAppSettings";
 import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
+import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -144,6 +145,8 @@ class ModalsContainer extends Component{
           <TeamEnterpriseAppSettingsModal/>}
           {this.props.modals.teamLinkAppSettings.active &&
           <TeamLinkAppSettingsModal/>}
+          {this.props.modals.updateAppPassword.active &&
+          <UpdateAppPasswordModal/>}
         </div>
     )
   }
