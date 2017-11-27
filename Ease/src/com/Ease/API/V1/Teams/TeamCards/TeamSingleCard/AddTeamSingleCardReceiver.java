@@ -48,9 +48,11 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
                 Profile profile = teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery());
                 app.setProfile(profile);
                 app.setPosition(profile.getSize());
-                NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver.getUser(), sm.getTeamUser(team), teamCardReceiver, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
             }
             sm.saveOrUpdate(teamCardReceiver);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (teamUser_receiver.isVerified() && !teamUser_receiver.equals(teamUser_connected))
+                NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {

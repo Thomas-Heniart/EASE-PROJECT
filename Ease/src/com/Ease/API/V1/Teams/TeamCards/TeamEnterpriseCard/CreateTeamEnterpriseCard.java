@@ -10,6 +10,7 @@ import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -73,6 +74,8 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                     app.setPosition(profile.getSize());
                 }
                 sm.saveOrUpdate(teamCardReceiver);
+                if (teamUser.isVerified() && !teamUser.equals(teamUser_connected))
+                    NotificationFactory.getInstance().createAppSentNotification(teamUser.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
             }
 
