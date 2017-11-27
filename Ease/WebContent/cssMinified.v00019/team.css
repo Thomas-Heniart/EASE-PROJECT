@@ -272,6 +272,12 @@ button.only-text-button {
     max-width: 250px;
     text-overflow: ellipsis; }
 
+#invitationButton .button {
+  width: 100%;
+  font-weight: 400; }
+  #invitationButton .button.basic:hover {
+    color: #179B69 !important; }
+
 #popup_team_single_card .segment {
   padding: 15px 30px 0 30px !important;
   max-height: 200px;

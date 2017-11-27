@@ -52,9 +52,8 @@ class PreviewStep extends React.Component {
             &nbsp;or&nbsp;
             <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.changeStep}>add a list of users</button>
           </Form.Field>
-          <Form.Group class="overflow-hidden">
+          <Form.Group id='invitationButton' class="overflow-hidden">
             <Form.Button
-              style={{width: "100%"}}
               basic color='green'
               positive
               floated='right'
@@ -64,13 +63,13 @@ class PreviewStep extends React.Component {
               Send invitation <u><strong>later</strong></u>
             </Form.Button>
             <Form.Button
-              style={{width: "100%", fontWeight: "400"}}
               color='green'
               floated='right'
               type="button"
               onClick={this.props.sendInvitationsNow}
               width={8}>
-              Send invitation <u><strong>now</strong></u></Form.Button>
+              Send invitation <u><strong>now</strong></u>
+            </Form.Button>
           </Form.Group>
           {/*<Form.Group style={{marginBottom: 0}}>
             <Form.Button width={8} fluid onClick={this.props.onStepValidated}>
@@ -112,9 +111,8 @@ class EmailListStep extends React.Component {
           <Form.Field>
             <TextArea rows={7} name="value" onChange={this.handleInput} placeholder="Write emails here..."/>
           </Form.Field>
-          <Form.Group class="overflow-hidden">
+          <Form.Group id='invitationButton' class="overflow-hidden">
             <Form.Button
-              style={{width: "100%"}}
               basic color='green'
               positive
               floated='right'
@@ -124,7 +122,6 @@ class EmailListStep extends React.Component {
               Send invitation <u><strong>later</strong></u>
             </Form.Button>
             <Form.Button
-              style={{width: "100%", fontWeight: "400"}}
               color='green'
               floated='right'
               type="button"
