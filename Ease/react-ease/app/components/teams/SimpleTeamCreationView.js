@@ -454,6 +454,7 @@ class SimpleTeamCreationView extends React.Component {
                       key="6"/>);
     steps.push(<InvitePeopleStep
         key="7"
+        dispatch={this.props.dispatch}
         ws_id={this.props.ws_id}
         team_id={this.state.teamId}
         onStepValidated={this.submitStep8}/>);
