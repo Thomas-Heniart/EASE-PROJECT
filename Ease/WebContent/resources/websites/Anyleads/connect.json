@@ -13,7 +13,7 @@
   "logout": {
     "todo": [
       {"action": "waitfor", "search": "a[href*='logout']"},
-      {"action":"trueClick", "url":"a[href*='logout']"},
+      {"action":"trueClick", "search":"a[href*='logout']"},
       {"action": "waitload"}
     ]
   },

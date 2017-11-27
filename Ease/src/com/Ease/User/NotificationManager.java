@@ -11,10 +11,11 @@ public class NotificationManager {
     }
 
     public void readAllNotifications(User user, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("UPDATE n FROM Notification n SET n.newNotification = :bool WHERE n.user = :user AND n.newNotification = :bool1");
+        hibernateQuery.queryString("UPDATE Notification n SET n.newNotification = :bool WHERE n.user = :user AND n.newNotification = :bool1");
         hibernateQuery.setParameter("bool", false);
         hibernateQuery.setParameter("bool1", true);
         hibernateQuery.setParameter("user", user);
+        hibernateQuery.executeUpdate();
     }
 
     private List<Notification> getNotifications(int limit, User user, HibernateQuery hibernateQuery) {

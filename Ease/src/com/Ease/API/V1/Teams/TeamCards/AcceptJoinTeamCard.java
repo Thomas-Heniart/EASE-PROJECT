@@ -7,6 +7,8 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -31,10 +33,15 @@ public class AcceptJoinTeamCard extends HttpServlet {
             JoinTeamCardRequest joinTeamCardRequest = teamCard.getJoinTeamCardRequest(request_id);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamCardReceiver teamCardReceiver = joinTeamCardRequest.accept((String) sm.getTeamProperties(team_id).get("teamKey"), hibernateQuery);
-            Profile profile = teamCardReceiver.getTeamUser().getOrCreateProfile(hibernateQuery);
-            App app = teamCardReceiver.getApp();
-            app.setProfile(profile);
-            app.setPosition(profile.getSize());
+            TeamUser teamUser_receiver = teamCardReceiver.getTeamUser();
+            if (teamUser_receiver.isVerified()) {
+                Profile profile = teamUser_receiver.getOrCreateProfile(hibernateQuery);
+                App app = teamCardReceiver.getApp();
+                app.setProfile(profile);
+                app.setPosition(profile.getSize());
+                sm.saveOrUpdate(app);
+                NotificationFactory.getInstance().createAcceptJoinRequestNotification(teamUser_receiver, sm.getTeamUser(team), teamCard, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), hibernateQuery);
+            }
             sm.setSuccess(teamCardReceiver.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -69,7 +69,7 @@ public class ServletRegistration extends HttpServlet {
             }
             User newUser = UserFactory.getInstance().createUser(email, username, password);
             sm.saveOrUpdate(newUser);
-            UserEmail userEmail = new UserEmail(email, true);
+            UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);
             newUser.addUserEmail(userEmail);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");

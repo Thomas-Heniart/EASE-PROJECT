@@ -8,6 +8,7 @@ import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamLinkCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -40,6 +41,9 @@ public class AddTeamLinkCardReceiver extends HttpServlet {
             else
                 app = AppFactory.getInstance().createLinkApp(teamLinkCard.getName(), teamLinkCard.getUrl(), teamLinkCard.getImg_url());
             TeamCardReceiver teamCardReceiver = new TeamLinkCardReceiver(app, teamLinkCard, teamUser);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (teamUser.isVerified() && !teamUser_connected.equals(teamUser))
+                NotificationFactory.getInstance().createAppSentNotification(teamUser.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
             sm.saveOrUpdate(teamCardReceiver);
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {

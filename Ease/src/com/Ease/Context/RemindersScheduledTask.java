@@ -3,11 +3,8 @@ package com.Ease.Context;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.ReminderEmailManager;
 import com.Ease.Team.TeamManager;
-import com.Ease.Utils.DataBase;
-import com.Ease.Utils.DataBaseConnection;
 
 import javax.servlet.ServletContext;
-import java.sql.SQLException;
 import java.util.TimerTask;
 
 /**
@@ -32,15 +29,9 @@ public class RemindersScheduledTask extends TimerTask {
             teamManager.teamUserNotRegisteredReminder(hibernateQuery);
             //reminderEmailManager.lunchReminders();
             teamManager.passwordReminder(hibernateQuery, servletContext);
-            DataBaseConnection db;
-            try {
-                db = new DataBaseConnection(DataBase.getConnection());
-                teamManager.checkDepartureDates(db);
-                teamManager.checkFreeTrialEnd(db);
-                db.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            teamManager.checkDepartureDates(hibernateQuery, servletContext);
+            teamManager.checkFreeTrialEnd(hibernateQuery);
+            teamManager.passwordLostReminder(hibernateQuery, servletContext);
             hibernateQuery.commit();
         } catch (Exception e) {
             hibernateQuery.rollback();

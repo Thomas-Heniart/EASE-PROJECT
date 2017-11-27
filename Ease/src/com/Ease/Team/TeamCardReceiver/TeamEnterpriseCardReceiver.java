@@ -4,6 +4,7 @@ import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.OnDelete;
@@ -40,6 +41,7 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         JSONObject res = super.getCardJson();
         Account account = ((ClassicApp)this.getApp()).getAccount();
         res.put("account_information", new JSONObject());
+        res.put("empty", account == null || !account.satisfyWebsite(((TeamWebsiteCard)this.getTeamCard()).getWebsite()));
         if (account == null)
             return res;
         res.put("account_information", account.getJsonWithoutPassword());

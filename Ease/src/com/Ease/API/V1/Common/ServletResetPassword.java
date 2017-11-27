@@ -10,15 +10,16 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.*;
+import com.Ease.User.NotificationFactory;
+import com.Ease.User.PasswordLost;
+import com.Ease.User.User;
+import com.Ease.User.UserKeys;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketManager;
-import com.Ease.websocketV1.WebSocketMessageFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -111,10 +112,7 @@ public class ServletResetPassword extends HttpServlet {
                     mailJetBuilder.addVariable("team_name", team.getName());
                     mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
                     mailJetBuilder.sendEmail();
-                    Notification notification = NotificationFactory.getInstance().createNotification(admin.getUser(), teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "/resources/notifications/user_role_changed.png", teamUser, true);
-                    sm.saveOrUpdate(notification);
-                    WebSocketManager webSocketManager = sm.getUserWebSocketManager(admin.getUser().getDb_id());
-                    webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+                    NotificationFactory.getInstance().createPasswordLostNotification(admin.getUser(), teamUser, team, sm.getUserWebSocketManager(admin.getUser().getDb_id()), hibernateQuery);
                 }
             }
             user.getProfileSet().stream().flatMap(Profile::getApps).forEach(app -> {

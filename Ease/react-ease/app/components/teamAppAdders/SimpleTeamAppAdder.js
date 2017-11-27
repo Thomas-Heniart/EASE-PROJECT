@@ -244,6 +244,7 @@ class SimpleTeamAppAdder extends Component {
   };
   render(){
     const app = this.state.app;
+    const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.teams[this.props.card.team_id].rooms[this.props.card.channel_id].room_manager_id];
     // const credentialsInputs = this.state.credentials.map(item => {
     //   return <TeamAppCredentialInput key={item.priority} onChange={this.handleCredentialInput} item={item}/>
     // });
@@ -279,9 +280,9 @@ class SimpleTeamAppAdder extends Component {
                   <div class="main_column">
                     <div class="credentials">
                       <div class="display-inline-flex">
-                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>
-                        {this.state.password_change_interval !== 0 &&
-                        <PasswordChangeManagerLabel username={this.state.room_manager_name}/>}
+                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
+                        {/*{this.state.password_change_interval !== 0 &&*/}
+                        {/*<PasswordChangeManagerLabel username={this.state.room_manager_name}/>}*/}
                       </div>
                     </div>
                     <div>

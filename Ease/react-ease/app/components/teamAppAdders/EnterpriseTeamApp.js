@@ -115,19 +115,29 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
              }
              content={
                <div>
-                 {!accepted && <span>App acceptation pending...</span>}
-                 {accepted &&
-                 <span>Mobile access: on</span>}
-                 {accepted &&
-                 <br/>}
-                 {accepted &&
-                 <span>Password copy: on</span>}
-                 {accepted &&
-                 <br/>}
-                 {accepted && up_to_date &&
+                 <span>Mobile access: on</span>
+                 <br/>
+                 <span>Password copy: on</span>
+                 <br/>
+                 {up_to_date &&
                  <span>Password is up to date</span>}
-                 {accepted && !up_to_date &&
+                 {!up_to_date &&
                  <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
+
+
+                 {/*{!accepted && <span>App acceptation pending...</span>}*/}
+                 {/*{accepted &&*/}
+                 {/*<span>Mobile access: on</span>}*/}
+                 {/*{accepted &&*/}
+                 {/*<br/>}*/}
+                 {/*{accepted &&*/}
+                 {/*<span>Password copy: on</span>}*/}
+                 {/*{accepted &&*/}
+                 {/*<br/>}*/}
+                 {/*{accepted && up_to_date &&*/}
+                 {/*<span>Password is up to date</span>}*/}
+                 {/*{accepted && !up_to_date &&*/}
+                 {/*<span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}*/}
                </div>}/>
   )
 };
@@ -135,7 +145,7 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
 const SimpleCredentialsInput = ({receiver, me, team_id}) => {
   return (
       <div class="receiver align_items_center">
-        <EnterpriseAppReceiverLabel username={receiver.username} up_to_date={!receiver.password_must_be_updated} accepted={receiver.accepted}/>
+        <EnterpriseAppReceiverLabel username={receiver.username} up_to_date={!receiver.password_must_be_updated} accepted={receiver.credentials[0].value ? true : false}/>
         {receiver.credentials.map(item => {
           return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true}
                                                  receiver_id={receiver.id} key={item.priority} onChange={null}
@@ -414,6 +424,7 @@ class EnterpriseTeamApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.website;
     const users = this.getUsers();
+    const room_manager = selectItemFromListById(users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
                    onSubmit={this.modify}>
@@ -446,10 +457,10 @@ class EnterpriseTeamApp extends Component {
                 <div class="credentials">
                   <div class="display-inline-flex align_items_center">
                     {!this.state.edit ?
-                        <PasswordChangeHolder value={app.password_reminder_interval}/> :
-                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput}/>}
-                    {this.state.edit &&
-                    <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}
+                        <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username}/> :
+                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
+                    {/*{this.state.edit &&*/}
+                    {/* <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}*/}
                     {this.state.edit && this.props.plan_id === 0 &&
                     <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
                   </div>
@@ -468,7 +479,6 @@ class EnterpriseTeamApp extends Component {
                 <Receivers receivers={users}
                            onChange={this.handleReceiverInput}
                            onDelete={this.deleteReceiver}
-                           extended={this.state.fill_in_switch}
                            myId={me.id}/>}
                 {this.state.edit &&
                 <Dropdown

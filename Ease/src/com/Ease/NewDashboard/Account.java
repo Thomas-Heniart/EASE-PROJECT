@@ -1,5 +1,6 @@
 package com.Ease.NewDashboard;
 
+import com.Ease.Catalog.Website;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DateComparator;
@@ -263,5 +264,9 @@ public class Account {
 
     public boolean mustUpdatePassword() {
         return this.getReminder_interval() != 0 && new Date().getTime() <= this.getLast_update().getTime() + this.getReminder_interval() * DateComparator.millisecondsInMonth;
+    }
+
+    public boolean satisfyWebsite(Website website) {
+        return this.getAccountInformationSet().size() == website.getWebsiteInformationList().size();
     }
 }

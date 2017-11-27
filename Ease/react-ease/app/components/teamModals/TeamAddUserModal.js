@@ -94,7 +94,47 @@ class TeamAddUserModal extends React.Component {
       email: this.state.email,
       username: this.state.username,
       departure_date: departureDate,
-      role:this.state.role
+      role: this.state.role
+    })).then(response => {
+      const user = response;
+      const calls = this.state.value.filter(id => {
+        return !team.rooms[id].default;
+      }).map(id => {
+        return this.props.dispatch(addTeamUserToChannel({
+          team_id: team.id,
+          channel_id: id,
+          team_user_id: user.id
+        }));
+      });
+      Promise.all(calls.map(reflect)).then(values => {
+        this.props.dispatch(showAddTeamUserModal({active: false}));
+      });
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
+  };
+  sendNow = (e) => {
+    e.preventDefault();
+    const team = this.props.team;
+
+    const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : null;
+    if (Object.keys(team.team_users).length > 29 && team.plan_id === 0){
+      this.props.dispatch(showUpgradeTeamPlanModal({
+        active: true,
+        feature_id: 4,
+        team_id: team.id
+      }));
+      return;
+    }
+    this.setState({errorMessage: '', loading: true});
+    this.props.dispatch(userActions.createTeamUserNow({
+      team_id: team.id,
+      first_name: this.state.fname,
+      last_name: this.state.lname,
+      email: this.state.email,
+      username: this.state.username,
+      departure_date: departureDate,
+      role: this.state.role
     })).then(response => {
       const user = response;
       const calls = this.state.value.filter(id => {
@@ -130,7 +170,7 @@ class TeamAddUserModal extends React.Component {
         <WhiteModalTemplate onClose={e => {this.props.dispatch(showAddTeamUserModal(false))}}>
           <Container>
             <Header as="h1">
-              Invite a team member
+              Create a team member
             </Header>
             <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0} id="add_user_modal">
               <Form.Group>
@@ -138,29 +178,33 @@ class TeamAddUserModal extends React.Component {
                             onChange={this.handleInput}
                             placeholder="name@company.com"
                             required
-                            width={6}/>
-                <Form.Input label="First name" type="text" name="fname"
+                            width={8}/>
+                <Form.Input label="Username" type="text" name="username"
+                            onChange={this.usernameInput}
+                            required
+                            placeholder="username" width={8}/>
+                {/*<Form.Input label="First name" type="text" name="fname"
                             onChange={this.handleInput}
                             placeholder="Optional"
                             width={5}/>
                 <Form.Input label="Last name" type="text" name="lname"
                             onChange={this.handleInput}
-                            placeholder="Optional" width={5}/>
+                            placeholder="Optional" width={5}/>*/}
               </Form.Group>
               <Form.Group>
-                <Form.Input label="Username" type="text" name="username"
+                {/*<Form.Input label="Username" type="text" name="username"
                             onChange={this.usernameInput}
                             required
-                            placeholder="Username" width={6}/>
+                            placeholder="Username" width={6}/>*/}
                 <Form.Select
                     style={{minWidth: '0px'}}
                     name="role"
                     value={this.state.role}
                     onChange={this.userRoleInput}
                     label="User role"
-                    width={4}
+                    width={8}
                     options={dropdownOptions}/>
-                <Form.Field>
+                <Form.Field width={8}>
                   <label>
                     Departure date&nbsp;
                     {team.plan_id === 0 &&
@@ -170,7 +214,7 @@ class TeamAddUserModal extends React.Component {
                          onFocus={team.plan_id === 0 ? e => {this.props.dispatch(showUpgradeTeamPlanModal({active: true, feature_id: 5, team_id: this.props.team_id}))} : null}
                          onChange={this.handleInput}
                          name="departure_date"
-                         placeholder="Optional" width={6}/>
+                         placeholder="Optional" width={8}/>
                 </Form.Field>
               </Form.Group>
               <Form.Dropdown
@@ -185,16 +229,25 @@ class TeamAddUserModal extends React.Component {
                   placeholder="Choose room(s)"
                   label="Room(s)"/>
               <Message error content={this.state.errorMessage}/>
-              <Form.Field class="overflow-hidden">
-                <Button
+              <Form.Group id='invitationButton' class="overflow-hidden">
+                <Form.Button
+                    basic color='green'
                     positive
                     floated='right'
                     loading={this.state.loading}
-                    type="submit">
-                  Next
-                </Button>
-                <Button floated='right' type="button" onClick={e => {this.props.dispatch(showAddTeamUserModal(false))}}>Cancel</Button>
-              </Form.Field>
+                    type="submit"
+                    width={8}>
+                  Send invitation <u><strong>later</strong></u>
+                </Form.Button>
+                <Form.Button
+                    color='green'
+                    floated='right'
+                    type="button"
+                    onClick={this.sendNow}
+                    width={8}>
+                  Send invitation <u><strong>now</strong></u>
+                </Form.Button>
+              </Form.Group>
               <Divider horizontal>Or</Divider>
               <Form.Group class="justify_content_center">
                 <Form.Button primary type="button" onClick={this.switchToMultipleUsers}>

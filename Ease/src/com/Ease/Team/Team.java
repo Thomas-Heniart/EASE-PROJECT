@@ -5,18 +5,15 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -85,9 +82,6 @@ public class Team {
 
     @Transient
     private Subscription subscription;
-
-    @Transient
-    private int activeSubscriptions;
 
     @Transient
     private Channel default_channel;
@@ -368,7 +362,7 @@ public class Team {
     public void updateSubscription(Map<String, Object> teamProperties) {
         if (this.subscription_id == null || this.subscription_id.equals(""))
             return;
-        activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
+        int activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
         System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
             Subscription subscription = (Subscription) teamProperties.get("subscription");
@@ -429,15 +423,7 @@ public class Team {
                 customer.update(customerParams);
                 customer.setAccountBalance(Long.valueOf(team_account_balance));
                 return team_account_balance;
-            } catch (AuthenticationException e) {
-                e.printStackTrace();
-            } catch (InvalidRequestException e) {
-                e.printStackTrace();
-            } catch (APIConnectionException e) {
-                e.printStackTrace();
-            } catch (CardException e) {
-                e.printStackTrace();
-            } catch (APIException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -458,7 +444,7 @@ public class Team {
         return null;
     }
 
-    public void checkFreeTrialEnd(DataBaseConnection db) {
+    public void checkFreeTrialEnd() {
         MailJetBuilder mailJetBuilder;
         if (this.card_entered)
             return;
@@ -485,53 +471,6 @@ public class Team {
                 mailJetBuilder.addTo(this.getTeamUserOwner().getEmail());
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
-            }
-            /* for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-                ((App) shareableApp).setDisabled(this.isBlocked(), db);
-                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
-                    if (!this.isBlocked() && sharedApp.getTeamUser_tenant().isDisabled())
-                        continue;
-                    ((App) sharedApp).setDisabled(this.isBlocked(), db);
-                }
-            } */
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void checkDepartureDates(Date date, DataBaseConnection db) {
-        try {
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
-            for (TeamUser teamUser : this.getTeamUsers().values()) {
-                if (teamUser.getDepartureDate() == null)
-                    continue;
-                /* if (teamUser.isDisabled()) {
-                    System.out.println(this.getAppManager().getSharedAppsForTeamUser(teamUser).size());
-                    for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser))
-                        ((App) sharedApp).setDisabled(true, db);
-                } */
-                if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
-                    calendar.setTime(teamUser.getDepartureDate());
-                    String suffixe = "th";
-                    switch (calendar.get(Calendar.DAY_OF_MONTH)) {
-                        case 1: {
-                            suffixe = "st";
-                            break;
-                        }
-                        case 2: {
-                            suffixe = "nd";
-                            break;
-                        }
-                        case 3: {
-                            suffixe = "rd";
-                            break;
-                        }
-                    }
-                    String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
-                    //this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
-
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
