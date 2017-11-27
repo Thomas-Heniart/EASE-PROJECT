@@ -135,7 +135,7 @@ export const renderLinkAppAddUserLabel = (label, index, props) => {
   )
 };
 
-export const PasswordChangeDropdown = ({value, onChange, disabled}) => {
+export const PasswordChangeDropdown = ({value, onChange, disabled, roomManager}) => {
   return (
       <Popup size="mini"
              position="top center"
@@ -151,7 +151,7 @@ export const PasswordChangeDropdown = ({value, onChange, disabled}) => {
                          labeled
                          options={passwordChangeOptions}/>
              }
-             content='Password update reminder'/>
+             content={`${roomManager} will be in charge of updating the password`}/>
   )
 };
 
@@ -212,7 +212,7 @@ export const TeamAppActionButton = ({onClick, icon, text, disabled}) => {
   )
 };
 
-export const PasswordChangeHolder = ({value}) => {
+export const PasswordChangeHolder = ({value, roomManager}) => {
   return (
       <Popup size="mini"
              position="top center"
@@ -220,7 +220,7 @@ export const PasswordChangeHolder = ({value}) => {
              trigger={
                <Button as='div' icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
              }
-             content='Password update reminder'/>
+             content={`${roomManager} will be in charge of updating the password`}/>
   )
 };
 

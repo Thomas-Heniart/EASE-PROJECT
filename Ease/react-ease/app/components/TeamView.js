@@ -10,6 +10,7 @@ var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var TeamAppAddingUi = require('./TeamAppAddingUi');
 var TeamAppsContainer = require('./TeamAppsContainer');
 var TeamSettings = require('./teamModals/TeamSettings');
+import { Icon, Segment, Dimmer, Loader } from 'semantic-ui-react';
 import queryString from "query-string";
 import TeamBrowsePeopleModal from "./teamModals/TeamBrowsePeopleModal";
 import TeamBrowseRoomsModal from "./teamModals/TeamBrowseRoomsModal";
@@ -24,6 +25,8 @@ import {showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateE
 import {Route, Switch, withRouter} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
 import {connect} from "react-redux";
+import {reflect} from "../utils/utils";
+import {sendTeamUserInvitation} from "../actions/userActions";
 var EaseHeader = require('./common/EaseHeader');
 var api = require('../utils/api');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -141,6 +144,60 @@ class TeamView extends React.Component {
         team_id: team.id
       }));
   };
+  sendInvitation = (teamUser) => {
+    this.setState({loading: true});
+    const team = this.props.teams[this.props.match.params.teamId];
+    this.props.dispatch(sendTeamUserInvitation({
+      team_id: team.id,
+      team_user_id: teamUser.id
+    }));
+    this.setState({loading: false});
+  };
+  sendAllInvitations = () => {
+    const team = this.props.teams[this.props.match.params.teamId];
+
+    const calls = Object.keys(team.team_users).map(item => {
+      if (team.team_users[item].state === 0 && team.team_users[item].invitation_sent === false) {
+        this.props.dispatch(sendTeamUserInvitation({
+          team_id: team.id,
+          team_user_id: Number(item)
+        }));
+      }
+    });
+    const response = calls.filter(item => {
+      if (item)
+        return true
+    });
+    Promise.all(response.map(reflect)).then(r => {
+      this.setState({loading: false});
+    }).catch(err => {
+      this.setState({loading: false});
+      this.setState({errorMessage: err});
+    });
+  };
+  reSendAllInvitations = () => {
+    const team = this.props.teams[this.props.match.params.teamId];
+
+    const calls = Object.keys(team.team_users).map(item => {
+      if (team.team_users[item].state === 0 && team.team_users[item].invitation_sent === true) {
+        this.props.dispatch(sendTeamUserInvitation({
+          team_id: team.id,
+          team_user_id: Number(item)
+        }));
+      }
+    });
+    const response = calls.filter(item => {
+      if (item)
+        return true
+    });
+    Promise.all(response.map(reflect)).then(r => {
+      this.setState({loading: false});
+    }).catch(err => {
+      this.setState({loading: false});
+      this.setState({errorMessage: err});
+    });
+  };
+
   render(){
     const team = this.props.teams[this.props.match.params.teamId];
     const selectedItem = this.getSelectedItem();
@@ -165,6 +222,27 @@ class TeamView extends React.Component {
                   setAddAppView={this.setAddAppView}
                   match={this.props.match}
                   dispatch={this.props.dispatch}/>
+              {selectedItem.state === 0 &&
+              <div id='invitation'>
+                {selectedItem.invitation_sent ?
+                  <Segment className='resend' inverted disabled={this.state.loading}>
+                    <p>
+                      {selectedItem.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(selectedItem)}>Resend invitation<Icon name='send'/></span>
+                      <Loader active={this.state.loading} inverted size='tiny'/>
+                      <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations<Icon name='rocket'/></span>
+                    </p>
+                  </Segment>
+                  :
+                  <Segment className='send' inverted disabled={this.state.loading}>
+                      <p>
+                        {selectedItem.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(selectedItem)}>Send invitation<Icon name='send'/></span>
+                        <Loader active={this.state.loading} inverted size='tiny'/>
+                        <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people<Icon name='rocket'/></span>
+                      </p>
+                  </Segment>
+                }
+              </div>
+              }
               <div className="team_client_body bordered_scrollbar">
                 <OpacityTransition appear={true}>
                   {!!this.props.common.user && !this.props.common.user.status.team_tuto_done &&

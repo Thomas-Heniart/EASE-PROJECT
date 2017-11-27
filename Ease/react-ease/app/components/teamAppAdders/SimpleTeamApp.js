@@ -365,10 +365,10 @@ class SimpleTeamApp extends Component {
                   <SingleAppCopyPasswordButton team_id={this.props.team_id} app_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
-                        <PasswordChangeHolder value={app.password_reminder_interval}/> :
-                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput}/>}
-                    {((!this.state.edit && app.password_reminder_interval !== 0) || (this.state.edit && this.state.password_reminder_interval !== 0)) &&
-                    <PasswordChangeManagerLabel username={room_manager.username}/>}
+                        <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username} /> :
+                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
+                    {/*{((!this.state.edit && app.password_reminder_interval !== 0) || (this.state.edit && this.state.password_reminder_interval !== 0)) &&*/}
+                    {/* <PasswordChangeManagerLabel username={room_manager.username}/>}*/}
                   </div>
                 </div>
                 <div>

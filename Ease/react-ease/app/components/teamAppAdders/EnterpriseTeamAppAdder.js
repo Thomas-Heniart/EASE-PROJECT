@@ -261,7 +261,7 @@ class EnterpriseTeamAppAdder extends Component {
   render(){
     const app = this.state.app;
     const selected_users = this.state.users.filter(item => (this.state.selected_users.indexOf(item.id) !== -1));
-
+    const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.teams[this.props.card.team_id].rooms[this.props.card.channel_id].room_manager_id];
     return (
         <Container fluid id='enterprise-app-adder' class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
           <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
@@ -294,7 +294,7 @@ class EnterpriseTeamAppAdder extends Component {
                   <div class="main_column">
                     <div class="credentials">
                       <div class="display-inline-flex align_items_center">
-                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>
+                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
                         {/*<ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>*/}
                         {/*{this.props.plan_id === 0 &&*/}
                         {/*<img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}*/}
