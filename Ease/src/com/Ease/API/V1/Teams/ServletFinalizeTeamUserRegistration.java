@@ -95,7 +95,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             if (teamKey != null) {
                 String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-                teamUser.lastRegistrationStep(keyUser, teamKey, sm.getHibernateQuery());
+                teamUser.lastRegistrationStep(keyUser, teamKey, sm.getUserWebSocketManager(user.getDb_id()), sm.getHibernateQuery());
             }
             sm.getUser().addTeamUser(teamUser);
             sm.setParam("team_id", team_id.longValue());

@@ -1,0 +1,23 @@
+{
+  "name":"flatchr",
+  "lastLogin":"",
+  "home":"https://app.flatchr.io/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":".default-form-login input[name='email']"},
+      {"action":"fill", "what":"password", "search":".default-form-login input[name='password']"},
+      {"action":"click", "search":".default-form-login button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"},
+      {"action":"aclick", "search":"a[href*='app.flatchr.io']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], .default-form-login input[name='email']"},
+    {"search":"a[href*='logout']"}
+  ]
+}
