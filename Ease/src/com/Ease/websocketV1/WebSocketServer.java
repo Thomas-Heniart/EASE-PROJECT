@@ -1,11 +1,5 @@
 package com.Ease.websocketV1;
 
-import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamUser;
-import com.Ease.User.User;
-import com.Ease.Utils.HttpServletException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.websocket.*;
@@ -42,7 +36,7 @@ public class WebSocketServer {
         session.getBasicRemote().sendText(new WebSocketMessage("CONNECTION_ID", session.getId()).toJSONObject().toString());
         if (user_id == null)
             return;
-        HibernateQuery hibernateQuery = new HibernateQuery();
+        /* HibernateQuery hibernateQuery = new HibernateQuery();
         hibernateQuery.get(User.class, user_id);
         User user = (User) hibernateQuery.getSingleResult();
         try {
@@ -53,7 +47,7 @@ public class WebSocketServer {
             return;
         }
         if (user == null)
-            return;
+            return; */
         WebSocketSession webSocketSession = new WebSocketSession(session);
         Map<Integer, Map<String, Object>> userIdMap = (Map<Integer, Map<String, Object>>) servletContext.getAttribute("userIdMap");
         Map<String, Object> userProperties = userIdMap.get(user_id);
@@ -67,7 +61,7 @@ public class WebSocketServer {
             userProperties.put("webSocketManager", webSocketManager);
         }
         webSocketManager.addWebSocketSession(webSocketSession);
-        for (TeamUser teamUser : user.getTeamUsers()) {
+        /* for (TeamUser teamUser : user.getTeamUsers()) {
             Team team = teamUser.getTeam();
             Map<Integer, Map<String, Object>> teamIdMap = (Map<Integer, Map<String, Object>>) servletContext.getAttribute("teamIdMap");
             Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
@@ -82,7 +76,7 @@ public class WebSocketServer {
             }
             teamWebSocketManager.addWebSocketSession(webSocketSession);
         }
-        System.out.println("webSocketSession registered for user : " + user.getEmail());
+        System.out.println("webSocketSession registered for user : " + user.getEmail()); */
     }
 
     @OnClose
