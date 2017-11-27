@@ -57,6 +57,7 @@ class PreviewStep extends React.Component {
               basic color='green'
               positive
               floated='right'
+              disabled={!this.props.invitationsReady()}
               loading={this.props.loading}
               type="submit"
               width={8}>
@@ -66,6 +67,7 @@ class PreviewStep extends React.Component {
               color='green'
               floated='right'
               type="button"
+              disabled={!this.props.invitationsReady()}
               onClick={this.props.sendInvitationsNow}
               width={8}>
               Send invitation <u><strong>now</strong></u>
@@ -116,6 +118,7 @@ class EmailListStep extends React.Component {
               basic color='green'
               positive
               floated='right'
+              disabled={!this.state.value}
               loading={this.props.loading}
               type="submit"
               width={8}>
@@ -125,6 +128,7 @@ class EmailListStep extends React.Component {
               color='green'
               floated='right'
               type="button"
+              disabled={!this.state.value}
               onClick={this.processNow}
               width={8}>
               Send invitation <u><strong>now</strong></u>
@@ -153,6 +157,9 @@ class InvitePeopleStep extends React.Component {
       cancelButtonText: 'Skip for now'
     }
   }
+  invitationsReady = () => {
+    return this.state.invitations.filter(item => (item.email.length > 0)).length > 0;
+  };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();
 
@@ -283,6 +290,8 @@ class InvitePeopleStep extends React.Component {
                 editField={this.editField}
                 loading={this.state.loading}
                 validate={this.sendInvitations}
+                sendInvitationsNow={this.sendInvitationsNow}
+                invitationsReady={this.invitationsReady}
                 onStepValidated={this.props.onStepValidated}
                 cancelButtonText={this.state.cancelButtonText}
                 validateButtonText={this.state.validateButtonText}
