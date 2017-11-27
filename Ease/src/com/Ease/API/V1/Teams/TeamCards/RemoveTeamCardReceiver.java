@@ -4,6 +4,8 @@ import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -26,11 +28,15 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
+            TeamUser teamUser = teamCardReceiver.getTeamUser();
+            TeamUser teamUser_admin = sm.getTeamUser(team);
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             Profile profile = teamCardReceiver.getApp().getProfile();
             if (profile != null)
                 profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
+            if (teamUser.isVerified())
+                NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {
             sm.setError(e);

@@ -9,14 +9,15 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
-import com.Ease.User.Notification;
 import com.Ease.User.NotificationFactory;
-import com.Ease.Utils.*;
+import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketManager;
-import com.Ease.websocketV1.WebSocketMessageFactory;
 
 import javax.servlet.ServletContext;
-import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TeamManager {
 
     public TeamManager() {
+    }
+
+    public List<Team> getAllTeams(HibernateQuery hibernateQuery) {
+        hibernateQuery.queryString("SELECT t FROM Team t");
+        return hibernateQuery.list();
     }
 
     public List<Team> getTeams(HibernateQuery hibernateQuery) {
@@ -54,10 +60,10 @@ public class TeamManager {
 
     }
 
-    public void checkFreeTrialEnd(DataBaseConnection db) {
-        /* for (Team team : this.getTeams())
-            team.checkFreeTrialEnd(db); */
-    }
+    public void checkFreeTrialEnd(HibernateQuery hibernateQuery) {
+        for (Team team : this.getTeams(hibernateQuery))
+            team.checkFreeTrialEnd();
+        }
 
     public void teamUserNotRegisteredReminder(HibernateQuery hibernateQuery) throws HttpServletException {
         System.out.println("Team users not registered reminder start...");
@@ -160,12 +166,7 @@ public class TeamManager {
                     if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
                         account.setPassword_must_be_updated(true);
                         hibernateQuery.saveOrUpdateObject(account);
-                        Channel channel = teamCard.getChannel();
-                        String url = team.getDb_id() + "/" + channel.getDb_id() + "?app_id=" + teamCard.getDb_id();
-                        Notification notification = NotificationFactory.getInstance().createNotification(channel.getRoom_manager().getUser(), "Password for " + teamSingleCard.getName() + " needs to be updated as soon as possible", teamSingleCard.getLogo(), url);
-                        hibernateQuery.saveOrUpdateObject(notification);
-                        WebSocketManager webSocketManager = this.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id(), servletContext);
-                        webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+                        NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamSingleCard, this.getUserWebSocketManager(teamCard.getChannel().getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
                     }
                 } else if (teamCard.isTeamEnterpriseCard()) {
                     for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
@@ -179,21 +180,13 @@ public class TeamManager {
                         if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
                             account.setPassword_must_be_updated(true);
                             hibernateQuery.saveOrUpdateObject(account);
-                            Channel channel = teamCard.getChannel();
-                            String url = team.getDb_id() + "/" + channel.getDb_id() + "?app_id=" + teamCard.getDb_id();
-                            Notification notification = NotificationFactory.getInstance().createNotification(teamCardReceiver.getTeamUser().getUser(), "Your password " + classicApp.getAppInformation().getName() + " needs to be updated as soon as possible", teamCard.getLogo(), url);
-                            hibernateQuery.saveOrUpdateObject(notification);
-                            WebSocketManager webSocketManager = this.getUserWebSocketManager(teamCardReceiver.getTeamUser().getUser().getDb_id(), servletContext);
-                            webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
-                        } else if (account.mustUpdatePassword() && !account.isAdmin_notified() && DateComparator.isOutdated(account.getLast_update(), account.getReminder_interval(), 7)) {
+                            if (teamCardReceiver.getTeamUser().isVerified())
+                                NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamEnterpriseCardReceiver, this.getUserWebSocketManager(teamCardReceiver.getTeamUser().getUser().getDb_id(), servletContext), hibernateQuery);
+                        } else if (teamCardReceiver.getTeamUser().isVerified() && account.mustUpdatePassword() && !account.isAdmin_notified() && DateComparator.isOutdated(account.getLast_update(), account.getReminder_interval(), 7)) {
                             account.setAdmin_notified(true);
                             hibernateQuery.saveOrUpdateObject(account);
                             Channel channel = teamCard.getChannel();
-                            String url = team.getDb_id() + "/" + channel.getDb_id() + "?app_id=" + teamCard.getDb_id();
-                            Notification notification = NotificationFactory.getInstance().createNotification(channel.getRoom_manager().getUser(), "The password of " + teamCardReceiver.getTeamUser().getUsername() + " for " + teamCard.getName() + " is not up to date for the last 7 days", teamCard.getLogo(), url);
-                            hibernateQuery.saveOrUpdateObject(notification);
-                            WebSocketManager webSocketManager = this.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id(), servletContext);
-                            webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+                            NotificationFactory.getInstance().createPasswordNotUpToDateNotificationOneWeek(teamEnterpriseCardReceiver, this.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
                         }
                     }
                 }
@@ -217,43 +210,57 @@ public class TeamManager {
         return webSocketManager;
     }
 
-    public void passwordLostReminder() throws HttpServletException {
+    public void passwordLostReminder(HibernateQuery hibernateQuery, ServletContext servletContext) throws HttpServletException {
         System.out.println("Password lost reminder start...");
-        HibernateQuery hibernateQuery = new HibernateQuery();
-        DataBaseConnection db = null;
-        try {
-            db = new DataBaseConnection(DataBase.getConnection());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            int transaction = db.startTransaction();
-            /* for (Team team : this.getTeams()) {
-                for (TeamUser teamUser : team.getTeamUsers().values()) {
-                    if (teamUser.isDisabled()) {
-                        hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
-                        hibernateQuery.setParameter(1, teamUser.getDisabledDate());
-                        if ((Boolean) hibernateQuery.getSingleResult()) {
-                            if (teamUser.getAdmin_id() == null)
-                                continue;
-                            team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Since last week " + teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id(), "", new Date(), db);
-                        }
+        for (Team team : this.getTeams(hibernateQuery)) {
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
+                if (teamUser.isDisabled()) {
+                    hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
+                    hibernateQuery.setParameter(1, teamUser.getDisabledDate());
+                    if ((Boolean) hibernateQuery.getSingleResult()) {
+                        if (teamUser.getAdmin_id() == null)
+                            continue;
+                        TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                        NotificationFactory.getInstance().createPasswordLostOneWeekNotification(teamUser, teamUser_admin, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id(), servletContext), hibernateQuery);
                     }
-
                 }
-            } */
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            e.printStackTrace();
+
+            }
         }
-        db.close();
         System.out.println("Password lost reminder end...");
     }
 
-    public void checkDepartureDates(DataBaseConnection db) {
-        /* for (Team team : this.getTeams()) {
-            team.checkDepartureDates(new Date(), db);
-        } */
+    public void checkDepartureDates(HibernateQuery hibernateQuery, ServletContext servletContext) throws HttpServletException {
+        for (Team team : this.getTeams(hibernateQuery)) {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
+                if (teamUser.getDepartureDate() == null)
+                    continue;
+                if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
+                    calendar.setTime(teamUser.getDepartureDate());
+                    String suffixe = "th";
+                    switch (calendar.get(Calendar.DAY_OF_MONTH)) {
+                        case 1: {
+                            suffixe = "st";
+                            break;
+                        }
+                        case 2: {
+                            suffixe = "nd";
+                            break;
+                        }
+                        case 3: {
+                            suffixe = "rd";
+                            break;
+                        }
+                    }
+                    String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
+                    if (teamUser.getUser() == null)
+                        continue;
+                    TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                    NotificationFactory.getInstance().createDepartureDateThreeDaysNotification(teamUser, teamUser_admin, formattedDate, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id(), servletContext), hibernateQuery);
+                }
+            }
+        }
     }
 }
