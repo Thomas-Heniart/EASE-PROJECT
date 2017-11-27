@@ -85,4 +85,40 @@ public class NotificationFactory {
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
+
+    public void createEditRoleNotification(TeamUser teamUserToModify, TeamUser teamUser, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        Notification notification = this.createNotification(teamUserToModify.getUser(), teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "/resources/notifications/user_role_changed.png", teamUserToModify, true);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createTransferOwnershipNotification(TeamUser new_teamUser_owner, TeamUser teamUser, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        Notification notification = this.createNotification(new_teamUser_owner.getUser(), teamUser.getUsername() + " changed your role to Owner", "/resources/notifications/user_role_changed.png", new_teamUser_owner, true);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createAcceptJoinRequestNotification(TeamUser teamUser_receiver, TeamUser teamUser, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        Notification notification = this.createNotification(teamUser_receiver.getUser(), teamUser.getUsername() + " approoved your access to " + teamCard.getName() + " in #" + teamCard.getChannel().getName(), teamCard.getLogo(), teamCard);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createAddTeamUserToChannelNotification(TeamUser teamUser, TeamUser teamUser_connected, Channel channel, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " added you in #" + channel.getName(), "/resources/notifications/channel.png", channel);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createEditRoomNameNotification(TeamUser teamUser, Channel channel, String old_name, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), "#" + old_name + " has been renamed to #" + channel.getName(), "/resources/notifications/room_renamed.png", channel);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createAskJoinChannelNotification(TeamUser teamUser, Channel channel, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        Notification notification = NotificationFactory.getInstance().createNotification(channel.getRoom_manager().getUser(), teamUser.getUsername() + " would like to join #" + channel.getName(), "/resources/notifications/channel.png", channel);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
 }

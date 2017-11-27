@@ -5,13 +5,11 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.Notification;
 import com.Ease.User.NotificationFactory;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -51,10 +49,7 @@ public class ServletTransferOwnership extends HttpServlet {
                     sm.saveOrUpdate(channel);
                 }
             }
-            Notification notification = NotificationFactory.getInstance().createNotification(new_teamUser_owner.getUser(), teamUser.getUsername() + " changed your role to Owner", "/resources/notifications/user_role_changed.png", new_teamUser_owner);
-            sm.saveOrUpdate(notification);
-            WebSocketManager webSocketManager = sm.getUserWebSocketManager(new_teamUser_owner.getUser().getDb_id());
-            webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+            NotificationFactory.getInstance().createTransferOwnershipNotification(new_teamUser_owner, teamUser, sm.getUserWebSocketManager(new_teamUser_owner.getUser().getDb_id()),  sm.getHibernateQuery());
             new_teamUser_owner.setDepartureDate(null);
             sm.saveOrUpdate(new_teamUser_owner);
             sm.saveOrUpdate(teamUser);

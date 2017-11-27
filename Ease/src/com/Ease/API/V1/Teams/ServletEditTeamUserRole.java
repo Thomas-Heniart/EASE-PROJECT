@@ -61,12 +61,8 @@ public class ServletEditTeamUserRole extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, message);
             }
             teamUserToModify.getTeamUserRole().setRoleValue(roleValue);
-            if (teamUser != teamUserToModify && teamUserToModify.getUser() != null) {
-                Notification notification = NotificationFactory.getInstance().createNotification(teamUserToModify.getUser(), teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "/resources/notifications/user_role_changed.png", teamUserToModify, true);
-                sm.saveOrUpdate(notification);
-                WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUserToModify.getUser().getDb_id());
-                webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
-            }
+            if (teamUser != teamUserToModify && teamUserToModify.getUser() != null)
+                NotificationFactory.getInstance().createEditRoleNotification(teamUserToModify, teamUser, sm.getUserWebSocketManager(teamUserToModify.getUser().getDb_id()), sm.getHibernateQuery());
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
             sm.setSuccess("TeamUser role edited.");

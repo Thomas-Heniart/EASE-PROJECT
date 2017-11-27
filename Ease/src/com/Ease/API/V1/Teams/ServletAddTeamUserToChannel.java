@@ -37,12 +37,8 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
             channel.addTeamUser(teamUser);
             sm.saveOrUpdate(channel);
             TeamUser teamUser_connected = sm.getTeamUser(team);
-            if (teamUser != teamUser_connected && teamUser.getUser() != null) {
-                Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " added you in #" + channel.getName(), "/resources/notifications/channel.png", channel);
-                sm.saveOrUpdate(notification);
-                WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());
-                webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
-            }
+            if (teamUser != teamUser_connected && teamUser.getUser() != null)
+                NotificationFactory.getInstance().createAddTeamUserToChannelNotification(teamUser, teamUser_connected, channel, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(channel.getJson());
