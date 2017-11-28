@@ -227,17 +227,6 @@ module.exports = {
         });
   },
   dashboard: {
-    getAppConnectionInformation: ({app_id}) => {
-      return axios.get('/api/v1/dashboard/GetConnection', {
-        params: {
-          app_id: app_id
-        }
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        return err.response.data;
-      });
-    },
     fetchProfiles: function(){
       return axios.get('/api/v1/dashboard/GetProfiles').then(response => {
         return response.data;
@@ -248,6 +237,9 @@ module.exports = {
     },
     fetchApps: function() {
       return basic_get('/api/v1/dashboard/GetApps');
+    },
+    fetchSsoGroups: () => {
+      return basic_get('/api/v1/dashboard/GetSsoGroups');
     },
     getAppPassword: ({app_id}) => {
       return basic_get('/api/v1/dashboard/GetAppPassword', {

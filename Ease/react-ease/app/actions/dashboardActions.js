@@ -7,13 +7,16 @@ export function fetchDashboard(){
   return (dispatch, getState) => {
     const calls = [
       api.dashboard.fetchProfileList(),
-      api.dashboard.fetchApps()
+      api.dashboard.fetchApps(),
+      api.dashboard.fetchSsoGroups()
     ];
     dispatch({type: 'FETCH_DASHBOARD_PENDING'});
     return Promise.all(calls).then(response => {
       const columns = response[0];
       const apps = response[1];
+      const sso_groups = response[2];
       const team_app_calls = [];
+
       apps.map(app => {
         if (!!app.team_id)
           team_app_calls.push(dispatch(fetchTeamApp({
@@ -24,7 +27,8 @@ export function fetchDashboard(){
       return Promise.all(team_app_calls).then(response => {
         dispatch({type: 'FETCH_DASHBOARD_FULFILLED', payload: {
           columns: columns,
-          apps: apps
+          apps: apps,
+          sso_groups: sso_groups
         }});
         return response;
       });
@@ -55,13 +59,34 @@ export function validateApp({app_id}) {
 
 export function deleteApp({app_id}){
   return (dispatch, getState) => {
-    const store = getState();
     return post_api.dashboard.deleteApp({
       app_id: app_id
     }).then(response => {
       dispatch(deleteAppAction({
         app_id: app_id
       }));
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function deleteSsoApp({app_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const app = store.dashboard.apps[app_id];
+    const sso_group = store.dashboard.sso_groups[app.sso_group_id];
+    return post_api.dashboard.deleteApp({
+      app_id: app_id
+    }).then(response => {
+      dispatch(deleteAppAction({
+        app_id: app_id
+      }));
+      if (sso_group.sso_app_ids.length === 1)
+        dispatch(deleteSsoGroup({
+          sso_group_id: sso_group.id
+        }));
       return response;
     }).catch(err => {
       throw err;
@@ -334,6 +359,62 @@ export function editLinkApp({app_id, name, url, img_url}) {
     }).catch(err =>  {
       throw err;
     })
+  }
+}
+
+export function editSsoGroup({sso_group_id, account_information}) {
+  return (dispatch, getState) => {
+    return post_api.dashboard.editSsoGroup({
+      sso_group_id: sso_group_id,
+      account_information: account_information
+    }).then(response => {
+      dispatch({
+        type: 'SSO_GROUP_CHANGED',
+        payload: {
+          sso_group: response
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function deleteSsoGroup({sso_group_id}){
+  return (dispatch, getState) => {
+    return post_api.dashboard.deleteSsoGroup({
+      sso_group_id: sso_group_id
+    }).then(response => {
+      dispatch({
+        type: 'SSO_GROUP_REMOVED',
+        payload: {
+          sso_group_id: sso_group_id
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function createSsoGroup({sso_id, account_information}){
+  return (dispatch, getState) => {
+    return post_api.dashboard.createSsoGroup({
+      sso_id:sso_id,
+      account_information: account_information
+    }).then(response => {
+      dispatch({
+        type: 'SSO_GROUP_ADDED',
+        payload: {
+          sso_group: response
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
   }
 }
 
