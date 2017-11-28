@@ -103,6 +103,10 @@ public class DatabaseRequest {
         } catch (SQLException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
 
+    @Override
+    public String toString() {
+        return this.statement.toString();
     }
 }

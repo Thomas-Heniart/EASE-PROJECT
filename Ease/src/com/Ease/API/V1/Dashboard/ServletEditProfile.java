@@ -4,6 +4,9 @@ import com.Ease.NewDashboard.Profile;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,6 +29,7 @@ public class ServletEditProfile extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             profile.getProfileInformation().setName(name);
             sm.saveOrUpdate(profile);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.PROFILE, WebSocketMessageAction.CHANGED, profile.getJson()));
             sm.setSuccess(profile.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.ServletException;
@@ -17,7 +16,6 @@ public class ServletLogout extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            User user = sm.getUser();
             Cookie cookies[] = sm.getRequest().getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
@@ -32,6 +30,10 @@ public class ServletLogout extends HttpServlet {
                     }
                 }
             }
+            Cookie cookie = new Cookie("JWT", "");
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
             sm.getSession().invalidate();
             sm.setSuccess("Logout successfully");
         } catch (Exception e) {

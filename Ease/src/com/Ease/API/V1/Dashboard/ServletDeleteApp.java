@@ -9,6 +9,9 @@ import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,6 +43,7 @@ public class ServletDeleteApp extends HttpServlet {
             if (profile != null)
                 profile.removeAppAndUpdatePositions(app, hibernateQuery);
             sm.deleteObject(app);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.REMOVED, app_id));
             sm.setSuccess("App deleted");
         } catch (Exception e) {
             sm.setError(e);

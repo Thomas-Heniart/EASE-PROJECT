@@ -28,4 +28,13 @@ public class TeamWebSocketMessage extends WebSocketMessage {
         thisData.put("action", data_type + "_" + action);
         thisData.put("target", target);
     }
+
+    public TeamWebSocketMessage(String data_type, String action, Integer id) {
+        super("UPDATE_CLIENT", new JSONObject());
+        JSONObject data = new JSONObject();
+        data.put("id", id);
+        JSONObject thisData = (JSONObject) this.getData();
+        thisData.put("data", data);
+        thisData.put("action", data_type + "_" + action);
+    }
 }

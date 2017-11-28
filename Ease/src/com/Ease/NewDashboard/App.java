@@ -121,6 +121,7 @@ abstract public class App {
         res.put("type", this.getType());
         res.put("new", this.isNewApp());
         res.put("profile_id", this.getProfile() == null ? -1 : this.getProfile().getDb_id());
+        res.put("position", this.getPosition() == null ? -1 : this.getPosition());
         if (this.getTeamCardReceiver() != null)
             res.putAll(this.getTeamCardReceiver().getJson());
         return res;

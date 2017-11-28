@@ -16,6 +16,18 @@ public class WebSocketMessageFactory {
         return new TeamWebSocketMessage(dataType.name(), actionType.name(), id, target);
     }
 
+    public static WebSocketMessage createWebSocketMessage(WebSocketMessageType dataType, WebSocketMessageAction actionType, Integer id) {
+        return new TeamWebSocketMessage(dataType.name(), actionType.name(), id);
+    }
+
+    public static WebSocketMessage createUserWebSocketMessage(WebSocketMessageType type, WebSocketMessageAction action, Integer id) {
+        return new UserWebSocketMessage(type.name(), action.name(), id);
+    }
+
+    public static WebSocketMessage createUserWebSocketMessage(WebSocketMessageType type, WebSocketMessageAction action, JSONObject data) {
+        return new UserWebSocketMessage(type.name(), action.name(), data);
+    }
+
     public static WebSocketMessage createNotificationMessage(Notification notification) {
         return new NotificationWebSocketMessage(notification);
     }
