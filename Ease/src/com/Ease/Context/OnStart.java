@@ -32,6 +32,7 @@ public class OnStart implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent evt) {
         ServletContext context = evt.getServletContext();
+        Variables.WEBSITES_FOLDER_PATH = context.getRealPath("/resources/websites/");
         DataBaseConnection db;
         try {
             db = new DataBaseConnection(DataBase.getConnection());

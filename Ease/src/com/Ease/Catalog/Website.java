@@ -317,7 +317,7 @@ public class Website {
             throw new HttpServletException(HttpStatus.BadRequest, "Please, wait until we integrate this website");
         JSONParser parser = new JSONParser();
         try {
-            JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.PROJECT_PATH + "/resources/websites/" + this.getFolder() + "/connect.json"));
+            JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.WEBSITES_FOLDER_PATH + this.getFolder() + "/connect.json"));
             a.put("loginUrl", this.getLogin_url());
             a.put("website_name", this.getName());
             a.put("siteSrc", this.getFolder());
