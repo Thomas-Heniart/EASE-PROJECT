@@ -7,6 +7,9 @@ import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,6 +50,7 @@ public class EditTeamEnterpriseCard extends HttpServlet {
                     classicApp.getAccount().setReminder_interval(password_reminder_interval);
             });
             sm.saveOrUpdate(teamCard);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, teamCard.getJson()));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

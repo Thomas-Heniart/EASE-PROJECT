@@ -7,6 +7,9 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,6 +43,7 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code());
             mailJetBuilder.sendEmail();
             teamUser.getTeamUserStatus().setInvitation_sent(true);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson()));
             sm.saveOrUpdate(teamUser);
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

@@ -1,7 +1,11 @@
 package com.Ease.API.V1.Dashboard;
 
+import com.Ease.NewDashboard.Profile;
 import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,6 +26,8 @@ public class ServletMoveProfile extends HttpServlet {
             Integer column_index = sm.getIntParam("column_index", true, false);
             Integer position = sm.getIntParam("position", true, false);
             user.moveProfile(profile_id, column_index, position, sm.getHibernateQuery());
+            Profile profile = (Profile) sm.getHibernateQuery().get(Profile.class, profile_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.PROFILE, WebSocketMessageAction.CHANGED, profile.getJson()));
             sm.setSuccess(user.getProfile(profile_id).getJson());
         } catch (Exception e) {
             sm.setError(e);

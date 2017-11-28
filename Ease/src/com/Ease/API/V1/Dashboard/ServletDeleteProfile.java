@@ -7,6 +7,9 @@ import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,6 +40,7 @@ public class ServletDeleteProfile extends HttpServlet {
                 sm.saveOrUpdate(teamUser);
             }
             user.removeProfileAndUpdatePositions(profile, hibernateQuery);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.PROFILE, WebSocketMessageAction.REMOVED, profile_id));
             sm.setSuccess("Profile deleted");
         } catch (Exception e) {
             sm.setError(e);

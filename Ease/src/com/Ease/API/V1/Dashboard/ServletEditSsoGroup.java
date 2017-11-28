@@ -4,6 +4,9 @@ import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.NewDashboard.SsoGroup;
 import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -27,6 +30,7 @@ public class ServletEditSsoGroup extends HttpServlet {
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0));
             sm.saveOrUpdate(ssoGroup);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.CHANGED, ssoGroup.getJson()));
             sm.setSuccess(ssoGroup.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -9,6 +9,9 @@ import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -36,6 +39,7 @@ public class ServletCreateSsoGroup extends HttpServlet {
             Account account = AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0);
             SsoGroup ssoGroup = new SsoGroup(user, sso, account);
             sm.saveOrUpdate(ssoGroup);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.CREATED, ssoGroup.getJson()));
             sm.setSuccess(ssoGroup.getJson());
         } catch (Exception e) {
             sm.setError(e);

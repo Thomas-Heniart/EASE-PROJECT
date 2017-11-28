@@ -12,6 +12,9 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -57,6 +60,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             } else
                 classicApp.getAccount().edit(account_information, sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getCardJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);

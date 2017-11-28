@@ -7,6 +7,9 @@ import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,6 +40,7 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             sm.saveOrUpdate(teamCard);
             if (teamUser.isVerified() && !teamUser.equals(sm.getTeamUser(team)))
                 NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.REMOVED, team_card_receiver_id));
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {
             sm.setError(e);

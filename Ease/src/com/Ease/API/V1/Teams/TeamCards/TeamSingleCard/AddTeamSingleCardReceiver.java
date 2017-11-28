@@ -11,6 +11,9 @@ import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,6 +57,7 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             if (teamUser_receiver.isVerified() && !teamUser_receiver.equals(teamUser_connected))
                 NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);

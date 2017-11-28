@@ -9,6 +9,9 @@ import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,6 +42,7 @@ public class JoinTeamSingleCard extends HttpServlet {
             sm.saveOrUpdate(joinTeamCardRequest);
             teamCard.addJoinTeamCardRequest(joinTeamCardRequest);
             NotificationFactory.getInstance().createJoinTeamCardNotification(teamUser, teamCard, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_JOIN, WebSocketMessageAction.CREATED, joinTeamCardRequest.getJson()));
             sm.setSuccess(joinTeamCardRequest.getJson());
         } catch (Exception e) {
             sm.setError(e);

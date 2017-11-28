@@ -14,6 +14,9 @@ import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -93,6 +96,7 @@ public class CreateTeamSingleCard extends HttpServlet {
             }
             channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CREATED, teamCard.getJson()));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
