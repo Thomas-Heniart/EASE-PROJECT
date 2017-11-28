@@ -1,6 +1,5 @@
 package com.Ease.Utils.Servlets;
 
-import com.Ease.Dashboard.User.JWToken;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
@@ -8,14 +7,12 @@ import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationManager;
 import com.Ease.User.User;
 import com.Ease.User.UserFactory;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -261,7 +258,7 @@ public abstract class ServletManager {
         this.logResponse = msg;
     }
 
-    private void saveLogs() throws GeneralException, HttpServletException {
+    private void saveLogs() throws HttpServletException {
         String argsString = "";
         Set<Entry<String, String>> setHm = args.entrySet();
         for (Entry<String, String> e : setHm) {
@@ -293,11 +290,9 @@ public abstract class ServletManager {
         if (this.saveLogs) {
             try {
                 saveLogs();
-            } catch (GeneralException e) {
-                System.out.println(e.getMsg());
-                System.err.println("Logs not sended to database.");
             } catch (HttpServletException e) {
                 e.printStackTrace();
+                System.err.println("Logs not sended to database.");
             }
         }
         if (this.response.getStatus() != HttpStatus.Success.getValue()) {
@@ -306,11 +301,10 @@ public abstract class ServletManager {
                     this.db.rollbackTransaction();
                 if (this.hibernateQuery != null)
                     this.hibernateQuery.rollback();
-            } catch (GeneralException e) {
+            } catch (HttpServletException e) {
                 System.err.println("Rollback transaction failed.");
             }
         }
-
         try {
             if (this.response.getStatus() != HttpStatus.Success.getValue()) {
                 System.out.println("Error code: " + response.getStatus());
@@ -332,7 +326,7 @@ public abstract class ServletManager {
                                 this.db.rollbackTransaction();
                             if (this.hibernateQuery != null)
                                 this.hibernateQuery.rollback();
-                        } catch (GeneralException e) {
+                        } catch (HttpServletException e) {
                             System.out.println("Rollback failed");
                         }
                     } else {
@@ -404,26 +398,7 @@ public abstract class ServletManager {
     }
 
     public User getUserWithToken() throws HttpServletException {
-        String token = this.request.getHeader("Authorization");
-        if (token == null || token.equals(""))
-            throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
-        Map<String, User> tokenUserMap = (Map<String, User>) this.getContextAttr("tokenUserMap");
-        Key key = (Key) this.getContextAttr("secret");
-        Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-        String connection_token = (String) claimsJws.get("tok");
-        User user = tokenUserMap.get(connection_token);
-        if (user == null) {
-            String user_name = (String) claimsJws.get("name");
-            String user_email = (String) claimsJws.get("email");
-            Long expiration_date = (Long) claimsJws.get("exp");
-            JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
-            user = null; //User.loadUserFromJWT(jwToken, this, this.getDB());
-            tokenUserMap.put(jwToken.getConnection_token(), user);
-        }
-        /* user.getJwt().checkJwt(claimsJws);
-        if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
-            throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired"); */
-        this.user = user;
+        this.needToBeConnected();
         return this.user;
     }
 

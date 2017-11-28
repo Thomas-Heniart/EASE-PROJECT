@@ -59,10 +59,10 @@ public class EditTeamSingleCard extends HttpServlet {
                     classicApp.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval()));
                 }
             } else {
-                teamSingleCard.getAccount().edit(account_information);
+                teamSingleCard.getAccount().edit(account_information, sm.getHibernateQuery());
                 for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {
                     ClassicApp classicApp = (ClassicApp) teamCardReceiver.getApp();
-                    classicApp.getAccount().edit(account_information);
+                    classicApp.getAccount().edit(account_information, sm.getHibernateQuery());
                 }
             }
             sm.saveOrUpdate(teamCard);

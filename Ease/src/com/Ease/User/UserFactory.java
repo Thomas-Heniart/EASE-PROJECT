@@ -4,7 +4,6 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import io.jsonwebtoken.Claims;
@@ -24,15 +23,11 @@ public class UserFactory {
     }
 
     public User createUser(String email, String username, String password) throws HttpServletException {
-        try {
-            Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
-            String saltPerso = AES.generateSalt();
-            String keyUser = AES.keyGenerator();
-            UserKeys userKeys = new UserKeys(Hashing.hash(password), saltPerso, AES.encryptUserKey(keyUser, password, saltPerso), publicAndPrivateKey.getKey(), AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
-            return new User(username, email, userKeys, new Options(), new UserStatus());
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String saltPerso = AES.generateSalt();
+        String keyUser = AES.keyGenerator();
+        UserKeys userKeys = new UserKeys(Hashing.hash(password), saltPerso, AES.encryptUserKey(keyUser, password, saltPerso), publicAndPrivateKey.getKey(), AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
+        return new User(username, email, userKeys, new Options(), new UserStatus());
     }
 
     public User loadUserFromJwt(String jwt, Key secretKey, HibernateQuery hibernateQuery) throws HttpServletException {

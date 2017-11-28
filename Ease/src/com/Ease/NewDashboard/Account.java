@@ -1,12 +1,11 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DateComparator;
-import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -167,15 +166,11 @@ public class Account {
      * @throws HttpServletException if an encryption error occurred
      */
     public void setKeys(String public_key, String private_key, String symmetric_key) throws HttpServletException {
-        try {
-            this.setPublic_key(public_key);
-            this.setPrivate_key(AES.encrypt(private_key, symmetric_key));
-            this.setDeciphered_private_key(private_key);
-            for (AccountInformation accountInformation : this.getAccountInformationSet())
-                accountInformation.setInformation_value(RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_key));
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+        this.setPublic_key(public_key);
+        this.setPrivate_key(AES.encrypt(private_key, symmetric_key));
+        this.setDeciphered_private_key(private_key);
+        for (AccountInformation accountInformation : this.getAccountInformationSet())
+            accountInformation.setInformation_value(RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_key));
     }
 
     /**
@@ -188,14 +183,10 @@ public class Account {
     }
 
     public JSONObject getCipheredJson(String public_key) throws HttpServletException {
-        try {
-            JSONObject res = new JSONObject();
-            for (AccountInformation accountInformation : this.getAccountInformationSet())
-                res.put(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_key));
-            return res;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+        JSONObject res = new JSONObject();
+        for (AccountInformation accountInformation : this.getAccountInformationSet())
+            res.put(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_key));
+        return res;
     }
 
     /**
@@ -207,25 +198,26 @@ public class Account {
         return res;
     }
 
-    public void edit(JSONObject account_information) throws HttpServletException {
-        try {
-            for (Object object : account_information.entrySet()) {
-                Map.Entry<String, Object> entry = (Map.Entry<String, Object>) object;
-                String key = entry.getKey();
-                String value = (String) entry.getValue();
-                AccountInformation accountInformation = this.getInformationNamed(key);
-                String old_value = null;
-                if (accountInformation == null) {
-                    accountInformation = new AccountInformation(key, RSA.Encrypt(value, this.getPublic_key()), value);
-                    this.getAccountInformationSet().add(accountInformation);
-                } else {
-                    old_value = accountInformation.getDeciphered_information_value();
-                    accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
-                    accountInformation.setDeciphered_information_value(value);
-                }
-                if (key.equals("password") && !value.equals(old_value))
-                    this.setLast_update(new Date());
+    public void edit(JSONObject account_information, HibernateQuery hibernateQuery) throws HttpServletException {
+        for (Object object : account_information.entrySet()) {
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) object;
+            String key = entry.getKey();
+            String value = (String) entry.getValue();
+            AccountInformation accountInformation = this.getInformationNamed(key);
+            String old_value = null;
+            if (accountInformation == null) {
+                accountInformation = new AccountInformation(key, RSA.Encrypt(value, this.getPublic_key()), value);
+                hibernateQuery.saveOrUpdateObject(accountInformation);
+                this.getAccountInformationSet().add(accountInformation);
+            } else {
+                old_value = accountInformation.getDeciphered_information_value();
+                accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
+                accountInformation.setDeciphered_information_value(value);
+                hibernateQuery.saveOrUpdateObject(accountInformation);
             }
+            if (key.equals("password") && !value.equals(old_value))
+                this.setLast_update(new Date());
+        }
             /* for (AccountInformation accountInformation : this.getAccountInformationSet()) {
                 String value = (String) account_information.get(accountInformation.getInformation_name());
                 if (value == null || value.equals(""))
@@ -235,9 +227,6 @@ public class Account {
                 accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
                 accountInformation.setDeciphered_information_value(value);
             } */
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
     }
 
     @Override

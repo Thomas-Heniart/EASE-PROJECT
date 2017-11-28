@@ -140,9 +140,9 @@ public class ServletResetPassword extends HttpServlet {
             String email = sm.getParam("email", true);
             String code = sm.getParam("code", true);
             if (email == null || email.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong email or password.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty email.");
             } else if (code == null || code.equals("")) {
-                throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong informations.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid code.");
             }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT id FROM users WHERE email = :email");

@@ -108,7 +108,7 @@ public class TeamUser {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) {
+    public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -122,7 +122,7 @@ public class TeamUser {
         this.teamUserStatus.setReminder_three_days_sended(false);
     }
 
-    public TeamUser() {
+    public TeamUser() throws HttpServletException {
     }
 
     public Integer getDb_id() {
@@ -325,7 +325,7 @@ public class TeamUser {
         this.getPending_channels().remove(channel);
     }
 
-    public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws GeneralException {
+    public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws HttpServletException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
         TeamUser owner = new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, team, teamUserRole);
         owner.setState(2);
@@ -377,28 +377,21 @@ public class TeamUser {
     }
 
     public void validateRegistration(String deciphered_teamKey, String userPublicKey, DataBaseConnection db) throws HttpServletException {
-        try {
-            if (this.isVerified())
-                throw new HttpServletException(HttpStatus.BadRequest, "TeamUser already registered");
-            DatabaseRequest request = db.prepareRequest("UDPATE teamUsers SET teamKey = ? WHERE id = ?;");
-            this.teamKey = RSA.Encrypt(deciphered_teamKey, userPublicKey);
-            request.setString(this.teamKey);
-            request.setInt(this.db_id);
-            request.set();
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+        if (this.isVerified())
+            throw new HttpServletException(HttpStatus.BadRequest, "TeamUser already registered");
+        DatabaseRequest request = db.prepareRequest("UDPATE teamUsers SET teamKey = ? WHERE id = ?;");
+        this.teamKey = RSA.Encrypt(deciphered_teamKey, userPublicKey);
+        request.setString(this.teamKey);
+        request.setInt(this.db_id);
+        request.set();
     }
 
     public void finalizeRegistration(String userKey, String userPrivateKey, HibernateQuery hibernateQuery) throws HttpServletException {
-        try {
-            String teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
-            this.setTeamKey(AES.encrypt(teamKey, userKey));
-            this.setState(2);
-            hibernateQuery.saveOrUpdateObject(this);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+
+        String teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
+        this.setTeamKey(AES.encrypt(teamKey, userKey));
+        this.setState(2);
+        hibernateQuery.saveOrUpdateObject(this);
     }
 
     public void lastRegistrationStep(String keyUser, String teamKey, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
@@ -485,18 +478,14 @@ public class TeamUser {
     }
 
     public void cipheringStep(String userKey, String userPrivateKey, HibernateQuery hibernateQuery) throws HttpServletException {
-        try {
-            if (this.getState() == 1) {
-                this.finalizeRegistration(userKey, userPrivateKey, hibernateQuery);
-                hibernateQuery.saveOrUpdateObject(this);
-            } else if (this.getState() == 2 && this.isDisabled()) {
-                String deciphered_teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
-                this.setTeamKey(AES.encrypt(deciphered_teamKey, userKey));
-                this.setDisabled(false);
-                hibernateQuery.saveOrUpdateObject(this);
-            }
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
+        if (this.getState() == 1) {
+            this.finalizeRegistration(userKey, userPrivateKey, hibernateQuery);
+            hibernateQuery.saveOrUpdateObject(this);
+        } else if (this.getState() == 2 && this.isDisabled()) {
+            String deciphered_teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
+            this.setTeamKey(AES.encrypt(deciphered_teamKey, userKey));
+            this.setDisabled(false);
+            hibernateQuery.saveOrUpdateObject(this);
         }
     }
 

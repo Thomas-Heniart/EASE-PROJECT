@@ -14,21 +14,17 @@ public class Metrics {
             if (!rs.next())
                 return;
             connection_number = Long.valueOf(rs.getString(1));
-        } catch (GeneralException e) {
+        } catch (HttpServletException e) {
             e.printStackTrace();
         }
     }
 
     public void increaseConnection(DataBaseConnection db) throws HttpServletException {
-        try {
-            connection_number = connection_number + ThreadLocalRandom.current().nextLong(1, 16);
-            DatabaseRequest request = db.prepareRequest("UPDATE ease_metrics SET metric_value = ? WHERE metric_name = ?");
-            request.setString(connection_number.toString());
-            request.setString("app_connections");
-            request.set();
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+        connection_number = connection_number + ThreadLocalRandom.current().nextLong(1, 16);
+        DatabaseRequest request = db.prepareRequest("UPDATE ease_metrics SET metric_value = ? WHERE metric_name = ?");
+        request.setString(connection_number.toString());
+        request.setString("app_connections");
+        request.set();
     }
 
     public Long getConnection_number() {

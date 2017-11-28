@@ -42,6 +42,7 @@ public class ServletGetAppPassword extends HttpServlet {
                 if (teamCardReceiver.isTeamSingleCardReceiver() && (!((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password() && !teamUser.isTeamAdmin()))
                     throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to see the password");
                 Team team = teamCardReceiver.getTeamCard().getTeam();
+                sm.initializeTeamWithContext(team);
                 sm.needToBeTeamUserOfTeam(team);
                 symmetric_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
             } else

@@ -55,7 +55,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
                 Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
                 classicApp.setAccount(account);
             } else
-                classicApp.getAccount().edit(account_information);
+                classicApp.getAccount().edit(account_information, sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {

@@ -3,11 +3,8 @@ package com.Ease.Catalog;
 import com.Ease.Context.Variables;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
-import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,7 +13,6 @@ import org.json.simple.parser.ParseException;
 import javax.persistence.*;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -313,52 +309,6 @@ public class Website {
         res.put("connectWith_websites", connectWith_websites_ids);
         res.put("integration_date", this.getWebsiteAttributes().getAddedDate().getTime());
         return res;
-    }
-
-    /* @TODO to be replaced ASAP do it with a JSON*/
-
-    public Map<String, String> getNeededInfos(ServletManager sm) throws HttpServletException {
-        try {
-            Map<String, String> res = new HashMap<>();
-            for (WebsiteInformation information : this.getWebsiteInformationList()) {
-                String info_name = information.getInformation_name();
-                String value = sm.getServletParam(info_name, false);
-                if (value == null || value.isEmpty())
-                    throw new HttpServletException(HttpStatus.BadRequest, "Wrong info: " + info_name + ".");
-                if (info_name.equals("password")) {
-                    //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
-                    String keyDate = sm.getServletParam("keyDate", true);
-                    if (keyDate != null && !keyDate.equals(""))
-                        value = RSA.Decrypt(value, Integer.parseInt(keyDate));
-                }
-                res.put(info_name, value);
-            }
-            return res;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, "Oops, please contact us at thomas@ease.space");
-        }
-    }
-
-    public Map<String, String> getNeededInfosForEdition(ServletManager sm) throws GeneralException {
-        Map<String, String> infos = new HashMap<String, String>();
-        for (WebsiteInformation info : this.getWebsiteInformationList()) {
-            String info_name = info.getInformation_name();
-            String value = sm.getServletParam(info_name, false);
-            if (value == null || value.equals("")) {
-                if (info_name.equals("password"))
-                    continue;
-                else
-                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
-            }
-            if (info_name.equals("password")) {
-                //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
-                String keyDate = sm.getServletParam("keyDate", true);
-                if (keyDate != null && !keyDate.equals(""))
-                    value = RSA.Decrypt(value, Integer.parseInt(keyDate));
-            }
-            infos.put(info_name, value);
-        }
-        return infos;
     }
 
     /* For current version of askInfo */

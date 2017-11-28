@@ -98,7 +98,7 @@ public class OnStart implements ServletContextListener {
                 request = db.prepareRequest("INSERT INTO logs values('Server Start', 200, NULL, '', 'Server started correctly', ?);");
                 request.setString(date);
 
-            } catch (GeneralException e1) {
+            } catch (HttpServletException e1) {
                 System.out.println("Start failed");
                 String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

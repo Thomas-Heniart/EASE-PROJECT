@@ -1,9 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.GeneralException;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 
 import javax.persistence.*;
 
@@ -79,11 +77,7 @@ public class AccountInformation {
     }
 
     public void decipher(String private_key) throws HttpServletException {
-        try {
-            this.setDeciphered_information_value(RSA.Decrypt(this.getInformation_value(), private_key));
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
+        this.setDeciphered_information_value(RSA.Decrypt(this.getInformation_value(), private_key));
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.Ease.Utils.Crypto;
 
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -10,12 +10,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.ServletManager;
-import org.apache.tomcat.util.codec.binary.Base64;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 
 public class AES {
@@ -110,7 +107,7 @@ public class AES {
 
     }
 
-    public static String cipherKey(String plainKey, String keyUser, String salt) throws GeneralException {
+    public static String cipherKey(String plainKey, String keyUser, String salt) throws HttpServletException {
         try {
             byte[] saltBytes = pepperedSalt(salt.getBytes(), keyUser);
 
@@ -120,7 +117,7 @@ public class AES {
 
             return encrypt(plainKey, new Base64().encodeToString(secretKey.getEncoded()));
         } catch (Exception e) {
-            throw new GeneralException(ServletManager.Code.InternError, e);
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
 

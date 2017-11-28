@@ -86,7 +86,7 @@ public class ServletConnection extends HttpServlet {
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
             sm.setSuccess(res);
-        } catch (GeneralException e) {
+        } catch (HttpServletException e) {
             sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         } catch (Exception e) {
             sm.setError(e);
@@ -99,7 +99,7 @@ public class ServletConnection extends HttpServlet {
         rd.forward(request, response);
     }
 
-    public void addIpInDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
+    public void addIpInDataBase(String client_ip, DataBaseConnection db) throws HttpServletException {
         DatabaseRequest request = db.prepareRequest("SELECT * FROM askingIps WHERE ip= ?;");
         request.setString(client_ip);
         DatabaseResult rs = request.get();
@@ -126,27 +126,28 @@ public class ServletConnection extends HttpServlet {
         return dateFormat.format(new Date(date.getTime() + (expiration_time * ONE_MINUTE_IN_MILLIS)));
     }
 
-    public void removeIpFromDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
+    public void removeIpFromDataBase(String client_ip, DataBaseConnection db) throws HttpServletException {
         DatabaseRequest request = db.prepareRequest("DELETE FROM askingIps WHERE ip = ?;");
         request.setString(client_ip);
         request.set();
     }
 
-    public boolean canConnect(String client_ip, DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("SELECT attempts, expirationDate FROM askingIps WHERE ip= ?;");
-        request.setString(client_ip);
-        DatabaseResult rs = request.get();
-        int attempts = 0;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date expirationDate = new Date();
+    public boolean canConnect(String client_ip, DataBaseConnection db) throws HttpServletException {
         try {
+            DatabaseRequest request = db.prepareRequest("SELECT attempts, expirationDate FROM askingIps WHERE ip= ?;");
+            request.setString(client_ip);
+            DatabaseResult rs = request.get();
+            int attempts = 0;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date expirationDate = new Date();
+
             if (rs.next()) {
                 attempts = Integer.parseInt(rs.getString(1));
                 expirationDate = dateFormat.parse(rs.getString(2));
             }
+            return attempts < max_attempts || expirationDate.compareTo(new Date()) <= 0;
         } catch (Exception e) {
-            throw new GeneralException(ServletManager.Code.InternError, e);
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return attempts < max_attempts || expirationDate.compareTo(new Date()) <= 0;
     }
 }
