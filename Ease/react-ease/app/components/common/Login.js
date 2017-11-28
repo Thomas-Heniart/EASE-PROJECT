@@ -250,7 +250,6 @@ class Login extends React.Component {
       this.props.history.replace('/main/dashboard');
     this.state.knownUser = !!this.state.knownFname && !!this.state.knownEmail;
     if (this.state.knownUser) {
-      this.state.knownFname = base64.decode(this.state.knownFname);
       this.state.activeView = 'known';
     }
     this.setView = this.setView.bind(this);

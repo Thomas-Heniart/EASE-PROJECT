@@ -1,6 +1,7 @@
 import api from "../utils/api";
 import post_api from "../utils/post_api";
 import {fetchTeamApp} from "./teamActions";
+import {showExtensionDownloadModal} from "./modalActions";
 
 export function fetchDashboard(){
   return (dispatch, getState) => {
@@ -55,22 +56,12 @@ export function validateApp({app_id}) {
 export function deleteApp({app_id}){
   return (dispatch, getState) => {
     const store = getState();
-    const app = store.dashboard.apps[app_id];
-    const profile = store.dashboard.profiles[app.profile_id];
-    const isEmpty = profile.app_ids.length === 1;
     return post_api.dashboard.deleteApp({
       app_id: app_id
     }).then(response => {
-      dispatch({
-        type: 'DASHBOARD_APP_REMOVED',
-        payload: {
-          app_id: app_id
-        }
-      });
-      if (isEmpty)
-        dispatch(removeProfile({
-          profile_id: profile.id
-        }));
+      dispatch(deleteAppAction({
+        app_id: app_id
+      }));
       return response;
     }).catch(err => {
       throw err;
@@ -125,8 +116,6 @@ export function endAppDrag(){
     const app = store.dashboard.apps[app_id];
     const index = store.dashboard.profiles[app.profile_id].app_ids.indexOf(app_id);
     const source_profile_id = store.dashboard_dnd.dragging_app_source_profile_id;
-    const last_profile = store.dashboard.profiles[source_profile_id];
-    const is_last_profile_empty = !last_profile.app_ids.length;
 
     dispatch({
       type: 'END_APP_DRAG',
@@ -134,22 +123,11 @@ export function endAppDrag(){
         app_id: app_id
       }
     });
-    if (is_last_profile_empty)
-      dispatch({
-        type: 'DASHBOARD_PROFILE_REMOVED',
-        payload: {
-          profile_id: source_profile_id
-        }
-      });
+    dispatch(checkIfProfileEmpty({profile_id: source_profile_id}));
     post_api.dashboard.moveApp({
       app_id: app_id,
       profile_id: app.profile_id,
       position: index
-    }).then(response => {
-      if (is_last_profile_empty)
-        post_api.dashboard.deleteProfile({
-          profile_id: source_profile_id
-        });
     });
   };
 }
@@ -286,9 +264,9 @@ export function checkIfProfileEmpty({profile_id}){
   return (dispatch, getState) => {
     const store = getState();
     if (!store.dashboard.profiles[profile_id].app_ids.length){
-/*      post_api.dashboard.deleteProfile({
-        profile_id: profile_id
-      });*/
+      /*      post_api.dashboard.deleteProfile({
+              profile_id: profile_id
+            });*/
       dispatch({
         type: 'DASHBOARD_PROFILE_REMOVED',
         payload: {
@@ -371,6 +349,44 @@ export function editAppName({app_id, name}) {
           app: app
         }
       });
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function validateTutorial() {
+  return (dispatch, getState) => {
+    return post_api.dashboard.validateTutorial().then(response => {
+      dispatch({
+        type: 'DASHBOARD_TUTORIAL_DONE'
+      });
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function AppConnection({app_id, keep_focus}){
+  return (dispatch, getState) => {
+    if (!document.querySelector('#new_ease_extension')){
+      dispatch(showExtensionDownloadModal({active: true}));
+      return;
+    }
+    return api.dashboard.getAppConnectionInformation({
+      app_id: app_id
+    }).then(response => {
+      let json = {};
+      json.detail = response;
+      json.detail = json.detail.map(item => {
+        Object.keys(item.user).map(id => {
+          item.user[id] = decipher(item.user[id]);
+        });
+        return item;
+      });
+      json.detail.highlight = !keep_focus;
+      document.dispatchEvent(new CustomEvent('NewConnection', json));
+      return json;
     }).catch(err => {
       throw err;
     });

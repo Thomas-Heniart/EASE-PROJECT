@@ -1,5 +1,7 @@
 var axios = require('axios');
 
+axios.defaults.withCredentials = true;
+
 const basic_post = (url, params) => {
   return axios.post(url, params)
       .then(response => {
@@ -12,6 +14,9 @@ const basic_post = (url, params) => {
 
 module.exports = {
   dashboard: {
+    validateTutorial : () => {
+      return basic_post('/api/v1/common/TutoDone');
+    },
     createProfile : function({name, column_index}) {
       return basic_post('/api/v1/dashboard/CreateProfile', {
         name: name,
@@ -965,14 +970,10 @@ module.exports = {
   },
   common : {
     connect : function(email, password){
-      return axios.post('/api/v1/common/Connection', {
+      return basic_post('/api/v1/common/Connection', {
         email: email,
         password: cipher(password)
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
-      })
+      });
     },
     askEditEmail : function(password, new_email){
       return axios.post('/api/v1/common/AskEditEmail', {

@@ -227,6 +227,17 @@ module.exports = {
         });
   },
   dashboard: {
+    getAppConnectionInformation: ({app_id}) => {
+      return axios.get('/api/v1/dashboard/GetConnection', {
+        params: {
+          app_id: app_id
+        }
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        return err.response.data;
+      });
+    },
     fetchProfiles: function(){
       return axios.get('/api/v1/dashboard/GetProfiles').then(response => {
         return response.data;

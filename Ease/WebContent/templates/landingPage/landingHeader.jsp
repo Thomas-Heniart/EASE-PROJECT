@@ -26,7 +26,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="/?skipLanding=true" id="connexionButton">
+					<a href="/#/login?skipLanding=true" id="connexionButton">
 						<fmt:message key="landing.header.connexion-link" />
 					</a>
 				</li>

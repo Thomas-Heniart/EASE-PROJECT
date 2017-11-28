@@ -4,6 +4,7 @@ import {showTeamSingleAppSettingsModal, showLockedTeamAppModal} from "../../acti
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
 import {connect} from "react-redux";
+import {AppConnection} from "../../actions/dashboardActions";
 
 @connect(store => ({
   teams: store.teams,
@@ -13,6 +14,12 @@ class TeamSingleApp extends Component {
   constructor(props){
     super(props);
   }
+  connect = (e) => {
+    this.props.dispatch(AppConnection({
+      app_id: this.props.app.id,
+      keep_focus: e.ctrlKey
+    }));
+  };
   render(){
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -21,7 +28,8 @@ class TeamSingleApp extends Component {
     const filler = team.team_users[team_app.team_user_filler_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
-    const password_update = !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+    const password_update = filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+
     return (
         <div class='app'>
           <div class="logo_area">
@@ -36,7 +44,7 @@ class TeamSingleApp extends Component {
             {team_app.empty && team_app.team_user_filler_id !== me.id &&
             <DisabledAppIndicator filler_name={filler.username}/>}
             <div class="logo_handler">
-              <img class="logo" src={team_app.logo}/>
+              <img class="logo" src={team_app.logo} onClick={this.connect}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}>
                 Settings
               </button>

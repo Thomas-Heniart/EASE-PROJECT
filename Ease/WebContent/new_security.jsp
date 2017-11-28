@@ -94,7 +94,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/?skipLanding=true" id="connexionButton">
+                    <a href="/#/login?skipLanding=true" id="connexionButton">
                         <fmt:message key="landing.header.connexion-link" />
                     </a>
                 </li>
@@ -225,7 +225,7 @@
                 <p><fmt:message key="security.whitepaper.text"/></p>
             </div>
             <div style="text-align: center">
-                <a href="/teams#/registration" class="btn btn-xl signUpButton">
+                <a href="/#/registration" class="btn btn-xl signUpButton">
                     <fmt:message key="security.button.text"/>
                 </a>
             </div>
