@@ -28,6 +28,8 @@ import {
   transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
 import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
+import {reduxActionBinder} from "../../actions/index";
+import {connect} from "react-redux";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = findMeInReceivers(app.receivers, me.id);
@@ -123,21 +125,6 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
                  <span>Password is up to date</span>}
                  {!up_to_date &&
                  <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
-
-
-                 {/*{!accepted && <span>App acceptation pending...</span>}*/}
-                 {/*{accepted &&*/}
-                 {/*<span>Mobile access: on</span>}*/}
-                 {/*{accepted &&*/}
-                 {/*<br/>}*/}
-                 {/*{accepted &&*/}
-                 {/*<span>Password copy: on</span>}*/}
-                 {/*{accepted &&*/}
-                 {/*<br/>}*/}
-                 {/*{accepted && up_to_date &&*/}
-                 {/*<span>Password is up to date</span>}*/}
-                 {/*{accepted && !up_to_date &&*/}
-                 {/*<span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}*/}
                </div>}/>
   )
 };
@@ -145,9 +132,9 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
 const SimpleCredentialsInput = ({receiver, me, team_id}) => {
   return (
       <div class="receiver align_items_center">
-        <EnterpriseAppReceiverLabel username={receiver.username} up_to_date={!receiver.password_must_be_updated} accepted={receiver.credentials[0].value ? true : false}/>
+        <EnterpriseAppReceiverLabel username={receiver.username} up_to_date={!receiver.password_must_be_updated} accepted={!receiver.empty}/>
         {receiver.credentials.map(item => {
-          return <ReadOnlyTeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={true}
+          return <ReadOnlyTeamAppCredentialInput pwd_filled={!receiver.empty} readOnly={true}
                                                  receiver_id={receiver.id} key={item.priority} onChange={null}
                                                  item={item}/>
         })}
@@ -233,6 +220,9 @@ const isDifferentCredentials = (first, second) => {
   return different;
 };
 
+@connect(store => ({
+  teams: store.teams
+}), reduxActionBinder)
 class EnterpriseTeamApp extends Component {
   constructor(props){
     super(props);
@@ -403,6 +393,7 @@ class EnterpriseTeamApp extends Component {
       const user = selectItemFromListById(this.props.users, item.team_user_id);
       return {
         password_must_be_updated: item.password_must_be_updated,
+        empty: item.empty,
         accepted: item.accepted,
         id: item.team_user_id,
         password_filled: item.password_filled,
@@ -424,7 +415,7 @@ class EnterpriseTeamApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.website;
     const users = this.getUsers();
-    const room_manager = selectItemFromListById(users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
+    const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
                    onSubmit={this.modify}>
