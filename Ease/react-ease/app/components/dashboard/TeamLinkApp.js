@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {DepartureDatePassedIndicator, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showTeamLinkAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed} from "../../utils/utils";
@@ -32,7 +32,9 @@ class TeamLinkApp extends Component {
           <div class="logo_area">
             {app.new &&
             <NewAppLabel/>}
-            {(me.disabled || teamUserDepartureDatePassed(me.departure_date)) &&
+            {teamUserDepartureDatePassed(me.departure_date) &&
+            <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
+            {me.disabled &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.process}/>
