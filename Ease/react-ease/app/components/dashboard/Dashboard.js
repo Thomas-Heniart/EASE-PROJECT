@@ -3,6 +3,7 @@ import classnames from "classnames";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {showLogWithAppSettingsModal, showLinkAppSettingsModal, showSimpleAppSettingsModal, showExtensionDownloadModal} from "../../actions/modalActions";
 import Profile from "./Profile";
+import Tutorial from "./Tutorial";
 import DashboardColumn from "./DashboardColumn";
 import {connect} from "react-redux";
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -15,7 +16,8 @@ const ScrollingComponent = withScrolling('div');
 
 @connect(store => ({
   dashboard: store.dashboard,
-  background_picture: store.common.user.background_picture
+  background_picture: store.common.user.background_picture,
+  tutorial_done: store.common.user.status.tuto_done
 }))
 class Dashboard extends Component {
   constructor(props){
@@ -42,6 +44,8 @@ class Dashboard extends Component {
                   <DashboardColumn idx={idx} key={idx} profile_ids={column}/>
               )
             })}
+            {!this.props.tutorial_done &&
+            <Tutorial/>}
           </ScrollingComponent>
         </div>
     )

@@ -109,6 +109,15 @@ export default function reducer(state=initialState, action) {
         homepage: action.payload.homepage
       }
     }
+    case 'DASHBOARD_TUTORIAL_DONE': {
+      return update(state, {
+        user: {
+          status: {
+            tuto_done: {$set: true}
+          }
+        }
+      })
+    }
   }
   return state;
 }

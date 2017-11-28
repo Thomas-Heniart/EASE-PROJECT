@@ -7,6 +7,10 @@ class LinkApp extends Component {
   constructor(props){
     super(props);
   }
+  process = () => {
+    const {app} = this.props;
+    window.open(app.url, '_blank');
+  };
   render(){
     const {app, dispatch} = this.props;
     return (
@@ -15,7 +19,7 @@ class LinkApp extends Component {
             {app.new &&
             <NewAppLabel/>}
             <div class="logo_handler">
-              <img class="logo" src={app.logo}/>
+              <img class="logo" src={app.logo} onClick={this.process}/>
               <button class="settings_button" onClick={e => {dispatch(showLinkAppSettingsModal({active: true, app:app}))}}>Settings</button>
             </div>
           </div>

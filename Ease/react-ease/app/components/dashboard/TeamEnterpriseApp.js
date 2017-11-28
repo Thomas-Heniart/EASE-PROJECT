@@ -4,6 +4,7 @@ import {showTeamEnterpriseAppSettingsModal, showLockedTeamAppModal, showUpdateAp
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
 import {connect} from "react-redux";
+import {AppConnection} from "../../actions/dashboardActions";
 
 @connect(store => ({
   teams: store.teams,
@@ -13,6 +14,12 @@ class TeamEnterpriseApp extends Component {
   constructor(props){
     super(props);
   }
+  connect = (e) => {
+    this.props.dispatch(AppConnection({
+      app_id: this.props.app.id,
+      keep_focus: e.ctrlKey
+    }));
+  };
   render(){
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -34,7 +41,7 @@ class TeamEnterpriseApp extends Component {
             {meReceiver.empty &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">
-              <img class="logo" src={team_app.logo}/>
+              <img class="logo" src={team_app.logo} onClick={this.connect}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}>
                 Settings
               </button>

@@ -13,6 +13,12 @@ class TeamLinkApp extends Component {
   constructor(props){
     super(props);
   }
+  process = () => {
+    const {app} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+
+    window.open(team_app.url, '_blank');
+  };
   render(){
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -29,7 +35,7 @@ class TeamLinkApp extends Component {
             {(me.disabled || teamUserDepartureDatePassed(me.departure_date)) &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
             <div class="logo_handler">
-              <img class="logo" src={app.logo}/>
+              <img class="logo" src={app.logo} onClick={this.process}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamLinkAppSettingsModal({active: true, app: app}))}}>
                 Settings
               </button>
