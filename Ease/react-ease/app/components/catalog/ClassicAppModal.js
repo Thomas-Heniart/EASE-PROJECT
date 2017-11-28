@@ -145,18 +145,38 @@ class AddBookmarkForm extends Component {
   }
   confirm = (e) => {
     e.preventDefault();
+    let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
-    this.props.catalogAddBookmark({
-      name: this.props.appName,
-      profile_id: this.props.profile_id,
-      url: this.props.url,
-      img_url: this.props.website.logo
-    }).then(resp => {
-      this.setState({loading: false});
-      this.props.showCatalogAddAppModal({active: false});
-    }).catch(err => {
-      this.setState({loading: false, errorMessage:err});
-    });
+    if (newProfile === 0) {
+      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+        newProfile = response.id;
+        this.props.catalogAddBookmark({
+          name: this.props.appName,
+          profile_id: newProfile,
+          url: this.props.url,
+          img_url: this.props.website.logo
+        }).then(resp => {
+          this.setState({loading: false});
+          this.props.showCatalogAddAppModal({active: false});
+        }).catch(err => {
+          this.setState({loading: false, errorMessage: err});
+        });
+      }).catch(err => {
+      });
+    }
+    else {
+      this.props.catalogAddBookmark({
+        name: this.props.appName,
+        profile_id: newProfile,
+        url: this.props.url,
+        img_url: this.props.website.logo
+      }).then(resp => {
+        this.setState({loading: false});
+        this.props.showCatalogAddAppModal({active: false});
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
+      });
+    }
   };
   render(){
     const {url, handleInput} = this.props;
@@ -195,23 +215,43 @@ class AddClassicAppForm extends Component {
     super(props);
     this.state = {
       loading: false,
-      errorMessage: ''
+      errorMessage: '',
     }
   }
   confirm = (e) => {
     e.preventDefault();
-    this.setState({loading: true});
-    this.props.catalogAddClassicApp({
-      name: this.props.appName,
-      website_id: this.props.website.id,
-      profile_id:this.props.profile_id,
-      account_information: transformCredentialsListIntoObject(this.props.credentials)
-    }).then(app => {
-      this.setState({loading: false});
-      this.props.showCatalogAddAppModal({active: false});
-    }).catch(err => {
-      this.setState({loading: false, errorMessage: err});
-    });
+    let newProfile = this.props.profile_id;
+    this.setState({loading: true, errorMessage: ''});
+    if (newProfile === 0) {
+      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+        newProfile = response.id;
+        this.props.catalogAddClassicApp({
+          name: this.props.appName,
+          website_id: this.props.website.id,
+          profile_id: newProfile,
+          account_information: transformCredentialsListIntoObject(this.props.credentials)
+        }).then(app => {
+          this.setState({loading: false});
+          this.props.showCatalogAddAppModal({active: false});
+        }).catch(err => {
+          this.setState({loading: false, errorMessage: err});
+        });
+      }).catch(err => {
+      });
+    }
+    else {
+      this.props.catalogAddClassicApp({
+        name: this.props.appName,
+        website_id: this.props.website.id,
+        profile_id: newProfile,
+        account_information: transformCredentialsListIntoObject(this.props.credentials)
+      }).then(app => {
+        this.setState({loading: false});
+        this.props.showCatalogAddAppModal({active: false});
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
+      });
+    }
   };
   render(){
     const {
@@ -311,18 +351,38 @@ class AddLogWithAppForm extends Component {
   }
   confirm = (e) => {
     e.preventDefault();
+    let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
-    this.props.catalogAddLogWithApp({
-      name: this.props.appName,
-      website_id: this.props.website.id,
-      profile_id: this.props.profile_id,
-      logWith_app_id: this.state.selectedAppId
-    }).then(app => {
-      this.setState({loading: false});
-      this.props.showCatalogAddAppModal({active: false});
-    }).catch(err => {
-      this.setState({loading: false, errorMessage: err});
-    });
+    if (newProfile === 0) {
+      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+        newProfile = response.id;
+        this.props.catalogAddLogWithApp({
+          name: this.props.appName,
+          website_id: this.props.website.id,
+          profile_id: newProfile,
+          logWith_app_id: this.state.selectedAppId
+        }).then(app => {
+          this.setState({loading: false});
+          this.props.showCatalogAddAppModal({active: false});
+        }).catch(err => {
+          this.setState({loading: false, errorMessage: err});
+        });
+      }).catch(err => {
+      });
+    }
+    else {
+      this.props.catalogAddLogWithApp({
+        name: this.props.appName,
+        website_id: this.props.website.id,
+        profile_id: newProfile,
+        logWith_app_id: this.state.selectedAppId
+      }).then(app => {
+        this.setState({loading: false});
+        this.props.showCatalogAddAppModal({active: false});
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
+      });
+    }
   };
   selectApp = (id) => {
     this.setState({selectedAppId: id});
@@ -398,39 +458,41 @@ class ClassicAppModal extends React.Component {
       url: this.props.modal.website.landing_url,
       profiles: [],
       selectedProfile: -1,
+      profileName: '',
       selectedTeam: -1,
       selectedRoom: -1,
       view: 1,
-      loading: false
+      loading: false,
+      profileAdded: false
     }
   }
   chooseLogWith = (logwithId) => {
     const logWithWebsite = selectItemFromListById(this.state.logWith_websites, logwithId);
     this.setState({view: 3, choosenLogWithWebsite:logWithWebsite});
-
   };
   componentWillMount(){
     this.setState({loading: true});
     const dashboard_apps = this.props.dashboard.apps;
-    api.dashboard.fetchProfiles().then(profiles => {
-      this.setState({profiles: profiles});
-      let logwith = this.props.modal.website.connectWith_websites.map(item => {
-        let website = selectItemFromListById(this.props.catalog.websites, item);
-        let apps = [];
-        profiles.map(item => {
-          item.app_ids.map(id => {
-            const app = dashboard_apps[id];
+    const profiles = Object.keys(this.props.dashboard.profiles).map(id => (
+      this.props.dashboard.profiles[id]
+    ));
+    this.setState({profiles: profiles});
+    let logwith = this.props.modal.website.connectWith_websites.map(item => {
+      let website = selectItemFromListById(this.props.catalog.websites, item);
+      let apps = [];
+      profiles.map(item => {
+        item.app_ids.map(id => {
+          const app = dashboard_apps[id];
+          if (app.type !== 'teamLinkApp' && app.type !== 'linkApp') {
             if (app.website.id === website.id && (app.type === 'classicApp' || app.type === 'logWithApp'))
               apps.push(app);
-          }, this);
+          }
         }, this);
-        website.personal_apps = apps;
-        return website;
-      });
-      this.setState({logWith_websites: logwith, loading: false});
-    }).catch(err => {
-      this.setState({loading: false});
+      }, this);
+      website.personal_apps = apps;
+      return website;
     });
+    this.setState({logWith_websites: logwith, loading: false});
   }
   handleInput = handleSemanticInput.bind(this);
   handleCredentialInput = (e, {name, value}) => {
@@ -440,6 +502,13 @@ class ClassicAppModal extends React.Component {
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  createProfile = () => {
+    const newProfile = {id: 0, name: this.state.profileName};
+    if (this.state.profileName.length === 0)
+      return;
+    this.addProfile(newProfile);
+    this.setState({profileAdded: true});
   };
   selectProfile = (id) => {
     this.setState({ selectedProfile: id, selectedTeam: -1, selectedRoom: -1 });
@@ -475,7 +544,8 @@ class ClassicAppModal extends React.Component {
               handleInput={this.handleInput}
               selectedProfile={this.state.selectedProfile}
               selectedRoom={this.state.selectedRoom}
-              addProfile={this.addProfile}
+              profileAdded={this.state.profileAdded}
+              createProfile={this.createProfile}
               confirm={this.changeView.bind(null, 2)}
               selectProfile={this.selectProfile}
               selectRoom={this.selectRoom} />}
@@ -489,6 +559,7 @@ class ClassicAppModal extends React.Component {
               appName={this.state.name}
               handleInput={this.handleInput}
               profile_id={this.state.selectedProfile}
+              profileName={this.state.profileName}
               handleCredentialInput={this.handleCredentialInput}
               chooseLogWith={this.chooseLogWith}
               changeView={this.changeView}/>}
