@@ -387,6 +387,8 @@ public class User {
         Cookie cookie1 = new Cookie("fname", this.getUsername());
         cookie.setMaxAge(Integer.MAX_VALUE);
         cookie1.setMaxAge(Integer.MAX_VALUE);
+        cookie.setPath("/");
+        cookie1.setPath("/");
         cookies.add(cookie);
         cookies.add(cookie1);
         return cookies;

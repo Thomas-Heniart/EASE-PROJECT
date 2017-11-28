@@ -79,6 +79,7 @@ public class ServletConnection extends HttpServlet {
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
+            cookie.setPath("/");
             cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
             response.addCookie(cookie);
             user.getCookies().forEach(response::addCookie);
