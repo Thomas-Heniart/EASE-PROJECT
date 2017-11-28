@@ -17,6 +17,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -135,9 +136,19 @@ public abstract class ServletManager {
     public void needToBeConnected() throws HttpServletException {
         Integer user_id = (Integer) this.getSession().getAttribute("user_id");
         String jwt = this.request.getHeader("Authorization");
-        if (jwt == null && user_id == null)
+        if (jwt == null) {
+            if (request.getCookies() != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    if (cookie.getName().equals("JWT")) {
+                        jwt = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        }
+        if (jwt == null && user_id == null) {
             throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-        else if (jwt != null) {
+        } else if (jwt != null) {
             Key secret = (Key) this.getContextAttr("secret");
             this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
             if (this.user == null)
@@ -259,16 +270,16 @@ public abstract class ServletManager {
     }
 
     private void saveLogs() throws HttpServletException {
-        String argsString = "";
+        StringBuilder argsString = new StringBuilder();
         Set<Entry<String, String>> setHm = args.entrySet();
         for (Entry<String, String> e : setHm) {
-            argsString += "<" + e.getKey() + ":" + e.getValue() + ">";
+            argsString.append("<").append(e.getKey()).append(":").append(e.getValue()).append(">");
         }
         if (this.logResponse == null)
             this.logResponse = "Success";
         try {
             this.logResponse = URLEncoder.encode(this.logResponse, "UTF-8");
-            argsString = URLEncoder.encode(argsString, "UTF-8");
+            argsString = new StringBuilder(URLEncoder.encode(argsString.toString(), "UTF-8"));
             DatabaseRequest request = this.getLogsDb().prepareRequest("INSERT INTO logs values(NULL, ?, ?, ?, ?, ?, default);");
             request.setString(this.servletName);
             request.setInt(this.response.getStatus());
@@ -276,9 +287,10 @@ public abstract class ServletManager {
                 request.setNull();
             else
                 request.setInt(this.user.getDb_id());
-            request.setString(argsString);
+            request.setString(argsString.toString());
             request.setString(this.logResponse);
             request.set();
+            System.out.println(request.toString());
             this.getLogsDb().close();
         } catch (UnsupportedEncodingException e) {
             this.setInternError();

@@ -40,7 +40,7 @@ public class UserFactory {
             return null;
         JsonWebToken jsonWebToken = user.getJsonWebToken();
         if (jsonWebToken == null || expiration_date > jsonWebToken.getExpiration_date() || !jsonWebToken.isGoodConnectionToken(connection_token))
-            throw new HttpServletException(HttpStatus.Forbidden, "Invalid JWT");
+            throw new HttpServletException(HttpStatus.AccessDenied, "Invalid JWT");
         return user;
     }
 
