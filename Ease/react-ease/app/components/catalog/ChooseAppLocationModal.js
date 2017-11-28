@@ -2,10 +2,8 @@ import React from 'react';
 import { Input, Button, Container, Form, Table, List, Loader, Icon } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
-import { Switch, Route } from 'react-router-dom';
 import {dashboard} from "../../utils/post_api";
 import {handleSemanticInput} from "../../utils/utils";
-var api = require('../../utils/api');
 
 @connect(store => ({
     teams: store.teams,
@@ -17,7 +15,7 @@ class ChooseAppLocationModal extends React.Component {
     this.state = {
       view: 1,
       profiles: [],
-      profileName: '',
+      profileName: ''
     }
   }
   handleInput = handleSemanticInput.bind(this);
