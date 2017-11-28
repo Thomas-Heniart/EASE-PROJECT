@@ -85,9 +85,33 @@ module.exports = {
         app_id: app_id,
         name: name
       });
+    },
+    editSsoGroup: ({sso_group_id, account_information}) => {
+      return basic_post('/api/v1/dashboard/EditSsoGroup', {
+        sso_group_id: sso_group_id,
+        account_information: account_information
+      });
+    },
+    deleteSsoGroup: ({sso_group_id}) => {
+      return basic_post('/api/v1/dashboard/DeleteSsoGroup', {
+        sso_group_id: sso_group_id
+      });
+    },
+    createSsoGroup: ({sso_id, account_information}) => {
+      return basic_post('/api/v1/catalog/CreateSsoGroup', {
+        sso_id: sso_id,
+        account_information: account_information
+      });
     }
   },
   catalog: {
+    addSsoApp: ({name, profile_id, sso_group_id}) => {
+      return basic_post('/api/v1/catalog/AddSsoApp', {
+        name: name,
+        profile_id: profile_id,
+        sso_group_id: sso_group_id
+      });
+    },
     addClassicApp: ({name, website_id, profile_id, account_information}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);

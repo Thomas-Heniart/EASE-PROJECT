@@ -153,7 +153,7 @@ class ClassicAppSettingsModal extends Component {
           <Container class="app_settings_modal">
             <div class="display-flex align_items_center">
               <div class="squared_image_handler">
-                <img src={this.props.app.logo} alt="Website logo"/>
+                <img src={app.website.logo} alt="Website logo"/>
               </div>
               <AppSettingsNameInput value={this.state.appName} onChange={this.handleInput}/>
             </div>

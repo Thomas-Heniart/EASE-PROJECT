@@ -10,7 +10,8 @@ import LogWithApp from "./LogWithApp";
 import TeamEnterpriseApp from "./TeamEnterpriseApp";
 import TeamSingleApp from "./TeamSingleApp";
 import TeamLinkApp from "./TeamLinkApp";
-import {createProfileAndInsertApp, moveApp, beginAppDrag,endAppDrag, checkIfProfileEmpty} from "../../actions/dashboardActions";
+import SsoApp from  "./SsoApp";
+import {createProfileAndInsertApp, moveApp, beginAppDrag,endAppDrag} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 
 class AppWrapper extends Component {
@@ -38,12 +39,14 @@ class AppWrapper extends Component {
         return <TeamSingleApp app={app} dispatch={dispatch}/>;
       case 'teamEnterpriseApp':
         return <TeamEnterpriseApp app={app} dispatch={dispatch}/>;
+      case 'ssoApp':
+        return <SsoApp app={app} dispatch={dispatch}/>;
       default:
         return null;
     }
   };
   render(){
-    const {app, connectDragSource, connectDropTarget, isDragging} = this.props;
+    const {connectDragSource, connectDropTarget, isDragging} = this.props;
 
     return connectDragSource(connectDropTarget(
         <div class="app_wrapper" class={classnames('app_wrapper', isDragging ? 'dragging': null)}>

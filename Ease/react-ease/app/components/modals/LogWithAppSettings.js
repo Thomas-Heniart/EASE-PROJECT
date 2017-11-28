@@ -59,7 +59,7 @@ class LogWithAppSettings extends Component {
     const lw_apps = Object.keys(apps).map(item => {
       return apps[item];
     }).filter(item => {
-      return item.type === 'classicApp' && item.website.id === app.logWith_website.id
+      return item.website.id === app.logWith_website.id
     });
     if (this.props.app.new)
       this.props.dispatch(validateApp({

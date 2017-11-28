@@ -34,6 +34,7 @@ import TeamLinkAppSettingsModal from "../modals/TeamLinkAppSettingsModal";
 import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
 import LockedTeamAppModal from "../modals/LockedTeamAppModal";
 import LogWithAppSettings from "../modals/LogWithAppSettings";
+import SsoAppSettingsModal from "../modals/SsoAppSettingsModal";
 import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
 import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
 
@@ -147,6 +148,8 @@ class ModalsContainer extends Component{
           <TeamLinkAppSettingsModal/>}
           {this.props.modals.updateAppPassword.active &&
           <UpdateAppPasswordModal/>}
+          {this.props.modals.ssoAppSettings.active &&
+          <SsoAppSettingsModal/>}
         </div>
     )
   }

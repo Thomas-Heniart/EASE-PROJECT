@@ -4,13 +4,14 @@ import update from 'immutability-helper';
 export const dashboard = createReducer({
   columns: [],
   profiles: {},
-  apps: {}
+  apps: {},
+  sso_groups: {}
 }, {
   ['FETCH_DASHBOARD_FULFILLED'](state, action){
     let columns = [];
     let profiles = {};
     let apps = {};
-
+    let sso_groups = {};
     columns = action.payload.columns.map(item => {
       return item.map(profile => {
         profiles[profile.id] = profile;
@@ -20,11 +21,15 @@ export const dashboard = createReducer({
     action.payload.apps.map(app => {
       apps[app.id] = app;
     });
+    action.payload.sso_groups.map(group => {
+      sso_groups[group.id] = group;
+    });
     return {
       ...state,
       columns: columns,
       profiles: profiles,
-      apps: apps
+      apps: apps,
+      sso_groups: sso_groups
     }
   },
   ['DASHBOARD_APP_CHANGED'](state, action){
@@ -39,7 +44,7 @@ export const dashboard = createReducer({
     const app_id = action.payload.app_id;
     const app = state.apps[app_id];
 
-    return update(state, {
+    let new_state = update(state, {
       apps: {$unset: [app_id]},
       profiles: {
         [app.profile_id]: {
@@ -47,11 +52,21 @@ export const dashboard = createReducer({
         }
       }
     });
+    if (app.type === 'ssoApp'){
+      new_state = update(state, {
+        sso_groups: {
+          [app.sso_group_id]: {
+            sso_app_ids: {$splice: [[state.sso_groups[app.sso_group_id].sso_app_ids.indexOf(app.id), 1]]}
+          }
+        }
+      });
+    }
+    return new_state;
   },
   ['DASHBOARD_APP_ADDED'](state, action){
     const {app} = action.payload;
 
-    return update(state, {
+    let new_state = update(state, {
       apps: {
         [app.id]: {$set: app}
       },
@@ -60,6 +75,40 @@ export const dashboard = createReducer({
           app_ids: {$push: [app.id]}
         }
       }
+    });
+    if (app.type === 'ssoApp'){
+      new_state = update(new_state, {
+        sso_groups: {
+          [app.sso_group_id]: {
+            sso_app_ids: {$push: [app.id]}
+          }
+        }
+      });
+    }
+    return new_state;
+  },
+  ['SSO_GROUP_ADDED'](state, action){
+    const {sso_group} = action.payload;
+    return update(state, {
+      sso_groups: {
+        [sso_group.id]: {$set: sso_group}
+      }
+    });
+  },
+  ['SSO_GROUP_CHANGED'](state,action){
+    const {sso_group} = action.payload;
+
+    return update(state, {
+      sso_groups: {
+        [sso_group.id]: {$set: sso_group}
+      }
+    });
+  },
+  ['SSO_GROUP_REMOVED'](state, action){
+    const {sso_group_id} = action.payload;
+
+    return update(state, {
+      sso_groups: {$unset: [sso_group_id]}
     });
   },
   ['DASHBOARD_PROFILE_REMOVED'](state, action){
