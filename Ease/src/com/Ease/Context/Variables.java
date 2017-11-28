@@ -4,6 +4,7 @@ public class Variables {
 
     public static final String MJ_APIKEY_PUBLIC = "c6b4097b55dc8d93c46f44c621efeca6";
     public static final String MJ_APIKEY_PRIVATE = "c3e6e3b927fdbefd4b3f5d2b25a31ce2";
+    public static String WEBSITES_FOLDER_PATH;
 
     //Prod
     /*

@@ -29,6 +29,7 @@ public class ServletGetConnection extends HttpServlet {
             TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
             if (teamCardReceiver != null) {
                 Team team = teamCardReceiver.getTeamCard().getTeam();
+                sm.initializeTeamWithContext(team);
                 sm.needToBeTeamUserOfTeam(team);
                 symmetric_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
             } else

@@ -23,6 +23,12 @@ public class ServletValidateApp extends HttpServlet {
             App app = sm.getUser().getApp(app_id, hibernateQuery);
             app.setNewApp(false);
             sm.saveOrUpdate(app);
+            String symmetric_key;
+            if (app.getTeamCardReceiver() == null)
+                symmetric_key = (String) sm.getUserProperties(sm.getUser().getDb_id()).get("keyUser");
+            else
+                symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+            app.decipher(symmetric_key);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

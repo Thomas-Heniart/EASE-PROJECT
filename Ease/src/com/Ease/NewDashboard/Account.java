@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
@@ -256,6 +257,13 @@ public class Account {
     }
 
     public boolean satisfyWebsite(Website website) {
-        return this.getAccountInformationSet().size() == website.getWebsiteInformationList().size();
+        if (this.getAccountInformationSet().size() != website.getWebsiteInformationList().size())
+            return false;
+        for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
+            AccountInformation accountInformation = this.getInformationNamed(websiteInformation.getInformation_name());
+            if (accountInformation == null || accountInformation.getDeciphered_information_value().equals(""))
+                return false;
+        }
+        return true;
     }
 }
