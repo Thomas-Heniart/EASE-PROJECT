@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
+import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.NewDashboard.SsoGroup;
 import com.Ease.User.User;
@@ -28,7 +29,11 @@ public class ServletEditSsoGroup extends HttpServlet {
             SsoGroup ssoGroup = user.getSsoGroup(sso_group_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0));
+            Account account = ssoGroup.getAccount();
+            if (account == null)
+                ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0));
+            else
+                account.edit(account_information, sm.getHibernateQuery());
             sm.saveOrUpdate(ssoGroup);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.CHANGED, ssoGroup.getJson()));
             sm.setSuccess(ssoGroup.getJson());

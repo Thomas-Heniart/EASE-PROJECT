@@ -211,6 +211,8 @@ public class Account {
                 hibernateQuery.saveOrUpdateObject(accountInformation);
                 this.getAccountInformationSet().add(accountInformation);
             } else {
+                if (value.equals(""))
+                    continue;
                 old_value = accountInformation.getDeciphered_information_value();
                 accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
                 accountInformation.setDeciphered_information_value(value);
