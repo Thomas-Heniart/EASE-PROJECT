@@ -53,6 +53,7 @@ public class EditTeamSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             teamSingleCard.setPassword_reminder_interval(password_reminder_interval);
             String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+            teamSingleCard.decipher(teamKey);
             if (teamSingleCard.getAccount() == null) {
                 Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval());
                 teamSingleCard.setAccount(account);

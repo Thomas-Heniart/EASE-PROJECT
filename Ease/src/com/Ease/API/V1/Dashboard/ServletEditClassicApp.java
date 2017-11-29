@@ -43,9 +43,10 @@ public class ServletEditClassicApp extends HttpServlet {
                 account_information.put(entry.getKey(), RSA.Decrypt(entry.getValue(), private_key));
             } */
             ClassicApp classicApp = (ClassicApp) app;
+            String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            classicApp.decipher(keyUser);
             Account account = classicApp.getAccount();
             if (account == null || account.getAccountInformationSet().isEmpty()) {
-                String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
                 Map<String, String> accountInformation = classicApp.getWebsite().getInformationNeeded(account_information);
                 account = AccountFactory.getInstance().createAccountFromMap(accountInformation, keyUser, 0);
                 classicApp.setAccount(account);

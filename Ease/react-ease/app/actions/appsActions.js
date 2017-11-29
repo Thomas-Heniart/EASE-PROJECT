@@ -246,7 +246,7 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
       receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_CARD_CREATED', payload: {app:app}});
+      dispatch({type: 'TEAM_CARD_CREATED', payload: {team_card:app}});
       return app;
     }).catch(err => {
       throw err;

@@ -135,6 +135,7 @@ class AddBookmarkModal extends Component {
             handleInput={this.handleInput}
             selectedProfile={this.state.selectedProfile}
             selectedRoom={this.state.selectedRoom}
+            bookmark={true}
             addProfile={this.addProfile}
             confirm={this.confirm}
             selectProfile={this.selectProfile}
