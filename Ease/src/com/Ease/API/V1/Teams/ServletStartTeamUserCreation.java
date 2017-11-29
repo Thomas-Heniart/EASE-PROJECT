@@ -12,6 +12,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.hibernate.exception.ConstraintViolationException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -64,8 +65,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.getEmail().equals(email))
                     throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
-                if (teamUser.getUsername().equals(username))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Username is already taken");
             }
             HibernateQuery query = sm.getHibernateQuery();
             Date arrival_date = sm.getTimestamp();
@@ -87,7 +86,11 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 query.setParameter(1, code);
             } while (!query.list().isEmpty());
             teamUser.setInvitation_code(code);
-            sm.saveOrUpdate(teamUser);
+            try {
+                sm.saveOrUpdate(teamUser);
+            } catch (ConstraintViolationException e) {
+                throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
+            }
             team.addTeamUser(teamUser);
             team.getDefaultChannel().addTeamUser(teamUser);
             sm.saveOrUpdate(team.getDefaultChannel());

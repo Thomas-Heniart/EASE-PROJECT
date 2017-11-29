@@ -90,17 +90,6 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
              }
              content={
                <div>
-                 {/*{!accepted && <span>App acceptation pending...</span>}*/}
-                 {/*{accepted && can_see_information &&
-                 <span>Mobile access: on</span>}
-                 {accepted && !can_see_information &&
-                 <span>Mobile access: off</span>}
-                 <br/>
-                 {accepted && can_see_information &&
-                 <span>Password copy: on</span>}
-                 {accepted && !can_see_information &&
-                 <span>Password copy: off</span>}*/}
-
                  {can_see_information &&
                  <span>Mobile access: on</span>}
                  {!can_see_information &&
@@ -211,7 +200,9 @@ class SimpleTeamApp extends Component {
     e.preventDefault();
     this.setState({loading: true});
     this.props.dispatch(teamEditSingleApp({
-      app_id: this.props.app.id,
+      name: this.props.app.name,
+      team_id: this.props.app.team_id,
+      team_card_id: this.props.app.id,
       description: this.state.description,
       password_reminder_interval: this.state.password_reminder_interval,
       account_information: transformCredentialsListIntoObject(this.state.credentials)
@@ -224,7 +215,7 @@ class SimpleTeamApp extends Component {
       this.state.users.map(item => {
         const selected = this.state.selected_users.indexOf(item.id) !== -1;
         const receiver = getReceiverInList(receivers, item.id);
-        if (!selected && receiver !== null)
+        if (!selected && !!receiver)
           deleting.push(this.props.dispatch(teamAppDeleteReceiver({
             team_id:this.props.team_id,
             shared_app_id: receiver.shared_app_id,
@@ -252,7 +243,7 @@ class SimpleTeamApp extends Component {
     });
   };
   setupUsers = () => {
-    const channel = selectItemFromListById(this.props.channels, this.props.app.id);
+    const channel = selectItemFromListById(this.props.channels, this.props.app.channel_id);
     let selected_users = [];
     const users = channel.team_user_ids.map(item => {
       const user = selectItemFromListById(this.props.users, item);

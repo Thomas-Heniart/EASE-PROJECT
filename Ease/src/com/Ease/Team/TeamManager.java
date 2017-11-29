@@ -60,9 +60,16 @@ public class TeamManager {
 
     }
 
-    public void checkFreeTrialEnd(HibernateQuery hibernateQuery) {
-        for (Team team : this.getTeams(hibernateQuery))
+    public void checkFreeTrialEnd(HibernateQuery hibernateQuery, Map<Integer, Map<String, Object>> teamIdMap) {
+        for (Team team : this.getTeams(hibernateQuery)) {
+            Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
+            if (teamProperties == null) {
+                teamProperties = new ConcurrentHashMap<>();
+                teamIdMap.put(team.getDb_id(), teamProperties);
+            }
+            team.initializeStripe(teamProperties);
             team.checkFreeTrialEnd();
+        }
         }
 
     public void teamUserNotRegisteredReminder(HibernateQuery hibernateQuery) throws HttpServletException {
