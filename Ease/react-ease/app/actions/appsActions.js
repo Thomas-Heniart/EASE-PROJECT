@@ -368,7 +368,8 @@ export function removeTeamCardReceiver({team_id, team_card_id, team_card_receive
     return post_api.teamApps.removeTeamCardReceiver({
       team_id: team_id,
       team_card_id: team_card_id,
-      team_card_receiver_id: team_card_receiver_id
+      team_card_receiver_id: team_card_receiver_id,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch(removeTeamCardReceiverAction({
         team_id: team_id,

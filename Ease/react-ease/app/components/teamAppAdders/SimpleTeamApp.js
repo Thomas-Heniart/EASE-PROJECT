@@ -215,7 +215,7 @@ class SimpleTeamApp extends Component {
       this.state.users.map(item => {
         const selected = this.state.selected_users.indexOf(item.id) !== -1;
         const receiver = getReceiverInList(receivers, item.id);
-        if (!selected && receiver !== null)
+        if (!selected && !!receiver)
           deleting.push(this.props.dispatch(teamAppDeleteReceiver({
             team_id:this.props.team_id,
             shared_app_id: receiver.shared_app_id,

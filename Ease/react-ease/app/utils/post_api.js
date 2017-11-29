@@ -718,11 +718,12 @@ module.exports = {
         return response.data;
       });
     },
-    removeTeamCardReceiver: ({team_id, team_card_id, team_card_receiver_id}) => {
+    removeTeamCardReceiver: ({team_id, team_card_id, team_card_receiver_id, ws_id}) => {
       return basic_post('/api/v1/teams/RemoveTeamCardReceiver', {
         team_id: team_id,
         team_card_id: team_card_id,
-        team_card_receiver_id: team_card_receiver_id
+        team_card_receiver_id: team_card_receiver_id,
+        ws_id: ws_id
       });
     },
     editReceiver: function(ws_id, team_id, app_id, receiver_info){
