@@ -30,12 +30,13 @@ export function fetchCatalog(){
   }
 }
 
-export function catalogAddSsoApp({name, profile_id, sso_group_id}){
+export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
   return (dispatch, getState) => {
     post_api.catalog.addSsoApp({
       name: name,
       profile_id: profile_id,
-      sso_group_id: sso_group_id
+      sso_group_id: sso_group_id,
+      website_id: website_id
     }).then(response => {
       dispatch({
         type: 'DASHBOARD_APP_ADDED',
