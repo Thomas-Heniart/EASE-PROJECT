@@ -3,7 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
@@ -33,7 +32,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer team_user_id = sm.getIntParam("team_user_id", true, false);
@@ -41,38 +39,28 @@ public class ServletDeleteTeamUser extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
+            if (!teamUser_connected.getTeamSingleCardToFillSet().isEmpty())
+                throw new HttpServletException(HttpStatus.BadRequest, "Ask Victor for error message");
             List<Channel> channelList = new LinkedList<>();
             for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
                 if (channel.getRoom_manager() == teamUser_to_delete)
                     channelList.add(channel);
             }
             if (!channelList.isEmpty()) {
-                String message = "This user cannot be deleted as long as he/she remains Room Manager of ";
+                StringBuilder message = new StringBuilder("This user cannot be deleted as long as he/she remains Room Manager of ");
                 for (Channel channel : channelList) {
-                    message += ("#" + channel.getName());
+                    message.append("#").append(channel.getName());
                     if (channelList.indexOf(channel) == channelList.size() - 1)
-                        message += ".";
+                        message.append(".");
                     else
-                        message += ", ";
+                        message.append(", ");
                 }
-                throw new HttpServletException(HttpStatus.Forbidden, message);
+                throw new HttpServletException(HttpStatus.Forbidden, message.toString());
             }
             String forEmail = "";
             teamUser_to_delete.getTeamCardReceivers().clear();
-            team.getTeamCardMap().values().stream().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete)));
+            team.getTeamCardMap().values().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete)));
             teamUser_to_delete.getChannels().forEach(channel -> channel.getTeamCardMap().values().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete))));
-            /* for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser_to_delete)) {
-                App holder = (App) sharedApp.getHolder();
-                if (holder.isEmpty() || (holder.isClassicApp() && sharedApp.getHolder().getTeamUser_tenants().size() == 1)) {
-                    ClassicApp classicApp = (ClassicApp) sharedApp;
-                    String login = classicApp.getAccount().getInformationNamed("login");
-                    forEmail += holder.getName();
-                    if (login != null)
-                        forEmail += " (" + login + ")";
-                    forEmail += ", ";
-                }
-
-            } */
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
                 forEmail = forEmail.substring(0, forEmail.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
