@@ -92,12 +92,13 @@ public class HibernateQuery {
 
     public void rollback() {
         this.transaction.rollback();
-        /* if (this.session != null) {
-            this.session.close();
-        } */
     }
 
     public Object get(Class someClass, Integer id) {
         return this.session.get(someClass, id);
+    }
+
+    public boolean isOpen() {
+        return this.session.isOpen();
     }
 }

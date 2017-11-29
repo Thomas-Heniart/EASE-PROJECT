@@ -264,6 +264,8 @@ public abstract class ServletManager {
     public HibernateQuery getHibernateQuery() {
         if (this.hibernateQuery == null)
             this.hibernateQuery = new HibernateQuery();
+        if (!this.hibernateQuery.isOpen())
+            this.hibernateQuery = new HibernateQuery();
         return this.hibernateQuery;
     }
 

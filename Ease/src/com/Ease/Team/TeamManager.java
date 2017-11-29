@@ -61,8 +61,10 @@ public class TeamManager {
     }
 
     public void checkFreeTrialEnd(HibernateQuery hibernateQuery) {
-        for (Team team : this.getTeams(hibernateQuery))
+        for (Team team : this.getTeams(hibernateQuery)) {
+
             team.checkFreeTrialEnd();
+        }
         }
 
     public void teamUserNotRegisteredReminder(HibernateQuery hibernateQuery) throws HttpServletException {

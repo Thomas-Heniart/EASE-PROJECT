@@ -246,7 +246,7 @@ public class Account {
     }
 
     public boolean mustUpdatePassword() {
-        return this.getReminder_interval() != 0 && new Date().getTime() <= this.getLast_update().getTime() + this.getReminder_interval() * DateComparator.millisecondsInMonth;
+        return this.getReminder_interval() != 0 && new Date().getTime() <= (this.getLast_update().getTime() + this.getReminder_interval() * DateComparator.millisecondsInMonth);
     }
 
     public boolean satisfyWebsite(Website website) {
