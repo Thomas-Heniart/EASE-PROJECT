@@ -383,19 +383,19 @@ export function editSsoGroup({sso_group_id, account_information}) {
 
 export function deleteSsoGroup({sso_group_id}){
   return (dispatch, getState) => {
-    return post_api.dashboard.deleteSsoGroup({
+/*    return post_api.dashboard.deleteSsoGroup({
       sso_group_id: sso_group_id
-    }).then(response => {
+    }).then(response => {*/
       dispatch({
         type: 'SSO_GROUP_REMOVED',
         payload: {
           sso_group_id: sso_group_id
         }
       });
-      return response;
+/*      return response;
     }).catch(err => {
       throw err;
-    });
+    });*/
   }
 }
 
