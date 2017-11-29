@@ -226,19 +226,19 @@ class TeamView extends React.Component {
               <div id='invitation'>
                 {selectedItem.invitation_sent ?
                   <Segment className='resend' inverted disabled={this.state.loading}>
-                    <p>
+                    <div>
                       {selectedItem.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(selectedItem)}>Resend invitation<Icon name='send'/></span>
                       <Loader active={this.state.loading} inverted size='tiny'/>
                       <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations<Icon name='rocket'/></span>
-                    </p>
+                    </div>
                   </Segment>
                   :
                   <Segment className='send' inverted disabled={this.state.loading}>
-                      <p>
+                      <div>
                         {selectedItem.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(selectedItem)}>Send invitation<Icon name='send'/></span>
                         <Loader active={this.state.loading} inverted size='tiny'/>
                         <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people<Icon name='rocket'/></span>
-                      </p>
+                      </div>
                   </Segment>
                 }
               </div>

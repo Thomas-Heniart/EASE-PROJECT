@@ -283,12 +283,14 @@ export const teams = createReducer({
       }
     });
   },
-  ['TEAM_APP_RECEIVER_CREATED'](state, action){
-    const {team_id, app_id, receiver} = action.payload;
+  ['TEAM_CARD_RECEIVER_CREATED'](state, action){
+    const {receiver} = action.payload;
+    const team_id = receiver.team_id;
+    const team_card_id = receiver.team_card_id;
     let team_user = state[team_id].team_users[receiver.team_user_id];
 
     team_user = update(team_user, {
-      team_card_ids: {$push: app_id}
+      team_card_ids: {$push: [team_card_id]}
     });
     return update(state, {
       [team_id]:{
@@ -313,24 +315,24 @@ export const teams = createReducer({
       }
     });
   },
-  ['TEAM_APP_ADDED'](state, action){
-    const {app} = action.payload;
-    const team_id = app.team_id;
-    const channel_id = app.channel_id;
+  ['TEAM_CARD_CREATED'](state, action){
+    const {team_card} = action.payload;
+    const team_id = team_card.team_id;
+    const channel_id = team_card.channel_id;
 
     let new_state = update(state, {
       [team_id]: {
         rooms: {
           [channel_id]: {
-            team_card_ids: {$push: [app.id]}
+            team_card_ids: {$push: [team_card.id]}
           }
         }
       }
     });
-    app.receivers.map(item => {
+    team_card.receivers.map(item => {
       let user = new_state[team_id].team_users[item.team_user_id];
       new_state[team_id].team_users[item.team_user_id] = update(user, {
-        team_card_ids: {$push: [app.id]}
+        team_card_ids: {$push: [team_card.id]}
       });
     });
     return new_state;
@@ -372,13 +374,13 @@ export const team_apps = createReducer({
       [app.id]: app
     }
   },
-  ['TEAM_APP_RECEIVER_CREATED'](state, action){
-    const {team_id, app_id, receiver} = action.payload;
-
-    if (!!state[app_id]){
+  ['TEAM_CARD_RECEIVER_CREATED'](state, action){
+    const {receiver} = action.payload;
+    const team_card_id = receiver.team_card_id;
+    if (!!state[team_card_id]){
       return update(state, {
-        [app_id]: {
-          receivers: {$push: receiver}
+        [team_card_id]: {
+          receivers: {$push: [receiver]}
         }
       })
     }
@@ -413,12 +415,11 @@ export const team_apps = createReducer({
       })
     }
   },
-  ['TEAM_APP_ADDED'](state, action){
-    const app = action.payload.app;
-    return {
-      ...state,
-      [app.id]: app
-    }
+  ['TEAM_CARD_CREATED'](state, action){
+    const {team_card} = action.payload;
+    return update(state, {
+      [team_card.id]: {$set: team_card}
+    });
   },
   ['TEAM_APP_CHANGED'](state, action){
     const app = action.payload.app;
