@@ -53,7 +53,7 @@ export const dashboard = createReducer({
       }
     });
     if (app.type === 'ssoApp'){
-      new_state = update(state, {
+      new_state = update(new_state, {
         sso_groups: {
           [app.sso_group_id]: {
             sso_app_ids: {$splice: [[state.sso_groups[app.sso_group_id].sso_app_ids.indexOf(app.id), 1]]}
