@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showTeamSingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
@@ -27,8 +27,8 @@ class TeamSingleApp extends Component {
     const me = team.team_users[team.my_team_user_id];
     const filler = team.team_users[team_app.team_user_filler_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-    const room = teams[team_app.team_id].rooms[team_app.channel_id];
-    const password_update = filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+    const room = team.rooms[team_app.channel_id];
+    const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
 
     return (
         <div class='app'>
@@ -37,7 +37,9 @@ class TeamSingleApp extends Component {
             <NewAppLabel/>}
             {password_update &&
             <UpdatePasswordLabel/>}
-            {(me.disabled || teamUserDepartureDatePassed(me.departure_date)) &&
+            {teamUserDepartureDatePassed(me.departure_date) &&
+            <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
+            {me.disabled &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
             {team_app.empty && team_app.team_user_filler_id === me.id &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}/>}

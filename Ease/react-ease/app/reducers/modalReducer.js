@@ -13,6 +13,10 @@ export const modals = createReducer({
     active: false,
     app: null
   },
+  ssoAppSettings: {
+    active: false,
+    app: null
+  },
   teamSingleAppSettings: {
     active: false,
     app: null
@@ -78,6 +82,12 @@ export const modals = createReducer({
       logWithAppSettings: action.payload
     };
   },
+  ['SHOW_SSO_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      ssoAppSettings: action.payload
+    }
+  },
   ['SHOW_CHOOSE_APP_CREDENTIALS_MODAL'](state, action){
     return {
       ...state,
@@ -104,7 +114,7 @@ export const modals = createReducer({
   },
   ['SHOW_UPDATE_APP_PASSWORD_PASSWORD'](state, action){
     return {
-        ...state,
+      ...state,
       updateAppPassword: action.payload
     }
   }

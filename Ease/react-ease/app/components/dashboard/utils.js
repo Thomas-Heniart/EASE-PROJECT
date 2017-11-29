@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import api from "../../utils/api";
-import {copyTextToClipboard} from "../../utils/utils";
+import {copyTextToClipboard, basicDateFormat} from "../../utils/utils";
 import {Loader, Input, Label,Icon, Popup} from 'semantic-ui-react';
 
 export const EmptyAppIndicator = (props) => {
@@ -14,6 +14,19 @@ export const EmptyAppIndicator = (props) => {
 export const WaitingTeamApproveIndicator = (props) => {
   return (
       <div class="app_overlay_indicator grey" {...props}/>
+  )
+};
+
+export const DepartureDatePassedIndicator = ({team_name, departure_date}) => {
+  return (
+      <Popup size="mini"
+             position="top center"
+             inverted
+             trigger={
+               <div class="app_overlay_indicator grey"/>
+             }
+             content={`Your departure date from ${team_name} has passed on ${basicDateFormat(departure_date)}.`}
+      />
   )
 };
 

@@ -58,6 +58,16 @@ export function showTeamEnterpriseAppSettingsModal({active, app}){
   }
 }
 
+export function showSsoAppSettingsModal({active, app}) {
+  return {
+    type: 'SHOW_SSO_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
 export function showExtensionDownloadModal({active}){
   return {
     type: 'SHOW_EXTENSION_DOWNLOAD_MODAL',

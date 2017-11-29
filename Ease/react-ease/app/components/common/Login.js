@@ -1,7 +1,6 @@
 var React = require('react');
 var classnames = require('classnames');
 import {withCookies, Cookies } from 'react-cookie';
-var base64 = require('base-64');
 import post_api from '../../utils/post_api';
 import {connect} from "react-redux";
 import {setLoginRedirectUrl, fetchMyInformation, processConnection} from "../../actions/commonActions"
@@ -104,10 +103,8 @@ class KnownUserForm extends React.Component{
       email:this.props.email,
       password:this.state.password
     })).then(response => {
-      console.log('finish login');
       this.props.finishLogin();
     }).catch(err => {
-      console.log(err);
       this.setState({errorMessage:err, error: true, password: ''});
       this.props.setView('known');
     });
@@ -252,9 +249,6 @@ class Login extends React.Component {
     if (this.state.knownUser) {
       this.state.activeView = 'known';
     }
-    this.setView = this.setView.bind(this);
-    this.goBack = this.goBack.bind(this);
-    this.finishLoggingIn = this.finishLoggingIn.bind(this);
   }
   componentDidMount(){
     if (this.props.redirect.length > 0){
@@ -262,18 +256,18 @@ class Login extends React.Component {
       this.props.dispatch(setLoginRedirectUrl(''));
     }
   }
-  finishLoggingIn(){
+  finishLoggingIn = () => {
     if (this.state.redirect.length > 0)
       this.props.history.replace(this.state.redirect);
     else
       this.props.history.replace('/main/dashboard');
-  }
-  setView(name){
+  };
+  setView = (name) => {
     this.setState({lastActive: this.state.activeView, activeView: name});
-  }
-  goBack(){
+  };
+  goBack = () => {
     this.setState({lastActive: this.state.activeView, activeView:this.state.lastActive});
-  }
+  };
   render(){
     if (this.props.authenticated)
       return null;
