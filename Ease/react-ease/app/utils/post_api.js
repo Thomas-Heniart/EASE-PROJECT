@@ -105,11 +105,12 @@ module.exports = {
     }
   },
   catalog: {
-    addSsoApp: ({name, profile_id, sso_group_id}) => {
+    addSsoApp: ({name, profile_id, sso_group_id, website_id}) => {
       return basic_post('/api/v1/catalog/AddSsoApp', {
         name: name,
         profile_id: profile_id,
-        sso_group_id: sso_group_id
+        sso_group_id: sso_group_id,
+        website_id: website_id
       });
     },
     addClassicApp: ({name, website_id, profile_id, account_information}) => {
