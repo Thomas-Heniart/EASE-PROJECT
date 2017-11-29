@@ -360,23 +360,37 @@ public class Team {
     }
 
     public void updateSubscription(Map<String, Object> teamProperties) {
-        if (this.subscription_id == null || this.subscription_id.equals(""))
-            return;
-        int activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
-        System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
         try {
-            Subscription subscription = (Subscription) teamProperties.get("subscription");
-            if (subscription == null) {
-                subscription = Subscription.retrieve(this.getSubscription_id());
-                teamProperties.put("subscription", subscription);
-            }
-            this.setSubscription(subscription);
+            if (this.subscription_id == null || this.subscription_id.equals(""))
+                return;
+            int activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
+            System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
+            this.initializeStripe(teamProperties);
             if (this.getSubscription().getQuantity() <= activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
                 this.getSubscription().update(updateParams);
                 this.getSubscription().setQuantity(activeSubscriptions);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initializeStripe(Map<String, Object> teamProperties) {
+        try {
+            Customer customer = (Customer) teamProperties.get("customer");
+            if (customer == null) {
+                customer = Customer.retrieve(this.getCustomer_id());
+                teamProperties.put("customer", customer);
+            }
+            this.setCustomer(customer);
+            Subscription subscription = (Subscription) teamProperties.get("subscription");
+            if (subscription == null) {
+                subscription = Subscription.retrieve(this.getSubscription_id());
+                teamProperties.put("subscription", subscription);
+            }
+            this.setSubscription(subscription);
         } catch (Exception e) {
             e.printStackTrace();
         }
