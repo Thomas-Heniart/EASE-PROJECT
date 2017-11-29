@@ -451,6 +451,15 @@ module.exports = {
         throw err.response.data;
       });
     },
+    addTeamSingleCardReceiver: ({team_id, team_card_id, team_user_id, allowed_to_see_password, ws_id}) => {
+      return basic_post('/api/v1/teams/AddTeamSingleCardReceiver', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_user_id: team_user_id,
+        allowed_to_see_password: allowed_to_see_password,
+        ws_id: ws_id
+      });
+    },
     shareSingleApp: ({team_id, app_id, team_user_id, can_see_information, ws_id}) => {
       return axios.post('/api/v1/teams/ShareSingleApp', {
         team_id: team_id,
@@ -483,11 +492,12 @@ module.exports = {
         throw err.response.data;
       });
     },
-    editSingleAppReceiver: ({team_id, shared_app_id, can_see_information, ws_id}) => {
-      return axios.post('/api/v1/teams/EditSingleAppReceiver', {
+    editSingleCardReceiver: ({team_id, team_card_id, team_card_receiver_id, allowed_to_see_password, ws_id}) => {
+      return axios.post('/api/v1/teams/EditTeamSingleCardReceiver', {
         team_id: team_id,
-        shared_app_id: shared_app_id,
-        can_see_information: can_see_information,
+        team_card_id: team_card_id,
+        team_card_receiver_id: team_card_receiver_id,
+        allowed_to_see_password: allowed_to_see_password,
         ws_id: ws_id
       }).then(response => {
         return response.data;
