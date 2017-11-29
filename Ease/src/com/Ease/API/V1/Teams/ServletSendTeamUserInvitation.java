@@ -34,7 +34,13 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
             TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-            mailJetBuilder.setTemplateId(179023);
+            if (!teamUser.getTeamUserStatus().isInvitation_sent()) {
+                mailJetBuilder.setTemplateId(179023);
+                teamUser.getTeamUserStatus().setInvitation_sent(true);
+                sm.saveOrUpdate(teamUser.getTeamUserStatus());
+                sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson()));
+            } else
+                mailJetBuilder.setTemplateId(259569);
             mailJetBuilder.addTo(teamUser.getEmail());
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
@@ -42,9 +48,6 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
             mailJetBuilder.addVariable("email", teamUser_admin.getEmail());
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code());
             mailJetBuilder.sendEmail();
-            teamUser.getTeamUserStatus().setInvitation_sent(true);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson()));
-            sm.saveOrUpdate(teamUser);
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);
