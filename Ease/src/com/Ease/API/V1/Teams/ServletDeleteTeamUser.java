@@ -39,8 +39,12 @@ public class ServletDeleteTeamUser extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
-            if (!teamUser_connected.getTeamSingleCardToFillSet().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "Ask Victor for error message");
+            if (!teamUser_to_delete.getTeamSingleCardToFillSet().isEmpty()) {
+                StringBuilder message = new StringBuilder(teamUser_to_delete.getUsername()).append(" cannot be deleted while this person is responsible to fill credentials for ");
+                teamUser_to_delete.getTeamSingleCardToFillSet().forEach(teamSingleCard -> message.append(teamSingleCard.getName()).append(", "));
+                message.replace(message.length() - 2, message.length(), ".");
+                throw new HttpServletException(HttpStatus.Forbidden, message.toString());
+            }
             List<Channel> channelList = new LinkedList<>();
             for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
                 if (channel.getRoom_manager() == teamUser_to_delete)
@@ -48,13 +52,8 @@ public class ServletDeleteTeamUser extends HttpServlet {
             }
             if (!channelList.isEmpty()) {
                 StringBuilder message = new StringBuilder("This user cannot be deleted as long as he/she remains Room Manager of ");
-                for (Channel channel : channelList) {
-                    message.append("#").append(channel.getName());
-                    if (channelList.indexOf(channel) == channelList.size() - 1)
-                        message.append(".");
-                    else
-                        message.append(", ");
-                }
+                channelList.forEach(channel -> message.append("#").append(channel.getName()).append(", "));
+                message.replace(message.length() - 2, message.length(), ".");
                 throw new HttpServletException(HttpStatus.Forbidden, message.toString());
             }
             String forEmail = "";
