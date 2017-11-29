@@ -28,10 +28,10 @@ public class EditTeamSingleCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamSingleCard teamCard = (TeamSingleCard) sm.getHibernateQuery().get(TeamSingleCard.class, team_card_id);
-            if (teamCard == null)
+            TeamSingleCard teamSingleCard = (TeamSingleCard) sm.getHibernateQuery().get(TeamSingleCard.class, team_card_id);
+            if (teamSingleCard == null)
                 throw new HttpServletException(HttpStatus.Forbidden);
-            Team team = teamCard.getTeam();
+            Team team = teamSingleCard.getTeam();
             sm.needToBeAdminOfTeam(team);
             String description = sm.getStringParam("description", true, true);
             if (description == null)
@@ -41,7 +41,7 @@ public class EditTeamSingleCard extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
-            teamCard.setDescription(description);
+            teamSingleCard.setDescription(description);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             /* String private_key = (String) sm.getContextAttr("privateKey");
             for (Object object : account_information.entrySet()) {
@@ -51,7 +51,6 @@ public class EditTeamSingleCard extends HttpServlet {
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
-            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             teamSingleCard.setPassword_reminder_interval(password_reminder_interval);
             String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
             if (teamSingleCard.getAccount() == null) {
@@ -68,9 +67,9 @@ public class EditTeamSingleCard extends HttpServlet {
                     classicApp.getAccount().edit(account_information, sm.getHibernateQuery());
                 }
             }
-            sm.saveOrUpdate(teamCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, teamCard.getJson()));
-            sm.setSuccess(teamCard.getJson());
+            sm.saveOrUpdate(teamSingleCard);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, teamSingleCard.getJson()));
+            sm.setSuccess(teamSingleCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
