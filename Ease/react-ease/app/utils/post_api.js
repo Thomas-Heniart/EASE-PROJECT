@@ -460,14 +460,13 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    shareSingleApp: ({team_id, app_id, team_user_id, can_see_information, ws_id}) => {
-      return axios.post('/api/v1/teams/ShareSingleApp', {
+    shareSingleApp: ({team_id, team_card_id, team_user_id, allowed_to_see_password, ws_id}) => {
+      return axios.post('/api/v1/teams/AddTeamSingleCardReceiver', {
         team_id: team_id,
-        app_id: app_id,
+        team_card_id: team_card_id,
         team_user_id: team_user_id,
-        can_see_information: can_see_information,
-        ws_id: ws_id,
-        timestamp: new Date().getTime()
+        allowed_to_see_password: allowed_to_see_password,
+        ws_id: ws_id
       }).then(response => {
         return response.data;
       }).catch(err => {
