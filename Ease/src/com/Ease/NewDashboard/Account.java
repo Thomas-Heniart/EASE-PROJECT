@@ -221,15 +221,6 @@ public class Account {
             if (key.equals("password") && !value.equals(old_value))
                 this.setLast_update(new Date());
         }
-            /* for (AccountInformation accountInformation : this.getAccountInformationSet()) {
-                String value = (String) account_information.get(accountInformation.getInformation_name());
-                if (value == null || value.equals(""))
-                    continue;
-                if (accountInformation.getInformation_name().equals("password") && !accountInformation.getInformation_value().equals(value))
-                    this.setLast_update(new Date());
-                accountInformation.setInformation_value(RSA.Encrypt(value, this.getPublic_key()));
-                accountInformation.setDeciphered_information_value(value);
-            } */
     }
 
     @Override
