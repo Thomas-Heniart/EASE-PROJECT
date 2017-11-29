@@ -39,6 +39,24 @@ export function fetchDashboard(){
   }
 }
 
+export function fetchApp({app_id}){
+  return (dispatch, getState) => {
+    return api.dashboard.fetchApp({
+      app_id:app_id
+    }).then(app => {
+      dispatch({
+        type: 'DASHBOARD_APP_ADDED',
+        payload: {
+          app: app
+        }
+      });
+      return app;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function validateApp({app_id}) {
   return (dispatch, getState) => {
     post_api.dashboard.validateApp({

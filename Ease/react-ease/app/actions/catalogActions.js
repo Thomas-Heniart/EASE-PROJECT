@@ -40,7 +40,9 @@ export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
     }).then(response => {
       dispatch({
         type: 'DASHBOARD_APP_ADDED',
-        app: response
+        payload:{
+          app:response
+        }
       });
       return response;
     }).catch(err => {

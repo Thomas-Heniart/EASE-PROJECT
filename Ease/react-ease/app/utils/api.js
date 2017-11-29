@@ -238,6 +238,11 @@ module.exports = {
     fetchApps: function() {
       return basic_get('/api/v1/dashboard/GetApps');
     },
+    fetchApp: ({app_id}) => {
+      return basic_get('/api/v1/dashboard/GetApp', {
+        app_id: app_id
+      });
+    },
     fetchSsoGroups: () => {
       return basic_get('/api/v1/dashboard/GetSsoGroups');
     },

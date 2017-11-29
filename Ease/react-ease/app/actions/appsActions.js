@@ -1,6 +1,6 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
-import {deleteAppAction} from "./dashboardActions";
+import {deleteAppAction, fetchApp} from "./dashboardActions";
 
 export function teamCreateMultiApp(app){
   return function (dispatch, getState){
@@ -27,7 +27,7 @@ export function teamCreateEnterpriseApp({team_id, channel_id, website_id, name, 
       receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_APP_ADDED', payload: {app:app}});
+      dispatch({type: 'TEAM_CARD_CREATED', payload: {app:app}});
       return app;
     }).catch(err => {
       throw err;
@@ -121,6 +121,38 @@ export function teamEditEnterpriseCardReceiver({team_id, team_card_id, team_card
   }
 }
 
+export function teamCardReceiverCreatedAction({receiver}) {
+  return (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[receiver.team_id];
+    dispatch({
+      type: 'TEAM_CARD_RECEIVER_CREATED',
+      payload: {
+        receiver: receiver
+      }
+    });
+    if (team.my_team_user_id === receiver.team_user_id){
+      dispatch(fetchApp({app_id: receiver.app_id}));
+    }
+  }
+}
+
+export function teamCardCreatedAction({team_card}){
+  return (dispatch, getState) => {
+    dispatch({
+      type: 'TEAM_CARD_CREATED',
+      payload: {
+        team_card: team_card
+      }
+    });
+    const store = getState();
+    const team = store.teams[team_card.team_id];
+    const meReceiver = team_card.receivers.find(receiver => (receiver.team_user_id === team.my_team_user_id));
+    if (!!meReceiver)
+      dispatch(fetchApp({app_id: meReceiver.app_id}));
+  }
+}
+
 export function teamCreateSingleApp({team_id, channel_id, website_id, name, description, password_change_interval, account_information, receivers}) {
   return (dispatch, getState) => {
     return post_api.teamApps.createSingleApp({
@@ -133,9 +165,9 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
       account_information: account_information,
       receivers: receivers,
       ws_id: getState().common.ws_id
-    }).then(app => {
-      dispatch({type: 'TEAM_APP_ADDED', payload: {app:app}});
-      return app;
+    }).then(team_card => {
+      dispatch(teamCardCreatedAction({team_card: team_card}));
+      return team_card;
     }).catch(err => {
       throw err;
     });
@@ -205,7 +237,7 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
       receivers: receivers,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_APP_ADDED', payload: {app:app}});
+      dispatch({type: 'TEAM_CARD_CREATED', payload: {app:app}});
       return app;
     }).catch(err => {
       throw err;
