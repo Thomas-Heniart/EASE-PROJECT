@@ -182,7 +182,7 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
       team_card_id: team_card_id,
       description: description,
       account_information: account_information,
-      password_change_interval: password_reminder_interval,
+      password_reminder_interval: password_reminder_interval,
       ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
