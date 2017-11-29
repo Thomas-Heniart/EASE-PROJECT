@@ -109,12 +109,13 @@ class EmailListStep extends React.Component {
   };
   render(){
     return (
-        <Form onSubmit={this.process}>
+        <Form onSubmit={this.process} error={this.props.errorMessage !== null}>
           <Form.Field>
             Enter multiple email addresses, separated with commas
           </Form.Field>
           <Form.Field>
             <TextArea rows={7} name="value" onChange={this.handleInput} placeholder="Write emails here..."/>
+            <Message error content={this.props.errorMessage}/>
           </Form.Field>
           <Form.Group id='invitationButton' class="overflow-hidden">
             <Form.Button
@@ -180,7 +181,7 @@ class TeamAddMultipleUsersModal extends React.Component {
       this.setState({
         errorMessage:
             <span>
-              You are adding {invitations.length} people to your team but unfortunately you only have {30 - this.props.users.length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
+              You are adding {invitations.length} people to your team but unfortunately you only have {30 - users_length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
             </span>
       });
       return;
@@ -221,7 +222,7 @@ class TeamAddMultipleUsersModal extends React.Component {
       this.setState({
         errorMessage:
           <span>
-              You are adding {invitations.length} people to your team but unfortunately you only have {30 - this.props.users.length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
+              You are adding {invitations.length} people to your team but unfortunately you only have {30 - users_length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
             </span>
       });
       return;
@@ -336,6 +337,7 @@ class TeamAddMultipleUsersModal extends React.Component {
                     // addFields={this.addMultipleFields}
                     changeStep={this.changeView.bind(null, 'main')}
                     validate={this.sendInvitations}
+                    errorMessage={this.state.errorMessage}
                     // sendInvitationsNow={this.sendInvitationsNow}
                     multipleAddNow={this.multipleAddNow}
                     multipleAddLater={this.multipleAddLater}/>}
