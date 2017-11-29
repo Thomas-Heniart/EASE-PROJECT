@@ -300,7 +300,7 @@ export const teams = createReducer({
       }
     });
   },
-  ['TEAM_APP_RECEIVER_REMOVED'](state, action){
+  ['TEAM_CARD_RECEIVER_REMOVED'](state, action){
     const {team_id, team_card_id, receiver} = action.payload;
 
     let team_user = state[team_id].team_users[receiver.team_user_id];
@@ -386,7 +386,7 @@ export const team_apps = createReducer({
     }
     return state;
   },
-  ['TEAM_APP_RECEIVER_REMOVED'](state, action){
+  ['TEAM_CARD_RECEIVER_REMOVED'](state, action){
     const {team_id, team_card_id, receiver} = action.payload;
 
     if (!!state[team_card_id]){
@@ -401,7 +401,7 @@ export const team_apps = createReducer({
     }
     return state;
   },
-  ['TEAM_APP_RECEIVER_CHANGED'](state, action){
+  ['TEAM_CARD_RECEIVER_CHANGED'](state, action){
     const {team_id, app_id, receiver} = action.payload;
 
     if (!!state[app_id]){
