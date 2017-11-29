@@ -3,6 +3,7 @@ package com.Ease.NewDashboard;
 import com.Ease.Catalog.Website;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -86,6 +87,8 @@ public class ClassicApp extends WebsiteApp {
 
     @Override
     public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        if (this.getAccount() == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "You cannot connect to en empty app");
         JSONArray res = super.getConnectionJson(public_key);
         JSONObject website = (JSONObject) res.get(0);
         website.put("user", this.getAccount().getCipheredJson(public_key));
