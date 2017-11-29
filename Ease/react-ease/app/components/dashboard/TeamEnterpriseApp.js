@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showTeamEnterpriseAppSettingsModal, showLockedTeamAppModal, showUpdateAppPasswordModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
@@ -36,8 +36,10 @@ class TeamEnterpriseApp extends Component {
             <NewAppLabel/>}
             {password_update &&
             <UpdatePasswordLabel/>}
-            {(me.disabled || teamUserDepartureDatePassed(me.departure_date)) &&
-              <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
+            {teamUserDepartureDatePassed(me.departure_date) &&
+            <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
+            {me.disabled &&
+            <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
             {meReceiver.empty &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">
