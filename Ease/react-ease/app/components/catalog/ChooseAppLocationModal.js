@@ -113,7 +113,8 @@ class ChooseAppLocationModal extends React.Component {
                                 </form>}
                               </Table.Cell>
                           </Table.Row>
-                        {teamsList}
+                        {(website.information && Object.keys(website.information).length > 0) && teamsList}
+                        {this.props.bookmark && teamsList}
                       </Table.Body>
                   </Table>
               </Container>
