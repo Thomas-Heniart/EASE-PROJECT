@@ -177,6 +177,7 @@ public abstract class ServletManager {
         for (TeamUser teamUser : user.getTeamUsers()) {
             Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
             String teamKey = (String) teamProperties.get("teamKey");
+            this.initializeTeamWithContext(teamUser.getTeam());
             if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null)
                 teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(this.user.getDb_id()), this.getHibernateQuery());
             else if (teamUser.getTeamKey() != null)
