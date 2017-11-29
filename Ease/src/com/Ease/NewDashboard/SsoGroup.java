@@ -3,6 +3,7 @@ package com.Ease.NewDashboard;
 import com.Ease.Catalog.Sso;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -95,6 +96,9 @@ public class SsoGroup {
         JSONObject res = new JSONObject();
         res.put("id", this.getDb_id());
         res.put("sso_id", this.getSso().getDb_id());
+        JSONArray sso_app_ids = new JSONArray();
+        this.getSsoAppMap().values().forEach(ssoApp -> sso_app_ids.add(ssoApp.getDb_id()));
+        res.put("sso_app_ids", sso_app_ids);
         res.put("empty", this.getAccount() == null);
         res.put("account_information", new JSONObject());
         if (this.getAccount() != null) {

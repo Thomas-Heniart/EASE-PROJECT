@@ -2,6 +2,8 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
 import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -59,5 +61,18 @@ public class SsoApp extends WebsiteApp {
         if (this.getAccount() == null)
             return;
         this.getAccount().decipher(symmetric_key);
+    }
+
+    @Override
+    public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        if (this.getAccount() == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "You cannot connect to en empty app");
+        JSONArray res = super.getConnectionJson(public_key);
+        JSONObject website = (JSONObject) res.get(0);
+        website.put("user", this.getAccount().getCipheredJson(public_key));
+        website.put("type", "ClassicApp");
+        website.put("app_name", this.getAppInformation().getName());
+        website.put("website_name", this.getWebsite().getName());
+        return res;
     }
 }

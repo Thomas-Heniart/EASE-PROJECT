@@ -3,12 +3,16 @@ package com.Ease.Team;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
+import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.NotificationFactory;
 import com.Ease.User.User;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.*;
+import com.Ease.Utils.DataBaseConnection;
+import com.Ease.Utils.DatabaseRequest;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -107,6 +111,9 @@ public class TeamUser {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id")
     private Profile profile;
+
+    @OneToMany(mappedBy = "teamUser_filler")
+    private Set<TeamSingleCard> teamSingleCardToFillSet = ConcurrentHashMap.newKeySet();
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
         this.firstName = firstName;
@@ -285,7 +292,7 @@ public class TeamUser {
         this.invitation_code = invitation_code;
     }
 
-    public Set<Channel> getChannels() {
+    public synchronized Set<Channel> getChannels() {
         return channels;
     }
 
@@ -293,7 +300,7 @@ public class TeamUser {
         this.channels = channels;
     }
 
-    public Set<Channel> getPending_channels() {
+    public synchronized Set<Channel> getPending_channels() {
         return pending_channels;
     }
 
@@ -301,12 +308,20 @@ public class TeamUser {
         this.pending_channels = pending_channels;
     }
 
-    public Set<TeamCardReceiver> getTeamCardReceivers() {
+    public synchronized Set<TeamCardReceiver> getTeamCardReceivers() {
         return teamCardReceivers;
     }
 
     public void setTeamCardReceivers(Set<TeamCardReceiver> teamCardReceivers) {
         this.teamCardReceivers = teamCardReceivers;
+    }
+
+    public synchronized Set<TeamSingleCard> getTeamSingleCardToFillSet() {
+        return teamSingleCardToFillSet;
+    }
+
+    public void setTeamSingleCardToFillSet(Set<TeamSingleCard> teamSingleCardToFillSet) {
+        this.teamSingleCardToFillSet = teamSingleCardToFillSet;
     }
 
     public void addChannel(Channel channel) {

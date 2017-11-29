@@ -1,0 +1,121 @@
+{
+  "name": "Zendesk",
+  "lastLogin": "",
+  "home": {
+    "http": "https://",
+    "subdomain": "subdomain",
+    "domain": "zendesk.com"
+  },
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.login"
+      },
+      {
+        "action": "waitfor",
+        "search": "iframe[src*='login']"
+      },
+      {
+        "action": "enterFrame",
+        "search": "iframe[src*='login']"
+      },
+      {
+        "action": "waitfor",
+        "search": ".credentials #user_email"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-form #user_email",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login-form #user_password",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "#login-form input[type='submit']",
+        "grave": true
+      },
+      {
+        "action": "exitFrame"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']",
+        "grave": true
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.login"
+      },
+      {
+        "action": "waitfor",
+        "search": "#zendesk-js-login-external a.service.facebook"
+      },
+      {
+        "action": "trueClick",
+        "search": "#zendesk-js-login-external a.service.facebook",
+        "grave": true
+      }
+    ]
+  },
+  "Twitter": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.login"
+      },
+      {
+        "action": "waitfor",
+        "search": "#zendesk-js-login-external a.service.twitter"
+      },
+      {
+        "action": "trueClick",
+        "search": "#zendesk-js-login-external a.service.twitter",
+        "grave": true
+      }
+    ]
+  },
+  "Google": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.login"
+      },
+      {
+        "action": "waitfor",
+        "search": "#zendesk-js-login-external a.service.google"
+      },
+      {
+        "action": "trueClick",
+        "search": "#zendesk-js-login-external a.service.google",
+        "grave": true
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a.login, iframe[src*='login'], a[href*='logout']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
+}

@@ -84,7 +84,7 @@ export function deleteSsoApp({app_id}){
         app_id: app_id
       }));
       if (sso_group.sso_app_ids.length === 1)
-        dispatch(deleteSsoGroup({
+        dispatch(deleteSsoGroupAction({
           sso_group_id: sso_group.id
         }));
       return response;
@@ -381,23 +381,14 @@ export function editSsoGroup({sso_group_id, account_information}) {
   }
 }
 
-export function deleteSsoGroup({sso_group_id}){
-  return (dispatch, getState) => {
-    return post_api.dashboard.deleteSsoGroup({
+export function deleteSsoGroupAction({sso_group_id}){
+  return {
+    type: 'SSO_GROUP_REMOVED',
+    payload: {
       sso_group_id: sso_group_id
-    }).then(response => {
-      dispatch({
-        type: 'SSO_GROUP_REMOVED',
-        payload: {
-          sso_group_id: sso_group_id
-        }
-      });
-      return response;
-    }).catch(err => {
-      throw err;
-    });
+    }
   }
-}
+};
 
 export function createSsoGroup({sso_id, account_information}){
   return (dispatch, getState) => {
@@ -454,6 +445,7 @@ export function AppConnection({app_id, keep_focus}){
       dispatch(showExtensionDownloadModal({active: true}));
       return;
     }
+    const app = getState().dashboard.apps[app_id];
     return api.dashboard.getAppConnectionInformation({
       app_id: app_id
     }).then(response => {
@@ -466,6 +458,8 @@ export function AppConnection({app_id, keep_focus}){
         return item;
       });
       json.detail.highlight = !keep_focus;
+      if (app.new)
+        dispatch(validateApp({app_id: app_id}));
       document.dispatchEvent(new CustomEvent('NewConnection', json));
       return json;
     }).catch(err => {

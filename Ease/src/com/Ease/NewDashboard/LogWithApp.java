@@ -2,6 +2,7 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
 import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -65,6 +66,8 @@ public class LogWithApp extends WebsiteApp {
 
     @Override
     public JSONArray getConnectionJson(String public_key) throws HttpServletException {
+        if (this.getLoginWith_app() == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "You cannot connect to en empty app");
         JSONArray res = this.getLoginWith_app().getConnectionJson(public_key);
         JSONObject website = (JSONObject) super.getConnectionJson(public_key).get(0);
         website.put("logWith", this.getLogWith_website().getName());

@@ -1,11 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.*;
 import com.Ease.User.User;
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.Profile;
-import com.Ease.NewDashboard.SsoApp;
-import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -34,15 +31,22 @@ public class ServletDeleteApp extends HttpServlet {
             Profile profile = app.getProfile();
             if (app.getTeamCardReceiver() != null)
                 throw new HttpServletException(HttpStatus.Forbidden);
+            SsoGroup ssoGroup = null;
             if (app.isWebsiteApp()) {
                 if (!((WebsiteApp) app).getLogWithAppSet().isEmpty())
                     throw new HttpServletException(HttpStatus.BadRequest, "You must first delete apps using this app before delete it.");
-                if (app.isSsoApp())
-                    ((SsoApp) app).getSsoGroup().removeSsoApp(app);
+                if (app.isSsoApp()) {
+                    SsoApp ssoApp = (SsoApp) app;
+                    ssoGroup = ssoApp.getSsoGroup();
+                    ssoGroup.removeSsoApp(ssoApp);
+                }
+
             }
             if (profile != null)
                 profile.removeAppAndUpdatePositions(app, hibernateQuery);
             sm.deleteObject(app);
+            if (ssoGroup != null && ssoGroup.getSsoAppMap().isEmpty())
+                sm.deleteObject(ssoGroup);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.REMOVED, app_id));
             sm.setSuccess("App deleted");
         } catch (Exception e) {

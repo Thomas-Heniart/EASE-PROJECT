@@ -27,7 +27,7 @@ class TeamSingleApp extends Component {
     const me = team.team_users[team.my_team_user_id];
     const filler = team.team_users[team_app.team_user_filler_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-    const room = teams[team_app.team_id].rooms[team_app.channel_id];
+    const room = team.rooms[team_app.channel_id];
     const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
 
     return (

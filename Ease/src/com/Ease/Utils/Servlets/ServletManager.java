@@ -136,6 +136,20 @@ public abstract class ServletManager {
     public void needToBeConnected() throws HttpServletException {
         Integer user_id = (Integer) this.getSession().getAttribute("user_id");
         String jwt = this.request.getHeader("Authorization");
+        Cookie cookies[] = this.request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ((cookie.getName()).compareTo("sId") == 0) {
+                    cookie.setValue("");
+                    cookie.setMaxAge(0);
+                    this.response.addCookie(cookie);
+                } else if ((cookie.getName()).compareTo("sTk") == 0) {
+                    cookie.setValue("");
+                    cookie.setMaxAge(0);
+                    this.response.addCookie(cookie);
+                }
+            }
+        }
         if (jwt == null) {
             if (request.getCookies() != null) {
                 for (Cookie cookie : request.getCookies()) {

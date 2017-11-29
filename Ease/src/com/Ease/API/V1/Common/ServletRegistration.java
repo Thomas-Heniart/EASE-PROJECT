@@ -5,6 +5,7 @@ import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.*;
+import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
 import com.Ease.User.UserEmail;
 import com.Ease.User.UserFactory;
@@ -17,10 +18,14 @@ import com.mailjet.client.resource.ContactslistManageContact;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Key;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 @WebServlet("/api/v1/common/Registration")
@@ -109,6 +114,21 @@ public class ServletRegistration extends HttpServlet {
             Map<String, Object> userProperties = sm.getUserProperties(newUser.getDb_id());
             userProperties.put("keyUser", keyUser);
             userProperties.put("privateKey", privateKey);
+            Key secret = (Key) sm.getContextAttr("secret");
+            newUser.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(newUser.getDb_id(), keyUser, secret));
+            sm.saveOrUpdate(newUser.getJsonWebToken());
+            String jwt = newUser.getJsonWebToken().getJwt(keyUser);
+            Cookie cookie = new Cookie("JWT", jwt);
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 4);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            cookie.setPath("/");
+            cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
+            response.addCookie(cookie);
+            newUser.getCookies().forEach(response::addCookie);
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
                 mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
@@ -116,9 +136,6 @@ public class ServletRegistration extends HttpServlet {
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
-            /* ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
-            ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-            ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser); */
             sm.setSuccess(newUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

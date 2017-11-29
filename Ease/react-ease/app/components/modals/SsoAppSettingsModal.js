@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import AppSettingsNameInput from "./AppSettingsNameInput";
-import {handleSemanticInput} from "../../utils/utils";
+import {handleSemanticInput, isCredentialsMatch} from "../../utils/utils";
 import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showSsoAppSettingsModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editClassicApp, deleteSsoApp, validateApp} from "../../actions/dashboardActions";
+import {editClassicApp, deleteSsoApp, validateApp, editAppName, editSsoGroup} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 
@@ -61,6 +61,26 @@ class SsoAppSettingsModal extends Component{
   };
   edit = (e) => {
     e.preventDefault();
+    const account_information = transformCredentialsListIntoObject(this.state.credentials);
+    this.setState({errorMessage: '', loading:true});
+
+    let calls = [];
+    if (this.state.appName !== this.props.app.name)
+      calls.push(this.props.dispatch(editAppName({
+        app_id: this.props.app.id,
+        name: this.state.appName
+      })));
+    if (!isCredentialsMatch(this.state.sso_group.account_information, account_information))
+      calls.push(this.props.dispatch(editSsoGroup({
+        sso_group_id: this.state.sso_group.id,
+        account_information: account_information
+      })));
+    Promise.all(calls).then(response => {
+      this.setState({loading: false});
+      this.close();
+    }).catch(err => {
+      this.setState({errorMessage: err, loading: false});
+    });
   };
   componentWillMount(){
     const {app} = this.props;
