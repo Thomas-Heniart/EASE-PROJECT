@@ -25,10 +25,10 @@ public class EditTeamEnterpriseCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamEnterpriseCard teamCard = (TeamEnterpriseCard) sm.getHibernateQuery().get(TeamEnterpriseCard.class, team_card_id);
-            if (teamCard == null)
+            TeamEnterpriseCard teamEnterpriseCard = (TeamEnterpriseCard) sm.getHibernateQuery().get(TeamEnterpriseCard.class, team_card_id);
+            if (teamEnterpriseCard == null)
                 throw new HttpServletException(HttpStatus.Forbidden);
-            Team team = teamCard.getTeam();
+            Team team = teamEnterpriseCard.getTeam();
             sm.needToBeAdminOfTeam(team);
             String description = sm.getStringParam("description", true, true);
             if (description == null)
@@ -41,7 +41,8 @@ public class EditTeamEnterpriseCard extends HttpServlet {
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
-            TeamEnterpriseCard teamEnterpriseCard = (TeamEnterpriseCard) teamCard;
+            String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+            teamEnterpriseCard.decipher(teamKey);
             teamEnterpriseCard.setPassword_reminder_interval(password_reminder_interval);
             teamEnterpriseCard.getTeamCardReceiverMap().values().stream().forEach(teamCardReceiver -> {
                 TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
@@ -49,9 +50,9 @@ public class EditTeamEnterpriseCard extends HttpServlet {
                 if (classicApp.getAccount() != null)
                     classicApp.getAccount().setReminder_interval(password_reminder_interval);
             });
-            sm.saveOrUpdate(teamCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, teamCard.getJson()));
-            sm.setSuccess(teamCard.getJson());
+            sm.saveOrUpdate(teamEnterpriseCard);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, teamEnterpriseCard.getJson()));
+            sm.setSuccess(teamEnterpriseCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
