@@ -402,8 +402,8 @@ export const team_apps = createReducer({
     return state;
   },
   ['TEAM_CARD_RECEIVER_CHANGED'](state, action){
-    const {team_id, app_id, receiver} = action.payload;
-
+    const {receiver} = action.payload;
+    const app_id = receiver.team_card_id;
     if (!!state[app_id]){
       const app = state[app_id];
       const _receiver = app.receivers.find(item => (item.id === receiver.id));
