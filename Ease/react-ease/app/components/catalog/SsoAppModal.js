@@ -155,12 +155,10 @@ class ThirdStep extends React.Component {
               this.setState({loading: false});
               this.props.showCatalogAddSSOAppModal({active: false})
             }).catch(err => {
-              this.setState({loading: false});
-              this.setState({errorMessage: err});
+              this.setState({loading: false, errorMessage: err});
             });
           }).catch(err => {
-            this.setState({loading: false});
-            this.setState({errorMessage: err});
+            this.setState({loading: false, errorMessage: err});
           });
         }
         else {
@@ -180,8 +178,7 @@ class ThirdStep extends React.Component {
             this.setState({loading: false});
             this.props.showCatalogAddSSOAppModal({active: false})
           }).catch(err => {
-            this.setState({loading: false});
-            this.setState({errorMessage: err});
+            this.setState({loading: false, errorMessage: err});
           });
         }
       }).catch(err => {
@@ -210,12 +207,10 @@ class ThirdStep extends React.Component {
             this.setState({loading: false});
             this.props.showCatalogAddSSOAppModal({active: false})
           }).catch(err => {
-            this.setState({loading: false});
-            this.setState({errorMessage: err});
+            this.setState({loading: false, errorMessage: err});
           });
         }).catch(err => {
-          this.setState({loading: false});
-          this.setState({errorMessage: err});
+          this.setState({loading: false, errorMessage: err});
         });
       }
       else {
@@ -235,8 +230,7 @@ class ThirdStep extends React.Component {
           this.setState({loading: false});
           this.props.showCatalogAddSSOAppModal({active: false})
         }).catch(err => {
-          this.setState({loading: false});
-          this.setState({errorMessage: err});
+          this.setState({loading: false, errorMessage: err});
         });
       }
     }

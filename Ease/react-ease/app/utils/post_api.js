@@ -431,7 +431,7 @@ module.exports = {
     }
   },
   teamApps: {
-    createSingleApp: ({team_id, channel_id, website_id, name, description, password_change_interval, account_information, receivers, ws_id}) => {
+    createSingleApp: ({team_id, channel_id, website_id, name, description, password_change_interval, team_user_filler_id, account_information, receivers, ws_id}) => {
       // Object.keys(account_information).map(item => {
       //   account_information[item] = cipher(account_information[item]);
       // });
@@ -441,6 +441,7 @@ module.exports = {
         website_id:website_id,
         name: name,
         password_reminder_interval: password_change_interval,
+        team_user_filler_id: team_user_filler_id,
         account_information: account_information,
         description: description,
         receivers: receivers,
@@ -504,26 +505,22 @@ module.exports = {
         throw err.response.data;
       });
     },
-    createEnterpriseApp: ({team_id, channel_id, website_id, name, description, password_change_interval, receivers, ws_id}) => {
+    createEnterpriseCard: ({team_id, channel_id, website_id, name, description, password_reminder_interval, receivers, ws_id}) => {
       // receivers = Object.keys(receivers).map(receiver => {
       //   Object.keys(receivers[receiver].account_information).map(item => {
       //     receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
       //   });
       //   return receivers[receiver];
       // });
-      return axios.post('/api/v1/teams/CreateTeamEnterpriseCard', {
+      return basic_post('/api/v1/teams/CreateTeamEnterpriseCard', {
         team_id: team_id,
         channel_id: channel_id,
         website_id: website_id,
         name: name,
         description: description,
-        password_reminder_interval: password_change_interval,
+        password_reminder_interval: password_reminder_interval,
         receivers: receivers,
         ws_id: ws_id
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
       });
     },
     editEnterpriseApp: ({team_id, app_id, description, password_change_interval, ws_id}) => {

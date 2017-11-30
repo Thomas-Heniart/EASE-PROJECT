@@ -3,15 +3,15 @@ import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
-    SingleAppCopyPasswordButton,
-    PasswordChangeDropdown,
-    PasswordChangeHolder,
-    PasswordChangeManagerLabel,
-    PinAppButton,
-    renderSimpleAppEditUserLabel,
-    setUserDropdownText,
-    SharingRequestButton,
-    TeamAppActionButton
+  SingleAppCopyPasswordButton,
+  PasswordChangeDropdown,
+  PasswordChangeHolder,
+  PasswordChangeManagerLabel,
+  PinAppButton,
+  renderSimpleAppEditUserLabel,
+  setUserDropdownText,
+  SharingRequestButton,
+  TeamAppActionButton
 } from "./common";
 import {
   askJoinTeamApp,
@@ -22,18 +22,18 @@ import {
   teamShareSingleApp
 } from "../../actions/appsActions";
 import {
-    credentialIconType,
-    handleSemanticInput,
-    reflect,
-    transformCredentialsListIntoObject,
-    transformWebsiteInfoIntoListAndSetValues
+  credentialIconType,
+  handleSemanticInput,
+  reflect,
+  transformCredentialsListIntoObject,
+  transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
 import {
-    findMeInReceivers,
-    getReceiverInList,
-    isAdmin,
-    selectItemFromListById,
-    sortReceiversAndMap
+  findMeInReceivers,
+  getReceiverInList,
+  isAdmin,
+  selectItemFromListById,
+  sortReceiversAndMap
 } from "../../utils/helperFunctions";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
@@ -171,6 +171,7 @@ class SimpleTeamApp extends Component {
     this.state = {
       loading: false,
       edit: false,
+      name: '',
       credentials: [],
       password_reminder_interval: 0,
       description: '',
@@ -200,7 +201,7 @@ class SimpleTeamApp extends Component {
     e.preventDefault();
     this.setState({loading: true});
     this.props.dispatch(teamEditSingleApp({
-      name: this.props.app.name,
+      name: this.state.name,
       team_id: this.props.app.team_id,
       team_card_id: this.props.app.id,
       description: this.state.description,
@@ -279,7 +280,7 @@ class SimpleTeamApp extends Component {
       const app = this.props.app;
       let credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
       this.setupUsers();
-      this.setState({credentials:credentials, password_reminder_interval: app.password_reminder_interval, description: app.description});
+      this.setState({credentials:credentials, password_reminder_interval: app.password_reminder_interval, description: app.description, name: app.name});
     }
     this.setState({edit: state, loading: false});
   };
@@ -296,7 +297,7 @@ class SimpleTeamApp extends Component {
     const me = this.props.me;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
     if (state)
-        this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
+      this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
     else
       this.props.dispatch(teamAppDeleteReceiver({
         team_id: this.props.team_id,
@@ -328,7 +329,16 @@ class SimpleTeamApp extends Component {
           {/*<AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}*/}
           <Segment>
             <Header as="h4">
-              {app.name}
+              {!this.state.edit ?
+                  app.name :
+                  <Input size="mini"
+                         class="team-app-input"
+                         onChange={this.handleInput}
+                         name="name"
+                         value={this.state.name}
+                         placeholder="Card name..."
+                         type="text"
+                         required/>}
               {meReceiver !== null &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.requests.length > 0 && isAdmin(me.role) &&
@@ -351,7 +361,7 @@ class SimpleTeamApp extends Component {
               <div class="main_column">
                 <div class="credentials">
                   {credentials}
-                  {((meReceiver !== null && meReceiver.can_see_information) || me.id === room_manager.id) &&
+                  {((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id) &&
                   <SingleAppCopyPasswordButton team_id={this.props.team_id} app_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
