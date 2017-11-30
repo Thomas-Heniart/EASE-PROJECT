@@ -55,7 +55,7 @@ public class ServletConnection extends HttpServlet {
             sm.getUserProperties(user.getDb_id()).put("keyUser", keyUser);
             for (TeamUser teamUser : user.getTeamUsers()) {
                 sm.initializeTeamWithContext(teamUser.getTeam());
-                if (teamUser.isVerified()) {
+                if (teamUser.isVerified() && !teamUser.isDisabled()) {
                     String teamKey = teamUser.getDecipheredTeamKey(keyUser);
                     sm.getTeamProperties(teamUser.getTeam().getDb_id()).put("teamKey", teamKey);
                 }

@@ -17,10 +17,12 @@ import com.Ease.User.UserKeys;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.*;
-import com.Ease.Utils.Servlets.GetServletManager;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,13 +33,13 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
-@WebServlet("/resetPassword")
+@WebServlet("/api/v1/common/ResetPassword")
 public class ServletResetPassword extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             String email = sm.getStringParam("email", true, false);
-            String code = sm.getStringParam("linkCode", true, false);
+            String code = sm.getStringParam("code", true, false);
             String password = sm.getStringParam("password", false, false);
             if (!Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
@@ -135,35 +137,7 @@ public class ServletResetPassword extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
-        try {
-            String email = sm.getParam("email", true);
-            String code = sm.getParam("code", true);
-            if (email == null || email.equals("")) {
-                throw new HttpServletException(HttpStatus.BadRequest, "Empty email.");
-            } else if (code == null || code.equals("")) {
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid code.");
-            }
-            HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.querySQLString("SELECT id FROM users WHERE email = :email");
-            hibernateQuery.setParameter("email", email);
-            Integer userId = (Integer) hibernateQuery.getSingleResult();
-            if (userId == null)
-                throw new HttpServletException(HttpStatus.Forbidden);
-            DataBaseConnection db = sm.getDB();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM passwordLost WHERE (NOW() <= DATE_ADD(dateOfRequest, INTERVAL 2 HOUR)) AND user_id = ? AND linkCode = ?;");
-            databaseRequest.setInt(userId);
-            databaseRequest.setString(code);
-            DatabaseResult rs = databaseRequest.get();
-            hibernateQuery.commit();
-            if (rs.next())
-                sm.setRedirectUrl("newPassword.jsp?email=" + email + "&linkCode=" + code + "");
-            else
-                sm.setRedirectUrl("passwordLost?codeExpiration=true");
-        } catch (Exception e) {
-            sm.setError(e);
-        }
-        sm.sendResponse();
-
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
     }
 }
