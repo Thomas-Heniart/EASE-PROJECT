@@ -40,14 +40,17 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             TeamUser adminTeamUser = sm.getTeamUser(team);
             String email = sm.getStringParam("email", true, false);
             String username = sm.getStringParam("username", true, true);
+            if (username == null)
+                username = "";
+            username = username.toLowerCase();
             Integer role = sm.getIntParam("role", true, false);
             if (!team.isValidFreemium() && role != TeamUserRole.Role.MEMBER.getValue())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have multiple admins.");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
-            if (username == null || username.equals("")) {
+            if (username.equals("")) {
                 username = email.substring(0, email.indexOf("@"));
-                username = username.replaceAll("\\W", "_");
+                username = username.replaceAll("[^a-zA-Z0-9._\\-]", "_");
                 if (team.hasTeamUserWithUsername(username)) {
                     int suffixe = 1;
                     while (team.hasTeamUserWithUsername(username + suffixe))

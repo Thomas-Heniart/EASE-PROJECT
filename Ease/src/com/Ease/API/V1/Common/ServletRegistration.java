@@ -37,6 +37,7 @@ public class ServletRegistration extends HttpServlet {
             if (user != null)
                 sm.setUser(null);
             String username = sm.getStringParam("username", true, false);
+            username = username.toLowerCase();
             String email = sm.getStringParam("email", true, false);
             String password = sm.getStringParam("password", false, false);
             String digits = sm.getStringParam("digits", false, true);
