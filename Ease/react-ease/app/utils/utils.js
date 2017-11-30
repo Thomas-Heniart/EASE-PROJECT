@@ -167,11 +167,11 @@ export const teamUserRoles = {
 };
 
 export const passwordChangeValues = {
-  0: 'No reminder',
-  1: "1 month",
-  3: "3 months",
-  6: "6 months",
-  12: "12 months"
+  0: 'No password update reminder',
+  1: "Every 1 month",
+  3: "Every 3 months",
+  6: "Every 6 months",
+  12: "Every 12 months"
 };
 
 export const credentialIconType = {
