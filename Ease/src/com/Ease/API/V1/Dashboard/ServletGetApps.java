@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.NewDashboard.App;
+import com.Ease.Team.Team;
 import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
@@ -22,12 +23,16 @@ public class ServletGetApps extends HttpServlet {
             User user = sm.getUser();
             JSONArray res = new JSONArray();
             for (App app : user.getApps()) {
-                String symmetric_key;
-                if (app.getTeamCardReceiver() != null)
-                    symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
-                else
+                String symmetric_key = null;
+                if (app.getTeamCardReceiver() != null) {
+                    System.out.println(app.getDb_id());
+                    Team team = app.getTeamCardReceiver().getTeamCard().getTeam();
+                    if (!sm.getTeamUser(team).isDisabled())
+                        symmetric_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                } else
                     symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-                app.decipher(symmetric_key);
+                if (symmetric_key != null && !symmetric_key.equals(""))
+                    app.decipher(symmetric_key);
                 res.add(app.getJson());
             }
             sm.setSuccess(res);

@@ -126,7 +126,7 @@ class ReceiversLabelGroup extends Component {
                 <TeamAppReceiverLabel key={receiver.team_user_id}
                                       admin={this.props.meAdmin}
                                       username={user.username}
-                                      can_see_information={receiver.can_see_information}
+                                      can_see_information={receiver.allowed_to_see_password}
                                       accepted={receiver.accepted}/>
             )
           })}
@@ -263,7 +263,7 @@ class SimpleTeamApp extends Component {
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
-      const can_see_information = receiver !== null ? receiver.can_see_information : false;
+      const can_see_information = receiver !== null ? receiver.allowed_to_see_password : false;
       if (receiver !== null)
         selected_users.push(item.id);
       return {

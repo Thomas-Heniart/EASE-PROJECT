@@ -38,10 +38,10 @@ public class Catalog {
         return res;
     }
 
-    public JSONArray getPublicCatalogWebsites(HibernateQuery hibernateQuery) {
+    public JSONArray getPublicCatalogWebsites(Set<Team> teams, HibernateQuery hibernateQuery) {
         JSONArray res = new JSONArray();
         for (Website website : this.getWebsites(hibernateQuery)) {
-            if (!website.getWebsiteAttributes().isPublic_website() || !website.getWebsiteAttributes().isIntegrated())
+            if (!website.getWebsiteAttributes().isPublic_website() || !website.getWebsiteAttributes().isIntegrated() || website.getTeams().stream().noneMatch(teams::contains))
                 continue;
             res.add(website.getCatalogJson());
         }

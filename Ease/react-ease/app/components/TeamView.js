@@ -125,13 +125,13 @@ class TeamView extends React.Component {
     const team = this.props.teams[this.props.match.params.teamId];
     const me = team.team_users[team.my_team_user_id];
     const dispatch = this.props.dispatch;
-    if (teamUser.state === teamUserState.registered && isAdmin(me.role) && teamUser.id !== me.id)
+/*    if (teamUser.state === teamUserState.registered && isAdmin(me.role) && teamUser.id !== me.id)
       dispatch(showVerifyTeamUserModal({
         active: true,
         team_user_id: teamUser.id,
         team_id: team.id
-      }));
-    else if (teamUser.disabled && isAdmin(me.role) && teamUser.id !== me.id)
+      }));*/
+    if (teamUser.disabled && isAdmin(me.role) && teamUser.id !== me.id)
       dispatch(showReactivateTeamUserModal({
         active:true,
         team_user_id: teamUser.id,

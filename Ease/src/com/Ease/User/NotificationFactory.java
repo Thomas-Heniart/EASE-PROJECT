@@ -48,7 +48,7 @@ public class NotificationFactory {
     public Notification createNotification(User user, String content, String icon, TeamUser teamUser, boolean flexPanel) {
         if (!flexPanel)
             return createNotification(user, content, icon, teamUser);
-        return createNotification(user, content, icon, teamUser.getTeam().getDb_id() + "/@" + teamUser.getDb_id() + "/flexPanel");
+        return createNotification(user, content, icon, "#/teams/" + teamUser.getTeam().getDb_id() + "/@" + teamUser.getDb_id() + "/flexPanel");
     }
 
     public void createAskOwnerForBillingNotification(Team team, TeamUser teamUser, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {

@@ -11,12 +11,12 @@
   },
   "logout":{
     "todo":[
-      {"action":"clickona", "search":"a.sign-out"},
+      {"action":"trueClick", "search":"a.sign-out"},
       {"action":"waitload"}
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"waitfor", "search":"section.dashboard, input#username"},
+    {"action":"waitfor", "search":"a.sign-out, input#username"},
     {"search":"a.sign-out"}
   ]
 }

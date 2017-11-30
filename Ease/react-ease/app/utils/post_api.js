@@ -1022,6 +1022,11 @@ module.exports = {
         throw err.response.data;
       })
     },
+    passwordLost: ({email}) => {
+      return basic_post('/passwordLost', {
+        email: email
+      });
+    },
     renewPassword: ({email, code, password}) => {
       return basic_post('/api/v1/common/ResetPassword', {
         email: email,

@@ -2,6 +2,9 @@ package com.Ease.API.V1.Teams.TeamCards;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -21,9 +24,14 @@ public class GetTeamCard extends HttpServlet {
             TeamCard teamCard = (TeamCard) sm.getHibernateQuery().get(TeamCard.class, team_card_id);
             Team team = teamCard.getTeam();
             sm.initializeTeamWithContext(team);
-            sm.needToBeTeamUserOfTeam(team);
-            String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
-            teamCard.decipher(teamKey);
+            sm.needToBeConnected();
+            TeamUser teamUser = sm.getTeamUser(team);
+            if (teamUser == null)
+                throw new HttpServletException(HttpStatus.Forbidden);
+            if (!teamUser.isDisabled()) {
+                String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                teamCard.decipher(teamKey);
+            }
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

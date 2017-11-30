@@ -175,6 +175,8 @@ public abstract class ServletManager {
             this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
         for (TeamUser teamUser : user.getTeamUsers()) {
+            if (!teamUser.isVerified() || teamUser.isDisabled())
+                continue;
             Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
             String teamKey = (String) teamProperties.get("teamKey");
             this.initializeTeamWithContext(teamUser.getTeam());
