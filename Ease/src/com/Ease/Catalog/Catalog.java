@@ -18,9 +18,7 @@ public class Catalog {
     }
 
     public Website getWebsiteWithId(Integer id, HibernateQuery hibernateQuery) throws HttpServletException {
-        hibernateQuery.queryString("SELECT w FROM Website w WHERE w.db_id = :id");
-        hibernateQuery.setParameter("id", id);
-        Website website = (Website) hibernateQuery.getSingleResult();
+        Website website = (Website) hibernateQuery.get(Website.class, id);
         if (website == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No websites corresponding to this id.");
         return website;
@@ -41,7 +39,7 @@ public class Catalog {
     public JSONArray getPublicCatalogWebsites(Set<Team> teams, HibernateQuery hibernateQuery) {
         JSONArray res = new JSONArray();
         for (Website website : this.getWebsites(hibernateQuery)) {
-            if (!website.getWebsiteAttributes().isPublic_website() || !website.getWebsiteAttributes().isIntegrated() || website.getTeams().stream().noneMatch(teams::contains))
+            if ((!website.getWebsiteAttributes().isPublic_website() && (website.getTeams().isEmpty() || website.getTeams().stream().noneMatch(teams::contains))) || !website.getWebsiteAttributes().isIntegrated())
                 continue;
             res.add(website.getCatalogJson());
         }
@@ -101,7 +99,7 @@ public class Catalog {
 
     public Website getPublicWebsiteWithId(Integer id, HibernateQuery hibernateQuery, Set<Team> teams) throws HttpServletException {
         Website website = this.getWebsiteWithId(id, hibernateQuery);
-        if (!website.getWebsiteAttributes().isPublic_website() && website.getTeams().stream().noneMatch(teams::contains))
+        if ((!website.getWebsiteAttributes().isPublic_website() && (website.getTeams().isEmpty() || website.getTeams().stream().noneMatch(teams::contains))) || !website.getWebsiteAttributes().isIntegrated())
             throw new HttpServletException(HttpStatus.BadRequest, "This website is not public");
         return website;
     }

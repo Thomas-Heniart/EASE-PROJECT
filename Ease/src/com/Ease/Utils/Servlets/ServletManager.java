@@ -171,6 +171,8 @@ public abstract class ServletManager {
             Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
             userProperties.put("keyUser", keyUser);
             userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
+            this.getSession().setAttribute("user_id", user.getDb_id());
+            this.getSession().setAttribute("is_admin", user.isAdmin());
         } else
             this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
@@ -317,7 +319,6 @@ public abstract class ServletManager {
     }
 
     public void sendResponse() {
-        user = (request.getSession().getAttribute("user") == null) ? user : (User) request.getSession().getAttribute("user");
         if (this.saveLogs) {
             try {
                 saveLogs();
