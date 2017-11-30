@@ -29,6 +29,7 @@ public class ServletEditSsoGroup extends HttpServlet {
             SsoGroup ssoGroup = user.getSsoGroup(sso_group_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            ssoGroup.decipher(keyUser);
             Account account = ssoGroup.getAccount();
             if (account == null)
                 ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0));

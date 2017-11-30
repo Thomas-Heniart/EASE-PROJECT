@@ -14,12 +14,12 @@ import {
     TeamAppActionButton
 } from "./common";
 import {
-    askJoinTeamApp,
-    joinTeamSingleCard,
-    teamAppDeleteReceiver,
-    teamEditSingleApp,
-    teamEditSingleAppReceiver,
-    teamShareSingleApp
+  askJoinTeamApp,
+  joinTeamSingleCard, removeTeamCardReceiver,
+  teamAppDeleteReceiver,
+  teamEditSingleApp,
+  teamEditSingleAppReceiver,
+  teamShareSingleApp
 } from "../../actions/appsActions";
 import {
     credentialIconType,
@@ -216,23 +216,22 @@ class SimpleTeamApp extends Component {
         const selected = this.state.selected_users.indexOf(item.id) !== -1;
         const receiver = getReceiverInList(receivers, item.id);
         if (!selected && !!receiver)
-          deleting.push(this.props.dispatch(teamAppDeleteReceiver({
-            team_id:this.props.team_id,
-            shared_app_id: receiver.shared_app_id,
-            team_user_id: item.id,
-            app_id: app.id})));
-        if (receiver === null && selected)
+          deleting.push(this.props.dispatch(removeTeamCardReceiver({
+            team_id:this.props.app.team_id,
+            team_card_id: this.props.app.id,
+            team_card_receiver_id: receiver.id})));
+        if (!receiver && selected)
           sharing.push(this.props.dispatch(teamShareSingleApp({
-            team_id: this.props.team_id,
-            app_id: app.id,
+            team_id: this.props.app.team_id,
+            team_card_id: app.id,
             team_user_id: item.id,
-            can_see_information: item.can_see_information})));
-        if (selected && receiver !== null && item.can_see_information !== receiver.can_see_information)
+            allowed_to_see_password: item.can_see_information})));
+        if (selected && !!receiver && item.can_see_information !== receiver.allowed_to_see_password)
           edit.push(this.props.dispatch(teamEditSingleAppReceiver({
-            team_id: this.props.team_id,
-            shared_app_id: receiver.shared_app_id,
-            can_see_information: item.can_see_information,
-            app_id: app.id})));
+            team_id: this.props.app.team_id,
+            team_card_id: this.props.app.id,
+            team_card_receiver_id: receiver.id,
+            allowed_to_see_password: item.can_see_information})));
       });
       const calls = deleting.concat(sharing, edit);
       Promise.all(calls.map(reflect)).then(response => {

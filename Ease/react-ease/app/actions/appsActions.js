@@ -193,15 +193,21 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
   }
 }
 
-export function teamEditSingleAppReceiver({team_id, shared_app_id, can_see_information, app_id}){
+export function teamEditSingleAppReceiver({team_id, team_card_id, allowed_to_see_password, team_card_receiver_id}){
   return function (dispatch, getState){
-    return post_api.teamApps.editSingleAppReceiver({
+    return post_api.teamApps.editSingleCardReceiver({
       team_id: team_id,
-      shared_app_id: shared_app_id,
-      can_see_information: can_see_information,
+      team_card_id: team_card_id,
+      team_card_receiver_id: team_card_receiver_id,
+      allowed_to_see_password: allowed_to_see_password,
       ws_id: getState().common.ws_id
     }).then(receiver => {
-      dispatch({type: 'TEAM_CARD_RECEIVER_CHANGED', payload: {app_id: app_id, receiver: receiver}});
+      dispatch({
+        type: 'TEAM_CARD_RECEIVER_CHANGED',
+        payload: {
+          receiver: receiver
+        }
+      });
       return receiver;
     }).catch(err => {
       throw err;
@@ -209,16 +215,18 @@ export function teamEditSingleAppReceiver({team_id, shared_app_id, can_see_infor
   }
 }
 
-export function teamShareSingleApp({team_id, app_id, team_user_id, can_see_information}){
+export function teamShareSingleApp({team_id, team_card_id, team_user_id, allowed_to_see_password}){
   return function (dispatch, getState){
     return post_api.teamApps.shareSingleApp({
       team_id: team_id,
-      app_id: app_id,
+      team_card_id: team_card_id,
       team_user_id: team_user_id,
-      can_see_information: can_see_information,
+      allowed_to_see_password: allowed_to_see_password,
       ws_id: getState().common.ws_id
     }).then(receiver => {
-      dispatch({type: 'TEAM_APP_RECEIVER_ADDED', payload: {app_id: app_id, receiver: receiver}});
+      dispatch(teamCardReceiverCreatedAction({
+        receiver: receiver
+      }));
       return receiver;
     }).catch(err => {
       throw err;
