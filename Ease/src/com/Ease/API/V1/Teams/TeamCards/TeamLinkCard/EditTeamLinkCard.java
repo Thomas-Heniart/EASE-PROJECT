@@ -41,6 +41,7 @@ public class EditTeamLinkCard extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
+            teamLinkCard.setName(name);
             String url = sm.getStringParam("url", true, false);
             if (url.equals("") || url.length() > 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter url");
