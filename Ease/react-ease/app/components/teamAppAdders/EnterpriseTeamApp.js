@@ -81,7 +81,7 @@ const ReadOnlyTeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, 
 const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
   return (
       <div class="receiver">
-          <Label class={classnames("receiver-label", (receiver.receiver !== null && receiver.receiver.accepted) ? 'accepted': null)}>
+        <Label class={classnames("receiver-label", (receiver.receiver !== null && receiver.receiver.accepted) ? 'accepted': null)}>
           <span>{receiver.username}</span>
           <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
         </Label>
@@ -229,6 +229,7 @@ class EnterpriseTeamApp extends Component {
     this.state = {
       loading: false,
       edit: false,
+      name: '',
       password_reminder_interval: 0,
       description: '',
       users: [],
@@ -333,7 +334,7 @@ class EnterpriseTeamApp extends Component {
       }
       const app = this.props.app;
       this.setupUsers();
-      this.setState({password_reminder_interval: app.password_reminder_interval, description: app.description, fill_in_switch: app.fill_in_switch});
+      this.setState({password_reminder_interval: app.password_reminder_interval, description: app.description, fill_in_switch: app.fill_in_switch, name: app.name});
     }
     this.setState({edit: state, loading: false, show_more: false});
   };
@@ -423,14 +424,23 @@ class EnterpriseTeamApp extends Component {
           {/*<AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}*/}
           <Segment>
             <Header as="h4">
-              {app.name}
+              {!this.state.edit ?
+                  app.name :
+                  <Input size="mini"
+                         class="team-app-input"
+                         onChange={this.handleInput}
+                         name="name"
+                         value={this.state.name}
+                         placeholder="Card name..."
+                         type="text"
+                         required/>}
               {meReceiver !== null &&
               <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
             </Header>
             {/*{meReceiver !== null && !meReceiver.accepted &&*/}
-             {/*<div class="overlay"/>}*/}
+            {/*<div class="overlay"/>}*/}
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}
                                         me={me}
@@ -463,8 +473,8 @@ class EnterpriseTeamApp extends Component {
                                  me={me}
                                  team_id={this.props.team_id}/>}
                 <div>
-                    {!this.state.edit && users.length > 3 &&
-                    <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
+                  {!this.state.edit && users.length > 3 &&
+                  <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
                 </div>
                 {this.state.edit &&
                 <Receivers receivers={users}

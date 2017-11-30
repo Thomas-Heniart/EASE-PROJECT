@@ -6,7 +6,7 @@ import {handleSemanticInput,
   credentialIconType} from "../../utils/utils";
 import {selectUserFromListById, newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite, showPinTeamAppToDashboardModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import {teamCreateSingleApp, teamCreateEnterpriseApp} from "../../actions/appsActions";
+import {teamCreateSingleApp, teamCreateEnterpriseCard} from "../../actions/appsActions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
 import {connect} from "react-redux";
 import {ExtendFillSwitch, setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
@@ -141,7 +141,7 @@ class EnterpriseTeamAppAdder extends Component {
       loading: false,
       app: this.props.card.app,
       app_name: this.props.card.app.name,
-      password_change_interval: 0,
+      password_reminder_interval: 0,
       description: '',
       users: [],
       selected_users: [],
@@ -241,13 +241,13 @@ class EnterpriseTeamAppAdder extends Component {
       result = Object.assign(result, item);
       return result;
     }, {});
-    this.props.dispatch(teamCreateEnterpriseApp({
+    this.props.dispatch(teamCreateEnterpriseCard({
       team_id: this.props.team_id,
       channel_id: this.props.item.id,
       website_id: this.state.app.id,
       name: this.state.app_name,
       description: this.state.description,
-      password_change_interval: this.state.password_change_interval,
+      password_reminder_interval: this.state.password_reminder_interval,
       receivers: newReceivers
     })).then(response => {
       this.setState({loading: false});
@@ -294,7 +294,7 @@ class EnterpriseTeamAppAdder extends Component {
                   <div class="main_column">
                     <div class="credentials">
                       <div class="display-inline-flex align_items_center">
-                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
+                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
                         {/*<ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>*/}
                         {/*{this.props.plan_id === 0 &&*/}
                         {/*<img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}*/}

@@ -119,7 +119,8 @@ export const dashboard = createReducer({
     return update(state, {
       columns: {
         [profile.column_index]: {$splice: [[index, 1]]}
-      }
+      },
+      profiles: {$unset: [profile_id]}
     });
   },
   ['DASHBOARD_PROFILE_CREATED'](state, action){
