@@ -1,0 +1,45 @@
+{
+  "name":"SurveyGizmo",
+  "lastLogin":"",
+  "home":"https://app.surveygizmo.com/login/v1",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url": "https://app.surveygizmo.com/login/v1"},
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":"button.login-btn"}
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {"action": "goto", "url": "https://app.surveygizmo.com/login/v1"},
+      {"action": "trueClick", "search": "a[href*='Facebook']"}
+    ]
+  },
+  "Twitter": {
+    "todo": [
+      {"action": "goto", "url": "https://app.surveygizmo.com/login/v1"},
+      {"action": "trueClick", "search": "a[href*='Twitter']"}
+    ]
+  },
+  "LinkedIn": {
+    "todo": [
+      {"action": "goto", "url": "https://app.surveygizmo.com/login/v1"},
+      {"action": "trueClick", "search": "a[href*='LinkedIn']"}
+    ]
+  },
+  "Google": {
+    "todo": [
+      {"action": "goto", "url": "https://app.surveygizmo.com/login/v1"},
+      {"action": "trueClick", "search": "a[href*='Google']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":".index-index"}
+  ]
+}
