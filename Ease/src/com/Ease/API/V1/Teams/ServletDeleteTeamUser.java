@@ -57,9 +57,11 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, message.toString());
             }
             String forEmail = "";
-            teamUser_to_delete.getTeamCardReceivers().clear();
-            team.getTeamCardMap().values().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete)));
-            teamUser_to_delete.getChannels().forEach(channel -> channel.getTeamCardMap().values().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete))));
+            teamUser_to_delete.getTeamCardReceivers().forEach(sm::deleteObject);
+            teamUser_to_delete.getChannels().forEach(channel -> {
+                channel.getTeamCardMap().values().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete)));
+                sm.saveOrUpdate(channel);
+            });
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
                 forEmail = forEmail.substring(0, forEmail.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
