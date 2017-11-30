@@ -406,7 +406,7 @@ class AddBookmark extends React.Component {
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
     if (this.props.selectedProfile === 0) {
-      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
         const newProfile = response.id;
         this.props.catalogAddBookmark({
           name: this.props.name,
