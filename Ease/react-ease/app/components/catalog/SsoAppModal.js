@@ -8,7 +8,7 @@ import {dashboard} from "../../utils/post_api";
 import {reflect, transformWebsiteInfoIntoList, credentialIconType} from "../../utils/utils";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
-import {createSsoGroup} from "../../actions/dashboardActions";
+import {createSsoGroup, createProfile} from "../../actions/dashboardActions";
 import {catalogAddSsoApp} from "../../actions/catalogActions";
 
 const CredentialInput = ({item, onChange}) => {
@@ -131,16 +131,99 @@ class ThirdStep extends React.Component {
   };
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
-    if (this.props.accountGoogleSelected.id === 0) {
-      this.props.dispatch(createSsoGroup({
-        sso_id: this.props.accountGoogleSelected.sso_id,
-        account_information: this.props.credentials
-      })).then(r => {
+    if (this.props.selectedProfile === 0) {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
+        const newProfile = response.id;
+        if (this.props.accountGoogleSelected.id === 0) {
+          this.props.dispatch(createSsoGroup({
+            sso_id: this.props.accountGoogleSelected.sso_id,
+            account_information: this.props.credentials
+          })).then(r => {
+            const calls = this.props.ssoSelected.map(item => {
+              return this.props.dispatch(catalogAddSsoApp({
+                name: item.name,
+                profile_id: newProfile,
+                sso_group_id: r.id,
+                website_id: item.website_id
+              }));
+            });
+            const response = calls.filter(item => {
+              if (item)
+                return true
+            });
+            Promise.all(response.map(reflect)).then(r => {
+              this.setState({loading: false});
+              this.props.showCatalogAddSSOAppModal({active: false})
+            }).catch(err => {
+              this.setState({loading: false});
+              this.setState({errorMessage: err});
+            });
+          }).catch(err => {
+            this.setState({loading: false});
+            this.setState({errorMessage: err});
+          });
+        }
+        else {
+          const calls = this.props.ssoSelected.map(item => {
+            return this.props.dispatch(catalogAddSsoApp({
+              name: item.name,
+              profile_id: newProfile,
+              sso_group_id: this.props.accountGoogleSelected.id,
+              website_id: item.website_id
+            }));
+          });
+          const response = calls.filter(item => {
+            if (item)
+              return true
+          });
+          Promise.all(response.map(reflect)).then(r => {
+            this.setState({loading: false});
+            this.props.showCatalogAddSSOAppModal({active: false})
+          }).catch(err => {
+            this.setState({loading: false});
+            this.setState({errorMessage: err});
+          });
+        }
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
+      });
+    }
+    else {
+      if (this.props.accountGoogleSelected.id === 0) {
+        this.props.dispatch(createSsoGroup({
+          sso_id: this.props.accountGoogleSelected.sso_id,
+          account_information: this.props.credentials
+        })).then(r => {
+          const calls = this.props.ssoSelected.map(item => {
+            return this.props.dispatch(catalogAddSsoApp({
+              name: item.name,
+              profile_id: this.props.selectedProfile,
+              sso_group_id: r.id,
+              website_id: item.website_id
+            }));
+          });
+          const response = calls.filter(item => {
+            if (item)
+              return true
+          });
+          Promise.all(response.map(reflect)).then(r => {
+            this.setState({loading: false});
+            this.props.showCatalogAddSSOAppModal({active: false})
+          }).catch(err => {
+            this.setState({loading: false});
+            this.setState({errorMessage: err});
+          });
+        }).catch(err => {
+          this.setState({loading: false});
+          this.setState({errorMessage: err});
+        });
+      }
+      else {
         const calls = this.props.ssoSelected.map(item => {
           return this.props.dispatch(catalogAddSsoApp({
             name: item.name,
             profile_id: this.props.selectedProfile,
-            sso_group_id: r.id,
+            sso_group_id: this.props.accountGoogleSelected.id,
             website_id: item.website_id
           }));
         });
@@ -155,31 +238,7 @@ class ThirdStep extends React.Component {
           this.setState({loading: false});
           this.setState({errorMessage: err});
         });
-      }).catch(err => {
-        this.setState({loading: false});
-        this.setState({errorMessage: err});
-      });
-    }
-    else {
-      const calls = this.props.ssoSelected.map(item => {
-        return this.props.dispatch(catalogAddSsoApp({
-          name: item.name,
-          profile_id: this.props.selectedProfile,
-          sso_group_id: this.props.accountGoogleSelected.id,
-          website_id: item.website_id
-        }));
-      });
-      const response = calls.filter(item => {
-        if (item)
-          return true
-      });
-      Promise.all(response.map(reflect)).then(r => {
-        this.setState({loading: false});
-        this.props.showCatalogAddSSOAppModal({active: false})
-      }).catch(err => {
-        this.setState({loading: false});
-        this.setState({errorMessage: err});
-      });
+      }
     }
   };
   render() {
@@ -346,18 +405,37 @@ class AddBookmark extends React.Component {
   handleInput = (e, {name, value}) => this.setState({[name]: value});
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
-    this.props.catalogAddBookmark({
-      name: this.props.name,
-      profile_id: this.props.selectedProfile,
-      url: this.state.url,
-      img_url: this.props.logo
-    }).then(r => {
-      this.setState({loading: false});
-      this.props.showCatalogAddSSOAppModal({active: false})
-    }).catch(err => {
-      this.setState({loading: false});
-      this.setState({errorMessage: err});
-    });
+    if (this.props.selectedProfile === 0) {
+      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+        const newProfile = response.id;
+        this.props.catalogAddBookmark({
+          name: this.props.name,
+          profile_id: newProfile,
+          url: this.state.url,
+          img_url: this.props.logo
+        }).then(r => {
+          this.setState({loading: false});
+          this.props.showCatalogAddSSOAppModal({active: false})
+        }).catch(err => {
+          this.setState({loading: false, errorMessage: err});
+        });
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
+      });
+    }
+    else {
+      this.props.catalogAddBookmark({
+        name: this.props.name,
+        profile_id: this.props.selectedProfile,
+        url: this.state.url,
+        img_url: this.props.logo
+      }).then(r => {
+        this.setState({loading: false});
+        this.props.showCatalogAddSSOAppModal({active: false})
+      }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
+      });
+    }
   };
   render() {
     const {
@@ -559,9 +637,11 @@ class SsoAppModal extends React.Component {
     return login;
   };
   showName = () => {
-    const name = this.state.ssoSelected.map(item => {
-      if (this.props.modal.website.id === item.website_id)
-        return item.name;
+    let name = this.state.ssoSelected.filter(item => {
+      return this.props.modal.website.id === item.website_id;
+    });
+    name = name.map(item => {
+      return item.name;
     });
     return name;
   };
@@ -569,8 +649,10 @@ class SsoAppModal extends React.Component {
     if (this.state.view === 1) {
       if (this.state.selectedProfile !== -1)
         this.addMainAppToSSOSelected();
+      else if (this.state.selectedProfile === -1 && this.state.selectedRoom !== -1)
+        this.setState({view: 4});
       else
-        this.setState({view: 4})
+        this.createProfile();
     }
     else if (this.state.addGoogleAccount) {
       this.setState({
@@ -624,6 +706,7 @@ class SsoAppModal extends React.Component {
             {...this.props}
             logo={this.props.modal.website.logo}
             name={this.showName()}
+            profileName={this.state.profileName}
             accountGoogleSelected={this.state.accountGoogleSelected}
             selectedProfile={this.state.selectedProfile}
             ssoWebsites={this.state.ssoWebsites}
