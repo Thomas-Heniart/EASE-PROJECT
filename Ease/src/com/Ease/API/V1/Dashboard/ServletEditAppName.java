@@ -29,6 +29,12 @@ public class ServletEditAppName extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             app.getAppInformation().setName(name);
             sm.saveOrUpdate(app.getAppInformation());
+            String symmetric_key;
+            if (app.getTeamCardReceiver() != null)
+                symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+            else
+                symmetric_key = sm.getKeyUser();
+            app.decipher(symmetric_key);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CHANGED, app.getJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
