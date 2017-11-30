@@ -134,9 +134,12 @@ const StaticReceivers = ({receivers, me, team_id, expanded}) => {
 const TeamAppCredentialInput = ({item, onChange, receiver, myId, empty}) => {
   const isRequired = receiver.user.id === myId && item.name !== 'password';
   const label = <Label><Icon name={credentialIconType[item.name]}/></Label>;
-  let placeholder = item.name === 'password' && empty ? item.placeholder : '••••••••';
+  let placeholder = item.placeholder;
+  if (item.name === 'password' && !receiver.empty)
+    placeholder = '••••••••';
   if (receiver.user.id !== myId && receiver.empty)
     placeholder = `${placeholder} (Optional)`;
+
   return <Input size="mini"
                 class="team-app-input"
                 name={item.name}
@@ -172,7 +175,7 @@ const Receivers = ({receivers, onChange, onDelete, myId}) => {
   return (
       <div class="receivers">
         {receivers.map(item => {
-          return <ExtendedReceiverCredentialsInput key={item.id}
+          return <ExtendedReceiverCredentialsInput key={item.user.id}
                                                    myId={myId}
                                                    receiver={item}
                                                    onChange={onChange}
@@ -268,7 +271,7 @@ class EnterpriseTeamApp extends Component {
   };
   handleReceiverInput = (id, {name, value}) => {
     const users = this.state.users.map(user => {
-      if (user.id === id){
+      if (user.user.id === id){
         user.credentials.map(item => {
           if (item.name === name)
             item.value = value;
@@ -302,9 +305,8 @@ class EnterpriseTeamApp extends Component {
     const channel = selectItemFromListById(this.props.channels, this.props.app.channel_id);
     const app = this.props.app;
     let selected_users = [];
-
     const users = channel.team_user_ids.map(item => {
-      const user = selectItemFromListById(this.props.users, item);
+      const user = this.props.users.find(user => (user.id === item));
       return {
         key: item,
         text: setUserDropdownText(user),
@@ -313,13 +315,13 @@ class EnterpriseTeamApp extends Component {
         user: user
       }
     }).sort((a, b) => {
-      if (a.id === this.props.me.id)
+      if (a.user.id === this.props.me.id)
         return -1000;
-      if (b.id === this.props.me.id)
+      if (b.user.id === this.props.me.id)
         return 1000;
       return a.username.localeCompare(b.username);
     }).map(item => {
-      const receiver = getReceiverInList(this.props.app.receivers, item.id);
+      const receiver = this.props.app.receivers.find(receiver => (receiver.team_user_id === item.user.id));
       let credentials;
       if (!!receiver) {
         credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, receiver.account_information);
@@ -363,8 +365,8 @@ class EnterpriseTeamApp extends Component {
       let edit = [];
       let sharing = [];
       this.state.users.map(item => {
-        const selected = this.state.selected_users.indexOf(item.id) !== -1;
-        const receiver = getReceiverInList(receivers, item.id);
+        const selected = this.state.selected_users.indexOf(item.user.id) !== -1;
+        const receiver = receivers.find(receiver => (receiver.team_user_id === item.user.id));
         if (!selected && !!receiver)
           deleting.push(this.props.dispatch(removeTeamCardReceiver({
             team_id:app.team_id,
@@ -374,7 +376,7 @@ class EnterpriseTeamApp extends Component {
           sharing.push(this.props.dispatch(teamShareEnterpriseCard({
             team_id: app.team_id,
             team_card_id: app.id,
-            team_user_id: item.id,
+            team_user_id: item.user.id,
             account_information: transformCredentialsListIntoObject(item.credentials)})));
         if (selected && !!receiver && isDifferentCredentials(transformCredentialsListIntoObject(item.credentials), receiver.account_information))
           edit.push(this.props.dispatch(teamEditEnterpriseCardReceiver({
@@ -395,7 +397,7 @@ class EnterpriseTeamApp extends Component {
     const app = this.props.app;
     if (this.state.edit){
       return this.state.selected_users.map(item => {
-        return selectItemFromListById(this.state.users, item);
+        return this.state.users.find(user => (user.user.id === item));
       });
     }
     return app.receivers.map(item => {
