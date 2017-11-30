@@ -1,0 +1,22 @@
+{
+  "name":"OneUp",
+  "lastlogin":"",
+  "home":"http://app.oneup.com/",
+  "connect": {
+    "todo": [
+      {"action":"waitfor", "search":"#userUsername"},
+      {"action":"fill", "what":"login", "search":"#userUsername"},
+      {"action":"fill", "what":"password", "search":"#userPassword"},
+      {"action":"trueClick", "search":"#signin"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"goto", "url":"http://app.oneup.com/logout"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"#headerRootPanel li:last-child() a[href*='javascript'], #userUsername"},
+    {"search":"#headerRootPanel li:last-child() a[href*='javascript']"}
+  ]
+}

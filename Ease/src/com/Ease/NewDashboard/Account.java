@@ -254,7 +254,7 @@ public class Account {
             return false;
         for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
             AccountInformation accountInformation = this.getInformationNamed(websiteInformation.getInformation_name());
-            if (accountInformation == null || accountInformation.getDeciphered_information_value().equals(""))
+            if (accountInformation == null || (accountInformation.getDeciphered_information_value() == null && accountInformation.getInformation_value() != null) || accountInformation.getDeciphered_information_value().equals(""))
                 return false;
         }
         return true;

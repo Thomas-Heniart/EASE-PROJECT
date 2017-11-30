@@ -45,7 +45,7 @@ public class ServletPasswordLost extends HttpServlet {
             mailJetBuilder.setTemplateId(178530);
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
             mailJetBuilder.addTo(email);
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "resetPassword?email=" + email + "&code=" + code);
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/recover/" + email + "/" + code);
             mailJetBuilder.sendEmail();
             sm.setSuccess("Email sent");
         } catch (Exception e) {

@@ -70,7 +70,7 @@ public class TeamManager {
             team.initializeStripe(teamProperties);
             team.checkFreeTrialEnd();
         }
-        }
+    }
 
     public void teamUserNotRegisteredReminder(HibernateQuery hibernateQuery) throws HttpServletException {
         System.out.println("Team users not registered reminder start...");
@@ -222,16 +222,17 @@ public class TeamManager {
         for (Team team : this.getTeams(hibernateQuery)) {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.isDisabled()) {
-                    hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
-                    hibernateQuery.setParameter(1, teamUser.getDisabledDate());
-                    if ((Boolean) hibernateQuery.getSingleResult()) {
+                    Calendar calendar = Calendar.getInstance();
+                    Calendar calendar1 = Calendar.getInstance();
+                    calendar1.setTime(teamUser.getDisabledDate());
+                    calendar1.add(Calendar.DAY_OF_YEAR, 7);
+                    if (calendar.get(Calendar.DAY_OF_YEAR) == calendar1.get(Calendar.DAY_OF_YEAR) && calendar.get(Calendar.YEAR) == calendar1.get(Calendar.YEAR)) {
                         if (teamUser.getAdmin_id() == null)
                             continue;
                         TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
                         NotificationFactory.getInstance().createPasswordLostOneWeekNotification(teamUser, teamUser_admin, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id(), servletContext), hibernateQuery);
                     }
                 }
-
             }
         }
         System.out.println("Password lost reminder end...");

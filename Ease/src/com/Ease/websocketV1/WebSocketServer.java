@@ -31,6 +31,10 @@ public class WebSocketServer {
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
             HttpSession httpSession = (HttpSession) config.getUserProperties().get("httpSession");
+            if (httpSession == null) {
+                hibernateQuery.commit();
+                return;
+            }
             Integer user_id = (Integer) httpSession.getAttribute("user_id");
             ServletContext servletContext = httpSession.getServletContext();
             System.out.println("connection opened by websocket. id = " + session.getId());
