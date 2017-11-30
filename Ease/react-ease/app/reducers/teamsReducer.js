@@ -421,13 +421,12 @@ export const team_apps = createReducer({
       [team_card.id]: {$set: team_card}
     });
   },
-  ['TEAM_APP_CHANGED'](state, action){
-    const app = action.payload.app;
-    if (state[app.id] !== undefined)
-      return {
-        ...state,
-        [app.id]: app
-      };
+  ['TEAM_CARD_CHANGED'](state, action){
+    const team_card = action.payload.team_card;
+    if (!!state[team_card.id])
+      return update(state, {
+        [team_card.id]: {$set: team_card}
+      });
     return state;
   },
   ['TEAM_APP_REMOVED'](state, action) {

@@ -474,9 +474,9 @@ module.exports = {
       });
     },
     editSingleApp: ({team_id, team_card_id, description, account_information, password_reminder_interval, name, ws_id}) => {
-/*      Object.keys(account_information).map(item => {
-        account_information[item] = cipher(account_information[item]);
-      });*/
+      /*      Object.keys(account_information).map(item => {
+              account_information[item] = cipher(account_information[item]);
+            });*/
       return axios.post('/api/v1/teams/EditTeamSingleCard', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -522,34 +522,27 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    editEnterpriseApp: ({team_id, app_id, description, password_change_interval, ws_id}) => {
-      return axios.post('/api/v1/teams/EditTeamEnterpriseCard', {
+    editEnterpriseCard: ({team_id, team_card_id, name, description, password_reminder_interval, ws_id}) => {
+      return basic_post('/api/v1/teams/EditTeamEnterpriseCard', {
         team_id: team_id,
-        team_card_id: app_id,
+        team_card_id: team_card_id,
+        name: name,
         description: description,
-        password_change_interval: password_change_interval,
+        password_reminder_interval: password_reminder_interval,
         ws_id: ws_id
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
       });
     },
-    shareEnterpriseApp: ({team_id, app_id, team_user_id, account_information, ws_id}) => {
-      if (account_information !== undefined)
-        Object.keys(account_information).map(item => {
-          account_information[item] = cipher(account_information[item]);
-        });
-      return axios.post('/api/v1/teams/ShareEnterpriseApp', {
+    shareEnterpriseCard: ({team_id, team_card_id, team_user_id, account_information, ws_id}) => {
+      /*      if (!!account_information)
+              Object.keys(account_information).map(item => {
+                account_information[item] = cipher(account_information[item]);
+              });*/
+      return basic_post('/api/v1/teams/AddTeamEnterpriseCardReceiver', {
         team_id: team_id,
-        app_id: app_id,
+        team_card_id: team_card_id,
         team_user_id: team_user_id,
         account_information: account_information,
         ws_id: ws_id
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
       });
     },
     joinEnterpriseApp : ({team_id, app_id, account_information, ws_id}) => {
@@ -584,10 +577,10 @@ module.exports = {
       });
     },
     editEnterpriseCardReceiver: ({team_id, team_card_id, team_card_receiver_id, account_information, ws_id}) => {
-/*      Object.keys(account_information).map(item => {
-        account_information[item] = cipher(account_information[item]);
-      });*/
-      return basic_post('/api/v1/teams/EditTeamEnterpriseCardReceiver',{
+      /*      Object.keys(account_information).map(item => {
+              account_information[item] = cipher(account_information[item]);
+            });*/
+      return basic_post('/api/v1/teams/EditTeamEnterpriseCardReceiver', {
         team_id: team_id,
         team_card_id: team_card_id,
         team_card_receiver_id: team_card_receiver_id,
