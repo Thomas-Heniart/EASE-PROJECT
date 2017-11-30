@@ -37,8 +37,8 @@ class AddBookmark extends React.Component {
       url: this.state.url,
       img_url: this.state.img_url
     }).then(app => {
-        this.setState({name: '', url: '', img_url:'/resources/icons/link_app.png'});
-        this.props.history.push('/main/catalog');
+      this.setState({name: '', url: '', img_url:'/resources/icons/link_app.png'});
+      this.props.history.push('/main/catalog');
     }).catch(() => {
 
     });
