@@ -37,13 +37,13 @@ class TeamSingleApp extends Component {
             <NewAppLabel/>}
             {password_update &&
             <UpdatePasswordLabel/>}
-            {teamUserDepartureDatePassed(me.departure_date) &&
+            {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
-            {team_app.empty && team_app.team_user_filler_id === me.id &&
+            {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}/>}
-            {team_app.empty && team_app.team_user_filler_id !== me.id &&
+            {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id &&
             <DisabledAppIndicator filler_name={filler.username}/>}
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.connect}/>
