@@ -37,34 +37,41 @@ export function teamCreateEnterpriseCard({team_id, channel_id, website_id, name,
   }
 }
 
-export function teamEditEnterpriseApp({team_id, app_id, description, password_change_interval}) {
+export function teamEditEnterpriseCard({team_id, team_card_id, name, description, password_reminder_interval}) {
   return (dispatch, getState) => {
-    return post_api.teamApps.editEnterpriseApp({
+    return post_api.teamApps.editEnterpriseCard({
       team_id: team_id,
-      app_id: app_id,
+      team_card_id: team_card_id,
+      name: name,
       description: description,
-      password_change_interval: password_change_interval,
+      password_reminder_interval: password_reminder_interval,
       ws_id: getState().common.ws_id
-    }).then(app => {
-      dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
-      return app;
+    }).then(team_card => {
+      dispatch({
+        type: 'TEAM_CARD_CHANGED',
+        payload: {
+          team_card: team_card
+        }
+      });
+      return team_card;
     }).catch(err => {
       throw err;
     });
   }
 }
 
-export function teamShareEnterpriseApp({team_id, app_id, team_user_id, account_information}) {
+export function teamShareEnterpriseCard({team_id, team_card_id, team_user_id, account_information}) {
   return (dispatch, getState) => {
-    return post_api.teamApps.shareEnterpriseApp({
+    return post_api.teamApps.shareEnterpriseCard({
       team_id: team_id,
-      app_id: app_id,
+      team_card_id: team_card_id,
       team_user_id: team_user_id,
       account_information: account_information,
-      ws_id: getState().common.ws_id,
-      timestamp: new Date().getTime()
+      ws_id: getState().common.ws_id
     }).then(receiver => {
-      dispatch({type: 'TEAM_APP_RECEIVER_ADDED', payload: {app_id: app_id, receiver: receiver}});
+      dispatch(teamCardReceiverCreatedAction({
+        receiver: receiver
+      }));
       return receiver;
     }).catch(err => {
       throw err;
@@ -97,7 +104,7 @@ export function teamJoinEnterpriseApp({team_id, app_id, account_information}){
       account_information: account_information,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
+      dispatch({type: 'TEAM_CARD_CHANGED', payload: {app: app}});
       return app;
     }).catch(err => {
       throw err;
@@ -115,7 +122,12 @@ export function teamEditEnterpriseCardReceiver({team_id, team_card_id, team_card
       account_information: account_information,
       ws_id: getState().common.ws_id
     }).then(receiver => {
-      dispatch({type: 'TEAM_CARD_RECEIVER_CHANGED', payload: {app_id: team_card_id, receiver: receiver}});
+      dispatch({
+        type: 'TEAM_CARD_RECEIVER_CHANGED',
+        payload: {
+          receiver: receiver
+        }
+      });
       return receiver;
     }).catch(err => {
       throw err;
@@ -188,7 +200,7 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
       password_reminder_interval: password_reminder_interval,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
+      dispatch({type: 'TEAM_CARD_CHANGED', payload: {app: app}});
       return app;
     }).catch(err => {
       throw err;
@@ -267,7 +279,7 @@ export function teamEditLinkAppNew({team_card_id, name, description, url, img_ur
       img_url: img_url,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_APP_CHANGED', payload: {app: app}});
+      dispatch({type: 'TEAM_CARD_CHANGED', payload: {app: app}});
       return app;
     }).catch(err => {
       throw err;
