@@ -61,10 +61,14 @@ extension.runtime.onMessage("logoutDone", function logoutHandler(message, sendRe
 });
 
 document.addEventListener("NewConnection", function (event) {
-    if (event.detail.highlight == undefined) event.detail.highlight = true;
+    if (event.detail.highlight === undefined)
+        event.detail.highlight = true;
+    if (event.detail.test_connection === undefined)
+        event.detail.test_connection = false;
     extension.runtime.sendMessage("NewConnection", {
         "highlight": event.detail.highlight,
-        "detail": event.detail
+        "detail": event.detail,
+        "test_connection": event.detail.test_connection
     }, function (response) {
     });
 }, false);
