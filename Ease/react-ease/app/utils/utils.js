@@ -183,11 +183,11 @@ export const credentialIconType = {
 };
 
 export const passwordChangeOptions = [
-  {key: 0, text: 'No reminder', value: 0},
-  {key: 1, text: '1 month', value: 1},
-  {key: 3, text: '3 months', value: 3},
-  {key: 6, text: '6 months', value: 6},
-  {key: 12, text: '12 months', value: 12},
+  {key: 0, text: 'No password update reminder', value: 0},
+  {key: 1, text: 'Every 1 month', value: 1},
+  {key: 3, text: 'Every 3 months', value: 3},
+  {key: 6, text: 'Every 6 months', value: 6},
+  {key: 12, text: 'Every 12 months', value: 12},
 ];
 
 export const teamUserRoleValues = [
