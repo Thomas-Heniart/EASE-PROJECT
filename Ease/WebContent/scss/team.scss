@@ -929,10 +929,9 @@ i.icon.pin_button {
     & > .ui.label {
       background-color: transparent;
       color: $themeLightGreyTextColor;
-      border: 1px solid $themeLightGreyTextColor;
+      box-shadow: 0 0 0 1px rgba(34,36,38,0.15) inset;
       &.accepted {
         background-color: $themeButtonGreenColor;
-        border: 1px solid $themeButtonGreenColor;
         color: white;
       }
     }

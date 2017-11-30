@@ -15,9 +15,10 @@ import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {
   teamAppDeleteReceiver,
-  teamEditEnterpriseApp,
-  teamEditEnterpriseAppReceiver,
-  teamShareEnterpriseApp
+  teamEditEnterpriseCard,
+  teamEditEnterpriseCardReceiver,
+  teamShareEnterpriseCard,
+  removeTeamCardReceiver
 } from "../../actions/appsActions";
 import {
   credentialIconType,
@@ -53,19 +54,6 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
   )
 };
 
-const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, pwd_filled}) => {
-  return <Input size="mini"
-                class="team-app-input"
-                readOnly={readOnly}
-                name={item.name}
-                onChange={onChange !== undefined ?(e, data) => {onChange(receiver_id, data)} : null}
-                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-                labelPosition="left"
-                placeholder={item.name === 'password' && pwd_filled ? '••••••••' : item.placeholder}
-                value={item.value}
-                type={item.type}/>;
-};
-
 const ReadOnlyTeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, pwd_filled}) => {
   return <Input size="mini"
                 class="team-app-input"
@@ -85,19 +73,6 @@ const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
           <span>{receiver.username}</span>
           <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
         </Label>
-      </div>
-  )
-};
-
-const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly}) => {
-  return (
-      <div class="receiver">
-        <Label class={classnames("receiver-label", (receiver.receiver !== null && receiver.receiver.accepted) ? 'accepted': null)}><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
-        {
-          receiver.credentials.map(item => {
-            return <TeamAppCredentialInput pwd_filled={receiver.password_filled} readOnly={readOnly} receiver_id={receiver.id} key={item.priority} onChange={onChange} item={item}/>
-          })
-        }
       </div>
   )
 };
@@ -156,19 +131,56 @@ const StaticReceivers = ({receivers, me, team_id, expanded}) => {
   )
 };
 
-const Receivers = ({receivers, onChange, onDelete, extended, myId}) => {
+const TeamAppCredentialInput = ({item, onChange, receiver, myId, empty}) => {
+  const isRequired = receiver.user.id === myId && item.name !== 'password';
+  const label = <Label><Icon name={credentialIconType[item.name]}/></Label>;
+  let placeholder = item.name === 'password' && empty ? item.placeholder : '••••••••';
+  if (receiver.user.id !== myId && receiver.empty)
+    placeholder = `${placeholder} (Optional)`;
+  return <Input size="mini"
+                class="team-app-input"
+                name={item.name}
+                required={isRequired}
+                onChange={(e, data) => {onChange(receiver.user.id, data)}}
+                label={label}
+                labelPosition="left"
+                placeholder={placeholder}
+                value={item.value}
+                type={item.type}/>;
+};
+
+const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId}) => {
+  return (
+      <div class="receiver">
+        <Label class={classnames("receiver-label", (!!receiver.receiver) ? 'accepted': null)}><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        {
+          receiver.credentials.map(item => {
+            return <TeamAppCredentialInput
+                empty={receiver.empty}
+                myId={myId}
+                receiver={receiver}
+                key={item.priority}
+                onChange={onChange}
+                item={item}/>
+          })
+        }
+      </div>
+  )
+};
+
+const Receivers = ({receivers, onChange, onDelete, myId}) => {
   return (
       <div class="receivers">
         {receivers.map(item => {
-          if (extended || item.id === myId)
-            return <ExtendedReceiverCredentialsInput key={item.id}
+          return <ExtendedReceiverCredentialsInput key={item.id}
+                                                   myId={myId}
+                                                   receiver={item}
+                                                   onChange={onChange}
+                                                   onDelete={onDelete}/>;
+          /*          return <ReceiverCredentialsInput key={item.id}
                                                      receiver={item}
                                                      onChange={onChange}
-                                                     onDelete={onDelete}/>;
-          return <ReceiverCredentialsInput key={item.id}
-                                           receiver={item}
-                                           onChange={onChange}
-                                           onDelete={onDelete}/>
+                                                     onDelete={onDelete}/>*/
         })}
       </div>
   )
@@ -234,8 +246,6 @@ class EnterpriseTeamApp extends Component {
       description: '',
       users: [],
       selected_users: [],
-      fill_in_switch: this.props.app.fill_in_switch,
-      expanded: false,
       show_more: false
     }
   }
@@ -289,7 +299,7 @@ class EnterpriseTeamApp extends Component {
     this.props.dispatch(modalActions.showTeamAskJoinMultiAppModal(true, this.props.me, this.props.app));
   };
   setupUsers = () =>  {
-    const channel = selectItemFromListById(this.props.channels, this.props.app.origin.id);
+    const channel = selectItemFromListById(this.props.channels, this.props.app.channel_id);
     const app = this.props.app;
     let selected_users = [];
 
@@ -299,7 +309,6 @@ class EnterpriseTeamApp extends Component {
         key: item,
         text: setUserDropdownText(user),
         value: item,
-        id: item,
         username: user.username,
         user: user
       }
@@ -312,15 +321,15 @@ class EnterpriseTeamApp extends Component {
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
       let credentials;
-      if (receiver !== null) {
+      if (!!receiver) {
         credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, receiver.account_information);
-        selected_users.push(item.id);
+        selected_users.push(item.user.id);
       } else
         credentials = transformWebsiteInfoIntoList(app.website.information);
       return {
         ...item,
         credentials: credentials,
-        password_filled: receiver !== null && receiver.password_filled,
+        empty: !!receiver && receiver.empty,
         receiver: receiver
       }
     });
@@ -334,19 +343,19 @@ class EnterpriseTeamApp extends Component {
       }
       const app = this.props.app;
       this.setupUsers();
-      this.setState({password_reminder_interval: app.password_reminder_interval, description: app.description, fill_in_switch: app.fill_in_switch, name: app.name});
+      this.setState({password_reminder_interval: app.password_reminder_interval, description: app.description, name: app.name});
     }
     this.setState({edit: state, loading: false, show_more: false});
   };
   modify = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    this.props.dispatch(teamEditEnterpriseApp({
+    this.props.dispatch(teamEditEnterpriseCard({
       team_id: this.props.team_id,
-      app_id: this.props.app.id,
+      team_card_id: this.props.app.id,
+      name: this.state.name,
       description: this.state.description,
-      password_reminder_interval: this.state.password_reminder_interval,
-      fill_in_switch:this.state.fill_in_switch
+      password_reminder_interval: this.state.password_reminder_interval
     })).then(response => {
       const app = response;
       const receivers = app.receivers;
@@ -356,24 +365,23 @@ class EnterpriseTeamApp extends Component {
       this.state.users.map(item => {
         const selected = this.state.selected_users.indexOf(item.id) !== -1;
         const receiver = getReceiverInList(receivers, item.id);
-        if (!selected && receiver !== null)
-          deleting.push(this.props.dispatch(teamAppDeleteReceiver({
-            team_id:this.props.team_id,
-            shared_app_id: receiver.shared_app_id,
-            team_user_id: item.id,
-            app_id: app.id})));
-        if (receiver === null && selected)
-          sharing.push(this.props.dispatch(teamShareEnterpriseApp({
-            team_id: this.props.team_id,
-            app_id: app.id,
+        if (!selected && !!receiver)
+          deleting.push(this.props.dispatch(removeTeamCardReceiver({
+            team_id:app.team_id,
+            team_card_id: app.id,
+            team_card_receiver_id: receiver.id})));
+        if (!receiver && selected)
+          sharing.push(this.props.dispatch(teamShareEnterpriseCard({
+            team_id: app.team_id,
+            team_card_id: app.id,
             team_user_id: item.id,
             account_information: transformCredentialsListIntoObject(item.credentials)})));
-        if (selected && receiver !== null && isDifferentCredentials(transformCredentialsListIntoObject(item.credentials), receiver.account_information))
-          edit.push(this.props.dispatch(teamEditEnterpriseAppReceiver({
-            team_id: this.props.team_id,
-            shared_app_id: receiver.shared_app_id,
-            account_information: transformCredentialsListIntoObject(item.credentials),
-            app_id: app.id})));
+        if (selected && !!receiver && isDifferentCredentials(transformCredentialsListIntoObject(item.credentials), receiver.account_information))
+          edit.push(this.props.dispatch(teamEditEnterpriseCardReceiver({
+            team_id: app.team_id,
+            team_card_id: app.id,
+            team_card_receiver_id: receiver.id,
+            account_information: transformCredentialsListIntoObject(item.credentials)})));
       });
       const calls = deleting.concat(sharing, edit);
       Promise.all(calls.map(reflect)).then(response => {
@@ -393,12 +401,9 @@ class EnterpriseTeamApp extends Component {
     return app.receivers.map(item => {
       const user = selectItemFromListById(this.props.users, item.team_user_id);
       return {
-        password_must_be_updated: item.password_must_be_updated,
         empty: item.empty,
         accepted: item.accepted,
         id: item.team_user_id,
-        password_filled: item.password_filled,
-        shared_app_id: item.shared_app_id,
         credentials: transformWebsiteInfoIntoListAndSetValues(app.website.information, item.account_information),
         username: user.username
       }
@@ -468,7 +473,6 @@ class EnterpriseTeamApp extends Component {
                 </div>
                 {!this.state.edit &&
                 <StaticReceivers receivers={users}
-                                 extended={this.state.extended}
                                  expanded={this.state.show_more}
                                  me={me}
                                  team_id={this.props.team_id}/>}
