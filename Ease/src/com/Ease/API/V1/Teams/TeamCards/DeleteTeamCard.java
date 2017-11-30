@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -31,6 +33,15 @@ public class DeleteTeamCard extends HttpServlet {
             sm.needToBeAdminOfTeam(teamCard.getTeam());
             TeamUser teamUser_admin = sm.getTeamUser(team);
             for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
+                App app = teamCardReceiver.getApp();
+                if (app.isWebsiteApp()) {
+                    WebsiteApp websiteApp = (WebsiteApp) app;
+                    websiteApp.getLogWithAppSet().forEach(logWithApp -> {
+                        Profile profile1 = logWithApp.getProfile();
+                        profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                        sm.deleteObject(logWithApp);
+                    });
+                }
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null)
                     profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
