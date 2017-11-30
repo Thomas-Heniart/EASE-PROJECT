@@ -36,7 +36,6 @@ class AddCardForm extends React.Component {
       errorMessage: ''
     }
   }
-
   checkValueInput = () => {
     let i = 0;
     let j = 0;
@@ -49,7 +48,6 @@ class AddCardForm extends React.Component {
     });
     return j === i;
   };
-
   render() {
     const {
       website,
@@ -90,7 +88,6 @@ class ChoosePersonWhoHasCredentials extends React.Component {
     super(props);
     this.state = {}
   }
-
   role = (role) => {
     if (role === 3)
       return ('Owner');
@@ -99,7 +96,6 @@ class ChoosePersonWhoHasCredentials extends React.Component {
     else
       return ('Member');
   };
-
   render() {
     const {
       me,
@@ -174,7 +170,6 @@ class ChooseAppCredentialsModal extends React.Component {
       users: null
     }
   }
-
   componentWillMount() {
     const me_id = this.props.teams[this.props.card.team_id].my_team_user_id;
     const me = this.props.teams[this.props.card.team_id].team_users[me_id];
@@ -188,7 +183,6 @@ class ChooseAppCredentialsModal extends React.Component {
       });
     this.setState({ me: me, users: users });
   }
-
   handleCredentialInput = (e, {name, value}) => {
     let credentials = this.state.credentials.map(item => {
       if (name === item.name)
@@ -197,20 +191,40 @@ class ChooseAppCredentialsModal extends React.Component {
     });
     this.setState({credentials: credentials});
   };
-
   handleChange = (e, { value }) => this.setState({ userSelected: value });
-
   close = () => {
     this.props.dispatch(showChooseAppCredentialsModal({active: false}));
   };
-
   confirm = () => {
     this.setState({loading: true});
     if (this.state.view === 1) {
       if (this.state.userSelected === this.state.me.id)
         this.setState({view: 2, loading: false});
-      else
-        ;
+      else {
+        const receivers = this.props.receivers
+          .map(item => ({
+            [item.id]: {allowed_to_see_password: item.can_see_information}
+          }));
+        const newReceivers = receivers.reduce(function (result, item) {
+          result = Object.assign(result, item);
+          return result;
+        }, {});
+        this.props.dispatch(teamCreateSingleApp({
+          team_id: this.props.card.team_id,
+          channel_id: this.props.card.channel_id,
+          website_id: this.props.card.app.id,
+          name: this.props.settingsCard.card_name,
+          description: this.props.settingsCard.description,
+          password_change_interval: this.props.settingsCard.password_change_interval,
+          team_user_filler_id: this.state.userSelected,
+          account_information: {},
+          receivers: newReceivers
+        })).then(response => {
+          this.setState({loading: false});
+          this.close();
+          this.props.resetTeamCard();
+        });
+      }
     }
     else {
       // const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
@@ -241,7 +255,6 @@ class ChooseAppCredentialsModal extends React.Component {
       });
     }
   };
-
   render() {
     return (
       <SimpleModalTemplate
