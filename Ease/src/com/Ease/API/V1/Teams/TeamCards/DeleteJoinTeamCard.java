@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -21,13 +22,14 @@ public class DeleteJoinTeamCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
-            Integer teamCard_id = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCard_id);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Integer request_id = sm.getIntParam("request_id", true, false);
-            JoinTeamCardRequest joinTeamCardRequest = teamCard.getJoinTeamCardRequest(request_id);
+            JoinTeamCardRequest joinTeamCardRequest = (JoinTeamCardRequest) hibernateQuery.get(JoinTeamCardRequest.class, request_id);
+            TeamCard teamCard = joinTeamCardRequest.getTeamCard();
+            Team team = teamCard.getTeam();
+            sm.needToBeAdminOfTeam(team);
+            String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+            teamCard.decipher(teamKey);
             teamCard.removeJoinTeamCardRequest(joinTeamCardRequest);
             sm.deleteObject(joinTeamCardRequest);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_REQUEST, WebSocketMessageAction.REMOVED, request_id));

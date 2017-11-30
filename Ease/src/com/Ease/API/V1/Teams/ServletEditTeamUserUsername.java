@@ -28,8 +28,8 @@ public class ServletEditTeamUserUsername extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            TeamUser teamUser = sm.getTeamUser(team);
             sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUserToModify = team.getTeamUserWithId(teamUser_id);
             if (!(teamUser.isSuperior(teamUserToModify) || teamUser == teamUserToModify))

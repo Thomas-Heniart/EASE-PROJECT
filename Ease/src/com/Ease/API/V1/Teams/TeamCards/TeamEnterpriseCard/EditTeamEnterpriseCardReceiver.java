@@ -53,8 +53,9 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             Map<String, String> accountInformation = teamEnterpriseCard.getWebsite().getInformationFromJson(account_information);
             TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
             ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            classicApp.decipher(teamKey);
             if (classicApp.getAccount() == null) {
-                String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
                 Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
                 classicApp.setAccount(account);
             } else

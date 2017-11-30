@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -39,8 +41,17 @@ public class RemoveTeamCardReceiver extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden);
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             Profile profile = teamCardReceiver.getApp().getProfile();
+            App app = teamCardReceiver.getApp();
+            if (app.isWebsiteApp()) {
+                WebsiteApp websiteApp = (WebsiteApp) app;
+                websiteApp.getLogWithAppSet().forEach(logWithApp -> {
+                    Profile profile1 = logWithApp.getProfile();
+                    profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                    sm.deleteObject(logWithApp);
+                });
+            }
             if (profile != null)
-                profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
+                profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
             if (teamUser.isVerified() && !teamUser.equals(teamUser_connected))
                 NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_connected, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());

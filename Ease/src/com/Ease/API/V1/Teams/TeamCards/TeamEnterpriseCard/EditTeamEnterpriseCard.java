@@ -38,6 +38,7 @@ public class EditTeamEnterpriseCard extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
+            teamEnterpriseCard.setName(name);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
