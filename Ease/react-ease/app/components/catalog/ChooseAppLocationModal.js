@@ -108,8 +108,7 @@ class ChooseAppLocationModal extends React.Component {
                                       onChange={handleInput}
                                       class="create_profile_input"
                                       icon={<Icon name="plus square" link onClick={this.props.createProfile}/>}
-                                      placeholder='Create new group'
-                                    />
+                                      placeholder='Create new group' />
                                 </form>}
                               </Table.Cell>
                           </Table.Row>

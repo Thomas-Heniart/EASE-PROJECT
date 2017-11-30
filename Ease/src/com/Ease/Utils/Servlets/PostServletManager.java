@@ -30,7 +30,7 @@ public class PostServletManager extends ServletManager {
         if (ServletFileUpload.isMultipartContent(request))
             return;
         String contentType = request.getHeader("Content-Type");
-        if (contentType == null || !contentType.contains("application/json"))
+        if (contentType == null || (!contentType.contains("application/json") && !contentType.contains("application/JSON")))
             return;
         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = "";

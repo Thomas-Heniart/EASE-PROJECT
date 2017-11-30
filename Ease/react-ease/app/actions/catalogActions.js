@@ -59,7 +59,12 @@ export function catalogAddClassicApp({name, website_id, profile_id, account_info
       profile_id: profile_id,
       account_information: account_information
     }).then(response => {
-      dispatch({type: 'CATALOG_ADD_CLASSIC_APP_FULFILLED', payload: {app: response}});
+      dispatch({
+        type: 'DASHBOARD_APP_ADDED',
+        payload:{
+          app:response
+        }
+      });
       return response;
     }).catch(err => {
       throw err;
@@ -74,7 +79,12 @@ export function catalogAddMultipleClassicApp({profile_id, apps_to_add, account_i
       apps_to_add: apps_to_add,
       account_information: account_information
     }).then(apps => {
-      dispatch({type: 'CATALOG_ADD_MULTIPLE_CLASSIC_APP', payload: {apps: apps}});
+      dispatch({
+        type: 'DASHBOARD_APP_ADDED',
+        payload:{
+          app:apps
+        }
+      });
       return apps;
     }).catch(err => {
       throw err;
@@ -90,7 +100,12 @@ export function catalogAddClassicAppSameAs({website_id, name, same_app_id, profi
             same_app_id: same_app_id,
             profile_id: profile_id
         }).then(apps => {
-            dispatch({type: 'CATALOG_ADD_CLASSIC_APP_SAME_AS', payload: {apps: apps}});
+          dispatch({
+            type: 'DASHBOARD_APP_ADDED',
+            payload:{
+              app:apps
+            }
+          });
             return apps;
         }).catch(err => {
             throw err;
@@ -106,7 +121,12 @@ export function catalogAddLogWithApp({name, website_id, profile_id, logWith_app_
       profile_id: profile_id,
       logWith_app_id: logWith_app_id
     }).then(response => {
-      dispatch({type: 'CATALOG_ADD_LOGWITH_APP_FULFILLED', payload: {app: response}});
+      dispatch({
+        type: 'DASHBOARD_APP_ADDED',
+        payload:{
+          app:response
+        }
+      });
       return response;
     }).catch(err => {
       throw err;
@@ -122,7 +142,12 @@ export function catalogAddBookmark({name, profile_id, url, img_url}){
       url: url,
       img_url: img_url
     }).then(app => {
-      dispatch({type: 'CATALOG_ADD_BOOKMARK_FULFILLED', payload: {app: app}});
+      dispatch({
+        type: 'DASHBOARD_APP_ADDED',
+        payload:{
+          app:app
+        }
+      });
       return app;
     }).catch(err => {
       throw err;

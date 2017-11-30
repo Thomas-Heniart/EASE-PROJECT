@@ -11,7 +11,7 @@ import {reduxActionBinder} from "../../actions/index";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {connect} from "react-redux";
-var api = require('../../utils/api');
+import {createProfile} from "../../actions/dashboardActions";
 
 class ProfileChooseStep extends Component {
   constructor(props){
@@ -97,8 +97,7 @@ class ProfileChooseStep extends Component {
                     onChange={this.handleInput}
                     class="create_profile_input"
                     icon={<Icon name="plus square" link onClick={this.createProfile}/>}
-                    placeholder='Create new group'
-                />
+                    placeholder='Create new group' />
               </form>}
             </Container>
           </Form.Field>
@@ -148,7 +147,7 @@ class AddBookmarkForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
         newProfile = response.id;
         this.props.catalogAddBookmark({
           name: this.props.appName,
@@ -162,6 +161,7 @@ class AddBookmarkForm extends Component {
           this.setState({loading: false, errorMessage: err});
         });
       }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
       });
     }
     else {
@@ -223,7 +223,7 @@ class AddClassicAppForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
         newProfile = response.id;
         this.props.catalogAddClassicApp({
           name: this.props.appName,
@@ -237,6 +237,7 @@ class AddClassicAppForm extends Component {
           this.setState({loading: false, errorMessage: err});
         });
       }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
       });
     }
     else {
@@ -354,7 +355,7 @@ class AddLogWithAppForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      dashboard.createProfile({name: this.props.profileName, column_index: 1}).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
         newProfile = response.id;
         this.props.catalogAddLogWithApp({
           name: this.props.appName,
@@ -368,6 +369,7 @@ class AddLogWithAppForm extends Component {
           this.setState({loading: false, errorMessage: err});
         });
       }).catch(err => {
+        this.setState({loading: false, errorMessage: err});
       });
     }
     else {
@@ -524,8 +526,10 @@ class ClassicAppModal extends React.Component {
   changeView = (view) => {
     if (this.state.selectedProfile !== -1)
       this.setState({view: view});
-    else
+    else if (this.state.selectedProfile === -1 && this.state.selectedRoom !== -1)
       this.setState({view: 4});
+    else
+      this.createProfile();
   };
   close = () => {
     this.props.showCatalogAddAppModal({active: false});
