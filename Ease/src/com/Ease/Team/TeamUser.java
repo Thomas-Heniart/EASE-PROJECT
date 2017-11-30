@@ -104,11 +104,10 @@ public class TeamUser {
     @ManyToMany(mappedBy = "pending_teamUsers")
     private Set<Channel> pending_channels = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teamUser_id")
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 

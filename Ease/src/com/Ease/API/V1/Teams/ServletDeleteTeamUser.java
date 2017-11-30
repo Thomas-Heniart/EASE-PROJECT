@@ -90,8 +90,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
             sm.deleteObject(teamUser_to_delete);
             WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, team_user_id, teamUser_to_delete.getOrigin());
             sm.addWebSocketMessage(webSocketMessage);
-            /* if (teamUser_to_delete.getDashboard_user() != null)
-                teamUser_to_delete.getDashboard_user().getWebSocketManager().sendObject(webSocketMessage); */
             sm.setSuccess("TeamUser deleted");
         } catch (Exception e) {
             sm.setError(e);
