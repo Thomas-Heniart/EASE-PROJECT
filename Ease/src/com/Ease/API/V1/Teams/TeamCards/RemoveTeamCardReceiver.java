@@ -6,6 +6,8 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -26,20 +28,22 @@ public class RemoveTeamCardReceiver extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
             TeamUser teamUser = teamCardReceiver.getTeamUser();
-            TeamUser teamUser_admin = sm.getTeamUser(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser.equals(teamUser_connected))
+                throw new HttpServletException(HttpStatus.Forbidden);
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             Profile profile = teamCardReceiver.getApp().getProfile();
             if (profile != null)
                 profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
-            if (teamUser.isVerified() && !teamUser.equals(sm.getTeamUser(team)))
-                NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+            if (teamUser.isVerified() && !teamUser.equals(teamUser_connected))
+                NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_connected, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.REMOVED, team_card_receiver_id));
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {
