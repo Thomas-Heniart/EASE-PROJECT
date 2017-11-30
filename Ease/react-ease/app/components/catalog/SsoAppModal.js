@@ -1,14 +1,35 @@
 import React from 'react';
-import { Image, Icon, Form, Button, Message, Checkbox, Segment, Input, Container, List, Grid } from 'semantic-ui-react';
+import { Image, Icon, Form, Button, Message, Checkbox, Segment, Input, Label, List, Grid } from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import InputModalCatalog from './InputModalCatalog';
-import {selectItemFromListById} from "../../utils/helperFunctions";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {dashboard} from "../../utils/post_api";
-import {reflect} from "../../utils/utils";
+import {reflect, transformWebsiteInfoIntoList, credentialIconType} from "../../utils/utils";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
+import {createSsoGroup} from "../../actions/dashboardActions";
+import {catalogAddSsoApp} from "../../actions/catalogActions";
+
+const CredentialInput = ({item, onChange}) => {
+  return (
+    <Form.Field>
+      <label style={{ fontSize: '16px', fontWeight: '300', color: '#424242' }}>{item.placeholder}</label>
+      <Input size="large"
+             autoFocus={item.autoFocus}
+             class="modalInput team-app-input"
+             required
+             autoComplete='on'
+             name={item.name}
+             onChange={onChange}
+             label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+             labelPosition="left"
+             placeholder={item.placeholder}
+             value={item.value}
+             type={item.type}/>
+    </Form.Field>
+  )
+};
 
 class SecondStep extends React.Component {
   constructor(props) {
@@ -18,46 +39,22 @@ class SecondStep extends React.Component {
       errorMessage: ''
     }
   }
-  checkDouble = (double, login) => {
-    const doubleLogin = double.filter(account => {
-      if (login === account)
-        return true;
-    });
-    if (doubleLogin.length) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  };
   render() {
     const {
       logo,
       name,
       toggleBookmark,
-      logWith_websites,
+      ssoGroup,
       selectAccount,
       addGoogleAccount} = this.props;
-    let double = [];
-    const mailList = logWith_websites.map(item => {
-      return item.personal_apps.map(key => {
-        if (key.account_information) {
-          if (this.checkDouble(double, key.account_information.login) === true) {
-            double.push(key.account_information.login);
-            return (
-              <List.Item key={key.id} as="p"
-                         className="overflow-ellipsis">
-                <a
-                  onClick={e => selectAccount(key.account_information.login, key.website_id, key.id)}>
-                  <Icon name='user circle'/>
-                  <span>{key.account_information.login}</span>
-                </a>
-              </List.Item>
-            )
-          }
-        }
-      })
-    });
+    const mailList = ssoGroup.map(key => (
+      <List.Item key={key.id} as="p" className="overflow-ellipsis">
+        <a onClick={e => selectAccount(key)}>
+          <Icon name='user circle'/>
+          <span>{key.account_information.login}</span>
+        </a>
+      </List.Item>
+    ));
     return (
       <Form class="container" error={this.state.errorMessage.length > 0}>
         <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
@@ -134,14 +131,30 @@ class ThirdStep extends React.Component {
   };
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
-    if (this.state.appIdOfLoginSelected === null) {
-      this.props.catalogAddMultipleClassicApp({
-        profile_id: this.props.selectedProfile,
-        apps_to_add: this.props.ssoSelected,
-        account_information: {login: this.props.login, password: this.props.password}
-      }).then(r => {
-        this.setState({loading: false});
-        this.props.showCatalogAddSSOAppModal({active: false})
+    if (this.props.accountGoogleSelected.id === 0) {
+      this.props.dispatch(createSsoGroup({
+        sso_id: this.props.accountGoogleSelected.sso_id,
+        account_information: this.props.credentials
+      })).then(r => {
+        const calls = this.props.ssoSelected.map(item => {
+          return this.props.dispatch(catalogAddSsoApp({
+            name: item.name,
+            profile_id: this.props.selectedProfile,
+            sso_group_id: r.id,
+            website_id: item.website_id
+          }));
+        });
+        const response = calls.filter(item => {
+          if (item)
+            return true
+        });
+        Promise.all(response.map(reflect)).then(r => {
+          this.setState({loading: false});
+          this.props.showCatalogAddSSOAppModal({active: false})
+        }).catch(err => {
+          this.setState({loading: false});
+          this.setState({errorMessage: err});
+        });
       }).catch(err => {
         this.setState({loading: false});
         this.setState({errorMessage: err});
@@ -149,12 +162,12 @@ class ThirdStep extends React.Component {
     }
     else {
       const calls = this.props.ssoSelected.map(item => {
-        return this.props.catalogAddClassicAppSameAs({
-          website_id: item.website_id,
+        return this.props.dispatch(catalogAddSsoApp({
           name: item.name,
-          same_app_id: this.props.appIdOfLoginSelected,
-          profile_id: this.props.selectedProfile
-        });
+          profile_id: this.props.selectedProfile,
+          sso_group_id: this.props.accountGoogleSelected.id,
+          website_id: item.website_id
+        }));
       });
       const response = calls.filter(item => {
         if (item)
@@ -174,15 +187,18 @@ class ThirdStep extends React.Component {
       logo,
       name,
       accountGoogleSelected,
-      logWith_websites,
+      ssoWebsites,
       back} = this.props;
 
-    const gridSsoWebsites = logWith_websites.map(item => {
-      if (!item.personal_apps.filter(key => {
-          if (key.account_information) {
-            if (key.account_information.login === this.state.login) return true
-          }
-        }).length && this.props.modal.website.id !== item.id) {
+    const ssoApps = accountGoogleSelected.sso_app_ids.map(item => {
+      return this.props.dashboard.apps[item]
+    });
+    const gridSsoWebsites = ssoWebsites.map(item => {
+      if (!ssoApps.filter(key => {
+          if (key.website.id === item.id)
+            return true
+        })
+          .length && this.props.modal.website.id !== item.id) {
         return (
           <Grid.Column key={item.id} className="showSegment">
             <List.Item as='a' active={this.props.checkActive(item.id)}
@@ -203,11 +219,9 @@ class ThirdStep extends React.Component {
             </List.Item>
           </Grid.Column>)
       }
-      else if (item.personal_apps.filter(key => {
-          if (key.account_information) {
-            if (key.account_information.login === this.state.login)
-              return true
-          }
+      else if (ssoApps.filter(key => {
+          if (key.website.id === item.id)
+            return true
         }).length && this.props.modal.website.id !== item.id) {
         return (
           <Grid.Column key={item.id} className="showSegment">
@@ -232,7 +246,12 @@ class ThirdStep extends React.Component {
           <div className="squared_image_handler">
             <Image src={logo} alt="Website logo"/>
           </div>
-          <span className='app_name'>{name}</span>
+          <span class="app_name"><Input size="mini" type="text" placeholder="App name..."
+                                        name="name"
+                                        class="input_unstyle modal_input name_input"
+                                        autoFocus={true}
+                                        value={name}
+                                        onChange={e => this.props.editSSO(e, this.props.modal.website)}/></span>
         </Form.Field>
         <Form.Field>
           <p className='backPointer' onClick={back}><Icon name='arrow left'/>Back</p>
@@ -241,7 +260,7 @@ class ThirdStep extends React.Component {
           <Segment.Group className='connectWithGoogle'>
             <Segment className='first overflow-ellipsis'>
               <Icon name='google'/>
-              {accountGoogleSelected}
+              {accountGoogleSelected.account_information.login}
             </Segment>
           </Segment.Group>
         </Form.Field>
@@ -280,9 +299,14 @@ class NewSsoAccount extends React.Component {
     const {
       name,
       logo,
+      credentials,
       toggleBookmark,
       handleInput,
+      handleCredentialInput,
       confirm} = this.props;
+    const credentialsInputs = credentials.map(item => {
+      return <CredentialInput key={item.priority} onChange={handleCredentialInput} item={item} />;
+    });
     return (
       <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={confirm}>
         <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
@@ -297,23 +321,9 @@ class NewSsoAccount extends React.Component {
           <Checkbox toggle onClick={toggleBookmark}
                     style={{marginLeft: '20px', marginBottom: '0'}}/>
         </Form.Field>
-        <InputModalCatalog
-          nameLabel='Login'
-          nameInput='login'
-          inputType='text'
-          placeholderInput='Your login'
-          handleInput={handleInput}
-          iconLabel='user'/>
-        <InputModalCatalog
-          nameLabel='Password'
-          nameInput='password'
-          inputType='password'
-          placeholderInput='Your password'
-          handleInput={handleInput}
-          iconLabel='lock'/>
+        {credentialsInputs}
         <Message error content={this.state.errorMessage}/>
         <Button
-          disabled={!this.props.login || !this.props.password}
           type="submit"
           positive
           loading={this.state.loading}
@@ -400,11 +410,10 @@ class SsoAppModal extends React.Component {
     this.state = {
       website: this.props.modal.website,
       name: this.props.modal.website.name,
-      login: '',
-      password: '',
+      credentials: transformWebsiteInfoIntoList(this.props.modal.website.information),
       addBookmark: false,
       addGoogleAccount: false,
-      accountGoogleSelected: '',
+      accountGoogleSelected: [],
       profiles: [],
       profileName: '',
       profileAdded: false,
@@ -413,10 +422,9 @@ class SsoAppModal extends React.Component {
       selectedRoom: -1,
       addingProfile: false,
       view: 1,
-      websiteIdOfLoginSelected: null,
-      appIdOfLoginSelected: null,
-      logWith_websites: [],
-      ssoSelected: []
+      ssoSelected: [],
+      ssoGroup: [],
+      ssoWebsites: []
     }
   }
   componentWillMount() {
@@ -425,95 +433,67 @@ class SsoAppModal extends React.Component {
       this.props.dashboard.profiles[id]
     ));
     this.setState({profiles: profiles});
-    const ssoList = this.props.catalog.websites.filter(item => {
+    const ssoWebsites = this.props.catalog.websites.filter(item => {
       return item.sso_id === this.props.modal.website.sso_id;
     });
-    let ssoWebsiteId = [];
-    ssoList.map(item => {
-      ssoWebsiteId.push(item.id);
+    const ssoGroup = Object.keys(this.props.dashboard.sso_groups).map(item => {
+      if (this.props.dashboard.sso_groups[item].sso_id === this.props.modal.website.sso_id)
+        return this.props.dashboard.sso_groups[item];
     });
-    let logwith = ssoWebsiteId.map(item => {
-      let website = selectItemFromListById(this.props.catalog.websites, item);
-      let apps = [];
-      Object.keys(this.props.dashboard.apps).map(item => {
-        if (this.props.dashboard.apps[item].type !== 'teamLinkApp' && this.props.dashboard.apps[item].type !== 'linkApp') {
-          if (this.props.dashboard.apps[item].website.id === website.id)
-            apps.push(this.props.dashboard.apps[item]);
-        }
-      });
-      website.personal_apps = apps;
-      return website;
-    });
-    this.setState({logWith_websites: logwith, loading: false});
+    this.setState({ssoGroup: ssoGroup, ssoWebsites: ssoWebsites, loading: false});
   }
   handleInput = (e, {name, value}) => this.setState({[name]: value});
+  handleCredentialInput = (e, {name, value}) => {
+    let credentials = this.state.credentials.map(item => {
+      if (name === item.name)
+        item.value = value;
+      return item;
+    });
+    this.setState({credentials: credentials});
+  };
   toggleBookmark = () => {
     if (this.state.addBookmark)
       this.setState({addBookmark: false, errorMessage: ''});
     else
-      this.setState({addBookmark: true, login: '', password: '', accountGoogleSelected: '', errorMessage: ''});
+      this.setState({addBookmark: true, credentials: transformWebsiteInfoIntoList(this.props.modal.website.information), accountGoogleSelected: [], errorMessage: ''});
   };
   back = () => {
-    if (this.checkAccountGoogle() === true)
+    if (this.state.ssoGroup.length)
       this.setState({
-        accountGoogleSelected: '',
+        accountGoogleSelected: [],
         view: 2,
-        login: '',
-        password: '',
+        credentials: transformWebsiteInfoIntoList(this.props.modal.website.information),
         addGoogleAccount: false,
         errorMessage: '',
         ssoSelected: [{website_id: this.props.modal.website.id, name: this.state.name}]
       });
     else
       this.setState({
-        accountGoogleSelected: '',
+        accountGoogleSelected: [],
         view: 2,
-        login: '',
-        password: '',
+        credentials: transformWebsiteInfoIntoList(this.props.modal.website.information),
         addGoogleAccount: true,
         errorMessage: '',
         ssoSelected: [{website_id: this.props.modal.website.id, name: this.state.name}]
       });
   };
-  selectAccount = (account, website_id, app_id) => {
+  selectAccount = (account) => {
     this.setState({
       accountGoogleSelected: account,
       view: 3,
-      login: account,
-      websiteIdOfLoginSelected: website_id,
-      appIdOfLoginSelected: app_id
+      credentials: account.account_information
     });
   };
   addGoogleAccount = () => {
-    this.setState({addGoogleAccount: true, accountGoogleSelected: ''});
+    this.setState({addGoogleAccount: true, accountGoogleSelected: []});
   };
   addMainAppToSSOSelected = () => {
     const newSelectedSSO = this.state.ssoSelected.slice();
     newSelectedSSO.push({website_id: this.props.modal.website.id, name: this.state.name});
-    if (this.checkAccountGoogle() === true)
+    if (this.state.ssoGroup.length)
       this.setState({ssoSelected: newSelectedSSO, view: 2});
     else
       this.setState({ssoSelected: newSelectedSSO, view: 2, addGoogleAccount: true});
-  };
-  checkAccountGoogle = () => {
-    const account = this.state.logWith_websites.map(item => {
-      return item.personal_apps.map(key => {
-        if (key.account_information) {
-          return key;
-        }
-      }).filter(key2 => {
-        if (key2)
-          return true
-      });
-    });
-    const response = account.filter(item => {
-      if (item.length)
-        return true
-    });
-    if (response.length)
-      return true;
-    else
-      return false;
   };
   checkActive = (id) => {
     let check = false;
@@ -571,6 +551,20 @@ class SsoAppModal extends React.Component {
     this.addProfile(newProfile);
     this.setState({profileAdded: true});
   };
+  showLogin = () => {
+    const login = this.state.credentials.map(item => {
+      if (item.name === "login")
+        return item.value
+    });
+    return login;
+  };
+  showName = () => {
+    const name = this.state.ssoSelected.map(item => {
+      if (this.props.modal.website.id === item.website_id)
+        return item.name;
+    });
+    return name;
+  };
   confirm = () => {
     if (this.state.view === 1) {
       if (this.state.selectedProfile !== -1)
@@ -579,7 +573,16 @@ class SsoAppModal extends React.Component {
         this.setState({view: 4})
     }
     else if (this.state.addGoogleAccount) {
-      this.setState({accountGoogleSelected: this.state.login, view: 3, addGoogleAccount: false});
+      this.setState({
+        accountGoogleSelected: {
+          id: 0,
+          sso_app_ids: [],
+          sso_id: this.props.modal.website.sso_id,
+          account_information: {login: this.showLogin()}
+        },
+        view: 3,
+        addGoogleAccount: false
+      });
     }
   };
   close = () => {
@@ -612,7 +615,7 @@ class SsoAppModal extends React.Component {
             {...this.props}
             logo={this.props.modal.website.logo}
             name={this.props.modal.website.name}
-            logWith_websites={this.state.logWith_websites}
+            ssoGroup={this.state.ssoGroup}
             addGoogleAccount={this.addGoogleAccount}
             toggleBookmark={this.toggleBookmark}
             selectAccount={this.selectAccount} />}
@@ -620,13 +623,11 @@ class SsoAppModal extends React.Component {
           <ThirdStep
             {...this.props}
             logo={this.props.modal.website.logo}
-            name={this.props.modal.website.name}
+            name={this.showName()}
             accountGoogleSelected={this.state.accountGoogleSelected}
-            logWith_websites={this.state.logWith_websites}
             selectedProfile={this.state.selectedProfile}
-            login={this.state.login}
-            password={this.state.password}
-            appIdOfLoginSelected={this.state.appIdOfLoginSelected}
+            ssoWebsites={this.state.ssoWebsites}
+            credentials={this.state.credentials}
             ssoSelected={this.state.ssoSelected}
             checkActive={this.checkActive}
             selectSSO={this.selectSSO}
@@ -636,11 +637,12 @@ class SsoAppModal extends React.Component {
         {(this.state.addGoogleAccount && !this.state.addBookmark) &&
           <NewSsoAccount
             {...this.props}
+            website={this.state.website}
             logo={this.props.modal.website.logo}
             name={this.props.modal.website.name}
-            login={this.state.login}
-            password={this.state.password}
+            credentials={this.state.credentials}
             toggleBookmark={this.toggleBookmark}
+            handleCredentialInput={this.handleCredentialInput}
             handleInput={this.handleInput}
             confirm={this.confirm} />}
         {this.state.addBookmark &&
