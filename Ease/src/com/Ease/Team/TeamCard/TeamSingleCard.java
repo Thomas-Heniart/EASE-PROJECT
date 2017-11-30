@@ -64,11 +64,11 @@ public class TeamSingleCard extends TeamWebsiteCard {
         JSONObject res = super.getJson();
         res.put("empty", this.getAccount() == null || !this.getAccount().satisfyWebsite((this.getWebsite())));
         res.put("account_information", new JSONObject());
+        res.put("team_user_filler_id", this.getTeamUser_filler() == null ? -1 : this.getTeamUser_filler().getDb_id());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
-        res.put("team_user_filler_id", this.getTeamUser_filler() == null ? -1 : this.getTeamUser_filler().getDb_id());
         return res;
     }
 
