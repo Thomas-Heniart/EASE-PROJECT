@@ -146,7 +146,7 @@ export const PasswordChangeDropdown = ({value, onChange, disabled, roomManager})
                          value={value}
                          onChange={onChange}
                          button
-                         name="password_change_interval"
+                         name="password_reminder_interval"
                          icon="refresh"
                          labeled
                          options={passwordChangeOptions}/>
