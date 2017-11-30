@@ -33,7 +33,7 @@ class ReactivateTeamUserModal extends React.Component {
     this.props.dispatch(showReactivateTeamUserModal({active: false}));
   };
   render(){
-    const user = this.props.modal.user;
+    const user = this.props.teams.team_users[this.props.team_user_id];
 
     return (
         <SimpleModalTemplate

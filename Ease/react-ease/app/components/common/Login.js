@@ -158,19 +158,23 @@ class PasswordLost extends React.Component{
     super(props);
     this.state = {
       email: '',
-      errorMessage: '',
-      error: false
+      errorMessage: ''
     };
-    this.handleInput = this.handleInput.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
-  handleInput(e){
+  handleInput = (e) => {
     this.setState({[e.target.name]: e.target.value});
-  }
-  onSubmit(e){
+  };
+  onSubmit = (e) => {
     e.preventDefault();
-    this.setState({error: false});
-  }
+    this.setState({errorMessage: ''});
+    post_api.common.passwordLost({
+      email: this.state.email
+    }).then(response => {
+      this.setState({errorMessage: response.msg});
+    }).catch(err => {
+      this.setState({errorMessage: err});
+    });
+  };
   render() {
     return (
         <div class={classnames('easePopup landingPopup', this.props.activeView === 'passwordLost' ? 'show' : null)} id="passwordLost">
@@ -182,15 +186,15 @@ class PasswordLost extends React.Component{
                     <p>Lost password ?</p>
                   </div>
                 </div>
-                <form method="POST" action="passwordLost" id="passwordLostForm">
+                <form method="POST" onSubmit={this.onSubmit} id="passwordLostForm">
                   <div class="row text-center">
                     <p class="popupText">For security reasons, resetting your EASE password will delete all account
                       passwords you added to the platform.</p>
                   </div>
                   <div class="row">
-                    <input type="email" name="email" placeholder="Email"/>
+                    <input type="email" name="email" placeholder="Email" value={this.state.email} onChange={this.handleInput}/>
                   </div>
-                  <div class={classnames("row alertDiv text-center", this.state.error ? 'show' : null)}>
+                  <div class={classnames("row alertDiv text-center", !!this.state.errorMessage.length ? 'show' : null)}>
                     <p>{this.state.errorMessage}</p>
                   </div>
                   <div class="row text-center">
