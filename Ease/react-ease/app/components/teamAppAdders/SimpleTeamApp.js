@@ -385,6 +385,7 @@ class SimpleTeamApp extends Component {
                           selection={true}
                           renderLabel={renderSimpleAppEditUserLabel}
                           multiple
+                          noResultsMessage='No more results found'
                           placeholder="Tag your team members here..."/>}
                 </div>
                 <div>

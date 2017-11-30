@@ -215,7 +215,7 @@ class ChooseAppCredentialsModal extends React.Component {
           website_id: this.props.card.app.id,
           name: this.props.settingsCard.card_name,
           description: this.props.settingsCard.description,
-          password_change_interval: this.props.settingsCard.password_change_interval,
+          password_reminder_interval: this.props.settingsCard.password_reminder_interval,
           team_user_filler_id: this.state.userSelected,
           account_information: {},
           receivers: newReceivers
@@ -243,7 +243,7 @@ class ChooseAppCredentialsModal extends React.Component {
         website_id: this.props.card.app.id,
         name: this.props.settingsCard.card_name,
         description: this.props.settingsCard.description,
-        password_change_interval: this.props.settingsCard.password_change_interval,
+        password_reminder_interval: this.props.settingsCard.password_reminder_interval,
         account_information: transformCredentialsListIntoObject(this.state.credentials),
         receivers: newReceivers
       })).then(response => {

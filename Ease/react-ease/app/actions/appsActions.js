@@ -155,7 +155,7 @@ export function teamCardCreatedAction({team_card}){
   }
 }
 
-export function teamCreateSingleApp({team_id, channel_id, website_id, name, description, password_change_interval, team_user_filler_id, account_information, receivers}) {
+export function teamCreateSingleApp({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers}) {
   return (dispatch, getState) => {
     return post_api.teamApps.createSingleApp({
       team_id: team_id,
@@ -163,7 +163,7 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
       website_id:website_id,
       name: name,
       description: description,
-      password_change_interval: password_change_interval,
+      password_reminder_interval: password_reminder_interval,
       team_user_filler_id: team_user_filler_id,
       account_information: account_information,
       receivers: receivers,

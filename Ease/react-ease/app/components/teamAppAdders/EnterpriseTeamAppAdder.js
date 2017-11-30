@@ -302,6 +302,7 @@ class EnterpriseTeamAppAdder extends Component {
                     </div>
                     <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
                     <div>
+                      {this.state.selected_users.length !== this.state.users.length &&
                       <Dropdown
                           class="mini users-dropdown"
                           search
@@ -312,7 +313,8 @@ class EnterpriseTeamAppAdder extends Component {
                           value={this.state.selected_users}
                           selection
                           multiple
-                          placeholder="Tag your team members here..."/>
+                          noResultsMessage='No more results found'
+                          placeholder="Tag your team members here..."/>}
                     </div>
                     <div>
                       <Input size="mini"
