@@ -269,6 +269,23 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
   }
 }
 
+export function teamShareLinkCard({team_card_id, team_user_id}){
+  return function (dispatch, getState){
+    return post_api.teamApps.addTeamLinkCardReceiver({
+      team_card_id: team_card_id,
+      team_user_id: team_user_id,
+      ws_id: getState().common.ws_id
+    }).then(receiver => {
+      dispatch(teamCardReceiverCreatedAction({
+        receiver: receiver
+      }));
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function teamEditLinkAppNew({team_card_id, name, description, url, img_url}) {
   return (dispatch, getState) => {
     return post_api.teamApps.editLinkAppNew({
@@ -279,7 +296,7 @@ export function teamEditLinkAppNew({team_card_id, name, description, url, img_ur
       img_url: img_url,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_CARD_CHANGED', payload: {app: app}});
+      dispatch({type: 'TEAM_CARD_CHANGED', payload: {team_card: app}});
       return app;
     }).catch(err => {
       throw err;

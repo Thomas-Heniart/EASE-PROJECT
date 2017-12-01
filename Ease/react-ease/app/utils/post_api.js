@@ -605,6 +605,13 @@ module.exports = {
         return err.response.data;
       });
     },
+    addTeamLinkCardReceiver: ({team_card_id, team_user_id, ws_id}) => {
+      return basic_post('/api/v1/teams/AddTeamLinkCardReceiver', {
+        team_card_id: team_card_id,
+        team_user_id: team_user_id,
+        ws_id: ws_id
+      });
+    },
     editLinkAppNew: ({team_card_id, name, description, url, img_url, ws_id}) => {
       return basic_post('/api/v1/teams/EditTeamLinkCard', {
         team_card_id: team_card_id,
