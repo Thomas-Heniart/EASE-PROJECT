@@ -74,7 +74,8 @@ class NotificationList extends React.Component {
   };
   executeNotification = (notification) => {
     if (!!notification.url.length) {
-      this.props.history.push(notification.url);
+      window.location.href = notification.url;
+//      this.props.history.push(notification.url);
     }
   };
   render() {

@@ -97,7 +97,6 @@ class WebsocketClient extends React.Component {
     switch (type){
       case 'UPDATE_CLIENT':
         this.props.dispatch(update_client_actions[mess.action](mess.data));
-//        this.props.dispatch(this.listeners[data.type](data.action, data.data, data.target));
         break;
       case 'CONNECTION_ID':
         this.props.dispatch(setWSId(data));
