@@ -331,7 +331,15 @@ class EnterpriseTeamAppAdder extends Component {
                   </div>
                 </div>
               </Segment>
-              <Button icon="send" content="Send" loading={this.state.loading} disabled={this.state.loading} floated="right" class="mrgn0" positive size="mini"/>
+              <Button
+                icon="send"
+                content="Send"
+                loading={this.state.loading}
+                disabled={this.state.loading}
+                floated="right"
+                class="mrgn0"
+                positive
+                size="mini"/>
             </div>}
           </Transition>
         </Container>
