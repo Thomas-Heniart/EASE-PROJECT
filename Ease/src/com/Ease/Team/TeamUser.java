@@ -3,6 +3,7 @@ package com.Ease.Team;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
+import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.NotificationFactory;
@@ -113,6 +114,9 @@ public class TeamUser {
 
     @OneToMany(mappedBy = "teamUser_filler")
     private Set<TeamSingleCard> teamSingleCardToFillSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<JoinTeamCardRequest> joinTeamCardRequestSet = ConcurrentHashMap.newKeySet();
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
         this.firstName = firstName;
@@ -321,6 +325,14 @@ public class TeamUser {
 
     public void setTeamSingleCardToFillSet(Set<TeamSingleCard> teamSingleCardToFillSet) {
         this.teamSingleCardToFillSet = teamSingleCardToFillSet;
+    }
+
+    public Set<JoinTeamCardRequest> getJoinTeamCardRequestSet() {
+        return joinTeamCardRequestSet;
+    }
+
+    public void setJoinTeamCardRequestSet(Set<JoinTeamCardRequest> joinTeamCardRequestSet) {
+        this.joinTeamCardRequestSet = joinTeamCardRequestSet;
     }
 
     public void addChannel(Channel channel) {
