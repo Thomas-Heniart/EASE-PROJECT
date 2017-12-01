@@ -41,6 +41,7 @@ public class ServletEditLogWithApp extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
+            app.getAppInformation().setName(name);
             LogWithApp logWithApp = (LogWithApp) app;
             Integer logWith_app_id = sm.getIntParam("logWithApp_id", true, false);
             App connectWith_app = user.getApp(logWith_app_id, hibernateQuery);
