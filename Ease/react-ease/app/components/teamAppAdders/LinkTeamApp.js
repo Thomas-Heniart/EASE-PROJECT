@@ -66,7 +66,7 @@ class ReceiversLabelGroup extends Component {
     return (
         <Label.Group>
           {receivers.map((item, idx) => {
-            if (!this.state.show_all && idx > 15)
+            if (!this.state.show_all && idx > 14)
               return null;
             const user = item.user;
             const receiver = item.receiver;
