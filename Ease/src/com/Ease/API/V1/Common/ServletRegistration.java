@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -79,9 +80,6 @@ public class ServletRegistration extends HttpServlet {
             newUser.addUserEmail(userEmail);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Profile profile_perso = new Profile(newUser, 0, 0, new ProfileInformation("Me"));
-            /* Profile profile_pro = new Profile(newUser, 1, 0, new ProfileInformation("Pro"));
-            sm.saveOrUpdate(profile_pro);
-            newUser.addProfile(profile_pro); */
             sm.saveOrUpdate(profile_perso);
 
             newUser.addProfile(profile_perso);
@@ -94,7 +92,10 @@ public class ServletRegistration extends HttpServlet {
             linkedinApp.setPosition(0);
             sm.saveOrUpdate(linkedinApp);
             profile_perso.addApp(linkedinApp);
-            SsoApp gmailApp = new SsoApp(new AppInformation(gmail.getName()), gmail, null);
+            Sso sso = catalog.getSsoWithId(1, hibernateQuery);
+            SsoGroup ssoGroup = new SsoGroup(newUser, sso, null);
+            sm.saveOrUpdate(ssoGroup);
+            SsoApp gmailApp = new SsoApp(new AppInformation(gmail.getName()), gmail, ssoGroup);
             gmailApp.setProfile(profile_perso);
             gmailApp.setPosition(1);
             sm.saveOrUpdate(gmailApp);
@@ -105,8 +106,8 @@ public class ServletRegistration extends HttpServlet {
             sm.saveOrUpdate(twitterApp);
             profile_perso.addApp(twitterApp);
             ClassicApp dropboxApp = new ClassicApp(new AppInformation(dropbox.getName()), dropbox);
-            twitterApp.setProfile(profile_perso);
-            twitterApp.setPosition(3);
+            dropboxApp.setProfile(profile_perso);
+            dropboxApp.setPosition(3);
             sm.saveOrUpdate(dropboxApp);
             profile_perso.addApp(dropboxApp);
             sm.setUser(newUser);
