@@ -55,7 +55,7 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
   )
 };
 
-const EnterpriseAppReceiverLabel = ({username, up_to_date}) => {
+const EnterpriseAppReceiverLabel = ({username, up_to_date, empty}) => {
   return (
       <Popup size="mini"
              position="bottom center"
@@ -63,7 +63,7 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date}) => {
              flowing
              hideOnScroll={true}
              trigger={
-               <Label class='receiver-label accepted'>
+               <Label class={classnames("receiver-label", !empty ? 'accepted': null)}>
                  <span>{username}</span>
                  <Icon name="refresh" color={up_to_date ? null : 'red'}/>
                </Label>
@@ -147,6 +147,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
           return (
               <div class="receiver align_items_center" key={receiver.user.id}>
                 <EnterpriseAppReceiverLabel
+                    empty={receiver.receiver.empty}
                     username={receiver.user.username}
                     up_to_date={!needPasswordUpdate(receiver.receiver.last_update_date, password_reminder_interval)}/>
                 {receiver.credentials.map(item => {
