@@ -8,9 +8,13 @@ import {teamEditLinkAppNew, teamShareLinkCard, removeTeamCardReceiver} from "../
 import {handleSemanticInput, reflect} from "../../utils/utils";
 import {getReceiverInList, isAdmin, sortReceiversAndMap, selectItemFromListById,} from "../../utils/helperFunctions";
 
-const TeamLinkAppButtonSet = ({app, me, dispatch, editMode}) => {
+const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, meReceiver, join}) => {
   return (
       <div class="team_app_actions_holder">
+        {meReceiver === null &&
+        <TeamAppActionButton text={'Join App'}
+                             onClick={join}
+                             icon="pointing up"/>}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
@@ -184,17 +188,25 @@ class LinkTeamApp extends Component {
     }
     this.setState({edit: state, loading: false});
   };
-
+  joinCard = () => {
+    this.props.dispatch(teamShareLinkCard({
+      team_id: this.props.app.team_id,
+      team_card_id: this.props.app.id,
+      team_user_id: this.props.me.id,
+      allowed_to_see_password: true
+    })).then(() => {
+    }).catch(err => {
+      console.log(err)
+    });
+  };
   render(){
     const app = this.props.app;
     const me = this.props.me;
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
-
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form"
                    onSubmit={this.modify}>
-
             <Segment>
                 <Header as="h4">
                   {!this.state.edit ?
@@ -211,13 +223,15 @@ class LinkTeamApp extends Component {
                              labelPosition="left"
                              required/>
                   }
-                  {!this.state.edit &&
-                  <PinAppButton is_pinned={meReceiver !== null && meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
+                  {/*{!this.state.edit &&*/}
+                  {/*<PinAppButton is_pinned={meReceiver !== null && meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}*/}
                 </Header>
               {!this.state.edit &&
               <TeamLinkAppButtonSet app={app}
                                     me={me}
                                     dispatch={this.props.dispatch}
+                                    meReceiver={meReceiver}
+                                    join={this.joinCard}
                                     editMode={this.setEdit.bind(null, true)}/>}
                 <div class="display_flex">
                     <div class="logo_column">
