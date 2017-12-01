@@ -234,4 +234,19 @@ public class NotificationFactory {
         }
         return webSocketManager;
     }
+
+    public void createMustFillAppNotification(TeamUser teamUser, TeamUser teamUser1, TeamCardReceiver teamCardReceiver, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        User user = teamUser.getUser();
+        String content = "@" + teamUser1 + " asks you to enter " + teamCardReceiver.getTeamCard().getName() + "'s information";
+        String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
+        String logo = teamCardReceiver.getTeamCard().getLogo();
+        if (user != null) {
+            Notification notification = this.createNotification(user, content, logo, url);
+            hibernateQuery.saveOrUpdateObject(notification);
+            this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        } else {
+            PendingNotification pendingNotification = this.createPendingNotification(teamUser, content, logo, url);
+            hibernateQuery.saveOrUpdateObject(pendingNotification);
+        }
+    }
 }

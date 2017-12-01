@@ -92,6 +92,8 @@ public class CreateTeamSingleCard extends HttpServlet {
                     app.setPosition(profile.getSize());
                 }
                 sm.saveOrUpdate(teamCardReceiver);
+                if (teamUser_filler != null && teamUser.equals(teamUser_filler))
+                    NotificationFactory.getInstance().createMustFillAppNotification(teamUser_filler, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 if (!teamUser.equals(teamUser_connected))
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
