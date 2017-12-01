@@ -9,7 +9,8 @@ import {connect} from "react-redux";
 
 @connect(store => ({
   modal: store.teamModals.catalogAddBookmarkModal,
-  profiles: store.dashboard.profiles
+  profiles: store.dashboard.profiles,
+  dashboard: store.dashboard
 }), reduxActionBinder)
 class AddBookmarkModal extends Component {
   constructor(props){
@@ -34,19 +35,17 @@ class AddBookmarkModal extends Component {
   handleInput = handleSemanticInput.bind(this);
   chooseColumn = () => {
     const columns = this.props.dashboard.columns.map((column, index) => {
-      let apps;
-      let i = 0;
+      let apps = 0;
       column.map(item => {
-        i++;
-        apps = this.props.dashboard.profiles[item].app_ids.length;
+        let tmp = this.props.dashboard.profiles[item].app_ids.length / 3;
+        if (tmp <= Number(tmp.toFixed(0)))
+          tmp = Number(tmp.toFixed(0)) + 1;
+        else if (tmp > Number(tmp.toFixed(0)))
+          tmp = Number(tmp.toFixed(0)) + 2;
+        apps = apps + tmp;
       });
-      let line = apps / 3;
-      if (line >= Number(line.toFixed(0)) + 0.5)
-        line = Number(line.toFixed(0)) - 1 + i;
-      else
-        line = Number(line.toFixed(0)) + i;
-      if (line)
-        return line;
+      if (apps > 0)
+        return apps;
       else
         return 0;
     });
