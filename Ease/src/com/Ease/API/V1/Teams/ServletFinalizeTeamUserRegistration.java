@@ -100,7 +100,6 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             teamUser.getPendingNotificationSet().forEach(pendingNotification -> pendingNotification.sendToUser(user, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery));
             sm.getUser().addTeamUser(teamUser);
-            sm.setParam("team_id", team_id.longValue());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

@@ -9,6 +9,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,7 +41,10 @@ public class ServletDeleteChannel extends HttpServlet {
             team.removeChannel(channel);
             sm.deleteObject(channel);
             sm.saveOrUpdate(team);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.REMOVED, channel_id, channel.getOrigin()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("room_id", channel_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.REMOVED, ws_obj));
             sm.setSuccess("Channel delete");
         } catch (Exception e) {
             sm.setError(e);

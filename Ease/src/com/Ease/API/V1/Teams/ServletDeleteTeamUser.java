@@ -12,6 +12,7 @@ import com.Ease.websocketV1.WebSocketMessage;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -88,7 +89,10 @@ public class ServletDeleteTeamUser extends HttpServlet {
             db.commitTransaction(transaction);
             team.removeTeamUser(teamUser_to_delete);
             sm.deleteObject(teamUser_to_delete);
-            WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, team_user_id, teamUser_to_delete.getOrigin());
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("team_user_id", team_user_id);
+            WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, ws_obj);
             sm.addWebSocketMessage(webSocketMessage);
             sm.setSuccess("TeamUser deleted");
         } catch (Exception e) {

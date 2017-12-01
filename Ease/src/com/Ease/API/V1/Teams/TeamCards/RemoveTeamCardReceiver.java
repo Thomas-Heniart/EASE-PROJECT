@@ -55,7 +55,7 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             sm.saveOrUpdate(teamCard);
             if (!teamUser.equals(teamUser_connected))
                 NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_connected, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.REMOVED, team_card_receiver_id));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.REMOVED, team_card_receiver_id));
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {
             sm.setError(e);

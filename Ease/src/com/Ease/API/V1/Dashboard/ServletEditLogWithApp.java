@@ -53,7 +53,7 @@ public class ServletEditLogWithApp extends HttpServlet {
                 logWithApp.setLogWith_website(((WebsiteApp) connectWith_app).getWebsite());
             logWithApp.setLoginWith_app((WebsiteApp) connectWith_app);
             sm.saveOrUpdate(logWithApp);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CHANGED, app.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CHANGED, app.getJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

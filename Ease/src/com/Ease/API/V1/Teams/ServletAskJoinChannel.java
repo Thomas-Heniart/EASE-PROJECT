@@ -5,13 +5,12 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.Notification;
 import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,7 +49,11 @@ public class ServletAskJoinChannel extends HttpServlet {
             mailJetBuilder.addVariable("teamUser", teamUser.getUsername());
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
             mailJetBuilder.sendEmail();
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("team_user_id", teamUser.getDb_id());
+            ws_obj.put("room_id", channel.getDb_id());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM_REQUEST, WebSocketMessageAction.CREATED, ws_obj));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

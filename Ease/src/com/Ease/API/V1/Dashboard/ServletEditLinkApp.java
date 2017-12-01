@@ -49,7 +49,7 @@ public class ServletEditLinkApp extends HttpServlet {
             linkApp.getLinkAppInformation().setUrl(url);
             app.getAppInformation().setName(name);
             sm.saveOrUpdate(app);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CHANGED, app.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CHANGED, app.getJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

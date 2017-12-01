@@ -32,7 +32,7 @@ public class ServletValidateApp extends HttpServlet {
             else
                 symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
             app.decipher(symmetric_key);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CHANGED, app.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CHANGED, app.getJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

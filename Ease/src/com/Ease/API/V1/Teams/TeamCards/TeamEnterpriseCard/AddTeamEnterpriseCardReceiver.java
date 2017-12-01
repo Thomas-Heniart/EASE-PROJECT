@@ -52,7 +52,7 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             App app = new ClassicApp(appInformation, teamEnterpriseCard.getWebsite(), account);
             TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser_receiver);
             if (teamUser_receiver.isVerified()) {
-                Profile profile = teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery());
+                Profile profile = teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
                 app.setProfile(profile);
                 app.setPosition(profile.getSize());
             }
@@ -61,7 +61,7 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             if (!teamUser_receiver.equals(teamUser_connected))
                 NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getCardJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getCardJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);

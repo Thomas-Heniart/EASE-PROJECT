@@ -37,7 +37,7 @@ public class EditTeamSingleCardReceiver extends HttpServlet {
             TeamSingleCardReceiver teamSingleCardReceiver = (TeamSingleCardReceiver) teamCardReceiver;
             teamSingleCardReceiver.setAllowed_to_see_password(allowed_to_see_password);
             sm.saveOrUpdate(teamCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.CHANGED, teamSingleCardReceiver.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamSingleCardReceiver.getJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);

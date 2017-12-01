@@ -8,6 +8,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,8 +38,11 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser.equals(teamUser_connected))
                 NotificationFactory.getInstance().createAddTeamUserToChannelNotification(teamUser, teamUser_connected, channel, sm.getUserIdMap(), sm.getHibernateQuery());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("room_id", channel_id);
+            ws_obj.put("team_user_id", teamUser_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM_MEMBER, WebSocketMessageAction.CREATED, ws_obj));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

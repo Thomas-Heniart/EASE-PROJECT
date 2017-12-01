@@ -7,9 +7,13 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,6 +58,9 @@ public class ServletUnsubscribe extends HttpServlet {
             team.setCard_entered(false);
             team.setActive(false);
             sm.saveOrUpdate(team);
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.REMOVED, ws_obj));
             sm.setSuccess("Subscription ended");
         } catch (StripeException e) {
             sm.setError(e);

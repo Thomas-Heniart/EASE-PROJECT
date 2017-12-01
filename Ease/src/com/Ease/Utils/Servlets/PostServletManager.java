@@ -1,6 +1,5 @@
 package com.Ease.Utils.Servlets;
 
-import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketMessage;
@@ -150,10 +149,8 @@ public class PostServletManager extends ServletManager {
             String ws_id = this.getStringParam("ws_id", false, true);
             if (ws_id == null || ws_id.equals("-1"))
                 return;
-            Integer team_id = this.getIntParam("team_id", false, true);
-            if (team_id != null) {
-                Team team = this.getTeamUser(team_id).getTeam();
-                System.out.println("WebSocketMessage to team " + team_id);
+            if (this.team != null) {
+                System.out.println("WebSocketMessage to team " + team.getDb_id());
                 this.getTeamWebSocketManager(team.getDb_id()).sendObjects(this.webSocketMessages, ws_id);
             } else {
                 if (this.getUser() != null)

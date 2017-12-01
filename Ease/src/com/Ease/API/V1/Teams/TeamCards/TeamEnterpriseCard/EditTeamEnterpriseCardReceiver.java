@@ -57,7 +57,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             } else
                 classicApp.getAccount().edit(account_information, sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getCardJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getCardJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -11,4 +11,8 @@ public class UserWebSocketMessage extends WebSocketMessage {
         super("UPDATE_CLIENT", new JSONObject(), data_type + "_" + action);
         this.getData().put("id", id);
     }
+
+    public UserWebSocketMessage(WebSocketMessageType type, JSONObject data) {
+        super("UPDATE_CLIENT", data, type.name());
+    }
 }

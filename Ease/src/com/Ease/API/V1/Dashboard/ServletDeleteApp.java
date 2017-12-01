@@ -47,7 +47,7 @@ public class ServletDeleteApp extends HttpServlet {
             sm.deleteObject(app);
             if (ssoGroup != null && ssoGroup.getSsoAppMap().isEmpty())
                 sm.deleteObject(ssoGroup);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.REMOVED, app_id));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.REMOVED, app_id));
             sm.setSuccess("App deleted");
         } catch (Exception e) {
             sm.setError(e);

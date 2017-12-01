@@ -29,7 +29,7 @@ public class ServletEditProfile extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             profile.getProfileInformation().setName(name);
             sm.saveOrUpdate(profile);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.PROFILE, WebSocketMessageAction.CHANGED, profile.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_PROFILE, WebSocketMessageAction.CHANGED, profile.getJson()));
             sm.setSuccess(profile.getJson());
         } catch (Exception e) {
             sm.setError(e);

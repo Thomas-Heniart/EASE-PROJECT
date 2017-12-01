@@ -45,7 +45,7 @@ public class ServletAddBookmark extends HttpServlet {
             linkApp.setPosition(profile.getSize());
             sm.saveOrUpdate(linkApp);
             profile.addApp(linkApp);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CREATED, linkApp.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, linkApp.getJson()));
             sm.setSuccess(linkApp.getJson());
         } catch (Exception e) {
             sm.setError(e);

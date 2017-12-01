@@ -6,6 +6,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,7 +28,11 @@ public class ServletDeleteJoinChannelRequest extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             channel.removePendingTeamUser(team.getTeamUserWithId(teamUser_id));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("team_user_id", teamUser_id);
+            ws_obj.put("room_id", channel.getDb_id());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM_REQUEST, WebSocketMessageAction.REMOVED, ws_obj));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);
