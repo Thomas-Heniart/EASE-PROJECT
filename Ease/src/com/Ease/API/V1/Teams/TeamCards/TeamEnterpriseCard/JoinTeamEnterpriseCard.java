@@ -47,6 +47,7 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
             Map<String, String> accountInformation = ((TeamEnterpriseCard) teamCard).getWebsite().getInformationNeeded(account_information);
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, ((TeamEnterpriseCard) teamCard).getPassword_reminder_interval());
+            sm.saveOrUpdate(account);
             JoinTeamCardRequest joinTeamCardRequest = new JoinTeamEnterpriseCardRequest(teamCard, teamUser, account);
             sm.saveOrUpdate(joinTeamCardRequest);
             teamCard.addJoinTeamCardRequest(joinTeamCardRequest);

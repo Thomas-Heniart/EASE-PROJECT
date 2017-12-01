@@ -45,7 +45,7 @@ public class ServletEditTeamUserUsername extends HttpServlet {
             teamUserToModify.editUsername(username);
             sm.saveOrUpdate(teamUserToModify);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getWebSocketJson()));
-            sm.setSuccess("TeamUser username edited, new username.");
+            sm.setSuccess(teamUserToModify.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

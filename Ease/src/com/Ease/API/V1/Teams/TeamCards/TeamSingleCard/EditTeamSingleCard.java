@@ -30,7 +30,9 @@ public class EditTeamSingleCard extends HttpServlet {
         try {
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = (TeamCard) sm.getHibernateQuery().get(TeamSingleCard.class, team_card_id);
-            if (teamCard == null || teamCard.isTeamSingleCard())
+            if (teamCard == null)
+                throw new HttpServletException(HttpStatus.Forbidden);
+            if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
             TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             Team team = teamSingleCard.getTeam();

@@ -66,7 +66,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
                 NotificationFactory.getInstance().createEditRoleNotification(teamUserToModify, teamUser, sm.getUserWebSocketManager(teamUserToModify.getUser().getDb_id()), sm.getHibernateQuery());
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getWebSocketJson()));
-            sm.setSuccess("TeamUser role edited.");
+            sm.setSuccess(teamUserToModify.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }
