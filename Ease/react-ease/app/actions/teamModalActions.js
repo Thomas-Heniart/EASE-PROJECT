@@ -83,12 +83,12 @@ export function showTeamLeaveAppModal(state, app, team_user_id){
   }
 }
 
-export function showTeamManageAppRequestModal(state, app){
+export function showTeamManageAppRequestModal({active, team_card_id}){
   return {
     type: 'SHOW_TEAM_MANAGE_APP_REQUEST_MODAL',
     payload: {
-      active: state,
-      app:app
+      active: active,
+      team_card_id:team_card_id
     }
   }
 }
@@ -104,35 +104,32 @@ export function showTeamAcceptMultiAppModal(state, user, app){
   }
 }
 
-export function showTeamJoinMultiAppModal(state, user, app){
+export function showTeamJoinEnterpriseAppModal({active, team_card_id}){
   return {
-    type: 'SHOW_TEAM_JOIN_MULTI_APP_MODAL',
+    type: 'SHOW_TEAM_JOIN_ENTERPRISE_APP_MODAL',
     payload: {
-      active: state,
-      user: user,
-      app:app
+      active: active,
+      team_card_id: team_card_id
     }
   }
 }
 
-export function showTeamEditEnterpriseAppModal(state, user, app){
+export function showTeamEditEnterpriseAppModal({active, team_card_id}){
   return {
     type: 'SHOW_TEAM_EDIT_ENTERPRISE_APP_MODAL',
     payload: {
-      active: state,
-      user: user,
-      app:app
+      active: active,
+      team_card_id: team_card_id
     }
   }
 }
 
-export function showTeamAskJoinMultiAppModal(state, user, app) {
+export function showTeamAskJoinEnterpriseAppModal({active, team_card_id}) {
   return {
     type: 'SHOW_TEAM_ASK_JOIN_ENTERPRISE_APP_MODAL',
     payload: {
-      active: state,
-      user: user,
-      app:app
+      active: active,
+      team_card_id: team_card_id
     }
   }
 }

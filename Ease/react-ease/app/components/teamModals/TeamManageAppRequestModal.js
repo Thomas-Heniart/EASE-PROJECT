@@ -1,36 +1,30 @@
 var React = require('react');
 var classnames = require('classnames');
 import {showTeamManageAppRequestModal} from "../../actions/teamModalActions";
-import {teamShareApp,
-  deleteJoinAppRequest,
-  teamShareSingleApp,
-  teamShareEnterpriseApp,
-  teamAcceptSharedApp} from "../../actions/appsActions";
 import {
-  selectChannelFromListById,
-  selectUserFromListById,
-  findMeInReceivers
-} from "../../utils/helperFunctions";
+  teamShareApp,
+  deleteJoinAppRequest,
+  acceptTeamCardRequest,
+  teamAcceptSharedApp, deleteTeamCardRequest
+} from "../../actions/appsActions";
 
 import {connect} from "react-redux";
 
-@connect((store)=>{
-  return {
-    modal: store.teamModals.teamManageAppRequestModal,
-    channels: store.channels.channels,
-    users: store.users.users,
-    team_id: store.team.id
-  };
-})
+@connect((store)=>({
+  teams : store.teams,
+  team_card: store.team_apps[store.teamModals.teamManageAppRequestModal.team_card_id]
+}))
 class TeamManageAppRequestModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      users : []
+      users : [],
+      team_card: this.props.team_card
     };
-    this.state.users = this.props.modal.app.sharing_requests.map(item => {
+    const team = this.props.teams[this.state.team_card.team_id];
+    this.state.users = this.state.team_card.requests.map(request => {
       return {
-        user: selectUserFromListById(this.props.users, item),
+        user: team.team_users[request.team_user_id],
         accepted: false,
         checked: false
       }
@@ -40,43 +34,29 @@ class TeamManageAppRequestModal extends React.Component {
     this.refuseUser = this.refuseUser.bind(this);
   }
   acceptUser(id){
-    const app = this.props.modal.app;
-    if (app.type === 'simple'){
-      this.props.dispatch(teamShareSingleApp({
-        team_id: this.props.team_id,
-        app_id: app.id,
-        team_user_id: id,
-        can_see_information: false
-      })).then(() => {
-        const users = this.state.users.map(item => {
-          if (item.user.id === id){
-            item.checked = true;
-            item.accepted = true;
-          }
-          return item;
-        });
-        this.setState({users : users});
+    const card = this.state.team_card;
+    const request = card.requests.find(request => (request.team_user_id === id));
+
+    this.props.dispatch(acceptTeamCardRequest({
+      team_id: card.team_id,
+      team_card_id: card.id,
+      request_id: request.id
+    })).then(() => {
+      const users = this.state.users.map(item => {
+        if (item.user.id === id){
+          item.checked = true;
+          item.accepted = true;
+        }
+        return item;
       });
-    }
-    else if (app.type === 'multi'){
-      this.props.dispatch(teamShareEnterpriseApp({
-        team_id: this.props.team_id,
-        app_id: app.id,
-        team_user_id: id
-      })).then(() => {
-        const users = this.state.users.map(item => {
-          if (item.user.id === id){
-            item.checked = true;
-            item.accepted = true;
-          }
-          return item;
-        });
-        this.setState({users : users});
-      });
-    }
+      this.setState({users : users});
+    });
   }
   refuseUser(id){
-    this.props.dispatch(deleteJoinAppRequest(this.props.modal.app.id, id)).then(() => {
+    this.props.dispatch(deleteTeamCardRequest({
+      team_card_id: this.state.team_card.id,
+      request_id: this.state.team_card.requests.find(request => (request.team_user_id === id)).id
+    })).then(() => {
       const users = this.state.users.map(item => {
         if (item.user.id === id)
           item.checked = true;
@@ -86,15 +66,19 @@ class TeamManageAppRequestModal extends React.Component {
     });
   }
   confirmModal(){
-    this.props.dispatch(showTeamManageAppRequestModal(false));
+    this.close();
   }
+  close = () => {
+    this.props.dispatch(showTeamManageAppRequestModal({active: false}));
+  };
   render(){
-    const app = this.props.modal.app;
+    const app = this.state.team_card;
+
     return (
         <div class="popupHandler myshow">
-          <div class="popover_mask" onClick={e => {this.props.dispatch(showTeamManageAppRequestModal(false))}}></div>
+          <div class="popover_mask" onClick={this.close}/>
           <div class="ease_popup ease_team_popup" id="modal_app_requests">
-            <button class="button-unstyle action_button close_button" onClick={e => {this.props.dispatch(showTeamManageAppRequestModal(false))}}>
+            <button class="button-unstyle action_button close_button" onClick={this.close}>
               <i class="fa fa-times"/>
             </button>
             <div class="row title-row text-center">

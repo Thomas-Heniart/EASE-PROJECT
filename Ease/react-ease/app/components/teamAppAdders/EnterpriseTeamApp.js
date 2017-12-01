@@ -2,11 +2,8 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import {
-  CopyPasswordButton,
-  ExtendFillSwitch,
   PasswordChangeDropdown,
   PasswordChangeHolder,
-  PinAppButton,
   setUserDropdownText,
   SharingRequestButton,
   TeamAppActionButton
@@ -18,66 +15,47 @@ import {
   teamEditEnterpriseCard,
   teamEditEnterpriseCardReceiver,
   teamShareEnterpriseCard,
-  removeTeamCardReceiver
+  removeTeamCardReceiver, requestTeamSingleCard
 } from "../../actions/appsActions";
 import {
+  copyTextToClipboard,
   credentialIconType,
   handleSemanticInput,
   reflect,
   transformCredentialsListIntoObject,
   transformWebsiteInfoIntoList,
-  transformWebsiteInfoIntoListAndSetValues
+  transformWebsiteInfoIntoListAndSetValues,
+  needPasswordUpdate
 } from "../../utils/utils";
 import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
+import * as api from "../../utils/api";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
-  const meReceiver = findMeInReceivers(app.receivers, me.id);
-  const asked = app.requests.indexOf(me.id) !== -1;
+  const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
+  const asked = !!app.requests.find(request => (request.team_user_id === me.id));
+
   return (
       <div class="team_app_actions_holder">
-        {meReceiver === null &&
+        {!meReceiver &&
         <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
-        {meReceiver !== null && meReceiver.accepted &&
-        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>}
-        {(isAdmin(me.role) || meReceiver !== null) &&
+        {/*!!meReceiver &&
+        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>*/}
+        {(isAdmin(me.role) || !!meReceiver) &&
         <TeamAppActionButton text='Edit App'
                              icon='pencil'
                              onClick={editMode}/>}
         {isAdmin(me.role) &&
-        <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal(true, app))}}/>}
+        <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
       </div>
   )
 };
 
-const ReadOnlyTeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, pwd_filled}) => {
-  return <Input size="mini"
-                class="team-app-input"
-                readOnly={readOnly}
-                name={item.name}
-                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-                labelPosition="left"
-                placeholder={item.placeholder}
-                value={item.name === 'password' && pwd_filled ? 'abcdabcd' : item.value}
-                type={item.type}/>;
-};
-
-const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
-  return (
-      <div class="receiver">
-        <Label class={classnames("receiver-label", (receiver.receiver !== null && receiver.receiver.accepted) ? 'accepted': null)}>
-          <span>{receiver.username}</span>
-          <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
-        </Label>
-      </div>
-  )
-};
-
-const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
+const EnterpriseAppReceiverLabel = ({username, up_to_date}) => {
   return (
       <Popup size="mini"
              position="bottom center"
@@ -85,9 +63,9 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
              flowing
              hideOnScroll={true}
              trigger={
-               <Label class={classnames('receiver-label', accepted ? 'accepted': null)}>
+               <Label class='receiver-label accepted'>
                  <span>{username}</span>
-                 <Icon name="refresh" color={!up_to_date ? 'red' : null}/>
+                 <Icon name="refresh" color={up_to_date ? null : 'red'}/>
                </Label>
              }
              content={
@@ -104,34 +82,95 @@ const EnterpriseAppReceiverLabel = ({username, up_to_date, accepted}) => {
   )
 };
 
-const SimpleCredentialsInput = ({receiver, me, team_id}) => {
-  return (
-      <div class="receiver align_items_center">
-        <EnterpriseAppReceiverLabel username={receiver.username} up_to_date={!receiver.password_must_be_updated} accepted={!receiver.empty}/>
-        {receiver.credentials.map(item => {
-          return <ReadOnlyTeamAppCredentialInput pwd_filled={!receiver.empty} readOnly={true}
-                                                 receiver_id={receiver.id} key={item.priority} onChange={null}
-                                                 item={item}/>
-        })}
-        {receiver.id === me.id &&
-        <CopyPasswordButton team_id={team_id} shared_app_id={receiver.shared_app_id}/>}
-      </div>
-  )
+class CopyPasswordButton extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      state: 0,
+      open: false,
+      pwd: ''
+    }
+  }
+  copyPassword = () => {
+    copyTextToClipboard(this.state.pwd);
+    this.setState({state: 3, open: true});
+    setTimeout(() => {
+      this.setState({state: 0, open: false});
+    }, 2000);
+  };
+  fetchPassword = () => {
+    this.setState({state: 1, open: true});
+    api.dashboard.getAppPassword({
+      app_id: this.props.app_id
+    }).then(response => {
+      this.setState({pwd: response.password, state: 2, open: true});
+    }).catch(err => {
+      this.setState({state: 4, open: true});
+      setTimeout(() => {
+        this.setState({state: 0, open: false});
+      }, 2000);
+    });
+  };
+  render(){
+    const content = <div>
+      {this.state.state === 0 &&
+      'Copy password'}
+      {this.state.state === 1 &&
+      <Icon name="asterisk" loading/>}
+      {this.state.state === 2 &&
+      <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
+      {this.state.state === 3 &&
+      'Copied!'}
+      {this.state.state === 4 &&
+      'Error'}
+    </div>;
+    return (
+        <Popup size="mini"
+               position="top center"
+               open={this.state.state > 0 ? true : undefined}
+               inverted
+               hoverable
+               trigger={
+                 <Icon name="copy" class="copy_pwd_button" link onClick={this.fetchPassword}/>
+               }
+               content={content}/>
+    )
+  }
 };
 
-const StaticReceivers = ({receivers, me, team_id, expanded}) => {
+const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) => {
   return (
       <div class="receivers">
-        {receivers.map((item, idx) => {
+        {receivers.map((receiver, idx) => {
           if (idx > 2 && !expanded)
             return null;
-          return <SimpleCredentialsInput key={item.id} receiver={item} me={me} team_id={team_id}/>
+          return (
+              <div class="receiver align_items_center" key={receiver.user.id}>
+                <EnterpriseAppReceiverLabel
+                    username={receiver.user.username}
+                    up_to_date={!needPasswordUpdate(receiver.receiver.last_update_date, password_reminder_interval)}/>
+                {receiver.credentials.map(item => {
+                  return <Input size="mini"
+                                key={item.name}
+                                class="team-app-input"
+                                readOnly={true}
+                                name={item.name}
+                                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+                                labelPosition="left"
+                                placeholder={item.placeholder}
+                                value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
+                                type={item.type}/>;
+                })}
+                {receiver.user.id === me.id &&
+                <CopyPasswordButton app_id={receiver.receiver.app_id}/>}
+              </div>
+          );
         })}
       </div>
   )
 };
 
-const TeamAppCredentialInput = ({item, onChange, receiver, myId, empty}) => {
+const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
   const isRequired = receiver.user.id === myId && item.name !== 'password';
   const label = <Label><Icon name={credentialIconType[item.name]}/></Label>;
   let placeholder = item.placeholder;
@@ -155,7 +194,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId, empty}) => {
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId}) => {
   return (
       <div class="receiver">
-        <Label class={classnames("receiver-label", (!!receiver.receiver) ? 'accepted': null)}><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        <Label class={classnames("receiver-label", (!!receiver.receiver) ? 'accepted': null)}><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.user.id)}/></Label>
         {
           receiver.credentials.map(item => {
             return <TeamAppCredentialInput
@@ -180,33 +219,9 @@ const Receivers = ({receivers, onChange, onDelete, myId}) => {
                                                    receiver={item}
                                                    onChange={onChange}
                                                    onDelete={onDelete}/>;
-          /*          return <ReceiverCredentialsInput key={item.id}
-                                                     receiver={item}
-                                                     onChange={onChange}
-                                                     onDelete={onDelete}/>*/
         })}
       </div>
   )
-};
-
-const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
-  if (pinneable)
-    return (
-        <span style={{lineHeight: '1.7'}}>
-          You received an Enterprise App,
-          &nbsp;
-          <button class="button-unstyle inline-text-button primary" type="button" onClick={onAccept}>Accept</button>
-          &nbsp;or&nbsp;
-          <button class="button-unstyle inline-text-button primary" type="button" onClick={onRefuse}>Refuse</button>
-          &nbsp;it?
-        </span>
-    );
-  else
-    return (
-        <span style={{lineHeight: '1.7'}}>
-          This app is new to our robot, we are processing the integration. It will be ready in few hours.
-        </span>
-    )
 };
 
 const ButtonShowMore = ({number_of_users, show_more, showMore}) => {
@@ -296,10 +311,16 @@ class EnterpriseTeamApp extends Component {
     }
   };
   selfJoinApp = () => {
-    this.props.dispatch(modalActions.showTeamJoinMultiAppModal(true, this.props.me, this.props.app));
+    this.props.dispatch(modalActions.showTeamJoinEnterpriseAppModal({
+      active: true,
+      team_card_id: this.props.app.id
+    }));
   };
   requestApp = () => {
-    this.props.dispatch(modalActions.showTeamAskJoinMultiAppModal(true, this.props.me, this.props.app));
+    this.props.dispatch(modalActions.showTeamAskJoinEnterpriseAppModal({
+      active: true,
+      team_card_id: this.props.app.id
+    }));
   };
   setupUsers = () =>  {
     const channel = selectItemFromListById(this.props.channels, this.props.app.channel_id);
@@ -340,7 +361,10 @@ class EnterpriseTeamApp extends Component {
   setEdit = (state) => {
     if (state){
       if (!isAdmin(this.props.me.role)){
-        this.props.dispatch(modalActions.showTeamEditEnterpriseAppModal(true, this.props.me, this.props.app));
+        this.props.dispatch(modalActions.showTeamEditEnterpriseAppModal({
+          active: true,
+          team_card_id: this.props.app.id
+        }));
         return;
       }
       const app = this.props.app;
@@ -400,21 +424,19 @@ class EnterpriseTeamApp extends Component {
         return this.state.users.find(user => (user.user.id === item));
       });
     }
-    return app.receivers.map(item => {
-      const user = selectItemFromListById(this.props.users, item.team_user_id);
+    return app.receivers.map(receiver => {
+      const user = this.props.users.find(user => (user.id === receiver.team_user_id));
       return {
-        empty: item.empty,
-        accepted: item.accepted,
-        id: item.team_user_id,
-        credentials: transformWebsiteInfoIntoListAndSetValues(app.website.information, item.account_information),
-        username: user.username
+        user: user,
+        receiver: receiver,
+        credentials: transformWebsiteInfoIntoListAndSetValues(app.website.information, receiver.account_information),
       }
     }).sort((a,b) => {
-      if (a.id === this.props.me.id)
+      if (a.user.id === this.props.me.id)
         return -1000;
-      if (b.id === this.props.me.id)
+      if (b.user.id === this.props.me.id)
         return 1000;
-      return a.username.localeCompare(b.username);
+      return a.user.username.localeCompare(b.user.username);
     });
   };
   render(){
@@ -425,10 +447,11 @@ class EnterpriseTeamApp extends Component {
     const users = this.getUsers();
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
     return (
-        <Container fluid id={`app_${app.id}`} class="team-app mrgn0 enterprise-team-app" as="form"
+        <Container fluid
+                   id={`app_${app.id}`}
+                   class="team-app mrgn0 enterprise-team-app"
+                   as="form"
                    onSubmit={this.modify}>
-          {/*{meReceiver !== null && !meReceiver.accepted &&*/}
-          {/*<AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}*/}
           <Segment>
             <Header as="h4">
               {!this.state.edit ?
@@ -441,13 +464,9 @@ class EnterpriseTeamApp extends Component {
                          placeholder="Card name..."
                          type="text"
                          required/>}
-              {meReceiver !== null &&
-              <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.requests.length > 0 && isAdmin(me.role) &&
-              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
+              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
             </Header>
-            {/*{meReceiver !== null && !meReceiver.accepted &&*/}
-            {/*<div class="overlay"/>}*/}
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}
                                         me={me}
@@ -467,20 +486,21 @@ class EnterpriseTeamApp extends Component {
                     {!this.state.edit ?
                         <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username}/> :
                         <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
-                    {/*{this.state.edit &&*/}
-                    {/* <ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>}*/}
                     {this.state.edit && this.props.plan_id === 0 &&
                     <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
                   </div>
                 </div>
                 {!this.state.edit &&
                 <StaticReceivers receivers={users}
+                                 password_reminder_interval={app.password_reminder_interval}
                                  expanded={this.state.show_more}
-                                 me={me}
-                                 team_id={this.props.team_id}/>}
+                                 me={me}/>}
                 <div>
                   {!this.state.edit && users.length > 3 &&
-                  <ButtonShowMore number_of_users={users.length - 3} show_more={this.state.show_more} showMore={this.setShowMore}/>}
+                  <ButtonShowMore
+                      number_of_users={users.length - 3}
+                      show_more={this.state.show_more}
+                      showMore={this.setShowMore}/>}
                 </div>
                 {this.state.edit &&
                 <Receivers receivers={users}

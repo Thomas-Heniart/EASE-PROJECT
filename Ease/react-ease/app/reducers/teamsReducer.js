@@ -378,11 +378,20 @@ export const team_apps = createReducer({
     const {receiver} = action.payload;
     const team_card_id = receiver.team_card_id;
     if (!!state[team_card_id]){
-      return update(state, {
+      const team_card = state[team_card_id];
+      const request = team_card.requests.find(request => (request.team_user_id === receiver.team_user_id));
+      let new_state = update(state, {
         [team_card_id]: {
           receivers: {$push: [receiver]}
         }
-      })
+      });
+      if (!!request)
+        new_state = update(new_state, {
+          [team_card_id]: {
+            requests: {$splice: [[team_card.requests.indexOf(request), 1]]}
+          }
+        });
+      return new_state;
     }
     return state;
   },
@@ -433,6 +442,31 @@ export const team_apps = createReducer({
     const app = action.payload.app;
 
     return update(state, {$unset: [app.id]});
+  },
+  ['TEAM_CARD_REQUEST_CREATED'](state, action){
+    const {team_card_id, request} = action.payload;
+
+    if (!!state[team_card_id]){
+      return update(state, {
+        [team_card_id]: {
+          requests: {$push: [request]}
+        }
+      });
+    }
+    return state;
+  },
+  ['TEAM_CARD_REQUEST_REMOVED'](state, action){
+    const {team_card_id, request_id} = action.payload;
+
+    if (!!state[team_card_id]){
+      const request = state[team_card_id].requests.find(request => (request_id === request.id));
+      return update(state, {
+        [team_card_id]: {
+          requests: {$splice: [[state[team_card_id].requests.indexOf(request), 1]]}
+        }
+      });
+    }
+    return state;
   }
 });
 

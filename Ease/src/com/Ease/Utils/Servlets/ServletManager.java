@@ -9,6 +9,7 @@ import com.Ease.User.User;
 import com.Ease.User.UserFactory;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -511,5 +512,23 @@ public abstract class ServletManager {
 
     public String getKeyUser() {
         return (String) this.getUserProperties(this.getUser().getDb_id()).get("keyUser");
+    }
+
+    public void decipher(JSONObject jsonObject) throws HttpServletException {
+        String private_key = (String) this.getContextAttr("privateKey");
+        for (Object entry : jsonObject.entrySet()) {
+            Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
+            jsonObject.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
+        }
+    }
+
+    public String decipher(String s) throws HttpServletException {
+        String private_key = (String) this.getContextAttr("privateKey");
+        return RSA.Decrypt(s, private_key);
+    }
+
+    public String cipher(String s) throws HttpServletException {
+        String public_key = (String) this.getContextAttr("publicKey");
+        return RSA.Encrypt(s, public_key);
     }
 }
