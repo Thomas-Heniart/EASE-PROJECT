@@ -7,6 +7,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -36,16 +37,20 @@ public class EditTeamSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden);
             TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             Team team = teamSingleCard.getTeam();
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
+            if (!teamUser.isTeamAdmin() && (teamSingleCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleCard.getTeamUser_filler())))
+                throw new HttpServletException(HttpStatus.Forbidden);
             String description = sm.getStringParam("description", true, true);
             if (description == null)
                 description = "";
             if (description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
+            teamSingleCard.setDescription(description);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
-            teamSingleCard.setDescription(description);
+            teamCard.setName(name);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             sm.decipher(account_information);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
