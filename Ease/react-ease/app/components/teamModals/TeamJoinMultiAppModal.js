@@ -6,17 +6,19 @@ import * as appActions from "../../actions/appsActions"
 import {findMeInReceivers} from "../../utils/helperFunctions"
 import {connect} from "react-redux"
 
-@connect((store)=>{
-  return {
-    modal: store.teamModals.teamJoinMultiAppModal
-  };
-})
+@connect((store)=>({
+  teams: store.teams,
+  team_apps: store.team_apps,
+  team_card: store.team_apps[store.teamModals.teamJoinMultiAppModal.team_card_id]
+}))
 class TeamJoinMultiAppModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      team_card: this.props.team_card,
       user: this.props.modal.user,
       app: this.props.modal.app,
+
       credentials: {}
     };
     Object.keys(this.state.app.website.information).map(function (item) {

@@ -1,11 +1,14 @@
 import React, {Component} from "react";
 import {showTeamEditEnterpriseAppModal, showPinTeamAppToDashboardModal} from '../../actions/teamModalActions';
-import {teamEditEnterpriseAppReceiver} from "../../actions/appsActions";
+import {teamEditEnterpriseCardReceiver} from "../../actions/appsActions";
 import api from "../../utils/api";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {findMeInReceivers} from "../../utils/helperFunctions";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
-import {transformWebsiteInfoIntoList, transformCredentialsListIntoObject} from "../../utils/utils";
+import {
+  transformWebsiteInfoIntoList, transformCredentialsListIntoObject,
+  transformWebsiteInfoIntoListAndSetValues
+} from "../../utils/utils";
 import {connect} from "react-redux";
 
 const CredentialInput = ({item, onChange}) => {
@@ -21,9 +24,8 @@ const CredentialInput = ({item, onChange}) => {
 };
 
 @connect(store => ({
-  app: store.teamModals.teamEditEnterpriseAppModal.app,
-  user: store.teamModals.teamEditEnterpriseAppModal.user,
-  team_id: store.team.id
+  teams: store.teams,
+  team_card: store.team_apps[store.teamModals.teamEditEnterpriseAppModal.team_card_id]
 }))
 class EditEnterpriseAppModal extends Component {
   constructor(props){
@@ -31,8 +33,12 @@ class EditEnterpriseAppModal extends Component {
     this.state = {
       loading: false,
       errorMessage: '',
-      credentials: transformWebsiteInfoIntoList(this.props.app.website.information)
-    }
+      team_card: this.props.team_card,
+      my_id: this.props.teams[this.props.team_card.team_id].my_team_user_id,
+      credentials: []
+    };
+    const meReceiver = this.state.team_card.receivers.find(receiver => (receiver.team_user_id === this.state.my_id));
+    this.state.credentials = transformWebsiteInfoIntoListAndSetValues(this.state.team_card.website.information, meReceiver.account_information);
   };
   handleCredentialInput = (e, {name, value}) => {
     const credentials = this.state.credentials.map(item => {
@@ -45,38 +51,46 @@ class EditEnterpriseAppModal extends Component {
   confirm = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    const meReceiver = findMeInReceivers(this.props.app.receivers, this.props.user.id);
+    const team_card = this.state.team_card;
+    const meReceiver = team_card.receivers.find(receiver => (receiver.team_user_id === this.state.my_id));
 
-    this.props.dispatch(teamEditEnterpriseAppReceiver({
-      team_id:this.props.team_id,
-      app_id: this.props.app.id,
-      shared_app_id: meReceiver.shared_app_id,
+    this.props.dispatch(teamEditEnterpriseCardReceiver({
+      team_id:team_card.team_id,
+      team_card_id: team_card.id,
+      team_card_receiver_id: meReceiver.id,
       account_information: transformCredentialsListIntoObject(this.state.credentials)
     })).then(() => {
-      this.props.dispatch(showTeamEditEnterpriseAppModal(false));
+      this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     });
   };
-  componentDidMount(){
-    const meReceiver = findMeInReceivers(this.props.app.receivers, this.props.user.id);
+  componentWillMount(){
+    const meReceiver = this.state.team_card.receivers.find(receiver => (receiver.team_user_id === this.state.my_id));
 
-    api.teamApps.getSharedAppPassword({team_id: this.props.team_id, shared_app_id: meReceiver.shared_app_id}).then(password => {
+    api.dashboard.getAppPassword({
+      app_id: meReceiver.app_id
+    }).then(response => {
+      const pwd = response.password;
+
       const credentials = this.state.credentials.map(item => {
         if (item.name === 'password')
-          item.value = password;
-        else
-          item.value = meReceiver.account_information[item.name];
+          item.value = pwd;
         return item;
       });
       this.setState({credentials: credentials});
     });
   }
+  close = () => {
+    this.props.dispatch(showTeamEditEnterpriseAppModal({
+      active: false
+    }));
+  };
   render(){
-    const app = this.props.app;
+    const app = this.props.team_card;
     return (
         <SimpleModalTemplate
-            onClose={e => {this.props.dispatch(showTeamEditEnterpriseAppModal(false))}}
+            onClose={this.close}
             headerContent={'Enter your info, last time ever'}>
           <Form class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
             <Form.Field class="display-flex align_items_center" style={{marginBottom: '35px'}}>
@@ -97,11 +111,9 @@ class EditEnterpriseAppModal extends Component {
             })}
             <Message error content={this.state.errorMessage}/>
             <Button
-                attached='bottom'
                 type="submit"
                 loading={this.state.loading}
                 positive
-                onClick={this.confirm}
                 className="modal-button"
                 content="CONFIRM"/>
           </Form>

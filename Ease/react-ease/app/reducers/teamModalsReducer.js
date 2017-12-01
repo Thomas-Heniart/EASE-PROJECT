@@ -43,27 +43,24 @@ const initialState = {
   },
   teamManageAppRequestModal: {
     active: false,
-    app: null
+    team_card_id: null
   },
   teamEditEnterpriseAppModal: {
     active: false,
-    user: null,
-    app: null
+    team_card_id: -1
   },
   teamAskJoinEnterpriseAppModal: {
     active: false,
-    user: null,
-    app: null
+    team_card_id: -1
   },
   teamAcceptMultiAppModal: {
     active: false,
     user: null,
     app: null
   },
-  teamJoinMultiAppModal: {
+  teamJoinEnterpriseAppModal: {
     active: false,
-    user:null,
-    app: null
+    team_card_id:-1
   },
   verifyTeamUserModal: {
     active: false,
@@ -200,10 +197,10 @@ export default function reducer(state=initialState, action){
         teamEditEnterpriseAppModal: action.payload
       }
     }
-    case 'SHOW_TEAM_JOIN_MULTI_APP_MODAL': {
+    case 'SHOW_TEAM_JOIN_ENTERPRISE_APP_MODAL': {
       return {
         ...state,
-        teamJoinMultiAppModal: action.payload
+        teamJoinEnterpriseAppModal: action.payload
       }
     }
     case 'SHOW_TEAM_SETTINGS_MODAL': {

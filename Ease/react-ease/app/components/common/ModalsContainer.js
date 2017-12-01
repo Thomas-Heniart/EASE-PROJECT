@@ -50,7 +50,7 @@ import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
   teamEditEnterpriseAppModal: store.teamModals.teamEditEnterpriseAppModal,
   teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
   teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
-  teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
+  teamJoinEnterpriseAppModal: store.teamModals.teamJoinEnterpriseAppModal,
   teamAskJoinEnterpriseAppModal: store.teamModals.teamAskJoinEnterpriseAppModal,
   teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
   verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
@@ -96,7 +96,7 @@ class ModalsContainer extends Component{
           <TeamManageAppRequestModal/>}
           {this.props.teamAcceptMultiAppModal.active &&
           <AcceptEnterpriseAppModal/>}
-          {this.props.teamJoinMultiAppModal.active &&
+          {this.props.teamJoinEnterpriseAppModal.active &&
           <JoinEnterpriseAppModal/>}
           {this.props.teamAskJoinEnterpriseAppModal.active &&
           <AskJoinEnterpriseAppModal/>}
