@@ -168,7 +168,7 @@ class SsoAppSettingsModal extends Component{
             onClose={this.close}
             headerContent={"App settings"}>
           <Container class="app_settings_modal">
-            <div class="display-flex align_items_center">
+            <div class="app_name_container display-flex align_items_center">
               <div class="squared_image_handler">
                 <img src={app.website.logo} alt="Website logo"/>
               </div>

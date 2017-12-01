@@ -41,25 +41,22 @@ export const teams = createReducer({
     const team = action.payload.team;
 
     if (state[team.id]){
-      const new_state = update(state, {
+      return update(state, {
         [team.id]: {$set: team}
       });
-      return new_state;
     }
   },
   ['TEAM_CREATED'](state, action){
     const team = action.payload.team;
-    const new_state = update(state, {
+    return update(state, {
       [team.id]: {$set: team}
     });
-    return new_state;
   },
   ['TEAM_REMOVED'](state, action){
     const team_id = action.payload.team_id;
-    const new_state = update(state, {
-      [team_id] : {$set: undefined}
+    return update(state, {
+      $unset: [team_id]
     });
-    return new_state;
   },
   ['TEAM_TRANSFER_OWNERSHIP'](state, action){
     const {team_id, team_user_id, owner_id} = action.payload;
@@ -336,6 +333,17 @@ export const team_apps = createReducer({
       ...state,
       [app.id]: app
     }
+  },
+  ['TEAM_REMOVED'](state, action){
+    const {team_id} = action.payload;
+
+    let new_state = state;
+    Object.keys(state).map(id => {
+      if (new_state[id].team_id === team_id){
+        new_state = update(state, {$unset: [id]});
+      }
+    });
+    return new_state;
   },
   ['TEAM_CARD_RECEIVER_CREATED'](state, action){
     const {receiver} = action.payload;

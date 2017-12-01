@@ -84,12 +84,12 @@ class TeamView extends React.Component {
   isValidTeamItemId = () => {
     const teamId = Number(this.props.match.params.teamId);
     const team = this.props.teams[teamId];
-    if (team === undefined) {
-      window.location.href = '/';
+    if (!team) {
+      this.props.history.replace('/main/dashboard');
       return;
     }
     const itemId = this.props.match.params.itemId;
-    if (itemId === undefined)
+    if (!itemId)
       return false;
     const me = team.team_users[team.my_team_user_id];
     if (itemId[0] !== '@' && me.room_ids.indexOf(Number(itemId)) !== -1)

@@ -104,7 +104,7 @@ class TeamsTutorial extends React.Component {
         key="3"
         validateStep={this.skipTutorial}
         title="Sharing accounts"
-        body="You can send multiple types of accounts regarding your needs. Just hit the + button."
+        body='You can send multiple types of accounts regarding your needs. Just hit the "add new app" button.'
         step={this.state.step}
         button_text={'Done!'}
         maxStep={this.state.maxStep}/>);

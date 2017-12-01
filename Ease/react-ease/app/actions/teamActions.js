@@ -1,6 +1,7 @@
 import axios from "axios"
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
+import {dashboardAppRemovedAction} from "./dashboardActions";
 import * as UserActions from "./userActions"
 import * as ChannelActions from "./channelActions"
 import {closeAppAddUI} from "./teamAppsAddUIActions";
@@ -217,10 +218,17 @@ export function teamChangedAction({team}) {
 }
 
 export function teamRemovedAction({team_id}) {
-  return {
-    type: 'TEAM_REMOVED',
-    payload: {
-      team_id: team_id
-    }
-  }
+  return (dispatch, getState) => {
+    const store = getState();
+    store.dashboard.apps.map(app => {
+      if (app.team_id === team_id)
+        dispatch(dashboardAppRemovedAction({app_id: app.id}));
+    });
+    dispatch({
+      type: 'TEAM_REMOVED',
+      payload: {
+        team_id: team_id
+      }
+    });
+  };
 }

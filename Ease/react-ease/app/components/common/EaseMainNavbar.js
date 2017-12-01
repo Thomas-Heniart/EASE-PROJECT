@@ -6,6 +6,13 @@ import {processLogout} from "../../actions/commonActions";
 import {connect} from "react-redux";
 import {Dropdown, Icon, Menu, Popup} from 'semantic-ui-react';
 
+const TeamsDropdownButton = (
+    <span>
+        <Icon name="users" data-tip="Team Space"/>
+        Teams
+      </span>
+);
+
 @connect(store => ({
   teams: store.teams
 }))
@@ -15,36 +22,36 @@ class TeamsList extends React.Component {
   }
   render() {
     return (
-        <Dropdown icon={<Icon name="users" data-tip="Team Space"/>} item floating id="teams_list">
-            <Dropdown.Menu>
-              {Object.keys(this.props.teams).map(id => {
-                const team = this.props.teams[id];
-                const me = team.team_users[team.my_team_user_id];
-                if (me.disabled)
-                  return (
-                      <Popup key={team.id}
-                             size="mini"
-                             position="left center"
-                             trigger={
-                                 <Dropdown.Item style={{opacity: '0.45'}}>
-                                     <Icon name="users"/>
-                                   {team.name}
-                                 </Dropdown.Item>
-                             }
-                             content='You need to wait until an admin accepts you.'/>
-                  );
+        <Dropdown trigger={TeamsDropdownButton} icon={null} item floating id="teams_list" class={this.props.url.indexOf('/teams') !== -1 ? 'active': null}>
+          <Dropdown.Menu>
+            {Object.keys(this.props.teams).map(id => {
+              const team = this.props.teams[id];
+              const me = team.team_users[team.my_team_user_id];
+              if (me.disabled)
                 return (
-                    <Dropdown.Item key={team.id} as={NavLink} to={`/teams/${team.id}`} activeClassName="active">
-                        <Icon name="users"/>
-                      {team.name}
-                    </Dropdown.Item>
-                )
-              })}
-                <Dropdown.Item as={NavLink} to={'/main/teamsPreview'}>
-                    <Icon name="add square"/>
-                    Create a new team...
-                </Dropdown.Item>
-            </Dropdown.Menu>
+                    <Popup key={team.id}
+                           size="mini"
+                           position="left center"
+                           trigger={
+                             <Dropdown.Item style={{opacity: '0.45'}}>
+                               <Icon name="users"/>
+                               {team.name}
+                             </Dropdown.Item>
+                           }
+                           content='You need to wait until an admin accepts you.'/>
+                );
+              return (
+                  <Dropdown.Item key={team.id} as={NavLink} to={`/teams/${team.id}`} activeClassName="active">
+                    <Icon name="users"/>
+                    {team.name}
+                  </Dropdown.Item>
+              )
+            })}
+            <Dropdown.Item as={NavLink} to={'/main/teamsPreview'}>
+              <Icon name="add square"/>
+              Create a new team...
+            </Dropdown.Item>
+          </Dropdown.Menu>
         </Dropdown>
     )
   }
@@ -84,24 +91,24 @@ class NotificationList extends React.Component {
         <Dropdown class="bordered_scrollbar"
                   icon={newNotifs ? newNotificationIcon() : <Icon name="bell" data-tip="Notifications"/>} item
                   floating scrolling onClose={this.onClose} id="notifications_menu">
-            <Dropdown.Menu onScroll={this.onScroll}>
-              {!this.props.notifications.notifications.length &&
-              <Dropdown.Item>There isn't notifications yet</Dropdown.Item>}
-              {this.props.notifications.notifications.map(function (item) {
-                return (
-                    <Dropdown.Item key={item.id} active={item.is_new} class="notification-card"
-                                   onClick={this.executeNotification.bind(null, item)}>
-                        <div class="squared_image_handler icon">
-                            <img src={item.icon} alt="icon"/>
-                        </div>
-                        <div class="display-flex flex_direction_column">
-                            <span>{item.content}</span>
-                            <span class="date">{moment(item.date).fromNow()}</span>
-                        </div>
-                    </Dropdown.Item>
-                )
-              }, this)}
-            </Dropdown.Menu>
+          <Dropdown.Menu onScroll={this.onScroll}>
+            {!this.props.notifications.notifications.length &&
+            <Dropdown.Item>There isn't notifications yet</Dropdown.Item>}
+            {this.props.notifications.notifications.map(function (item) {
+              return (
+                  <Dropdown.Item key={item.id} active={item.is_new} class="notification-card"
+                                 onClick={this.executeNotification.bind(null, item)}>
+                    <div class="squared_image_handler icon">
+                      <img src={item.icon} alt="icon"/>
+                    </div>
+                    <div class="display-flex flex_direction_column">
+                      <span>{item.content}</span>
+                      <span class="date">{moment(item.date).fromNow()}</span>
+                    </div>
+                  </Dropdown.Item>
+              )
+            }, this)}
+          </Dropdown.Menu>
         </Dropdown>
     )
   }
@@ -127,26 +134,27 @@ class EaseMainNavbar extends React.Component {
     });
   };
   render() {
-    const user = this.props.user;
     return (
         <Menu id="main_navbar">
-            <Menu.Item as={NavLink} to='/main/dashboard' data-tip="Apps Dashboard">
-              {user !== null ? user.first_name : '...'}
-            </Menu.Item>
-            <Dropdown icon={<Icon name="log out" data-tip="Logout Menu"/>} item floating id="logout_button">
-                <Dropdown.Menu>
-                    <Dropdown.Item text="Logout from Ease" onClick={this.processLogout}/>
-                    <Dropdown.Item text="Logout from all apps" onClick={this.logoutFromAllApps}/>
-                </Dropdown.Menu>
-            </Dropdown>
-            <Menu.Item data-tip="Settings" as={NavLink} to={`/main/settings`} activeClassName="active">
-                <Icon name="setting"/>
-            </Menu.Item>
-            <NotificationList history={this.props.history}/>
-            <TeamsList user={this.props.user}/>
-            <Menu.Item as={NavLink} data-tip="Apps Catalogue" id="catalog_button" to={'/main/catalog'}>
-                <Icon name="plus"/>
-            </Menu.Item>
+          <Menu.Item id="dashboard_button" as={NavLink} to='/main/dashboard' data-tip="Apps Dashboard">
+            <Icon name="grid layout"/>
+            &nbsp;
+            Dashboard
+          </Menu.Item>
+          <Dropdown floating item id="navbar_dropdown">
+            <Dropdown.Menu>
+              <Dropdown.Item as={NavLink} to={`/main/settings`} text="Settings" icon="setting"/>
+              <Dropdown.Item icon="log out" text="Ease.space Logout" onClick={this.processLogout}/>
+              <Dropdown.Item icon="power" text="General Logout" onClick={this.logoutFromAllApps}/>
+            </Dropdown.Menu>
+          </Dropdown>
+          <NotificationList history={this.props.history}/>
+          <TeamsList user={this.props.user} url={this.props.match.url}/>
+          <Menu.Item as={NavLink} data-tip="Apps Catalogue" id="catalog_button" to={'/main/catalog'}>
+            <Icon name="plus circle"/>
+            &nbsp;
+            Add new App
+          </Menu.Item>
         </Menu>
     )
   }
