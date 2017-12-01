@@ -65,7 +65,7 @@ class Base extends React.Component {
   componentWillMount(){
     const query = queryString.parse(this.props.location.search);
     if (query.skipLanding !== undefined)
-      this.props.cookies.set('skipLanding', true);
+      this.props.cookies.set('skipLanding', true, {maxAge: 9999999, path: '/'});
   }
   render(){
     if (this.state.fetching)

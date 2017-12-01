@@ -190,7 +190,7 @@ class TeamEnterpriseAppSettingsModal extends Component {
             onClose={this.close}
             headerContent={"App settings"}>
           <Container class="app_settings_modal">
-            <div class="display-flex align_items_center">
+            <div class="app_name_container display-flex align_items_center">
               <div class="squared_image_handler">
                 <img src={this.props.app.logo} alt="Website logo"/>
               </div>
@@ -200,9 +200,10 @@ class TeamEnterpriseAppSettingsModal extends Component {
                   value={this.state.appName}
                   onChange={this.handleInput}/>
             </div>
+            {!this.state.isEmpty &&
             <AppSettingsMenu
                 view={view}
-                onChange={this.handleInput}/>
+                onChange={this.handleInput}/>}
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
               {this.state.isEmpty &&

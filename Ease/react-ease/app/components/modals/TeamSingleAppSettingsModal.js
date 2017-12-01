@@ -80,10 +80,10 @@ class TeamSingleAppSettingsModal extends Component{
     if (!isCredentialsMatch(this.state.team_app.account_information, account_information))
       calls.push(this.props.dispatch(teamEditSingleApp({
         team_id: team_app.team_id,
-        app_id: team_app.id,
+        team_card_id: team_app.id,
         description: team_app.description,
         account_information: account_information,
-        password_change_interval: team_app.password_reminder_interval,
+        password_reminder_interval: team_app.password_reminder_interval,
         name: team_app.name
       })));
     Promise.all(calls).then(response => {
@@ -184,7 +184,7 @@ class TeamSingleAppSettingsModal extends Component{
             onClose={this.close}
             headerContent={"App settings"}>
           <Container class="app_settings_modal">
-            <div class="display-flex align_items_center">
+            <div class="app_name_container display-flex align_items_center">
               <div class="squared_image_handler">
                 <img src={this.props.app.logo} alt="Website logo"/>
               </div>

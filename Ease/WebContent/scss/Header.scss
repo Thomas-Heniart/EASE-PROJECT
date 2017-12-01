@@ -21,14 +21,26 @@
 		left: auto;
 		right: 0;
 	}
+	.item.active {
+		font-weight: bold;
+	}
+	#dashboard_button {
+		&:before {
+			display:none;
+		}
+	}
 	#catalog_button {
-		background-color: $themeGreenColor;
-		color: white;
+		color: $themeGreenColor;
 		border-top-right-radius: .28571429rem;
 		border-bottom-right-radius: .28571429rem;
-		&:hover {
-			cursor: pointer;
-			background-color: darken($themeGreenColor, 10%);
+		padding-top: 0;
+		padding-bottom: 0;
+		&.active {
+			color: white;
+			background-color: $themeGreenColor;
+		}
+		.circle.icon {
+			font-size: 1rem;
 		}
 	}
 	#logout_button {
@@ -217,6 +229,12 @@
 				color: $themeBlueColor;
 			}
 		}
+	}
+}
+
+#navbar_dropdown {
+	& > .dropdown.icon {
+		margin: 0;
 	}
 }
 
