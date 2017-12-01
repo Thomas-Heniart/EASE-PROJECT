@@ -516,9 +516,9 @@ module.exports = {
     },
     createEnterpriseCard: ({team_id, channel_id, website_id, name, description, password_reminder_interval, receivers, ws_id}) => {
       Object.keys(receivers).map(receiver => {
-          Object.keys(receivers[receiver].account_information).map(item => {
-            receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
-          });
+        Object.keys(receivers[receiver].account_information).map(item => {
+          receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
+        });
         return receivers[receiver];
       });
       return basic_post('/api/v1/teams/CreateTeamEnterpriseCard', {

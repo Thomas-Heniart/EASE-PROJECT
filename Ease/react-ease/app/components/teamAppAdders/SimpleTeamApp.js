@@ -35,6 +35,7 @@ import {
   selectItemFromListById,
   sortReceiversAndMap
 } from "../../utils/helperFunctions";
+import {connect} from "react-redux";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
   return <Input size="mini"
@@ -166,6 +167,9 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
     )
 };
 
+@connect(store => ({
+  teams: store.teams
+}))
 class SimpleTeamApp extends Component {
   constructor(props){
     super(props);
@@ -184,8 +188,8 @@ class SimpleTeamApp extends Component {
   toggleCanSeeInformation = (id) => {
     let users = this.state.users.map(item => {
       return {
-        ...item,
-        can_see_information: item.id === id ? !item.can_see_information : item.can_see_information
+          ...item,
+        can_see_information: item.id === id ? (isAdmin(item.user.role) ? item.can_see_information : !item.can_see_information) : item.can_see_information
       }
     });
     this.setState({users: users});
@@ -265,8 +269,8 @@ class SimpleTeamApp extends Component {
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
-      const can_see_information = receiver !== null ? receiver.allowed_to_see_password : false;
-      if (receiver !== null)
+      const can_see_information = !!receiver ? receiver.allowed_to_see_password : !!isAdmin(item.user.role);
+      if (!!receiver)
         selected_users.push(item.id);
       return {
         ...item,
@@ -368,7 +372,7 @@ class SimpleTeamApp extends Component {
                 <div class="credentials">
                   {credentials}
                   {((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id) &&
-                  <SingleAppCopyPasswordButton team_id={this.props.team_id} app_id={app.id}/>}
+                  <SingleAppCopyPasswordButton team_card_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
                         <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username} /> :

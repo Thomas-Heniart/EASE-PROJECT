@@ -306,7 +306,7 @@ export class SingleAppCopyPasswordButton extends Component {
   };
   fetchPassword = () => {
     this.setState({state: 1, open: true});
-    api.teamApps.getSingleAppPassword({team_id: this.props.team_id, app_id: this.props.app_id}).then(pwd => {
+    api.teamApps.getSingleAppPassword({team_card_id: this.props.team_card_id}).then(pwd => {
       this.setState({pwd: pwd, state: 2, open: true});
     }).catch(err => {
       this.setState({state: 4, open: true});
