@@ -4,6 +4,7 @@ import {showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateE
 import {teamRemovedAction} from "./teamActions";
 import {teamUserState} from "../utils/utils";
 import {selectUserFromListById,  isAdmin} from "../utils/helperFunctions";
+import {teamCardReceiverRemovedAction2} from "./appsActions";
 
 export function selectTeamUser(id){
   return function(dispatch, getState){
@@ -112,13 +113,10 @@ export function sendTeamUserInvitation({team_id, team_user_id}){
 export function deleteTeamUser({team_id,team_user_id}){
   return function(dispatch, getState){
     return post_api.teamUser.deleteTeamUser(getState().common.ws_id, team_id, team_user_id).then(response => {
-      dispatch({
-        type: 'TEAM_USER_REMOVED',
-        payload: {
-          team_id: team_id,
-          team_user_id: team_user_id
-        }
-      });
+      dispatch(teamUserRemovedAction({
+        team_id: team_id,
+        team_user_id: team_user_id
+      }))
     }).catch(err => {
       throw err;
     })
@@ -309,12 +307,19 @@ export function teamUserRemovedAction({team_id, team_user_id}) {
       dispatch(teamRemovedAction({team_id: team_id}));
       return;
     }
-    return {
+    const team_user = team.team_users[team_user_id];
+    team_user.team_card_ids.map(team_card_id => {
+      dispatch(teamCardReceiverRemovedAction2({
+        team_card_id: team_card_id,
+        team_user_id: team_user_id
+      }));
+    });
+    dispatch({
       type: 'TEAM_USER_REMOVED',
       payload: {
         team_id: team_id,
         team_user_id: team_user_id
       }
-    }
+    })
   };
 }

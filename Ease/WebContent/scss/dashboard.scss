@@ -185,6 +185,9 @@
 }
 
 .app_settings_modal {
+  i.icon.disabled {
+    pointer-events: none !important;
+  }
   .app_name_container {
     margin-bottom: 1em;
   }

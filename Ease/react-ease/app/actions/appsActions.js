@@ -521,6 +521,27 @@ export function teamCardReceiverChangedAction({receiver}) {
   }
 }
 
+
+export function teamCardReceiverRemovedAction2({team_card_id, team_user_id}) {
+  return (dispatch, getState) => {
+    const store = getState();
+    const team_card = store.team_apps[team_card_id];
+    const team = store.teams[team_card.team_id];
+    const receiver = team_card.receivers.find(item => (item.team_user_id === team_user_id));
+    if (team.my_team_user_id === receiver.team_user_id){
+      dispatch(deleteAppAction({
+        app_id: receiver.app_id
+      }));
+    }
+    dispatch({
+      type: 'TEAM_CARD_RECEIVER_REMOVED',
+      payload: {
+        receiver: receiver
+      }
+    });
+  }
+}
+
 export function teamCardReceiverRemovedAction({team_card_id, team_card_receiver_id}){
   return (dispatch, getState) => {
     const store = getState();
