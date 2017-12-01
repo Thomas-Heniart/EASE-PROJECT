@@ -507,15 +507,6 @@ public class TeamUser {
             this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
     }
 
-    public void delete(DataBaseConnection db) throws HttpServletException {
-        for (Channel channel : this.getChannels())
-            channel.removeTeamUser(this);
-        for (Channel channel : this.getPending_channels())
-            channel.removePendingTeamUser(this);
-        if (this.getUser() != null)
-            this.getUser().getTeamUsers().remove(this);
-    }
-
     public JSONObject getOrigin() {
         JSONObject res = new JSONObject();
         res.put("team_id", this.getTeam().getDb_id());

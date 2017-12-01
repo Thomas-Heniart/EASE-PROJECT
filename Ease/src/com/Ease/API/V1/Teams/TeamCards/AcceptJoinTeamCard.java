@@ -32,6 +32,8 @@ public class AcceptJoinTeamCard extends HttpServlet {
             sm.needToBeAdminOfTeam(team);
             Integer teamCard_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(teamCard_id);
+            String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
+            teamCard.decipher(teamKey);
             Integer request_id = sm.getIntParam("request_id", true, false);
             JoinTeamCardRequest joinTeamCardRequest = teamCard.getJoinTeamCardRequest(request_id);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();

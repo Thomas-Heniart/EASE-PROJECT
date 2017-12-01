@@ -76,12 +76,18 @@ export function transformWebsiteInfoIntoListAndSetValues(information, values){
 }
 
 export function isCredentialsMatch(prev, next){
-  let changed = true;
+  let match = true;
   Object.keys(prev).map(key => {
     if (prev[key] !== next[key])
-      changed = false;
+      match = false;
   });
-  return changed;
+  if (match){
+    Object.keys(next).map(key => {
+      if (next[key] !== prev[key])
+        match = false;
+    });
+  }
+  return match;
 }
 
 export function getTeamAppPasswordAndCopyToClipboard({team_id, shared_app_id}){

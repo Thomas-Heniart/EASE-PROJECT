@@ -1,6 +1,7 @@
 var api =require('../utils/api');
 var post_api = require('../utils/post_api');
 import {showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateEndModal} from "./teamModalActions";
+import {teamRemovedAction} from "./teamActions";
 import {teamUserState} from "../utils/utils";
 import {selectUserFromListById,  isAdmin} from "../utils/helperFunctions";
 
@@ -301,11 +302,19 @@ export function teamUserChangedAction({team_user}) {
 }
 
 export function teamUserRemovedAction({team_id, team_user_id}) {
-  return {
-    type: 'TEAM_USER_REMOVED',
-    payload: {
-      team_id: team_id,
-      team_user_id: team_user_id
+  return (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[team_id];
+    if (team.my_team_user_id === team_user_id){
+      dispatch(teamRemovedAction({team_id: team_id}));
+      return;
     }
-  }
+    return {
+      type: 'TEAM_USER_REMOVED',
+      payload: {
+        team_id: team_id,
+        team_user_id: team_user_id
+      }
+    }
+  };
 }

@@ -31,9 +31,9 @@ public class ServletTransferOwnership extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            User user = sm.getUser();
             Team team = sm.getTeam(team_id);
             sm.needToBeOwnerOfTeam(team);
+            User user = sm.getUser();
             String password = sm.getStringParam("password", false, false);
             if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");

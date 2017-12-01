@@ -2,6 +2,7 @@ var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {selectChannelFromListById} from "../utils/helperFunctions";
 import {autoSelectTeamItem} from "./commonActions";
+import {teamCardReceiverRemovedAction} from "./appsActions";
 
 export function selectTeamChannel(id){
   return function(dispatch, getState){
@@ -193,34 +194,28 @@ export function deleteJoinChannelRequest({team_id, room_id, team_user_id}){
 
 export function teamRoomCreatedAction({room}) {
   return {
+    type: 'TEAM_ROOM_CREATED',
     payload: {
-      type: 'TEAM_ROOM_CREATED',
-      payload: {
-        room: room
-      }
+      room: room
     }
   }
 }
 
 export function teamRoomChangedAction({room}) {
   return {
+    type: 'TEAM_ROOM_CHANGED',
     payload: {
-      type: 'TEAM_ROOM_CHANGED',
-      payload: {
-        room: room
-      }
+      room: room
     }
   }
 }
 
 export function teamRoomRemovedAction({team_id, room_id}) {
   return {
+    type: 'TEAM_ROOM_REMOVED',
     payload: {
-      type: 'TEAM_ROOM_REMOVED',
-      payload: {
-        team_id:team_id,
-        room_id: room_id
-      }
+      team_id:team_id,
+      room_id: room_id
     }
   }
 }
@@ -259,12 +254,25 @@ export function teamRoomMemberCreated({team_id, room_id, team_user_id}) {
 }
 
 export function teamRoomMemberRemoved({team_id, room_id, team_user_id}) {
-  return {
-    type: 'TEAM_ROOM_MEMBER_REMOVED',
-    payload: {
-      team_id: team_id,
-      room_id: room_id,
-      team_user_id: team_user_id
-    }
-  }
+  return (dispatch, getState) => {
+    const store = getState();
+    const team_cards = store.team_apps;
+    const user = store.teams[team_id].team_users[team_user_id];
+    user.team_card_ids.map(team_card_id => {
+      const team_card = team_cards[team_card_id];
+      const receiver = team_card.receivers.find(receiver => (receiver.team_user_id === team_user_id));
+      dispatch(teamCardReceiverRemovedAction({
+        team_card_id: team_card.id,
+        team_card_receiver_id: receiver.id
+      }));
+    });
+    dispatch({
+      type: 'TEAM_ROOM_MEMBER_REMOVED',
+      payload: {
+        team_id: team_id,
+        room_id: room_id,
+        team_user_id: team_user_id
+      }
+    });
+  };
 }

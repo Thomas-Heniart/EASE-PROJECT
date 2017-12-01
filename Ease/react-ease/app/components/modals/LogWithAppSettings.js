@@ -89,7 +89,7 @@ class LogWithAppSettings extends Component {
             headerContent={'App settings'}
             onClose={this.close}>
           <Container class="app_settings_modal">
-            <div class="display-flex align_items_center">
+            <div class="app_name_container display-flex align_items_center">
               <div class="squared_image_handler">
                 <img src={app.logo} alt="Website logo"/>
               </div>

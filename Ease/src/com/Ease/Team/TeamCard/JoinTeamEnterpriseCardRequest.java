@@ -21,7 +21,7 @@ import javax.persistence.*;
 @OnDelete(action = OnDeleteAction.CASCADE)
 public class JoinTeamEnterpriseCardRequest extends JoinTeamCardRequest {
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -58,7 +58,7 @@ public class JoinTeamEnterpriseCardRequest extends JoinTeamCardRequest {
         TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, this.getTeamUser());
         hibernateQuery.saveOrUpdateObject(teamEnterpriseCardReceiver);
         teamCard.removeJoinTeamCardRequest(this);
-        hibernateQuery.saveOrUpdateObject(teamCard);
+        hibernateQuery.deleteObject(this);
         return teamEnterpriseCardReceiver;
     }
 }

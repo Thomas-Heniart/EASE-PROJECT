@@ -208,6 +208,7 @@ public class Account {
             String old_value = null;
             if (accountInformation == null) {
                 accountInformation = new AccountInformation(key, RSA.Encrypt(value, this.getPublic_key()), value);
+                accountInformation.setAccount(this);
                 hibernateQuery.saveOrUpdateObject(accountInformation);
                 this.getAccountInformationSet().add(accountInformation);
             } else {

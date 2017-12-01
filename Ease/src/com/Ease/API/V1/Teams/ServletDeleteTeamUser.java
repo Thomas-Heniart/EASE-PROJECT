@@ -4,7 +4,6 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -59,10 +58,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
             }
             String forEmail = "";
             teamUser_to_delete.getTeamCardReceivers().forEach(sm::deleteObject);
-            teamUser_to_delete.getChannels().forEach(channel -> {
-                channel.getTeamCardMap().values().forEach(teamCard -> teamCard.getTeamCardReceiverMap().values().removeIf(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_to_delete)));
-                sm.saveOrUpdate(channel);
-            });
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
                 forEmail = forEmail.substring(0, forEmail.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
@@ -83,10 +78,10 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     sm.saveOrUpdate(teamUser);
                 }
             }
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            teamUser_to_delete.delete(db);
-            db.commitTransaction(transaction);
+            team.getChannels().values().forEach(channel -> {
+                channel.removeTeamUser(teamUser_to_delete);
+                channel.removePendingTeamUser(teamUser_to_delete);
+            });
             team.removeTeamUser(teamUser_to_delete);
             sm.deleteObject(teamUser_to_delete);
             JSONObject ws_obj = new JSONObject();

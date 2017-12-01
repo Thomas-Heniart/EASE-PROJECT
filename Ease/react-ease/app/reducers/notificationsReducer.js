@@ -29,7 +29,6 @@ export default function reducer(state={
           item.is_new = false;
         return item;
       });
-      console.log('notifications validated');
       return {
           ...state,
         notifications: n

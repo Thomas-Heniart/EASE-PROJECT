@@ -35,7 +35,7 @@ public class GetTeamSingleCardPassword extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
             TeamSingleCardReceiver teamCardReceiver = (TeamSingleCardReceiver) teamSingleCard.getTeamCardReceiver(teamUser);
-            if (teamCardReceiver == null || !teamCardReceiver.isAllowed_to_see_password() && !teamUser.isTeamAdmin())
+            if (teamCardReceiver == null || (!teamCardReceiver.isAllowed_to_see_password() && !teamUser.isTeamAdmin()))
                 throw new HttpServletException(HttpStatus.Forbidden);
             Account account = teamSingleCard.getAccount();
             if (account == null)
