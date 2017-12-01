@@ -96,7 +96,7 @@ abstract public class TeamCardReceiver {
 
     public JSONObject getWebSocketJson() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("team_card_receiver", this.getCardJson());
+        jsonObject.put("receiver", this.getCardJson());
         return jsonObject;
     }
 
