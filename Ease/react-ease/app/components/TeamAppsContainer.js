@@ -162,65 +162,71 @@ class TeamAppsContainer extends React.Component{
     });
     const me = team.team_users[team.my_team_user_id];
     const plan_id = team.plan_id;
-      return (
+    let team_cards = [];
+    if (!this.props.loading)
+      team_cards = item.team_card_ids.map(id => {
+        return this.props.team_apps[id];
+      }).sort((a,b) => {
+        return a.name.localeCompare(b.name);
+      });
+    return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
             {item.state === 0 &&
             <div id='invitation'>
               {item.invitation_sent ?
-                <Segment className='resend' inverted disabled={this.state.loadingSendInvitation}>
-                  <div>
-                    {item.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(item)}>Resend invitation<Icon name='send'/></span>
-                    <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
-                    <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations<Icon name='rocket'/></span>
-                  </div>
-                </Segment>
-                :
-                <Segment className='send' inverted disabled={this.state.loadingSendInvitation}>
-                  <div>
-                    {item.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(item)}>Send invitation<Icon name='send'/></span>
-                    <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
-                    <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people<Icon name='rocket'/></span>
-                  </div>
-                </Segment>}
+                  <Segment className='resend' inverted disabled={this.state.loadingSendInvitation}>
+                    <div>
+                      {item.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(item)}>Resend invitation<Icon name='send'/></span>
+                      <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
+                      <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations<Icon name='rocket'/></span>
+                    </div>
+                  </Segment>
+                  :
+                  <Segment className='send' inverted disabled={this.state.loadingSendInvitation}>
+                    <div>
+                      {item.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(item)}>Send invitation<Icon name='send'/></span>
+                      <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
+                      <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people<Icon name='rocket'/></span>
+                    </div>
+                  </Segment>}
             </div>}
             {!this.state.loading ?
-                item.team_card_ids.map(id => {
-                  const item = this.props.team_apps[id];
+                team_cards.map(item => {
                   if (item.type === 'teamSingleCard')
                     return (
-                      <SimpleTeamApp
-                        app={item}
-                        users={users}
-                        channels={channels}
-                        me={me}
-                        key={item.id}
-                        plan_id={plan_id}
-                        team_id={team.id}
-                        dispatch={this.props.dispatch}/>
+                        <SimpleTeamApp
+                            app={item}
+                            users={users}
+                            channels={channels}
+                            me={me}
+                            key={item.id}
+                            plan_id={plan_id}
+                            team_id={team.id}
+                            dispatch={this.props.dispatch}/>
                     );
                   if (item.type === 'teamLinkCard')
                     return (
-                      <TeamLinkApp
-                        app={item}
-                        users={users}
-                        channels={channels}
-                        me={me}
-                        key={item.id}
-                        team_id={team.id}
-                        dispatch={this.props.dispatch}/>
+                        <TeamLinkApp
+                            app={item}
+                            users={users}
+                            channels={channels}
+                            me={me}
+                            key={item.id}
+                            team_id={team.id}
+                            dispatch={this.props.dispatch}/>
                     );
                   if (item.type === 'teamEnterpriseCard')
                     return (
-                      <EnterpriseTeamApp
-                        app={item}
-                        users={users}
-                        channels={channels}
-                        me={me}
-                        key={item.id}
-                        plan_id={plan_id}
-                        team_id={team.id}
-                        dispatch={this.props.dispatch}/>
+                        <EnterpriseTeamApp
+                            app={item}
+                            users={users}
+                            channels={channels}
+                            me={me}
+                            key={item.id}
+                            plan_id={plan_id}
+                            team_id={team.id}
+                            dispatch={this.props.dispatch}/>
                     );
                 }) :
                 <Loader active />

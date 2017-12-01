@@ -171,7 +171,7 @@ class TeamView extends React.Component {
               <div className="team_client_body bordered_scrollbar">
                 <OpacityTransition appear={true}>
                   {!!this.props.common.user && !this.props.common.user.status.team_tuto_done &&
-                  <TeamsTutorial/>}
+                  <TeamsTutorial team_id={team.id}/>}
                 </OpacityTransition>
                 <div id="col_main">
                     {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
