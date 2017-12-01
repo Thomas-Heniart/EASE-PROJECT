@@ -4,6 +4,7 @@ import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.HttpServletException;
@@ -28,9 +29,10 @@ public class EditTeamSingleCard extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamSingleCard teamSingleCard = (TeamSingleCard) sm.getHibernateQuery().get(TeamSingleCard.class, team_card_id);
-            if (teamSingleCard == null)
+            TeamCard teamCard = (TeamCard) sm.getHibernateQuery().get(TeamSingleCard.class, team_card_id);
+            if (teamCard == null || teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden);
+            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             Team team = teamSingleCard.getTeam();
             sm.needToBeAdminOfTeam(team);
             String description = sm.getStringParam("description", true, true);
