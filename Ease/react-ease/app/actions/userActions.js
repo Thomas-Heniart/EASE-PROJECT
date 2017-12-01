@@ -75,13 +75,7 @@ export function createTeamUserNow({team_id, first_name, last_name, email, userna
   return function(dispatch, getState){
     return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role).then(response => {
       post_api.teamUser.sendTeamUserInvitation(getState().common.ws_id, team_id, response.id).then(response => {
-        dispatch({
-          type: 'TEAM_USER_CREATED_AND_INVITATION_SENT',
-          payload: {
-            team_user: response,
-            team_id: team_id
-          }
-        })
+        dispatch(teamUserCreatedAction({team_user: response}));
       }).catch(err => {
         throw err;
       });
@@ -95,13 +89,7 @@ export function createTeamUserNow({team_id, first_name, last_name, email, userna
 export function createTeamUser({team_id, first_name, last_name, email, username, departure_date, role}){
   return function(dispatch, getState){
     return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role).then(response => {
-      dispatch({
-        type: 'TEAM_USER_CREATED',
-        payload: {
-          team_user: response,
-          team_id: team_id
-        }
-      });
+      dispatch(teamUserCreatedAction({team_user: response}));
       return response;
     }).catch(err => {
       throw err;
@@ -112,13 +100,7 @@ export function createTeamUser({team_id, first_name, last_name, email, username,
 export function sendTeamUserInvitation({team_id, team_user_id}){
   return function(dispatch, getState){
     return post_api.teamUser.sendTeamUserInvitation(getState().common.ws_id, team_id, team_user_id).then(response => {
-      dispatch({
-        type: 'TEAM_USER_INVITATION',
-        payload: {
-          team_user: response,
-          team_id: team_id
-        }
-      });
+      dispatch(teamUserCreatedAction({team_user: response}));
       return response;
     }).catch(err => {
       throw err;
