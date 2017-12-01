@@ -27,7 +27,8 @@ class TeamAddUserModal extends React.Component {
       defaultRooms: [],
       value: [],
       loading: false,
-      errorMessage: ''
+      errorMessage: '',
+      loadingInvitationNow: false
     };
     const team = this.props.team;
     this.state.options = Object.keys(team.rooms).map(id => {
@@ -76,7 +77,7 @@ class TeamAddUserModal extends React.Component {
   confirm = (e) =>{
     e.preventDefault();
     const team = this.props.team;
-
+    this.setState({errorMessage: '', loading: true});
     const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : null;
     if (Object.keys(team.team_users).length > 29 && team.plan_id === 0){
       this.props.dispatch(showUpgradeTeamPlanModal({
@@ -86,7 +87,6 @@ class TeamAddUserModal extends React.Component {
       }));
       return;
     }
-    this.setState({errorMessage: '', loading: true});
     this.props.dispatch(userActions.createTeamUser({
       team_id: team.id,
       first_name: this.state.fname,
@@ -107,6 +107,7 @@ class TeamAddUserModal extends React.Component {
         }));
       });
       Promise.all(calls.map(reflect)).then(values => {
+        this.setState({loading: false});
         this.props.dispatch(showAddTeamUserModal({active: false}));
       });
     }).catch(err => {
@@ -116,7 +117,7 @@ class TeamAddUserModal extends React.Component {
   sendNow = (e) => {
     e.preventDefault();
     const team = this.props.team;
-
+    this.setState({errorMessage: '', loadingInvitationNow: true});
     const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : null;
     if (Object.keys(team.team_users).length > 29 && team.plan_id === 0){
       this.props.dispatch(showUpgradeTeamPlanModal({
@@ -126,7 +127,6 @@ class TeamAddUserModal extends React.Component {
       }));
       return;
     }
-    this.setState({errorMessage: '', loading: true});
     this.props.dispatch(userActions.createTeamUserNow({
       team_id: team.id,
       first_name: this.state.fname,
@@ -147,10 +147,11 @@ class TeamAddUserModal extends React.Component {
         }));
       });
       Promise.all(calls.map(reflect)).then(values => {
+        this.setState({loadingInvitationNow: false});
         this.props.dispatch(showAddTeamUserModal({active: false}));
       });
     }).catch(err => {
-      this.setState({loading: false, errorMessage: err});
+      this.setState({loadingInvitationNow: false, errorMessage: err});
     });
   };
   switchToMultipleUsers = () => {
@@ -235,6 +236,7 @@ class TeamAddUserModal extends React.Component {
                     positive
                     floated='right'
                     loading={this.state.loading}
+                    disabled={this.state.loading}
                     type="submit"
                     width={8}>
                   Send invitation <u><strong>later</strong></u>
@@ -243,6 +245,8 @@ class TeamAddUserModal extends React.Component {
                     color='green'
                     floated='right'
                     type="button"
+                    loading={this.state.loadingInvitationNow}
+                    disabled={this.state.loadingInvitationNow}
                     onClick={this.sendNow}
                     width={8}>
                   Send invitation <u><strong>now</strong></u>
