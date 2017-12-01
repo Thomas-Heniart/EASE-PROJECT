@@ -34,30 +34,12 @@ public class ServletUnsubscribe extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             if (!sm.getUser().getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
-
-            /* ==== Stripe start ==== */
-
             Subscription subscription = team.getSubscription();
             subscription.cancel(new HashMap<>());
-            Customer customer = Customer.retrieve(team.getCustomer_id());
+            Customer customer = team.getCustomer();
             String default_source = customer.getDefaultSource();
             if (default_source != null && !default_source.equals(""))
                 customer.getSources().retrieve(default_source).delete();
-
-            /* ===== Stripe end ===== */
-            /* DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            for (TeamUser teamUser1 : team.getTeamUsers().values()) {
-                if (teamUser1.getDashboard_user() != null)
-                    teamUser1.getDashboard_user().getTeamUsers().remove(teamUser1);
-                for (SharedApp sharedApp : teamUser1.getSharedApps()) {
-                    App app = (App) sharedApp;
-                    if (app.isPinned())
-                        app.unpin(db);
-                    sharedApp.setDisableShared(true, db);
-                }
-            }
-            db.commitTransaction(transaction); */
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
                 Profile profile = teamCardReceiver.getApp().getProfile();
@@ -66,8 +48,8 @@ public class ServletUnsubscribe extends HttpServlet {
                     teamCardReceiver.getApp().setProfile(null);
                     teamCardReceiver.getApp().setPosition(null);
                 }
-
             });
+            team.getTeamCardMap().clear();
             team.setSubscription_id(null);
             team.setCard_entered(false);
             team.setActive(false);

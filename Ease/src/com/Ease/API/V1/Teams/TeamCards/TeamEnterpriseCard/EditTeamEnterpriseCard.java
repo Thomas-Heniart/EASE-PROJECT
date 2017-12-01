@@ -35,6 +35,7 @@ public class EditTeamEnterpriseCard extends HttpServlet {
                 description = "";
             if (description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
+            teamEnterpriseCard.setDescription(description);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
