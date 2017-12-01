@@ -382,7 +382,7 @@ export const team_apps = createReducer({
     const team_card_id = receiver.team_card_id;
     if (!!state[team_card_id]){
       const team_card = state[team_card_id];
-      const request = team_card.requests.find(request => (request.team_user_id === receiver.team_user_id));
+      const request = team_card.type !== 'teamLinkCard' ? team_card.requests.find(request => (request.team_user_id === receiver.team_user_id)) : false;
       let new_state = update(state, {
         [team_card_id]: {
           receivers: {$push: [receiver]}
