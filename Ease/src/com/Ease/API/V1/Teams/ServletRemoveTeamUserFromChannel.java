@@ -59,7 +59,7 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                     App app = teamCardReceiver.getApp();
                     Profile profile = app.getProfile();
                     if (profile != null)
-                        profile.removeAppAndUpdatePositions(app, hibernateQuery);
+                        profile.removeAppAndUpdatePositions(app, sm.getUserWebSocketManager(profile.getUser().getDb_id()), hibernateQuery);
                 }
                 sm.deleteObject(teamCardReceiver);
             }

@@ -57,13 +57,12 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Newsletter cannot be null");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
-                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = ?");
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = ? AND invitation_code LIKE ?");
                 hibernateQuery.setParameter(1, email);
+                hibernateQuery.setParameter(2, code);
                 String valid_code = (String) hibernateQuery.getSingleResult();
                 if (valid_code == null)
                     throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
-                if (!valid_code.equals(code))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Invalid code.");
             } else {
                 hibernateQuery.querySQLString("SELECT digits FROM userPendingRegistrations WHERE email = ?");
                 hibernateQuery.setParameter(1, email);

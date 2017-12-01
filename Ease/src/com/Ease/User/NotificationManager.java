@@ -27,7 +27,12 @@ public class NotificationManager {
 
     public JSONArray getJson(Integer offset, int limit, User user, HibernateQuery hibernateQuery) {
         JSONArray res = new JSONArray();
-        this.getNotifications(limit, user, hibernateQuery).subList(offset, limit).forEach(notification -> res.add(notification.getJson()));
+        List<Notification> notifications = this.getNotifications(limit, user, hibernateQuery);
+        if (offset + limit > notifications.size())
+            notifications = notifications.subList(offset, notifications.size());
+        else
+            notifications = notifications.subList(offset, limit);
+        notifications.forEach(notification -> res.add(notification.getJson()));
         return res;
     }
 }

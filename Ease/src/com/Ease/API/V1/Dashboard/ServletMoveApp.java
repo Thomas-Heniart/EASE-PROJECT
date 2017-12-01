@@ -40,7 +40,7 @@ public class ServletMoveApp extends HttpServlet {
             if (old_profile.equals(new_profile))
                 old_profile.updateAppPositions(app, position, hibernateQuery);
             else {
-                old_profile.removeAppAndUpdatePositions(app, hibernateQuery);
+                old_profile.removeAppAndUpdatePositions(app, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                 new_profile.addAppAndUpdatePositions(app, position, hibernateQuery);
             }
             JSONObject ws_obj = new JSONObject();

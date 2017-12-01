@@ -48,7 +48,7 @@ public class ServletUnsubscribe extends HttpServlet {
             team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null) {
-                    profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), hibernateQuery);
+                    profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getUserWebSocketManager(profile.getUser().getDb_id()), hibernateQuery);
                     teamCardReceiver.getApp().setProfile(null);
                     teamCardReceiver.getApp().setPosition(null);
                 }

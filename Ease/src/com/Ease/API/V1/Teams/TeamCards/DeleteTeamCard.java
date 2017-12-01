@@ -38,13 +38,13 @@ public class DeleteTeamCard extends HttpServlet {
                     WebsiteApp websiteApp = (WebsiteApp) app;
                     websiteApp.getLogWithAppSet().forEach(logWithApp -> {
                         Profile profile1 = logWithApp.getProfile();
-                        profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                        profile1.removeAppAndUpdatePositions(logWithApp, sm.getUserWebSocketManager(profile1.getUser().getDb_id()), sm.getHibernateQuery());
                         sm.deleteObject(logWithApp);
                     });
                 }
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null)
-                    profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
+                    profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getUserWebSocketManager(profile.getUser().getDb_id()), sm.getHibernateQuery());
                 TeamUser teamUser = teamCardReceiver.getTeamUser();
                 if (!teamUser.equals(sm.getTeamUser(team)))
                     NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
