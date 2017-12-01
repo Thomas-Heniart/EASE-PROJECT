@@ -5,7 +5,7 @@ import InputModalCatalog from './InputModalCatalog';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {dashboard} from "../../utils/post_api";
-import {reflect, transformWebsiteInfoIntoList, credentialIconType} from "../../utils/utils";
+import {reflect, transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {createSsoGroup, createProfile} from "../../actions/dashboardActions";
@@ -137,7 +137,7 @@ class ThirdStep extends React.Component {
         if (this.props.accountGoogleSelected.id === 0) {
           this.props.dispatch(createSsoGroup({
             sso_id: this.props.accountGoogleSelected.sso_id,
-            account_information: this.props.credentials
+            account_information: transformCredentialsListIntoObject(this.props.credentials)
           })).then(r => {
             const calls = this.props.ssoSelected.map(item => {
               return this.props.dispatch(catalogAddSsoApp({
@@ -189,7 +189,7 @@ class ThirdStep extends React.Component {
       if (this.props.accountGoogleSelected.id === 0) {
         this.props.dispatch(createSsoGroup({
           sso_id: this.props.accountGoogleSelected.sso_id,
-          account_information: this.props.credentials
+          account_information: transformCredentialsListIntoObject(this.props.credentials)
         })).then(r => {
           const calls = this.props.ssoSelected.map(item => {
             return this.props.dispatch(catalogAddSsoApp({
