@@ -64,7 +64,7 @@ const EnterpriseAppReceiverLabel = ({receiver, reminder_interval}) => {
              flowing
              hideOnScroll={true}
              trigger={
-               <Label class={classnames("receiver-label", !receiver.empty ? 'accepted': null)}>
+               <Label class={classnames("receiver-label", !receiver.receiver.empty ? 'accepted': null)}>
                  <span>{receiver.user.username}</span>
                  {!!reminder_interval &&
                  <Icon name="refresh" color={up_to_date ? null : 'red'}/>}
@@ -150,8 +150,8 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
           return (
               <div class="receiver align_items_center" key={receiver.user.id}>
                 <EnterpriseAppReceiverLabel
-                    username={receiver.user.username}
-                    up_to_date={!needPasswordUpdate(receiver.receiver.last_update_date, password_reminder_interval)}/>
+                    receiver={receiver}
+                    password_interval={password_reminder_interval}/>
                 {receiver.credentials.map(item => {
                   return <Input size="mini"
                                 key={item.name}
