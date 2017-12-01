@@ -59,6 +59,9 @@ module.exports = {
       });
     },
     editClassicApp: ({app_id, name, account_information}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/dashboard/EditClassicApp', {
         app_id: app_id,
         name: name,
@@ -87,6 +90,9 @@ module.exports = {
       });
     },
     editSsoGroup: ({sso_group_id, account_information}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/dashboard/EditSsoGroup', {
         sso_group_id: sso_group_id,
         account_information: account_information
@@ -98,6 +104,9 @@ module.exports = {
       });
     },
     createSsoGroup: ({sso_id, account_information}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/catalog/CreateSsoGroup', {
         sso_id: sso_id,
         account_information: account_information
@@ -432,9 +441,9 @@ module.exports = {
   },
   teamApps: {
     createSingleApp: ({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers, ws_id}) => {
-      // Object.keys(account_information).map(item => {
-      //   account_information[item] = cipher(account_information[item]);
-      // });
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return axios.post('/api/v1/teams/CreateTeamSingleCard', {
         team_id: team_id,
         channel_id: channel_id,
@@ -475,9 +484,9 @@ module.exports = {
       });
     },
     editSingleApp: ({team_id, team_card_id, description, account_information, password_reminder_interval, name, ws_id}) => {
-      /*      Object.keys(account_information).map(item => {
-              account_information[item] = cipher(account_information[item]);
-            });*/
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return axios.post('/api/v1/teams/EditTeamSingleCard', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -506,12 +515,12 @@ module.exports = {
       });
     },
     createEnterpriseCard: ({team_id, channel_id, website_id, name, description, password_reminder_interval, receivers, ws_id}) => {
-      // receivers = Object.keys(receivers).map(receiver => {
-      //   Object.keys(receivers[receiver].account_information).map(item => {
-      //     receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
-      //   });
-      //   return receivers[receiver];
-      // });
+      Object.keys(receivers).map(receiver => {
+          Object.keys(receivers[receiver].account_information).map(item => {
+            receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
+          });
+        return receivers[receiver];
+      });
       return basic_post('/api/v1/teams/CreateTeamEnterpriseCard', {
         team_id: team_id,
         channel_id: channel_id,
@@ -534,10 +543,9 @@ module.exports = {
       });
     },
     shareEnterpriseCard: ({team_id, team_card_id, team_user_id, account_information, ws_id}) => {
-      /*      if (!!account_information)
-              Object.keys(account_information).map(item => {
-                account_information[item] = cipher(account_information[item]);
-              });*/
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/teams/AddTeamEnterpriseCardReceiver', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -578,9 +586,9 @@ module.exports = {
       });
     },
     editEnterpriseCardReceiver: ({team_id, team_card_id, team_card_receiver_id, account_information, ws_id}) => {
-      /*      Object.keys(account_information).map(item => {
-              account_information[item] = cipher(account_information[item]);
-            });*/
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       return basic_post('/api/v1/teams/EditTeamEnterpriseCardReceiver', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -1036,7 +1044,7 @@ module.exports = {
       return basic_post('/api/v1/common/ResetPassword', {
         email: email,
         code: code,
-        password: password
+        password: cipher(password)
       });
     },
     editEmail : function(password, new_email, digits){
