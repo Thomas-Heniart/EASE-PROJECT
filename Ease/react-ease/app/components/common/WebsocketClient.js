@@ -39,7 +39,7 @@ const update_client_actions = {
   'TEAM_CARD_REMOVED': teamCardActions.teamCardRemovedAction,
   'TEAM_CARD_RECEIVER_CREATED': teamCardActions.teamCardReceiverCreatedAction,
   'TEAM_CARD_RECEIVER_CHANGED': teamCardActions.teamCardReceiverChangedAction,
-  'TEAM_CARD_RECEIVER_REMOVED': teamCardActions.teamCardRequestRemovedAction,
+  'TEAM_CARD_RECEIVER_REMOVED': teamCardActions.teamCardReceiverRemovedAction,
   'TEAM_CARD_REQUEST_CREATED': teamCardActions.teamCardRequestCreatedAction,
   'TEAM_CARD_REQUEST_REMOVED': teamCardActions.teamCardRequestRemovedAction
 };
