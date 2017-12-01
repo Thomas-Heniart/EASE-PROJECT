@@ -14,6 +14,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -53,7 +54,8 @@ public class ServletAddSsoApp extends HttpServlet {
             sm.saveOrUpdate(ssoApp);
             profile.addApp(ssoApp);
             ssoGroup.addSsoApp(ssoApp);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, ssoApp.getJson()));
+            JSONObject jsonObject = new JSONObject();
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, ssoApp.getWebSocketJson()));
             sm.setSuccess(ssoApp.getJson());
         } catch (Exception e) {
             sm.setError(e);

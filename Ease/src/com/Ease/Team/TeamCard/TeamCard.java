@@ -150,6 +150,12 @@ abstract public class TeamCard {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("team_card", this.getJson());
+        return res;
+    }
+
     public abstract String getType();
 
     public void addTeamCardReceiver(TeamCardReceiver teamCardReceiver) {

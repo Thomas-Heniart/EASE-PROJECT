@@ -321,6 +321,12 @@ public class Team {
         return res;
     }
 
+    public JSONObject getWebSockeetJson() throws HttpServletException {
+        JSONObject res = new JSONObject();
+        res.put("team", this.getSimpleJson());
+        return res;
+    }
+
     public JSONObject getJson() throws HttpServletException {
         JSONObject res = this.getSimpleJson();
         JSONArray rooms = new JSONArray();

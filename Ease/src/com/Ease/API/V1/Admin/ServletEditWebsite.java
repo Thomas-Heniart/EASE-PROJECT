@@ -96,7 +96,7 @@ public class ServletEditWebsite extends HttpServlet {
                         }
                         JSONObject target = shareableApp.getOrigin();
                         target.put("team_id", team.getDb_id());
-                        team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
+                        team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
                     } */
                     System.out.println(webSocketMessageList.size() + " messages send");
                     sm.getTeamWebSocketManager(team.getDb_id()).sendObjects(webSocketMessageList);

@@ -37,7 +37,7 @@ public class ServletDeleteSsoGroup extends HttpServlet {
             for (SsoApp ssoApp : ssoGroup.getSsoAppMap().values()) {
                 Profile profile = ssoApp.getProfile();
                 if (profile != null)
-                    profile.removeAppAndUpdatePositions(ssoApp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
+                    profile.removeAppAndUpdatePositions(ssoApp, hibernateQuery);
             }
             sm.deleteObject(ssoGroup);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.REMOVED, sso_group_id));

@@ -37,7 +37,7 @@ public class ServletEditSsoGroup extends HttpServlet {
             else
                 account.edit(account_information, sm.getHibernateQuery());
             sm.saveOrUpdate(ssoGroup);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.CHANGED, ssoGroup.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.CHANGED, ssoGroup.getWebSocketJson()));
             sm.setSuccess(ssoGroup.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -5,10 +5,6 @@ import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.websocketV1.WebSocketManager;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -134,6 +130,12 @@ public class Profile {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("profile", this.getJson());
+        return res;
+    }
+
     public Stream<App> getApps() {
         return this.getAppSet().stream().sorted(Comparator.comparingInt(App::getPosition));
     }
@@ -145,7 +147,7 @@ public class Profile {
         return app;
     }
 
-    public synchronized void removeAppAndUpdatePositions(App app, WebSocketManager webSocketManager, HibernateQuery hibernateQuery) {
+    public synchronized void removeAppAndUpdatePositions(App app, HibernateQuery hibernateQuery) {
         int position = app.getPosition();
         this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {
             app1.setPosition((app1.getPosition() != null && app1.getPosition() > 0) ? (app1.getPosition() - 1) : 0);
@@ -154,7 +156,6 @@ public class Profile {
         this.getAppSet().remove(app);
         JSONObject ws_obj = new JSONObject();
         ws_obj.put("app_id", app.getDb_id());
-        webSocketManager.sendObject(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.REMOVED, ws_obj));
         if (this.getAppSet().isEmpty()) {
             TeamUser teamUser = this.getTeamUser();
             if (teamUser != null) {
@@ -163,7 +164,6 @@ public class Profile {
             }
             JSONObject ws_obj1 = new JSONObject();
             ws_obj1.put("profile_id", this.getDb_id());
-            webSocketManager.sendObject(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_PROFILE, WebSocketMessageAction.REMOVED, ws_obj1));
             this.getUser().removeProfileAndUpdatePositions(this, hibernateQuery);
         }
 

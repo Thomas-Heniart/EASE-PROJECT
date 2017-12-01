@@ -36,7 +36,7 @@ public class ServletEditTeamUserPhoneNumber extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number.");
             teamUser.setPhone_number(phone_number);
             sm.saveOrUpdate(teamUser);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

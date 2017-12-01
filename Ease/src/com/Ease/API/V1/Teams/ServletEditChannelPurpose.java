@@ -37,7 +37,7 @@ public class ServletEditChannelPurpose extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Room purpose cannot exceed 250 characters");
             channel.editPurpose(purpose);
             sm.saveOrUpdate(channel);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getWebSocketJson()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

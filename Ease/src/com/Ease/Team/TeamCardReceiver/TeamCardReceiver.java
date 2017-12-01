@@ -94,6 +94,12 @@ abstract public class TeamCardReceiver {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("team_card_receiver", this.getCardJson());
+        return jsonObject;
+    }
+
     public JSONObject getCardJson() {
         JSONObject res = new JSONObject();
         res.put("team_user_id", this.getTeamUser().getDb_id());

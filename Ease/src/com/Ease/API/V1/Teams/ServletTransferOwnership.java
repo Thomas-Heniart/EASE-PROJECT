@@ -62,8 +62,8 @@ public class ServletTransferOwnership extends HttpServlet {
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id());
             mailJetBuilder.sendEmail();
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, new_teamUser_owner.getJson(), new_teamUser_owner.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, new_teamUser_owner.getWebSocketJson()));
             sm.setSuccess("Ownership transferred");
         } catch (Exception e) {
             sm.setError(e);

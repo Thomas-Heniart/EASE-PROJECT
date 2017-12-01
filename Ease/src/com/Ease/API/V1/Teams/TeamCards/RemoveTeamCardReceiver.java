@@ -14,6 +14,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,16 +47,19 @@ public class RemoveTeamCardReceiver extends HttpServlet {
                 WebsiteApp websiteApp = (WebsiteApp) app;
                 websiteApp.getLogWithAppSet().forEach(logWithApp -> {
                     Profile profile1 = logWithApp.getProfile();
-                    profile1.removeAppAndUpdatePositions(logWithApp, sm.getUserWebSocketManager(profile1.getUser().getDb_id()), sm.getHibernateQuery());
+                    profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
                     sm.deleteObject(logWithApp);
                 });
             }
             if (profile != null)
-                profile.removeAppAndUpdatePositions(app, sm.getUserWebSocketManager(profile.getUser().getDb_id()), sm.getHibernateQuery());
+                profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
             if (!teamUser.equals(teamUser_connected))
                 NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_connected, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.REMOVED, team_card_receiver_id));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("team_card_id", team_card_id);
+            jsonObject.put("team_card_receiver_id", team_card_receiver_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.REMOVED, jsonObject));
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {
             sm.setError(e);

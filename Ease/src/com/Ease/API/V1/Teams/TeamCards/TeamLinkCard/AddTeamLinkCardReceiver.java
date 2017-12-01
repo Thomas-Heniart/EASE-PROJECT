@@ -48,7 +48,7 @@ public class AddTeamLinkCardReceiver extends HttpServlet {
             if (!teamUser_connected.equals(teamUser))
                 NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             sm.saveOrUpdate(teamCardReceiver);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getWebSocketJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);

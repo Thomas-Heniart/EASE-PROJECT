@@ -127,6 +127,12 @@ abstract public class App {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("app", this.getJson());
+        return res;
+    }
+
     public JSONObject getRestJson() {
         return this.getJson();
     }

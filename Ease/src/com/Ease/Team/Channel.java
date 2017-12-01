@@ -173,6 +173,12 @@ public class Channel {
         return jsonObject;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("room", this.getJson());
+        return res;
+    }
+
     public boolean isDefault() {
         return this.getName().equals("openspace");
     }

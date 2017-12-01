@@ -66,6 +66,12 @@ abstract public class JoinTeamCardRequest {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("request", this.getJson());
+        return res;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

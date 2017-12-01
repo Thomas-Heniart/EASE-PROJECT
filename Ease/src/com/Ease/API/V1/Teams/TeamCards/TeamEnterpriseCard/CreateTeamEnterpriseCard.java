@@ -85,7 +85,7 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
 
             team.addTeamCard(teamCard);
             channel.addTeamCard(teamCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CREATED, teamCard.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CREATED, teamCard.getWebSocketJson()));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
