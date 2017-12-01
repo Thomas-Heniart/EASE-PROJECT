@@ -71,6 +71,7 @@
         <mapping class="com.Ease.User.UserKeys"/>
         <mapping class="com.Ease.User.Options"/>
         <mapping class="com.Ease.User.Notification"/>
+        <mapping class="com.Ease.User.PendingNotification"/>
         <mapping class="com.Ease.User.JsonWebToken"/>
         <mapping class="com.Ease.User.PasswordLost"/>
     </session-factory>

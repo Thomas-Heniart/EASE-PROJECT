@@ -64,8 +64,8 @@ public class CreateTeamLinkCard extends HttpServlet {
                     app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url);
                 TeamCardReceiver teamCardReceiver = new TeamLinkCardReceiver(app, teamCard, teamUser_receiver);
                 sm.saveOrUpdate(teamCardReceiver);
-                if (teamUser_receiver.isVerified() && !teamUser_receiver.equals(teamUser_connected))
-                    NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
+                if (!teamUser_receiver.equals(teamUser_connected))
+                    NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
             }
             channel.addTeamCard(teamCard);

@@ -4,7 +4,6 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.simple.JSONObject;
@@ -43,8 +42,7 @@ public class ServletConnection extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "Too much attempts to connect. Please retry in 5 minutes.");
             if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
-            String key = (String) sm.getContextAttr("privateKey");
-            password = RSA.Decrypt(password, key);
+            password = sm.decipher(password);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
             hibernateQuery.setParameter("email", email);

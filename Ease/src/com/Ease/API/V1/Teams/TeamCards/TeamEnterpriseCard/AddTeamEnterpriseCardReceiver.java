@@ -42,6 +42,7 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
+            sm.decipher(account_information);
             Account account = null;
             if (account_information != null && !account_information.isEmpty()) {
                 String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
@@ -57,8 +58,8 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             }
             sm.saveOrUpdate(teamCardReceiver);
             TeamUser teamUser_connected = sm.getTeamUser(team);
-            if (teamUser_receiver.isVerified() && !teamUser_receiver.equals(teamUser_connected))
-                NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
+            if (!teamUser_receiver.equals(teamUser_connected))
+                NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getCardJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());

@@ -65,8 +65,9 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
                 Account account = null;
                 if (account_information != null && !account_information.isEmpty()) {
+                    sm.decipher(account_information);
                     String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-                    account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, password_reminder_interval);
+                    account = AccountFactory.getInstance().createAccountFromMap(website.getInformationFromJson(account_information), teamKey, password_reminder_interval);
                 }
                 AppInformation appInformation = new AppInformation(website.getName());
                 App app = new ClassicApp(appInformation, website, account);
@@ -77,8 +78,8 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                     app.setPosition(profile.getSize());
                 }
                 sm.saveOrUpdate(teamCardReceiver);
-                if (teamUser.isVerified() && !teamUser.equals(teamUser_connected))
-                    NotificationFactory.getInstance().createAppSentNotification(teamUser.getUser(), teamUser_connected, teamCardReceiver, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+                if (!teamUser.equals(teamUser_connected))
+                    NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
             }
 

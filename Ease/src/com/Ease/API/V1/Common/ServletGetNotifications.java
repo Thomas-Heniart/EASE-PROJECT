@@ -22,7 +22,7 @@ public class ServletGetNotifications extends HttpServlet {
             User user = sm.getUser();
             NotificationManager notificationManager = sm.getUserNotificationManager(user.getDb_id());
             int limit = offset + 10;
-            sm.setSuccess(notificationManager.getJson(limit, user, sm.getHibernateQuery()));
+            sm.setSuccess(notificationManager.getJson(offset, limit, user, sm.getHibernateQuery()));
         } catch (Exception e) {
             sm.setError(e);
         }

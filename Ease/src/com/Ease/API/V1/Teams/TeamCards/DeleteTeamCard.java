@@ -46,8 +46,8 @@ public class DeleteTeamCard extends HttpServlet {
                 if (profile != null)
                     profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 TeamUser teamUser = teamCardReceiver.getTeamUser();
-                if (teamUser.isVerified() && !teamUser.equals(sm.getTeamUser(team)))
-                    NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+                if (!teamUser.equals(sm.getTeamUser(team)))
+                    NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
             }
             sm.deleteObject(teamCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.REMOVED, team_card_id));

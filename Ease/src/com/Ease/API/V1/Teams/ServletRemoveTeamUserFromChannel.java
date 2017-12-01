@@ -1,7 +1,13 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.JoinTeamCardRequest;
+import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -17,6 +23,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @WebServlet("/api/v1/teams/RemoveUserFromChannel")
 public class ServletRemoveTeamUserFromChannel extends HttpServlet {
@@ -37,6 +45,27 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             if (channel.getRoom_manager() == teamUser_to_remove)
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove the room manager.");
+            Set<TeamSingleCard> teamSingleCardSet = teamUser_to_remove.getTeamSingleCardToFillSet().stream().filter(teamSingleCard -> teamSingleCard.getChannel().equals(channel)).collect(Collectors.toSet());
+            if (!teamSingleCardSet.isEmpty()) {
+                StringBuilder message = new StringBuilder(teamUser_to_remove.getUsername()).append(" cannot be removed from this channel as long as this person is responsible to fill credentials for ");
+                teamSingleCardSet.forEach(teamSingleCard -> message.append(teamSingleCard.getName()).append(", "));
+                message.replace(message.length() - 2, message.length(), ".");
+                throw new HttpServletException(HttpStatus.BadRequest, message.toString());
+            }
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            for (TeamCardReceiver teamCardReceiver : teamUser_to_remove.getTeamCardReceivers()) {
+                if (teamCardReceiver.getTeamCard().getChannel().equals(channel)) {
+                    App app = teamCardReceiver.getApp();
+                    Profile profile = app.getProfile();
+                    if (profile != null)
+                        profile.removeAppAndUpdatePositions(app, hibernateQuery);
+                }
+                sm.deleteObject(teamCardReceiver);
+            }
+            for (JoinTeamCardRequest joinTeamCardRequest : teamUser_to_remove.getJoinTeamCardRequestSet()) {
+                if (joinTeamCardRequest.getTeamCard().getChannel().equals(channel))
+                    sm.deleteObject(joinTeamCardRequest);
+            }
             channel.removeTeamUser(teamUser_to_remove);
             sm.saveOrUpdate(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));

@@ -46,8 +46,7 @@ public class GetTeamSingleCardPassword extends HttpServlet {
             if (password == null)
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject res = new JSONObject();
-            /* @TODO cipher password */
-            res.put("password", password.getDeciphered_information_value());
+            res.put("password", sm.cipher(password.getDeciphered_information_value()));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

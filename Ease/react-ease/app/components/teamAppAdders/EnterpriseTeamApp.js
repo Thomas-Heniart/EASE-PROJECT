@@ -518,6 +518,7 @@ class EnterpriseTeamApp extends Component {
                     value={this.state.selected_users}
                     selection={true}
                     multiple
+                    noResultsMessage='No more results found'
                     placeholder="Tag your team members here..."/>}
                 <div>
                   <Input size="mini"

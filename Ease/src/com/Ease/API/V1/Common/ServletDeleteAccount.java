@@ -2,7 +2,6 @@ package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.User.User;
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -24,8 +23,7 @@ public class ServletDeleteAccount extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             if (password == null || password.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password does not not match.");
-            String key = (String) sm.getContextAttr("privateKey");
-            password = RSA.Decrypt(password, key);
+            password = sm.decipher(password);
             User user = sm.getUser();
             if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password does not match.");

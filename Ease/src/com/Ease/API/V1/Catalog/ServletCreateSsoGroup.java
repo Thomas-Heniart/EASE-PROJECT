@@ -35,6 +35,7 @@ public class ServletCreateSsoGroup extends HttpServlet {
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             if (account_information.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "account information cannot be empty");
+            sm.decipher(account_information);
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             Account account = AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0);
             SsoGroup ssoGroup = new SsoGroup(user, sso, account);

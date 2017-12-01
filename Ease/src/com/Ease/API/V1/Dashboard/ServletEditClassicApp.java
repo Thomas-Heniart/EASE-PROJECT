@@ -37,11 +37,7 @@ public class ServletEditClassicApp extends HttpServlet {
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            /* String private_key = (String) sm.getContextAttr("privateKey");
-            for (Object object : account_information.entrySet()) {
-                Map.Entry<String, String> entry = (Map.Entry<String, String>) object;
-                account_information.put(entry.getKey(), RSA.Decrypt(entry.getValue(), private_key));
-            } */
+            sm.decipher(account_information);
             ClassicApp classicApp = (ClassicApp) app;
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             classicApp.decipher(keyUser);

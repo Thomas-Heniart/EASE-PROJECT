@@ -96,7 +96,7 @@ export function showLockedTeamAppModal({active}){
   }
 }
 
-export function showChooseAppCredentialsModal({active, card_name, receivers, description, password_change_interval}){
+export function showChooseAppCredentialsModal({active, card_name, receivers, description, password_reminder_interval}){
   return {
     type: 'SHOW_CHOOSE_APP_CREDENTIALS_MODAL',
     payload: {
@@ -104,7 +104,7 @@ export function showChooseAppCredentialsModal({active, card_name, receivers, des
       card_name: card_name,
       receivers: receivers,
       description: description,
-      password_change_interval: password_change_interval
+      password_reminder_interval: password_reminder_interval
     }
   }
 }

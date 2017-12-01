@@ -110,7 +110,7 @@ class SimpleTeamAppAdder extends Component {
       loading: false,
       app: this.props.card.app,
       credentials: [],
-      password_change_interval: 0,
+      password_reminder_interval: 0,
       description: '',
       room_manager_name: 'johny',
       users: [],
@@ -221,13 +221,13 @@ class SimpleTeamAppAdder extends Component {
       card_name: this.state.app_name,
       receivers: receivers,
       description: this.state.description,
-      password_change_interval: this.state.password_change_interval }));
+      password_reminder_interval: this.state.password_reminder_interval }));
       /*this.props.dispatch(teamCreateSingleApp({
         team_id: this.props.card.team_id,
         channel_id: this.props.item.id,
         website_id: this.state.app.id,
         description: this.state.description,
-        password_change_interval: this.state.password_change_interval,
+        password_reminder_interval: this.state.password_reminder_interval,
         // account_information: transformCredentialsListIntoObject(this.state.credentials),
         account_information: {login: 'salut', password: 'salut'},
         receivers: newReceivers
@@ -280,8 +280,8 @@ class SimpleTeamAppAdder extends Component {
                   <div class="main_column">
                     <div class="credentials">
                       <div class="display-inline-flex">
-                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
-                        {/*{this.state.password_change_interval !== 0 &&*/}
+                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
+                        {/*{this.state.password_reminder_interval !== 0 &&*/}
                         {/*<PasswordChangeManagerLabel username={this.state.room_manager_name}/>}*/}
                       </div>
                     </div>
@@ -297,6 +297,7 @@ class SimpleTeamAppAdder extends Component {
                           selection
                           renderLabel={renderSimpleAppAddUserLabel}
                           multiple
+                          noResultsMessage='No more results found'
                           placeholder="Tag your team members here..."/>
                     </div>
                     <div>

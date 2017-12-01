@@ -247,8 +247,14 @@ module.exports = {
       return basic_get('/api/v1/dashboard/GetSsoGroups');
     },
     getAppPassword: ({app_id}) => {
-      return basic_get('/api/v1/dashboard/GetAppPassword', {
-        app_id: app_id
+      return axios.get('/api/v1/dashboard/GetAppPassword', {
+        params: {
+          app_id: app_id
+        }
+      }).then(response => {
+        return {password: decipher(response.data.password)};
+      }).catch(err => {
+        throw err.data.response;
       });
     },
     getAppConnectionInformation: ({app_id}) => {

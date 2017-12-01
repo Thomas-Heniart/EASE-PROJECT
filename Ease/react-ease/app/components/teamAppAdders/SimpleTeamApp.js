@@ -119,7 +119,7 @@ class ReceiversLabelGroup extends Component {
     return (
         <Label.Group>
           {this.props.receivers.map((item, idx) => {
-            if (!this.state.show_all && idx > 15)
+            if (!this.state.show_all && idx > 14)
               return null;
             const user = item.user;
             const receiver = item.receiver;
@@ -389,6 +389,7 @@ class SimpleTeamApp extends Component {
                           selection={true}
                           renderLabel={renderSimpleAppEditUserLabel}
                           multiple
+                          noResultsMessage='No more results found'
                           placeholder="Tag your team members here..."/>}
                 </div>
                 <div>

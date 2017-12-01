@@ -62,12 +62,13 @@ class PreviewStep extends React.Component {
               floated='right'
               loading={this.props.loading}
               type="submit"
-              disabled={!this.props.invitationsReady()}
+              disabled={!this.props.invitationsReady() || this.props.loading}
               width={8}>
               Send invitation <u><strong>later</strong></u>
             </Form.Button>
             <Form.Button
-              disabled={!this.props.invitationsReady()}
+              disabled={!this.props.invitationsReady() || this.props.loadingInvitationsNow}
+              loading={this.props.loadingInvitationsNow}
               color='green'
               floated='right'
               type="button"
@@ -121,7 +122,7 @@ class EmailListStep extends React.Component {
             <Form.Button
               basic color='green'
               positive
-              disabled={!this.state.value}
+              disabled={!this.state.value || this.props.loading}
               floated='right'
               loading={this.props.loading}
               type="submit"
@@ -131,7 +132,8 @@ class EmailListStep extends React.Component {
             <Form.Button
               color='green'
               floated='right'
-              disabled={!this.state.value}
+              loading={this.props.loadingInvitationsNow}
+              disabled={!this.state.value || this.props.loadingInvitationsNow}
               type="button"
               onClick={this.processNow}
               width={8}>
@@ -161,6 +163,7 @@ class TeamAddMultipleUsersModal extends React.Component {
         {email: '', username: '', error: ''},
         {email: '', username: '', error: ''}],
       loading: false,
+      loadingInvitationsNow: false,
       validateButtonText: 'Send invitations',
       cancelButtonText: 'Cancel',
       errorMessage: null
@@ -216,6 +219,7 @@ class TeamAddMultipleUsersModal extends React.Component {
   sendInvitationsNow = () => {
     let invitations = this.state.invitations.slice();
     const team = this.props.teams[this.props.team_id];
+    this.setState({loadingInvitationsNow: true, errorMessage: null});
     const users_length = Object.keys(team.team_users).length;
     invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
     if (invitations.length + users_length > 30 && team.plan_id === 0){
@@ -238,7 +242,6 @@ class TeamAddMultipleUsersModal extends React.Component {
         role: 1
       }));
     });
-    this.setState({loading: true, errorMessage: null});
     Promise.all(calls.map(reflect)).then(results => {
       results.map((item, idx) => {
         if (item.error)
@@ -251,7 +254,7 @@ class TeamAddMultipleUsersModal extends React.Component {
         this.props.dispatch(showTeamAddMultipleUsersModal({active: false}));
         return;
       }
-      this.setState({loading: false, invitations: invitations, validateButtonText:'Resend invitations', cancelButtonText: "Ok, I'm done"});
+      this.setState({loadingInvitationsNow: false, invitations: invitations, validateButtonText:'Resend invitations', cancelButtonText: "Ok, I'm done"});
     });
   };
   changeView = (view) => {
@@ -325,6 +328,7 @@ class TeamAddMultipleUsersModal extends React.Component {
                     removeField={this.removeField}
                     editField={this.editField}
                     loading={this.state.loading}
+                    loadingInvitationsNow={this.state.loadingInvitationsNow}
                     validate={this.sendInvitations}
                     sendInvitationsNow={this.sendInvitationsNow}
                     errorMessage={this.state.errorMessage}
@@ -337,6 +341,8 @@ class TeamAddMultipleUsersModal extends React.Component {
                     // addFields={this.addMultipleFields}
                     changeStep={this.changeView.bind(null, 'main')}
                     validate={this.sendInvitations}
+                    loading={this.state.loading}
+                    loadingInvitationsNow={this.state.loadingInvitationsNow}
                     errorMessage={this.state.errorMessage}
                     // sendInvitationsNow={this.sendInvitationsNow}
                     multipleAddNow={this.multipleAddNow}

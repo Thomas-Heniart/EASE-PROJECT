@@ -13,6 +13,9 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class NotificationFactory {
     private static NotificationFactory ourInstance = new NotificationFactory();
 
@@ -25,12 +28,17 @@ public class NotificationFactory {
     private NotificationFactory() {
     }
 
-    public Notification createNotification(User user, String content, String icon, Channel channel) {
+    private Notification createNotification(User user, String content, String icon, Channel channel) {
         String url = base_url + "#/teams/" + channel.getTeam().getDb_id() + "/" + channel.getDb_id();
         return new Notification(content, url, icon, user);
     }
 
-    public Notification createNotification(User user, String content, String icon, TeamUser teamUser) {
+    private PendingNotification createPendingNotification(TeamUser teamUser, String content, String icon, Channel channel) {
+        String url = base_url + "#/teams/" + channel.getTeam().getDb_id() + "/" + channel.getDb_id();
+        return new PendingNotification(teamUser, content, url, icon);
+    }
+
+    private Notification createNotification(User user, String content, String icon, TeamUser teamUser) {
         String url = base_url + "#/teams/" + teamUser.getTeam().getDb_id() + "/@" + teamUser.getDb_id();
         return new Notification(content, url, icon, user);
     }
@@ -43,6 +51,11 @@ public class NotificationFactory {
     public Notification createNotification(User user, String content, String icon, String url) {
         String final_url = base_url + url;
         return new Notification(content, final_url, icon, user);
+    }
+
+    private PendingNotification createPendingNotification(TeamUser teamUser, String content, String icon, String url) {
+        String final_url = base_url + url;
+        return new PendingNotification(teamUser, content, final_url, icon);
     }
 
     public Notification createNotification(User user, String content, String icon, TeamUser teamUser, boolean flexPanel) {
@@ -82,10 +95,19 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
-    public void createAppSentNotification(User user, TeamUser teamUser, TeamCardReceiver teamCardReceiver, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        Notification notification = this.createNotification(user, teamUser.getUsername() + " sent you " + teamCardReceiver.getApp().getAppInformation().getName(), teamCardReceiver.getApp().getLogo(), "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id());
-        hibernateQuery.saveOrUpdateObject(notification);
-        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    public void createAppSentNotification(TeamUser teamUser_receiver, TeamUser teamUser_sender, TeamCardReceiver teamCardReceiver, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        User user = teamUser_receiver.getUser();
+        String content = teamUser_sender.getUsername() + " sent you " + teamCardReceiver.getApp().getAppInformation().getName();
+        String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
+        String logo = teamCardReceiver.getApp().getLogo();
+        if (user != null) {
+            Notification notification = this.createNotification(user, content, logo, url);
+            hibernateQuery.saveOrUpdateObject(notification);
+            this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        } else {
+            PendingNotification pendingNotification = this.createPendingNotification(teamUser_receiver, content, logo, url);
+            hibernateQuery.saveOrUpdateObject(pendingNotification);
+        }
     }
 
     public void createEditRoleNotification(TeamUser teamUserToModify, TeamUser teamUser, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
@@ -106,16 +128,32 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
-    public void createAddTeamUserToChannelNotification(TeamUser teamUser, TeamUser teamUser_connected, Channel channel, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        Notification notification = this.createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " added you in #" + channel.getName(), "/resources/notifications/channel.png", channel);
-        hibernateQuery.saveOrUpdateObject(notification);
-        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    public void createAddTeamUserToChannelNotification(TeamUser teamUser, TeamUser teamUser_connected, Channel channel, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        User user = teamUser.getUser();
+        String content = teamUser_connected.getUsername() + " added you in #" + channel.getName();
+        String icon = "/resources/notifications/channel.png";
+        if (user != null) {
+            Notification notification = this.createNotification(user, content, icon, channel);
+            hibernateQuery.saveOrUpdateObject(notification);
+            this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        } else {
+            PendingNotification pendingNotification = this.createPendingNotification(teamUser, content, icon, channel);
+            hibernateQuery.saveOrUpdateObject(pendingNotification);
+        }
     }
 
-    public void createEditRoomNameNotification(TeamUser teamUser, Channel channel, String old_name, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        Notification notification = this.createNotification(teamUser.getUser(), "#" + old_name + " has been renamed to #" + channel.getName(), "/resources/notifications/room_renamed.png", channel);
-        hibernateQuery.saveOrUpdateObject(notification);
-        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    public void createEditRoomNameNotification(TeamUser teamUser, Channel channel, String old_name, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        User user = teamUser.getUser();
+        String content = "#" + old_name + " has been renamed to #" + channel.getName();
+        String icon = "/resources/notifications/room_renamed.png";
+        if (user != null) {
+            Notification notification = this.createNotification(user, content, icon, channel);
+            hibernateQuery.saveOrUpdateObject(notification);
+            this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        } else {
+            PendingNotification pendingNotification = this.createPendingNotification(teamUser, content, icon, channel);
+            hibernateQuery.saveOrUpdateObject(pendingNotification);
+        }
     }
 
     public void createAskJoinChannelNotification(TeamUser teamUser, Channel channel, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
@@ -131,11 +169,20 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
-    public void createPasswordNotUpToDateNotification(TeamEnterpriseCardReceiver teamEnterpriseCardReceiver, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+    public void createPasswordNotUpToDateNotification(TeamEnterpriseCardReceiver teamEnterpriseCardReceiver, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        TeamUser teamUser = teamEnterpriseCardReceiver.getTeamUser();
+        User user = teamUser.getUser();
+        String content = "Your password " + teamEnterpriseCardReceiver.getApp().getAppInformation().getName() + " needs to be updated as soon as possible";
         String url = "#/main/dashboard?app_id=" + teamEnterpriseCardReceiver.getApp().getDb_id();
-        Notification notification = this.createNotification(teamEnterpriseCardReceiver.getTeamUser().getUser(), "Your password " + teamEnterpriseCardReceiver.getApp().getAppInformation().getName() + " needs to be updated as soon as possible", teamEnterpriseCardReceiver.getApp().getLogo(), url);
-        hibernateQuery.saveOrUpdateObject(notification);
-        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        String icon = teamEnterpriseCardReceiver.getApp().getLogo();
+        if (user != null) {
+            Notification notification = this.createNotification(user, content, icon, url);
+            hibernateQuery.saveOrUpdateObject(notification);
+            this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        } else {
+            PendingNotification pendingNotification = this.createPendingNotification(teamUser, content, icon, url);
+            hibernateQuery.saveOrUpdateObject(pendingNotification);
+        }
     }
 
 
@@ -161,9 +208,30 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
-    public void createRemovedFromTeamCardNotification(TeamUser teamUser, TeamUser  teamUser_admin, String app_name, String logo, Channel channel, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-     Notification notification = this.createNotification(teamUser.getUser(), teamUser_admin.getUsername() + " removed your access to " + app_name + " (in #" + channel.getName() + ").", logo, channel);
-     hibernateQuery.saveOrUpdateObject(notification);
-     userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    public void createRemovedFromTeamCardNotification(TeamUser teamUser, TeamUser teamUser_admin, String app_name, String logo, Channel channel, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        User user = teamUser.getUser();
+        String content = teamUser_admin.getUsername() + " removed your access to " + app_name + " (in #" + channel.getName() + ").";
+        if (user != null) {
+            Notification notification = this.createNotification(user, content, logo, channel);
+            hibernateQuery.saveOrUpdateObject(notification);
+            this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        } else {
+            PendingNotification pendingNotification = this.createPendingNotification(teamUser, content, logo, channel);
+            hibernateQuery.saveOrUpdateObject(pendingNotification);
+        }
+    }
+
+    private WebSocketManager getUserWebSocketManager(Map<Integer, Map<String, Object>> userIdMap, User user) {
+        Map<String, Object> userProperties = userIdMap.get(user.getDb_id());
+        if (userProperties == null) {
+            userProperties = new ConcurrentHashMap<>();
+            userIdMap.put(user.getDb_id(), userProperties);
+        }
+        WebSocketManager webSocketManager = (WebSocketManager) userProperties.get("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            userProperties.put("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
     }
 }

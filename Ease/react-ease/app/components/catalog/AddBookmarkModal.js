@@ -32,6 +32,33 @@ class AddBookmarkModal extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  chooseColumn = () => {
+    const columns = this.props.dashboard.columns.map((column, index) => {
+      let apps;
+      let i = 0;
+      column.map(item => {
+        i++;
+        apps = this.props.dashboard.profiles[item].app_ids.length;
+      });
+      let line = apps / 3;
+      if (line >= Number(line.toFixed(0)) + 0.5)
+        line = Number(line.toFixed(0)) - 1 + i;
+      else
+        line = Number(line.toFixed(0)) + i;
+      if (line)
+        return line;
+      else
+        return 0;
+    });
+    let columnChoose = null;
+    columns.map((column, index) => {
+      let test = columns.slice();
+      test.sort();
+      if (column === test[0] && columnChoose === null)
+        columnChoose = index;
+    });
+    return columnChoose;
+  };
   createProfile = () => {
     const newProfile = {id: 0, name: this.state.profileName};
     if (this.state.profileName.length === 0)
@@ -71,7 +98,7 @@ class AddBookmarkModal extends Component {
     if (this.state.selectedRoom === -1 && this.state.selectedProfile !== -1) {
       this.setState({errorMessage: '', loading: true});
       if (this.state.selectedProfile === 0) {
-        this.props.dispatch(createProfile({name: this.state.profileName, column_index: 1})).then(response => {
+        this.props.dispatch(createProfile({name: this.state.profileName, column_index: this.chooseColumn()})).then(response => {
           const newProfile = response.id;
           this.props.catalogAddBookmark({
             name: this.state.name,

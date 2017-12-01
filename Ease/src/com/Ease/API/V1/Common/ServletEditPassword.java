@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.User.User;
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -24,9 +23,8 @@ public class ServletEditPassword extends HttpServlet {
             User user = sm.getUser();
             String password = sm.getStringParam("password", false, false);
             String new_password = sm.getStringParam("new_password", false, false);
-            String private_key = (String) sm.getContextAttr("privateKey");
-            password = RSA.Decrypt(password, private_key);
-            new_password = RSA.Decrypt(new_password, private_key);
+            password = sm.decipher(password);
+            new_password = sm.decipher(new_password);
             if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
             if (user.getUserKeys().isGoodPassword(new_password))

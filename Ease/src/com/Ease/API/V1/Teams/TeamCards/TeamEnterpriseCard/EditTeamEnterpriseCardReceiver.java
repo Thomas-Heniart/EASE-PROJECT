@@ -45,11 +45,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             if (!teamUser_connected.equals(teamCardReceiver.getTeamUser()) && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            /* String private_key = (String) sm.getContextAttr("privateKey");
-            for (Object object : account_information.entrySet()) {
-                Map.Entry<String, String> entry = (Map.Entry<String, String>) object;
-                account_information.put(entry.getKey(), RSA.Decrypt(entry.getValue(), private_key));
-            } */
+            sm.decipher(account_information);
             Map<String, String> accountInformation = teamEnterpriseCard.getWebsite().getInformationFromJson(account_information);
             TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
             ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
