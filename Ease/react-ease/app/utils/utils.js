@@ -17,6 +17,8 @@ export function reflect(promise){
 }
 
 export function needPasswordUpdate(last_update, interval){
+  if (!interval)
+    return false;
   return last_update + monthInMs * interval < new Date().getTime();
 }
 

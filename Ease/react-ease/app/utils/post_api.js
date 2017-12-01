@@ -431,7 +431,7 @@ module.exports = {
     }
   },
   teamApps: {
-    createSingleApp: ({team_id, channel_id, website_id, name, description, password_change_interval, team_user_filler_id, account_information, receivers, ws_id}) => {
+    createSingleApp: ({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers, ws_id}) => {
       // Object.keys(account_information).map(item => {
       //   account_information[item] = cipher(account_information[item]);
       // });
@@ -440,7 +440,7 @@ module.exports = {
         channel_id: channel_id,
         website_id:website_id,
         name: name,
-        password_reminder_interval: password_change_interval,
+        password_reminder_interval: password_reminder_interval,
         team_user_filler_id: team_user_filler_id,
         account_information: account_information,
         description: description,
@@ -603,6 +603,13 @@ module.exports = {
         return response.data;
       }).catch(err => {
         return err.response.data;
+      });
+    },
+    addTeamLinkCardReceiver: ({team_card_id, team_user_id, ws_id}) => {
+      return basic_post('/api/v1/teams/AddTeamLinkCardReceiver', {
+        team_card_id: team_card_id,
+        team_user_id: team_user_id,
+        ws_id: ws_id
       });
     },
     editLinkAppNew: ({team_card_id, name, description, url, img_url, ws_id}) => {
@@ -772,28 +779,36 @@ module.exports = {
         return response.data;
       })
     },
-    joinTeamSingleCard : function(ws_id, team_id, team_card_id){
-      return axios.post('/api/v1/teams/JoinTeamSingleCard', {
+    requestTeamSingleCard : function({ws_id, team_id, team_card_id}){
+      return basic_post('/api/v1/teams/JoinTeamSingleCard', {
         ws_id: ws_id,
         team_id: team_id,
         team_card_id: team_card_id
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
-      })
+      });
     },
-    joinTeamEnterpriseCard : function(ws_id, team_id, team_card_id, account_information){
-      return axios.post('/api/v1/teams/JoinTeamEnterpriseCard', {
+    acceptTamCardRequest: ({team_id, team_card_id, request_id, ws_id}) => {
+      return basic_post('/api/v1/teams/AcceptJoinTeamCard', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        request_id: request_id,
+        ws_id: ws_id
+      });
+    },
+    deleteTeamCardRequest: ({team_id, team_card_id, request_id, ws_id}) => {
+      return basic_post('/api/v1/teams/DeleteJoinTeamCard', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        request_id: request_id,
+        ws_id: ws_id
+      });
+    },
+    requestTeamEnterpriseCard : function({ws_id, team_id, team_card_id, account_information}){
+      return basic_post('/api/v1/teams/JoinTeamEnterpriseCard', {
         ws_id: ws_id,
         team_id: team_id,
         team_card_id: team_card_id,
         account_information: account_information
-      }).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
-      })
+      });
     },
     askJoinApp: function(ws_id, team_id, app_id){
       return axios.post('/api/v1/teams/AskJoinApp', {

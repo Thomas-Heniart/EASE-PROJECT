@@ -189,6 +189,7 @@ class LinkTeamAppAdder extends React.Component {
                         selection
                         renderLabel={renderLinkAppAddUserLabel}
                         multiple
+                        noResultsMessage='No more results found'
                         placeholder="Tag your team members here..."/>
                     </div>
                       <div>

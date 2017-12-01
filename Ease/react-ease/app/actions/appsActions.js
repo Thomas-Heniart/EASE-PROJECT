@@ -167,7 +167,7 @@ export function teamCardCreatedAction({team_card}){
   }
 }
 
-export function teamCreateSingleApp({team_id, channel_id, website_id, name, description, password_change_interval, team_user_filler_id, account_information, receivers}) {
+export function teamCreateSingleApp({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers}) {
   return (dispatch, getState) => {
     return post_api.teamApps.createSingleApp({
       team_id: team_id,
@@ -175,7 +175,7 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
       website_id:website_id,
       name: name,
       description: description,
-      password_change_interval: password_change_interval,
+      password_reminder_interval: password_reminder_interval,
       team_user_filler_id: team_user_filler_id,
       account_information: account_information,
       receivers: receivers,
@@ -199,9 +199,108 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
       account_information: account_information,
       password_reminder_interval: password_reminder_interval,
       ws_id: getState().common.ws_id
-    }).then(app => {
-      dispatch({type: 'TEAM_CARD_CHANGED', payload: {app: app}});
-      return app;
+    }).then(team_card => {
+      dispatch({
+        type: 'TEAM_CARD_CHANGED',
+        payload: {
+          team_card: team_card
+        }
+      });
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamCardRequestCreatedAction({team_card_id, request}) {
+  return {
+    type: 'TEAM_CARD_REQUEST_CREATED',
+    payload: {
+      team_card_id: team_card_id,
+      request: request
+    }
+  }
+}
+
+export function teamCardRequestRemovedAction({team_card_id, request_id}){
+  return {
+    type: 'TEAM_CARD_REQUEST_REMOVED',
+    payload: {
+      team_card_id: team_card_id,
+      request_id: request_id
+    }
+  }
+}
+
+export function deleteTeamCardRequest({team_id, team_card_id, request_id}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.deleteTeamCardRequest({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      request_id: request_id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch(teamCardRequestRemovedAction({
+        team_card_id: team_card_id,
+        request_id: request_id
+      }));
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function acceptTeamCardRequest({team_id, team_card_id, request_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.acceptTamCardRequest({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      request_id: request_id,
+      ws_id: getState().common.ws_id
+    }).then(receiver => {
+      dispatch(teamCardReceiverCreatedAction({
+        receiver: receiver
+      }));
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function requestTeamSingleCard({team_id, team_card_id}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.requestTeamSingleCard({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      ws_id: getState().common.ws_id
+    }).then(request => {
+      dispatch(teamCardRequestCreatedAction({
+        team_card_id: team_card_id,
+        request: request
+      }));
+      return request;
+    }).catch(err => {
+      throw err;
+    });
+  };
+}
+
+export function requestTeamEnterpriseCard({team_id, team_card_id, account_information}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.requestTeamEnterpriseCard({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(request => {
+      dispatch(teamCardRequestCreatedAction({
+        team_card_id: team_card_id,
+        request: request
+      }));
+      return request;
     }).catch(err => {
       throw err;
     });
@@ -230,7 +329,7 @@ export function teamEditSingleAppReceiver({team_id, team_card_id, allowed_to_see
   }
 }
 
-export function teamShareSingleApp({team_id, team_card_id, team_user_id, allowed_to_see_password}){
+export function teamShareSingleCard({team_id, team_card_id, team_user_id, allowed_to_see_password}){
   return function (dispatch, getState){
     return post_api.teamApps.shareSingleApp({
       team_id: team_id,
@@ -269,6 +368,23 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
   }
 }
 
+export function teamShareLinkCard({team_card_id, team_user_id}){
+  return function (dispatch, getState){
+    return post_api.teamApps.addTeamLinkCardReceiver({
+      team_card_id: team_card_id,
+      team_user_id: team_user_id,
+      ws_id: getState().common.ws_id
+    }).then(receiver => {
+      dispatch(teamCardReceiverCreatedAction({
+        receiver: receiver
+      }));
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function teamEditLinkAppNew({team_card_id, name, description, url, img_url}) {
   return (dispatch, getState) => {
     return post_api.teamApps.editLinkAppNew({
@@ -279,7 +395,7 @@ export function teamEditLinkAppNew({team_card_id, name, description, url, img_ur
       img_url: img_url,
       ws_id: getState().common.ws_id
     }).then(app => {
-      dispatch({type: 'TEAM_CARD_CHANGED', payload: {app: app}});
+      dispatch({type: 'TEAM_CARD_CHANGED', payload: {team_card: app}});
       return app;
     }).catch(err => {
       throw err;

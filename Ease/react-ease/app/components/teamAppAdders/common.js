@@ -9,7 +9,6 @@ export const setUserDropdownText = (user) => {
 };
 
 export const renderSimpleAppUserLabel = (label, index, props) => {
-    console.log(label);
     const {username, can_see_information, receiver} = label;
     return (
         <Popup size="mini"
@@ -43,7 +42,6 @@ export const renderSimpleAppUserLabel = (label, index, props) => {
 };
 
 export const renderSimpleAppEditUserLabel = (label, index, props) => {
-    console.log(label);
     const {username, can_see_information, receiver} = label;
     return (
         <Popup size="mini"

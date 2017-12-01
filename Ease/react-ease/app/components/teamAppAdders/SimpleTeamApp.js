@@ -15,11 +15,11 @@ import {
 } from "./common";
 import {
   askJoinTeamApp,
-  joinTeamSingleCard, removeTeamCardReceiver,
+  joinTeamSingleCard, removeTeamCardReceiver, requestTeamSingleCard,
   teamAppDeleteReceiver,
   teamEditSingleApp,
   teamEditSingleAppReceiver,
-  teamShareSingleApp
+  teamShareSingleCard
 } from "../../actions/appsActions";
 import {
   credentialIconType,
@@ -53,17 +53,18 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
 };
 
 const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
-  const meReceiver = findMeInReceivers(app.receivers, me.id);
-  const asked = app.requests.indexOf(me.id) !== -1;
+  const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
+  const asked = !!app.requests.find(request => (request.team_user_id === me.id));
+
   return (
       <div class="team_app_actions_holder">
-        {meReceiver === null &&
+        {!meReceiver &&
         <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
-        {meReceiver !== null &&
-        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>}
+        {/*meReceiver !== null &&
+        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>*/}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
@@ -118,7 +119,7 @@ class ReceiversLabelGroup extends Component {
     return (
         <Label.Group>
           {this.props.receivers.map((item, idx) => {
-            if (!this.state.show_all && idx > 15)
+            if (!this.state.show_all && idx > 14)
               return null;
             const user = item.user;
             const receiver = item.receiver;
@@ -222,7 +223,7 @@ class SimpleTeamApp extends Component {
             team_card_id: this.props.app.id,
             team_card_receiver_id: receiver.id})));
         if (!receiver && selected)
-          sharing.push(this.props.dispatch(teamShareSingleApp({
+          sharing.push(this.props.dispatch(teamShareSingleCard({
             team_id: this.props.app.team_id,
             team_card_id: app.id,
             team_user_id: item.id,
@@ -285,12 +286,22 @@ class SimpleTeamApp extends Component {
     this.setState({edit: state, loading: false});
   };
   selfJoinApp = () => {
-    this.props.dispatch(joinTeamSingleCard({
-      team_id : this.props.team_id,
-      team_card_id: this.props.app.id
-    })).then(() => {
-      this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, this.props.app));
-    });
+    const team_card = this.props.app;
+    const me = this.props.me;
+
+    this.props.dispatch(teamShareSingleCard({
+      team_id: team_card.team_id,
+      team_card_id: team_card.id,
+      team_user_id: me.id,
+      allowed_to_see_password: true
+    }));
+  };
+  requestApp = () => {
+    const team_card = this.props.app;
+    this.props.dispatch(requestTeamSingleCard({
+      team_id: team_card.team_id,
+      team_card_id: team_card.id
+    }));
   };
   acceptRequest = (state) => {
     const app = this.props.app;
@@ -325,8 +336,6 @@ class SimpleTeamApp extends Component {
         });
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
-          {/*{meReceiver !== null && !meReceiver.accepted &&*/}
-          {/*<AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}*/}
           <Segment>
             <Header as="h4">
               {!this.state.edit ?
@@ -339,19 +348,16 @@ class SimpleTeamApp extends Component {
                          placeholder="Card name..."
                          type="text"
                          required/>}
-              {meReceiver !== null &&
-              <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
               {app.requests.length > 0 && isAdmin(me.role) &&
-              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
+              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
             </Header>
-            {/*{meReceiver !== null &&*/}
-            {/*<div class="overlay"/>}*/}
             {!this.state.edit &&
             <TeamSimpleAppButtonSet app={app}
                                     me={me}
                                     selfJoin={this.selfJoinApp}
-                                    requestApp={e => {this.props.dispatch(askJoinTeamApp(app.id))}}
-                                    dispatch={this.props.dispatch} editMode={this.setEdit.bind(null, true)}/>}
+                                    requestApp={this.requestApp}
+                                    dispatch={this.props.dispatch}
+                                    editMode={this.setEdit.bind(null, true)}/>}
             <div class="display_flex">
               <div class="logo_column">
                 <div class="logo">
@@ -367,8 +373,6 @@ class SimpleTeamApp extends Component {
                     {!this.state.edit ?
                         <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username} /> :
                         <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
-                    {/*{((!this.state.edit && app.password_reminder_interval !== 0) || (this.state.edit && this.state.password_reminder_interval !== 0)) &&*/}
-                    {/* <PasswordChangeManagerLabel username={room_manager.username}/>}*/}
                   </div>
                 </div>
                 <div>
@@ -385,6 +389,7 @@ class SimpleTeamApp extends Component {
                           selection={true}
                           renderLabel={renderSimpleAppEditUserLabel}
                           multiple
+                          noResultsMessage='No more results found'
                           placeholder="Tag your team members here..."/>}
                 </div>
                 <div>

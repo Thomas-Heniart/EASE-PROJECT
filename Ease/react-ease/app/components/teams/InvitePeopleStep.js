@@ -57,7 +57,7 @@ class PreviewStep extends React.Component {
               basic color='green'
               positive
               floated='right'
-              disabled={!this.props.invitationsReady()}
+              disabled={!this.props.invitationsReady() || this.props.loading}
               loading={this.props.loading}
               type="submit"
               width={8}>
@@ -67,7 +67,8 @@ class PreviewStep extends React.Component {
               color='green'
               floated='right'
               type="button"
-              disabled={!this.props.invitationsReady()}
+              loading={this.props.loadingInvitationsNow}
+              disabled={!this.props.invitationsReady() || this.props.loadingInvitationsNow}
               onClick={this.props.sendInvitationsNow}
               width={8}>
               Send invitation <u><strong>now</strong></u>
@@ -118,7 +119,7 @@ class EmailListStep extends React.Component {
               basic color='green'
               positive
               floated='right'
-              disabled={!this.state.value}
+              disabled={!this.state.value || this.props.loading}
               loading={this.props.loading}
               type="submit"
               width={8}>
@@ -128,7 +129,8 @@ class EmailListStep extends React.Component {
               color='green'
               floated='right'
               type="button"
-              disabled={!this.state.value}
+              loading={this.props.loadingInvitationsNow}
+              disabled={!this.state.value || this.props.loadingInvitationsNow}
               onClick={this.processNow}
               width={8}>
               Send invitation <u><strong>now</strong></u>
@@ -153,6 +155,7 @@ class InvitePeopleStep extends React.Component {
         {email: '', username: '', error: ''},
         {email: '', username: '', error: ''}],
       loading: false,
+      loadingInvitationsNow: false,
       validateButtonText: 'Send invitations',
       cancelButtonText: 'Skip for now'
     }
@@ -162,7 +165,7 @@ class InvitePeopleStep extends React.Component {
   };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();
-
+    this.setState({loading: true});
     invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
     let calls = invitations.map(item => {
       return this.props.dispatch(createTeamUser({
@@ -175,7 +178,6 @@ class InvitePeopleStep extends React.Component {
         role: 1
       }));
     });
-    this.setState({loading: true});
     Promise.all(calls.map(reflect)).then(results => {
       results.map((item, idx) => {
         if (item.error)
@@ -193,7 +195,7 @@ class InvitePeopleStep extends React.Component {
   };
   sendInvitationsNow = () => {
     let invitations = this.state.invitations.slice();
-
+    this.setState({loadingInvitationsNow: true});
     invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
     let calls = invitations.map(item => {
       return this.props.dispatch(createTeamUserNow({
@@ -206,7 +208,6 @@ class InvitePeopleStep extends React.Component {
         role: 1
       }));
     });
-    this.setState({loading: true});
     Promise.all(calls.map(reflect)).then(results => {
       results.map((item, idx) => {
         if (item.error)
@@ -219,7 +220,7 @@ class InvitePeopleStep extends React.Component {
         this.props.onStepValidated();
         return;
       }
-      this.setState({loading: false, invitations: invitations, validateButtonText:'Resend invitations', cancelButtonText: "Ok, I'm done"});
+      this.setState({loadingInvitationsNow: false, invitations: invitations, validateButtonText:'Resend invitations', cancelButtonText: "Ok, I'm done"});
     });
   };
   changeView = (view) => {
@@ -289,6 +290,7 @@ class InvitePeopleStep extends React.Component {
                 removeField={this.removeField}
                 editField={this.editField}
                 loading={this.state.loading}
+                loadingInvitationsNow={this.state.loadingInvitationsNow}
                 validate={this.sendInvitations}
                 sendInvitationsNow={this.sendInvitationsNow}
                 invitationsReady={this.invitationsReady}
@@ -301,6 +303,8 @@ class InvitePeopleStep extends React.Component {
               // addFields={this.addMultipleFields}
               changeStep={this.changeView.bind(null, 'main')}
               validate={this.sendInvitations}
+              loading={this.state.loading}
+              loadingInvitationsNow={this.state.loadingInvitationsNow}
               // sendInvitationsNow={this.sendInvitationsNow}
               multipleAddNow={this.multipleAddNow}
               multipleAddLater={this.multipleAddLater}/>}

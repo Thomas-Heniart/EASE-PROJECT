@@ -132,7 +132,7 @@ class ThirdStep extends React.Component {
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
     if (this.props.selectedProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
         const newProfile = response.id;
         if (this.props.accountGoogleSelected.id === 0) {
           this.props.dispatch(createSsoGroup({
@@ -400,7 +400,7 @@ class AddBookmark extends React.Component {
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
     if (this.props.selectedProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
         const newProfile = response.id;
         this.props.catalogAddBookmark({
           name: this.props.name,
@@ -548,6 +548,33 @@ class SsoAppModal extends React.Component {
         errorMessage: '',
         ssoSelected: [{website_id: this.props.modal.website.id, name: this.state.name}]
       });
+  };
+  chooseColumn = () => {
+    const columns = this.props.dashboard.columns.map((column, index) => {
+      let apps;
+      let i = 0;
+      column.map(item => {
+        i++;
+        apps = this.props.dashboard.profiles[item].app_ids.length;
+      });
+      let line = apps / 3;
+      if (line >= Number(line.toFixed(0)) + 0.5)
+        line = Number(line.toFixed(0)) - 1 + i;
+      else
+        line = Number(line.toFixed(0)) + i;
+      if (line)
+        return line;
+      else
+        return 0;
+    });
+    let columnChoose = null;
+    columns.map((column, index) => {
+      let test = columns.slice();
+      test.sort();
+      if (column === test[0] && columnChoose === null)
+        columnChoose = index;
+    });
+    return columnChoose;
   };
   selectAccount = (account) => {
     this.setState({
@@ -709,6 +736,7 @@ class SsoAppModal extends React.Component {
             checkActive={this.checkActive}
             selectSSO={this.selectSSO}
             deselectSSO={this.deselectSSO}
+            chooseColumn={this.chooseColumn}
             editSSO={this.editSSO}
             back={this.back}/> }
         {(this.state.addGoogleAccount && !this.state.addBookmark) &&
@@ -729,6 +757,7 @@ class SsoAppModal extends React.Component {
             logo={this.props.modal.website.logo}
             name={this.props.modal.website.name}
             toggleBookmark={this.toggleBookmark}
+            chooseColumn={this.chooseColumn}
             selectedProfile={this.state.selectedProfile} />}
         {this.state.view === 4 &&
           <ChooseTypeAppModal

@@ -1,21 +1,25 @@
 var React = require('react');
-import {Loader} from 'semantic-ui-react';
 import SimpleTeamApp from "./teamAppAdders/SimpleTeamApp";
 import TeamLinkApp from "./teamAppAdders/LinkTeamApp";
 import EnterpriseTeamApp from "./teamAppAdders/EnterpriseTeamApp";
 import queryString from "query-string";
 import {fetchTeamAppList} from "../actions/teamActions";
 import {connect} from "react-redux";
+import { Icon, Segment, Dimmer, Loader } from 'semantic-ui-react';
+import {reflect} from "../utils/utils";
+import {sendTeamUserInvitation} from "../actions/userActions";
 import {withRouter} from "react-router-dom";
 
 @connect(store => ({
-  team_apps: store.team_apps
+  team_apps: store.team_apps,
+  teams: store.teams
 }))
 class TeamAppsContainer extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      loadingSendInvitation: false
     }
   }
   componentWillReceiveProps(nextProps){
@@ -62,6 +66,91 @@ class TeamAppsContainer extends React.Component{
       }
     }
   }
+  sendInvitation = (teamUser) => {
+    if (this.state.loadingSendInvitation !== true) {
+      this.setState({loadingSendInvitation: true});
+      const team = this.props.teams[this.props.match.params.teamId];
+      this.props.dispatch(sendTeamUserInvitation({
+        team_id: team.id,
+        team_user_id: teamUser.id
+      })).then(r => {
+        setTimeout(() => {
+          this.setState({loadingSendInvitation: false});
+        }, 5000);
+        // this.setState({loadingSendInvitation: false});
+      }).catch(err => {
+        setTimeout(() => {
+          this.setState({loadingSendInvitation: false});
+        }, 5000);
+        // this.setState({loadingSendInvitation: false});
+        // this.setState({errorMessage: err});
+        console.log(err);
+      });
+      // this.setState({loadingSendInvitation: false});
+    }
+  };
+  sendAllInvitations = () => {
+    if (this.state.loadingSendInvitation !== true) {
+      const team = this.props.teams[this.props.match.params.teamId];
+      this.setState({loadingSendInvitation: true});
+      const calls = Object.keys(team.team_users).map(item => {
+        if (team.team_users[item].state === 0 && team.team_users[item].invitation_sent === false) {
+          this.props.dispatch(sendTeamUserInvitation({
+            team_id: team.id,
+            team_user_id: Number(item)
+          }));
+        }
+      });
+      const response = calls.filter(item => {
+        if (item)
+          return true
+      });
+      Promise.all(response.map(reflect)).then(r => {
+        setTimeout(() => {
+          this.setState({loadingSendInvitation: false});
+        }, 5000);
+        // this.setState({loadingSendInvitation: false});
+      }).catch(err => {
+        setTimeout(() => {
+          this.setState({loadingSendInvitation: false});
+        }, 5000);
+        // this.setState({loadingSendInvitation: false});
+        // this.setState({errorMessage: err});
+        console.log(err);
+      });
+    }
+  };
+  reSendAllInvitations = () => {
+    if (this.state.loadingSendInvitation !== true) {
+      const team = this.props.teams[this.props.match.params.teamId];
+      this.setState({loadingSendInvitation: true});
+      const calls = Object.keys(team.team_users).map(item => {
+        if (team.team_users[item].state === 0 && team.team_users[item].invitation_sent === true) {
+          this.props.dispatch(sendTeamUserInvitation({
+            team_id: team.id,
+            team_user_id: Number(item)
+          }));
+        }
+      });
+      const response = calls.filter(item => {
+        if (item)
+          return true
+      });
+      Promise.all(response.map(reflect)).then(r => {
+        setTimeout(() => {
+          this.setState({loadingSendInvitation: false});
+        }, 5000);
+        // this.setState({loadingSendInvitation: false});
+      }).catch(err => {
+        setTimeout(() => {
+          this.setState({loadingSendInvitation: false});
+        }, 5000);
+        // this.setState({loadingSendInvitation: false});
+        // this.setState({errorMessage: err});
+        console.log(err);
+      });
+    }
+  };
   render() {
     const item = this.props.item;
     const team = this.props.team;
@@ -76,6 +165,25 @@ class TeamAppsContainer extends React.Component{
       return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
+            {item.state === 0 &&
+            <div id='invitation'>
+              {item.invitation_sent ?
+                <Segment className='resend' inverted disabled={this.state.loadingSendInvitation}>
+                  <div>
+                    {item.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(item)}>Resend invitation<Icon name='send'/></span>
+                    <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
+                    <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations<Icon name='rocket'/></span>
+                  </div>
+                </Segment>
+                :
+                <Segment className='send' inverted disabled={this.state.loadingSendInvitation}>
+                  <div>
+                    {item.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(item)}>Send invitation<Icon name='send'/></span>
+                    <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
+                    <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people<Icon name='rocket'/></span>
+                  </div>
+                </Segment>}
+            </div>}
             {!this.state.loading ?
                 item.team_card_ids.map(id => {
                   const item = this.props.team_apps[id];

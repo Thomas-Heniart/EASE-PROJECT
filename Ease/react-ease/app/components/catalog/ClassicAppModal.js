@@ -147,7 +147,7 @@ class AddBookmarkForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
         newProfile = response.id;
         this.props.catalogAddBookmark({
           name: this.props.appName,
@@ -223,7 +223,7 @@ class AddClassicAppForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
         newProfile = response.id;
         this.props.catalogAddClassicApp({
           name: this.props.appName,
@@ -355,7 +355,7 @@ class AddLogWithAppForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: 1})).then(response => {
+      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
         newProfile = response.id;
         this.props.catalogAddLogWithApp({
           name: this.props.appName,
@@ -505,6 +505,33 @@ class ClassicAppModal extends React.Component {
     });
     this.setState({credentials: credentials});
   };
+  chooseColumn = () => {
+    const columns = this.props.dashboard.columns.map((column, index) => {
+      let apps;
+      let i = 0;
+      column.map(item => {
+        i++;
+        apps = this.props.dashboard.profiles[item].app_ids.length;
+      });
+      let line = apps / 3;
+      if (line >= Number(line.toFixed(0)) + 0.5)
+        line = Number(line.toFixed(0)) - 1 + i;
+      else
+        line = Number(line.toFixed(0)) + i;
+      if (line)
+        return line;
+      else
+        return 0;
+    });
+    let columnChoose = null;
+    columns.map((column, index) => {
+      let test = columns.slice();
+      test.sort();
+      if (column === test[0] && columnChoose === null)
+        columnChoose = index;
+    });
+    return columnChoose;
+  };
   createProfile = () => {
     const newProfile = {id: 0, name: this.state.profileName};
     if (this.state.profileName.length === 0)
@@ -566,12 +593,14 @@ class ClassicAppModal extends React.Component {
               profileName={this.state.profileName}
               handleCredentialInput={this.handleCredentialInput}
               chooseLogWith={this.chooseLogWith}
+              chooseColumn={this.chooseColumn}
               changeView={this.changeView}/>}
           {this.state.view === 3 &&
           <AddLogWithAppForm
               {...this.props}
               website={this.state.website}
               appName={this.state.name}
+              chooseColumn={this.chooseColumn}
               profile_id={this.state.selectedProfile}
               goBack={this.changeView.bind(null, 2)}
               logWithWebsite={this.state.choosenLogWithWebsite}/>}
