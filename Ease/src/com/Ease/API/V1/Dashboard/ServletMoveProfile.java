@@ -3,9 +3,9 @@ package com.Ease.API.V1.Dashboard;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -27,7 +27,11 @@ public class ServletMoveProfile extends HttpServlet {
             Integer position = sm.getIntParam("position", true, false);
             user.moveProfile(profile_id, column_index, position, sm.getHibernateQuery());
             Profile profile = (Profile) sm.getHibernateQuery().get(Profile.class, profile_id);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.PROFILE, WebSocketMessageAction.CHANGED, profile.getJson()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("profile_id", profile_id);
+            ws_obj.put("column_index", column_index);
+            ws_obj.put("index", position);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.MOVE_PROFILE, ws_obj));
             sm.setSuccess(user.getProfile(profile_id).getJson());
         } catch (Exception e) {
             sm.setError(e);

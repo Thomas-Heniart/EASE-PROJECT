@@ -47,7 +47,7 @@ public abstract class ServletManager {
     private User user;
     protected boolean saveLogs;
     protected String logResponse;
-    protected String socketId;
+    protected Team team;
     protected JSONObject jsonObjectResponse;
     protected JSONArray jsonArrayResponse;
     protected String errorMessage;
@@ -505,6 +505,7 @@ public abstract class ServletManager {
                 }
                 team.setSubscription(subscription);
             }
+            this.team = team;
         } catch (StripeException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

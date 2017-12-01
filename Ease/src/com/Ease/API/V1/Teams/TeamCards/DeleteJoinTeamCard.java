@@ -32,7 +32,7 @@ public class DeleteJoinTeamCard extends HttpServlet {
             teamCard.decipher(teamKey);
             teamCard.removeJoinTeamCardRequest(joinTeamCardRequest);
             sm.deleteObject(joinTeamCardRequest);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_REQUEST, WebSocketMessageAction.REMOVED, request_id));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_REQUEST, WebSocketMessageAction.REMOVED, request_id));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

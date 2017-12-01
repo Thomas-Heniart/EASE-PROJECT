@@ -50,7 +50,7 @@ public class ServletEditClassicApp extends HttpServlet {
                 account.edit(account_information, sm.getHibernateQuery());
             app.getAppInformation().setName(name);
             sm.saveOrUpdate(app);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CHANGED, app.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CHANGED, app.getJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

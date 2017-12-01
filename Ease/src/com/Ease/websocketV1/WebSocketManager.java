@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class WebSocketManager {
-    private List<WebSocketSession> webSocketSessions;
+    private List<WebSocketSession> webSocketSessions = new LinkedList<>();
+    private List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
 
     public WebSocketManager() {
-        this.webSocketSessions = new LinkedList<>();
     }
 
     public void sendMessage(String message) {
@@ -43,6 +43,12 @@ public class WebSocketManager {
         }
     }
 
+    public void sendObjects(String ws_id) {
+        removeClosedSesions();
+        this.webSocketSessions.stream().filter(webSocketSession -> webSocketSession.getSession().getId().equals(ws_id)).forEach(webSocketSession -> this.webSocketMessageList.forEach(webSocketSession::sendObject));
+        this.webSocketMessageList.clear();
+    }
+
     public List<WebSocketSession> getWebSocketSessions() {
         return this.webSocketSessions;
     }
@@ -50,6 +56,10 @@ public class WebSocketManager {
     public void addWebSocketSession(WebSocketSession wss) {
         removeClosedSesions();//to delete after start using sendMessage()
         this.webSocketSessions.add(wss);
+    }
+
+    public void addWebSocketMessage(WebSocketMessage webSocketMessage) {
+        this.webSocketMessageList.add(webSocketMessage);
     }
 
     public void invalidateAllSessions() {

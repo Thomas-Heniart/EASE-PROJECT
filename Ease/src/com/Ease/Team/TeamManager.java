@@ -105,7 +105,7 @@ public class TeamManager {
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
                 String url = Variables.URL_PATH + "#/teamJoin/";
-                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE id = ?");
                 hibernateQuery.setParameter(1, teamUser.getDb_id());
                 url += (String) hibernateQuery.getSingleResult();
                 mailJetBuilder.addVariable("url", url);
@@ -127,7 +127,7 @@ public class TeamManager {
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
                 String url = Variables.URL_PATH + "#/teamJoin/";
-                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE id = ?");
                 hibernateQuery.setParameter(1, teamUser.getDb_id());
                 url += (String) hibernateQuery.getSingleResult();
                 mailJetBuilder.addVariable("url", url);

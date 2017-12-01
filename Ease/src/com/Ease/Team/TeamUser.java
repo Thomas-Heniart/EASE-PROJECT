@@ -15,7 +15,7 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.websocketV1.WebSocketManager;
+import com.Ease.websocketV1.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -438,7 +438,7 @@ public class TeamUser {
         hibernateQuery.saveOrUpdateObject(this);
         if (this.getTeamCardReceivers().isEmpty())
             return;
-        Profile profile = this.getOrCreateProfile(hibernateQuery);
+        Profile profile = this.getOrCreateProfile(userWebSocketManager, hibernateQuery);
         this.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
             app.setProfile(profile);
             app.setPosition(profile.getSize());
@@ -537,10 +537,10 @@ public class TeamUser {
      * @return Profile profile
      * @throws HttpServletException
      */
-    public synchronized Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+    public synchronized Profile getOrCreateProfile(WebSocketManager webSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
         if (this.getUser() == null)
             throw new HttpServletException(HttpStatus.InternError);
-        Profile profile = null;
+        Profile profile;
         if (!this.getTeamUserStatus().isProfile_created()) {
             int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
             profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
@@ -558,6 +558,7 @@ public class TeamUser {
                 this.getUser().addProfile(profile);
                 this.setProfile(profile);
                 hibernateQuery.saveOrUpdateObject(this);
+                webSocketManager.sendObject(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_PROFILE, WebSocketMessageAction.CREATED, profile.getJson()));
                 return this.getProfile();
             } else if (this.getProfile() == null) {
                 return this.getUser().getProfileSet().stream().findAny().get();

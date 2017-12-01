@@ -53,7 +53,7 @@ public class ServletAddSsoApp extends HttpServlet {
             sm.saveOrUpdate(ssoApp);
             profile.addApp(ssoApp);
             ssoGroup.addSsoApp(ssoApp);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CREATED, ssoApp.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, ssoApp.getJson()));
             sm.setSuccess(ssoApp.getJson());
         } catch (Exception e) {
             sm.setError(e);

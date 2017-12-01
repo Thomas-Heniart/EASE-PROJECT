@@ -46,7 +46,7 @@ public class ServletCreateProfile extends HttpServlet {
             Profile profile = new Profile(user, column_index, position, new ProfileInformation(name));
             sm.saveOrUpdate(profile);
             user.addProfile(profile);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.PROFILE, WebSocketMessageAction.CREATED, profile.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_PROFILE, WebSocketMessageAction.CREATED, profile.getJson()));
             sm.setSuccess(profile.getJson());
         } catch (Exception e) {
             sm.setError(e);

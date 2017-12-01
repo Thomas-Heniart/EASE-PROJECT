@@ -97,7 +97,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             team.addTeamUser(teamUser);
             team.getDefaultChannel().addTeamUser(teamUser);
             sm.saveOrUpdate(team.getDefaultChannel());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CREATED, teamUser.getJson(), teamUser.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CREATED, teamUser.getJson()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

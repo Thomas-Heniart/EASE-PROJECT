@@ -15,6 +15,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -58,7 +59,7 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                     App app = teamCardReceiver.getApp();
                     Profile profile = app.getProfile();
                     if (profile != null)
-                        profile.removeAppAndUpdatePositions(app, hibernateQuery);
+                        profile.removeAppAndUpdatePositions(app, sm.getUserWebSocketManager(profile.getUser().getDb_id()), hibernateQuery);
                 }
                 sm.deleteObject(teamCardReceiver);
             }
@@ -68,8 +69,11 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
             }
             channel.removeTeamUser(teamUser_to_remove);
             sm.saveOrUpdate(channel);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_remove.getJson(), teamUser_to_remove.getOrigin()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("room_id", channel_id);
+            ws_obj.put("team_user_id", teamUser_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM_MEMBER, WebSocketMessageAction.REMOVED, ws_obj));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

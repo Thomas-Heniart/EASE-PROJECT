@@ -31,4 +31,8 @@ public class WebSocketMessageFactory {
     public static WebSocketMessage createNotificationMessage(Notification notification) {
         return new NotificationWebSocketMessage(notification);
     }
+
+    public static WebSocketMessage createUserWebSocketMessage(WebSocketMessageType type, JSONObject data) {
+        return new UserWebSocketMessage(type, data);
+    }
 }

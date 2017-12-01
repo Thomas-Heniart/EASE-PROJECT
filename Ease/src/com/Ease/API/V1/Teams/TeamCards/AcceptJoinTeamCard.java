@@ -38,15 +38,15 @@ public class AcceptJoinTeamCard extends HttpServlet {
             TeamCardReceiver teamCardReceiver = joinTeamCardRequest.accept((String) sm.getTeamProperties(team_id).get("teamKey"), hibernateQuery);
             TeamUser teamUser_receiver = teamCardReceiver.getTeamUser();
             if (teamUser_receiver.isVerified()) {
-                Profile profile = teamUser_receiver.getOrCreateProfile(hibernateQuery);
+                Profile profile = teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), hibernateQuery);
                 App app = teamCardReceiver.getApp();
                 app.setProfile(profile);
                 app.setPosition(profile.getSize());
                 sm.saveOrUpdate(app);
                 NotificationFactory.getInstance().createAcceptJoinRequestNotification(teamUser_receiver, sm.getTeamUser(team), teamCard, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), hibernateQuery);
             }
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_REQUEST, WebSocketMessageAction.REMOVED, request_id));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_REQUEST, WebSocketMessageAction.REMOVED, request_id));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getJson()));
             sm.setSuccess(teamCardReceiver.getJson());
         } catch (Exception e) {
             sm.setError(e);

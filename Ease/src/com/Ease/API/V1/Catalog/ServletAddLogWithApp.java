@@ -49,7 +49,7 @@ public class ServletAddLogWithApp extends HttpServlet {
             app.setPosition(profile.getSize());
             sm.saveOrUpdate(app);
             profile.addApp(app);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.APP, WebSocketMessageAction.CREATED, app.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, app.getJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);
