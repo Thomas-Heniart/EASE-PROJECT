@@ -43,6 +43,7 @@ public class ServletResetPassword extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             if (!Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid password");
+            password = sm.decipher(password);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
             hibernateQuery.setParameter("email", email);

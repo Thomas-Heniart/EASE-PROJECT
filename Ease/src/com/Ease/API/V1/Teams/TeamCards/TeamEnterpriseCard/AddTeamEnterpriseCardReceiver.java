@@ -42,6 +42,7 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
+            sm.decipher(account_information);
             Account account = null;
             if (account_information != null && !account_information.isEmpty()) {
                 String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");

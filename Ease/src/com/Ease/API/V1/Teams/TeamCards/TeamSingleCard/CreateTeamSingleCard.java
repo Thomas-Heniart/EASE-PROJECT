@@ -58,8 +58,10 @@ public class CreateTeamSingleCard extends HttpServlet {
             Integer teamUser_filler_id = sm.getIntParam("team_user_filler_id", true, true);
             TeamUser teamUser_filler = null;
             Map<String, String> account_information = new HashMap<>();
-            if (!account_information_obj.isEmpty())
+            if (!account_information_obj.isEmpty()) {
+                sm.decipher(account_information_obj);
                 account_information = website.getInformationNeeded(account_information_obj);
+            }
             if (teamUser_filler_id != null && !teamUser_filler_id.equals(-1))
                 teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
             else if (account_information.isEmpty())

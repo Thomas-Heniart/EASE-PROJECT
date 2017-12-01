@@ -28,6 +28,7 @@ public class ServletEditSsoGroup extends HttpServlet {
             Integer sso_group_id = sm.getIntParam("sso_group_id", true, false);
             SsoGroup ssoGroup = user.getSsoGroup(sso_group_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
+            sm.decipher(account_information);
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             ssoGroup.decipher(keyUser);
             Account account = ssoGroup.getAccount();

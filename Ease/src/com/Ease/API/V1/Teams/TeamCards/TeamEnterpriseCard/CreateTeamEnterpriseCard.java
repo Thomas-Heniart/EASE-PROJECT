@@ -65,6 +65,7 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
                 Account account = null;
                 if (account_information != null && !account_information.isEmpty()) {
+                    sm.decipher(account_information);
                     String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
                     account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, password_reminder_interval);
                 }

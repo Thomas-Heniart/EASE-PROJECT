@@ -41,11 +41,7 @@ public class ServletAddClassicApp extends HttpServlet {
             Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), user.getTeams());
             Profile profile = user.getProfile(profile_id);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            String private_key = (String) sm.getContextAttr("privateKey");
-            for (Object entry : account_information.entrySet()) {
-                Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
-                account_information.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
-            }
+            sm.decipher(account_information);
             Map<String, String> information = website.getInformationNeeded(account_information);
             Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
             Set<AccountInformation> accountInformationSet = new HashSet<>();
