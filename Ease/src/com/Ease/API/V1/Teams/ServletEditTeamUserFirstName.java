@@ -23,7 +23,6 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/EditTeamUserFirstName")
 public class ServletEditTeamUserFirstName extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println(request.getParameter("first_name"));
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
@@ -37,7 +36,6 @@ public class ServletEditTeamUserFirstName extends HttpServlet {
             String firstName = sm.getStringParam("first_name", true, false);
             if (firstName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty firstName.");
-            System.out.println(firstName);
             teamUserToModify.editFirstName(firstName);
             sm.saveOrUpdate(teamUserToModify);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getWebSocketJson()));
