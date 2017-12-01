@@ -5,33 +5,40 @@ import org.json.simple.JSONObject;
 public class WebSocketMessage {
     private String type;
     private Object data = new JSONObject();
+    private String action;
 
-    public WebSocketMessage(String type){
+    public WebSocketMessage(String type) {
         this.type = type;
     }
 
-    public WebSocketMessage(String type, JSONObject data) {
-        this.type = type;
-        this.data = data;
-    }
-
-    public WebSocketMessage(String type, String data) {
+    public WebSocketMessage(String type, JSONObject data, String action) {
         this.type = type;
         this.data = data;
+        this.action = action;
     }
 
-    public String getType(){
+    public WebSocketMessage(String type, String id) {
+        this.type = type;
+        this.data = id;
+    }
+
+    public String getType() {
         return this.type;
     }
 
-    public Object getData() {
-        return this.data;
+    public JSONObject getData() {
+        return (JSONObject) this.data;
     }
 
-    public JSONObject toJSONObject(){
+    public String getAction() {
+        return action;
+    }
+
+    public JSONObject toJSONObject() {
         JSONObject res = new JSONObject();
         res.put("type", this.type);
         res.put("data", this.data);
+        res.put("action", this.getAction());
         return res;
     }
 }

@@ -7,6 +7,7 @@ import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.NotificationFactory;
+import com.Ease.User.PendingNotification;
 import com.Ease.User.User;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
@@ -117,6 +118,9 @@ public class TeamUser {
 
     @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<JoinTeamCardRequest> joinTeamCardRequestSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PendingNotification> pendingNotificationSet = ConcurrentHashMap.newKeySet();
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
         this.firstName = firstName;
@@ -333,6 +337,14 @@ public class TeamUser {
 
     public void setJoinTeamCardRequestSet(Set<JoinTeamCardRequest> joinTeamCardRequestSet) {
         this.joinTeamCardRequestSet = joinTeamCardRequestSet;
+    }
+
+    public Set<PendingNotification> getPendingNotificationSet() {
+        return pendingNotificationSet;
+    }
+
+    public void setPendingNotificationSet(Set<PendingNotification> pendingNotificationSet) {
+        this.pendingNotificationSet = pendingNotificationSet;
     }
 
     public void addChannel(Channel channel) {

@@ -414,3 +414,14 @@ ALTER TABLE status
   ADD COLUMN new_feature_seen TINYINT(1) NOT NULL DEFAULT 1;
 UPDATE status
 SET new_feature_seen = 0;
+
+CREATE TABLE pendingTeamUserNotifications (
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  teamUser_id INT(10) UNSIGNED NOT NULL,
+  content TEXT NOT NULL,
+  creation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  url VARCHAR(255),
+  icon VARCHAR(255),
+  PRIMARY KEY (id),
+  FOREIGN KEY (teamUser_id) REFERENCES teamUsers(id)
+);

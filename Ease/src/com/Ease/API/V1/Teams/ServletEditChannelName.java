@@ -3,13 +3,11 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.Notification;
 import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -51,9 +49,9 @@ public class ServletEditChannelName extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!old_name.equals(channel.getName())) {
                 for (TeamUser teamUser : channel.getTeamUsers()) {
-                    if (teamUser == teamUser_connected || teamUser.getUser() == null)
+                    if (teamUser.equals(teamUser_connected))
                         continue;
-                    NotificationFactory.getInstance().createEditRoomNameNotification(teamUser, channel, old_name, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()),  sm.getHibernateQuery());
+                    NotificationFactory.getInstance().createEditRoomNameNotification(teamUser, channel, old_name, sm.getUserIdMap(), sm.getHibernateQuery());
                 }
             }
             sm.saveOrUpdate(channel);

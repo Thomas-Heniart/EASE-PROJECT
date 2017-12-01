@@ -187,8 +187,7 @@ public class TeamManager {
                         if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
                             account.setPassword_must_be_updated(true);
                             hibernateQuery.saveOrUpdateObject(account);
-                            if (teamCardReceiver.getTeamUser().isVerified())
-                                NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamEnterpriseCardReceiver, this.getUserWebSocketManager(teamCardReceiver.getTeamUser().getUser().getDb_id(), servletContext), hibernateQuery);
+                            NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamEnterpriseCardReceiver, this.getUserIdMap(servletContext), hibernateQuery);
                         } else if (teamCardReceiver.getTeamUser().isVerified() && account.mustUpdatePassword() && !account.isAdmin_notified() && DateComparator.isOutdated(account.getLast_update(), account.getReminder_interval(), 7)) {
                             account.setAdmin_notified(true);
                             hibernateQuery.saveOrUpdateObject(account);
@@ -202,8 +201,12 @@ public class TeamManager {
         System.out.println("Password reminder end...");
     }
 
+    private Map<Integer, Map<String, Object>> getUserIdMap(ServletContext servletContext) {
+        return (Map<Integer, Map<String, Object>>) servletContext.getAttribute("userIdMap");
+    }
+
     private WebSocketManager getUserWebSocketManager(Integer user_id, ServletContext servletContext) {
-        Map<Integer, Map<String, Object>> userIdMap = (Map<Integer, Map<String, Object>>) servletContext.getAttribute("userIdMap");
+        Map<Integer, Map<String, Object>> userIdMap = this.getUserIdMap(servletContext);
         Map<String, Object> userProperties = userIdMap.get(user_id);
         if (userProperties == null) {
             userProperties = new ConcurrentHashMap<>();

@@ -531,4 +531,8 @@ public abstract class ServletManager {
         String public_key = (String) this.getContextAttr("publicKey");
         return RSA.Encrypt(s, public_key);
     }
+
+    public Map<Integer,Map<String,Object>> getUserIdMap() {
+        return (Map<Integer, Map<String, Object>>) this.getContextAttr("userIdMap");
+    }
 }

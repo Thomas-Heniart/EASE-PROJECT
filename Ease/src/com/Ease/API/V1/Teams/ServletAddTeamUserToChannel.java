@@ -3,10 +3,8 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.Notification;
 import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -37,8 +35,8 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
             channel.addTeamUser(teamUser);
             sm.saveOrUpdate(channel);
             TeamUser teamUser_connected = sm.getTeamUser(team);
-            if (teamUser != teamUser_connected && teamUser.getUser() != null)
-                NotificationFactory.getInstance().createAddTeamUserToChannelNotification(teamUser, teamUser_connected, channel, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+            if (!teamUser.equals(teamUser_connected))
+                NotificationFactory.getInstance().createAddTeamUserToChannelNotification(teamUser, teamUser_connected, channel, sm.getUserIdMap(), sm.getHibernateQuery());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
             sm.setSuccess(channel.getJson());

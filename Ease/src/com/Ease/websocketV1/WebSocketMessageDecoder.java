@@ -15,7 +15,7 @@ public class WebSocketMessageDecoder implements Decoder.Text<WebSocketMessage> {
         JSONObject res;
         try {
             res = (JSONObject) parser.parse(StringEscapeUtils.unescapeHtml4(s));
-            return new WebSocketMessage((String) res.get("type"), (JSONObject) res.get("data"));
+            return new WebSocketMessage((String) res.get("type"), (JSONObject) res.get("data"), (String) res.get("action"));
         } catch (Exception e) {
             e.printStackTrace();
         }
