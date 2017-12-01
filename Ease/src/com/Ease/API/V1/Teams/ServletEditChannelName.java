@@ -55,7 +55,7 @@ public class ServletEditChannelName extends HttpServlet {
                 }
             }
             sm.saveOrUpdate(channel);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getWebSocketJson()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

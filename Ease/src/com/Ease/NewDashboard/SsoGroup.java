@@ -109,6 +109,12 @@ public class SsoGroup {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("sso_group", this.getJson());
+        return res;
+    }
+
     public void decipher(String symmetric_key) throws HttpServletException {
         if (this.getAccount() == null)
             return;

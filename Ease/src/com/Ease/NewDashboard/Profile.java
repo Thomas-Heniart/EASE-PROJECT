@@ -130,6 +130,12 @@ public class Profile {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("profile", this.getJson());
+        return res;
+    }
+
     public Stream<App> getApps() {
         return this.getAppSet().stream().sorted(Comparator.comparingInt(App::getPosition));
     }

@@ -61,7 +61,7 @@ public class EditTeamLinkCard extends HttpServlet {
                 linkApp.getLinkAppInformation().setImg_url(img_url);
             }
             sm.saveOrUpdate(teamCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

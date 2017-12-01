@@ -40,7 +40,7 @@ public class ServletEditTeamUserFirstName extends HttpServlet {
             System.out.println(firstName);
             teamUserToModify.editFirstName(firstName);
             sm.saveOrUpdate(teamUserToModify);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getWebSocketJson()));
             sm.setSuccess("TeamUser firstName edited.");
         } catch (Exception e) {
             sm.setError(e);

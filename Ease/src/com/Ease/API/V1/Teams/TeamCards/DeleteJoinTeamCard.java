@@ -8,6 +8,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -32,7 +33,10 @@ public class DeleteJoinTeamCard extends HttpServlet {
             teamCard.decipher(teamKey);
             teamCard.removeJoinTeamCardRequest(joinTeamCardRequest);
             sm.deleteObject(joinTeamCardRequest);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_REQUEST, WebSocketMessageAction.REMOVED, request_id));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("team_card_id", teamCard.getDb_id());
+            jsonObject.put("request_id", request_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_REQUEST, WebSocketMessageAction.REMOVED, jsonObject));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

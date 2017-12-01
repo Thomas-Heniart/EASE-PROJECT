@@ -1,12 +1,13 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.User.Notification;
+import com.Ease.Team.Channel;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
+import com.Ease.Team.TeamUserRole;
 import com.Ease.User.NotificationFactory;
-import com.Ease.Team.*;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
@@ -64,7 +65,7 @@ public class ServletEditTeamUserRole extends HttpServlet {
             if (teamUser != teamUserToModify && teamUserToModify.getUser() != null)
                 NotificationFactory.getInstance().createEditRoleNotification(teamUserToModify, teamUser, sm.getUserWebSocketManager(teamUserToModify.getUser().getDb_id()), sm.getHibernateQuery());
             sm.saveOrUpdate(teamUserToModify.getTeamUserRole());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getJson(), teamUserToModify.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUserToModify.getWebSocketJson()));
             sm.setSuccess("TeamUser role edited.");
         } catch (Exception e) {
             sm.setError(e);

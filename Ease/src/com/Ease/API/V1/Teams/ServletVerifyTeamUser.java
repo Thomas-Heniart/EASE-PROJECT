@@ -47,7 +47,7 @@ public class ServletVerifyTeamUser extends HttpServlet {
             sm.saveOrUpdate(notification);
             WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());
             webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

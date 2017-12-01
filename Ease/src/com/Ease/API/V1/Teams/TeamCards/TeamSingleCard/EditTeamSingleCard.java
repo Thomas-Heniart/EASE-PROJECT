@@ -66,7 +66,7 @@ public class EditTeamSingleCard extends HttpServlet {
                 }
             }
             sm.saveOrUpdate(teamSingleCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleCard.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleCard.getWebSocketJson()));
             sm.setSuccess(teamSingleCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -9,6 +9,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,7 +48,9 @@ public class ServletDeleteApp extends HttpServlet {
             sm.deleteObject(app);
             if (ssoGroup != null && ssoGroup.getSsoAppMap().isEmpty())
                 sm.deleteObject(ssoGroup);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.REMOVED, app_id));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("app_id", app_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.REMOVED, jsonObject));
             sm.setSuccess("App deleted");
         } catch (Exception e) {
             sm.setError(e);

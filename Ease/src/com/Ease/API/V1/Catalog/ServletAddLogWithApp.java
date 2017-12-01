@@ -2,8 +2,8 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.User.User;
 import com.Ease.NewDashboard.*;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -49,7 +49,7 @@ public class ServletAddLogWithApp extends HttpServlet {
             app.setPosition(profile.getSize());
             sm.saveOrUpdate(app);
             profile.addApp(app);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, app.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, app.getWebSocketJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

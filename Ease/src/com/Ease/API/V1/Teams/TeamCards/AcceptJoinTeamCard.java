@@ -45,8 +45,7 @@ public class AcceptJoinTeamCard extends HttpServlet {
                 sm.saveOrUpdate(app);
                 NotificationFactory.getInstance().createAcceptJoinRequestNotification(teamUser_receiver, sm.getTeamUser(team), teamCard, sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), hibernateQuery);
             }
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_REQUEST, WebSocketMessageAction.REMOVED, request_id));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getWebSocketJson()));
             sm.setSuccess(teamCardReceiver.getJson());
         } catch (Exception e) {
             sm.setError(e);

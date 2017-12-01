@@ -395,6 +395,12 @@ public class TeamUser {
         return res;
     }
 
+    public JSONObject getWebSocketJson() {
+        JSONObject res = new JSONObject();
+        res.put("team_user", this.getJson());
+        return res;
+    }
+
     public void edit(JSONObject editJson) {
         String firstName = (String) editJson.get("firstName");
         String lastName = (String) editJson.get("lastName");
@@ -559,7 +565,7 @@ public class TeamUser {
                 this.getUser().addProfile(profile);
                 this.setProfile(profile);
                 hibernateQuery.saveOrUpdateObject(this);
-                webSocketManager.sendObject(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_PROFILE, WebSocketMessageAction.CREATED, profile.getJson()));
+                webSocketManager.sendObject(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_PROFILE, WebSocketMessageAction.CREATED, profile.getWebSocketJson()));
                 return this.getProfile();
             } else if (this.getProfile() == null) {
                 return this.getUser().getProfileSet().stream().findAny().get();

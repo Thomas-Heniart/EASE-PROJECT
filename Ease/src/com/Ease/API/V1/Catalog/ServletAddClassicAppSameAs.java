@@ -57,7 +57,7 @@ public class ServletAddClassicAppSameAs extends HttpServlet {
             classicApp.setPosition(profile.getSize());
             sm.saveOrUpdate(classicApp);
             profile.addApp(classicApp);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, classicApp.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, classicApp.getWebSocketJson()));
             sm.setSuccess(classicApp.getJson());
         } catch (Exception e) {
             sm.setError(e);
