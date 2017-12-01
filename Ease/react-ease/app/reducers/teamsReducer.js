@@ -151,7 +151,8 @@ export const teams = createReducer({
     return state;
   },
   ['TEAM_USER_CHANGED'](state, action){
-    const {team_id, team_user} = action.payload;
+    const {team_user} = action.payload;
+    const team_id = team_user.team_id;
 
     return update(state, {
       [team_id]: {
@@ -162,8 +163,8 @@ export const teams = createReducer({
     });
   },
   ['TEAM_USER_CREATED'](state, action){
-    const {team_user, team_id} = action.payload;
-
+    const {team_user} = action.payload;
+    const team_id = team_user.team_id;
     let new_state = update(state, {
       [team_id]: {
         team_users: {
@@ -178,6 +179,23 @@ export const teams = createReducer({
           team_user_ids: {$push: [team_user.id]}
         });
       }
+    });
+    return new_state;
+  },
+  ['TEAM_USER_REMOVED'](state, action){
+    const {team_id, team_user_id} = action.payload;
+    const team_user = state[team_id].team_users[team_user_id];
+
+    let new_state = update(state, {
+      [team_id]: {
+        team_users: {$unset: [team_user_id]}
+      }
+    });
+    team_user.room_ids.map(id => {
+      let room = new_state[team_id].rooms[id];
+      new_state[team_id].rooms[id] = update(room, {
+        team_user_ids: {$splice: [[room.team_user_ids.indexOf(team_user_id), 1]]}
+      });
     });
     return new_state;
   },
@@ -218,23 +236,6 @@ export const teams = createReducer({
           team_user_ids: {$push: [team_user.id]}
         });
       }
-    });
-    return new_state;
-  },
-  ['TEAM_USER_REMOVED'](state, action){
-    const {team_id, team_user_id} = action.payload;
-    const team_user = state[team_id].team_users[team_user_id];
-
-    let new_state = update(state, {
-      [team_id]: {
-        team_users: {$unset: [team_user_id]}
-      }
-    });
-    team_user.room_ids.map(id => {
-      let room = new_state[team_id].rooms[id];
-      new_state[team_id].rooms[id] = update(room, {
-        team_user_ids: {$splice: [[room.team_user_ids.indexOf(team_user_id), 1]]}
-      });
     });
     return new_state;
   },
@@ -301,7 +302,9 @@ export const teams = createReducer({
     });
   },
   ['TEAM_CARD_RECEIVER_REMOVED'](state, action){
-    const {team_id, team_card_id, receiver} = action.payload;
+    const {receiver} = action.payload;
+    const team_id = receiver.team_id;
+    const team_card_id = receiver.team_card_id;
 
     let team_user = state[team_id].team_users[receiver.team_user_id];
     team_user = update(team_user, {
@@ -337,7 +340,7 @@ export const teams = createReducer({
     });
     return new_state;
   },
-  ['TEAM_APP_REMOVED'](state, action){
+  ['TEAM_CARD_REMOVED'](state, action){
     const app = action.payload.app;
     const app_id = app.id;
     const team_id = app.team_id;
@@ -396,7 +399,8 @@ export const team_apps = createReducer({
     return state;
   },
   ['TEAM_CARD_RECEIVER_REMOVED'](state, action){
-    const {team_id, team_card_id, receiver} = action.payload;
+    const {receiver} = action.payload;
+    const team_card_id = receiver.team_card_id;
 
     if (!!state[team_card_id]){
       const app = state[team_card_id];
@@ -438,7 +442,7 @@ export const team_apps = createReducer({
       });
     return state;
   },
-  ['TEAM_APP_REMOVED'](state, action) {
+  ['TEAM_CARD_REMOVED'](state, action) {
     const app = action.payload.app;
 
     return update(state, {$unset: [app.id]});

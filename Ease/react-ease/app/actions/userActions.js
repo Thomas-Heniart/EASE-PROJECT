@@ -299,3 +299,31 @@ export function editTeamUserPhone({team_id, team_user_id, phone_number}){
     });
   }
 }
+
+export function teamUserCreatedAction({team_user}) {
+  return {
+    type: 'TEAM_USER_CREATED',
+    payload: {
+      team_user: team_user
+    }
+  }
+}
+
+export function teamUserChangedAction({team_user}) {
+  return {
+    type: 'TEAM_USER_CHANGED',
+    payload: {
+      team_user: team_user
+    }
+  }
+}
+
+export function teamUserRemovedAction({team_id, team_user_id}) {
+  return {
+    type: 'TEAM_USER_REMOVED',
+    payload: {
+      team_id: team_id,
+      team_user_id: team_user_id
+    }
+  }
+}

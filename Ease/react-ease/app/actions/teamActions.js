@@ -197,3 +197,30 @@ export function upgradePlan({team_id, plan_id}){
     });
   }
 }
+
+export function teamCreatedAction({team}) {
+  return {
+    type: 'TEAM_CREATED',
+    payload: {
+      team: team
+    }
+  }
+}
+
+export function teamChangedAction({team}) {
+  return {
+    type: 'TEAM_CHANGED',
+    payload: {
+      team: team
+    }
+  }
+}
+
+export function teamRemovedAction({team_id}) {
+  return {
+    type: 'TEAM_REMOVED',
+    payload: {
+      team_id: team_id
+    }
+  }
+}

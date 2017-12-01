@@ -135,22 +135,6 @@ export function teamEditEnterpriseCardReceiver({team_id, team_card_id, team_card
   }
 }
 
-export function teamCardReceiverCreatedAction({receiver}) {
-  return (dispatch, getState) => {
-    const store = getState();
-    const team = store.teams[receiver.team_id];
-    dispatch({
-      type: 'TEAM_CARD_RECEIVER_CREATED',
-      payload: {
-        receiver: receiver
-      }
-    });
-    if (team.my_team_user_id === receiver.team_user_id){
-      dispatch(fetchApp({app_id: receiver.app_id}));
-    }
-  }
-}
-
 export function teamCardCreatedAction({team_card}){
   return (dispatch, getState) => {
     dispatch({
@@ -164,6 +148,37 @@ export function teamCardCreatedAction({team_card}){
     const meReceiver = team_card.receivers.find(receiver => (receiver.team_user_id === team.my_team_user_id));
     if (!!meReceiver)
       dispatch(fetchApp({app_id: meReceiver.app_id}));
+  }
+}
+
+export function teamCardChangedAction({team_card}) {
+  return {
+    type: 'TEAM_CARD_CHANGED',
+    payload: {
+      team_card: team_card
+    }
+  }
+}
+
+export function teamCardRemovedAction({team_card_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const app = store.team_apps[team_card_id];
+    const team_id = app.team_id;
+
+    app.receivers.map(item => {
+      dispatch(teamCardReceiverRemovedAction({
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: item.id
+      }));
+    });
+    dispatch({
+      type: 'TEAM_CARD_REMOVED',
+      payload: {
+        app: app
+      }
+    });
   }
 }
 
@@ -419,7 +434,7 @@ export function teamCreateLinkApp(app){
 export function teamDeleteApp(app_id, team_id){
   return function (dispatch, getState){
     return post_api.teamApps.deleteApp(getState().common.ws_id, team_id, app_id).then(response => {
-      dispatch({type: 'TEAM_APP_REMOVED', payload:{app_id: app_id}});
+      dispatch({type: 'TEAM_CARD_REMOVED', payload:{app_id: app_id}});
       return response;
     }).catch(err => {
       throw err;
@@ -464,11 +479,37 @@ export function teamAppEditReceiver(app_id,user_app_id, receiver_info){
   }
 }
 
-export function removeTeamCardReceiverAction({team_id, team_card_id, team_card_receiver_id}){
+export function teamCardReceiverCreatedAction({receiver}) {
   return (dispatch, getState) => {
     const store = getState();
-    const team = store.teams[team_id];
-    const receiver = store.team_apps[team_card_id].receivers.find(item => (item.id === team_card_receiver_id));
+    const team = store.teams[receiver.team_id];
+    dispatch({
+      type: 'TEAM_CARD_RECEIVER_CREATED',
+      payload: {
+        receiver: receiver
+      }
+    });
+    if (team.my_team_user_id === receiver.team_user_id){
+      dispatch(fetchApp({app_id: receiver.app_id}));
+    }
+  }
+}
+
+export function teamCardReceiverChangedAction({receiver}) {
+  return {
+    type: 'TEAM_CARD_RECEIVER_CHANGED',
+    payload: {
+      receiver: receiver
+    }
+  }
+}
+
+export function teamCardReceiverRemovedAction({team_card_id, team_card_receiver_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const team_card = store.team_apps[team_card_id];
+    const team = store.teams[team_card.team_id];
+    const receiver = team_card.receivers.find(item => (item.id === team_card_receiver_id));
     if (team.my_team_user_id === receiver.team_user_id){
       dispatch(deleteAppAction({
         app_id: receiver.app_id
@@ -477,8 +518,6 @@ export function removeTeamCardReceiverAction({team_id, team_card_id, team_card_r
     dispatch({
       type: 'TEAM_CARD_RECEIVER_REMOVED',
       payload: {
-        team_id: team_id,
-        team_card_id: team_card_id,
         receiver: receiver
       }
     });
@@ -493,7 +532,7 @@ export function removeTeamCardReceiver({team_id, team_card_id, team_card_receive
       team_card_receiver_id: team_card_receiver_id,
       ws_id: getState().common.ws_id
     }).then(response => {
-      dispatch(removeTeamCardReceiverAction({
+      dispatch(teamCardReceiverRemovedAction({
         team_id: team_id,
         team_card_id: team_card_id,
         team_card_receiver_id: team_card_receiver_id
@@ -505,27 +544,6 @@ export function removeTeamCardReceiver({team_id, team_card_id, team_card_receive
   }
 }
 
-export function deleteTeamCardAction({team_id, team_card_id}){
-  return (dispatch, getState) => {
-    const store = getState();
-    const app = store.team_apps[team_card_id];
-
-    app.receivers.map(item => {
-      dispatch(removeTeamCardReceiverAction({
-        team_id: team_id,
-        team_card_id: team_card_id,
-        team_card_receiver_id: item.id
-      }));
-    });
-    dispatch({
-      type: 'TEAM_APP_REMOVED',
-      payload: {
-        app: app
-      }
-    });
-  }
-}
-
 export function deleteTeamCard({team_id, team_card_id}) {
   return (dispatch, getState) => {
     return post_api.teamApps.deleteApp({
@@ -533,7 +551,7 @@ export function deleteTeamCard({team_id, team_card_id}) {
       team_card_id: team_card_id,
       ws_id: getState().common.ws_id
     }).then(response => {
-      dispatch(deleteTeamCardAction({
+      dispatch(teamCardRemovedAction({
         team_id: team_id,
         team_card_id: team_card_id
       }));

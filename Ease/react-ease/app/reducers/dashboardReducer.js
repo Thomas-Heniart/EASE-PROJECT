@@ -63,7 +63,7 @@ export const dashboard = createReducer({
     }
     return new_state;
   },
-  ['DASHBOARD_APP_ADDED'](state, action){
+  ['DASHBOARD_APP_CREATED'](state, action){
     const {app} = action.payload;
 
     let new_state = update(state, {
@@ -87,7 +87,7 @@ export const dashboard = createReducer({
     }
     return new_state;
   },
-  ['SSO_GROUP_ADDED'](state, action){
+  ['SSO_GROUP_CREATED'](state, action){
     const {sso_group} = action.payload;
     return update(state, {
       sso_groups: {
@@ -142,6 +142,54 @@ export const dashboard = createReducer({
         [profile.id]: {$set: profile}
       }
     });
+  },
+  ['MOVE_APP'](state, action){
+    const {app_id, profile_id, index} = action.payload;
+    const app = state.apps[app_id];
+    const source_profile = state.profiles[app.profile_id];
+    const source_idx = source_profile.app_ids.indexOf(app.id);
+
+    let new_state = update(state, {
+      profiles: {
+        [source_profile.id]: {
+          app_ids: {$splice: [[source_idx, 1]]}
+        }
+      }
+    });
+    new_state = update(new_state, {
+      profiles: {
+        [profile_id]: {
+          app_ids: {$splice: [[index, 0, app_id]]}
+        }
+      },
+      apps: {
+        [app.id]: {
+          profile_id: {$set: profile_id}
+        }
+      }
+    });
+    return new_state;
+  },
+  ['MOVE_PROFILE'](state, action){
+    const {profile_id, column_index, index} = action.payload;
+    const profile = state.profiles[profile_id];
+    const source_idx = state.columns[profile.column_index].indexOf(profile_id);
+    let new_state = update(state, {
+      columns: {
+        [profile.column_index]: {$splice: [[source_idx, 1]]}
+      }
+    });
+    new_state = update(new_state, {
+      columns: {
+        [column_index]: {$splice: [[index, 0, profile_id]]}
+      },
+      profiles: {
+        [profile_id]: {
+          column_index: {$set: column_index}
+        }
+      }
+    });
+    return new_state;
   },
   ['INSERT_APP'](state, action){
     const {app_id, targetApp_id} = action.payload;
