@@ -149,7 +149,7 @@ export const PasswordChangeDropdown = ({value, onChange, disabled, roomManager})
                          labeled
                          options={passwordChangeOptions}/>
              }
-             content={`${roomManager} will be in charge of updating the password`}/>
+             content={value > 0 ? `The Room Manager (${roomManager}) will be in charge of updating the password` : `The room manager (${roomManager}) can be in charge of updating the password`}/>
   )
 };
 
