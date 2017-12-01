@@ -21,9 +21,7 @@ public class WebSocketSession {
             synchronized (session) {
                 this.session.getBasicRemote().sendObject(o);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (EncodeException e) {
+        } catch (IOException | EncodeException e) {
             e.printStackTrace();
         }
         //this.session.getAsyncRemote().sendObject(o);
