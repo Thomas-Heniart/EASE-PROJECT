@@ -53,7 +53,7 @@ public class EditTeamEnterpriseCard extends HttpServlet {
                     classicApp.getAccount().setReminder_interval(password_reminder_interval);
             });
             sm.saveOrUpdate(teamEnterpriseCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, teamEnterpriseCard.getJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamEnterpriseCard.getJson()));
             sm.setSuccess(teamEnterpriseCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

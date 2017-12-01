@@ -2,7 +2,7 @@ package com.Ease.websocketV1;
 
 public enum WebSocketMessageType {
     TEAM,
-    TEAM_APP,
+    TEAM_CARD,
     TEAM_CARD_RECEIVER,
     TEAM_CARD_REQUEST,
     TEAM_USER,
