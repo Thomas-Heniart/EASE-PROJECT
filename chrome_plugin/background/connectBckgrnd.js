@@ -141,7 +141,7 @@ extension.runtime.bckgrndOnMessage("NewConnection", function (msg, senderTab, se
                                     msg.visitedWebsites = visitedWebsites;
                                     if (lastConnections == undefined) lastConnections = {};
                                     msg.lastConnections = lastConnections;
-                                    extension.tabs.sendMessage(tab, "goooo", msg, function (response) {
+                                    extension.tabs.sendMessage(tab, msg.test_connection ? "test_connection" : "goooo", msg, function (response) {
                                         if (response) {
                                             console.log("-- Status : " + response.type + " --");
                                             if (response.type == "completed") {
