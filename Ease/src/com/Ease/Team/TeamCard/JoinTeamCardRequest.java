@@ -62,13 +62,14 @@ abstract public class JoinTeamCardRequest {
         JSONObject res = new JSONObject();
         res.put("id", this.getDb_id());
         res.put("team_user_id", this.getTeamUser().getDb_id());
-        res.put("team_card_id", this.getTeamUser().getDb_id());
+        res.put("team_card_id", this.getTeamCard().getDb_id());
         return res;
     }
 
     public JSONObject getWebSocketJson() {
         JSONObject res = new JSONObject();
         res.put("request", this.getJson());
+        res.put("team_card_id", this.getTeamCard().getDb_id());
         return res;
     }
 
