@@ -31,7 +31,6 @@ public class ServletMoveApp extends HttpServlet {
             User user = sm.getUser();
             App app = user.getApp(app_id, sm.getHibernateQuery());
             Profile old_profile = app.getProfile();
-            Integer old_profile_id = old_profile.getDb_id();
             Profile new_profile = user.getProfile(profile_id);
             if (position < 0 || position > new_profile.getSize())
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter position");
@@ -47,6 +46,12 @@ public class ServletMoveApp extends HttpServlet {
             ws_obj.put("profile_id", profile_id);
             ws_obj.put("index", position);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.MOVE_APP, ws_obj));
+            String symmetric_key;
+            if (app.getTeamCardReceiver() != null)
+                symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+            else
+                symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            app.decipher(symmetric_key);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);
