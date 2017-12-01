@@ -186,16 +186,35 @@ class SimpleTeamAppAdder extends Component {
   componentWillMount(){
     let users = this.props.item.team_user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
-      return {
-        key: item,
-        text: setUserDropdownText(user),
-        value: item,
-        id: item,
-        role: user.role,
-        username: user.username,
-        can_see_information: false,
-        toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
+      if (user.role > 1) {
+        return {
+          key: item,
+          text: setUserDropdownText(user),
+          value: item,
+          id: item,
+          role: user.role,
+          username: user.username,
+          can_see_information: true
+        }
       }
+      else {
+        return {
+          key: item,
+          text: setUserDropdownText(user),
+          value: item,
+          id: item,
+          role: user.role,
+          username: user.username,
+          can_see_information: false,
+          toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
+        }
+      }
+    // }).sort((a, b) => {
+    //   if (a.id === this.props.myId)
+    //     return -1000;
+    //   else if (b.id === this.props.myId)
+    //     return 1000;
+    //   return a.username.localeCompare(b.username);
     });
     const room_manager_name = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, this.props.item.room_manager_id).username;
     this.setState({users: users, room_manager_name: room_manager_name});
@@ -244,7 +263,7 @@ class SimpleTeamAppAdder extends Component {
   };
   render(){
     const app = this.state.app;
-    const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.teams[this.props.card.team_id].rooms[this.props.card.channel_id].room_manager_id];
+    const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id];
     // const credentialsInputs = this.state.credentials.map(item => {
     //   return <TeamAppCredentialInput key={item.priority} onChange={this.handleCredentialInput} item={item}/>
     // });
@@ -318,6 +337,7 @@ class SimpleTeamAppAdder extends Component {
               <Button
                   icon="arrow right"
                   content="Next"
+                  type='submit'
                   loading={this.state.loading}
                   disabled={this.state.loading}
                   floated="right"

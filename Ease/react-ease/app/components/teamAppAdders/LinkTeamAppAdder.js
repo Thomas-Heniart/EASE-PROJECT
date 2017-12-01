@@ -211,6 +211,7 @@ class LinkTeamAppAdder extends React.Component {
               <Button positive
                       size="mini"
                       floated="right"
+                      type='submit'
                       loading={this.state.loading}
                       disabled={this.state.loading}>
                   <Icon name="send"/>
