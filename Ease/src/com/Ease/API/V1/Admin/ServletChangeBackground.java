@@ -62,8 +62,6 @@ public class ServletChangeBackground extends HttpServlet {
                         File storeFile;
                         filePath = uploadPath + "/" + "background.jpeg";
                         storeFile = new File(filePath);
-                        System.out.println(storeFile.getAbsoluteFile());
-                        System.out.println(storeFile.getCanonicalPath());
                         if (storeFile.exists()) {
                             String newPathName = uploadPath + "/" + "background_old";
                             File temp = new File(newPathName + ".jpeg");

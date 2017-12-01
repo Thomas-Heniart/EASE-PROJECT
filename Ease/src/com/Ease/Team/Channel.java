@@ -1,6 +1,8 @@
 package com.Ease.Team;
 
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -229,5 +231,12 @@ public class Channel {
     @Override
     public int hashCode() {
         return db_id.hashCode();
+    }
+
+    public TeamUser getTeamUser(Integer teamUser_id) throws HttpServletException {
+        TeamUser teamUser = this.getTeamUsers().stream().filter(teamUser1 -> teamUser1.getDb_id().equals(teamUser_id)).findAny().orElse(null);
+        if (teamUser == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "No such teamUser in this team");
+        return teamUser;
     }
 }

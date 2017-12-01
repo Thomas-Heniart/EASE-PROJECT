@@ -19,7 +19,10 @@ class UserListItem extends Component {
             <Header as="h4">
               {item.first_name} {item.last_name}
             </Header>
-            <p><Icon name="user"/>{item.username} ({teamUserRoles[item.role]})</p>
+            {item.state !== 0 ?
+              <p><Icon name="user"/>{item.username} ({teamUserRoles[item.role]})</p> :
+              <p><Icon name="user outline"/>{item.username} ({teamUserRoles[item.role]})</p>
+            }
             <p><Icon name="mail outline"/>{item.email}</p>
           </List.Content>
         </List.Item>

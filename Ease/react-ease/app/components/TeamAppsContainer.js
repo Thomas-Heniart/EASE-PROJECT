@@ -76,12 +76,12 @@ class TeamAppsContainer extends React.Component{
       })).then(r => {
         setTimeout(() => {
           this.setState({loadingSendInvitation: false});
-        }, 5000);
+        }, 2000);
         // this.setState({loadingSendInvitation: false});
       }).catch(err => {
         setTimeout(() => {
           this.setState({loadingSendInvitation: false});
-        }, 5000);
+        }, 2000);
         // this.setState({loadingSendInvitation: false});
         // this.setState({errorMessage: err});
         console.log(err);
@@ -108,12 +108,12 @@ class TeamAppsContainer extends React.Component{
       Promise.all(response.map(reflect)).then(r => {
         setTimeout(() => {
           this.setState({loadingSendInvitation: false});
-        }, 5000);
+        }, 2000);
         // this.setState({loadingSendInvitation: false});
       }).catch(err => {
         setTimeout(() => {
           this.setState({loadingSendInvitation: false});
-        }, 5000);
+        }, 2000);
         // this.setState({loadingSendInvitation: false});
         // this.setState({errorMessage: err});
         console.log(err);
@@ -139,12 +139,12 @@ class TeamAppsContainer extends React.Component{
       Promise.all(response.map(reflect)).then(r => {
         setTimeout(() => {
           this.setState({loadingSendInvitation: false});
-        }, 5000);
+        }, 2000);
         // this.setState({loadingSendInvitation: false});
       }).catch(err => {
         setTimeout(() => {
           this.setState({loadingSendInvitation: false});
-        }, 5000);
+        }, 2000);
         // this.setState({loadingSendInvitation: false});
         // this.setState({errorMessage: err});
         console.log(err);
@@ -176,18 +176,23 @@ class TeamAppsContainer extends React.Component{
             <div id='invitation'>
               {item.invitation_sent ?
                   <Segment className='resend' inverted disabled={this.state.loadingSendInvitation}>
+                    {this.state.loadingSendInvitation ?
+                      <div style={{textAlign: 'center'}}>
+                        <span style={{textDecoration: 'none'}}>Invitations sent ! <Icon name='rocket'/></span>
+                      </div>
+                      :
                     <div>
-                      {item.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(item)}>Resend invitation<Icon name='send'/></span>
+                      {item.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(item)}>Resend invitation <Icon name='send'/></span>
                       <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
-                      <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations<Icon name='rocket'/></span>
-                    </div>
+                      <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations <Icon name='rocket'/></span>
+                    </div>}
                   </Segment>
                   :
                   <Segment className='send' inverted disabled={this.state.loadingSendInvitation}>
                     <div>
-                      {item.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(item)}>Send invitation<Icon name='send'/></span>
+                      {item.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(item)}>Send invitation <Icon name='send'/></span>
                       <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
-                      <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people<Icon name='rocket'/></span>
+                      <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people <Icon name='rocket'/></span>
                     </div>
                   </Segment>}
             </div>}

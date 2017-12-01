@@ -47,10 +47,13 @@ public class JoinTeamEnterpriseCard extends HttpServlet {
             Map<String, String> accountInformation = ((TeamEnterpriseCard) teamCard).getWebsite().getInformationNeeded(account_information);
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, ((TeamEnterpriseCard) teamCard).getPassword_reminder_interval());
+            sm.saveOrUpdate(account);
             JoinTeamCardRequest joinTeamCardRequest = new JoinTeamEnterpriseCardRequest(teamCard, teamUser, account);
             sm.saveOrUpdate(joinTeamCardRequest);
             teamCard.addJoinTeamCardRequest(joinTeamCardRequest);
-            NotificationFactory.getInstance().createJoinTeamCardNotification(teamUser, teamCard, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+            TeamUser room_manager = teamCard.getChannel().getRoom_manager();
+            if (!teamUser.equals(room_manager))
+                NotificationFactory.getInstance().createJoinTeamCardNotification(teamUser, teamCard, sm.getUserWebSocketManager(room_manager.getUser().getDb_id()), sm.getHibernateQuery());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_REQUEST, WebSocketMessageAction.CREATED, joinTeamCardRequest.getWebSocketJson()));
             sm.setSuccess(joinTeamCardRequest.getJson());
         } catch (Exception e) {

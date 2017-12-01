@@ -93,11 +93,9 @@ class ChooseAppLocationModal extends React.Component {
                               </Table.Cell>
                               <Table.Cell verticalAlign='bottom'>
                                   <List link style={{width: '180px'}}>
-                                    {this.props.loading ?
-                                      <Loader inline={'centered'} active size="tiny"/> :
-                                      profiles}
+                                    {profiles}
                                   </List>
-                                {(!this.props.loading && !this.props.profileAdded) &&
+                                {(!this.props.profileAdded) &&
                                 <form style={{marginBottom: 0}} onSubmit={this.props.createProfile}>
                                     <Input
                                       value={this.props.profileName}
@@ -122,7 +120,8 @@ class ChooseAppLocationModal extends React.Component {
             attached='bottom'
             type="submit"
             positive
-            disabled={(selectedProfile === -1 && selectedRoom === -1) || appName.length === 0}
+            loading={this.props.loading}
+            disabled={(selectedProfile === -1 && selectedRoom === -1) || appName.length === 0 || this.props.loading}
             onClick={confirm}
             className="modal-button"
             content="NEXT"/>

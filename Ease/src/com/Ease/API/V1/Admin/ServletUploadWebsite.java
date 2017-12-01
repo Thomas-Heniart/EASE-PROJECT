@@ -79,14 +79,12 @@ public class ServletUploadWebsite extends HttpServlet {
                     }
                     // processes only fields that are not form fields
                     if (!item.isFormField()) {
-                        // System.out.println(uploadPath);
                         String fileName = new File(item.getName()).getName();
                         String filePath;
                         File storeFile;
                         if (fileName.endsWith(".json")) {
 
                             filePath = uploadPath + File.separator + "connect.json";
-                            // System.out.println(filePath);
                             storeFile = new File(filePath);
                             if (storeFile.exists())
                                 storeFile.renameTo(new File(uploadPath + File.separator + "connect_old.json"));

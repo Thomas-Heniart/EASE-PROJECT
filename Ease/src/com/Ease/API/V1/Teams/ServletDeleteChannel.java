@@ -37,7 +37,8 @@ public class ServletDeleteChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
-            channel.delete();
+            channel.getTeamCardMap().clear();
+            channel.getPending_teamUsers().clear();
             team.removeChannel(channel);
             sm.deleteObject(channel);
             sm.saveOrUpdate(team);

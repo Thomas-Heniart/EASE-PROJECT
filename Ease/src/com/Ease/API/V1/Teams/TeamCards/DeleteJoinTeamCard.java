@@ -4,6 +4,8 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -26,6 +28,8 @@ public class DeleteJoinTeamCard extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Integer request_id = sm.getIntParam("request_id", true, false);
             JoinTeamCardRequest joinTeamCardRequest = (JoinTeamCardRequest) hibernateQuery.get(JoinTeamCardRequest.class, request_id);
+            if (joinTeamCardRequest == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "No such request");
             TeamCard teamCard = joinTeamCardRequest.getTeamCard();
             Team team = teamCard.getTeam();
             sm.needToBeAdminOfTeam(team);
