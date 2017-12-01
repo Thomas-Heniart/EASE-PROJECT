@@ -190,3 +190,81 @@ export function deleteJoinChannelRequest({team_id, room_id, team_user_id}){
     });
   }
 }
+
+export function teamRoomCreatedAction({room}) {
+  return {
+    payload: {
+      type: 'TEAM_ROOM_CREATED',
+      payload: {
+        room: room
+      }
+    }
+  }
+}
+
+export function teamRoomChangedAction({room}) {
+  return {
+    payload: {
+      type: 'TEAM_ROOM_CHANGED',
+      payload: {
+        room: room
+      }
+    }
+  }
+}
+
+export function teamRoomRemovedAction({team_id, room_id}) {
+  return {
+    payload: {
+      type: 'TEAM_ROOM_REMOVED',
+      payload: {
+        team_id:team_id,
+        room_id: room_id
+      }
+    }
+  }
+}
+
+export function teamRoomRequestCreatedAction({team_id, room_id, team_user_id}) {
+  return {
+    type: 'TEAM_ROOM_REQUEST_CREATED',
+    payload: {
+      team_id: team_id,
+      room_id: room_id,
+      team_user_id: team_user_id
+    }
+  }
+}
+
+export function teamRoomRequestRemovedAction({team_id, room_id, team_user_id}) {
+  return {
+    type: 'TEAM_ROOM_REQUEST_REMOVED',
+    payload: {
+      team_id: team_id,
+      room_id: room_id,
+      team_user_id: team_user_id
+    }
+  }
+}
+
+export function teamRoomMemberCreated({team_id, room_id, team_user_id}) {
+  return {
+    type: 'TEAM_ROOM_MEMBER_CREATED',
+    payload: {
+      team_id: team_id,
+      room_id: room_id,
+      team_user_id: team_user_id
+    }
+  }
+}
+
+export function teamRoomMemberRemoved({team_id, room_id, team_user_id}) {
+  return {
+    type: 'TEAM_ROOM_MEMBER_REMOVED',
+    payload: {
+      team_id: team_id,
+      room_id: room_id,
+      team_user_id: team_user_id
+    }
+  }
+}

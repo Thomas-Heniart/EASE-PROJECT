@@ -39,7 +39,7 @@ export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
       website_id: website_id
     }).then(response => {
       dispatch({
-        type: 'DASHBOARD_APP_ADDED',
+        type: 'DASHBOARD_APP_CREATED',
         payload:{
           app:response
         }
@@ -60,7 +60,7 @@ export function catalogAddClassicApp({name, website_id, profile_id, account_info
       account_information: account_information
     }).then(response => {
       dispatch({
-        type: 'DASHBOARD_APP_ADDED',
+        type: 'DASHBOARD_APP_CREATED',
         payload:{
           app:response
         }
@@ -80,7 +80,7 @@ export function catalogAddMultipleClassicApp({profile_id, apps_to_add, account_i
       account_information: account_information
     }).then(apps => {
       dispatch({
-        type: 'DASHBOARD_APP_ADDED',
+        type: 'DASHBOARD_APP_CREATED',
         payload:{
           app:apps
         }
@@ -101,7 +101,7 @@ export function catalogAddClassicAppSameAs({website_id, name, same_app_id, profi
             profile_id: profile_id
         }).then(apps => {
           dispatch({
-            type: 'DASHBOARD_APP_ADDED',
+            type: 'DASHBOARD_APP_CREATED',
             payload:{
               app:apps
             }
@@ -122,7 +122,7 @@ export function catalogAddLogWithApp({name, website_id, profile_id, logWith_app_
       logWith_app_id: logWith_app_id
     }).then(response => {
       dispatch({
-        type: 'DASHBOARD_APP_ADDED',
+        type: 'DASHBOARD_APP_CREATED',
         payload:{
           app:response
         }
@@ -143,7 +143,7 @@ export function catalogAddBookmark({name, profile_id, url, img_url}){
       img_url: img_url
     }).then(app => {
       dispatch({
-        type: 'DASHBOARD_APP_ADDED',
+        type: 'DASHBOARD_APP_CREATED',
         payload:{
           app:app
         }

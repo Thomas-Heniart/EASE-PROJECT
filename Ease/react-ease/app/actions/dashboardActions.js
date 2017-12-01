@@ -39,13 +39,138 @@ export function fetchDashboard(){
   }
 }
 
+export function dashboardAppCreatedAction({app}) {
+  return {
+    type: 'DASHBOARD_APP_CREATED',
+    payload: {
+      app: app
+    }
+  }
+}
+
+export function dashboardAppChangedAction({app}) {
+  return {
+    type: 'DASHBOARD_APP_CHANGED',
+    payload: {
+      app: app
+    }
+  }
+}
+
+export function dashboardAppRemovedAction({app_id}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const app = store.dashboard.apps[app_id];
+    dispatch({
+      type: 'DASHBOARD_APP_REMOVED',
+      payload: {
+        app_id: app.id
+      }
+    });
+    dispatch(checkIfProfileEmpty({
+      profile_id: app.profile_id
+    }));
+    if (app.type === 'ssoApp'){
+      const sso_group = store.dashboard.sso_groups[app.sso_group_id];
+      if (sso_group.sso_app_ids.length === 1)
+        dispatch(ssoGroupRemovedAction({
+          sso_group_id: sso_group.id
+        }));
+    }
+  };
+}
+
+export function dashboardProfileCreatedAction({profile}){
+  return {
+    type: 'DASHBOARD_PROFILE_CREATED',
+    payload: {
+      profile: profile
+    }
+  }
+}
+
+export function dashboardProfileChangedAction({profile}){
+  return {
+    type: 'DASHBOARD_PROFILE_CHANGED',
+    payload: {
+      profile: profile
+    }
+  }
+}
+
+export function dashboardProfileRemovedAction({profile_id}){
+  return {
+    type: 'DASHBOARD_PROFILE_REMOVED',
+    payload: {
+      profile_id: profile_id
+    }
+  }
+}
+
+export function moveAppAction({app_id, profile_id, index}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const app = store.apps[app_id];
+    const source_profile = store.profiles[app.profile_id];
+    dispatch({
+      type: 'MOVE_APP',
+      payload: {
+        app_id: app_id,
+        profile_id: profile_id,
+        index: index
+      }
+    });
+    dispatch(checkIfProfileEmpty({
+      profile_id: source_profile.id
+    }));
+  }
+}
+
+export function moveProfileAction({profile_id, column_index, index}){
+  return {
+    type: 'MOVE_PROFILE',
+    payload: {
+      profile_id: profile_id,
+      column_index: column_index,
+      index: index
+    }
+  }
+}
+
+export function ssoGroupCreatedAction({sso_group}) {
+  return {
+    type: 'SSO_GROUP_CREATED',
+    payload: {
+      sso_group: sso_group
+    }
+  }
+}
+
+export function ssoGroupRemovedAction({sso_group_id}) {
+  return {
+    type: 'SSO_GROUP_REMOVED',
+    payload: {
+      sso_group_id: sso_group_id
+    }
+  }
+}
+
+export function ssoGroupChangedAction({sso_group}) {
+  return {
+    type: 'SSO_GROUP_CHANGED',
+    payload: {
+      sso_group: sso_group
+    }
+  }
+}
+
 export function fetchApp({app_id}){
   return (dispatch, getState) => {
     return api.dashboard.fetchApp({
       app_id:app_id
     }).then(app => {
       dispatch({
-        type: 'DASHBOARD_APP_ADDED',
+        type: 'DASHBOARD_APP_CREATED',
         payload: {
           app: app
         }
@@ -415,7 +540,7 @@ export function createSsoGroup({sso_id, account_information}){
       account_information: account_information
     }).then(response => {
       dispatch({
-        type: 'SSO_GROUP_ADDED',
+        type: 'SSO_GROUP_CREATED',
         payload: {
           sso_group: response
         }

@@ -351,7 +351,7 @@ export default function reducer(state={
         }
       }
     }
-    case 'TEAM_APP_REMOVED' : {
+    case 'TEAM_CARD_REMOVED' : {
       const apps = state.apps.filter(app => (app.id !== action.payload.team_card_id));
       return {
         ...state,
