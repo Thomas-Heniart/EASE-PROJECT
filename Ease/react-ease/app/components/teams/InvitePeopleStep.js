@@ -34,14 +34,13 @@ class PreviewStep extends React.Component {
           <Divider hidden clearing/>
           <Form.Group>
             <Form.Field><label>Email address</label></Form.Field>
-            {/*<Form.Field width={7}><label>Username (editable later)</label></Form.Field>*/}
           </Form.Group>
           {fields}
           <Form.Field>
             <Icon name="add circle" color="blue" size='large'/>
-            <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.addField}>Add another</button>
+            <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.addField}>Add another field</button>
             &nbsp;or&nbsp;
-            <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.changeStep}>add a list of users</button>
+            <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.changeStep}>Paste a list of emails</button>
           </Form.Field>
           <Form.Group id='invitationButton' class="overflow-hidden">
             <Form.Button
