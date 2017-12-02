@@ -288,7 +288,7 @@ class AddClassicAppForm extends Component {
           </Form.Field>}
           {logWithButtons}
           <Message error content={this.state.errorMessage}/>
-          <span id='test_credentials' onClick={testCredentials}>Test credentials <Icon color='green' name='magic stick'/></span>
+          <span id='test_credentials' onClick={testCredentials}>Test connection <Icon color='green' name='magic'/></span>
           <Button
               type="submit"
               loading={this.state.loading}
@@ -396,12 +396,23 @@ class AddLogWithAppForm extends Component {
     const {website, appName, profile_id, goBack, logWithWebsite} = this.props;
     const logWithName = logWithWebsite.name.toLowerCase();
     const logWithSelectors = logWithWebsite.personal_apps.map(item => {
-      return (
-          <List.Item key={item.id} as="p" active={this.state.selectedAppId === item.id} onClick={this.selectApp.bind(null, item.id)}>
-            <Icon name='user circle' />
+      if (!item.empty) {
+        return (
+          <List.Item key={item.id} as="p" active={this.state.selectedAppId === item.id}
+                     onClick={this.selectApp.bind(null, item.id)}>
+            <Icon name='user circle'/>
             <span>{item.account_information.login}</span>
           </List.Item>
-      )
+        )
+      }
+      else {
+        return (
+          <List.Item key={item.id} as="p" style={{opacity:'.7'}}>
+            <Icon name='user circle'/>
+            <span>App with missing credentials</span>
+          </List.Item>
+        )
+      }
     });
     return (
         <Form as="div" class="container" error={this.state.errorMessage.length > 0}>
@@ -489,7 +500,7 @@ class ClassicAppModal extends React.Component {
         item.app_ids.map(id => {
           const app = dashboard_apps[id];
           if (app.type !== 'teamLinkApp' && app.type !== 'linkApp') {
-            if (app.website.id === website.id && !app.empty)
+            if (app.website.id === website.id)
               apps.push(app);
           }
         }, this);
