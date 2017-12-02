@@ -190,8 +190,8 @@ class FriendInvitations extends React.Component {
     const payment = this.props.payment;
     return (
         <Segment size="mini" loading={payment.loading}>
-          <Header>
-            You now have {payment.data.credit} euros in credits
+          <Header style={{color: '#2185d0'}}>
+            Credits : {payment.data.credit} €
           </Header>
           <p>You can obtain credits by inviting friends. As soon as you have credits your payments will be withdrawn from it until you reach 0€.</p>
           {!this.state.modifying &&
