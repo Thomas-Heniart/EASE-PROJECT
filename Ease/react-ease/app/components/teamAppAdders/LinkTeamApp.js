@@ -169,16 +169,15 @@ class LinkTeamApp extends Component {
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
-      const can_see_information = receiver !== null ? receiver.allowed_to_see_password : false;
       if (receiver !== null)
         selected_users.push(item.id);
       return {
         ...item,
-        can_see_information: can_see_information,
+        can_see_information: true,
         receiver: receiver
       }
     });
-    this.setState({users: users, selected_users:selected_users});
+    this.setState({users: users, selected_users: selected_users});
   };
   setEdit = (state) => {
     if (state){
@@ -223,8 +222,6 @@ class LinkTeamApp extends Component {
                              labelPosition="left"
                              required/>
                   }
-                  {/*{!this.state.edit &&*/}
-                  {/*<PinAppButton is_pinned={meReceiver !== null && meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}*/}
                 </Header>
               {!this.state.edit &&
               <TeamLinkAppButtonSet app={app}
