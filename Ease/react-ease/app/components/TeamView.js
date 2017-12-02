@@ -55,6 +55,9 @@ class TeamView extends React.Component {
     document.title = "Team Space"
   }
   componentDidUpdate(){
+    const teamId = this.props.match.params.teamId;
+    const team = this.props.teams[teamId];
+
     if (!this.state.loadingInfo && !this.isValidTeamItemId(this.props.match.params.itemId)) {
       this.autoSelectItem();
     }
@@ -67,7 +70,7 @@ class TeamView extends React.Component {
   }
   componentDidMount() {
     const teamId = this.props.match.params.teamId;
-    const team = this.props.teams[Number(teamId)];
+    const team = this.props.teams[teamId];
 
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
@@ -84,10 +87,7 @@ class TeamView extends React.Component {
   isValidTeamItemId = () => {
     const teamId = Number(this.props.match.params.teamId);
     const team = this.props.teams[teamId];
-    if (!team) {
-      this.props.history.replace('/main/dashboard');
-      return;
-    }
+
     const itemId = this.props.match.params.itemId;
     if (!itemId)
       return false;
@@ -111,8 +111,10 @@ class TeamView extends React.Component {
   };
   getSelectedItem = () => {
     const team = this.props.teams[this.props.match.params.teamId];
+    if (!team)
+      return null;
     const itemId = this.props.match.params.itemId;
-    if (itemId === undefined){
+    if (!itemId){
       return null;
     }
     let item = (itemId[0] === '@') ?
@@ -125,12 +127,6 @@ class TeamView extends React.Component {
     const team = this.props.teams[this.props.match.params.teamId];
     const me = team.team_users[team.my_team_user_id];
     const dispatch = this.props.dispatch;
-/*    if (teamUser.state === teamUserState.registered && isAdmin(me.role) && teamUser.id !== me.id)
-      dispatch(showVerifyTeamUserModal({
-        active: true,
-        team_user_id: teamUser.id,
-        team_id: team.id
-      }));*/
     if (teamUser.disabled && isAdmin(me.role) && teamUser.id !== me.id)
       dispatch(showReactivateTeamUserModal({
         active:true,
@@ -147,9 +143,10 @@ class TeamView extends React.Component {
   render(){
     const team = this.props.teams[this.props.match.params.teamId];
     const selectedItem = this.getSelectedItem();
-    const me = team.team_users[team.my_team_user_id];
+    const me = !!team ? team.team_users[team.my_team_user_id] : null;
     return (
         <div id="teamsHandler">
+          {!!team &&
           <div className="team_view" id="team_view">
             {!this.state.loadingInfo && team.payment_required &&
             <FreeTrialEndModal team_id={team.id}/>}
@@ -174,8 +171,8 @@ class TeamView extends React.Component {
                   <TeamsTutorial team_id={team.id}/>}
                 </OpacityTransition>
                 <div id="col_main">
-                    {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
-                    <TeamAppAddingUi
+                  {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
+                  <TeamAppAddingUi
                       addAppView={this.props.card.type}
                       item={selectedItem}
                       website={this.props.card.app} />}
@@ -201,7 +198,7 @@ class TeamView extends React.Component {
               <Route path={`${this.props.match.path}/upgrade`}
                      component={StaticUpgradeTeamPlanModal}/>
             </Switch>}
-          </div>
+          </div>}
         </div>
     )
   }

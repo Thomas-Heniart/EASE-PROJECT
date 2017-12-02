@@ -379,6 +379,15 @@ module.exports = {
         throw err.response.data;
       });
     },
+    editFirstLastName: ({team_id, team_user_id, first_name, last_name, ws_id}) => {
+      return basic_post('/api/v1/teams/EditTeamUserFirstAndLastName', {
+        team_id: team_id,
+        team_user_id: team_user_id,
+        first_name: first_name,
+        last_name: last_name,
+        ws_id: ws_id
+      })
+    },
     editFirstName : function(ws_id, team_id, user_id, first_name){
       return axios.post('/api/v1/teams/EditTeamUserFirstName', {
         ws_id: ws_id,
