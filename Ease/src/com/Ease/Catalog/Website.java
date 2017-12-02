@@ -3,6 +3,7 @@ package com.Ease.Catalog;
 import com.Ease.Context.Variables;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.json.simple.JSONArray;
@@ -75,6 +76,9 @@ public class Website {
 
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WebsiteApp> websiteAppSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TeamWebsiteCard> teamWebsiteCardSet = ConcurrentHashMap.newKeySet();
 
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
@@ -207,6 +211,14 @@ public class Website {
 
     public void setWebsiteAppSet(Set<WebsiteApp> websiteAppSet) {
         this.websiteAppSet = websiteAppSet;
+    }
+
+    public Set<TeamWebsiteCard> getTeamWebsiteCardSet() {
+        return teamWebsiteCardSet;
+    }
+
+    public void setTeamWebsiteCardSet(Set<TeamWebsiteCard> teamWebsiteCardSet) {
+        this.teamWebsiteCardSet = teamWebsiteCardSet;
     }
 
     public void addConnectWith_website(Website website) {
