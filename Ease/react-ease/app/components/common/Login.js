@@ -3,7 +3,7 @@ var classnames = require('classnames');
 import {withCookies, Cookies } from 'react-cookie';
 import post_api from '../../utils/post_api';
 import {connect} from "react-redux";
-import {setLoginRedirectUrl, fetchMyInformation, processConnection} from "../../actions/commonActions"
+import {setLoginRedirectUrl, fetchMyInformation, processConnection} from "../../actions/commonActions";
 
 class UnknownUserForm extends React.Component{
   constructor(props){
@@ -252,6 +252,8 @@ class Login extends React.Component {
     this.state.knownUser = !!this.state.knownFname && !!this.state.knownEmail;
     if (this.state.knownUser) {
       this.state.activeView = 'known';
+      if (this.state.knownFname.indexOf('=') !== -1)
+        this.state.knownFname = atob(this.state.knownFname);
     }
   }
   componentDidMount(){
