@@ -149,6 +149,7 @@ public class PostServletManager extends ServletManager {
             String ws_id = this.getStringParam("ws_id", false, true);
             if (ws_id == null || ws_id.equals("-1"))
                 return;
+            System.out.println("ws_id present");
             if (this.team != null) {
                 System.out.println("WebSocketMessage to team " + team.getDb_id());
                 this.getTeamWebSocketManager(team.getDb_id()).sendObjects(this.webSocketMessages, ws_id);

@@ -16,6 +16,7 @@ public class WebSocketSession {
     }
 
     public void sendObject(Object o) {
+        System.out.println("Send websocket message " + o.toString());
         this.session.getAsyncRemote().sendObject(o);
     }
 
