@@ -43,8 +43,11 @@
 		}
 	}
 	.tip[step='2'], .tip[step='3'] {
-		right: 7px;
+		right: 45px;
 		top:75px;
+	}
+	.tip[id='2'] {
+		right: 120px;
 	}
 	.tip {
 		.arrow {
