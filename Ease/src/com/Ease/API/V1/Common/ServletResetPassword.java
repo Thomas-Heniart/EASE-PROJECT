@@ -22,6 +22,10 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -134,6 +138,11 @@ public class ServletResetPassword extends HttpServlet {
                 }
             });
             sm.deleteObject(passwordLost);
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                Team team = teamUser.getTeam();
+                WebSocketManager webSocketManager = sm.getTeamWebSocketManager(team.getDb_id());
+                webSocketManager.sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
+            }
             sm.setSuccess("New password set");
         } catch (Exception e) {
             sm.setError(e);

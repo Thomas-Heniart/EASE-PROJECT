@@ -46,7 +46,14 @@ public class WebSocketServer {
                 return;
             }
             session.getBasicRemote().sendText(new WebSocketMessage("CONNECTION_ID", session.getId()).toJSONObject().toString());
+            WebSocketSession webSocketSession = new WebSocketSession(session);
             if (user_id == null) {
+                WebSocketManager sessionWebSocketManager = (WebSocketManager) httpSession.getAttribute("webSocketManager");
+                if (sessionWebSocketManager == null) {
+                    sessionWebSocketManager = new WebSocketManager();
+                    httpSession.setAttribute("webSocketManager", sessionWebSocketManager);
+                }
+                sessionWebSocketManager.addWebSocketSession(webSocketSession);
                 hibernateQuery.commit();
                 return;
             }
@@ -54,7 +61,6 @@ public class WebSocketServer {
             hibernateQuery.commit();
             if (user == null)
                 return;
-            WebSocketSession webSocketSession = new WebSocketSession(session);
             Map<Integer, Map<String, Object>> userIdMap = (Map<Integer, Map<String, Object>>) servletContext.getAttribute("userIdMap");
             Map<String, Object> userProperties = userIdMap.get(user_id);
             if (userProperties == null) {
