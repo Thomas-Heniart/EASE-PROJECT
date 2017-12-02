@@ -13,19 +13,6 @@ import { Label, Container, Icon, Segment, Input, Button, Dropdown } from 'semant
 import {reduxActionBinder} from "../../actions/index";
 import { setUserDropdownText, renderLinkAppAddUserLabel} from "./common";
 
-const AppResultRenderer = ({name, logo, request, profile_name, login}) => {
-  if (request)
-    return (<div><Icon name="gift" color="red"/><strong>Didn't found your website? Request it!</strong></div>);
-  return (
-    <div>
-      <img src={logo} class="logo"/>
-      {name}
-      {profile_name !== undefined &&
-      <span class="text-muted">&nbsp;- from {profile_name} - {login}</span>}
-    </div>
-  )
-};
-
 @connect(store => ({
   team_id: store.team.id,
   teams: store.teams,
@@ -66,20 +53,6 @@ class LinkTeamAppAdder extends React.Component {
     });
     const room_manager_name = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, this.props.item.room_manager_id).username;
     this.setState({users: users, room_manager_name: room_manager_name});
-    // if (this.props.item.id) {
-    //   this.props.item.team_user_ids.map(item => {
-    //     let user = selectUserFromListById(this.props.teams[this.props.item.team_id].rooms[this.props.item.id].team_user_ids, item);
-    //     user.selected = false;
-    //     user.removable = true;
-    //     this.state.users.push(user);
-    //   });
-    // } else {
-    //   var item = this.props.item;
-    //   item.selected = false;
-    //   item.removable = false;
-    //   this.state.users.push(item);
-    //   // this.handleUserSelect(item.id);
-    // }
   };
   componentDidMount() {
     this.getLogo();
@@ -119,7 +92,6 @@ class LinkTeamAppAdder extends React.Component {
       receivers: this.state.selected_users,
       img_url: this.state.img_url ? this.state.img_url : this.state.logoSrc
     })).then(response => {
-      // this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
       this.setState({loading: false});
       this.close();
     });
