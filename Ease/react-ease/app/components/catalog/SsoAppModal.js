@@ -9,7 +9,7 @@ import {reflect, transformWebsiteInfoIntoList, credentialIconType, transformCred
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {createSsoGroup, createProfile} from "../../actions/dashboardActions";
-import {catalogAddSsoApp} from "../../actions/catalogActions";
+import {catalogAddSsoApp, testCredentials} from "../../actions/catalogActions";
 
 const CredentialInput = ({item, onChange}) => {
   return (
@@ -353,6 +353,7 @@ class NewSsoAccount extends React.Component {
       name,
       logo,
       credentials,
+      testCredentials,
       toggleBookmark,
       handleInput,
       handleCredentialInput,
@@ -376,6 +377,7 @@ class NewSsoAccount extends React.Component {
         </Form.Field>
         {credentialsInputs}
         <Message error content={this.state.errorMessage}/>
+        <span id='test_credentials' onClick={testCredentials}>Test credentials <Icon color='green' name='magic stick'/></span>
         <Button
           type="submit"
           positive
@@ -686,6 +688,12 @@ class SsoAppModal extends React.Component {
       });
     }
   };
+  testCredentials = () => {
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      website_id: this.state.website.id
+    }));
+  };
   close = () => {
     this.props.showCatalogAddSSOAppModal({active: false});
   };
@@ -744,6 +752,7 @@ class SsoAppModal extends React.Component {
             logo={this.props.modal.website.logo}
             name={this.props.modal.website.name}
             credentials={this.state.credentials}
+            testCredentials={this.testCredentials}
             toggleBookmark={this.toggleBookmark}
             handleCredentialInput={this.handleCredentialInput}
             handleInput={this.handleInput}

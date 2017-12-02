@@ -11,6 +11,7 @@ import {reduxActionBinder} from "../../actions/index";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {connect} from "react-redux";
+import {testCredentials} from "../../actions/catalogActions";
 import {createProfile} from "../../actions/dashboardActions";
 
 class ProfileChooseStep extends Component {
@@ -257,6 +258,7 @@ class AddClassicAppForm extends Component {
   render(){
     const {
       credentials,
+      testCredentials,
       logWith_websites,
       chooseLogWith,
       handleCredentialInput} = this.props;
@@ -286,6 +288,7 @@ class AddClassicAppForm extends Component {
           </Form.Field>}
           {logWithButtons}
           <Message error content={this.state.errorMessage}/>
+          <span id='test_credentials' onClick={testCredentials}>Test credentials <Icon color='green' name='magic stick'/></span>
           <Button
               type="submit"
               loading={this.state.loading}
@@ -556,6 +559,12 @@ class ClassicAppModal extends React.Component {
     else
       this.createProfile();
   };
+  testCredentials = () => {
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      website_id: this.state.website.id
+    }));
+  };
   close = () => {
     this.props.showCatalogAddAppModal({active: false});
   };
@@ -589,6 +598,7 @@ class ClassicAppModal extends React.Component {
               handleInput={this.handleInput}
               profile_id={this.state.selectedProfile}
               profileName={this.state.profileName}
+              testCredentials={this.testCredentials}
               handleCredentialInput={this.handleCredentialInput}
               chooseLogWith={this.chooseLogWith}
               chooseColumn={this.chooseColumn}

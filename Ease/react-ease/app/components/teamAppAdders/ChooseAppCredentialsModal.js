@@ -139,13 +139,14 @@ class ChoosePersonWhoHasCredentials extends React.Component {
                 )}
               </Segment>
           </Form.Field>
-          <Button type="submit"
-                  loading={loading}
-                  disabled={loading}
-                  onClick={confirm}
-                  positive
-                  className="modal-button uppercase"
-                  content={'CONFIRM'}/>
+          <Button
+            type="submit"
+            loading={loading}
+            disabled={loading}
+            onClick={confirm}
+            positive
+            className="modal-button uppercase"
+            content={'CONFIRM'}/>
       </Form>
     )
   }
