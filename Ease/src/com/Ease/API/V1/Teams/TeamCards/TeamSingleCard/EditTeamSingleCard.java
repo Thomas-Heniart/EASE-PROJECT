@@ -8,6 +8,7 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -66,7 +67,9 @@ public class EditTeamSingleCard extends HttpServlet {
                     ClassicApp classicApp = (ClassicApp) teamCardReceiver.getApp();
                     classicApp.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval()));
                 }
+                NotificationFactory.getInstance().createAppFilledNotification(teamUser, teamCard, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamSingleCard.setTeamUser_filler(null);
+
             } else {
                 teamSingleCard.getAccount().edit(account_information, sm.getHibernateQuery());
                 for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {

@@ -5,6 +5,7 @@ import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
@@ -40,6 +41,11 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.isTeamAdmin() && !teamUser.equals(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden);
+            if (teamCard.isTeamSingleCard()) {
+                TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                teamSingleCard.setTeamUser_filler(null);
+                sm.saveOrUpdate(teamSingleCard);
+            }
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             Profile profile = teamCardReceiver.getApp().getProfile();
             App app = teamCardReceiver.getApp();

@@ -284,4 +284,24 @@ public class NotificationFactory {
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
+
+    public void createAppFilledNotification(TeamUser filler, TeamCard teamCard, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        String content = teamCard.getName() + " is now ready";
+        String url = "#/main/dashboard?app_id=";
+        String logo = teamCard.getLogo();
+        teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> {
+            TeamUser teamUser = teamCardReceiver.getTeamUser();
+            if (!teamUser.equals(filler)) {
+                User user = teamUser.getUser();
+                if (user != null) {
+                    Notification notification = this.createNotification(user, content, logo, url + teamCardReceiver.getApp().getDb_id());
+                    hibernateQuery.saveOrUpdateObject(notification);
+                    this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+                } else {
+                    PendingNotification pendingNotification = this.createPendingNotification(teamUser, content, logo, url + teamCardReceiver.getApp().getDb_id());
+                    hibernateQuery.saveOrUpdateObject(pendingNotification);
+                }
+            }
+        });
+    }
 }
