@@ -80,7 +80,7 @@ class LogWithAppSettings extends Component {
               active={app.id === this.state.lw_app_id}
               onClick={this.selectApp.bind(null, app.id)}>
             <Icon name='user circle' />
-            <span>{app.account_information.login}</span>
+            <span>{!app.empty ? app.account_information.login : `App with missing credentials`}</span>
           </List.Item>
       )
     });
