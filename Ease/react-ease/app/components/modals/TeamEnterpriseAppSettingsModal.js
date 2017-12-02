@@ -4,7 +4,7 @@ import {handleSemanticInput, isCredentialsMatch} from "../../utils/utils";
 import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamEnterpriseAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput, TestCredentialsButton} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
 import {connect} from "react-redux";

@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import api from "../../utils/api";
 import post_api from "../../utils/post_api";
-import {copyTextToClipboard, basicDateFormat} from "../../utils/utils";
+import {copyTextToClipboard, basicDateFormat, transformCredentialsListIntoObject} from "../../utils/utils";
 import {Loader, Input, Label,Icon, Popup} from 'semantic-ui-react';
+import {testCredentials} from "../../actions/catalogActions";
 
 export const EmptyAppIndicator = (props) => {
   return (

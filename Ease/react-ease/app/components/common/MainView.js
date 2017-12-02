@@ -9,8 +9,16 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "../dashboard/CustomDragLayer";
 var SimpleTeamCreationView = require('../teams/SimpleTeamCreationView');
+import {connect} from "react-redux";
+import {showExtensionDownloadModal} from "../../actions/modalActions";
 
+@connect()
 class MainView extends Component {
+  componentDidMount(){
+    if (!document.querySelector('#new_ease_extension')){
+      this.props.dispatch(showExtensionDownloadModal({active: true}));
+    }
+  }
   render() {
     return (
         <div class="display-flex flex_direction_column full_flex" style={{flexFlow: 'column-reverse'}}>

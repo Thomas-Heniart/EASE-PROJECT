@@ -103,7 +103,11 @@ export function teamInviteFriends({team_id, email1, email2, email3}){
 
 export function teamAddCreditCard({team_id, cardToken}){
   return (dispatch, getState) => {
-    return post_api.teams.addCreditCard({team_id: team_id, cardToken: cardToken}).then(response => {
+    return post_api.teams.addCreditCard({
+      team_id: team_id,
+      cardToken: cardToken,
+      ws_id: getState().common.ws_id
+    }).then(response => {
       dispatch({type: 'TEAM_ADD_CREDIT_CARD_FULFILLED', payload: {card: response, team_id: team_id}});
     }).catch(err => {
       throw err;
@@ -134,7 +138,9 @@ export function teamUpdateBillingInformation({team_id, address_city, address_cou
 export function fetchTeamPaymentInformation({team_id}){
   return (dispatch, getState) => {
     dispatch({type: 'FETCH_TEAM_PAYMENT_INFORMATION_PENDING', payload:{team_id: team_id}});
-    return api.teams.getTeamPaymentInformation({team_id: team_id}).then(r => {
+    return api.teams.getTeamPaymentInformation({
+      team_id: team_id
+    }).then(r => {
       dispatch({type: 'FETCH_TEAM_PAYMENT_INFORMATION_FULFILLED', payload: {data: r}});
       return r;
     }).catch(err => {
@@ -146,7 +152,11 @@ export function fetchTeamPaymentInformation({team_id}){
 
 export function unsubscribe({team_id,password}){
   return (dispatch, getState) => {
-    return post_api.teams.unsubscribe({team_id: team_id, password: password}).then(response => {
+    return post_api.teams.unsubscribe({
+      team_id: team_id,
+      password: password,
+      ws_id: getState().common.ws_id
+    }).then(response => {
       dispatch(teamRemovedAction({team_id: team_id}));
       return response;
     }).catch(err => {
@@ -175,7 +185,11 @@ export function showTeamMenu(state){
 export function editTeamName({team_id, name}){
   return function(dispatch, getState){
     dispatch ({type: 'EDIT_TEAM_NAME_PENDING'});
-    return post_api.teams.editTeamName(team_id, name).then(r => {
+    return post_api.teams.editTeamName({
+      team_id: team_id,
+      name: name,
+      ws_id: getState().common.ws_id
+    }).then(r => {
       dispatch({type: 'EDIT_TEAM_NAME_FULFILLED', payload: {team_id:team_id,name:name}});
       return name;
     }).catch(err => {
@@ -189,7 +203,8 @@ export function upgradePlan({team_id, plan_id}){
   return (dispatch, getState) => {
     return post_api.teams.upgradePlan({
       team_id: team_id,
-      plan_id: plan_id
+      plan_id: plan_id,
+      ws_id: getState().common.ws_id
     }).then(team => {
       dispatch({type: 'UPGRADE_TEAM_PLAN_FULFILLED', payload: {team: team}});
       return team;

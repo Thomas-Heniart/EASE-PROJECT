@@ -795,7 +795,7 @@ class TeamUserFlexTab extends React.Component{
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
-                  <strong>First connection: </strong>
+                  <strong>Arrival date: </strong>
                   {basicDateFormat(user.arrival_date)}
                 </Grid.Column>
               </Grid.Row>

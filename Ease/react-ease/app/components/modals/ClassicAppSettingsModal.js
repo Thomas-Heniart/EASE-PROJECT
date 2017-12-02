@@ -4,11 +4,12 @@ import {handleSemanticInput} from "../../utils/utils";
 import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
+import {TestCredentialsButton, AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {editClassicApp, deleteApp, validateApp} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
+import * as api from "../../utils/api";
 
 @connect(store => ({
   app: store.modals.classicAppSettings.app

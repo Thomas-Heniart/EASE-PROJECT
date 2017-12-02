@@ -4,22 +4,40 @@ import {showExtensionDownloadModal} from "../../actions/modalActions";
 import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import {connect} from "react-redux";
 
-const MainView = (props) => {
-  return (
-      <Form as="div" class="container">
-        <Form.Field>
-          This computer doesn’t have the Ease.space extension yet.
-        </Form.Field>
-        <Form.Field>
-          It needs to be installed on your browser in order to fully work. <a class="inline-text-button" onClick={props.showInfo}>Why is the extension necessary.</a>
-        </Form.Field>
-        <Button
-            positive
-            className="modal-button"
-            onClick={e => {window.open('https://chrome.google.com/webstore/detail/ease/hnacegpfmpknpdjmhdmpkmedplfcmdmp', '_blank')}}
-            content="DOWNLOAD EASE.SPACE EXTENSION"/>
-      </Form>
-  )
+class MainView extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      step: 0
+    }
+  }
+  onClick = () => {
+    if (this.state.step === 0){
+      this.setState({step: 1});
+      window.open('https://chrome.google.com/webstore/detail/ease/hnacegpfmpknpdjmhdmpkmedplfcmdmp', '_blank');
+    } else {
+      window.location.reload();
+    }
+  };
+  render() {
+    return (
+        <Form as="div" class="container">
+          <Form.Field>
+            This computer doesn’t have the Ease.space extension yet.
+          </Form.Field>
+          <Form.Field>
+            It needs to be installed on your browser in order to fully work. <a class="inline-text-button"
+                                                                                onClick={this.props.showInfo}>Why is the
+            extension necessary.</a>
+          </Form.Field>
+          <Button
+              positive
+              className="modal-button"
+              onClick={this.onClick}
+              content={!this.state.step ? 'DOWNLOAD EASE.SPACE EXTENSION' : 'DONE'}/>
+        </Form>
+    )
+  }
 };
 
 const InformationView = (props) => {

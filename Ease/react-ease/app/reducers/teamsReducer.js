@@ -30,12 +30,11 @@ export const teams = createReducer({
   ['EDIT_TEAM_NAME_FULFILLED'](state, action){
     const teamId = action.payload.team_id;
     const name = action.payload.name;
-    const new_state = update(state, {
+    return update(state, {
       [teamId]: {
         name: {$set: name}
       }
     });
-    return new_state;
   },
   ['TEAM_CHANGED'](state, action){
     const team = action.payload.team;
