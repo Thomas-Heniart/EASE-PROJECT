@@ -8,6 +8,7 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
+import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.websocketV1.WebSocketManager;
@@ -78,7 +79,7 @@ public class NotificationFactory {
     }
 
     public void createTeamUserRegisteredNotification(TeamUser teamUser, TeamUser teamUser_admin, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        Notification notification = this.createNotification(teamUser_admin.getUser(), teamUser.getUsername() + "is now part of your team " + teamUser.getTeam().getName() + "!", "/resources/notifications/flag.png", teamUser);
+        Notification notification = this.createNotification(teamUser_admin.getUser(), teamUser.getUsername() + " is now part of your team " + teamUser.getTeam().getName() + "!", "/resources/notifications/flag.png", teamUser);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
@@ -106,6 +107,22 @@ public class NotificationFactory {
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
         } else {
             PendingNotification pendingNotification = this.createPendingNotification(teamUser_receiver, content, logo, url);
+            hibernateQuery.saveOrUpdateObject(pendingNotification);
+        }
+    }
+
+    public void createRemindTeamSingleCardFiller(TeamSingleCardReceiver teamSingleCardReceiver, TeamUser teamUser, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        TeamUser filler = teamSingleCardReceiver.getTeamUser();
+        User user = filler.getUser();
+        String content = teamUser.getUsername() + " reminds you to enter " + teamSingleCardReceiver.getTeamCard().getName() + "'s information";
+        String url = "#/main/dashboard?app_id=" + teamSingleCardReceiver.getApp().getDb_id();
+        String logo = teamSingleCardReceiver.getApp().getLogo();
+        if (user != null) {
+            Notification notification = this.createNotification(user, content, logo, url);
+            hibernateQuery.saveOrUpdateObject(notification);
+            this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+        } else {
+            PendingNotification pendingNotification = this.createPendingNotification(filler, content, logo, url);
             hibernateQuery.saveOrUpdateObject(pendingNotification);
         }
     }

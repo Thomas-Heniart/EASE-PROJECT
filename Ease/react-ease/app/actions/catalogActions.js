@@ -30,6 +30,17 @@ export function fetchCatalog(){
   }
 }
 
+export function testCredentials({account_information, website_id}) {
+  return (dispatch, getState) => {
+    api.getWebsiteConnection({account_information, website_id})
+      .then(response => {
+        dispatch({type: 'TEST_CREDENTIALS'});
+      }).catch(err => {
+        console.log(err);
+    });
+  }
+}
+
 export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
   return (dispatch, getState) => {
     post_api.catalog.addSsoApp({

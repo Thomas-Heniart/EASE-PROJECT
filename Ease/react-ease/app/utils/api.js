@@ -226,6 +226,23 @@ module.exports = {
           return response.data
         });
   },
+  getWebsiteConnection: function ({website_id, account_information}) {
+    return axios.get('/api/v1/catalog/GetWebsiteConnection', {
+      params: {
+        website_id: website_id
+      }
+    }).then(response => {
+        var detail = response.data;
+        detail[0].user = account_information;
+        detail.test_connection = true;
+        var message = "NewConnection";
+        var event = new CustomEvent(message, {"detail": detail});
+        document.dispatchEvent(event);
+      }).catch(err => {
+        console.log(err);
+        throw err.response;
+      })
+  },
   dashboard: {
     fetchProfiles: function(){
       return axios.get('/api/v1/dashboard/GetProfiles').then(response => {
