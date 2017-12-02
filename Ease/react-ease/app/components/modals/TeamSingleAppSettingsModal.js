@@ -200,6 +200,10 @@ class TeamSingleAppSettingsModal extends Component{
                 onChange={this.handleInput}/>}
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage}>
+              {(isAdmin(me.role) || team_app.team_user_filler_id !== me.id) &&
+              <Form.Field>
+                Modifications will be applied to your Team.
+              </Form.Field>}
               {this.state.isEmpty && me.id === team_app.team_user_filler_id &&
               <Form.Field>
                 <Icon name="wrench" style={{color: '#ff9a00'}}/> your admin asked you to enter the credentials.

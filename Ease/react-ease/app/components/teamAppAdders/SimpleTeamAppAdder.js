@@ -17,83 +17,6 @@ import {
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 
-const AppResultRenderer = ({name, logo, request, profile_name, login}) => {
-  if (request)
-    return (<div><Icon name="gift" color="red"/><strong>Didn't found your website? Request it!</strong></div>);
-  return (
-      <div>
-        <img src={logo} class="logo"/>
-        {name}
-        {profile_name !== undefined &&
-        <span class="text-muted">&nbsp;- from {profile_name} - {login}</span>}
-      </div>
-  )
-};
-
-class SimpleTeamAppSearch extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      allApps: [],
-      apps: [],
-      loading: true,
-      value: ''
-    }
-  }
-  handleInput = (e, {value}) => {
-    this.setState({value: value});
-    const apps = this.state.allApps.filter(item => {
-      return (
-          item.name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null
-      )
-    });
-    apps.push({request: true, key: -1});
-    this.setState({apps: apps});
-  };
-  componentDidMount(){
-    dashboardAndTeamAppSearch(this.props.team_id, '').then(response => {
-      const apps = response.map(item => {
-        item.key = item.id;
-        return item;
-      });
-      this.setState({allApps: apps, apps: apps, loading: false});
-    });
-  }
-  render(){
-    return (
-        <Search
-            fluid
-            minCharacters={0}
-            autoFocus
-            showNoResults={false}
-            loading={this.state.loading}
-            placeholder="Search websites here..."
-            value={this.state.value}
-            class="inverted full_flex bordered_scrollbar"
-            onResultSelect={(e, data) => {this.props.select_app_func(data.result)}}
-            resultRenderer={AppResultRenderer}
-            onSearchChange={this.handleInput}
-            size="mini"
-            results={this.state.apps}/>
-    )
-  }
-}
-
-const TeamAppCredentialInput = ({item, onChange}) => {
-  return <Input size="mini"
-                autoFocus={item.autoFocus}
-                class="team-app-input"
-                required
-                name={item.name}
-                onChange={onChange}
-                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-                labelPosition="left"
-                placeholder={item.placeholder}
-                value={item.value}
-                type={item.type}/>;
-};
-
-
 @connect(store => ({
   team_id: store.team.id,
   myId: store.team.myTeamUserId,
@@ -216,7 +139,7 @@ class SimpleTeamAppAdder extends Component {
     //     return 1000;
     //   return a.username.localeCompare(b.username);
     });
-    const room_manager_name = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, this.props.item.room_manager_id).username;
+    const room_manager_name = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id].username;
     this.setState({users: users, room_manager_name: room_manager_name});
   };
   componentDidMount(){
@@ -225,37 +148,15 @@ class SimpleTeamAppAdder extends Component {
   send = (e) => {
     e.preventDefault();
     // this.setState({loading: true});
-    // const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
     const receivers = this.state.users
         .filter(item => (this.state.selected_users.indexOf(item.id) !== -1));
-        // .map(item => ({
-        //   [item.id]: {allowed_to_see_password: item.can_see_information}
-        // }));
-    // const newReceivers = receivers.reduce(function(result, item) {
-    //     result = Object.assign(result, item);
-    //     return result;
-    //   }, {});
     this.props.dispatch(showChooseAppCredentialsModal({
       active: true,
       card_name: this.state.app_name,
       receivers: receivers,
       description: this.state.description,
-      password_reminder_interval: this.state.password_reminder_interval }));
-      /*this.props.dispatch(teamCreateSingleApp({
-        team_id: this.props.card.team_id,
-        channel_id: this.props.item.id,
-        website_id: this.state.app.id,
-        description: this.state.description,
-        password_reminder_interval: this.state.password_reminder_interval,
-        // account_information: transformCredentialsListIntoObject(this.state.credentials),
-        account_information: {login: 'salut', password: 'salut'},
-        receivers: newReceivers
-      })).then(response => {
-        if (meReceiver)
-          this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
-        this.setState({loading: false});
-        this.close();
-      });*/
+      password_reminder_interval: this.state.password_reminder_interval
+    }));
   };
   close = () => {
     this.props.resetTeamCard();
@@ -264,9 +165,6 @@ class SimpleTeamAppAdder extends Component {
   render(){
     const app = this.state.app;
     const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id];
-    // const credentialsInputs = this.state.credentials.map(item => {
-    //   return <TeamAppCredentialInput key={item.priority} onChange={this.handleCredentialInput} item={item}/>
-    // });
     return (
         <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
           <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>

@@ -439,8 +439,6 @@ class TeamAccount extends React.Component {
       team_id: team_id,
       password:this.state.password
     })).then(response => {
-      window.location.href = "/#/main/dashboard";
-      window.location.reload(true);
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
     });
