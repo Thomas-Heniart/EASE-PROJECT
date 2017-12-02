@@ -47,7 +47,7 @@ public class ServletAskJoinChannel extends HttpServlet {
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.addVariable("teamUser", teamUser.getUsername());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
             mailJetBuilder.sendEmail();
             JSONObject ws_obj = new JSONObject();
             ws_obj.put("team_id", team_id);
