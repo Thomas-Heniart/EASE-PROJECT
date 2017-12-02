@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import classnames from "classnames";
+import queryString from "query-string";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {showLogWithAppSettingsModal, showLinkAppSettingsModal, showSimpleAppSettingsModal, showExtensionDownloadModal} from "../../actions/modalActions";
 import Profile from "./Profile";
@@ -33,6 +34,23 @@ class Dashboard extends Component {
       this.setState({scrolling: true});
     }
   };
+  componentDidUpdate(prevProps, prevState){
+    if (prevProps.location.search !== this.props.location.search) {
+      const query = queryString.parse(this.props.location.search);
+      if (!!query.app_id && !!query.app_id.length) {
+        const app = document.querySelector(`#app_${query.app_id} .logo_area`);
+        this.props.history.replace(this.props.location.pathname);
+        if (app){
+          app.classList.add('ld');
+          app.classList.add('ld-jump');
+          setTimeout(() => {
+            app.classList.remove('ld');
+            app.classList.remove('ld-jump');
+          }, 3000);
+        }
+      }
+    }
+  }
   render(){
     const {columns} = this.props.dashboard;
 

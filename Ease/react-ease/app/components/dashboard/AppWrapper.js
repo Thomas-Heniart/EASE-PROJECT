@@ -49,7 +49,7 @@ class AppWrapper extends Component {
     const {connectDragSource, connectDropTarget, isDragging} = this.props;
 
     return connectDragSource(connectDropTarget(
-        <div class="app_wrapper" class={classnames('app_wrapper', isDragging ? 'dragging': null)}>
+        <div class="app_wrapper" id={`app_${this.props.app.id}`} class={classnames('app_wrapper', isDragging ? 'dragging': null)}>
           {this.renderApp()}
         </div>
     ))

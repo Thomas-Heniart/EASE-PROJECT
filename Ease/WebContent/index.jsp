@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="/cssMinified.v00019/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/cssMinified.v00019/lib/fonts/untitled-font-4/styles.css"/>
     <link rel="stylesheet" href="/cssMinified.v00019/team.css"/>
+    <link rel="stylesheet" href="/css/lib/loading.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00022/jsencrypt.js"></script>
     <script src="/jsMinified.v00022/moment.js"></script>

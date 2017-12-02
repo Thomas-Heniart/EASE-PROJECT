@@ -298,7 +298,7 @@ export class CopyPasswordButton extends Component {
       {this.state.state === 0 &&
       'Copy password'}
       {this.state.state === 1 &&
-      <Icon name="asterisk" loading/>}
+      <div><Icon name="asterisk" loading/> decrypting password locally</div>}
       {this.state.state === 2 &&
       <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
       {this.state.state === 3 &&
@@ -352,7 +352,7 @@ export class SingleAppCopyPasswordButton extends Component {
       {this.state.state === 0 &&
       'Copy password'}
       {this.state.state === 1 &&
-      <Icon name="asterisk" loading/>}
+      <div><Icon name="asterisk" loading/> decrypting password locally</div>}
       {this.state.state === 2 &&
       <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
       {this.state.state === 3 &&
