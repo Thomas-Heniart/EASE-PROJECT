@@ -13,72 +13,6 @@ import {ExtendFillSwitch, setUserDropdownText, renderSimpleAppUserLabel, Passwor
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 
-const AppResultRenderer = ({name, logo, request}) => {
-  if (request)
-    return (<div><Icon name="gift" color="red"/><strong>Didn't found your website? Request it!</strong></div>);
-  return (
-      <div>
-        <img src={logo} class="logo"/>
-        {name}
-      </div>
-  )
-};
-
-class TeamAppSearch extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      allApps: [],
-      apps: [],
-      loading: true,
-      value: ''
-    }
-  }
-  handleInput = (e, {value}) => {
-    this.setState({value: value});
-    const apps = this.state.allApps.filter(item => {
-      return (
-          item.name.toLowerCase().replace(/\s+/g, '').match(value.toLowerCase()) !== null
-      )
-    });
-    apps.push({request: true, key: -1});
-    this.setState({apps: apps});
-  };
-  componentDidMount(){
-    teamAppSearch(this.props.team_id, '').then(response => {
-      const apps = response.map(item => {
-        item.key = item.id;
-        return item;
-      }).sort(function(a,b){
-        if (a.name < b.name)
-          return -1;
-        if (a.name > b.name)
-          return 1;
-        return 0;
-      });
-      this.setState({allApps: apps, apps: apps, loading: false});
-    });
-  }
-  render(){
-    return (
-        <Search
-            fluid
-            minCharacters={0}
-            autoFocus
-            showNoResults={false}
-            loading={this.state.loading}
-            placeholder="Search websites here..."
-            value={this.state.value}
-            class="inverted full_flex bordered_scrollbar"
-            onResultSelect={(e, data) => {this.props.select_app_func(data.result)}}
-            resultRenderer={AppResultRenderer}
-            onSearchChange={this.handleInput}
-            size="mini"
-            results={this.state.apps}/>
-    )
-  }
-}
-
 const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) => {
   return <Input size="mini"
                 class="team-app-input"
@@ -91,14 +25,6 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) =
                 placeholder={isMe ? item.placeholder : `${item.placeholder} (Optional)`}
                 value={item.value}
                 type={item.type}/>;
-};
-
-const ReceiverCredentialsInput = ({receiver, onChange, onDelete}) => {
-  return (
-      <div class="receiver">
-        <Label class="receiver-label"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
-      </div>
-  )
 };
 
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe}) => {
@@ -149,13 +75,6 @@ class EnterpriseTeamAppAdder extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
-  changeFillInSwitch = (e, {checked}) => {
-    if (this.props.plan_id === 0 && !checked){
-      this.props.dispatch(showUpgradeTeamPlanModal(true, 2));
-      return;
-    }
-    this.setState({fill_in_switch: !checked});
-  };
   onDeleteReceiver = (id) => {
     const selected_users = this.state.selected_users.filter(item => (item !== id));
     this.setState({selected_users: selected_users});
@@ -295,9 +214,6 @@ class EnterpriseTeamAppAdder extends Component {
                     <div class="credentials">
                       <div class="display-inline-flex align_items_center">
                         <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
-                        {/*<ExtendFillSwitch value={this.state.fill_in_switch} onClick={this.changeFillInSwitch}/>*/}
-                        {/*{this.props.plan_id === 0 &&*/}
-                        {/*<img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}*/}
                       </div>
                     </div>
                     <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
