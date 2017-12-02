@@ -252,6 +252,11 @@ module.exports = {
     fetchProfileList: function () {
       return basic_get('/api/v1/dashboard/GetProfileList');
     },
+    fetchProfile: ({profile_id}) => {
+      return basic_get('/api/v1/dashboard/GetProfile',{
+        profile_id: profile_id
+      });
+    },
     fetchApps: function() {
       return basic_get('/api/v1/dashboard/GetApps');
     },

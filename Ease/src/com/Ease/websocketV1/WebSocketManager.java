@@ -11,7 +11,7 @@ public class WebSocketManager {
     public WebSocketManager() {
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message) throws IOException {
         removeClosedSesions();
         for (WebSocketSession ws : webSocketSessions) {
             ws.sendMessage(message);

@@ -164,17 +164,41 @@ export function ssoGroupChangedAction({sso_group}) {
   }
 }
 
+export function fetchProfile({profile_id}) {
+  return (dispatch, getState) => {
+    return api.dashboard.fetchProfile({
+      profile_id: profile_id
+    }).then(profile => {
+      dispatch(dashboardProfileCreatedAction({
+        profile: profile
+      }));
+      return profile;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function fetchApp({app_id}){
   return (dispatch, getState) => {
     return api.dashboard.fetchApp({
       app_id:app_id
     }).then(app => {
-      dispatch({
-        type: 'DASHBOARD_APP_CREATED',
-        payload: {
-          app: app
-        }
-      });
+      const store = getState();
+      const profile = store.dashboard.profiles[app.profile_id];
+
+      if (!profile) {
+        dispatch({
+          type: 'FETCH_DASHBOARD_APP',
+          payload: {app: app}
+        });
+        return dispatch(fetchProfile({
+          profile_id: app.profile_id
+        })).then(response => {
+          return app;
+        });
+      }
+      dispatch(dashboardAppCreatedAction({app: app}));
       return app;
     }).catch(err => {
       throw err;

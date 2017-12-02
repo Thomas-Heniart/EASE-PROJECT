@@ -41,4 +41,13 @@ public class WebSocketMessage {
         res.put("action", this.getAction());
         return res;
     }
+
+    @Override
+    public String toString() {
+        return "WebSocketMessage{" +
+                "type='" + type + '\'' +
+                ", data=" + data +
+                ", action='" + action + '\'' +
+                '}';
+    }
 }

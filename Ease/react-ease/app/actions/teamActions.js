@@ -220,7 +220,9 @@ export function teamChangedAction({team}) {
 export function teamRemovedAction({team_id}) {
   return (dispatch, getState) => {
     const store = getState();
-    store.dashboard.apps.map(app => {
+    const apps = store.dashboard.apps;
+    Object.keys(apps).map(id => {
+      const app = apps[id];
       if (app.team_id === team_id)
         dispatch(dashboardAppRemovedAction({app_id: app.id}));
     });

@@ -30,6 +30,7 @@ public class ServletEditTeamUserFirstAndLastName extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This user does not exist");
             Team team = teamUser.getTeam();
             sm.initializeTeamWithContext(team);
+            sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.equals(teamUser) && !teamUser_connected.isTeamAdmin())
                 throw new HttpServletException(HttpStatus.Forbidden);

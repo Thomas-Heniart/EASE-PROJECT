@@ -63,6 +63,15 @@ export const dashboard = createReducer({
     }
     return new_state;
   },
+  ['FETCH_DASHBOARD_APP'](state, action){
+    const {app} = action.payload;
+
+    return update(state, {
+      apps: {
+        [app.id]: {$set: app}
+      }
+    });
+  },
   ['DASHBOARD_APP_CREATED'](state, action){
     const {app} = action.payload;
 

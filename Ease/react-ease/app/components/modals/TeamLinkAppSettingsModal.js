@@ -110,6 +110,10 @@ class TeamLinkAppSettingsModal extends Component {
             <AppSettingsMenu view={view} onChange={this.handleInput}/>
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
+              {isAdmin(me.role) &&
+              <Form.Field>
+                Modifications will be applied to your Team.
+              </Form.Field>}
               {!isAdmin(me.role) &&
               <Message content={'This app is shared with your team, you’re not allowed to modify it.'}/>}
               <Form.Field>
