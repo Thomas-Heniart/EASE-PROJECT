@@ -6,6 +6,7 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.SsoApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
@@ -127,6 +128,9 @@ public class ServletResetPassword extends HttpServlet {
                 } else if (app.isLogWithApp()) {
                     ((LogWithApp) app).setLoginWith_app(null);
                     sm.saveOrUpdate(app);
+                } else if (app.isSsoApp()) {
+                    SsoApp ssoApp = (SsoApp) app;
+                    ssoApp.getSsoGroup().setAccount(null);
                 }
             });
             sm.deleteObject(passwordLost);
