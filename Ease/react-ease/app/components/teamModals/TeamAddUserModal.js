@@ -8,11 +8,9 @@ import {renderRoomLabel} from "../../utils/renderHelpers";
 import {reflect, handleSemanticInput, isEmail} from "../../utils/utils";
 import { Header, Container, Divider, Icon, Form, Input, Message } from 'semantic-ui-react';
 
-@connect((store) => {
-  return {
-    team: store.teams[store.teamModals.addUserModal.team_id]
-  };
-})
+@connect((store) => ({
+  team: store.teams[store.teamModals.addUserModal.team_id]
+}))
 class TeamAddUserModal extends React.Component {
   constructor(props){
     super(props);
@@ -207,7 +205,7 @@ class TeamAddUserModal extends React.Component {
                     <img style={{height: '22px'}} src="/resources/images/upgrade.png"/>}
                   </label>
                   <Input type="date"
-                         onFocus={team.plan_id === 0 ? e => {this.props.dispatch(showUpgradeTeamPlanModal({active: true, feature_id: 5, team_id: this.props.team_id}))} : null}
+                         onFocus={team.plan_id === 0 ? e => {this.props.dispatch(showUpgradeTeamPlanModal({active: true, feature_id: 5, team_id: this.props.team.id}))} : null}
                          onChange={this.handleInput}
                          name="departure_date"
                          placeholder="Optional" width={8}/>
