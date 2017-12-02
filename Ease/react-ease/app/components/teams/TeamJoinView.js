@@ -277,6 +277,7 @@ class TeamJoinView extends React.Component {
     if (this.canSkip()){
       post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
         this.setState({lastStepLoading: false});
+        window.location.reload();
         window.location.href = '/';
       }).catch(err => {
         this.setState({lastStepLoading: false, lastStepErrorMessage: err})
@@ -285,6 +286,7 @@ class TeamJoinView extends React.Component {
       post_api.common.registration(this.state.email, this.state.username, this.state.password, null, this.state.code, false).then(r => {
         post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
           this.setState({lastStepLoading: false});
+          window.location.reload();
           window.location.href = '/';
         }).catch(err => {
           this.setState({lastStepLoading: false, lastStepErrorMessage: err})
