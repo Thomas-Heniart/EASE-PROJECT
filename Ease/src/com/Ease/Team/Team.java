@@ -323,7 +323,7 @@ public class Team {
 
     public JSONObject getWebSockeetJson() throws HttpServletException {
         JSONObject res = new JSONObject();
-        res.put("team", this.getSimpleJson());
+        res.put("team", this.getJson());
         return res;
     }
 

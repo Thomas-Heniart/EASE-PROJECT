@@ -4,6 +4,9 @@ import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 
@@ -52,7 +55,8 @@ public class ServletUpgradePlan extends HttpServlet {
             team.setSubscription(subscription);
             sm.getTeamProperties(team_id).put("subscription", subscription);
             sm.saveOrUpdate(team);
-            sm.setSuccess(team.getSimpleJson());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CHANGED, team.getWebSockeetJson()));
+            sm.setSuccess(team.getJson());
         } catch (StripeException e) {
             sm.setError(e);
         } catch (Exception e) {
