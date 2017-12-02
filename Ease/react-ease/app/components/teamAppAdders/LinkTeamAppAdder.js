@@ -38,7 +38,6 @@ class LinkTeamAppAdder extends React.Component {
     this.handleComment = this.handleComment.bind(this);
   }
   componentWillMount() {
-    console.log('item: ', this.props.item);
     let users = this.props.item.team_user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
       return {
@@ -51,7 +50,7 @@ class LinkTeamAppAdder extends React.Component {
         can_see_information: true
       }
     });
-    const room_manager_name = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, this.props.item.room_manager_id).username;
+    const room_manager_name = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id].username;
     this.setState({users: users, room_manager_name: room_manager_name});
   };
   componentDidMount() {

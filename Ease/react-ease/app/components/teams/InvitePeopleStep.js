@@ -1,8 +1,7 @@
 import React from "react";
-import {handleSemanticInput, reflect} from "../../utils/utils";
-import { Header, Label, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
+import { Header, Label, Divider, Icon, TextArea, Segment, Form, Button } from 'semantic-ui-react';
 import {sendTeamUserInvitation, createTeamUserNow, createTeamUser} from "../../actions/userActions";
-var post_api = require('../../utils/post_api');
 
 class PreviewStep extends React.Component {
   constructor(props){
@@ -16,7 +15,6 @@ class PreviewStep extends React.Component {
     const fields = this.props.invitations.map((item, idx) => {
       return (
           <Form.Field key={idx} error={item.error.length > 0}>
-            {/*<Form.Group style={{marginBottom: 0}}>*/}
               <Form.Input
                   width={16}
                   action={<Button icon="delete" type="button" onClick={this.props.removeField.bind(null, idx)}/>}
@@ -26,13 +24,6 @@ class PreviewStep extends React.Component {
                   value={item.email}
                   placeholder="Email"
                   onChange={(e, values) => {this.props.editField(idx, values)}}/>
-            {/*<Form.Input width={7}
-                          type="text"
-                          name="username"
-                          placeholder="Username"
-                          value={item.username}
-                          onChange={(e, values) => {this.props.editField(idx, values)}}/>*/}
-            {/*</Form.Group>*/}
             {item.error.length > 0 &&
             <Label pointing fluid class="fluid" style={{textAlign: 'center'}} content={item.error} color="red" basic/>}
           </Form.Field>
@@ -74,12 +65,6 @@ class PreviewStep extends React.Component {
               Send invitation <u><strong>now</strong></u>
             </Form.Button>
           </Form.Group>
-          {/*<Form.Group style={{marginBottom: 0}}>
-            <Form.Button width={8} fluid onClick={this.props.onStepValidated}>
-              {this.props.cancelButtonText}
-            </Form.Button>
-            <Form.Button width={8} fluid positive loading={this.props.loading}>{this.props.validateButtonText}</Form.Button>
-          </Form.Group>*/}
         </Form>
     )
   }
@@ -96,13 +81,11 @@ class EmailListStep extends React.Component {
   process = (e) => {
     e.preventDefault();
     let filterSpacesValue = this.state.value.replace(/\s+/g, '');
-    // this.props.addFields(filterSpacesValue);
     this.props.multipleAddLater(filterSpacesValue);
   };
   processNow = (e) => {
     e.preventDefault();
     let filterSpacesValue = this.state.value.replace(/\s+/g, '');
-    // this.props.addFields(filterSpacesValue);
     this.props.multipleAddNow(filterSpacesValue);
   };
   render(){
@@ -136,10 +119,6 @@ class EmailListStep extends React.Component {
               Send invitation <u><strong>now</strong></u>
             </Form.Button>
           </Form.Group>
-          {/*<Form.Group style={{marginBottom: 0}}>
-            <Form.Button width={8} fluid type="button" onClick={this.props.changeStep}>Cancel</Form.Button>
-            <Form.Button width={8} fluid primary>Next</Form.Button>
-          </Form.Group>*/}
         </Form>
     )
   }
@@ -161,7 +140,7 @@ class InvitePeopleStep extends React.Component {
     }
   }
   invitationsReady = () => {
-    return this.state.invitations.filter(item => (item.email.length > 0)).length > 0;
+    return this.state.invitations.filter(item => (isEmail(item.email))).length > 0;
   };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();
@@ -243,7 +222,6 @@ class InvitePeopleStep extends React.Component {
     this.setState({invitations: invitations});
   };
   multipleAddLater = (value) => {
-    // this.addMultipleFields(invitations);
     let invitations = [];
     let emails = value.split(',');
     emails.map(item => {
@@ -253,7 +231,6 @@ class InvitePeopleStep extends React.Component {
     this.setState({invitations: invitations}, this.sendInvitations);
   };
   multipleAddNow = (value) => {
-    // this.addMultipleFields(invitations);
     let invitations = [];
     let emails = value.split(',');
     emails.map(item => {
@@ -300,12 +277,10 @@ class InvitePeopleStep extends React.Component {
                 addField={this.addField}/>}
             {this.state.view === 'emailList' &&
             <EmailListStep
-              // addFields={this.addMultipleFields}
               changeStep={this.changeView.bind(null, 'main')}
               validate={this.sendInvitations}
               loading={this.state.loading}
               loadingInvitationsNow={this.state.loadingInvitationsNow}
-              // sendInvitationsNow={this.sendInvitationsNow}
               multipleAddNow={this.multipleAddNow}
               multipleAddLater={this.multipleAddLater}/>}
           </Segment>

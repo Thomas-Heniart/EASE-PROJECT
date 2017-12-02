@@ -115,7 +115,7 @@ export const renderLinkAppAddUserLabel = (label, index, props) => {
            flowing
            hideOnScroll={true}
            trigger={
-             <Label class={classnames("user-label static", can_see_information ? 'can_see_information' : null)}>
+             <Label class={"user-label static pinned can_see_information"}>
                {username}
                {can_see_information &&
                <Icon name='mobile'/>}
