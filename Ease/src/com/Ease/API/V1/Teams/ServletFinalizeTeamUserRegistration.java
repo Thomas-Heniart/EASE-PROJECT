@@ -101,6 +101,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.getPendingNotificationSet().forEach(pendingNotification -> pendingNotification.sendToUser(user, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery));
             teamUser.getPendingNotificationSet().clear();
             sm.getUser().addTeamUser(teamUser);
+            sm.setTeam(team);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

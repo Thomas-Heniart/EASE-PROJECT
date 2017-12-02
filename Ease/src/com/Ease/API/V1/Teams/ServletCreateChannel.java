@@ -40,7 +40,7 @@ public class ServletCreateChannel extends HttpServlet {
             if (purpose.length() >= 250)
                 throw new HttpServletException(HttpStatus.BadRequest, "Purpose of room cannot be greater than 250 characters");
             if (team.getChannelNamed(name) != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "<<" + name + ">> is already used for another room");
+                throw new HttpServletException(HttpStatus.BadRequest, name + " is already used for another room");
             Channel channel = new Channel(team, name, purpose, sm.getTeamUser(team_id));
             sm.saveOrUpdate(channel);
             team.addChannel(channel);

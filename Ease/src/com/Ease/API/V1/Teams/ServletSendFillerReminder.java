@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
@@ -26,11 +27,15 @@ public class ServletSendFillerReminder extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamSingleCard teamSingleCard = (TeamSingleCard) hibernateQuery.get(TeamSingleCard.class, teamCard_id);
             if (teamSingleCard == null)
-                throw new HttpServletException(HttpStatus.Forbidden);
+                throw new HttpServletException(HttpStatus.BadRequest, "No such teamCard");
+            Team team = teamSingleCard.getTeam();
+            sm.needToBeTeamUserOfTeam(team);
             TeamUser filler = teamSingleCard.getTeamUser_filler();
-            if (filler == null)
-                throw new HttpServletException(HttpStatus.Forbidden);
-            NotificationFactory.getInstance().createRemindTeamSingleCardFiller((TeamSingleCardReceiver) teamSingleCard.getTeamCardReceiver(filler), sm.getTeamUser(teamSingleCard.getTeam()), sm.getUserIdMap(), sm.getHibernateQuery());
+            if (filler == null) {
+                TeamUser room_manager = teamSingleCard.getChannel().getRoom_manager();
+                NotificationFactory.getInstance().createRemindTeamSingleCardFiller(teamSingleCard, sm.getTeamUser(teamSingleCard.getTeam()), room_manager, sm.getUserWebSocketManager(room_manager.getUser().getDb_id()), sm.getHibernateQuery());
+            } else
+                NotificationFactory.getInstance().createRemindTeamSingleCardFiller((TeamSingleCardReceiver) teamSingleCard.getTeamCardReceiver(filler), sm.getTeamUser(teamSingleCard.getTeam()), sm.getUserIdMap(), sm.getHibernateQuery());
             sm.setSuccess("Notification sent");
         } catch (Exception e) {
             sm.setError(e);
