@@ -41,6 +41,7 @@ class Dashboard extends Component {
         const app = document.querySelector(`#app_${query.app_id} .logo_area`);
         this.props.history.replace(this.props.location.pathname);
         if (app){
+          app.scrollIntoView(false);
           app.classList.add('ld');
           app.classList.add('ld-jump');
           setTimeout(() => {
