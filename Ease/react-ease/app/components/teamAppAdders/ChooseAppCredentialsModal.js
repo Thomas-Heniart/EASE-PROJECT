@@ -2,7 +2,7 @@ import React from 'react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox } from 'semantic-ui-react';
 import {teamCreateSingleApp} from "../../actions/appsActions";
-import {showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
+import {testCredentials} from "../../actions/catalogActions";
 import {showChooseAppCredentialsModal} from "../../actions/modalActions";
 import {transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 import {connect} from "react-redux";
@@ -52,6 +52,7 @@ class AddCardForm extends React.Component {
     const {
       website,
       credentials,
+      testCredentials,
       confirm,
       appName,
       loading,
@@ -62,22 +63,23 @@ class AddCardForm extends React.Component {
     });
     return (
       <Form as="div" className="container" onSubmit={confirm} error={this.state.errorMessage.length > 0}>
-          <Form.Field className="display-flex align_items_center" style={{marginBottom: '30px'}}>
-              <div className="squared_image_handler">
-                  <img src={website.logo} alt="Website logo"/>
-              </div>
-              <span className="app_name">{appName}</span>
-          </Form.Field>
+        <Form.Field className="display-flex align_items_center" style={{marginBottom: '30px'}}>
+          <div className="squared_image_handler">
+            <img src={website.logo} alt="Website logo"/>
+          </div>
+          <span className="app_name">{appName}</span>
+        </Form.Field>
         {credentialsInputs}
-          <Message error content={this.state.errorMessage}/>
-          <Button
-            type="submit"
-            loading={loading}
-            disabled={loading || !this.checkValueInput()}
-            onClick={confirm}
-            positive
-            className="modal-button uppercase"
-            content={'DONE'}/>
+        <Message error content={this.state.errorMessage}/>
+        <span id='test_credentials' onClick={testCredentials}>Test credentials <Icon color='green' name='magic stick'/></span>
+        <Button
+          type="submit"
+          loading={loading}
+          disabled={loading || !this.checkValueInput()}
+          onClick={confirm}
+          positive
+          className="modal-button uppercase"
+          content={'DONE'}/>
       </Form>
     )
   }
@@ -193,6 +195,12 @@ class ChooseAppCredentialsModal extends React.Component {
     this.setState({credentials: credentials});
   };
   handleChange = (e, { value }) => this.setState({ userSelected: value });
+  testCredentials = () => {
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      website_id: this.props.card.app.id
+    }));
+  };
   close = () => {
     this.props.dispatch(showChooseAppCredentialsModal({active: false}));
   };
@@ -277,6 +285,7 @@ class ChooseAppCredentialsModal extends React.Component {
                      handleCredentialInput={this.handleCredentialInput}
                      website={this.props.card.app}
                      appName={this.props.settingsCard.card_name}
+                     testCredentials={this.testCredentials}
                      confirm={this.confirm} />}
       </SimpleModalTemplate>
     )
