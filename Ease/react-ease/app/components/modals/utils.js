@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Icon, Input, Form, Menu, Message, Button, Checkbox} from 'semantic-ui-react';
-import {handleSemanticInput} from "../../utils/utils";
+import {handleSemanticInput, transformCredentialsListIntoObject} from "../../utils/utils";
+import {testCredentials} from "../../actions/catalogActions";
 
 export const LabeledInput = ({icon, value, onChange, readOnly, disabled, type, name, placeholder, required}) => {
   return (
@@ -126,6 +127,28 @@ export class TeamAppRemoveSection extends Component {
               className="modal-button"
               content="CONFIRM"/>
         </Form>
+    )
+  }
+}
+
+export class TestCredentialsButton extends Component {
+  constructor(props){
+    super(props);
+  }
+  test = () => {
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(this.props.credentials),
+      website_id: this.props.website_id
+    }));
+  };
+  render(){
+    return (
+        <span
+            id='test_credentials'
+            onClick={this.test}>
+      Test connection
+      <Icon color='green' name='magic'/>
+    </span>
     )
   }
 }

@@ -4,7 +4,7 @@ import {handleSemanticInput} from "../../utils/utils";
 import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamSingleAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput, TestCredentialsButton} from "./utils";
 import {isAdmin} from "../../utils/helperFunctions";
 import {isCredentialsMatch, isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {teamEditSingleApp, removeTeamCardReceiver} from "../../actions/appsActions";

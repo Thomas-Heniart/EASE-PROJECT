@@ -36,9 +36,10 @@
   margin-bottom: 10px;
   position: relative;
   padding: 25px 40px 50px 40px;
+  border-radius: 5px;
   &.hovered {
     transition: background-color .3s ease;
-    background-color: #45C997;
+    background-color: #D2DAE4;
   }
   & > * {
     position: relative;
@@ -53,6 +54,7 @@
   border: solid 1px #e1e1e1;
   margin-bottom: 10px;
   position: relative;
+  border-radius: 5px;
   padding: 25px 40px 50px 40px;
   &:hover {
     .move_button {

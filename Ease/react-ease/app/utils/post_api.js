@@ -17,99 +17,113 @@ module.exports = {
     validateTutorial : () => {
       return basic_post('/api/v1/common/TutoDone');
     },
-    createProfile : function({name, column_index}) {
+    createProfile : function({name, column_index, ws_id}) {
       return basic_post('/api/v1/dashboard/CreateProfile', {
         name: name,
-        column_index: column_index
+        column_index: column_index,
+        ws_id:ws_id
       });
     },
-    editProfile: ({profile_id, name}) => {
+    editProfile: ({profile_id, name,ws_id}) => {
       return basic_post('/api/v1/dashboard/EditProfile', {
         profile_id: profile_id,
-        name: name
+        name: name,
+        ws_id:ws_id
       });
     },
-    moveProfile: ({profile_id, column_index, position}) => {
+    moveProfile: ({profile_id, column_index, position,ws_id}) => {
       return basic_post('/api/v1/dashboard/MoveProfile', {
         profile_id: profile_id,
         column_index: column_index,
-        position: position
+        position: position,
+        ws_id:ws_id
       });
     },
-    deleteProfile: ({profile_id}) => {
+    deleteProfile: ({profile_id, ws_id}) => {
       return basic_post('/api/v1/dashboard/DeleteProfile', {
-        profile_id: profile_id
+        profile_id: profile_id,
+        ws_id:ws_id
       })
     },
-    deleteApp: ({app_id}) => {
+    deleteApp: ({app_id, ws_id}) => {
       return basic_post('/api/v1/dashboard/DeleteApp', {
-        app_id: app_id
+        app_id: app_id,
+        ws_id:ws_id
       });
     },
-    moveApp: ({app_id, profile_id, position}) => {
+    moveApp: ({app_id, profile_id, position, ws_id}) => {
       return basic_post('/api/v1/dashboard/MoveApp', {
         app_id: app_id,
         profile_id: profile_id,
-        position: position
+        position: position,
+        ws_id:ws_id
       });
     },
-    validateApp: ({app_id}) => {
+    validateApp: ({app_id,ws_id}) => {
       return basic_post('/api/v1/dashboard/ValidateApp', {
-        app_id: app_id
+        app_id: app_id,
+        ws_id:ws_id
       });
     },
-    editClassicApp: ({app_id, name, account_information}) => {
+    editClassicApp: ({app_id, name, account_information, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
       return basic_post('/api/v1/dashboard/EditClassicApp', {
         app_id: app_id,
         name: name,
-        account_information: account_information
+        account_information: account_information,
+        ws_id:ws_id
       });
     },
-    editLogWithApp: ({app_id, name, logWithApp_id}) => {
+    editLogWithApp: ({app_id, name, logWithApp_id, ws_id}) => {
       return basic_post('/api/v1/dashboard/EditLogWithApp', {
         app_id: app_id,
         name: name,
-        logWithApp_id:logWithApp_id
+        logWithApp_id:logWithApp_id,
+        ws_id:ws_id
       });
     },
-    editLinkApp: ({app_id, name, url, img_url}) => {
+    editLinkApp: ({app_id, name, url, img_url, ws_id}) => {
       return basic_post('/api/v1/dashboard/EditLinkApp', {
         app_id: app_id,
         name: name,
         url: url,
-        img_url: img_url
+        img_url: img_url,
+        ws_id:ws_id
       })
     },
-    editAppName: ({app_id, name}) => {
+    editAppName: ({app_id, name,ws_id}) => {
       return basic_post('/api/v1/dashboard/EditAppName', {
         app_id: app_id,
-        name: name
+        name: name,
+        ws_id:ws_id
       });
     },
-    editSsoGroup: ({sso_group_id, account_information}) => {
+    editSsoGroup: ({sso_group_id, account_information, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
       return basic_post('/api/v1/dashboard/EditSsoGroup', {
         sso_group_id: sso_group_id,
-        account_information: account_information
+        account_information: account_information,
+        ws_id:ws_id
       });
     },
-    deleteSsoGroup: ({sso_group_id}) => {
+    deleteSsoGroup: ({sso_group_id,ws_id}) => {
       return basic_post('/api/v1/dashboard/DeleteSsoGroup', {
-        sso_group_id: sso_group_id
+        sso_group_id: sso_group_id,
+        ws_id:ws_id
       });
     },
-    createSsoGroup: ({sso_id, account_information}) => {
+    createSsoGroup: ({sso_id, account_information,ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
       return basic_post('/api/v1/catalog/CreateSsoGroup', {
         sso_id: sso_id,
-        account_information: account_information
+        account_information: account_information,
+        ws_id:ws_id
       });
     }
   },
@@ -862,11 +876,11 @@ module.exports = {
     }
   },
   teams: {
-    editTeamName : function(team_id, name){
+    editTeamName : function({team_id, name, ws_id}){
       return axios.post('/api/v1/teams/EditTeamName', {
         team_id: team_id,
         name: name,
-        timestamp: new Date().getTime()
+        ws_id: ws_id
       }).then(r => {
         return (r.data);
       }).catch(err => {
@@ -968,10 +982,11 @@ module.exports = {
         throw err.response.data;
       })
     },
-    addCreditCard: function({team_id, cardToken}) {
+    addCreditCard: function({team_id, cardToken,ws_id}) {
       return axios.post('/api/v1/teams/AddCreditCard', {
         team_id: team_id,
-        token: cardToken
+        token: cardToken,
+        ws_id:ws_id
       }).then(response => {
         return response.data;
       }).catch(err => {
@@ -994,21 +1009,22 @@ module.exports = {
         throw err.response.data;
       });
     },
-    unsubscribe : function({team_id, password}){
+    unsubscribe : function({team_id, password,ws_id}){
       return axios.post('/api/v1/teams/Unsubscribe', {
         team_id: team_id,
-        password: password
+        password: password,
+        ws_id: ws_id
       }).then(response => {
         return response.data;
       }).catch(err => {
         throw err.response.data;
       });
     },
-    upgradePlan: ({team_id, plan_id}) => {
+    upgradePlan: ({team_id, plan_id, ws_id}) => {
       return axios.post('/api/v1/teams/UpgradePlan', {
         team_id: team_id,
         plan_id: plan_id,
-        timestamp: new Date().getTime()
+        ws_id:ws_id
       }).then(response => {
         return response.data;
       }).catch(err => {

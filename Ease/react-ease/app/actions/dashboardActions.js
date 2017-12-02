@@ -64,7 +64,8 @@ export function dashboardAppRemovedAction({app_id}){
     dispatch({
       type: 'DASHBOARD_APP_REMOVED',
       payload: {
-        app_id: app.id
+        app_id: app.id,
+        ws_id: getState().common.ws_id
       }
     });
     dispatch(checkIfProfileEmpty({
@@ -209,7 +210,8 @@ export function fetchApp({app_id}){
 export function validateApp({app_id}) {
   return (dispatch, getState) => {
     post_api.dashboard.validateApp({
-      app_id: app_id
+      app_id: app_id,
+      ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({
         type: 'DASHBOARD_APP_CHANGED',
@@ -227,7 +229,8 @@ export function validateApp({app_id}) {
 export function deleteApp({app_id}){
   return (dispatch, getState) => {
     return post_api.dashboard.deleteApp({
-      app_id: app_id
+      app_id: app_id,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch(deleteAppAction({
         app_id: app_id
@@ -245,7 +248,8 @@ export function deleteSsoApp({app_id}){
     const app = store.dashboard.apps[app_id];
     const sso_group = store.dashboard.sso_groups[app.sso_group_id];
     return post_api.dashboard.deleteApp({
-      app_id: app_id
+      app_id: app_id,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch(deleteAppAction({
         app_id: app_id
@@ -319,7 +323,8 @@ export function endAppDrag(){
     post_api.dashboard.moveApp({
       app_id: app_id,
       profile_id: app.profile_id,
-      position: index
+      position: index,
+      ws_id: getState().common.ws_id
     });
   };
 }
@@ -341,7 +346,8 @@ export function endProfileDrag({profile_id}){
     post_api.dashboard.moveProfile({
       profile_id: profile_id,
       column_index: profile.column_index,
-      position: index
+      position: index,
+      ws_id: getState().common.ws_id
     });
     dispatch({
       type: 'END_PROFILE_DRAG',
@@ -409,7 +415,8 @@ export function createProfile({column_index, name}) {
   return (dispatch, getState) => {
     return post_api.dashboard.createProfile({
       name: name,
-      column_index: column_index
+      column_index: column_index,
+      ws_id: getState().common.ws_id
     }).then(profile => {
       dispatch({
         type: 'DASHBOARD_PROFILE_CREATED',
@@ -426,7 +433,8 @@ export function editProfile({profile_id, name}) {
   return (dispatch, getState) => {
     return post_api.dashboard.editProfile({
       profile_id: profile_id,
-      name: name
+      name: name,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({type: 'DASHBOARD_PROFILE_CHANGED', payload: {profile: response}});
       return response;
@@ -488,7 +496,8 @@ export function editClassicApp({app_id, name, account_information}){
     return post_api.dashboard.editClassicApp({
       app_id: app_id,
       name: name,
-      account_information: account_information
+      account_information: account_information,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({type: 'DASHBOARD_APP_CHANGED', payload: {app: response}});
       return response;
@@ -503,7 +512,8 @@ export function editLogWithApp({app_id, name, logWithApp_id}) {
     return post_api.dashboard.editLogWithApp({
       app_id: app_id,
       name: name,
-      logWithApp_id:logWithApp_id
+      logWithApp_id:logWithApp_id,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({type: 'DASHBOARD_APP_CHANGED', payload: {app: response}});
       return response;
@@ -519,7 +529,8 @@ export function editLinkApp({app_id, name, url, img_url}) {
       app_id: app_id,
       name: name,
       url: url,
-      img_url: img_url
+      img_url: img_url,
+      ws_id: getState().common.ws_id
     }).then(response=> {
       dispatch({type: 'DASHBOARD_APP_CHANGED', payload: {app: response}});
       return response;
@@ -533,7 +544,8 @@ export function editSsoGroup({sso_group_id, account_information}) {
   return (dispatch, getState) => {
     return post_api.dashboard.editSsoGroup({
       sso_group_id: sso_group_id,
-      account_information: account_information
+      account_information: account_information,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({
         type: 'SSO_GROUP_CHANGED',
@@ -561,7 +573,8 @@ export function createSsoGroup({sso_id, account_information}){
   return (dispatch, getState) => {
     return post_api.dashboard.createSsoGroup({
       sso_id:sso_id,
-      account_information: account_information
+      account_information: account_information,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({
         type: 'SSO_GROUP_CREATED',
@@ -580,7 +593,8 @@ export function editAppName({app_id, name}) {
   return (dispatch, getState) => {
     return post_api.dashboard.editAppName({
       app_id: app_id,
-      name: name
+      name: name,
+      ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({
         type: 'DASHBOARD_APP_CHANGED',
