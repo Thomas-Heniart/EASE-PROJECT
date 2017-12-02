@@ -377,7 +377,7 @@ class NewSsoAccount extends React.Component {
         </Form.Field>
         {credentialsInputs}
         <Message error content={this.state.errorMessage}/>
-        <span id='test_credentials' onClick={testCredentials}>Test credentials <Icon color='green' name='magic stick'/></span>
+        <span id='test_credentials' onClick={testCredentials}>Test connection <Icon color='green' name='magic'/></span>
         <Button
           type="submit"
           positive
