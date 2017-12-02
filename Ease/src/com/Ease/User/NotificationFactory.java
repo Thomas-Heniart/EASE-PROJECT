@@ -214,7 +214,7 @@ public class NotificationFactory {
     }
 
     public void createDepartureDateThreeDaysNotification(TeamUser teamUser, TeamUser teamUser_admin, String formattedDate, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        Notification notification = this.createNotification(teamUser_admin.getUser(), "the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "/resources/notifications/user_departure.png", teamUser, true);
+        Notification notification = this.createNotification(teamUser_admin.getUser(), "the departure of " + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "/resources/notifications/user_departure.png", teamUser, true);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
@@ -254,7 +254,7 @@ public class NotificationFactory {
 
     public void createMustFillAppNotification(TeamUser teamUser, TeamUser teamUser1, TeamCardReceiver teamCardReceiver, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
         User user = teamUser.getUser();
-        String content = "@" + teamUser1 + " asks you to enter " + teamCardReceiver.getTeamCard().getName() + "'s information";
+        String content = teamUser1.getUsername() + " asks you to enter " + teamCardReceiver.getTeamCard().getName() + "'s information";
         String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
         String logo = teamCardReceiver.getTeamCard().getLogo();
         if (user != null) {
@@ -265,5 +265,13 @@ public class NotificationFactory {
             PendingNotification pendingNotification = this.createPendingNotification(teamUser, content, logo, url);
             hibernateQuery.saveOrUpdateObject(pendingNotification);
         }
+    }
+
+    public void createRemindAdminPasswordLost(TeamUser teamUser, TeamUser teamUser_admin, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        User user = teamUser_admin.getUser();
+        String content = "Reminder: " + teamUser.getUsername() + " asks you to be re-accepted in " + teamUser.getTeam().getName();
+        Notification notification = this.createNotification(user, content, "/resources/notifications/user_password_lost.png", teamUser, true);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 }

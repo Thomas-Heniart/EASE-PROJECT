@@ -39,7 +39,7 @@ public class ServletEditEmail extends HttpServlet {
             if (!digits.equals(user.getUserStatus().getEdit_email_code()))
                 throw new HttpServletException(HttpStatus.BadRequest, "This code isn't valid.");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT User u FROM users WHERE email = :email");
+            hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
             hibernateQuery.setParameter("email", new_email);
             if (hibernateQuery.getSingleResult() != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This email is already used for another Ease.space account.");

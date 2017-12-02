@@ -425,3 +425,5 @@ CREATE TABLE pendingTeamUserNotifications (
   PRIMARY KEY (id),
   FOREIGN KEY (teamUser_id) REFERENCES teamUsers(id)
 );
+
+ALTER TABLE logWithApps MODIFY logWith_website_app_id INT(10) UNSIGNED;
