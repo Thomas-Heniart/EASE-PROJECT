@@ -37,7 +37,7 @@ public class ServletSendWebsitesIntegrated extends HttpServlet {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
                 mailJetBuilder.addTo(email);
-                mailJetBuilder.setTemplateId(237392);
+                mailJetBuilder.setTemplateId(265363);
                 mailJetBuilder.addVariable("app_name", website_names);
                 mailJetBuilder.addVariable("url", Variables.URL_PATH + "#/main/catalog");
                 mailJetBuilder.sendEmail();
