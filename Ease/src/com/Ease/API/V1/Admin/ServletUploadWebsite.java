@@ -3,9 +3,9 @@ package com.Ease.API.V1.Admin;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -16,7 +16,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -30,11 +29,9 @@ public class ServletUploadWebsite extends HttpServlet {
     private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            User user = (User) httpSession.getAttribute("user");
-            if (user == null || !user.isAdmin())
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
+            sm.needToBeEaseAdmin();
             if (!ServletFileUpload.isMultipartContent(request))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong form enctype");
             // configures upload settings
