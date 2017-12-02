@@ -1,0 +1,30 @@
+{
+  "name":"UberEats",
+  "lastLogin":"",
+  "home":"https://www.ubereats.com/stores/",
+  "connect":{
+    "todo":[
+      {"action":"waitfor", "search":".signInText_"},
+      {"action":"trueClick", "search":".signInText_"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login", "search":"#useridInput"},
+      {"action":"trueClick", "search":"form button"},
+      {"action":"waitfor", "search":"#password"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"form button"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"goto", "url":"https://riders.uber.com/logout"},
+      {"action":"waitfor", "search":"#useridInput"},
+      {"action":"goto", "url":"https://www.ubereats.com/stores/"},
+      {"action":"waitfor", "search":".signInText_"},
+      {"action":"waitfor", "search":".signInText_, img.clientImage_"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".signInText_, img.clientImage_"},
+    {"search":"img.clientImage_"}
+  ]
+}

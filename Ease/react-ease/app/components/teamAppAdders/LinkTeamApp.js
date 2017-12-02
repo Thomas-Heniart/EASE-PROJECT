@@ -265,6 +265,7 @@ class LinkTeamApp extends Component {
                             multiple
                             noResultsMessage='No more results found'
                             placeholder="Tag your team members here..."/>}
+                      {(this.state.description || app.description || this.state.edit) &&
                         <div>
                             <Input size="mini"
                                    fluid
@@ -277,7 +278,7 @@ class LinkTeamApp extends Component {
                                    type="text"
                                    label={<Label><Icon name="sticky note"/></Label>}
                                    labelPosition="left"/>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </Segment>

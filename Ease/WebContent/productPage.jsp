@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00019/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00019/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00019/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00019/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00019/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00019/securityPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00019/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00020/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00020/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00020/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00020/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00020/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00020/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00020/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -155,7 +155,7 @@
         </div>
     </div>
     <div id="more" class="ui top attached tabular menu">
-        <a class="item centered" data-tab="first" style="font-size:20px;font-weight:bold;line-height:1.35;color:#4990e2;"><u><fmt:message key="product.showMore"/></u></a>
+        <a class="item centered" data-tab="first" style="margin-top:10px;font-size:20px;font-weight:bold;line-height:1.35;color:#4990e2;"><u><fmt:message key="product.showMore"/></u></a>
     </div>
     <div class="container">
         <div class="ui two column stackable grid textDistrib">
@@ -210,6 +210,35 @@
                 </div>
                 <div class="five wide mobile only column" style="display:inline-block;float:left">
                     <img class="ui small left floated image" src="/resources/images/partageApps.png">
+                </div>
+            </div>
+        </div>
+        <div class="ui stackable two column grid textNotifications">
+            <div class="ui row" style="display:inline-block;float:left">
+                <div class="eleven wide column" style="display:inline-block;float:left">
+                    <h2><fmt:message key="product.notifications.title"/></h2>
+                    <p><fmt:message key="product.notifications.text.1"/></p>
+                    <p><fmt:message key="product.notifications.text.2"/></p>
+                </div>
+                <div class="five wide column" style="display:inline-block;float:left">
+                    <img class="ui small right floated image" src="/resources/images/notifications_product.png">
+                </div>
+            </div>
+        </div>
+        <div class="ui stackable two column grid textMobile">
+            <div class="ui mobile reversed row" style="display:inline-block;float:left">
+                <div class="five wide computer only column" style="display:inline-block;float:left">
+                    <img class="ui small left floated image" src="/resources/images/black_phone.png">
+                </div>
+                <div class="eleven wide column" style="display:inline-block;float:left">
+                    <h2><fmt:message key="product.mobile.title"/></h2>
+                    <p><fmt:message key="product.mobile.text.1"/></p>
+                    <p class="last"><fmt:message key="product.mobile.text.2"/></p>
+                    <img class="apple" src="/resources/icons/app_store.badge.svg"/>
+                    <img class="google" src="/resources/icons/google-play-badge.png"/>
+                </div>
+                <div class="five wide mobile only column" style="display:inline-block;float:left">
+                    <img class="ui small left floated image" src="/resources/images/black_phone.png">
                 </div>
             </div>
         </div>

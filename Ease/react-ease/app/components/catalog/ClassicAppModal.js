@@ -265,7 +265,7 @@ class AddClassicAppForm extends Component {
     const credentialsInputs = credentials.map(item => {
       return <CredentialInput key={item.priority} onChange={handleCredentialInput} item={item}/>;
     });
-    const logWithButtons = logWith_websites.map(item => {
+      const logWithButtons = logWith_websites.map(item => {
       const name = item.name.toLowerCase();
       return (
           <Form.Field key={item.id}>
@@ -282,7 +282,7 @@ class AddClassicAppForm extends Component {
     return (
         <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
           {credentialsInputs}
-          {logWithButtons.length > 0 &&
+          {(logWithButtons.length > 0 && credentialsInputs.length > 0) &&
           <Form.Field>
             <Divider horizontal>Or</Divider>
           </Form.Field>}

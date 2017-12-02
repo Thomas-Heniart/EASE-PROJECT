@@ -396,6 +396,7 @@ class SimpleTeamApp extends Component {
                           noResultsMessage='No more results found'
                           placeholder="Tag your team members here..."/>}
                 </div>
+                {(this.state.description || app.description || this.state.edit) &&
                 <div>
                   <Input size="mini"
                          fluid
@@ -408,7 +409,7 @@ class SimpleTeamApp extends Component {
                          type="text"
                          label={<Label><Icon name="sticky note"/></Label>}
                          labelPosition="left"/>
-                </div>
+                </div>}
               </div>
             </div>
           </Segment>

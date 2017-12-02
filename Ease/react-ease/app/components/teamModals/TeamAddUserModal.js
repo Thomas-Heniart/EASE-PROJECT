@@ -26,7 +26,8 @@ class TeamAddUserModal extends React.Component {
       value: [],
       loading: false,
       errorMessage: '',
-      loadingInvitationNow: false
+      loadingInvitationNow: false,
+      usernameError: false
     };
     const team = this.props.team;
     this.state.options = Object.keys(team.rooms).map(id => {
@@ -54,9 +55,15 @@ class TeamAddUserModal extends React.Component {
     const username = newValue.split('@')[0];
     this.setState(() => ({[name]: value, username: username}));
   };
-  usernameInput = (e) => {
-    e.target.value = e.target.value.replace(" ", "_").toLowerCase();
-    this.setState({[e.target.name] : e.target.value});
+  handleUsernameInput = (e, {name, value}) => {
+    if (value && value.match(/[a-zA-Z0-9\s_\-]/gi)) {
+      if (value.match(/[a-zA-Z0-9\s_\-]/gi).length === value.length && value.length <= 22)
+        this.setState({ [name]: value.toLowerCase().replace(/\s/gi, '_'), usernameError: false });
+      else
+        this.setState({ usernameError: true });
+    }
+    else
+      this.setState({ [name]: '', usernameError: true });
   };
   userRoleInput = (e, {value}) => {
     if (this.props.team.plan_id === 0 && value === 2) {
@@ -186,7 +193,7 @@ class TeamAddUserModal extends React.Component {
                             width={8}/>
                 <Form.Input label="Username" type="text" name="username"
                             value={this.state.username}
-                            onChange={this.usernameInput}
+                            onChange={this.handleUsernameInput}
                             placeholder="username" width={8}/>
               </Form.Group>
               <Form.Group>
@@ -211,6 +218,8 @@ class TeamAddUserModal extends React.Component {
                          placeholder="Optional" width={8}/>
                 </Form.Field>
               </Form.Group>
+              {this.state.usernameError &&
+              <Message color="red" content={'Please choose a username that is all lowercase, containing, only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.'}/>}
               <Form.Dropdown
                   search={true}
                   fluid
