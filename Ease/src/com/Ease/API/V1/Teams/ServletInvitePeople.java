@@ -97,7 +97,7 @@ public class ServletInvitePeople extends HttpServlet {
             MailJetBuilder mailJetBuilder;
             for (String email : emails) {
                 mailJetBuilder = new MailJetBuilder();
-                mailJetBuilder.setTemplateId(180224);
+                mailJetBuilder.setTemplateId(265359);
                 mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
                 mailJetBuilder.addCc(teamUser.getEmail());
                 mailJetBuilder.addTo(email);
