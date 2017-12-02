@@ -218,7 +218,7 @@ export const PasswordChangeHolder = ({value, roomManager}) => {
              trigger={
                <Button as='div' icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
              }
-             content={`${roomManager} will be in charge of updating the password`}/>
+             content={value > 0 ? `The Room Manager (${roomManager}) will be in charge of updating the password` : `The room manager (${roomManager}) can be in charge of updating the password`}/>
   )
 };
 
