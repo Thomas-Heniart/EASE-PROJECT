@@ -201,6 +201,7 @@ public abstract class ServletManager {
 
     public void needToBeTeamUserOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
+        this.team = team;
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             if (teamUser.getTeam().equals(team) && !team.isBlocked() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
@@ -211,6 +212,7 @@ public abstract class ServletManager {
 
     public void needToBeAdminOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
+        this.team = team;
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
@@ -221,6 +223,7 @@ public abstract class ServletManager {
 
     public void needToBeOwnerOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
+        this.team = team;
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             this.timestamp = this.getCurrentTime();
             if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
@@ -450,7 +453,7 @@ public abstract class ServletManager {
         Map<String, Object> teamProperties = teamIdMap.get(team_id);
         if (teamProperties == null) {
             teamProperties = new ConcurrentHashMap<>();
-            teamIdMap.put(team_id, teamProperties);
+            teamIdMap.putIfAbsent(team_id, teamProperties);
         }
         return teamProperties;
     }
@@ -468,7 +471,7 @@ public abstract class ServletManager {
         WebSocketManager webSocketManager = (WebSocketManager) this.getTeamProperties(team_id).get("webSocketManager");
         if (webSocketManager == null) {
             webSocketManager = new WebSocketManager();
-            this.getTeamProperties(team_id).put("webSocketManager", webSocketManager);
+            this.getTeamProperties(team_id).putIfAbsent("webSocketManager", webSocketManager);
         }
         return webSocketManager;
     }
@@ -505,7 +508,6 @@ public abstract class ServletManager {
                 }
                 team.setSubscription(subscription);
             }
-            this.team = team;
         } catch (StripeException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }

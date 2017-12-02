@@ -79,14 +79,15 @@ public class WebSocketServer {
                 Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
                 if (teamProperties == null) {
                     teamProperties = new ConcurrentHashMap<>();
-                    teamIdMap.put(team.getDb_id(), teamProperties);
+                    teamIdMap.putIfAbsent(team.getDb_id(), teamProperties);
                 }
                 WebSocketManager teamWebSocketManager = (WebSocketManager) teamProperties.get("webSocketManager");
                 if (teamWebSocketManager == null) {
                     teamWebSocketManager = new WebSocketManager();
-                    teamProperties.put("webSocketManager", teamWebSocketManager);
+                    teamProperties.putIfAbsent("webSocketManager", teamWebSocketManager);
                 }
                 teamWebSocketManager.addWebSocketSession(webSocketSession);
+                System.out.println("TeamWebSocketSessions size: " + teamWebSocketManager.getWebSocketSessions().size());
             }
             System.out.println("webSocketSession registered for user : " + user.getEmail());
         } catch (Exception e) {
