@@ -538,4 +538,8 @@ public abstract class ServletManager {
     public Map<Integer,Map<String,Object>> getUserIdMap() {
         return (Map<Integer, Map<String, Object>>) this.getContextAttr("userIdMap");
     }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }

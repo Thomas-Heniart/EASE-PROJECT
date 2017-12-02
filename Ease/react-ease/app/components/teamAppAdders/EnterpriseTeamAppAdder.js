@@ -1,16 +1,15 @@
 import React, {Component} from "react";
-import {teamAppSearch, fetchWebsiteInfo, getDashboardApp} from "../../utils/api";
+import {fetchWebsiteInfo} from "../../utils/api";
 import {handleSemanticInput,
   transformCredentialsListIntoObject,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
-import {selectUserFromListById, newSelectUserFromListById} from "../../utils/helperFunctions";
-import {requestWebsite, showPinTeamAppToDashboardModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import {teamCreateSingleApp, teamCreateEnterpriseCard} from "../../actions/appsActions";
-import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
+import {newSelectUserFromListById} from "../../utils/helperFunctions";
+import {requestWebsite} from "../../actions/teamModalActions";
+import {teamCreateEnterpriseCard} from "../../actions/appsActions";
 import {connect} from "react-redux";
-import {ExtendFillSwitch, setUserDropdownText, renderSimpleAppUserLabel, PasswordChangeDropdown, PasswordChangeManagerLabel} from "./common";
-import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {setUserDropdownText, PasswordChangeDropdownEnterprise} from "./common";
+import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 
 const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) => {
@@ -44,9 +43,7 @@ const Receivers = ({receivers, onChange, onDelete, myId}) => {
   return (
       <div class="receivers">
         {receivers.map(item => {
-          // if (item.id === myId)
             return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete}/>;
-          // return <ReceiverCredentialsInput key={item.id} receiver={item} onChange={onChange} onDelete={onDelete}/>
         })}
       </div>
   )
@@ -213,7 +210,7 @@ class EnterpriseTeamAppAdder extends Component {
                   <div class="main_column">
                     <div class="credentials">
                       <div class="display-inline-flex align_items_center">
-                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
+                        <PasswordChangeDropdownEnterprise value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
                       </div>
                     </div>
                     <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>

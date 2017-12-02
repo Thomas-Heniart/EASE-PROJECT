@@ -2,8 +2,8 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import {
-  PasswordChangeDropdown,
-  PasswordChangeHolder,
+  PasswordChangeDropdownEnterprise,
+  PasswordChangeHolderEnterprise,
   setUserDropdownText,
   SharingRequestButton,
   TeamAppActionButton
@@ -524,10 +524,8 @@ class EnterpriseTeamApp extends Component {
                 <div class="credentials">
                   <div class="display-inline-flex align_items_center">
                     {!this.state.edit ?
-                        <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username}/> :
-                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
-                    {this.state.edit && this.props.plan_id === 0 &&
-                    <img style={{height: '18px'}} src="/resources/images/upgrade.png"/>}
+                        <PasswordChangeHolderEnterprise value={app.password_reminder_interval} roomManager={room_manager.username}/> :
+                        <PasswordChangeDropdownEnterprise value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
                   </div>
                 </div>
                 {!this.state.edit &&
