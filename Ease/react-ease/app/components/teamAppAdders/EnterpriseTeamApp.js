@@ -55,8 +55,41 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
   )
 };
 
+const EnterpriseAppEditReceiverLabel = ({receiver, reminder_interval, onDelete}) => {
+  const up_to_date =  !!receiver.receiver ? !needPasswordUpdate(receiver.receiver.last_update_date, reminder_interval) : true;
+  return (
+      <Popup size="mini"
+             position="bottom center"
+             inverted
+             flowing
+             hideOnScroll={true}
+             trigger={
+               <Label class={classnames("receiver-label", (!!receiver.receiver && !receiver.empty) ? 'accepted': null)}>
+                 <span>{receiver.user.username}</span>
+                 {!!reminder_interval &&
+                 <Icon name="refresh" color={up_to_date ? null : 'red'}/>}
+                 <Icon name="mobile" style={{marginRight: 0}}/>
+                 <Icon name="delete"
+                       link
+                       onClick={onDelete.bind(null, receiver.user.id)}/>
+               </Label>
+             }
+             content={
+               <div>
+                 <span>Mobile access: on</span>
+                 <br/>
+                 <span>Password copy: on</span>
+                 <br/>
+                 {!!receiver.receiver && !!reminder_interval && up_to_date &&
+                 <span>Password is up to date</span>}
+                 {!!receiver.receiver && !!reminder_interval && !up_to_date &&
+                 <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
+               </div>}/>
+  )
+};
+
 const EnterpriseAppReceiverLabel = ({receiver, reminder_interval}) => {
-  const up_to_date = !needPasswordUpdate(receiver.receiver.last_update_date, reminder_interval);
+  const up_to_date =  !needPasswordUpdate(receiver.receiver.last_update_date, reminder_interval);
   return (
       <Popup size="mini"
              position="bottom center"
@@ -151,7 +184,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
               <div class="receiver align_items_center" key={receiver.user.id}>
                 <EnterpriseAppReceiverLabel
                     receiver={receiver}
-                    password_interval={password_reminder_interval}/>
+                    reminder_interval={password_reminder_interval}/>
                 {receiver.credentials.map(item => {
                   return <Input size="mini"
                                 key={item.name}
@@ -194,10 +227,13 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
                 type={item.type}/>;
 };
 
-const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId}) => {
+const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, password_reminder_interval}) => {
   return (
       <div class="receiver">
-        <Label class={classnames("receiver-label", (!!receiver.receiver) ? 'accepted': null)}><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.user.id)}/></Label>
+        <EnterpriseAppEditReceiverLabel
+            receiver={receiver}
+            reminder_interval={password_reminder_interval}
+            onDelete={onDelete}/>
         {
           receiver.credentials.map(item => {
             return <TeamAppCredentialInput
@@ -213,11 +249,12 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId}) 
   )
 };
 
-const Receivers = ({receivers, onChange, onDelete, myId}) => {
+const Receivers = ({receivers, onChange, onDelete, myId, password_reminder_interval}) => {
   return (
       <div class="receivers">
         {receivers.map(item => {
           return <ExtendedReceiverCredentialsInput key={item.user.id}
+                                                   password_reminder_interval={password_reminder_interval}
                                                    myId={myId}
                                                    receiver={item}
                                                    onChange={onChange}
@@ -507,6 +544,7 @@ class EnterpriseTeamApp extends Component {
                 </div>
                 {this.state.edit &&
                 <Receivers receivers={users}
+                           password_reminder_interval={this.state.password_reminder_interval}
                            onChange={this.handleReceiverInput}
                            onDelete={this.deleteReceiver}
                            myId={me.id}/>}

@@ -36,7 +36,8 @@ export const modals = createReducer({
     active: false
   },
   lockedTeamApp: {
-    active: false
+    active: false,
+    team_user_id: -1
   },
   chooseAppCredentials: {
     active: false

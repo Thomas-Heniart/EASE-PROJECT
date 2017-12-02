@@ -446,6 +446,11 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       })
+    },
+    sendActivationReminderToAdmin: ({team_user_id}) => {
+      return basic_post('/api/v1/teams/SendPasswordLostReminderToAdmin', {
+        team_user_id: team_user_id
+      })
     }
   },
   teamApps: {
@@ -469,6 +474,11 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       });
+    },
+    sendSingleCardFillerReminder: ({team_card_id}) => {
+      return basic_post('/api/v1/teams/SendFillerReminder', {
+        team_card_id: team_card_id
+      })
     },
     addTeamSingleCardReceiver: ({team_id, team_card_id, team_user_id, allowed_to_see_password, ws_id}) => {
       return basic_post('/api/v1/teams/AddTeamSingleCardReceiver', {

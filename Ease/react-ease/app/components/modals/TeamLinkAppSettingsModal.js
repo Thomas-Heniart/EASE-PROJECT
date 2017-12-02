@@ -5,12 +5,12 @@ import {getLogo} from "../../utils/api";
 import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamLinkAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {connect} from "react-redux";
 import {removeTeamCardReceiver, teamEditLinkAppNew} from "../../actions/appsActions";
 import {isAdmin} from "../../utils/helperFunctions";
-import {editAppName} from "../../actions/dashboardActions";
+import {editAppName, validateApp} from "../../actions/dashboardActions";
 
 @connect(store => ({
   app: store.modals.teamLinkAppSettings.app,
@@ -82,6 +82,12 @@ class TeamLinkAppSettingsModal extends Component {
       throw err;
     });
   };
+  componentWillMount() {
+    if (this.props.app.new)
+      this.props.dispatch(validateApp({
+        app_id: this.props.app.id
+      }));
+  }
   render(){
     const {app, teams} = this.props;
     const {view, logo} = this.state;
@@ -144,7 +150,7 @@ class TeamLinkAppSettingsModal extends Component {
                   content="CONFIRM"/>
             </Form>}
             {view === 'Remove' &&
-            <RemoveSection onRemove={this.remove}/>}
+            <TeamAppRemoveSection onRemove={this.remove}/>}
             {view === 'Share' &&
             <ShareSection/>}
           </Container>

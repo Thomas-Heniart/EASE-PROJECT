@@ -87,11 +87,12 @@ export function showPasswordLostInformationModal({active}){
   }
 }
 
-export function showLockedTeamAppModal({active}){
+export function showLockedTeamAppModal({active, team_user_id}){
   return {
     type: 'SHOW_LOCKED_TEAM_APP_MODAL',
     payload: {
-      active: active
+      active: active,
+      team_user_id: team_user_id
     }
   }
 }

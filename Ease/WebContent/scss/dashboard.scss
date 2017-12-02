@@ -60,6 +60,7 @@
     }
   }
   .move_button {
+    color: $themeBlue2Color;
     display: none;
     position: absolute;
     left:.4rem;
@@ -153,6 +154,7 @@
             font-size: 8px;
             background-color: #424242;
             text-align: center;
+            border-radius: 0;
             border-bottom-right-radius: 5px;
             border-bottom-left-radius: 5px;
           }

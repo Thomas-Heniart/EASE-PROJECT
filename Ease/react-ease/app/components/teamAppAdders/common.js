@@ -50,7 +50,7 @@ export const renderSimpleAppEditUserLabel = (label, index, props) => {
                flowing
                hideOnScroll={true}
                trigger={
-                   <Label class={classnames("user-label static", (receiver !== null && receiver.accepted) ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
+                   <Label class={classnames("user-label static accepted", (receiver !== null && receiver.accepted) ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
                        {username}
                        <Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
                        {can_see_information &&
