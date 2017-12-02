@@ -29,11 +29,26 @@ public class ServletDeleteTeam extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team;
             try {
+                HibernateQuery hibernateQuery = sm.getHibernateQuery();
                 team = sm.getTeam(team_id);
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
                     teamUser.setAdmin_id(null);
                     sm.saveOrUpdate(teamUser);
                 }
+                Subscription subscription = team.getSubscription();
+                subscription.cancel(new HashMap<>());
+                Customer customer = team.getCustomer();
+                String default_source = customer.getDefaultSource();
+                if (default_source != null && !default_source.equals(""))
+                    customer.getSources().retrieve(default_source).delete();
+                team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
+                    Profile profile = teamCardReceiver.getApp().getProfile();
+                    if (profile != null) {
+                        profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), hibernateQuery);
+                        teamCardReceiver.getApp().setProfile(null);
+                        teamCardReceiver.getApp().setPosition(null);
+                    }
+                });
                 sm.deleteObject(team);
                 sm.setSuccess("Team deleted");
             } catch (HttpServletException e) {
@@ -48,19 +63,9 @@ public class ServletDeleteTeam extends HttpServlet {
                 hibernateQuery.queryString("SELECT t FROM Team t WHERE t.id = ?");
                 hibernateQuery.setParameter(1, team_id);
                 team = (Team) hibernateQuery.getSingleResult();
-                Subscription subscription = team.getSubscription();
-                subscription.cancel(new HashMap<>());
-                Customer customer = team.getCustomer();
-                String default_source = customer.getDefaultSource();
-                if (default_source != null && !default_source.equals(""))
-                    customer.getSources().retrieve(default_source).delete();
-                team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
-                    Profile profile = teamCardReceiver.getApp().getProfile();
-                    if (profile != null) {
-                        profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), hibernateQuery);
-                        teamCardReceiver.getApp().setProfile(null);
-                        teamCardReceiver.getApp().setPosition(null);
-                    }
+                team.getTeamUsers().forEach((integer, teamUser) -> {
+                    teamUser.setAdmin_id(null);
+                    sm.saveOrUpdate(teamUser);
                 });
                 team.getTeamCardMap().clear();
                 team.setSubscription_id(null);
