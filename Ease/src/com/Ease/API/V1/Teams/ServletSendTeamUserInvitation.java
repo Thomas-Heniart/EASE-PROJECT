@@ -43,8 +43,8 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
                 mailJetBuilder.setTemplateId(259569);
             mailJetBuilder.addTo(teamUser.getEmail());
             mailJetBuilder.addVariable("team_name", team.getName());
-            mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
-            mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+            mailJetBuilder.addVariable("first_name", teamUser_admin.getFirstName());
+            mailJetBuilder.addVariable("last_name", teamUser_admin.getLastName());
             mailJetBuilder.addVariable("email", teamUser_admin.getEmail());
             mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code());
             mailJetBuilder.sendEmail();
