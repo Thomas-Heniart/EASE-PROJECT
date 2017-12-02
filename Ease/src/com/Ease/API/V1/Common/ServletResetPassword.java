@@ -60,7 +60,7 @@ public class ServletResetPassword extends HttpServlet {
             hibernateQuery.setParameter("code", code);
             PasswordLost passwordLost = (PasswordLost) hibernateQuery.getSingleResult();
             if (passwordLost == null)
-                throw new HttpServletException(HttpStatus.BadRequest);
+                throw new HttpServletException(HttpStatus.BadRequest, "Sorry, it looks like you have already used this link to reset your password.");
             String keyUser = AES.keyGenerator();
             String salt = AES.generateSalt();
             UserKeys userKeys = user.getUserKeys();

@@ -127,6 +127,16 @@ public class NotificationFactory {
         }
     }
 
+    public void createRemindTeamSingleCardFiller(TeamSingleCard teamSingleCard, TeamUser teamUser, TeamUser room_manager, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        User user = room_manager.getUser();
+        String content = teamUser.getUsername() + " reminds you to enter " + teamSingleCard.getName() + "'s information";
+        String url = "#/teams/" + teamSingleCard.getChannel().getDb_id() + "?app_id=" + teamSingleCard.getDb_id();
+        String logo = teamSingleCard.getLogo();
+        Notification notification = this.createNotification(user, content, logo, url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
     public void createEditRoleNotification(TeamUser teamUserToModify, TeamUser teamUser, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         Notification notification = this.createNotification(teamUserToModify.getUser(), teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "/resources/notifications/user_role_changed.png", teamUserToModify, true);
         hibernateQuery.saveOrUpdateObject(notification);
