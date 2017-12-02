@@ -1,6 +1,6 @@
 import React from 'react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox } from 'semantic-ui-react';
+import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {testCredentials} from "../../actions/catalogActions";
 import {showChooseAppCredentialsModal} from "../../actions/modalActions";
@@ -62,25 +62,27 @@ class AddCardForm extends React.Component {
       return <CredentialInput key={item.priority} onChange={handleCredentialInput} item={item}/>;
     });
     return (
-      <Form as="div" className="container" onSubmit={confirm} error={this.state.errorMessage.length > 0}>
-        <Form.Field className="display-flex align_items_center" style={{marginBottom: '30px'}}>
+      <Container>
+        <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
           <div className="squared_image_handler">
             <img src={website.logo} alt="Website logo"/>
           </div>
           <span className="app_name">{appName}</span>
-        </Form.Field>
-        {credentialsInputs}
-        <Message error content={this.state.errorMessage}/>
-        <span id='test_credentials' onClick={testCredentials}>Test credentials <Icon color='green' name='magic stick'/></span>
-        <Button
-          type="submit"
-          loading={loading}
-          disabled={loading || !this.checkValueInput()}
-          onClick={confirm}
-          positive
-          className="modal-button uppercase"
-          content={'DONE'}/>
-      </Form>
+        </div>
+        <Form  onSubmit={confirm} error={this.state.errorMessage.length > 0}>
+          {credentialsInputs}
+          <Message error content={this.state.errorMessage}/>
+          <span id='test_credentials' onClick={testCredentials}>Test connection <Icon color='green' name='magic'/></span>
+          <Button
+            type="submit"
+            loading={loading}
+            disabled={loading || !this.checkValueInput()}
+            onClick={confirm}
+            positive
+            className="modal-button uppercase"
+            content={'DONE'}/>
+        </Form>
+      </Container>
     )
   }
 }
@@ -111,45 +113,44 @@ class ChoosePersonWhoHasCredentials extends React.Component {
       confirm
     } = this.props;
     return (
-      <Form id="popup_team_single_card" as="div" className="container" onSubmit={confirm}>
-          <Form.Field className="display-flex align_items_center" style={{marginBottom: '30px'}}>
-              <div className="squared_image_handler">
-                  <img src={website.logo} alt="Website logo"/>
-              </div>
-              <span className="app_name">{appName}</span>
-          </Form.Field>
-          <Form.Field>
-              <p>Who will enter app credentials?</p>
-          </Form.Field>
-          <Form.Field>
-              <Segment className='pushable'>
-                  <Checkbox radio
-                            label={`${me.username} (${this.role(me.role)})`}
-                            name='checkboxRadioGroup'
-                            value={me.id}
-                            checked={userSelected === me.id}
-                            onChange={change}/>
-                {receivers.map(user => (
-                  user.id !== me.id &&
-                  <Checkbox radio
-                            key={user.id}
-                            label={`${user.username} (${this.role(user.role)})`}
-                            name='checkboxRadioGroup'
-                            value={user.id}
-                            checked={userSelected === user.id}
-                            onChange={change}/> )
-                )}
-              </Segment>
-          </Form.Field>
-          <Button
+      <Container id="popup_team_single_card">
+        <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
+          <div className="squared_image_handler">
+            <img src={website.logo} alt="Website logo"/>
+          </div>
+          <span className="app_name">{appName}</span>
+        </div>
+        <div>
+          <p>Who will enter app credentials?</p>
+        </div>
+        <Form onSubmit={confirm}>
+          <Segment className='pushable'>
+            <Checkbox radio
+                      label={`${me.username} (${this.role(me.role)})`}
+                      name='checkboxRadioGroup'
+                      value={me.id}
+                      checked={userSelected === me.id}
+                      onChange={change}/>
+            {receivers.map(user => (
+              user.id !== me.id &&
+              <Checkbox radio
+                        key={user.id}
+                        label={`${user.username} (${this.role(user.role)})`}
+                        name='checkboxRadioGroup'
+                        value={user.id}
+                        checked={userSelected === user.id}
+                        onChange={change}/> )
+            )}
+          </Segment>
+        <Button
             type="submit"
             loading={loading}
             disabled={loading}
-            onClick={confirm}
             positive
             className="modal-button uppercase"
             content={'CONFIRM'}/>
-      </Form>
+        </Form>
+      </Container>
     )
   }
 }
@@ -204,7 +205,8 @@ class ChooseAppCredentialsModal extends React.Component {
   close = () => {
     this.props.dispatch(showChooseAppCredentialsModal({active: false}));
   };
-  confirm = () => {
+  confirm = (e) => {
+    e.preventDefault();
     this.setState({loading: true});
     if (this.state.view === 1) {
       if (this.state.userSelected === this.state.me.id)

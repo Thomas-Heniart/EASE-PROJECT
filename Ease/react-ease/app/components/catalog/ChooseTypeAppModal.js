@@ -1,7 +1,6 @@
 import React from 'react';
-import { Container, Form, Checkbox, Button, Icon } from 'semantic-ui-react';
-import { Switch, Route, withRouter} from 'react-router-dom';
-import {handleSemanticInput} from "../../utils/utils";
+import { Form, Checkbox, Button, Icon } from 'semantic-ui-react';
+import { withRouter} from 'react-router-dom';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 
@@ -18,7 +17,8 @@ class ChooseTypeAppModal extends React.Component {
       value: 'Simple'
     }
   }
-  catalogToTeamSpace = (team_id, room_id) => {
+  catalogToTeamSpace = (e, team_id, room_id) => {
+    e.preventDefault();
     this.props.close();
     this.props.createTeamCard({
       team_id,
@@ -38,7 +38,7 @@ class ChooseTypeAppModal extends React.Component {
     } = this.props;
 
     return (
-      <Form class="container" id="add_bookmark_form" onSubmit={confirm}>
+      <Form class="container" id="add_bookmark_form" onSubmit={e => this.catalogToTeamSpace(e, team_id, room_id)}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
               <div className="squared_image_handler">
                   <img src={website.logo} alt="Website logo"/>
@@ -74,7 +74,7 @@ class ChooseTypeAppModal extends React.Component {
             attached='bottom'
             type="submit"
             positive
-            onClick={e => this.catalogToTeamSpace(team_id, room_id, website.id)}
+            onClick={e => this.catalogToTeamSpace(e, team_id, room_id)}
             className="modal-button"
             content="NEXT"/>
       </Form>

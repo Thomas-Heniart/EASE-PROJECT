@@ -6,6 +6,7 @@ import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -21,6 +22,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/api/v1/common/Connection")
 public class ServletConnection extends HttpServlet {
@@ -84,6 +87,14 @@ public class ServletConnection extends HttpServlet {
             sm.setUser(user);
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
+            WebSocketManager userWebSocketManager = sm.getUserWebSocketManager(user.getDb_id());
+            List<WebSocketManager> teamWebSocketManagerList = user.getTeams().stream().map(team -> sm.getTeamWebSocketManager(team.getDb_id())).collect(Collectors.toList());
+            WebSocketManager webSocketManager = sm.getSessionWebSocketManager();
+            webSocketManager.getWebSocketSessions().forEach(webSocketSession -> {
+                userWebSocketManager.addWebSocketSession(webSocketSession);
+                teamWebSocketManagerList.forEach(webSocketManager1 -> webSocketManager1.addWebSocketSession(webSocketSession));
+            });
+            sm.getSession().setAttribute("webSocketManager", null);
             sm.setSuccess(res);
         } catch (HttpServletException e) {
             sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));

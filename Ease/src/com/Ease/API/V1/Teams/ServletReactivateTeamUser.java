@@ -50,12 +50,13 @@ public class ServletReactivateTeamUser extends HttpServlet {
                 teamUser.setTeamKey(AES.encrypt(teamKey, keyUser));
                 teamUser.setDisabled(false);
             }
-            Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), "@" + teamUser_connected.getUsername() + " validated again your access to " + team.getName(), "/resources/notifications/flag.png", team.getDb_id().toString());
+            Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " validated again your access to " + team.getName(), "/resources/notifications/flag.png", team.getDb_id().toString());
             sm.saveOrUpdate(notification);
             WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());
             webSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
             sm.saveOrUpdate(teamUser);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
+            WebSocketManager webSocketManager1 = sm.getTeamWebSocketManager(team_id);
+            webSocketManager1.sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
             sm.setError(e);

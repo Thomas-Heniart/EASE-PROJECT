@@ -11,6 +11,10 @@ export function isUrl(url){
   return url.match(urlRegexp) !== null;
 }
 
+export function isEmail(email){
+  return email.match(emailRegexp) !== null;
+}
+
 export function reflect(promise){
   return promise.then(function(v){ return {data:v, error: false }},
       function(e){ return {data:e, error: true }});

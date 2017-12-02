@@ -5,8 +5,8 @@ import * as userActions from "../../actions/userActions";
 import {addTeamUserToChannel} from "../../actions/channelActions";
 import {showAddTeamUserModal, showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions"
 import {renderRoomLabel} from "../../utils/renderHelpers";
-import {reflect, handleSemanticInput} from "../../utils/utils";
-import { Header, Container, Divider, Icon, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {reflect, handleSemanticInput, isEmail} from "../../utils/utils";
+import { Header, Container, Divider, Icon, Form, Input, Message } from 'semantic-ui-react';
 
 @connect((store) => {
   return {
@@ -51,6 +51,11 @@ class TeamAddUserModal extends React.Component {
     this.state.defaultRooms = this.state.value.slice();
   }
   handleInput = handleSemanticInput.bind(this);
+  emailInput = (e, {name, value}) => {
+    const newValue = value.replace(".", "").toLowerCase();
+    const username = newValue.split('@')[0];
+    this.setState(() => ({[name]: value, username: username}));
+  };
   usernameInput = (e) => {
     e.target.value = e.target.value.replace(" ", "_").toLowerCase();
     this.setState({[e.target.name] : e.target.value});
@@ -176,27 +181,17 @@ class TeamAddUserModal extends React.Component {
             <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0} id="add_user_modal">
               <Form.Group>
                 <Form.Input label="Email address" type="email" name="email"
-                            onChange={this.handleInput}
+                            onChange={this.emailInput}
                             placeholder="name@company.com"
+                            value={this.state.email}
                             required
                             width={8}/>
                 <Form.Input label="Username" type="text" name="username"
+                            value={this.state.username}
                             onChange={this.usernameInput}
-                            required
                             placeholder="username" width={8}/>
-                {/*<Form.Input label="First name" type="text" name="fname"
-                            onChange={this.handleInput}
-                            placeholder="Optional"
-                            width={5}/>
-                <Form.Input label="Last name" type="text" name="lname"
-                            onChange={this.handleInput}
-                            placeholder="Optional" width={5}/>*/}
               </Form.Group>
               <Form.Group>
-                {/*<Form.Input label="Username" type="text" name="username"
-                            onChange={this.usernameInput}
-                            required
-                            placeholder="Username" width={6}/>*/}
                 <Form.Select
                     style={{minWidth: '0px'}}
                     name="role"
@@ -236,7 +231,7 @@ class TeamAddUserModal extends React.Component {
                     positive
                     floated='right'
                     loading={this.state.loading}
-                    disabled={this.state.loading}
+                    disabled={this.state.loading || !isEmail(this.state.email)}
                     type="submit"
                     width={8}>
                   Send invitation <u><strong>later</strong></u>
@@ -246,7 +241,7 @@ class TeamAddUserModal extends React.Component {
                     floated='right'
                     type="button"
                     loading={this.state.loadingInvitationNow}
-                    disabled={this.state.loadingInvitationNow}
+                    disabled={this.state.loadingInvitationNow || !isEmail(this.state.email)}
                     onClick={this.sendNow}
                     width={8}>
                   Send invitation <u><strong>now</strong></u>

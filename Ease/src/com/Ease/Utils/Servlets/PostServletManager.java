@@ -2,6 +2,7 @@ package com.Ease.Utils.Servlets;
 
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessage;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.simple.JSONArray;
@@ -46,6 +47,15 @@ public class PostServletManager extends ServletManager {
             e.printStackTrace();
             throw new IOException();
         }
+    }
+
+    public WebSocketManager getSessionWebSocketManager() {
+        WebSocketManager webSocketManager = (WebSocketManager) this.getSession().getAttribute("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            this.getSession().setAttribute("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
     }
 
     protected void setInternError() {
@@ -147,9 +157,6 @@ public class PostServletManager extends ServletManager {
             return;
         try {
             String ws_id = this.getStringParam("ws_id", false, true);
-            if (ws_id == null || ws_id.equals("-1"))
-                return;
-            System.out.println("ws_id present");
             if (this.team != null) {
                 System.out.println("WebSocketMessage to team " + team.getDb_id());
                 this.getTeamWebSocketManager(team.getDb_id()).sendObjects(this.webSocketMessages, ws_id);

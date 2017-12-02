@@ -1,9 +1,9 @@
 var React = require('react');
 import {connect} from "react-redux";
 import {createTeamUser, createTeamUserNow} from "../../actions/userActions";
-import {handleSemanticInput, reflect} from "../../utils/utils";
+import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
 import {showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import { Header, Label, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import { Header, Label, Container, Divider, Icon, TextArea, Form, Input, Button, Message } from 'semantic-ui-react';
 
 class PreviewStep extends React.Component {
   constructor(props){
@@ -17,7 +17,6 @@ class PreviewStep extends React.Component {
     const fields = this.props.invitations.map((item, idx) => {
       return (
           <Form.Field key={idx} error={item.error.length > 0}>
-          {/*<Form.Group style={{marginBottom: 0}}>*/}
             <Input
                 action={<Button icon="delete" type='button' onClick={this.props.removeField.bind(null, idx)}/>}
                 actionPosition="left"
@@ -26,13 +25,6 @@ class PreviewStep extends React.Component {
                 value={item.email}
                 placeholder="Email"
                 onChange={(e, values) => {this.props.editField(idx, values)}}/>
-            {/*<Form.Input width={7}
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        value={item.username}
-                        onChange={(e, values) => {this.props.editField(idx, values)}}/>*/}
-          {/*</Form.Group>*/}
             {item.error.length > 0 &&
             <Label pointing class="fluid" style={{textAlign: 'center'}} content={item.error} color="red" basic/>}
           </Form.Field>
@@ -77,12 +69,6 @@ class PreviewStep extends React.Component {
               Send invitation <u><strong>now</strong></u>
             </Form.Button>
           </Form.Group>
-          {/*<Form.Field class="overflow-hidden">*/}
-            {/*<Button floated="right" positive  loading={this.props.loading}>{this.props.validateButtonText}</Button>*/}
-            {/*<Button floated="right">*/}
-              {/*{this.props.cancelButtonText}*/}
-            {/*</Button>*/}
-          {/*</Form.Field>*/}
         </Form>
     )
   }
@@ -99,13 +85,11 @@ class EmailListStep extends React.Component {
   process = (e) => {
     e.preventDefault();
     let filterSpacesValue = this.state.value.replace(/\s+/g, '');
-    // this.props.addFields(filterSpacesValue);
     this.props.multipleAddLater(filterSpacesValue);
   };
   processNow = (e) => {
     e.preventDefault();
     let filterSpacesValue = this.state.value.replace(/\s+/g, '');
-    // this.props.addFields(filterSpacesValue);
     this.props.multipleAddNow(filterSpacesValue);
   };
   render(){
@@ -140,10 +124,6 @@ class EmailListStep extends React.Component {
               Send invitation <u><strong>now</strong></u>
             </Form.Button>
           </Form.Group>
-          {/*<Form.Field>
-            <Button floated="right" primary>Next</Button>
-            <Button floated="right" type="button" onClick={this.props.changeStep}>Cancel</Button>
-          </Form.Field>*/}
         </Form>
     )
   }
@@ -173,7 +153,7 @@ class TeamAddMultipleUsersModal extends React.Component {
     this.props.dispatch(showUpgradeTeamPlanModal(true, 4));
   };
   invitationsReady = () => {
-    return this.state.invitations.filter(item => (item.email.length > 0 && item.username.length > 0)).length > 0;
+    return this.state.invitations.filter(item => (isEmail(item.email))).length > 0;
   };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();
@@ -277,7 +257,6 @@ class TeamAddMultipleUsersModal extends React.Component {
     this.setState({invitations: invitations});
   };
   multipleAddLater = (value) => {
-    // this.addMultipleFields(invitations);
     let invitations = [];
     let emails = value.split(',');
     emails.map(item => {
@@ -287,7 +266,6 @@ class TeamAddMultipleUsersModal extends React.Component {
     this.setState({invitations: invitations}, this.sendInvitations);
   };
   multipleAddNow = (value) => {
-    // this.addMultipleFields(invitations);
     let invitations = [];
     let emails = value.split(',');
     emails.map(item => {
@@ -338,13 +316,11 @@ class TeamAddMultipleUsersModal extends React.Component {
                     addField={this.addField}/>}
                 {this.state.view === 'emailList' &&
                 <EmailListStep
-                    // addFields={this.addMultipleFields}
                     changeStep={this.changeView.bind(null, 'main')}
                     validate={this.sendInvitations}
                     loading={this.state.loading}
                     loadingInvitationsNow={this.state.loadingInvitationsNow}
                     errorMessage={this.state.errorMessage}
-                    // sendInvitationsNow={this.sendInvitationsNow}
                     multipleAddNow={this.multipleAddNow}
                     multipleAddLater={this.multipleAddLater}/>}
               </Container>
