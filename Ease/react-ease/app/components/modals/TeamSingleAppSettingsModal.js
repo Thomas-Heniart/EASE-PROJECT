@@ -4,7 +4,7 @@ import {handleSemanticInput} from "../../utils/utils";
 import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamSingleAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
 import {isAdmin} from "../../utils/helperFunctions";
 import {isCredentialsMatch, isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {teamEditSingleApp, removeTeamCardReceiver} from "../../actions/appsActions";
@@ -128,6 +128,7 @@ class TeamSingleAppSettingsModal extends Component{
                     disabled={!item.edit && !this.state.isEmpty}
                     className="modalInput team-app-input"
                     size='large'
+                    required={this.state.isEmpty}
                     type={item.type}
                     name={item.name}
                     onChange={this.handleCredentialInput}
@@ -162,6 +163,7 @@ class TeamSingleAppSettingsModal extends Component{
                   size='large'
                   type={item.type}
                   name={item.name}
+                  required={this.state.isEmpty}
                   onChange={this.handleCredentialInput}
                   label={{ icon: credentialIconType[item.name]}}
                   value={item.value}
@@ -220,7 +222,7 @@ class TeamSingleAppSettingsModal extends Component{
                   content="CONFIRM"/>
             </Form>}
             {view === 'Remove' &&
-            <RemoveSection onRemove={this.remove}/>}
+            <TeamAppRemoveSection onRemove={this.remove}/>}
             {view === 'Share' &&
             <ShareSection/>}
           </Container>

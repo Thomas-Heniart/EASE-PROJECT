@@ -13,6 +13,15 @@ import {findDOMNode} from 'react-dom';
 function ChannelList(props){
   const {team, me} = props;
   const rooms = team.rooms;
+  const myRooms = me.room_ids.map(id => {
+    return rooms[id];
+  }).sort((a, b) => {
+    if (a.default)
+      return -1000;
+    else if (b.default)
+      return 1000;
+    return a.name.localeCompare(b.name);
+  });
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_channels">
         {isAdmin(props.me.role) &&
@@ -32,8 +41,7 @@ function ChannelList(props){
         </NavLink>
         <div className="section-list">
           {
-            me.room_ids.map(room_id => {
-              const room = rooms[room_id];
+            myRooms.map(room => {
               return (
                   <NavLink to={`/teams/${team.id}/${room.id}`} className="section-list-item channel" key={room.id}>
                     <div className="primary_action channel_name">

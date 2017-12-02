@@ -40,11 +40,11 @@ class TeamSingleApp extends Component {
             {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&
-            <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
+            <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
             {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}/>}
             {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id &&
-            <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'}/>}
+            <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}/>}
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.connect}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}>

@@ -9,7 +9,7 @@ class EaseHeader extends React.Component {
   render(){
     return (
         <header id="ease_header">
-          <a class="logo_container" href="/home">
+          <a class="logo_container" href="/">
               {location.hash.indexOf("#/main/catalog") !== -1 ?
                   <img src="/resources/images/Ease_Logo.svg" alt="logo"/>
                   :

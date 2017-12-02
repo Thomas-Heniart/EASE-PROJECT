@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import api from "../../utils/api";
+import post_api from "../../utils/post_api";
 import {copyTextToClipboard, basicDateFormat} from "../../utils/utils";
 import {Loader, Input, Label,Icon, Popup} from 'semantic-ui-react';
 
@@ -38,18 +39,52 @@ export const EmptyTeamAppIndicator = (props) => {
   )
 };
 
-export const DisabledAppIndicator = (props) => {
-  return (
-      <Popup size="mini"
-             position="top center"
-             inverted
-             trigger={
-               <div class="app_overlay_indicator" {...props}>
-                 <Icon name="hourglass half" fitted size="large"/>
-               </div>
-             }
-             content={`${props.filler_name} will setup this app soon.`}/>
-  )
+export class DisabledAppIndicator extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      buttonText: 'Send reminder'
+    }
+  }
+  send = () => {
+    post_api.teamApps.sendSingleCardFillerReminder({
+      team_card_id: this.props.team_card_id
+    }).then(response => {
+      this.setState({buttonText: 'Reminder sent!'});
+      setTimeout(() => {
+        this.setState({buttonText: 'Send reminder'});
+      }, 2000);
+    }).catch(err => {
+      this.setState({buttonText: 'Error :('});
+      setTimeout(() => {
+        this.setState({buttonText: 'Send reminder'});
+      }, 2000);
+    });
+  };
+  render(){
+    const {filler_name} = this.props;
+    return (
+        <Popup size="mini"
+               position="top center"
+               inverted
+               hoverable
+               trigger={
+                 <div class="app_overlay_indicator">
+                   <Icon name="hourglass half" fitted size="large"/>
+                 </div>
+               }
+               content={
+                 <div>
+                   {`${filler_name} will setup this app soon.`}
+                   <div class="text-center">
+                     <button onClick={this.send} class="button-unstyle inline-text-button fw-normal">
+                       {this.state.buttonText}
+                     </button>
+                   </div>
+                 </div>
+               }/>
+    )
+  }
 };
 
 export const NewAppLabel = (props) => {

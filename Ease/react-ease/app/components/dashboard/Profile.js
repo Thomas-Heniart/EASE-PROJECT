@@ -48,7 +48,10 @@ class Profile extends Component {
         <div class={classnames('app_group', isDragging ? 'dragging':null)}>
           {connectDragSource(
               <div>
-                <Icon name="square outline" link fitted class="move_button"/>
+                <Icon name="move"
+                      link
+                      fitted
+                      class="move_button"/>
               </div>
           )}
           <div class="app_group_name">

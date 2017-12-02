@@ -205,7 +205,7 @@ function Step4(props){
             Tell us about your role
           </Header>
           <Divider hidden clearing/>
-          <Form onSubmit={props.onStepValidated}>
+          <Form onSubmit={props.onStepValidated} error={!!props.errorMessage.length}>
             <Form.Field>
               <label>What type of work do you do?</label>
               <Select placeholder="Select your role" name="jobRole" options={roles} onChange={props.handleInput}/>
@@ -218,6 +218,7 @@ function Step4(props){
                 name="jobDetails"
                 required
                 onChange={props.handleInput}/>}
+            <Message error content={props.errorMessage}/>
             <Form.Field>
               <Button positive
                       fluid
@@ -255,7 +256,8 @@ class TeamJoinView extends React.Component {
       code: '',
       skipRegistration: false,
       loading: true,
-      lastStepLoading: false
+      lastStepLoading: false,
+      lastStepErrorMessage: ''
     };
     this.handleInput = this.handleInput.bind(this);
     this.incrementStep = this.incrementStep.bind(this);
@@ -270,13 +272,13 @@ class TeamJoinView extends React.Component {
     return this.state.skipRegistration && this.props.common.authenticated;
   }
   finalizeModal(){
-    this.setState({lastStepLoading: true});
+    this.setState({lastStepLoading: true, lastStepErrorMessage: ''});
     if (this.canSkip()){
       post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.fname, this.state.lname, this.state.username, this.state.jobRole, this.state.jobDetails, this.state.code).then(response => {
         this.setState({lastStepLoading: false});
         window.location.href = '/';
       }).catch(err => {
-        console.log(err);
+        this.setState({lastStepLoading: false, lastStepErrorMessage: err})
       });
     }else {
       post_api.common.registration(this.state.email, this.state.username, this.state.password, null, this.state.code, false).then(r => {
@@ -284,7 +286,7 @@ class TeamJoinView extends React.Component {
           this.setState({lastStepLoading: false});
           window.location.href = '/';
         }).catch(err => {
-          console.log(err);
+          this.setState({lastStepLoading: false, lastStepErrorMessage: err})
         });
       })
     }
@@ -371,6 +373,7 @@ class TeamJoinView extends React.Component {
                       jobRole={this.state.jobRole}
                       jobDetails={this.state.jobDetails}
                       loading={this.state.lastStepLoading}
+                      errorMessage={this.state.lastStepErrorMessage}
                       key="4"/>);
 
     return (

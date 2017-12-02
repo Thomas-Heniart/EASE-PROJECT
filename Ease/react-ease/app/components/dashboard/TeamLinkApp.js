@@ -4,6 +4,7 @@ import {showTeamLinkAppSettingsModal, showLockedTeamAppModal} from "../../action
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed} from "../../utils/utils";
 import {connect} from "react-redux";
+import {validateApp} from "../../actions/dashboardActions";
 
 @connect(store => ({
   teams: store.teams,
@@ -16,7 +17,9 @@ class TeamLinkApp extends Component {
   process = () => {
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
-
+    this.props.dispatch(validateApp({
+      app_id: this.props.app.id
+    }));
     window.open(team_app.url, '_blank');
   };
   render(){
@@ -35,7 +38,7 @@ class TeamLinkApp extends Component {
             {teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&
-            <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
+            <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.process}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamLinkAppSettingsModal({active: true, app: app}))}}>

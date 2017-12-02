@@ -39,7 +39,7 @@ class TeamEnterpriseApp extends Component {
             {teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&
-            <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
+            <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
             {!me.disabled && meReceiver.empty &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">

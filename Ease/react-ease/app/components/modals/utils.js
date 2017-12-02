@@ -91,3 +91,41 @@ export class RemoveSection extends Component {
     )
   }
 }
+
+export class TeamAppRemoveSection extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      errorMessage: '',
+      loading: false
+    }
+  }
+  submit = (e) => {
+    e.preventDefault();
+    this.setState({loading: true, errorMessage:''});
+    this.props.onRemove().then(response => {
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
+  };
+  render(){
+    return (
+        <Form onSubmit={this.submit} error={this.state.errorMessage.length > 0}>
+          <Form.Field style={{lineHeight: '1.5'}}>
+            This app is shared with your team, removing it from your Personal Space, does not impact access of other users in your team.
+          </Form.Field>
+          <Form.Field style={{lineHeight: '1.5'}}>
+            As long as this App remains in your Team Space you will be able to join it again.
+          </Form.Field>
+          <Message error content={this.state.errorMessage}/>
+          <Button
+              type="submit"
+              loading={this.state.loading}
+              disabled={this.state.loading}
+              negative
+              className="modal-button"
+              content="CONFIRM"/>
+        </Form>
+    )
+  }
+}
