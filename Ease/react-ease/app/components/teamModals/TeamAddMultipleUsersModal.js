@@ -1,9 +1,9 @@
 var React = require('react');
 import {connect} from "react-redux";
 import {createTeamUser, createTeamUserNow} from "../../actions/userActions";
-import {handleSemanticInput, reflect} from "../../utils/utils";
+import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
 import {showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import { Header, Label, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import { Header, Label, Container, Divider, Icon, TextArea, Form, Input, Button, Message } from 'semantic-ui-react';
 
 class PreviewStep extends React.Component {
   constructor(props){
@@ -153,7 +153,7 @@ class TeamAddMultipleUsersModal extends React.Component {
     this.props.dispatch(showUpgradeTeamPlanModal(true, 4));
   };
   invitationsReady = () => {
-    return this.state.invitations.filter(item => (item.email.length > 0 && item.username.length > 0)).length > 0;
+    return this.state.invitations.filter(item => (isEmail(item.email))).length > 0;
   };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();

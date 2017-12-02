@@ -1,8 +1,7 @@
 import React from "react";
-import {handleSemanticInput, reflect} from "../../utils/utils";
-import { Header, Label, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
+import { Header, Label, Divider, Icon, TextArea, Segment, Form, Button } from 'semantic-ui-react';
 import {sendTeamUserInvitation, createTeamUserNow, createTeamUser} from "../../actions/userActions";
-var post_api = require('../../utils/post_api');
 
 class PreviewStep extends React.Component {
   constructor(props){
@@ -161,7 +160,7 @@ class InvitePeopleStep extends React.Component {
     }
   }
   invitationsReady = () => {
-    return this.state.invitations.filter(item => (item.email.length > 0)).length > 0;
+    return this.state.invitations.filter(item => (isEmail(item.email))).length > 0;
   };
   sendInvitations = () => {
     let invitations = this.state.invitations.slice();
