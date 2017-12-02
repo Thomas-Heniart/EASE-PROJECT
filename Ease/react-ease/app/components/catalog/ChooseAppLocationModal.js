@@ -53,8 +53,8 @@ class ChooseAppLocationModal extends React.Component {
             <Table.Cell verticalAlign='bottom'>
                 <List link style={{width: '180px'}}>
                   {Object.entries(team.rooms).map(rooms => (
-                    rooms.map((room) => (
-                      room.id &&
+                    rooms.map(room => (
+                      (room.id && room.team_user_ids.filter(id => (id === team.my_team_user_id)).length > 0) &&
                       <List.Item as="a"
                                  class="display_flex"
                                  active={selectedRoom === room.id}
