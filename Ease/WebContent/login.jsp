@@ -3,15 +3,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@    page import="com.Ease.Dashboard.User.User" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="java.util.Base64" %>
 
-<% User user = (User)(session.getAttribute("user"));%>
-
-<% if (user != null) {%>
-<c:redirect url="/home"/>
-<%}%>
+<c:redirect url="/"/>
 <!-- Amplitude script -->
 <%
     Cookie cookie = null;
@@ -44,10 +39,6 @@
     }
     if (sessionId.length() > 0 && token.length() > 0) {
 %>
-<jsp:forward page="connectionWithCookies">
-    <jsp:param name="sessionId" value="<%=sessionId%>"/>
-    <jsp:param name="token" value="<%=token%>"/>
-</jsp:forward>
 <%}%>
 
 <%
