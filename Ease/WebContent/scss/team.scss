@@ -67,6 +67,17 @@ button.only-text-button {
   }
 }
 
+#test_credentials {
+  text-decoration: underline;
+  font-size: 16px;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 15px;
+  i {
+    text-decoration: none;
+  }
+}
+
 #popup_team_single_card {
   .segment {
     padding: 15px 30px 0 30px !important;

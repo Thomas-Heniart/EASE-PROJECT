@@ -5,7 +5,7 @@ import EnterpriseTeamApp from "./teamAppAdders/EnterpriseTeamApp";
 import queryString from "query-string";
 import {fetchTeamAppList} from "../actions/teamActions";
 import {connect} from "react-redux";
-import { Icon, Segment, Dimmer, Loader } from 'semantic-ui-react';
+import { Icon, Segment, Loader } from 'semantic-ui-react';
 import {reflect} from "../utils/utils";
 import {sendTeamUserInvitation} from "../actions/userActions";
 import {withRouter} from "react-router-dom";
