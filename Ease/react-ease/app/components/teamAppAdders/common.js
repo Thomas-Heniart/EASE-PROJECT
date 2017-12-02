@@ -153,6 +153,26 @@ export const PasswordChangeDropdown = ({value, onChange, disabled, roomManager})
   )
 };
 
+export const PasswordChangeDropdownEnterprise = ({value, onChange, disabled, roomManager}) => {
+  return (
+    <Popup size="mini"
+           position="top center"
+           inverted
+           trigger={
+             <Dropdown class="mini icon"
+                       disabled={disabled}
+                       value={value}
+                       onChange={onChange}
+                       button
+                       name="password_reminder_interval"
+                       icon="refresh"
+                       labeled
+                       options={passwordChangeOptions}/>
+           }
+           content={value > 0 ? `Frequency at which members will update their password for this app.` : `You can choose at which frequency your members will update their password for this app.`}/>
+  )
+};
+
 export const ExtendFillSwitch = ({value, onClick}) => {
   return (
       <Popup size="mini"
@@ -218,7 +238,19 @@ export const PasswordChangeHolder = ({value, roomManager}) => {
              trigger={
                <Button as='div' icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
              }
-             content={value > 0 ? `The Room Manager (${roomManager}) will be in charge of updating the password` : `The room manager (${roomManager}) can be in charge of updating the password`}/>
+             content={value > 0 ? `The Room Manager (${roomManager}) will be in charge of updating the password` : `There isn’t password update policy setup.`}/>
+  )
+};
+
+export const PasswordChangeHolderEnterprise = ({value, roomManager}) => {
+  return (
+    <Popup size="mini"
+           position="top center"
+           inverted
+           trigger={
+             <Button as='div' icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
+           }
+           content={value > 0 ? `Frequency at which members will update their password for this app.` : `There isn’t password update policy setup.`}/>
   )
 };
 
