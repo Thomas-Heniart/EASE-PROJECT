@@ -77,20 +77,22 @@ class TeamView extends React.Component {
         this.setAddAppView('none');
     }
   }
-  componentWillMount(){
+/*  componentWillMount(){
     const teamId = this.props.match.params.teamId;
     const team = this.props.teams[teamId];
 
     if (!team){
       this.props.history.replace('/main/dashboard');
     }
-  }
+  }*/
   componentDidMount() {
     const teamId = this.props.match.params.teamId;
     const team = this.props.teams[teamId];
 
-    if (!team)
+    if (!team){
+      this.props.history.replace('/main/dashboard');
       return;
+    }
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
     }
