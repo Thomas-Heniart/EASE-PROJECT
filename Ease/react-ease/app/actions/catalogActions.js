@@ -47,7 +47,8 @@ export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
       name: name,
       profile_id: profile_id,
       sso_group_id: sso_group_id,
-      website_id: website_id
+      website_id: website_id,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
@@ -68,7 +69,8 @@ export function catalogAddClassicApp({name, website_id, profile_id, account_info
       name: name,
       website_id: website_id,
       profile_id: profile_id,
-      account_information: account_information
+      account_information: account_information,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
@@ -88,7 +90,8 @@ export function catalogAddMultipleClassicApp({profile_id, apps_to_add, account_i
     return post_api.catalog.addMultipleClassicApp({
       profile_id: profile_id,
       apps_to_add: apps_to_add,
-      account_information: account_information
+      account_information: account_information,
+      ws_id: getState().common.ws_id
     }).then(apps => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
@@ -104,24 +107,25 @@ export function catalogAddMultipleClassicApp({profile_id, apps_to_add, account_i
 }
 
 export function catalogAddClassicAppSameAs({website_id, name, same_app_id, profile_id}) {
-    return (dispatch, getState) => {
-        return post_api.catalog.addClassicAppSameAs({
-            website_id: website_id,
-            name: name,
-            same_app_id: same_app_id,
-            profile_id: profile_id
-        }).then(apps => {
-          dispatch({
-            type: 'DASHBOARD_APP_CREATED',
-            payload:{
-              app:apps
-            }
-          });
-            return apps;
-        }).catch(err => {
-            throw err;
-        });
-    }
+  return (dispatch, getState) => {
+    return post_api.catalog.addClassicAppSameAs({
+      website_id: website_id,
+      name: name,
+      same_app_id: same_app_id,
+      profile_id: profile_id,
+      ws_id: getState().common.ws_id
+    }).then(apps => {
+      dispatch({
+        type: 'DASHBOARD_APP_CREATED',
+        payload: {
+          app: apps
+        }
+      });
+      return apps;
+    }).catch(err => {
+      throw err;
+    });
+  }
 }
 
 export function catalogAddLogWithApp({name, website_id, profile_id, logWith_app_id}) {
@@ -130,7 +134,8 @@ export function catalogAddLogWithApp({name, website_id, profile_id, logWith_app_
       name: name,
       website_id: website_id,
       profile_id: profile_id,
-      logWith_app_id: logWith_app_id
+      logWith_app_id: logWith_app_id,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
@@ -151,7 +156,8 @@ export function catalogAddBookmark({name, profile_id, url, img_url}){
       name: name,
       profile_id: profile_id,
       url: url,
-      img_url: img_url
+      img_url: img_url,
+      ws_id: getState().common.ws_id
     }).then(app => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
@@ -170,7 +176,8 @@ export function catalogRequestWebsite({url, account_information}){
   return (dispatch, getState) => {
     return post_api.catalog.requestWebsite({
       url: url,
-      account_information: account_information
+      account_information: account_information,
+      ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({type: 'CATALOG_REQUEST_WEBSITE_FULFILLED', payload: response});
       return response;

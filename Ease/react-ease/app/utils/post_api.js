@@ -114,15 +114,16 @@ module.exports = {
     }
   },
   catalog: {
-    addSsoApp: ({name, profile_id, sso_group_id, website_id}) => {
+    addSsoApp: ({name, profile_id, sso_group_id, website_id, ws_id}) => {
       return basic_post('/api/v1/catalog/AddSsoApp', {
         name: name,
         profile_id: profile_id,
         sso_group_id: sso_group_id,
-        website_id: website_id
+        website_id: website_id,
+        ws_id: ws_id
       });
     },
-    addClassicApp: ({name, website_id, profile_id, account_information}) => {
+    addClassicApp: ({name, website_id, profile_id, account_information, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -130,51 +131,57 @@ module.exports = {
         name: name,
         website_id: website_id,
         profile_id: profile_id,
-        account_information: account_information
+        account_information: account_information,
+        ws_id: ws_id
       });
     },
-    addClassicAppSameAs: ({website_id, name, same_app_id, profile_id}) => {
+    addClassicAppSameAs: ({website_id, name, same_app_id, profile_id, ws_id}) => {
       return basic_post('/api/v1/catalog/AddClassicAppSameAs', {
         website_id: website_id,
         name: name,
         same_app_id: same_app_id,
-        profile_id: profile_id
+        profile_id: profile_id,
+        ws_id: ws_id
       });
     },
-    addMultipleClassicApp: ({profile_id, apps_to_add, account_information}) => {
+    addMultipleClassicApp: ({profile_id, apps_to_add, account_information, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
       return basic_post('/api/v1/catalog/AddMultipleClassicApp', {
         profile_id: profile_id,
         apps_to_add: apps_to_add,
-        account_information: account_information
+        account_information: account_information,
+        ws_id: ws_id
       });
     },
-    addBookmark: ({name, profile_id, url, img_url}) => {
+    addBookmark: ({name, profile_id, url, img_url, ws_id}) => {
       return basic_post('/api/v1/catalog/AddBookmark', {
         name: name,
         profile_id: profile_id,
         url: url,
-        img_url: img_url
+        img_url: img_url,
+        ws_id: ws_id
       });
     },
-    addLogWithApp: ({name, website_id, profile_id, logWith_app_id}) => {
+    addLogWithApp: ({name, website_id, profile_id, logWith_app_id, ws_id}) => {
       return basic_post('/api/v1/catalog/AddLogWithApp', {
         name: name,
         website_id: website_id,
         profile_id: profile_id,
-        logWith_app_id: logWith_app_id
+        logWith_app_id: logWith_app_id,
+        ws_id: ws_id
       });
     },
-    requestWebsite: ({url, account_information}) => {
+    requestWebsite: ({url, account_information, ws_id}) => {
       if (account_information !== undefined)
         Object.keys(account_information).map(item => {
           account_information[item] = cipher(account_information[item]);
         });
       return basic_post('/api/v1/catalog/WebsiteRequest', {
         url: url,
-        account_information: account_information
+        account_information: account_information,
+        ws_id: ws_id
       });
     }
   },
