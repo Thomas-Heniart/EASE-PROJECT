@@ -174,6 +174,25 @@ export function editTeamUserLastName({team_id, team_user_id, last_name}){
   }
 }
 
+export function editTeamUserFirstLastName({team_id, team_user_id, first_name, last_name}) {
+  return (dispatch, getState) => {
+    return post_api.teamUser.editFirstLastName({
+      team_id: team_id,
+      team_user_id: team_user_id,
+      first_name: first_name,
+      last_name: last_name,
+      ws_id: getState().common.ws_id
+    }).then(team_user => {
+      dispatch(teamUserChangedAction({
+        team_user: team_user
+      }));
+      return team_user;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function editTeamUserRole({team_id, team_user_id, role}){
   return function(dispatch, getState){
     return post_api.teamUser.editRole(getState().common.ws_id, team_id, team_user_id, role).then(response => {

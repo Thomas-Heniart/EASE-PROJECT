@@ -40,7 +40,7 @@ class TeamEnterpriseApp extends Component {
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true}))}}/>}
-            {meReceiver.empty &&
+            {!me.disabled && meReceiver.empty &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.connect}/>

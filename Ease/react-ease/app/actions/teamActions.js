@@ -147,7 +147,7 @@ export function fetchTeamPaymentInformation({team_id}){
 export function unsubscribe({team_id,password}){
   return (dispatch, getState) => {
     return post_api.teams.unsubscribe({team_id: team_id, password: password}).then(response => {
-      dispatch({type:'TEAM_REMOVED', payload: {team_id: team_id}});
+      dispatch(teamRemovedAction({team_id: team_id}));
       return response;
     }).catch(err => {
       throw err;

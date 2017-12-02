@@ -621,7 +621,8 @@ class FirstLastNameSection extends React.Component {
       loading: false,
       first_name: '',
       last_name: '',
-      edit: false
+      edit: false,
+      errorMessage: ''
     }
   }
   handleInput = handleSemanticInput.bind(this);
@@ -632,22 +633,17 @@ class FirstLastNameSection extends React.Component {
   confirm = (e) => {
     e.preventDefault();
     const {dispatch, team, me, user} = this.props;
-    const calls = [
-      dispatch(userActions.editTeamUserFirstName({
-        team_id: team.id,
-        team_user_id: user.id,
-        first_name: this.state.first_name
-      })),
-      dispatch(userActions.editTeamUserLastName({
-        team_id: team.id,
-        team_user_id: user.id,
-        last_name: this.state.last_name
-      }))
-    ];
-    this.setState({loading: true});
-    Promise.all(calls.map(reflect)).then(response => {
-      this.setState({loading: false});
+    this.setState({loading: true, errorMessage: ''});
+    dispatch(userActions.editTeamUserFirstLastName({
+      team_id: team.id,
+      team_user_id: user.id,
+      first_name: this.state.first_name,
+      last_name: this.state.last_name
+    })).then(response => {
+      this.setState({loading: true, errorMessage: ''});
       this.setEdit(false);
+    }).catch(err => {
+      this.setState({loading: true, errorMessage: err});
     });
   };
   render(){
@@ -661,7 +657,7 @@ class FirstLastNameSection extends React.Component {
                 {isSuperiorOrMe(user, me) &&
                 <Icon link name="pencil" class="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
               </h4> :
-              <Form onSubmit={this.confirm}>
+              <Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
                 <Form.Input
                     size="mini"
                     placeholder="First name"
@@ -674,6 +670,7 @@ class FirstLastNameSection extends React.Component {
                     type="text" name="last_name" fluid
                     value={this.state.last_name}
                     onChange={this.handleInput}/>
+                <Message error size="mini" content={this.state.errorMessage}/>
                 <Form.Field>
                   <Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>
                   <Button primary size="mini" loading={this.state.loading}>Save</Button>
