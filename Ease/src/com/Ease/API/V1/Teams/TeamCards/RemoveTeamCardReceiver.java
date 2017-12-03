@@ -65,6 +65,7 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("team_card_id", team_card_id);
             jsonObject.put("team_card_receiver_id", team_card_receiver_id);
+            jsonObject.put("team_user_id", teamUser.getDb_id());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.REMOVED, jsonObject));
             sm.setSuccess("Receiver removed");
         } catch (Exception e) {
