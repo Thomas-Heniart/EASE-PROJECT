@@ -12,6 +12,7 @@ body {
   webkit-tap-highlight-color: #fed136; }
 
 body#landingBody {
+  height: 0;
   -webkit-user-select: auto;
   -khtml-user-select: auto;
   -moz-user-select: auto;
