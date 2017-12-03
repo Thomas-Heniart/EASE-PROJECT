@@ -311,6 +311,15 @@ html {
   height: 75px;
   z-index: 1;
 }
+@media screen and (max-width: 768px) {
+  #single_ease_logo_handler {
+    position: absolute;
+    top:0;
+    left: 0;
+    height: 50px;
+    z-index: 1;
+  }
+}
 
 #main_navbar {
   min-width: inherit;
