@@ -38,7 +38,7 @@ public class ServletEditRoomManager extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "New room manager must be in the room.");
             channel.setRoom_manager(new_room_manager);
             sm.saveOrUpdate(channel);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getWebSocketJson()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

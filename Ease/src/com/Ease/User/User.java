@@ -397,4 +397,8 @@ public class User {
     public Set<Team> getTeams() {
         return this.getTeamUsers().stream().map(TeamUser::getTeam).collect(Collectors.toSet());
     }
+
+    public void removeSsoGroup(SsoGroup ssoGroup) {
+        this.getSsoGroupSet().remove(ssoGroup);
+    }
 }

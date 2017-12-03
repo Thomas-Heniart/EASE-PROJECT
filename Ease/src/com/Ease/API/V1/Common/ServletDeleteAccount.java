@@ -33,6 +33,7 @@ public class ServletDeleteAccount extends HttpServlet {
             hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
             hibernateQuery.setParameter("id", user.getDb_id());
             hibernateQuery.executeUpdate();
+            /* Delete app first then delete user */
             sm.deleteObject(user);
             sm.getSession().invalidate();
             sm.setSuccess("Account deleted");
