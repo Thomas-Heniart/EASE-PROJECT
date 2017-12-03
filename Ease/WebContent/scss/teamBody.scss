@@ -8,16 +8,14 @@
 		}
 		#members {
 			text-align: center;
+			margin: 0;
 			.memberDescription {
 				width: 180px !important;
 				margin: 80px 70px 0px 70px;
 				position: relative;
-				//width: 32%;
 				display: inline-block;
-				//margin-bottom: 3vw;
 				.memberPhoto {
 					width: 100%;
-					//margin:auto;
 					img {
 						width: 100%;
 						border-radius: 3px;

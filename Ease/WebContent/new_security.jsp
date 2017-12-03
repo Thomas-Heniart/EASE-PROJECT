@@ -119,7 +119,7 @@
         <ul class="docs-nav">
             <li><a href="#1" class="cc-active">1. <fmt:message key="security.menu.title1"/></a></li>
             <li><a href="#2" class="cc-active">2. <fmt:message key="security.menu.title2"/></a></li>
-            <li><a href="#3" class="cc-active"><p style="position: absolute;">3.</p><p style="margin-left: 18px;"><fmt:message key="security.menu.title3"/></p></a></li>
+            <li><a href="#3" class="cc-active"><p>3.</p><p style="margin-left: 3px;"><fmt:message key="security.menu.title3"/></p></a></li>
             <li><a href="#4" class="cc-active">4. <fmt:message key="security.menu.title4"/></a></li>
             <li><a href="#5" class="cc-active">5. <fmt:message key="security.menu.title5"/></a></li>
             <li><a href="#6" class="cc-active">6. <fmt:message key="security.menu.title6"/></a></li>

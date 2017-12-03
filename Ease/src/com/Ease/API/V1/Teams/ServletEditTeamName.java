@@ -4,6 +4,9 @@ import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,6 +32,7 @@ public class ServletEditTeamName extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name.");
             team.editName(name);
             sm.saveOrUpdate(team);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CHANGED, team.getWebSockeetJson()));
             sm.setSuccess(team.getJson());
         } catch (Exception e) {
             sm.setError(e);

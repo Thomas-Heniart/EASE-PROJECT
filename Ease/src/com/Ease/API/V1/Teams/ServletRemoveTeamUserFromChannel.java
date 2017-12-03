@@ -1,12 +1,12 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
@@ -63,6 +63,28 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                     continue;
                 if (teamCardReceiver.getTeamUser().equals(teamUser_to_remove)) {
                     App app = teamCardReceiver.getApp();
+                    if (app.isWebsiteApp()) {
+                        WebsiteApp websiteApp = (WebsiteApp) app;
+                        websiteApp.getLogWithAppSet().forEach(logWithApp -> {
+                            Profile profile1 = logWithApp.getProfile();
+                            profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                            sm.deleteObject(logWithApp);
+                        });
+                    } else if (app.isLinkApp()) {
+                        TeamLinkCard teamLinkCard = (TeamLinkCard) teamCardReceiver.getTeamCard();
+                        LinkApp linkApp = (LinkApp) app;
+                        TeamCardReceiver other_receiver = teamLinkCard.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> !teamCardReceiver.equals(teamCardReceiver1)).findFirst().orElse(null);
+                        if (other_receiver != null) {
+                            LinkApp linkApp1 = (LinkApp) other_receiver.getApp();
+                            if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
+                                LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
+                                sm.saveOrUpdate(linkAppInformation);
+                                linkApp1.setLinkAppInformation(linkAppInformation);
+                                sm.saveOrUpdate(linkApp1);
+                            }
+                        }
+                        teamLinkCard.removeTeamCardReceiver(teamCardReceiver);
+                    }
                     Profile profile = app.getProfile();
                     if (profile != null)
                         profile.removeAppAndUpdatePositions(app, hibernateQuery);

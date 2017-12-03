@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.*;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -33,6 +34,21 @@ public class ServletDeleteAccount extends HttpServlet {
             hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
             hibernateQuery.setParameter("id", user.getDb_id());
             hibernateQuery.executeUpdate();
+            user.getApps().forEach(app -> {
+                if (app.isLogWithApp()) {
+                    ((LogWithApp) app).setLoginWith_app(null);
+                    sm.saveOrUpdate(app);
+                } else if (app.isSsoApp()) {
+                    SsoApp ssoApp = (SsoApp) app;
+                    SsoGroup ssoGroup = ssoApp.getSsoGroup();
+                    ssoGroup.removeSsoApp(ssoApp);
+                }
+            });
+            user.getApps().forEach(sm::deleteObject);
+            user.getApps().clear();
+            user.getProfileSet().forEach(sm::deleteObject);
+            user.getProfileSet().clear();
+            user.getSsoGroupSet().clear();
             sm.deleteObject(user);
             sm.getSession().invalidate();
             sm.setSuccess("Account deleted");

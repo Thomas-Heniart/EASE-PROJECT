@@ -1,7 +1,11 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -37,6 +41,35 @@ public class ServletDeleteChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
+            for (TeamCard teamCard : channel.getTeamCardMap().values()) {
+                for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
+                    App app = teamCardReceiver.getApp();
+                    if (app.isWebsiteApp()) {
+                        WebsiteApp websiteApp = (WebsiteApp) app;
+                        websiteApp.getLogWithAppSet().forEach(logWithApp -> {
+                            Profile profile1 = logWithApp.getProfile();
+                            profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                            sm.deleteObject(logWithApp);
+                        });
+                    } else if (app.isLinkApp()) {
+                        TeamLinkCard teamLinkCard = (TeamLinkCard) teamCard;
+                        LinkApp linkApp = (LinkApp) app;
+                        TeamCardReceiver other_receiver = teamCard.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> !teamCardReceiver.equals(teamCardReceiver1)).findFirst().orElse(null);
+                        if (other_receiver != null) {
+                            LinkApp linkApp1 = (LinkApp) other_receiver.getApp();
+                            if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
+                                LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
+                                sm.saveOrUpdate(linkAppInformation);
+                                linkApp.setLinkAppInformation(linkAppInformation);
+                                sm.saveOrUpdate(linkApp);
+                            }
+                        }
+                    }
+                    Profile profile = teamCardReceiver.getApp().getProfile();
+                    if (profile != null)
+                        profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
+                }
+            }
             channel.getTeamCardMap().clear();
             channel.getPending_teamUsers().clear();
             team.removeChannel(channel);

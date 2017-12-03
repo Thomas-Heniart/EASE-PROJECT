@@ -1,10 +1,9 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.Profile;
-import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
@@ -42,8 +41,21 @@ public class DeleteTeamCard extends HttpServlet {
                         profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
                         sm.deleteObject(logWithApp);
                     });
+                } else if (app.isLinkApp()) {
+                    TeamLinkCard teamLinkCard = (TeamLinkCard) teamCard;
+                    LinkApp linkApp = (LinkApp) app;
+                    TeamCardReceiver other_receiver = teamCard.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> !teamCardReceiver.equals(teamCardReceiver1)).findFirst().orElse(null);
+                    if (other_receiver != null) {
+                        LinkApp linkApp1 = (LinkApp) other_receiver.getApp();
+                        if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
+                            LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
+                            sm.saveOrUpdate(linkAppInformation);
+                            linkApp.setLinkAppInformation(linkAppInformation);
+                            sm.saveOrUpdate(linkApp);
+                        }
+                    }
                 }
-                Profile profile = teamCardReceiver.getApp().getProfile();
+                Profile profile = app.getProfile();
                 if (profile != null)
                     profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 TeamUser teamUser = teamCardReceiver.getTeamUser();
@@ -52,6 +64,7 @@ public class DeleteTeamCard extends HttpServlet {
             }
             sm.deleteObject(teamCard);
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put("team_id", team.getDb_id());
             jsonObject.put("team_card_id", team_card_id);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.REMOVED, jsonObject));
             sm.setSuccess("Team card deleted");
