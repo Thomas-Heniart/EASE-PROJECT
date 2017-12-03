@@ -2,7 +2,7 @@ var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {selectChannelFromListById} from "../utils/helperFunctions";
 import {autoSelectTeamItem} from "./commonActions";
-import {teamCardReceiverRemovedAction} from "./appsActions";
+import {teamCardReceiverRemovedAction, teamCardRemovedAction} from "./appsActions";
 
 export function selectTeamChannel(id){
   return function(dispatch, getState){
@@ -78,13 +78,10 @@ export function createTeamChannel({team_id, name, purpose}){
 export function deleteTeamChannel({team_id, room_id}){
   return function (dispatch, getState){
     return post_api.teamChannel.deleteChannel(getState().common.ws_id, team_id, room_id).then(response => {
-      dispatch({
-        type: 'TEAM_ROOM_REMOVED',
-        payload: {
-          team_id: team_id,
-          room_id: room_id
-        }
-      });
+      dispatch(teamRoomRemovedAction({
+        team_id: team_id,
+        room_id: room_id
+      }));
       return response;
     }).catch(err => {
       throw err;
@@ -211,13 +208,25 @@ export function teamRoomChangedAction({room}) {
 }
 
 export function teamRoomRemovedAction({team_id, room_id}) {
-  return {
-    type: 'TEAM_ROOM_REMOVED',
-    payload: {
-      team_id:team_id,
-      room_id: room_id
-    }
-  }
+  return (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[team_id];
+    const room = team.rooms[room_id];
+
+    room.team_card_ids.map(team_card_id => {
+      dispatch(teamCardRemovedAction({
+        team_id: team_id,
+        team_card_id: team_card_id
+      }))
+    });
+    dispatch({
+      type: 'TEAM_ROOM_REMOVED',
+      payload: {
+        team_id:team_id,
+        room_id: room_id
+      }
+    })
+  };
 }
 
 export function teamRoomRequestCreatedAction({team_id, room_id, team_user_id}) {
@@ -256,14 +265,12 @@ export function teamRoomMemberCreated({team_id, room_id, team_user_id}) {
 export function teamRoomMemberRemoved({team_id, room_id, team_user_id}) {
   return (dispatch, getState) => {
     const store = getState();
-    const team_cards = store.team_apps;
     const user = store.teams[team_id].team_users[team_user_id];
     user.team_card_ids.map(team_card_id => {
-      const team_card = team_cards[team_card_id];
-      const receiver = team_card.receivers.find(receiver => (receiver.team_user_id === team_user_id));
       dispatch(teamCardReceiverRemovedAction({
-        team_card_id: team_card.id,
-        team_card_receiver_id: receiver.id
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_user_id: team_user_id
       }));
     });
     dispatch({

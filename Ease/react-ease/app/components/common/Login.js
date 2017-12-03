@@ -262,6 +262,9 @@ class Login extends React.Component {
       this.props.dispatch(setLoginRedirectUrl(''));
     }
   }
+  componentWillMount(){
+    document.title = "Ease.space";
+  }
   finishLoggingIn = () => {
     if (this.state.redirect.length > 0)
       this.props.history.replace(this.state.redirect);

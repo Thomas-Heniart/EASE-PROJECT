@@ -116,6 +116,7 @@ class SsoAppSettingsModal extends Component{
                     disabled={!item.edit && !this.state.sso_group.empty}
                     className="modalInput team-app-input"
                     size='large'
+                    required={this.state.sso_group.empty}
                     type={item.type}
                     name={item.name}
                     onChange={this.handleCredentialInput}
@@ -146,6 +147,7 @@ class SsoAppSettingsModal extends Component{
                   disabled={!item.edit && !this.state.sso_group.empty}
                   className="modalInput team-app-input"
                   size='large'
+                  required={this.state.sso_group.empty}
                   type={item.type}
                   name={item.name}
                   onChange={this.handleCredentialInput}
