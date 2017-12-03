@@ -11,6 +11,9 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
@@ -149,6 +152,7 @@ public class ServletCreateTeam extends HttpServlet {
                 userEmail.setVerified(true);
             sm.saveOrUpdate(userEmail);
             sm.initializeTeamWithContext(team);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CREATED, team.getWebSockeetJson()));
             sm.setSuccess(team.getJson());
         } catch (StripeException e) {
             sm.setError(e);
