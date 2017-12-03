@@ -172,7 +172,7 @@ class TeamAppsContainer extends React.Component{
     return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
-            {item.state === 0 &&
+            {(item.state === 0 && me.role > 1) &&
             <div id='invitation'>
               {item.invitation_sent ?
                   <Segment className='resend' inverted disabled={this.state.loadingSendInvitation}>

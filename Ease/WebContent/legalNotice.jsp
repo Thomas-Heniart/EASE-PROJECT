@@ -58,6 +58,11 @@
                 padding: 1% 1% 1% 1%;
                 border-radius: 5px;
             }
+            @media screen and (max-width: 768px) {
+                .truc {
+                    margin: 0;
+                }
+            }
             .button {
                 text-align: center;
                 margin-top: 20px;
