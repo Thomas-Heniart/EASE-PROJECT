@@ -1,8 +1,11 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -57,7 +60,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, message.toString());
             }
             String forEmail = "";
-            teamUser_to_delete.getTeamCardReceivers().forEach(sm::deleteObject);
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
                 forEmail = forEmail.substring(0, forEmail.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
@@ -77,6 +79,35 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     teamUser.setAdmin_id(teamUser_connected.getDb_id());
                     sm.saveOrUpdate(teamUser);
                 }
+            }
+            for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
+                App app = teamCardReceiver.getApp();
+                if (app.isWebsiteApp()) {
+                    WebsiteApp websiteApp = (WebsiteApp) app;
+                    websiteApp.getLogWithAppSet().forEach(logWithApp -> {
+                        Profile profile1 = logWithApp.getProfile();
+                        profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                        sm.deleteObject(logWithApp);
+                    });
+                } else if (app.isLinkApp()) {
+                    TeamLinkCard teamLinkCard = (TeamLinkCard) teamCardReceiver.getTeamCard();
+                    LinkApp linkApp = (LinkApp) app;
+                    TeamCardReceiver other_receiver = teamLinkCard.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> !teamCardReceiver.equals(teamCardReceiver1)).findFirst().orElse(null);
+                    if (other_receiver != null) {
+                        LinkApp linkApp1 = (LinkApp) other_receiver.getApp();
+                        if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
+                            LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
+                            sm.saveOrUpdate(linkAppInformation);
+                            linkApp1.setLinkAppInformation(linkAppInformation);
+                            sm.saveOrUpdate(linkApp1);
+                        }
+                    }
+                    teamLinkCard.removeTeamCardReceiver(teamCardReceiver);
+                }
+                Profile profile = app.getProfile();
+                if (profile != null)
+                    profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
+                sm.deleteObject(teamCardReceiver);
             }
             team.getChannels().values().forEach(channel -> {
                 channel.removeTeamUser(teamUser_to_delete);

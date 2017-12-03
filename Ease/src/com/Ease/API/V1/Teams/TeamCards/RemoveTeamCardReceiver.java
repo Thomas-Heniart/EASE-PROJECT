@@ -1,10 +1,9 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.Profile;
-import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
@@ -47,7 +46,6 @@ public class RemoveTeamCardReceiver extends HttpServlet {
                 sm.saveOrUpdate(teamSingleCard);
             }
             teamCard.removeTeamCardReceiver(teamCardReceiver);
-            Profile profile = teamCardReceiver.getApp().getProfile();
             App app = teamCardReceiver.getApp();
             if (app.isWebsiteApp()) {
                 WebsiteApp websiteApp = (WebsiteApp) app;
@@ -56,7 +54,21 @@ public class RemoveTeamCardReceiver extends HttpServlet {
                     profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
                     sm.deleteObject(logWithApp);
                 });
+            } else if (app.isLinkApp()) {
+                TeamLinkCard teamLinkCard = (TeamLinkCard) teamCard;
+                LinkApp linkApp = (LinkApp) app;
+                TeamCardReceiver other_receiver = teamCard.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> !teamCardReceiver.equals(teamCardReceiver1)).findFirst().orElse(null);
+                if (other_receiver != null) {
+                    LinkApp linkApp1 = (LinkApp) other_receiver.getApp();
+                    if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
+                        LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
+                        sm.saveOrUpdate(linkAppInformation);
+                        linkApp.setLinkAppInformation(linkAppInformation);
+                        sm.saveOrUpdate(linkApp);
+                    }
+                }
             }
+            Profile profile = app.getProfile();
             if (profile != null)
                 profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
