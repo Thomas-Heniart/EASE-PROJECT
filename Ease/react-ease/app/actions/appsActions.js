@@ -594,7 +594,7 @@ export function removeTeamCardReceiver({team_id, team_card_id, team_card_receive
     }).then(response => {
       const store = getState();
       const team_card = store.team_apps[team_card_id];
-      const team_user_id = team_card.receivers.find(receiver => (receiver.id === team_card_receiver_id)).id;
+      const team_user_id = team_card.receivers.find(receiver => (receiver.id === team_card_receiver_id)).team_user_id;
       dispatch(teamCardReceiverRemovedAction({
         team_id: team_id,
         team_card_id: team_card_id,
