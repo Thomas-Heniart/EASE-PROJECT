@@ -4,7 +4,7 @@ import {showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateE
 import {teamRemovedAction} from "./teamActions";
 import {teamUserState} from "../utils/utils";
 import {selectUserFromListById,  isAdmin} from "../utils/helperFunctions";
-import {teamCardReceiverRemovedAction2} from "./appsActions";
+import {teamCardReceiverRemovedAction, teamCardReceiverRemovedAction2} from "./appsActions";
 
 export function selectTeamUser(id){
   return function(dispatch, getState){
@@ -75,13 +75,13 @@ export function getTeamUserShareableApps(team_user_id){
 
 export function createTeamUserNow({team_id, first_name, last_name, email, username, departure_date, role}){
   return function(dispatch, getState){
-    return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role).then(response => {
-      post_api.teamUser.sendTeamUserInvitation(getState().common.ws_id, team_id, response.id).then(response => {
-        dispatch(teamUserCreatedAction({team_user: response}));
+    return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role).then(team_user => {
+      return post_api.teamUser.sendTeamUserInvitation(getState().common.ws_id, team_id, team_user.id).then(response => {
+        dispatch(teamUserCreatedAction({team_user: team_user}));
+        return team_user;
       }).catch(err => {
         throw err;
       });
-      return response;
     }).catch(err => {
       throw err;
     });
@@ -328,7 +328,8 @@ export function teamUserRemovedAction({team_id, team_user_id}) {
     }
     const team_user = team.team_users[team_user_id];
     team_user.team_card_ids.map(team_card_id => {
-      dispatch(teamCardReceiverRemovedAction2({
+      dispatch(teamCardReceiverRemovedAction({
+        team_id: team_id,
         team_card_id: team_card_id,
         team_user_id: team_user_id
       }));

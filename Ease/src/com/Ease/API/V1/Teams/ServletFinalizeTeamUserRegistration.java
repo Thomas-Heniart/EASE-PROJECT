@@ -95,7 +95,8 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             if (teamKey != null) {
                 String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-                teamUser.lastRegistrationStep(keyUser, teamKey, sm.getUserWebSocketManager(user.getDb_id()), sm.getHibernateQuery());
+                TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                teamUser.lastRegistrationStep(keyUser, teamKey, sm.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), sm.getHibernateQuery());
             }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             teamUser.getPendingNotificationSet().forEach(pendingNotification -> pendingNotification.sendToUser(user, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery));

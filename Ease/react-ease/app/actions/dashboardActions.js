@@ -111,8 +111,8 @@ export function dashboardProfileRemovedAction({profile_id}){
 export function moveAppAction({app_id, profile_id, index}){
   return (dispatch, getState) => {
     const store = getState();
-    const app = store.apps[app_id];
-    const source_profile = store.profiles[app.profile_id];
+    const app = store.dashboard.apps[app_id];
+    const source_profile = store.dashboard.profiles[app.profile_id];
     dispatch({
       type: 'MOVE_APP',
       payload: {

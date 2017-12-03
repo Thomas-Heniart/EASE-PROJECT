@@ -443,6 +443,7 @@ public class TeamUser {
         this.setTeamKey(AES.encrypt(teamKey, keyUser));
         this.setState(2);
         hibernateQuery.saveOrUpdateObject(this);
+        NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
         if (this.getTeamCardReceivers().isEmpty())
             return;
         Profile profile = this.getOrCreateProfile(userWebSocketManager, hibernateQuery);
@@ -452,7 +453,6 @@ public class TeamUser {
             hibernateQuery.saveOrUpdateObject(app);
             profile.addApp(app);
         });
-        NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
     }
 
     public String getDecipheredTeamKey(String userKey) throws HttpServletException {
