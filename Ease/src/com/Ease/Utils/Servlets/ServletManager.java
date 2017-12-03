@@ -163,7 +163,9 @@ public abstract class ServletManager {
         }
         if (jwt == null && user_id == null) {
             throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-        } else if (jwt != null) {
+        } else if (user_id != null)
+            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+        else {
             Key secret = (Key) this.getContextAttr("secret");
             this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
             if (this.user == null)
@@ -174,8 +176,7 @@ public abstract class ServletManager {
             userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
-        } else
-            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+        }
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
         for (TeamUser teamUser : user.getTeamUsers()) {
             if (!teamUser.isVerified() || teamUser.isDisabled())
@@ -537,7 +538,7 @@ public abstract class ServletManager {
         return RSA.Encrypt(s, public_key);
     }
 
-    public Map<Integer,Map<String,Object>> getUserIdMap() {
+    public Map<Integer, Map<String, Object>> getUserIdMap() {
         return (Map<Integer, Map<String, Object>>) this.getContextAttr("userIdMap");
     }
 
