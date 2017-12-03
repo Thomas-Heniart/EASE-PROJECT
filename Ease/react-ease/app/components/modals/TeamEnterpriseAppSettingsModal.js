@@ -136,6 +136,7 @@ class TeamEnterpriseAppSettingsModal extends Component {
                     disabled={!item.edit && !this.state.isEmpty}
                     className="modalInput team-app-input"
                     size='large'
+                    required={this.state.isEmpty}
                     type={item.type}
                     name={item.name}
                     onChange={this.handleCredentialInput}
@@ -167,6 +168,7 @@ class TeamEnterpriseAppSettingsModal extends Component {
                   disabled={!item.edit && !this.state.isEmpty}
                   className="modalInput team-app-input"
                   size='large'
+                  required={this.state.isEmpty}
                   type={item.type}
                   name={item.name}
                   onChange={this.handleCredentialInput}
