@@ -258,21 +258,19 @@ export const teams = createReducer({
     });
   },
   ['TEAM_CARD_RECEIVER_REMOVED'](state, action){
-    const {receiver} = action.payload;
-    const team_id = receiver.team_id;
-    const team_card_id = receiver.team_card_id;
+    const {team_id, team_card_id, team_user_id} = action.payload;
 
-    let team_user = state[team_id].team_users[receiver.team_user_id];
+    let team_user = state[team_id].team_users[team_user_id];
     team_user = update(team_user, {
       team_card_ids: {$splice: [[team_user.team_card_ids.indexOf(team_card_id), 1]]}
     });
     return update(state, {
-      [team_id]:{
+      [team_id]: {
         team_users: {
           [team_user.id]: {$set: team_user}
         }
       }
-    });
+    })
   },
   ['TEAM_CARD_CREATED'](state, action){
     const {team_card} = action.payload;
@@ -297,29 +295,28 @@ export const teams = createReducer({
     return new_state;
   },
   ['TEAM_CARD_REMOVED'](state, action){
-    const app = action.payload.app;
-    const app_id = app.id;
-    const team_id = app.team_id;
-    const room_id = app.channel_id;
-    const room = state[team_id].rooms[room_id];
-
-    return update(state, {
+    const {team_id, team_card_id} = action.payload;
+    const team = state[team_id];
+    const room_id = Object.keys(team.rooms).find(room_id => (team.rooms[room_id].team_card_ids.indexOf(team_card_id) !== -1));
+    const room = team.rooms[room_id];
+    let new_state = update(state, {
       [team_id]: {
         rooms: {
-          [room_id]: {
-            team_card_ids: {$splice: [[room.team_card_ids.indexOf(app_id), 1]]}
+          [room.id]: {
+            team_card_ids: {$splice: [[room.team_card_ids.indexOf(team_card_id), 1]]}
           }
         }
       }
     });
-    /*    app.receivers.map(item => {
-          let user = new_state[team_id].team_users[item.team_user_id];
-          const idx = user.team_card_ids.indexOf(app.id);
-          new_state[team_id].team_users[item.team_user_id] = update(user, {
-            team_card_ids: {$splice: [[idx, 1]]}
-          });
-        });*/
-//    return new_state;
+    room.team_user_ids.map(team_user_id => {
+      let team_user = team.team_users[team_user_id];
+      const index = team_user.team_card_ids.indexOf(team_card_id);
+      if (index !== -1)
+        new_state[team_id].team_users[team_user_id] = update(team_user, {
+          team_card_ids: {$splice: [[index, 1]]}
+        })
+    });
+    return new_state;
   }
 });
 
@@ -366,18 +363,17 @@ export const team_apps = createReducer({
     return state;
   },
   ['TEAM_CARD_RECEIVER_REMOVED'](state, action){
-    const {receiver} = action.payload;
-    const team_card_id = receiver.team_card_id;
+    const {team_id, team_card_id, team_user_id} = action.payload;
 
     if (!!state[team_card_id]){
-      const app = state[team_card_id];
-      const _receiver = app.receivers.find(item => (item.id === receiver.id));
-      const idx = app.receivers.indexOf(_receiver);
+      const team_card = state[team_card_id];
+      const receiver = team_card.receivers.find(receiver => (receiver.team_user_id === team_user_id));
+      const idx = team_card.receivers.indexOf(receiver);
       return update(state, {
         [team_card_id]: {
           receivers: {$splice: [[idx, 1]]}
         }
-      });
+      })
     }
     return state;
   },
@@ -410,9 +406,9 @@ export const team_apps = createReducer({
     return state;
   },
   ['TEAM_CARD_REMOVED'](state, action) {
-    const app = action.payload.app;
+    const team_card_id = action.payload.team_card_id;
 
-    return update(state, {$unset: [app.id]});
+    return update(state, {$unset: [team_card_id]});
   },
   ['TEAM_CARD_REQUEST_CREATED'](state, action){
     const {team_card_id, request} = action.payload;
