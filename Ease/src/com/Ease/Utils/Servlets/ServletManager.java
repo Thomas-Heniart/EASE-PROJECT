@@ -183,8 +183,10 @@ public abstract class ServletManager {
             Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
             String teamKey = (String) teamProperties.get("teamKey");
             this.initializeTeamWithContext(teamUser.getTeam());
-            if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null)
-                teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(this.user.getDb_id()), this.getHibernateQuery());
+            if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null) {
+                TeamUser teamUser_admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
+                teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
+            }
             else if (teamUser.getTeamKey() != null)
                 teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
         }
