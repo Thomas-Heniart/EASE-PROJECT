@@ -642,6 +642,11 @@ export function AppConnection({app_id, keep_focus}){
       if (app.new)
         dispatch(validateApp({app_id: app_id}));
       document.dispatchEvent(new CustomEvent('NewConnection', json));
+      easeTracker.trackEvent("ClickOnApp", {
+        type: app.type,
+        appName: app.name,
+        websiteName: app.website.name
+      });
       return json;
     }).catch(err => {
       throw err;
