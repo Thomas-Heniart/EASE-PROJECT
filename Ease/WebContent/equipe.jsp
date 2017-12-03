@@ -19,7 +19,7 @@ pageEncoding="UTF-8"%>
 	content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00021/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00022/lib/fonts/museo-font.css"/>
 
 
 
@@ -33,11 +33,11 @@ pageEncoding="UTF-8"%>
     <script src="/jsMinified.v00022/languageChooser.js"></script>
 
 	<link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00021/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00021/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00021/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00021/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00021/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {

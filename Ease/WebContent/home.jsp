@@ -52,14 +52,14 @@
     <link rel="chrome-webstore-item"
           href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00021/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00022/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00021/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00021/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/bootstrap.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00021/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00021/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00022/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00022/moment.js"></script>
     <script type="text/javascript">
@@ -126,7 +126,7 @@
     <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">
-    <link rel="stylesheet" href="/cssMinified.v00021/lib/niftyPopupWindow/component.css">
+    <link rel="stylesheet" href="/cssMinified.v00022/lib/niftyPopupWindow/component.css">
 </noscript>
 <script src="/jsMinified.v00022/jquery1.12.4.js"></script>
 <script src="/jsMinified.v00022/jquery-ui-1.12.0.js" defer></script>
