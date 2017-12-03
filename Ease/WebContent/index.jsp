@@ -64,11 +64,11 @@
       amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
     </script>
     <script src="/jsMinified.v00022/tracker.js"></script>
-    <script src="teams_bundle.js?v=15"></script>
 </head>
 <BODY>
 <div id="app">
 </div>
+<script src="teams_bundle.js?v=15"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];
