@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.LogWithApp;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -24,15 +26,26 @@ public class ServletGetApps extends HttpServlet {
             JSONArray res = new JSONArray();
             for (App app : user.getApps()) {
                 String symmetric_key = null;
+                String team_key = null;
                 if (app.getTeamCardReceiver() != null) {
-                    System.out.println(app.getDb_id());
                     Team team = app.getTeamCardReceiver().getTeamCard().getTeam();
                     if (!sm.getTeamUser(team).isDisabled())
-                        symmetric_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
-                } else
+                        team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                } else {
                     symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-                if (symmetric_key != null && !symmetric_key.equals(""))
-                    app.decipher(symmetric_key);
+                    if (app.isLogWithApp()) {
+                        WebsiteApp websiteApp = ((LogWithApp) app).getLoginWith_app();
+                        if (websiteApp != null) {
+                            if (websiteApp.getTeamCardReceiver() != null) {
+                                Team team = websiteApp.getTeamCardReceiver().getTeamCard().getTeam();
+                                if (!sm.getTeamUser(team).isDisabled())
+                                    team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                            }
+                        }
+                    }
+                }
+                if ((symmetric_key != null && !symmetric_key.equals("")) || (team_key != null && !team_key.equals("")))
+                    app.decipher(symmetric_key, team_key);
                 res.add(app.getJson());
             }
             sm.setSuccess(res);

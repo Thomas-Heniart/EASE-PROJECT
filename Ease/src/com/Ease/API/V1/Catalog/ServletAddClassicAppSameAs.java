@@ -44,7 +44,7 @@ public class ServletAddClassicAppSameAs extends HttpServlet {
             Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
             Set<AccountInformation> accountInformationSet = new HashSet<>();
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            same_app.decipher(keyUser);
+            same_app.decipher(keyUser, null);
             for (AccountInformation accountInformation : ((ClassicApp) same_app).getAccount().getAccountInformationSet())
                 accountInformationSet.add(new AccountInformation(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_and_private_key.getKey()), accountInformation.getDeciphered_information_value()));
             Account account = new Account(((ClassicApp) same_app).getAccount().getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), keyUser), accountInformationSet, public_and_private_key.getValue());

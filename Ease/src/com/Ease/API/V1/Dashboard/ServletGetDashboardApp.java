@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.LogWithApp;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -24,15 +26,27 @@ public class ServletGetDashboardApp extends HttpServlet {
             sm.needToBeConnected();
             Integer app_id = sm.getIntParam("id", true);
             App app = sm.getUser().getApp(app_id, sm.getHibernateQuery());
-            String symmetric_key;
+            String symmetric_key = null;
+            String team_key = null;
             TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
             if (teamCardReceiver != null) {
                 Team team = teamCardReceiver.getTeamCard().getTeam();
                 sm.needToBeTeamUserOfTeam(team);
-                symmetric_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
-            } else
+                team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+            } else {
                 symmetric_key = (String) sm.getUserProperties(sm.getUser().getDb_id()).get("keyUser");
-            app.decipher(symmetric_key);
+                if (app.isLogWithApp()) {
+                    WebsiteApp websiteApp = ((LogWithApp) app).getLoginWith_app();
+                    if (websiteApp != null) {
+                        if (websiteApp.getTeamCardReceiver() != null) {
+                            Team team = websiteApp.getTeamCardReceiver().getTeamCard().getTeam();
+                            if (!sm.getTeamUser(team).isDisabled())
+                                team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                        }
+                    }
+                }
+            }
+            app.decipher(symmetric_key, team_key);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

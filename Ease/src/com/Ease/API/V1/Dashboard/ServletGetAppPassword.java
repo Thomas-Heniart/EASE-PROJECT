@@ -34,19 +34,20 @@ public class ServletGetAppPassword extends HttpServlet {
             if (!app.isClassicApp() && !app.isSsoApp())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot ask password for this app");
             String password;
-            String symmetric_key;
+            String symmetric_key = null;
             symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             if (app.isSsoApp()) {
                 SsoApp ssoApp = (SsoApp) app;
                 if (ssoApp.getAccount() == null)
                     throw new HttpServletException(HttpStatus.BadRequest, "This app is empty");
-                ssoApp.decipher(symmetric_key);
+                ssoApp.decipher(symmetric_key, null);
                 password = ssoApp.getAccount().getInformationNamed("password").getDeciphered_information_value();
             } else {
                 ClassicApp classicApp = (ClassicApp) app;
                 if (classicApp.getAccount() == null)
                     throw new HttpServletException(HttpStatus.BadRequest, "This app is empty");
                 TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
+                String team_key = null;
                 if (teamCardReceiver != null) {
                     TeamUser teamUser = sm.getTeamUser(teamCardReceiver.getTeamCard().getTeam());
                     if (teamCardReceiver.isTeamSingleCardReceiver() && (!((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password() && !teamUser.isTeamAdmin()))
@@ -54,9 +55,9 @@ public class ServletGetAppPassword extends HttpServlet {
                     Team team = teamCardReceiver.getTeamCard().getTeam();
                     sm.initializeTeamWithContext(team);
                     sm.needToBeTeamUserOfTeam(team);
-                    symmetric_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                    team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
                 }
-                classicApp.decipher(symmetric_key);
+                classicApp.decipher(symmetric_key, team_key);
                 password = classicApp.getAccount().getInformationNamed("password").getDeciphered_information_value();
             }
             res.put("password", sm.cipher(password));

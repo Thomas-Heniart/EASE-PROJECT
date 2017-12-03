@@ -1,6 +1,9 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.LogWithApp;
+import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.Team.Team;
 import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 
@@ -21,12 +24,24 @@ public class ServletGetApp extends HttpServlet {
             User user = sm.getUser();
             Integer app_id = sm.getIntParam("app_id", true, false);
             App app = user.getApp(app_id, sm.getHibernateQuery());
-            String symmetric_key;
+            String symmetric_key = null;
+            String team_key = null;
             if (app.getTeamCardReceiver() != null)
-                symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
-            else
+                team_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+            else {
                 symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            app.decipher(symmetric_key);
+                if (app.isLogWithApp()) {
+                    WebsiteApp websiteApp = ((LogWithApp) app).getLoginWith_app();
+                    if (websiteApp != null) {
+                        if (websiteApp.getTeamCardReceiver() != null) {
+                            Team team = websiteApp.getTeamCardReceiver().getTeamCard().getTeam();
+                            if (!sm.getTeamUser(team).isDisabled())
+                                team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                        }
+                    }
+                }
+            }
+            app.decipher(symmetric_key, team_key);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

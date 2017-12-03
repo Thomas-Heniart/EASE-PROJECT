@@ -2,6 +2,9 @@ package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.LogWithApp;
+import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.Team.Team;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -26,12 +29,24 @@ public class ServletValidateApp extends HttpServlet {
             App app = sm.getUser().getApp(app_id, hibernateQuery);
             app.setNewApp(false);
             sm.saveOrUpdate(app);
-            String symmetric_key;
+            String symmetric_key = null;
+            String team_key = null;
             if (app.getTeamCardReceiver() == null)
+                team_key = (String) sm.getUserProperties(sm.getUser().getDb_id()).get("keyUser");
+            else {
                 symmetric_key = (String) sm.getUserProperties(sm.getUser().getDb_id()).get("keyUser");
-            else
-                symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
-            app.decipher(symmetric_key);
+                if (app.isLogWithApp()) {
+                    WebsiteApp websiteApp = ((LogWithApp) app).getLoginWith_app();
+                    if (websiteApp != null) {
+                        if (websiteApp.getTeamCardReceiver() != null) {
+                            Team team = websiteApp.getTeamCardReceiver().getTeamCard().getTeam();
+                            if (!sm.getTeamUser(team).isDisabled())
+                                team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                        }
+                    }
+                }
+            }
+            app.decipher(symmetric_key, team_key);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CHANGED, app.getWebSocketJson()));
             sm.setSuccess(app.getJson());
         } catch (Exception e) {

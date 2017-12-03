@@ -163,9 +163,7 @@ public abstract class ServletManager {
         }
         if (jwt == null && user_id == null) {
             throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-        } else if (user_id != null)
-            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
-        else {
+        } else if (jwt != null) {
             Key secret = (Key) this.getContextAttr("secret");
             this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
             if (this.user == null)
@@ -176,6 +174,11 @@ public abstract class ServletManager {
             userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
+        } else {
+            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+            String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
+            if (keyUser == null)
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
         }
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
         for (TeamUser teamUser : user.getTeamUsers()) {
@@ -187,8 +190,7 @@ public abstract class ServletManager {
             if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null) {
                 TeamUser teamUser_admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
                 teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
-            }
-            else if (teamUser.getTeamKey() != null)
+            } else if (teamUser.getTeamKey() != null)
                 teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
         }
     }

@@ -29,12 +29,13 @@ public class GetAppInformation extends HttpServlet {
             if (!app.isClassicApp())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot get password of this app");
             ClassicApp classicApp = (ClassicApp) app;
-            String symmetric_key;
+            String symmetric_key = null;
+            String team_key = null;
             if (app.getTeamCardReceiver() != null)
-                symmetric_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+                team_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
             else
                 symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            classicApp.decipher(symmetric_key);
+            classicApp.decipher(symmetric_key, team_key);
             JSONObject res = new JSONObject();
             res.put(information_name, classicApp.getAccount().getInformationNamed(information_name).getDeciphered_information_value());
             sm.setSuccess(res);

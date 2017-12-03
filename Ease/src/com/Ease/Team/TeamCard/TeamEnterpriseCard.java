@@ -37,7 +37,7 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
     @Override
     public void decipher(String teamKey) throws HttpServletException {
         for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
-            teamCardReceiver.getApp().decipher(teamKey);
+            teamCardReceiver.getApp().decipher(null, teamKey);
         }
     }
 }

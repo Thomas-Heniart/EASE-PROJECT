@@ -78,8 +78,10 @@ public class LogWithApp extends WebsiteApp {
     }
 
     @Override
-    public void decipher(String symmetric_key) throws HttpServletException {
-        if (this.getLoginWith_app() != null)
-            this.getLoginWith_app().decipher(symmetric_key);
+    public void decipher(String symmetric_key, String team_key) throws HttpServletException {
+        if (this.getLoginWith_app() != null) {
+
+            this.getLoginWith_app().decipher(symmetric_key, team_key);
+        }
     }
 }

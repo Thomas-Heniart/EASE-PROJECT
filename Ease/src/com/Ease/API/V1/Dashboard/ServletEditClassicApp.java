@@ -40,7 +40,7 @@ public class ServletEditClassicApp extends HttpServlet {
             sm.decipher(account_information);
             ClassicApp classicApp = (ClassicApp) app;
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            classicApp.decipher(keyUser);
+            classicApp.decipher(keyUser, null);
             Account account = classicApp.getAccount();
             if (account == null || account.getAccountInformationSet().isEmpty()) {
                 Map<String, String> accountInformation = classicApp.getWebsite().getInformationNeeded(account_information);
