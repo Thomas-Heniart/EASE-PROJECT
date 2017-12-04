@@ -109,7 +109,7 @@ public class UserKeys {
         return AES.decryptUserKey(this.getKeyUser(), password, this.getSaltPerso());
     }
 
-    public String getDecipheredPrivateKey(String keyUser) {
+    public String getDecipheredPrivateKey(String keyUser) throws HttpServletException {
         return AES.decrypt(this.getPrivateKey(), keyUser);
     }
 

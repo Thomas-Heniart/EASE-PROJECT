@@ -132,7 +132,7 @@ public class JsonWebToken {
         this.setConnection_token_hash(Hashing.hash(connection_token));
     }
 
-    public String getJwt(String keyUser) {
+    public String getJwt(String keyUser) throws HttpServletException {
         return AES.decrypt(this.getJwt_ciphered(), keyUser);
     }
 }
