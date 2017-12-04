@@ -1,10 +1,10 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.LogWithApp;
-import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.User.User;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/api/v1/dashboard/GetApps")
 public class ServletGetApps extends HttpServlet {
@@ -44,8 +45,30 @@ public class ServletGetApps extends HttpServlet {
                         }
                     }
                 }
-                if ((symmetric_key != null && !symmetric_key.equals("")) || (team_key != null && !team_key.equals("")))
+                if ((symmetric_key != null && !symmetric_key.equals("")) || (team_key != null && !team_key.equals(""))) {
+                    if (app.isClassicApp() && symmetric_key != null && !symmetric_key.equals("")) {
+                        ClassicApp classicApp = (ClassicApp) app;
+                        Account account = classicApp.getAccount();
+                        if (account != null) {
+                            if (account.getPrivate_key() == null || account.getPublic_key() == null || account.getPrivate_key().equals("") || account.getPublic_key().equals("")) {
+                                Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+                                account.setPublic_key(publicAndPrivateKey.getKey());
+                                account.setPrivate_key(AES.encrypt(publicAndPrivateKey.getValue(), symmetric_key));
+                                sm.saveOrUpdate(account);
+                                for (AccountInformation accountInformation : account.getAccountInformationSet()) {
+                                    String value = accountInformation.getInformation_value();
+                                    if (accountInformation.getInformation_name().equals("password"))
+                                        value = AES.decrypt(value, symmetric_key);
+                                    if (value == null)
+                                        value = "";
+                                    accountInformation.setInformation_value(RSA.Encrypt(value, account.getPublic_key()));
+                                    sm.saveOrUpdate(accountInformation);
+                                }
+                            }
+                        }
+                    }
                     app.decipher(symmetric_key, team_key);
+                }
                 res.add(app.getJson());
             }
             sm.setSuccess(res);

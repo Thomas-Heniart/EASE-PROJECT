@@ -8,11 +8,13 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.servlet.http.Cookie;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -384,7 +386,7 @@ public class User {
     public List<Cookie> getCookies() {
         List<Cookie> cookies = new ArrayList<>();
         Cookie cookie = new Cookie("email", this.getEmail());
-        Cookie cookie1 = new Cookie("fname", this.getUsername());
+        Cookie cookie1 = new Cookie("fname", Base64.encodeBase64String(this.getUsername().getBytes(Charset.forName("utf8"))));
         cookie.setMaxAge(Integer.MAX_VALUE);
         cookie1.setMaxAge(Integer.MAX_VALUE);
         cookie.setPath("/");

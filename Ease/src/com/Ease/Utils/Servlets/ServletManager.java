@@ -7,6 +7,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationManager;
 import com.Ease.User.User;
 import com.Ease.User.UserFactory;
+import com.Ease.User.UserKeys;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
@@ -171,7 +172,13 @@ public abstract class ServletManager {
             String keyUser = this.user.getJsonWebToken().getKeyUser(jwt, secret);
             Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
             userProperties.put("keyUser", keyUser);
-            userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
+            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            if (private_key == null) {
+                UserKeys userKeys = user.getUserKeys();
+                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
+                this.saveOrUpdate(userKeys);
+            }
+            userProperties.put("privateKey", private_key);
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
         } else {
