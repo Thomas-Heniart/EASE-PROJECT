@@ -50,6 +50,7 @@ public class ServletChangeBackground extends HttpServlet {
 
             // constructs the directory path to store upload file
             // this path is relative to application's directory
+            
             String uploadPath = getServletContext().getRealPath("resources/backgrounds");
 
             // parses the request's content to extract file data
