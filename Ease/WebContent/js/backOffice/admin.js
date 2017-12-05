@@ -271,13 +271,13 @@ function addCategoryRow(category) {
 
 function addTeamRow(team, index) {
     var elem = $("<tr>" +
-    "<td>" + (index + 1) + "</td>" +
-    "<td>" + team.id + "</td>" +
-    "<td>" + team.name + "</td>" +
-    "<td>" + team.admin_first_name + " " + team.admin_last_name + "</td>" +
-    "<td>" + team.admin_email + "</td>" +
-    "<td>" + team.phone_number + "</td>" +
-    "<td>" + (team.plan_id === 0) ? "Free" : "Pro" + "</td>" +
+        "<td>" + (index + 1) + "</td>" +
+        "<td>" + team.id + "</td>" +
+        "<td>" + team.name + "</td>" +
+        "<td>" + team.admin_first_name + " " + team.admin_last_name + "</td>" +
+        "<td>" + team.admin_email + "</td>" +
+        "<td>" + team.phone_number + "</td>" +
+        "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
         "<td>" + team.card_entered + "</td>" +
         "<td>" + team.team_users_size + "</td>" +
         "<td>" + team.active_team_users + "</td>" +
@@ -521,17 +521,17 @@ function addResult(website) {
 
 function openTeamSettings(team, teamRow) {
     var modal = $("#team-settings");
-    ajaxHandler.get("/api/v1/tems/GetTeamInformation", {
+    ajaxHandler.get("/api/v1/admin/GetTeam", {
         team_id: team.id
     }, function () {
     }, function (data) {
         var input = $("#send-money", modal);
         $("#current-credit", modal).text(team.credit);
-        $("#card-number span", modal).text(team.card_number);
-        $("#link-number span", modal).text(team.link_number);
-        $("#single-number span", modal).text(team.single_number);
-        $("#enterprise-number span", modal).text(team.enterprise_number);
-        $("#card-with-password-reminder span", modal).text(team.card_with_password_reminder);
+        $("#card-number span", modal).text(data.card_number);
+        $("#link-number span", modal).text(data.link_card_number);
+        $("#single-number span", modal).text(data.single_card_number);
+        $("#enterprise-number span", modal).text(data.enterprise_card_number);
+        $("#card-with-password-reminder span", modal).text(data.card_with_receiver_and_password_reminder_number);
         $("i", input).click(function (e) {
             if (input.hasClass("loading"))
                 return;
@@ -570,7 +570,7 @@ function openTeamSettings(team, teamRow) {
                 teamRow.remove();
                 modal.modal("hide");
             })
-        })
+        });
         modal
             .modal({
                 onHide: function () {
