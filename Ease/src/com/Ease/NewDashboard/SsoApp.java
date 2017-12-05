@@ -57,10 +57,10 @@ public class SsoApp extends WebsiteApp {
     }
 
     @Override
-    public void decipher(String symmetric_key) throws HttpServletException {
+    public void decipher(String symmetric_key, String team_key) throws HttpServletException {
         if (this.getAccount() == null)
             return;
-        this.getAccount().decipher(symmetric_key);
+        this.getAccount().decipher(team_key == null ? symmetric_key : team_key);
     }
 
     @Override

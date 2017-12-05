@@ -50,7 +50,7 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
             ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-            classicApp.decipher(teamKey);
+            classicApp.decipher(null, teamKey);
             if (classicApp.getAccount() == null) {
                 Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
                 classicApp.setAccount(account);

@@ -50,7 +50,7 @@ public class AES {
         return new Base64().encodeToString(secretKey.getEncoded());
     }
 
-    public static String encrypt(String strToEncrypt, String key) {
+    public static String encrypt(String strToEncrypt, String key) throws HttpServletException {
         try {
             byte[] bytesKey = new Base64().decode(key);
             // rebuild key using SecretKeySpec
@@ -65,13 +65,11 @@ public class AES {
             return Base64.encodeBase64String(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
 
         } catch (Exception e) {
-
-            System.out.println("Error while encrypting: " + e.toString());
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return null;
     }
 
-    public static String decrypt(String strToDecrypt, String key) {
+    public static String decrypt(String strToDecrypt, String key) throws HttpServletException {
         try {
             byte[] bytesKey = new Base64().decode(key);
             // rebuild key using SecretKeySpec
@@ -84,10 +82,8 @@ public class AES {
             return new String(cipher.doFinal(Base64.decodeBase64(strToDecrypt)), StandardCharsets.UTF_8);
 
         } catch (Exception e) {
-
-            System.out.println("Error while decrypting: " + e.toString());
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return null;
     }
 
     public static String encryptUserKey(String plainKey, String easePass, String salt) {

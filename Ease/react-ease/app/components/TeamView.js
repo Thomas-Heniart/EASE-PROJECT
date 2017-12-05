@@ -55,9 +55,6 @@ class TeamView extends React.Component {
     document.title = "Team Space"
   }
   componentDidUpdate(){
-    const teamId = this.props.match.params.teamId;
-    const team = this.props.teams[teamId];
-
     if (!this.state.loadingInfo && !this.isValidTeamItemId(this.props.match.params.itemId)) {
       this.autoSelectItem();
     }

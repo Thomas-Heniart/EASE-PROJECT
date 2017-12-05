@@ -137,7 +137,7 @@ abstract public class App {
         return this.getJson();
     }
 
-    public void decipher(String symmetric_key) throws HttpServletException {
+    public void decipher(String symmetric_key, String team_key) throws HttpServletException {
         return;
     }
 

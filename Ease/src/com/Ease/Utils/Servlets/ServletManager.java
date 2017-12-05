@@ -7,6 +7,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationManager;
 import com.Ease.User.User;
 import com.Ease.User.UserFactory;
+import com.Ease.User.UserKeys;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
@@ -163,9 +164,7 @@ public abstract class ServletManager {
         }
         if (jwt == null && user_id == null) {
             throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-        } else if (user_id != null)
-            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
-        else {
+        } else if (jwt != null) {
             Key secret = (Key) this.getContextAttr("secret");
             this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
             if (this.user == null)
@@ -173,24 +172,47 @@ public abstract class ServletManager {
             String keyUser = this.user.getJsonWebToken().getKeyUser(jwt, secret);
             Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
             userProperties.put("keyUser", keyUser);
-            userProperties.put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
+            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            if (private_key == null) {
+                UserKeys userKeys = user.getUserKeys();
+                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
+                this.saveOrUpdate(userKeys);
+            }
+            userProperties.put("privateKey", private_key);
+            this.getSession().setAttribute("user_id", user.getDb_id());
+            this.getSession().setAttribute("is_admin", user.isAdmin());
+        } else {
+            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+            String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
+            if (keyUser == null)
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            if (private_key == null) {
+                UserKeys userKeys = user.getUserKeys();
+                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
+                this.saveOrUpdate(userKeys);
+            }
+            this.getUserProperties(user.getDb_id()).put("privateKey", private_key);
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
         }
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
         for (TeamUser teamUser : user.getTeamUsers()) {
+            Team team = teamUser.getTeam();
+            if (!team.isActive())
+                continue;
+            this.initializeTeamWithContext(teamUser.getTeam());
             if (!teamUser.isVerified() || teamUser.isDisabled())
                 continue;
-            Map<String, Object> teamProperties = this.getTeamProperties(teamUser.getTeam().getDb_id());
+            Map<String, Object> teamProperties = this.getTeamProperties(team.getDb_id());
             String teamKey = (String) teamProperties.get("teamKey");
-            this.initializeTeamWithContext(teamUser.getTeam());
             if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null) {
-                TeamUser teamUser_admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
+                TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
                 teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
-            }
-            else if (teamUser.getTeamKey() != null)
+            } else if (teamUser.getTeamKey() != null)
                 teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
         }
+        user.getCookies().forEach(cookie -> response.addCookie(cookie));
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;

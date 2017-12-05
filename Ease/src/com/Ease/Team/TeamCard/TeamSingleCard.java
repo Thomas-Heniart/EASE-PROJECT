@@ -88,7 +88,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
             return;
         this.getAccount().decipher(symmetric_key);
         for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
-            teamCardReceiver.getApp().decipher(symmetric_key);
+            teamCardReceiver.getApp().decipher(null, symmetric_key);
         }
     }
 }

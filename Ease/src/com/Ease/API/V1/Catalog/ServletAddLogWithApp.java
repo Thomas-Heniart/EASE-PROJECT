@@ -36,8 +36,13 @@ public class ServletAddLogWithApp extends HttpServlet {
             Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), user.getTeams());
             Profile profile = user.getProfile(profile_id);
             App logWithApp = user.getApp(logWith_app_id, sm.getHibernateQuery());
-            String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            logWithApp.decipher(keyUser);
+            String symmetric_key = null;
+            String team_key = null;
+            if (logWithApp.getTeamCardReceiver() != null)
+                team_key = (String) sm.getTeamProperties(logWithApp.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
+            else
+                symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+            logWithApp.decipher(symmetric_key, team_key);
             if (!logWithApp.isWebsiteApp())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot login with this app.");
             WebsiteApp websiteApp = (WebsiteApp) logWithApp;

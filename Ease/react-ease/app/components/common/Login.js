@@ -252,8 +252,7 @@ class Login extends React.Component {
     this.state.knownUser = !!this.state.knownFname && !!this.state.knownEmail;
     if (this.state.knownUser) {
       this.state.activeView = 'known';
-      if (this.state.knownFname.indexOf('=') !== -1)
-        this.state.knownFname = atob(this.state.knownFname);
+      this.state.knownFname = atob(this.state.knownFname);
     }
   }
   componentDidMount(){

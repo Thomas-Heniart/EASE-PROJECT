@@ -36,7 +36,7 @@ public class ServletEditSsoApp extends HttpServlet {
             SsoGroup ssoGroup = user.getSsoGroup(sso_group_id);
             ssoApp.setSsoGroup(ssoGroup);
             sm.saveOrUpdate(ssoApp);
-            ssoApp.decipher(sm.getKeyUser());
+            ssoApp.decipher(sm.getKeyUser(), null);
             sm.setSuccess(ssoApp.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -68,7 +68,7 @@
 <BODY>
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=15"></script>
+<script src="teams_bundle.js?v=18"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];

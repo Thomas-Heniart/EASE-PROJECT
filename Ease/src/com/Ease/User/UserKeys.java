@@ -2,10 +2,12 @@ package com.Ease.User;
 
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @Entity
 @Table(name = "userKeys")
@@ -107,7 +109,7 @@ public class UserKeys {
         return AES.decryptUserKey(this.getKeyUser(), password, this.getSaltPerso());
     }
 
-    public String getDecipheredPrivateKey(String keyUser) {
+    public String getDecipheredPrivateKey(String keyUser) throws HttpServletException {
         return AES.decrypt(this.getPrivateKey(), keyUser);
     }
 
@@ -133,5 +135,12 @@ public class UserKeys {
     public void changePassword(String new_password, String keyUser) {
         this.setHashed_password(Hashing.hash(new_password));
         this.setKeyUser(AES.encryptUserKey(keyUser, new_password, this.getSaltPerso()));
+    }
+
+    public String generatePublicAndPrivateKey(String keyUser) throws HttpServletException {
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        this.setPublicKey(publicAndPrivateKey.getKey());
+        this.setPrivateKey(AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
+        return publicAndPrivateKey.getValue();
     }
 }
