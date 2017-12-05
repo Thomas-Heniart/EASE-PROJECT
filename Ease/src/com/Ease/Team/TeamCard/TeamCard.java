@@ -174,6 +174,10 @@ abstract public class TeamCard {
         return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver -> teamCardReceiver.getTeamUser() == teamUser_receiver).findFirst().orElse(null) != null;
     }
 
+    public boolean isTeamWebsiteCard() {
+        return false;
+    }
+
     public boolean isTeamSingleCard() {
         return false;
     }

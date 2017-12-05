@@ -4,12 +4,14 @@
         <th>count</th>
         <th>id</th>
         <th>Name</th>
-        <th>Admin first name</th>
-        <th>Admin last name</th>
+        <th>Admin name</th>
         <th>Admin email</th>
+        <th>Phone number</th>
+        <th>Plan</th>
+        <th>Card</th>
         <th>Users</th>
         <th>Active users</th>
-        <th>Phone number</th>
+        <th>Active users on 3 days</th>
         <th></th>
     </tr>
     </thead>

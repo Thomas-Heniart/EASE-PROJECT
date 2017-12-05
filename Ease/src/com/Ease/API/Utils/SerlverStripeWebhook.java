@@ -36,6 +36,7 @@ public class SerlverStripeWebhook extends HttpServlet {
                 for (Team team : teamManager.getTeams(sm.getHibernateQuery())) {
                     if (!team.getSubscription_id().equals(subscription_id))
                         continue;
+                    sm.initializeTeamWithContext(team);
                     team.getSubscription().setTrialEnd(trialEnd);
                 }
             }

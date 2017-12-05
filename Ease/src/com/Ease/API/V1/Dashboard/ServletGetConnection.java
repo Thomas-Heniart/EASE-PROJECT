@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
+import com.Ease.Metrics.ClickOnApp;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 
 @WebServlet("/api/v1/dashboard/GetConnection")
 public class ServletGetConnection extends HttpServlet {
@@ -52,6 +54,8 @@ public class ServletGetConnection extends HttpServlet {
             if (app.getTeamCardReceiver() != null && app.getTeamCardReceiver().getTeamUser().isDisabled())
                 throw new HttpServletException(HttpStatus.Forbidden);
             String public_key = (String) sm.getContextAttr("publicKey");
+            Calendar calendar = Calendar.getInstance();
+            ClickOnApp.incrementClickOnApp(app_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.DAY_OF_WEEK), sm.getHibernateQuery());
             sm.setSuccess(app.getConnectionJson(public_key));
         } catch (Exception e) {
             sm.setError(e);

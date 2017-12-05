@@ -49,6 +49,11 @@ public abstract class TeamWebsiteCard extends TeamCard {
     }
 
     @Override
+    public boolean isTeamWebsiteCard() {
+        return true;
+    }
+
+    @Override
     public String getLogo() {
         return this.getWebsite().getLogo();
     }
