@@ -501,6 +501,11 @@ public class Team {
         return this.getTeamUsers().values().stream().anyMatch(teamUser -> teamUser.getUsername().equals(username));
     }
 
+    public int getNumberOfPeopleWhoClickOnApps(int number_of_days, HibernateQuery hibernateQuery) {
+        return Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser ->
+                teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp().hasBeenClickedForDays(number_of_days, hibernateQuery)).count() > 0).count());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

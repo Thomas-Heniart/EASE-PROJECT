@@ -11,12 +11,12 @@
   },
   "logout":{
     "todo":[
-      {"action":"trueClick", "search":"a.sign-out"},
+      {"action":"trueClick", "search":"a[href*='logout']"},
       {"action":"waitload"}
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"waitfor", "search":"a.sign-out, input#username"},
+    {"action":"waitfor", "search":"a[href*='logout'], input#username"},
     {"search":"a.sign-out"}
   ]
 }
