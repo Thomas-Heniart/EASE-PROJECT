@@ -12,6 +12,7 @@ import api from "../../utils/api";
 import ReactTooltip from 'react-tooltip';
 import WebsocketClient from './WebsocketClient';
 import ModalsContainer from "./ModalsContainer";
+import {showNewFeatureModal} from "../../actions/modalActions";
 
 @connect((store)=>{
   return {
@@ -51,6 +52,8 @@ class Base extends React.Component {
         });
       }else
         this.setState({fetching: false});
+      if (!response.user.new_feature_seen)
+        this.props.dispatch(showNewFeatureModal({active: true}))
     });
     document.addEventListener("GetSettingsDone", this.eventListener);
     setTimeout(() => {
