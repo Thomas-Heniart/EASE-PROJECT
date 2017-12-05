@@ -186,6 +186,8 @@ public abstract class ServletManager {
             String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
             if (keyUser == null)
                 throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            this.getSession().setAttribute("user_id", user.getDb_id());
+            this.getSession().setAttribute("is_admin", user.isAdmin());
         }
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
         for (TeamUser teamUser : user.getTeamUsers()) {
@@ -203,6 +205,7 @@ public abstract class ServletManager {
             } else if (teamUser.getTeamKey() != null)
                 teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
         }
+        user.getCookies().forEach(cookie -> response.addCookie(cookie));
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
