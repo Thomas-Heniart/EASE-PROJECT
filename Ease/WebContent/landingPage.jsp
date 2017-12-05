@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00022/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00022/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00022/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00022/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00023/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00023/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00023/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00023/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00022/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00023/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;
@@ -123,7 +123,7 @@
         </div>
     </div>
 </nav>
-<section style="margin-top: 60px;">
+<section class="sectionLanding">
     <div class="container">
         <div class="ui stackable grid">
             <div class="one wide column"></div>

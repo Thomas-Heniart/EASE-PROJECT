@@ -945,6 +945,9 @@ header .intro-text .intro-heading {
     to { width: 100% }
 }
 
+.sectionLanding {
+  margin-top: 60px;
+}
 .rightLanding {
     //position: absolute;
     background-image: url(/resources/images/gif_landing.gif);
@@ -1345,165 +1348,168 @@ header {
 }
 }
 @media screen and (max-width: 768px) {
-    .digit {
-        display: table-cell;
-        font-size: 20px !important;
-    }
-    .contactSegment {
-        margin: 1rem 0 !important;
-        padding: 16px !important;
-    }
-    #mainNav {
-        .container {
-            .navbar-header {
-                padding-left: 10px;
-                padding-top: 5px;
-                .navbar-brand {
-                    padding: 5px;
-                }
-            }
+  .sectionLanding {
+    margin-top: 0;
+  }
+  .digit {
+    display: table-cell;
+    font-size: 20px !important;
+  }
+  .contactSegment {
+    margin: 1rem 0 !important;
+    padding: 16px !important;
+  }
+  #mainNav {
+    .container {
+      .navbar-header {
+        padding-left: 10px;
+        padding-top: 5px;
+        .navbar-brand {
+          padding: 5px;
         }
+      }
     }
-    #popupBefore {
-        width: 210px !important;
-    }
-    #columnMac {
-        height: 130%;
-    }
-    .rightLanding {
-        height: 80%;
-    }
-    .inTheMac {
-        margin:0;
-        padding:0;
-        height: 100%;
-        top: -10;
-    }
-    #footer {
-        padding: 10% 20%;
-        .container {
-            padding:0;
-            margin:0;
-            .row {
-                margin: 0;
-                padding: 0 0;
-                .left-part {
-                    width: 100%;
-                    .right-menu {
-                        width: 50%;
-                        text-align: right;
-                        padding-left: 20%;
-                        .links {
-                            display: inline-block;
-                            width: 100%;
-                        }
-                    }
-                    .left-menu {
-                        display: inline-block;
-                        float: left;
-                        width: 50%;
-                    }
-                }
-                .easeExplore {
-                    width: 100%;
-                    .logo {
-                        width: 100%;
-                    }
-                    .social_links {
-                       padding-left: 25%;
-                        link a i {
-                            font-size: 25px;
-                        }
-                    }
-                }
+  }
+  #popupBefore {
+    width: 210px !important;
+  }
+  #columnMac {
+    height: 130%;
+  }
+  .rightLanding {
+    height: 59vw;
+  }
+  .inTheMac {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    top: -10;
+  }
+  #footer {
+    padding: 10% 20%;
+    .container {
+      padding: 0;
+      margin: 0;
+      .row {
+        margin: 0;
+        padding: 0 0;
+        .left-part {
+          width: 100%;
+          .right-menu {
+            width: 50%;
+            text-align: right;
+            padding-left: 20%;
+            .links {
+              display: inline-block;
+              width: 100%;
             }
-        }
-    }
-    #markSection {
-        .container {
-            .row {
-                .markColumn {
-                    .markHandler {
-                        width: (100% / 3);
-                        margin-bottom: 20px;
-                        a {
-                            &:hover {
-                                img {
-                                }
-                            }
-                            img {
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    #avantages {
-      .container {
-         .w70 {
-
-         }
-         .row.showcase {
-            margin-bottom: 5px;
-         }
-         .row.showcase:last-child {
-            margin-bottom: 0px;
-         }
-         .row.showcase {
-            margin: 0px auto;
-            text-align: center;
-            .fa-stack {
-               font-size: 12vw;
-           }
-           p, span{
-               text-align: center;
-               font-size: 1.1em;
-           }
-           p {
-               margin-bottom: 10px;
-               width: 100%;
-               position: relative;
-               transform: none;
-           }
-       }
-   }
-}
-#features {
-  .container {
-     .row {
-        width: 98%;
-        margin: 0px auto;
-        .fList:first-child {
-           margin-bottom: 10px;
-           border-bottom: 1px solid #d0d1d5;
-       }
-       .fList {
-           width: 100%;
-           .feature:last-child {
-              border-bottom: none;
-              margin-bottom: 0px;
           }
-          .feature {
-              border-bottom: 1px solid #d0d1d5;
-              padding-bottom: 10px;
-              margin-bottom: 10px;
-              span {
-                 display: inline-block;
-                 max-width: 80%;
-                 font-size: 18px;
-                 color: #3f424a;
-             }
-             i {
-                 font-size: 20px;
-                 color: #5f6774;
-                 float: right;
-                 margin-right: 2px;
-             }
-         }
-     }
- }
-}
+          .left-menu {
+            display: inline-block;
+            float: left;
+            width: 50%;
+          }
+        }
+        .easeExplore {
+          width: 100%;
+          .logo {
+            width: 100%;
+          }
+          .social_links {
+            padding-left: 25%;
+            link a i {
+              font-size: 25px;
+            }
+          }
+        }
+      }
+    }
+  }
+  #markSection {
+    .container {
+      .row {
+        .markColumn {
+          .markHandler {
+            width: (100% / 3);
+            margin-bottom: 20px;
+            a {
+              &:hover {
+                img {
+                }
+              }
+              img {
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  #avantages {
+    .container {
+      .w70 {
+
+      }
+      .row.showcase {
+        margin-bottom: 5px;
+      }
+      .row.showcase:last-child {
+        margin-bottom: 0px;
+      }
+      .row.showcase {
+        margin: 0px auto;
+        text-align: center;
+        .fa-stack {
+          font-size: 12vw;
+        }
+        p, span {
+          text-align: center;
+          font-size: 1.1em;
+        }
+        p {
+          margin-bottom: 10px;
+          width: 100%;
+          position: relative;
+          transform: none;
+        }
+      }
+    }
+  }
+  #features {
+  .container {
+    .row {
+      width: 98%;
+      margin: 0px auto;
+      .fList:first-child {
+        margin-bottom: 10px;
+        border-bottom: 1px solid #d0d1d5;
+      }
+      .fList {
+        width: 100%;
+        .feature:last-child {
+          border-bottom: none;
+          margin-bottom: 0px;
+        }
+        .feature {
+          border-bottom: 1px solid #d0d1d5;
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+          span {
+            display: inline-block;
+            max-width: 80%;
+            font-size: 18px;
+            color: #3f424a;
+          }
+          i {
+            font-size: 20px;
+            color: #5f6774;
+            float: right;
+            margin-right: 2px;
+          }
+        }
+      }
+    }
+  }
 }
 #userFeedbacks {
 	.container {
