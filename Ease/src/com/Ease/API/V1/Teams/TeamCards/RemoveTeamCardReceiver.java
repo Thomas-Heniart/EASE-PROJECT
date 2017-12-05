@@ -75,6 +75,7 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             if (!teamUser.equals(teamUser_connected))
                 NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_connected, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put("team_id", team_id);
             jsonObject.put("team_card_id", team_card_id);
             jsonObject.put("team_card_receiver_id", team_card_receiver_id);
             jsonObject.put("team_user_id", teamUser.getDb_id());

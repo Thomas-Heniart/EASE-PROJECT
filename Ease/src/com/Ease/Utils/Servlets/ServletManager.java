@@ -186,6 +186,13 @@ public abstract class ServletManager {
             String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
             if (keyUser == null)
                 throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            if (private_key == null) {
+                UserKeys userKeys = user.getUserKeys();
+                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
+                this.saveOrUpdate(userKeys);
+            }
+            this.getUserProperties(user.getDb_id()).put("privateKey", private_key);
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
         }

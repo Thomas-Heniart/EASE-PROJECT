@@ -66,6 +66,29 @@ public class ServletGetApps extends HttpServlet {
                                 }
                             }
                         }
+                    } else if (app.isLogWithApp() && symmetric_key != null && !symmetric_key.equals("")) {
+                        LogWithApp logWithApp = (LogWithApp) app;
+                        if (logWithApp.getLoginWith_app().isClassicApp()) {
+                            ClassicApp classicApp = (ClassicApp) logWithApp.getLoginWith_app();
+                            Account account = classicApp.getAccount();
+                            if (account != null) {
+                                if (account.getPrivate_key() == null || account.getPublic_key() == null || account.getPrivate_key().equals("") || account.getPublic_key().equals("")) {
+                                    Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+                                    account.setPublic_key(publicAndPrivateKey.getKey());
+                                    account.setPrivate_key(AES.encrypt(publicAndPrivateKey.getValue(), symmetric_key));
+                                    sm.saveOrUpdate(account);
+                                    for (AccountInformation accountInformation : account.getAccountInformationSet()) {
+                                        String value = accountInformation.getInformation_value();
+                                        if (accountInformation.getInformation_name().equals("password"))
+                                            value = AES.decrypt(value, symmetric_key);
+                                        if (value == null)
+                                            value = "";
+                                        accountInformation.setInformation_value(RSA.Encrypt(value, account.getPublic_key()));
+                                        sm.saveOrUpdate(accountInformation);
+                                    }
+                                }
+                            }
+                        }
                     }
                     app.decipher(symmetric_key, team_key);
                 }
