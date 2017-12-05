@@ -633,9 +633,10 @@ export function AppConnection({app_id, keep_focus}){
       let json = {};
       json.detail = response;
       json.detail = json.detail.map(item => {
-        Object.keys(item.user).map(id => {
-          item.user[id] = decipher(item.user[id]);
-        });
+        if (!!item.user)
+          Object.keys(item.user).map(id => {
+            item.user[id] = decipher(item.user[id]);
+          });
         return item;
       });
       json.detail.highlight = !keep_focus;

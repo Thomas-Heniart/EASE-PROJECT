@@ -1,6 +1,7 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'https://ease.space/api/rest';
+//axios.defaults.baseURL = 'https://ease.space/api/rest';
+axios.defaults.baseURL = 'https://192.162.0.19:8443/api/rest';
 
 const basic_get = (url, params) => {
   return axios.get(url, {params: params})
@@ -39,8 +40,7 @@ export default api = {
     getTeamRoomApps: ({team_id, room_id}) => {
       return basic_get('/GetRoomApps', {
         team_id: team_id,
-        room_id: room_id,
-        timestamp: new Date().getTime()
+        room_id: room_id
       });
     },
     getGroupApps: ({group_id}) => {

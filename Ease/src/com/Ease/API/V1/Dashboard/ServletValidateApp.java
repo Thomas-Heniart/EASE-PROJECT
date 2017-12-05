@@ -31,8 +31,8 @@ public class ServletValidateApp extends HttpServlet {
             sm.saveOrUpdate(app);
             String symmetric_key = null;
             String team_key = null;
-            if (app.getTeamCardReceiver() == null)
-                team_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("keyUser");
+            if (app.getTeamCardReceiver() != null)
+                team_key = (String) sm.getTeamProperties(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id()).get("teamKey");
             else {
                 symmetric_key = (String) sm.getUserProperties(sm.getUser().getDb_id()).get("keyUser");
                 if (app.isLogWithApp()) {

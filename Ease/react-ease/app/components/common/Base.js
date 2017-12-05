@@ -30,14 +30,12 @@ class Base extends React.Component {
   }
   checkConnection = () => {
     window.setInterval(() => {
-      if (this.props.common.authenticated){
-        api.common.bz().then(connected => {
-          if (!connected)
-            window.location.href = '/';
-        }).catch(err => {
+      api.common.bz().then(authenticated => {
+        if (authenticated !== this.props.common.authenticated)
           window.location.href = '/';
-        });
-      }
+      }).catch(err => {
+        window.location.href = '/';
+      });
     }, 30000);
   };
   eventListener = (event) => {

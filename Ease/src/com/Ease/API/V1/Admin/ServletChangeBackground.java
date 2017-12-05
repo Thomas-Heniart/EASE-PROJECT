@@ -25,6 +25,8 @@ public class ServletChangeBackground extends HttpServlet {
     private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
     private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
 
+    private static final String UPLOAD_DIRECTORY = "/var/lib/tomcat8/webapps/backgrounds";
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
 
@@ -50,7 +52,8 @@ public class ServletChangeBackground extends HttpServlet {
 
             // constructs the directory path to store upload file
             // this path is relative to application's directory
-            String uploadPath = getServletContext().getRealPath("resources/backgrounds");
+
+            String uploadPath = UPLOAD_DIRECTORY;
 
             // parses the request's content to extract file data
             List<FileItem> formItems = upload.parseRequest(request);
@@ -73,7 +76,7 @@ public class ServletChangeBackground extends HttpServlet {
                 }
             }
             sm.getHibernateQuery().commit();
-            sm.setRedirectUrl("/admin");
+            sm.setRedirectUrl("/admin.jsp");
             sm.setSuccess("Background changed");
         } catch (Exception e) {
             sm.setError(e);

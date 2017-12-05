@@ -74,5 +74,6 @@
         <mapping class="com.Ease.User.PendingNotification"/>
         <mapping class="com.Ease.User.JsonWebToken"/>
         <mapping class="com.Ease.User.PasswordLost"/>
+        <mapping class="com.Ease.Metrics.ClickOnApp"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,11 +1,9 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
-import com.stripe.model.Customer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -24,11 +22,11 @@ public class ServletGetTeamsInformation extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             List<Team> teamList = teamManager.getTeams(sm.getHibernateQuery());
             JSONArray res = new JSONArray();
             for (Team team : teamList) {
+                sm.initializeTeamWithContext(team);
                 JSONObject tmp = new JSONObject();
                 tmp.put("id", team.getDb_id());
                 tmp.put("name", team.getName());
@@ -36,35 +34,22 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("admin_first_name", owner.getFirstName());
                 tmp.put("admin_last_name", owner.getLastName());
                 tmp.put("admin_email", owner.getEmail());
+                tmp.put("plan_id", team.isActive() ? team.getPlan_id() : -1);
+                tmp.put("card_entered", team.isCard_entered());
                 String phoneNumber = owner.getPhone_number();
                 if (phoneNumber == null)
                     phoneNumber = "";
                 tmp.put("phone_number", phoneNumber);
-                tmp.put("team_users_size", team.getTeamUsers().size());
+                tmp.put("team_users_size", team.getTeamUsers().values().stream().filter(TeamUser::isVerified).count());
                 tmp.put("active_team_users", team.getActiveTeamUserNumber());
+                tmp.put("people_click_on_app_three_days", team.getNumberOfPeopleWhoClickOnApps(3, sm.getHibernateQuery()));
                 tmp.put("is_active", team.isActive());
-                tmp.put("credit", (float) -Customer.retrieve(team.getCustomer_id()).getAccountBalance() / 100);
+                tmp.put("credit", team.isActive() ? (float) -team.getCustomer().getAccountBalance() / 100 : 0);
                 int card_number = 0;
                 int link_number = 0;
                 int single_number = 0;
                 int enterprise_number = 0;
                 int card_with_password_reminder = 0;
-                /* for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                    App app = (App) shareableApp;
-                    card_number++;
-                    if (app.isClassicApp()) {
-                        single_number++;
-                        ClassicApp classicApp = (ClassicApp) app;
-                        if (classicApp.getAccount().getPasswordChangeInterval() != null && classicApp.getAccount().getPasswordChangeInterval() > 0)
-                            card_with_password_reminder++;
-                    } else if (app.isEmpty()) {
-                        enterprise_number++;
-                        WebsiteApp websiteApp = (WebsiteApp) app;
-                        if (websiteApp.getReminderIntervalValue() != null && websiteApp.getReminderIntervalValue() > 0)
-                            card_with_password_reminder++;
-                    } else
-                        link_number++;
-                } */
                 tmp.put("card_number", card_number);
                 tmp.put("link_number", link_number);
                 tmp.put("single_number", single_number);

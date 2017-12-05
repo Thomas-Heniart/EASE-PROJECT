@@ -74,14 +74,13 @@ public class LogWithApp extends WebsiteApp {
         website.put("app_name", this.getAppInformation().getName());
         website.put("website_name", this.getWebsite().getName());
         website.put("type", "logWithApp");
+        res.add(website);
         return res;
     }
 
     @Override
     public void decipher(String symmetric_key, String team_key) throws HttpServletException {
-        if (this.getLoginWith_app() != null) {
-
+        if (this.getLoginWith_app() != null)
             this.getLoginWith_app().decipher(symmetric_key, team_key);
-        }
     }
 }

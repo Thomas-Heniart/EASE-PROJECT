@@ -136,10 +136,10 @@ $(document).ready(function () {
                     });
                     break;
                 case "website-failures-segment":
-                    ajaxHandler.get("/api/v1/admin/GetWebsiteFailures", null, function() {
+                    ajaxHandler.get("/api/v1/admin/GetWebsiteFailures", null, function () {
 
                     }, function (websiteFailures) {
-                        websiteFailures.forEach(function(websiteFailure) {
+                        websiteFailures.forEach(function (websiteFailure) {
                             createWebsiteFailureRow(websiteFailure).appendTo($("#website-failures-body"));
                         });
                         target.removeClass("loading");
@@ -274,12 +274,14 @@ function addTeamRow(team, index) {
         "<td>" + (index + 1) + "</td>" +
         "<td>" + team.id + "</td>" +
         "<td>" + team.name + "</td>" +
-        "<td>" + team.admin_first_name + "</td>" +
-        "<td>" + team.admin_last_name + "</td>" +
+        "<td>" + team.admin_first_name + " " + team.admin_last_name + "</td>" +
         "<td>" + team.admin_email + "</td>" +
+        "<td>" + team.phone_number + "</td>" +
+        "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
+        "<td>" + team.card_entered + "</td>" +
         "<td>" + team.team_users_size + "</td>" +
         "<td>" + team.active_team_users + "</td>" +
-        "<td>" + team.phone_number + "</td>" +
+        "<td>" + team.people_click_on_app_three_days + "</td>" +
         "<td><a href='#'><i class='fa fa-cog'></i></a></td>" +
         "</tr>");
     if (!team.is_active)
@@ -519,58 +521,63 @@ function addResult(website) {
 
 function openTeamSettings(team, teamRow) {
     var modal = $("#team-settings");
-    var input = $("#send-money", modal);
-    $("#current-credit", modal).text(team.credit);
-    $("#card-number span", modal).text(team.card_number);
-    $("#link-number span", modal).text(team.link_number);
-    $("#single-number span", modal).text(team.single_number);
-    $("#enterprise-number span", modal).text(team.enterprise_number);
-    $("#card-with-password-reminder span", modal).text(team.card_with_password_reminder);
-    $("i", input).click(function (e) {
-        if (input.hasClass("loading"))
-            return;
-        var credit = $("input", input).val();
-        if (credit.indexOf(".") === -1) {
-            credit = parseInt(credit) * 100;
-        } else {
-            var entirePart = credit.split(".")[0];
-            var decimalPart = credit.split(".")[1];
-            if (decimalPart.length === 1)
-                decimalPart += "0";
-            credit = parseInt(entirePart) * 100 + parseInt(decimalPart);
-        }
-        input.addClass("loading");
-        input.addClass("disabled");
-        ajaxHandler.post("/api/v1/admin/SendLoveMoney", {
-            team_id: team.id,
-            credit: credit
-        }, function () {
-        }, function (data) {
-            $("#current-credit", modal).text(data.credit);
-            $("input", input).val("");
-            input.removeClass("loading");
-            input.removeClass("disabled");
-        });
-    });
-    $("button.negative", modal).click(function () {
-        var button = $(this);
-        button.addClass("loading");
-        ajaxHandler.post("/api/v1/admin/DeleteTeam", {
-            team_id: team.id
-        }, function() {
-
-        }, function() {
-            button.removeClass("loading");
-            teamRow.remove();
-            modal.modal("hide");
-        })
-    })
-    modal
-        .modal({
-            onHide: function () {
-                $("i", input).off("click");
-                $("input", input).val("");
+    ajaxHandler.get("/api/v1/admin/GetTeam", {
+        team_id: team.id
+    }, function () {
+    }, function (data) {
+        var input = $("#send-money", modal);
+        $("#current-credit", modal).text(team.credit);
+        $("#card-number span", modal).text(data.card_number);
+        $("#link-number span", modal).text(data.link_card_number);
+        $("#single-number span", modal).text(data.single_card_number);
+        $("#enterprise-number span", modal).text(data.enterprise_card_number);
+        $("#card-with-password-reminder span", modal).text(data.card_with_receiver_and_password_reminder_number);
+        $("i", input).click(function (e) {
+            if (input.hasClass("loading"))
+                return;
+            var credit = $("input", input).val();
+            if (credit.indexOf(".") === -1) {
+                credit = parseInt(credit) * 100;
+            } else {
+                var entirePart = credit.split(".")[0];
+                var decimalPart = credit.split(".")[1];
+                if (decimalPart.length === 1)
+                    decimalPart += "0";
+                credit = parseInt(entirePart) * 100 + parseInt(decimalPart);
             }
-        })
-        .modal("show");
+            input.addClass("loading");
+            input.addClass("disabled");
+            ajaxHandler.post("/api/v1/admin/SendLoveMoney", {
+                team_id: team.id,
+                credit: credit
+            }, function () {
+            }, function (data) {
+                $("#current-credit", modal).text(data.credit);
+                $("input", input).val("");
+                input.removeClass("loading");
+                input.removeClass("disabled");
+            });
+        });
+        $("button.negative", modal).click(function () {
+            var button = $(this);
+            button.addClass("loading");
+            ajaxHandler.post("/api/v1/admin/DeleteTeam", {
+                team_id: team.id
+            }, function () {
+
+            }, function () {
+                button.removeClass("loading");
+                teamRow.remove();
+                modal.modal("hide");
+            })
+        });
+        modal
+            .modal({
+                onHide: function () {
+                    $("i", input).off("click");
+                    $("input", input).val("");
+                }
+            })
+            .modal("show");
+    });
 }
