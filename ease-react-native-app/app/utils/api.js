@@ -16,9 +16,11 @@ const basic_get = (url, params) => {
 const basic_post = (url, params) => {
   return axios.post(url, params)
       .then(response => {
+        console.log(response.data);
         return response.data;
       })
       .catch(err => {
+        console.log(err.response.data);
         throw err.response.data;
       });
 };
