@@ -1,5 +1,8 @@
 import React, {Component} from "react";
-import {DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {
+  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel,
+  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator
+} from "./utils";
 import {showTeamSingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
@@ -13,12 +16,20 @@ import {AppConnection} from "../../actions/dashboardActions";
 class TeamSingleApp extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      loading: false
+    }
   }
   connect = (e) => {
+    this.setState({loading: true});
     this.props.dispatch(AppConnection({
       app_id: this.props.app.id,
       keep_focus: e.ctrlKey
-    }));
+    })).then(response => {
+      this.setState({loading: false});
+    }).catch(err => {
+      this.setState({loading: false});
+    });
   };
   render(){
     const {app, teams, dispatch} = this.props;
@@ -33,6 +44,8 @@ class TeamSingleApp extends Component {
     return (
         <div class='app'>
           <div class="logo_area">
+            {this.state.loading &&
+            <LoadingAppIndicator/>}
             {app.new &&
             <NewAppLabel/>}
             {password_update &&
