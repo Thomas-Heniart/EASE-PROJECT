@@ -69,7 +69,7 @@ public class ServletGetApps extends HttpServlet {
                     } else if (app.isLogWithApp() && symmetric_key != null && !symmetric_key.equals("")) {
                         LogWithApp logWithApp = (LogWithApp) app;
                         if (logWithApp.getLoginWith_app().isClassicApp()) {
-                            ClassicApp classicApp = (ClassicApp) logWithApp.getLoginWith_app();
+                            ClassicApp classicApp = (ClassicApp) user.getApp(logWithApp.getLoginWith_app());
                             Account account = classicApp.getAccount();
                             if (account != null) {
                                 if (account.getPrivate_key() == null || account.getPublic_key() == null || account.getPrivate_key().equals("") || account.getPublic_key().equals("")) {

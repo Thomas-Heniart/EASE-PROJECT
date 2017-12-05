@@ -403,4 +403,8 @@ public class User {
     public void removeSsoGroup(SsoGroup ssoGroup) {
         this.getSsoGroupSet().remove(ssoGroup);
     }
+
+    public App getApp(App app) {
+        return this.getApps().stream().filter(app::equals).findFirst().orElse(null);
+    }
 }
