@@ -65,13 +65,13 @@ const BrowserDownloadView = (props) => {
   return (
       <Form as="div" class="container">
         <Form.Field>
-          Ease.space works on Chrome and Safari for now!
+          Ease.space works on Chrome!
         </Form.Field>
         <Form.Field>
           We are working on bringing it to more browsers.
         </Form.Field>
         <Form.Field>
-          To continue using Ease.space, you can download Chrome or use Safari now.
+          To continue using Ease.space, you can download Chrome.
         </Form.Field>
         <Button
             positive
