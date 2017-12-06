@@ -71,6 +71,7 @@ public class ServletLogin extends HttpServlet {
             response.addCookie(cookie);
             sm.setUser(user);
             JSONObject res = user.getJson();
+            res.put("JWT", jwt);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

@@ -520,12 +520,16 @@ function addResult(website) {
 function openTeamSettings(team, teamRow) {
     var modal = $("#team-settings");
     var send_money = $("#send-money", modal);
+    var people_data = $("#people_data");
+    var account_data = $("#account_data");
     modal
         .modal({
             onHide: function () {
                 $(".segment", modal).addClass("loading");
                 $("i", send_money).off("click");
                 $("input", send_money).val("");
+                $("button", people_data).off("click");
+
             }
         })
         .modal("show");
@@ -534,7 +538,7 @@ function openTeamSettings(team, teamRow) {
     }, function () {
     }, function (data) {
         $(".segment", modal).removeClass("loading");
-        $("#people_data").find("span").each(function (index, element) {
+        people_data.find("span").each(function (index, element) {
             $(element).text(data[element.id]);
             var anchor = $(element).next();
             anchor.click(function (e) {
@@ -554,6 +558,24 @@ function openTeamSettings(team, teamRow) {
                     $("#account_data").show();
                 })
             });
+        });
+        people_data.find("button").click(function () {
+            $("#account_data").hide();
+            $("team_settings_right").addClass("loading");
+            var people_data_history = $("#people_data_history");
+            people_data_history.show();
+            ajaxHandler.get("/api/v1/admin/GetPeopleChartData", {
+                team_id: team.id
+            }, function() {}, function(data) {
+                $("team_settings_right").removeClass("loading");
+                var ctx = $("#people_data_chart");
+                var myChart = new Chart(ctx, data);
+            });
+            $("button", $("#people_data_history")).click(function () {
+                people_data_history.hide();
+                $(this).off("click");
+                $("#account_data").show();
+            })
         });
         $("#account_data").find("span").each(function (index, element) {
             $(element).text(data[element.id]);
