@@ -24,7 +24,7 @@ public class ServletGetTeam extends HttpServlet {
             Team team = sm.getTeam(team_id);
             JSONObject res = new JSONObject();
             res.put("people_invited", team.getTeamUsers().size());
-            res.put("people_joine", team.getTeamUsers().values().stream().filter(TeamUser::isVerified).count());
+            res.put("people_joined", team.getTeamUsers().values().stream().filter(TeamUser::isVerified).count());
             res.put("people_active", team.getActiveTeamUserNumber());
             res.put("people_click_on_app_three_days", team.getNumberOfPeopleWhoClickOnApps(3, sm.getHibernateQuery()));
             res.put("card_number", team.getTeamCardMap().size());

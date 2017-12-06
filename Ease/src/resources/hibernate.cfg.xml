@@ -75,5 +75,6 @@
         <mapping class="com.Ease.User.JsonWebToken"/>
         <mapping class="com.Ease.User.PasswordLost"/>
         <mapping class="com.Ease.Metrics.ClickOnApp"/>
+        <mapping class="com.Ease.Metrics.TeamMetrics"/>
     </session-factory>
 </hibernate-configuration>
