@@ -55,7 +55,7 @@
   margin-bottom: 10px;
   position: relative;
   border-radius: 5px;
-  padding: 25px 40px 50px 40px;
+  padding: 15px 26px 20px 26px;
   &:hover {
     .move_button {
       display: block;
@@ -92,7 +92,7 @@
     width: 100%;
     .app_wrapper {
       width: 33.3333%;
-      margin-top: 20px;
+      margin-top: 10px;
       &.dragging {
         .logo_area {
           border: 3px dashed #949EB7;
@@ -115,7 +115,7 @@
           transform: translate3d(-35%, -35%, 0);
         }
         .logo_area {
-          width: 60px;
+          width: 55px;
           position: relative;
           transform: scale(1);
           transition: transform .2s ease;

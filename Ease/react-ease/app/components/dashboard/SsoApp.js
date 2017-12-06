@@ -22,7 +22,7 @@ class SsoApp extends Component {
     this.setState({loading: true});
     this.props.dispatch(AppConnection({
       app_id: this.props.app.id,
-      keep_focus: e.ctrlKey
+      keep_focus: e.ctrlKey || e.metaKey
     })).then(response => {
       this.setState({loading: false});
     }).catch(err => {
