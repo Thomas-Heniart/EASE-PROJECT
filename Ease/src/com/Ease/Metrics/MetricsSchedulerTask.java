@@ -71,30 +71,47 @@ public class MetricsSchedulerTask extends TimerTask {
                     room_names.append(channel.getName()).append(", ");
                 }
                 int people_click_on_app_once = 0;
+                StringBuilder people_click_on_app_once_emails = new StringBuilder();
                 int people_click_on_app_three_times = 0;
+                StringBuilder people_click_on_app_three_times_emails = new StringBuilder();
                 int people_click_on_app_five_times = 0;
+                StringBuilder people_click_on_app_five_times_emails = new StringBuilder();
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
                     for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
                         if (teamCardReceiver.getApp().hasBeenClickedForDays(5, hibernateQuery)) {
                             people_click_on_app_once++;
                             people_click_on_app_three_times++;
                             people_click_on_app_five_times++;
+                            people_click_on_app_once_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
+                            people_click_on_app_three_times_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
+                            people_click_on_app_five_times_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
                             break;
                         } else if (teamCardReceiver.getApp().hasBeenClickedForDays(3, hibernateQuery)) {
                             people_click_on_app_once++;
                             people_click_on_app_three_times++;
+                            people_click_on_app_once_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
+                            people_click_on_app_three_times_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
                             break;
-                        } else if (teamCardReceiver.getApp().hasBeenClickedForDays(3, hibernateQuery)) {
+                        } else if (teamCardReceiver.getApp().hasBeenClickedForDays(1, hibernateQuery)) {
                             people_click_on_app_once++;
-
+                            people_click_on_app_once_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
                             break;
                         }
                     }
                 }
                 room_names.replace(room_names.length() - 2, room_names.length(), ")");
-                people_invited_emails.deleteCharAt(people_invited_emails.length() - 1);
-                people_joined_emails.deleteCharAt(people_joined_emails.length() - 1);
-                people_with_cards_emails.deleteCharAt(people_with_cards_emails.length() - 1);
+                if (people_invited_emails.length() > 0)
+                    people_invited_emails.deleteCharAt(people_invited_emails.length() - 1);
+                if (people_joined_emails.length() > 0)
+                    people_joined_emails.deleteCharAt(people_joined_emails.length() - 1);
+                if (people_with_cards_emails.length() > 0)
+                    people_with_cards_emails.deleteCharAt(people_with_cards_emails.length() - 1);
+                if (people_click_on_app_once_emails.length() > 0)
+                    people_click_on_app_once_emails.deleteCharAt(people_click_on_app_once_emails.length() - 1);
+                if (people_click_on_app_three_times_emails.length() > 0)
+                    people_click_on_app_three_times_emails.deleteCharAt(people_click_on_app_three_times_emails.length() - 1);
+                if (people_click_on_app_five_times_emails.length() > 0)
+                    people_click_on_app_five_times_emails.deleteCharAt(people_click_on_app_five_times_emails.length() - 1);
                 teamMetrics.setPeople_invited(people_invited);
                 teamMetrics.setPeople_invited_emails(people_invited_emails.toString());
                 teamMetrics.setPeople_joined(people_joined);
@@ -112,10 +129,13 @@ public class MetricsSchedulerTask extends TimerTask {
                 teamMetrics.setPeople_click_on_app_once(people_click_on_app_once);
                 teamMetrics.setPeople_click_on_app_three_times(people_click_on_app_three_times);
                 teamMetrics.setPeople_click_on_app_five_times(people_click_on_app_five_times);
+                teamMetrics.setPeople_click_on_app_once_emails(people_click_on_app_once_emails.toString());
+                teamMetrics.setPeople_click_on_app_three_times_emails(people_click_on_app_three_times_emails.toString());
+                teamMetrics.setPeople_click_on_app_five_times_emails(people_click_on_app_five_times_emails.toString());
                 hibernateQuery.saveOrUpdateObject(teamMetrics);
             }
             hibernateQuery.commit();
-        } catch (HttpServletException e) {
+        } catch (Exception e) {
             hibernateQuery.rollback();
             e.printStackTrace();
         }

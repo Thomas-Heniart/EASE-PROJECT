@@ -1,6 +1,7 @@
 package com.Ease.Metrics;
 
 import com.Ease.Hibernate.HibernateQuery;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -8,15 +9,18 @@ import java.util.Calendar;
 @Entity
 @Table(name = "metricTeam")
 public class TeamMetrics {
-    static TeamMetrics getMetrics(Integer team_id, HibernateQuery hibernateQuery) {
+    public static TeamMetrics getMetrics(Integer team_id, HibernateQuery hibernateQuery) {
         Calendar calendar = Calendar.getInstance();
+        return getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), hibernateQuery);
+    }
+    public static TeamMetrics getMetrics(Integer team_id, Integer year, Integer week_of_year, HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT m FROM TeamMetrics m WHERE m.team_id = :team_id AND m.year = :year AND m.week_of_year = :week");
         hibernateQuery.setParameter("team_id", team_id);
-        hibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
-        hibernateQuery.setParameter("week", calendar.get(Calendar.WEEK_OF_YEAR));
+        hibernateQuery.setParameter("year", year);
+        hibernateQuery.setParameter("week", week_of_year);
         TeamMetrics teamMetrics = (TeamMetrics) hibernateQuery.getSingleResult();
         if (teamMetrics == null) {
-            teamMetrics = new TeamMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR));
+            teamMetrics = new TeamMetrics(team_id, year, week_of_year);
             hibernateQuery.saveOrUpdateObject(teamMetrics);
         }
         return teamMetrics;
@@ -100,7 +104,7 @@ public class TeamMetrics {
 
     }
 
-    public TeamMetrics(Integer team_id, int year, int week_of_year) {
+    private TeamMetrics(Integer team_id, int year, int week_of_year) {
         this.team_id = team_id;
         this.year = year;
         this.week_of_year = week_of_year;
@@ -296,5 +300,30 @@ public class TeamMetrics {
 
     public void setLink_cards(int link_cards) {
         this.link_cards = link_cards;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("people_invited", this.getPeople_invited());
+        res.put("people_invited_emails", this.getPeople_invited_emails());
+        res.put("people_joined", this.getPeople_joined());
+        res.put("people_joined_emails", this.getPeople_joined_emails());
+        res.put("people_with_cards", this.getPeople_with_cards());
+        res.put("people_with_cards_emails", this.getPeople_with_cards_emails());
+        res.put("people_click_on_app_once", this.getPeople_click_on_app_once());
+        res.put("people_click_on_app_once_emails", this.getPeople_click_on_app_once_emails());
+        res.put("people_click_on_app_three_times", this.getPeople_click_on_app_three_times());
+        res.put("people_click_on_app_three_times_emails", this.getPeople_click_on_app_three_times_emails());
+        res.put("people_click_on_app_five_times", this.getPeople_click_on_app_five_times());
+        res.put("people_click_on_app_five_times_emails", this.getPeople_click_on_app_five_times_emails());
+        res.put("rooms", this.getRoom_number());
+        res.put("room_names", this.getRoom_names());
+        res.put("cards", this.getCards());
+        res.put("cards_with_receiver", this.getCards_with_receiver());
+        res.put("cards_with_receiver_and_password_policy", this.getCards_with_receiver_and_password_policy());
+        res.put("single_cards", this.getSingle_cards());
+        res.put("enterprise_cards", this.getEnterprise_cards());
+        res.put("link_cards", this.getLink_cards());
+        return res;
     }
 }

@@ -171,4 +171,8 @@ abstract public class App {
         Calendar calendar = Calendar.getInstance();
         return ClickOnApp.getMetricForApp(this.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), hibernateQuery);
     }
+
+    public boolean isEmpty() {
+        return false;
+    }
 }
