@@ -30,33 +30,33 @@ public class ServletGetPeopleChartData extends HttpServlet {
             JSONArray datasets = new JSONArray();
             JSONObject people_invited = new JSONObject();
             people_invited.put("label", "People invited");
-            people_invited.put("backgroundColor", "#653964");
             people_invited.put("borderColor", "#653964");
+            people_invited.put("backgroundColor", "#653964");
             people_invited.put("data", new JSONArray());
             JSONObject people_joined = new JSONObject();
             people_joined.put("label", "People joined");
-            people_joined.put("backgroundColor", "#653964");
             people_joined.put("borderColor", "#653964");
+            people_joined.put("backgroundColor", "#653964");
             people_joined.put("data", new JSONArray());
             JSONObject people_with_cards = new JSONObject();
             people_with_cards.put("label", "People with apps");
-            people_with_cards.put("backgroundColor", "#653964");
             people_with_cards.put("borderColor", "#653964");
+            people_with_cards.put("backgroundColor", "#653964");
             people_with_cards.put("data", new JSONArray());
             JSONObject people_click_on_app_once = new JSONObject();
             people_click_on_app_once.put("label", "People click 1 day");
-            people_click_on_app_once.put("backgroundColor", "#653964");
             people_click_on_app_once.put("borderColor", "#653964");
+            people_click_on_app_once.put("backgroundColor", "#653964");
             people_click_on_app_once.put("data", new JSONArray());
             JSONObject people_click_on_app_three_times = new JSONObject();
             people_click_on_app_three_times.put("label", "People click 3 days");
-            people_click_on_app_three_times.put("backgroundColor", "#653964");
             people_click_on_app_three_times.put("borderColor", "#653964");
+            people_click_on_app_three_times.put("backgroundColor", "#653964");
             people_click_on_app_three_times.put("data", new JSONArray());
             JSONObject people_click_on_app_five_times = new JSONObject();
             people_click_on_app_five_times.put("label", "People click 5 days");
-            people_click_on_app_five_times.put("backgroundColor", "#653964");
             people_click_on_app_five_times.put("borderColor", "#653964");
+            people_click_on_app_five_times.put("backgroundColor", "#653964");
             people_click_on_app_five_times.put("data", new JSONArray());
             datasets.add(people_invited);
             datasets.add(people_joined);
@@ -77,12 +77,12 @@ public class ServletGetPeopleChartData extends HttpServlet {
                 for (int i = subscription_week; i <= current_week; i++) {
                     labels.add(i - subscription_week);
                     TeamMetrics teamMetrics = TeamMetrics.getMetrics(team_id, current_year, i, sm.getHibernateQuery());
-                    ((JSONArray)people_invited.get("data")).add(teamMetrics.getPeople_invited());
-                    ((JSONArray)people_joined.get("data")).add(teamMetrics.getPeople_joined());
-                    ((JSONArray)people_with_cards.get("data")).add(teamMetrics.getPeople_with_cards());
-                    ((JSONArray)people_click_on_app_once.get("data")).add(teamMetrics.getPeople_click_on_app_once());
-                    ((JSONArray)people_click_on_app_three_times.get("data")).add(teamMetrics.getPeople_click_on_app_three_times());
-                    ((JSONArray)people_click_on_app_five_times.get("data")).add(teamMetrics.getPeople_click_on_app_five_times());
+                    ((JSONArray) people_invited.get("data")).add(teamMetrics.getPeople_invited());
+                    ((JSONArray) people_joined.get("data")).add(teamMetrics.getPeople_joined());
+                    ((JSONArray) people_with_cards.get("data")).add(teamMetrics.getPeople_with_cards());
+                    ((JSONArray) people_click_on_app_once.get("data")).add(teamMetrics.getPeople_click_on_app_once());
+                    ((JSONArray) people_click_on_app_three_times.get("data")).add(teamMetrics.getPeople_click_on_app_three_times());
+                    ((JSONArray) people_click_on_app_five_times.get("data")).add(teamMetrics.getPeople_click_on_app_five_times());
                 }
             } else {
                 /* @TODO */
