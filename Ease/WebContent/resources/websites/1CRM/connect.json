@@ -1,0 +1,42 @@
+{
+  "name": "1CRM",
+  "lastLogin": "",
+  "home": "https://actemis1crm.3acrm.info/login.php",
+  "folder": "1CRM",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login_user",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login_pass",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "#login_button"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "goto",
+        "url": "index.php?module=Users&action=Logout"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "search": ".float-menu"
+    }
+  ]
+}

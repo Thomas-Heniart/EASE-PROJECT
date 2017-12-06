@@ -70,7 +70,7 @@
         </style>
     </head>
     <body>
-    <img src="https://ease.space/resources/images/Ease_Logo.png" style="width:256px;height:133px;"/>
+    <img src="resources/images/ease_logo_white.png" style="width:250px;height:50px;"/>
     <h1>Mentions Légales</h1>
     <div class="truc">
         <h2>Editeur du site</h2>

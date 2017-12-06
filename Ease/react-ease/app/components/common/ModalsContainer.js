@@ -37,6 +37,7 @@ import LogWithAppSettings from "../modals/LogWithAppSettings";
 import SsoAppSettingsModal from "../modals/SsoAppSettingsModal";
 import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
 import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
+import NewFeatureModal from "../modals/NewFeatureModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -150,6 +151,8 @@ class ModalsContainer extends Component{
           <UpdateAppPasswordModal/>}
           {this.props.modals.ssoAppSettings.active &&
           <SsoAppSettingsModal/>}
+          {this.props.modals.newFeature.active &&
+          <NewFeatureModal/>}
         </div>
     )
   }

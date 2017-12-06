@@ -13,6 +13,13 @@ export const EmptyAppIndicator = (props) => {
   )
 };
 
+export const LoadingAppIndicator = (props) => {
+  return (
+      <div class="app_overlay_indicator white" style={{zIndex: '2'}}>
+      </div>
+  )
+};
+
 export const WaitingTeamApproveIndicator = (props) => {
   return (
       <div class="app_overlay_indicator grey" {...props}/>

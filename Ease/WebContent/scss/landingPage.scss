@@ -1046,26 +1046,28 @@ header .intro-text .intro-heading {
     color: #373b60;
 }
 #mainNav.affix-top .navbar-header a#ease-logo {
-    background-image: url("/resources/landing/ease-white-logo.svg");
-    background-size: 106px 40px;
-    position:relative;
-    z-index:2;
-    height:40px;
-    width:106px;
-    float:left;
-    -webkit-transition:none;
-    transition:none;
+  background-image: url("/resources/images/ease_logo_white.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  position: relative;
+  z-index: 2;
+  height: 40px;
+  width: 190.67px;
+  float: left;
+  -webkit-transition: none;
+  transition: none;
 }
 #mainNav.affix .navbar-header a#ease-logo {
-    background-image: url("/resources/landing/ease-logo.svg");
-    background-size: 106px 40px;
-    position:relative;
-    z-index:2;
-    height:40px;
-    width:106px;
-    float:left;
-    -webkit-transition:none;
-    transition:none;
+  background-image: url("/resources/images/ease_logo_blue.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  position: relative;
+  z-index: 2;
+  height: 40px;
+  width: 190.67px;
+  float: left;
+  -webkit-transition: none;
+  transition: none;
 }
 #footer {
     padding: 20px 150px;
@@ -1102,15 +1104,18 @@ header .intro-text .intro-heading {
             .easeExplore {
                 width: 30%;
                 .logo {
-                    width: 120px;
-                    margin: 30px 200px 40px 0;
+                    //width: 120px;
+                    //margin: 30px 200px 40px 0;
+                  width: 170px;
+                  margin: 40px 0 20px 0;
                     img {
                         width: 100%;
                     }
                 }
                 .social_links {
+                  margin: 20px 0 40px 35px;
                     display: flex;
-                    margin:40px 210px 40px 0;
+                    //margin:40px 210px 40px 0;
                     text-align: center;
                     .link {
                         display: inline-block;
@@ -1416,6 +1421,7 @@ header {
             width: 100%;
           }
           .social_links {
+            margin: 0;
             padding-left: 25%;
             link a i {
               font-size: 25px;

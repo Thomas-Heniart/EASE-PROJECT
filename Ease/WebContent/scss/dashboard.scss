@@ -55,7 +55,7 @@
   margin-bottom: 10px;
   position: relative;
   border-radius: 5px;
-  padding: 25px 40px 50px 40px;
+  padding: 15px 26px 20px 26px;
   &:hover {
     .move_button {
       display: block;
@@ -92,7 +92,7 @@
     width: 100%;
     .app_wrapper {
       width: 33.3333%;
-      margin-top: 20px;
+      margin-top: 10px;
       &.dragging {
         .logo_area {
           border: 3px dashed #949EB7;
@@ -115,8 +115,25 @@
           transform: translate3d(-35%, -35%, 0);
         }
         .logo_area {
-          width: 60px;
+          width: 55px;
           position: relative;
+          transform: scale(1);
+          transition: transform .2s ease;
+          &.loading {
+            &:before {
+              content: '';
+              position: absolute;
+              top:0;
+              left:0;
+              right: 0;
+              bottom: 0;
+              z-index: 1;
+              background-color: rgba(white, .7);
+            }
+          }
+          &:active {
+            transform: scale(0.9);
+          }
         }
         .logo_handler {
           background-color: white;
@@ -132,7 +149,7 @@
           &:hover {
             cursor: pointer;
             .settings_button {
-              transition: all .3s ease;
+              transition: transform .3s ease .3s, font-size .3s ease;
               transform: translateY(0);
               &:hover {
                 font-size: 9px;
@@ -143,7 +160,7 @@
             position: absolute;
             bottom: 0;
             left: 0;
-            transition: all .3s ease;
+            transition: all .0s ease;
             transform: translateY(102%);
             text-transform: uppercase;
             font-weight: bold;
@@ -255,8 +272,10 @@
   &.grey {
     background-color: rgba(65,65,65,0.8);
   }
+  &.white {
+    background-color: rgba(255,255,255,0.8);
+  }
   i {
     color:white;
   }
 }
-

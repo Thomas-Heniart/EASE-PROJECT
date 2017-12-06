@@ -1,5 +1,8 @@
 import React, {Component} from "react";
-import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {
+  EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator,
+  LoadingAppIndicator
+} from "./utils";
 import {showSsoAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection} from "../../actions/dashboardActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
@@ -11,12 +14,20 @@ import {connect} from "react-redux";
 class SsoApp extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      loading: false
+    }
   };
   connect = (e) => {
+    this.setState({loading: true});
     this.props.dispatch(AppConnection({
       app_id: this.props.app.id,
-      keep_focus: e.ctrlKey
-    }));
+      keep_focus: e.ctrlKey || e.metaKey
+    })).then(response => {
+      this.setState({loading: false});
+    }).catch(err => {
+      this.setState({loading: false});
+    });
   };
   render(){
     const {app, dispatch} = this.props;
@@ -25,6 +36,8 @@ class SsoApp extends Component {
     return (
         <div class='app'>
           <div class="logo_area">
+            {this.state.loading &&
+            <LoadingAppIndicator/>}
             {sso_group.empty &&
             <EmptyAppIndicator onClick={e => {
               dispatch(showSsoAppSettingsModal({active: true, app: app}))

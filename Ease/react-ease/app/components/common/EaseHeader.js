@@ -11,9 +11,9 @@ class EaseHeader extends React.Component {
         <header id="ease_header">
           <a class="logo_container" href="/">
               {location.hash.indexOf("#/main/catalog") !== -1 ?
-                  <img src="/resources/images/Ease_Logo.svg" alt="logo"/>
+                  <img src="/resources/images/ease_logo_white.png" alt="logo"/>
                   :
-                  <img src="/resources/images/logo.svg" alt="logo"/>
+                  <img src="/resources/images/ease_logo_blue.png" alt="logo"/>
               }
           </a>
           <div class="full_flex"></div>
