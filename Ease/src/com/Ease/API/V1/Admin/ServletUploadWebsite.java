@@ -64,7 +64,7 @@ public class ServletUploadWebsite extends HttpServlet {
                     if (item.isFormField()) {
                         if (item.getFieldName().equals("website_id")) {
                             Catalog catalog = (Catalog) request.getServletContext().getAttribute("catalog");
-                            HibernateQuery hibernateQuery = new HibernateQuery();
+                            HibernateQuery hibernateQuery = sm.getHibernateQuery();
                             String folder = catalog.getWebsiteWithId(Integer.parseInt(item.getString()), hibernateQuery).getFolder();
                             hibernateQuery.commit();
                             uploadPath = Variables.PROJECT_PATH + Variables.WEBSITES_PATH + folder;
@@ -102,9 +102,11 @@ public class ServletUploadWebsite extends HttpServlet {
             response.setStatus(200);
             response.sendRedirect("/admin");
         } catch (HttpServletException e) {
-            response.setStatus(e.getHttpStatus().getValue());
+            e.printStackTrace();
+            sm.setError(e);
         } catch (Exception e) {
-            response.setStatus(500);
+            e.printStackTrace();
+            sm.setError(e);
         }
         response.getWriter().println("Error");
     }

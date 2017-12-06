@@ -48,19 +48,19 @@
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
-        <div id="team-segment" class="ui segment loading" style="display: none">
+        <div id="team-segment" class="ui segment loading backOffice_part" style="display: none">
             <%@ include file="templates/backofficeAdmin/TeamManager.jsp" %>
         </div>
-        <div id="website-segment" class="ui segment loading" style="display: none;">
+        <div id="website-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebsiteManager.jsp" %>
         </div>
-        <div id="category-segment" class="ui segment loading" style="display: none;">
+        <div id="category-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/CategoryManager.jsp" %>
         </div>
-        <div id="website-requests-segment" class="ui segment loading" style="display: none;">
+        <div id="website-requests-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebisteRequests.jsp"%>
         </div>
-        <div id="website-failures-segment" class="ui segment loading" style="display: none;">
+        <div id="website-failures-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebisteFailures.jsp"%>
         </div>
     </div>
