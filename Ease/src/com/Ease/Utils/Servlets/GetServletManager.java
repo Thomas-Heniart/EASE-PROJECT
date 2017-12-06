@@ -53,6 +53,8 @@ public class GetServletManager extends ServletManager {
 
     public Integer getIntParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         String param = this.getParam(paramName, saveInLogs, canBeNull);
+        if (param == null && canBeNull)
+            return null;
         try {
             return Integer.valueOf(param);
         } catch (NumberFormatException e) {

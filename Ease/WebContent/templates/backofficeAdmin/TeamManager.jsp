@@ -58,6 +58,10 @@
                     <ul></ul>
                     <button class="ui blue button">back</button>
                 </div>
+                <div id="people_data_history" class="view_part" style="display: none;">
+                    <canvas id="people_data_chart" width="400" height="400"></canvas>
+                    <button class="ui blue button">back</button>
+                </div>
             </div>
         </div>
         <div class="ui segment">

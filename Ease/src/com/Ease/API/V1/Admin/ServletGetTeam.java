@@ -17,6 +17,7 @@ public class ServletGetTeam extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeEaseAdmin();
             Integer team_id = sm.getIntParam("team_id", true, false);
             Integer year = sm.getIntParam("year", true, true);
             Integer week_of_year = sm.getIntParam("week_of_year", true, true);
