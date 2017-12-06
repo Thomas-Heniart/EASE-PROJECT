@@ -1126,6 +1126,51 @@ button.action_text_button {
   }
 }
 
+.ease_popup.ease_new_feature_popup {
+  width: 830px;
+  //height: 500px;
+  height: 90%;
+  margin-bottom: 50px;
+  overflow: scroll;
+  padding: 30px;
+  .header {
+    padding: 0 30px 10px 30px;
+    margin: 0;
+    border:none;
+    text-align: center;
+  }
+  .popup_content {
+    font-size: 16px;
+    p {
+      margin-left: 20px;
+      display: inline-flex;
+      span {
+        margin-left: 10px;
+      }
+      &.no_margin {
+        margin-left: 0;
+        &.no_inline {
+          display: flex;
+        }
+      }
+      img {
+        width: 200px;
+        height: 120px;
+        margin: 0 0 0 10px;
+        &.phone {
+          width: 150px;
+          height: 130px;
+          margin: 0 30px 0 30px;
+        }
+      }
+    }
+  }
+  .infoColor {
+    color: $themeBlue2Color;
+  }
+
+}
+
 #team_settings_modal {
   .contents {
     width: 900px;

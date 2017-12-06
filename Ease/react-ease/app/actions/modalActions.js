@@ -119,3 +119,12 @@ export function showUpdateAppPasswordModal({active, app}) {
     }
   }
 }
+
+export function showNewFeatureModal({active}) {
+  return {
+    type: 'SHOW_NEW_FEATURE',
+    payload: {
+      active: active
+    }
+  }
+}

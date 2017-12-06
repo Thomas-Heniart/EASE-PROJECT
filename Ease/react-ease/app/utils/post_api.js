@@ -1204,6 +1204,14 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       });
+    },
+    newFeatureSeen: function(){
+      return axios.post('/api/v1/common/NewFeatureSeen', {})
+        .then(response => {
+          return response.data;
+        }).catch(err => {
+          throw err;
+        })
     }
   }
 };

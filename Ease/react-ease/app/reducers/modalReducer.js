@@ -45,6 +45,9 @@ export const modals = createReducer({
   updateAppPassword: {
     active: false,
     app: null
+  },
+  newFeature: {
+    active: false
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -117,6 +120,12 @@ export const modals = createReducer({
     return {
       ...state,
       updateAppPassword: action.payload
+    }
+  },
+  ['SHOW_NEW_FEATURE'](state, action){
+    return {
+      ...state,
+      newFeature: action.payload
     }
   }
 });

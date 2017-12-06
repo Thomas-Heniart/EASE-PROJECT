@@ -48,10 +48,10 @@ class Base extends React.Component {
         this.props.dispatch(fetchCriticalParts()).then(response => {
           this.setState({fetching: false});
         });
+        if (!response.user.new_feature_seen)
+          this.props.dispatch(showNewFeatureModal({active: true}))
       }else
         this.setState({fetching: false});
-      if (!response.user.new_feature_seen)
-        this.props.dispatch(showNewFeatureModal({active: true}))
     });
     document.addEventListener("GetSettingsDone", this.eventListener);
     setTimeout(() => {

@@ -224,3 +224,15 @@ export function setHomepage({homepage}){
     type: 'SET_HOMEPAGE', payload: {homepage: homepage}
   }
 }
+
+export function newFeatureSeen() {
+  return (dispatch, getState) => {
+    return post_api.common.newFeatureSeen().then(response => {
+      dispatch({
+        type: 'NEW_FEATURE_SEEN'
+      });
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
