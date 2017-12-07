@@ -279,8 +279,8 @@ function addTeamRow(team, index) {
         "<td>" + team.admin_first_name + " " + team.admin_last_name + "</td>" +
         "<td>" + team.admin_email + "</td>" +
         "<td>" + team.phone_number + "</td>" +
-        "<td>" + "week of sub" + "</td>" +
-        "<td>" + "week now" + "</td>" +
+        "<td>" + team.week_of_subscription + "</td>" +
+        "<td>" + team.week_now + "</td>" +
         "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
         "<td>" + team.card_entered + "</td>" +
         "</tr>");
@@ -524,7 +524,28 @@ function openTeamSettings(team, teamRow) {
     var account_data = $("#account_data");
     var data_emails = $("#people_data_emails");
     var people_data_history = $("#people_data_history");
+    var account_data_hisotry = $("#account_data_history");
     var team_settings_right = $("#team_settings_right");
+    var team_settings_left = $("#team_settings_left");
+    var click_average_graphic = $("#click_average_graphic");
+    var show_graphic = $("#show_graphic");
+    var delete_button = $("#show_delete");
+    var delete_modal = $("#team_delete");
+    var delete_modal_button = $("div.button.red", delete_modal);
+    console.log(delete_modal_button);
+    delete_modal_button.off("click");
+    delete_modal_button.click(function () {
+        $(this).addClass("loading");
+        console.log("lala");
+        ajaxHandler.post("/api/v1/admin/DeleteTeam", {
+            team_id: team.id
+        }, function () {
+        }, function () {
+            delete_modal_button.removeClass("loading");
+            delete_modal.modal("hide");
+            teamRow.remove();
+        })
+    });
     modal
         .modal({
             onHide: function () {
@@ -532,9 +553,17 @@ function openTeamSettings(team, teamRow) {
                 $("i", send_money).off("click");
                 $("input", send_money).val("");
                 $("button", people_data).off("click");
+                $("button", account_data).off("click");
+                delete_button.off("click");
+                show_graphic.off("click");
                 data_emails.hide();
                 people_data_history.hide();
+                account_data_hisotry.hide();
+                click_average_graphic.hide();
+                team_settings_left.show();
+                team_settings_right.show();
                 account_data.show();
+                people_data.show();
             }
         })
         .modal("show");
@@ -569,7 +598,8 @@ function openTeamSettings(team, teamRow) {
             people_data_history.show();
             ajaxHandler.get("/api/v1/admin/GetPeopleChartData", {
                 team_id: team.id
-            }, function() {}, function(data) {
+            }, function () {
+            }, function (data) {
                 team_settings_right.removeClass("loading");
                 var ctx = document.getElementById("people_data_chart").getContext("2d");
                 var myChart = new Chart(ctx, data);
@@ -578,6 +608,25 @@ function openTeamSettings(team, teamRow) {
                 people_data_history.hide();
                 $(this).off("click");
                 $("#account_data").show();
+            })
+        });
+        account_data.find("button").click(function () {
+            people_data.hide();
+            click_average_graphic.hide();
+            team_settings_left.addClass("loading");
+            account_data_hisotry.show();
+            ajaxHandler.get("/api/v1/admin/GetAccountChartData", {
+                team_id: team.id
+            }, function () {
+            }, function (data) {
+                team_settings_left.removeClass("loading");
+                var ctx = $("#account_data_chart");
+                new Chart(ctx, data);
+            });
+            $("button", account_data_hisotry).click(function () {
+                account_data_hisotry.hide();
+                $(this).off("click");
+                people_data.show();
             })
         });
         $("#account_data").find("span").each(function (index, element) {
@@ -609,6 +658,33 @@ function openTeamSettings(team, teamRow) {
                 send_money.removeClass("loading");
                 send_money.removeClass("disabled");
             });
+        });
+        show_graphic.click(function () {
+            team_settings_right.hide();
+            team_settings_left.show();
+            team_settings_left.addClass("loading");
+            people_data.hide();
+            click_average_graphic.show();
+            ajaxHandler.get("/api/v1/teams/GetTeamClickChartData", {
+                team_id: team.id
+            }, function () {
+            }, function (data) {
+                team_settings_left.removeClass("loading");
+                var canvas = $("canvas", click_average_graphic);
+                new Chart(canvas, data);
+                $("body").css({
+                    "overlfow-y": "auto"
+                });
+            });
+            $("button", click_average_graphic).click(function () {
+                team_settings_right.show();
+                people_data.show();
+                click_average_graphic.hide();
+                $(this).off("click");
+            });
+        });
+        delete_button.click(function () {
+            delete_modal.modal("show");
         });
         /*
         $("#card-number span", modal).text(data.cards);

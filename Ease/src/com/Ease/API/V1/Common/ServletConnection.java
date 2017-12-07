@@ -97,9 +97,10 @@ public class ServletConnection extends HttpServlet {
             sm.getSession().setAttribute("webSocketManager", null);
             sm.setSuccess(res);
         } catch (HttpServletException e) {
-            sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
-        } catch (Exception e) {
             sm.setError(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         }
         sm.sendResponse();
     }

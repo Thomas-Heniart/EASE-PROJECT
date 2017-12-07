@@ -543,16 +543,24 @@ public abstract class ServletManager {
     }
 
     public void decipher(JSONObject jsonObject) throws HttpServletException {
-        String private_key = (String) this.getContextAttr("privateKey");
-        for (Object entry : jsonObject.entrySet()) {
-            Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
-            jsonObject.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
+        try {
+            String private_key = (String) this.getContextAttr("privateKey");
+            for (Object entry : jsonObject.entrySet()) {
+                Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
+                jsonObject.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
+            }
+        } catch (Exception e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "That didn't work! Please refresh the page");
         }
     }
 
     public String decipher(String s) throws HttpServletException {
-        String private_key = (String) this.getContextAttr("privateKey");
-        return RSA.Decrypt(s, private_key);
+        try {
+            String private_key = (String) this.getContextAttr("privateKey");
+            return RSA.Decrypt(s, private_key);
+        } catch (Exception e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "That didn't work! Please refresh the page");
+        }
     }
 
     public String cipher(String s) throws HttpServletException {

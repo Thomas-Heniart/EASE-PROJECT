@@ -14,10 +14,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 @WebServlet("/api/v1/admin/GetTeamsInformation")
 public class ServletGetTeamsInformation extends HttpServlet {
+
+    private final static int EASE_FIRST_WEEK = 40;
+    private final static int EASE_FIRST_YEAR = 2017;
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -40,21 +45,28 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 if (phoneNumber == null)
                     phoneNumber = "";
                 tmp.put("phone_number", phoneNumber);
-                tmp.put("team_users_size", team.getTeamUsers().values().stream().filter(TeamUser::isVerified).count());
-                tmp.put("active_team_users", team.getActiveTeamUserNumber());
-                tmp.put("people_click_on_app_three_days", team.getNumberOfPeopleWhoClickOnApps(3, sm.getHibernateQuery()));
-                tmp.put("is_active", team.isActive());
                 tmp.put("credit", team.isActive() ? (float) -team.getCustomer().getAccountBalance() / 100 : 0);
-                int card_number = 0;
-                int link_number = 0;
-                int single_number = 0;
-                int enterprise_number = 0;
-                int card_with_password_reminder = 0;
-                tmp.put("card_number", card_number);
-                tmp.put("link_number", link_number);
-                tmp.put("single_number", single_number);
-                tmp.put("enterprise_number", enterprise_number);
-                tmp.put("card_with_password_reminder", card_with_password_reminder);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(team.getSubscription_date());
+                int week_of_subscription = 0;
+                if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
+                    do {
+                        week_of_subscription += calendar.get(Calendar.WEEK_OF_YEAR);
+                        calendar.add(Calendar.WEEK_OF_YEAR, -calendar.get(Calendar.WEEK_OF_YEAR));
+                    } while (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR);
+                }
+                week_of_subscription += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
+                calendar = Calendar.getInstance();
+                int week_now = 0;
+                if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
+                    do {
+                        week_now += calendar.get(Calendar.WEEK_OF_YEAR);
+                        calendar.add(Calendar.WEEK_OF_YEAR, -calendar.get(Calendar.WEEK_OF_YEAR));
+                    } while (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR);
+                }
+                week_now += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
+                tmp.put("week_of_subscription", week_of_subscription);
+                tmp.put("week_now", week_now);
                 res.add(tmp);
             }
             sm.setSuccess(res);
