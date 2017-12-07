@@ -1,13 +1,12 @@
 import api from "../utils/api";
 import axios from "axios";
-import base64 from "base-64";
 import {AsyncStorage} from "react-native";
 import { Toast } from 'native-base';
 
 function parseJwt (token) {
   let base64Url = token.split('.')[1];
   let str = base64Url.replace('-', '+').replace('_', '/');
-  return JSON.parse(base64.decode(str));
+  return JSON.parse(atob(str));
 }
 
 export function connectionChanged(connectionInfo){
@@ -52,11 +51,69 @@ export function connection({email, password}) {
       password: password
     }).then(response => {
       AsyncStorage.setItem('JWTToken', response.JWT);
-      AsyncStorage.setItem('LastEmail', email);
       const information = parseJwt(response.JWT);
       axios.defaults.headers.common['Authorization'] = response.JWT;
-      dispatch({type: 'CONNECTION', payload: {user_info: information}});
+      dispatch({
+        type: 'CONNECTION',
+        payload: {
+          username: response.first_name,
+          email: response.email
+        }
+      });
       return information;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function setUserInformation({username, email}) {
+  return {
+    type: 'SET_USER_INFORMATION',
+    payload: {
+      username: username,
+      email: email
+    }
+  }
+}
+
+export function fetchMyInformation() {
+  return (dispatch, getState) => {
+    return api.get.fetchMyInformation().then(response => {
+      AsyncStorage.setItem('LastEmail', response.email);
+      dispatch(setUserInformation({
+        username: response.first_name,
+        email: response.email
+      }));
+      return response;
+    }).catch(err => {
+      throw err;
+    })
+  }
+}
+
+export function fetchPersonalSpace() {
+  return (dispatch, getState) => {
+    return api.get.fetchPersonalSpace().then(response => {
+      dispatch({
+        type: 'FETCH_PERSONAL_SPACE',
+        payload: response
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function fetchCriticalInformation(){
+  return (dispatch, getState) => {
+    const calls = [
+      dispatch(fetchMyInformation()),
+      dispatch(fetchPersonalSpace())
+    ];
+    return Promise.all(calls).then((response) => {
+      return response;
     }).catch(err => {
       throw err;
     });
