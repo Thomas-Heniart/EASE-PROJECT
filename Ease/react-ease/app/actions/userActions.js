@@ -77,8 +77,8 @@ export function createTeamUserNow({team_id, first_name, last_name, email, userna
   return function(dispatch, getState){
     return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role).then(team_user => {
       return post_api.teamUser.sendTeamUserInvitation(getState().common.ws_id, team_id, team_user.id).then(response => {
-        dispatch(teamUserCreatedAction({team_user: team_user}));
-        return team_user;
+        dispatch(teamUserCreatedAction({team_user: response}));
+        return response;
       }).catch(err => {
         throw err;
       });
