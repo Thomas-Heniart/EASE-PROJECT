@@ -522,6 +522,9 @@ function openTeamSettings(team, teamRow) {
     var send_money = $("#send-money", modal);
     var people_data = $("#people_data");
     var account_data = $("#account_data");
+    var data_emails = $("#people_data_emails");
+    var people_data_history = $("#people_data_history");
+    var team_settings_right = $("#team_settings_right");
     modal
         .modal({
             onHide: function () {
@@ -529,7 +532,9 @@ function openTeamSettings(team, teamRow) {
                 $("i", send_money).off("click");
                 $("input", send_money).val("");
                 $("button", people_data).off("click");
-
+                data_emails.hide();
+                people_data_history.hide();
+                account_data.show();
             }
         })
         .modal("show");
@@ -543,8 +548,7 @@ function openTeamSettings(team, teamRow) {
             var anchor = $(element).next();
             anchor.click(function (e) {
                 e.preventDefault();
-                $("#account_data").hide();
-                var data_emails = $("#people_data_emails");
+                account_data.hide();
                 var list = $("ul", data_emails);
                 $("li", list).remove();
                 data[anchor.attr("id")].split(";").forEach(function (email) {
@@ -560,15 +564,14 @@ function openTeamSettings(team, teamRow) {
             });
         });
         people_data.find("button").click(function () {
-            $("#account_data").hide();
-            $("team_settings_right").addClass("loading");
-            var people_data_history = $("#people_data_history");
+            account_data.hide();
+            team_settings_right.addClass("loading");
             people_data_history.show();
             ajaxHandler.get("/api/v1/admin/GetPeopleChartData", {
                 team_id: team.id
             }, function() {}, function(data) {
-                $("team_settings_right").removeClass("loading");
-                var ctx = $("#people_data_chart");
+                team_settings_right.removeClass("loading");
+                var ctx = document.getElementById("people_data_chart").getContext("2d");
                 var myChart = new Chart(ctx, data);
             });
             $("button", $("#people_data_history")).click(function () {

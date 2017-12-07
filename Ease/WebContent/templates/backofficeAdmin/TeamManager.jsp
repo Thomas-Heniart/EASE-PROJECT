@@ -14,7 +14,7 @@
     </thead>
     <tbody id="team-manager-body"></tbody>
 </table>
-<div class="ui united modal" id="team-settings">
+<div class="ui united fullscreen modal" id="team-settings">
     <i class="close icon"></i>
     <div class="header">Team settings</div>
     <div class="content">
@@ -58,8 +58,9 @@
                     <ul></ul>
                     <button class="ui blue button">back</button>
                 </div>
-                <div id="people_data_history" class="view_part" style="display: none;">
-                    <canvas id="people_data_chart" width="400" height="400"></canvas>
+                <div id="people_data_history" class="view_part"
+                     style="display: none; max-width: 600px; max-height: 600px">
+                    <canvas id="people_data_chart"></canvas>
                     <button class="ui blue button">back</button>
                 </div>
             </div>
