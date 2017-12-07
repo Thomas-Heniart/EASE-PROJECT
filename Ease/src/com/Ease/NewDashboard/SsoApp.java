@@ -75,4 +75,16 @@ public class SsoApp extends WebsiteApp {
         website.put("website_name", this.getWebsite().getName());
         return res;
     }
+
+    @Override
+    public JSONObject getRestJson() {
+        JSONObject res = super.getRestJson();
+        res.put("empty", this.isEmpty());
+        if (this.getAccount() == null)
+            return res;
+        res.put("last_update_date", this.getAccount().getLast_update().getTime());
+        res.put("password_reminder_interval", this.getAccount().getReminder_interval());
+        res.put("account_information", this.getAccount().getJson());
+        return res;
+    }
 }

@@ -34,7 +34,7 @@ public class GetProfiles extends HttpServlet {
                 JSONArray app_ids = new JSONArray();
                 for (App app : profile.getAppSet()) {
                     if (!app.isEmpty() && !app.isLogWithApp()) {
-                        if (app.isClassicApp()) {
+                        if (app.isClassicApp() || app.isSsoApp()) {
                             String symmetric_key = null;
                             String team_key = null;
                             if (app.getTeamCardReceiver() != null) {
