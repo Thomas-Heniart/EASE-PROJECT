@@ -29,6 +29,7 @@ public class GetProfiles extends HttpServlet {
             JSONObject apps = new JSONObject();
             for (Profile profile : user.getProfileSet()) {
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", profile.getDb_id());
                 jsonObject.put("name", profile.getProfileInformation().getName());
                 JSONArray app_ids = new JSONArray();
                 for (App app : profile.getAppSet()) {

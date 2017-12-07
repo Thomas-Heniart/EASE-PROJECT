@@ -42,3 +42,7 @@ CREATE TABLE metricTeam (
   link_cards MEDIUMINT UNSIGNED NOT NULL,
   PRIMARY KEY (id)
 );
+
+ALTER TABLE metricTeam ADD COLUMN people_with_personnal_apps MEDIUMINT UNSIGNED NOT NULL NULL;
+ALTER TABLE metricTeam ADD COLUMN people_with_personnal_apps_emails TEXT;
+UPDATE metricTeam SET people_with_personnal_apps = 0;
