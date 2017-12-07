@@ -1,7 +1,7 @@
 {
   "name": "1CRM",
   "lastLogin": "",
-  "home": "https://actemis1crm.3acrm.info/login.php",
+  "home": {"http": "https://", "subdomain": "team", "domain": "3acrm.info"},
   "folder": "1CRM",
   "connect": {
     "todo": [

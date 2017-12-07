@@ -83,4 +83,9 @@ public class LogWithApp extends WebsiteApp {
         if (this.getLoginWith_app() != null)
             this.getLoginWith_app().decipher(symmetric_key, team_key);
     }
+
+    @Override
+    public boolean isEmpty() {
+        return this.getLoginWith_app() == null;
+    }
 }

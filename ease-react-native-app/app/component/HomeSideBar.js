@@ -87,15 +87,6 @@ class HomeSideBar extends Component {
                 select={this.selectItem}
                 profiles={spaces.personal_space}
                 selectedItem={this.props.selectedItem}/>
-            {spaces.teams.map(item => {
-              return (
-                  <TeamRoomList
-                      team={item}
-                      key={item.id}
-                      select={this.selectItem}
-                      selectedItem={this.props.selectedItem}/>
-              )
-            })}
           </ScrollView>
           <View style={{paddingLeft:20, paddingRight:20}}>
             <TouchableHighlight style={styles.mainButtons}>

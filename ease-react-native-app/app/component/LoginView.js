@@ -25,7 +25,7 @@ class LoginView extends Component {
       email: this.state.email,
       password: this.state.password
     }).then(response => {
-      this.props.fetchSpaces().then(() => {
+      this.props.fetchCriticalInformation().then(() => {
         this.setState({loading: false});
         this.props.navigation.navigate('Home');
       }).catch(err => {

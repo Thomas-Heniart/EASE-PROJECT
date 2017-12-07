@@ -63,7 +63,7 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("empty", this.getAccount() == null || !this.getAccount().satisfyWebsite(this.getWebsite()));
+        res.put("empty", this.isEmpty());
         res.put("account_information", new JSONObject());
         if (this.getAccount() == null)
             return res;
@@ -76,7 +76,7 @@ public class ClassicApp extends WebsiteApp {
     @Override
     public JSONObject getRestJson() {
         JSONObject res = super.getRestJson();
-        res.put("empty", this.getAccount() == null);
+        res.put("empty", this.isEmpty());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
@@ -96,5 +96,10 @@ public class ClassicApp extends WebsiteApp {
         website.put("app_name", this.getAppInformation().getName());
         website.put("website_name", this.getWebsite().getName());
         return res;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.getAccount() == null || !this.getAccount().satisfyWebsite(this.getWebsite());
     }
 }

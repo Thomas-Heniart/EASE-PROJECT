@@ -1,6 +1,9 @@
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
+    $(".united.modal").modal({
+        allowMultiple: true
+    });
     $("#website-requests-segment button").click(function () {
         var button = $(this);
         button.addClass("loading");
@@ -49,9 +52,9 @@ $(document).ready(function () {
             .addClass("active")
             .siblings().removeClass("active");
         var target = $($(this).attr("data-target"));
-        $(".segment").hide();
-        $(".segment").addClass("loading");
-        $(".segment table tbody tr").remove();
+        $(".backOffice_part").hide();
+        $(".backOffice_part").addClass("loading");
+        $(".backOffice_part table tbody tr").remove();
         target.show();
         if (target.hasClass("loading")) {
             switch (target.attr("id")) {
@@ -61,8 +64,8 @@ $(document).ready(function () {
                         data.forEach(function (team, index) {
                             addTeamRow(team, index).appendTo($("#team-manager-body"));
                         });
+                        target.removeClass("loading");
                     });
-                    target.removeClass("loading");
                     break;
 
                 case "website-segment":
@@ -272,21 +275,16 @@ function addCategoryRow(category) {
 function addTeamRow(team, index) {
     var elem = $("<tr>" +
         "<td>" + (index + 1) + "</td>" +
-        "<td>" + team.id + "</td>" +
         "<td>" + team.name + "</td>" +
         "<td>" + team.admin_first_name + " " + team.admin_last_name + "</td>" +
         "<td>" + team.admin_email + "</td>" +
         "<td>" + team.phone_number + "</td>" +
+        "<td>" + "week of sub" + "</td>" +
+        "<td>" + "week now" + "</td>" +
         "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
         "<td>" + team.card_entered + "</td>" +
-        "<td>" + team.team_users_size + "</td>" +
-        "<td>" + team.active_team_users + "</td>" +
-        "<td>" + team.people_click_on_app_three_days + "</td>" +
-        "<td><a href='#'><i class='fa fa-cog'></i></a></td>" +
         "</tr>");
-    if (!team.is_active)
-        elem.addClass("negative");
-    $("a", elem).click(function () {
+    elem.click(function () {
         openTeamSettings(team, elem);
     });
     return elem;
@@ -521,21 +519,75 @@ function addResult(website) {
 
 function openTeamSettings(team, teamRow) {
     var modal = $("#team-settings");
+    var send_money = $("#send-money", modal);
+    var people_data = $("#people_data");
+    var account_data = $("#account_data");
+    var data_emails = $("#people_data_emails");
+    var people_data_history = $("#people_data_history");
+    var team_settings_right = $("#team_settings_right");
+    modal
+        .modal({
+            onHide: function () {
+                $(".segment", modal).addClass("loading");
+                $("i", send_money).off("click");
+                $("input", send_money).val("");
+                $("button", people_data).off("click");
+                data_emails.hide();
+                people_data_history.hide();
+                account_data.show();
+            }
+        })
+        .modal("show");
     ajaxHandler.get("/api/v1/admin/GetTeam", {
         team_id: team.id
     }, function () {
     }, function (data) {
-        var input = $("#send-money", modal);
+        $(".segment", modal).removeClass("loading");
+        people_data.find("span").each(function (index, element) {
+            $(element).text(data[element.id]);
+            var anchor = $(element).next();
+            anchor.click(function (e) {
+                e.preventDefault();
+                account_data.hide();
+                var list = $("ul", data_emails);
+                $("li", list).remove();
+                data[anchor.attr("id")].split(";").forEach(function (email) {
+                    $("<li>" + email + "</li>").appendTo(list);
+                });
+                data_emails.show();
+                $("button", data_emails).click(function () {
+                    data_emails.hide();
+                    $("li", list).remove();
+                    $(this).off("click");
+                    $("#account_data").show();
+                })
+            });
+        });
+        people_data.find("button").click(function () {
+            account_data.hide();
+            team_settings_right.addClass("loading");
+            people_data_history.show();
+            ajaxHandler.get("/api/v1/admin/GetPeopleChartData", {
+                team_id: team.id
+            }, function() {}, function(data) {
+                team_settings_right.removeClass("loading");
+                var ctx = document.getElementById("people_data_chart").getContext("2d");
+                var myChart = new Chart(ctx, data);
+            });
+            $("button", $("#people_data_history")).click(function () {
+                people_data_history.hide();
+                $(this).off("click");
+                $("#account_data").show();
+            })
+        });
+        $("#account_data").find("span").each(function (index, element) {
+            $(element).text(data[element.id]);
+        });
         $("#current-credit", modal).text(team.credit);
-        $("#card-number span", modal).text(data.card_number);
-        $("#link-number span", modal).text(data.link_card_number);
-        $("#single-number span", modal).text(data.single_card_number);
-        $("#enterprise-number span", modal).text(data.enterprise_card_number);
-        $("#card-with-password-reminder span", modal).text(data.card_with_receiver_and_password_reminder_number);
-        $("i", input).click(function (e) {
-            if (input.hasClass("loading"))
+        $("i", send_money).click(function () {
+            if (send_money.hasClass("loading"))
                 return;
-            var credit = $("input", input).val();
+            var credit = $("input", send_money).val();
             if (credit.indexOf(".") === -1) {
                 credit = parseInt(credit) * 100;
             } else {
@@ -545,19 +597,25 @@ function openTeamSettings(team, teamRow) {
                     decimalPart += "0";
                 credit = parseInt(entirePart) * 100 + parseInt(decimalPart);
             }
-            input.addClass("loading");
-            input.addClass("disabled");
+            send_money.addClass("loading");
+            send_money.addClass("disabled");
             ajaxHandler.post("/api/v1/admin/SendLoveMoney", {
                 team_id: team.id,
                 credit: credit
             }, function () {
             }, function (data) {
                 $("#current-credit", modal).text(data.credit);
-                $("input", input).val("");
-                input.removeClass("loading");
-                input.removeClass("disabled");
+                $("input", send_money).val("");
+                send_money.removeClass("loading");
+                send_money.removeClass("disabled");
             });
         });
+        /*
+        $("#card-number span", modal).text(data.cards);
+        $("#link-number span", modal).text(data.link_card_number);
+        $("#single-number span", modal).text(data.single_card_number);
+        $("#enterprise-number span", modal).text(data.enterprise_card_number);
+        $("#card-with-password-reminder span", modal).text(data.card_with_receiver_and_password_reminder_number);
         $("button.negative", modal).click(function () {
             var button = $(this);
             button.addClass("loading");
@@ -570,14 +628,6 @@ function openTeamSettings(team, teamRow) {
                 teamRow.remove();
                 modal.modal("hide");
             })
-        });
-        modal
-            .modal({
-                onHide: function () {
-                    $("i", input).off("click");
-                    $("input", input).val("");
-                }
-            })
-            .modal("show");
+        }); */
     });
 }

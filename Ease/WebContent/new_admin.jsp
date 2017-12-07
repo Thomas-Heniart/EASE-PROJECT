@@ -22,6 +22,8 @@
     <script src="js/backOffice/admin.js?0"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <link rel="stylesheet" type="text/css"
           href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
@@ -48,19 +50,19 @@
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
-        <div id="team-segment" class="ui segment loading" style="display: none">
+        <div id="team-segment" class="ui segment loading backOffice_part" style="display: none">
             <%@ include file="templates/backofficeAdmin/TeamManager.jsp" %>
         </div>
-        <div id="website-segment" class="ui segment loading" style="display: none;">
+        <div id="website-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebsiteManager.jsp" %>
         </div>
-        <div id="category-segment" class="ui segment loading" style="display: none;">
+        <div id="category-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/CategoryManager.jsp" %>
         </div>
-        <div id="website-requests-segment" class="ui segment loading" style="display: none;">
+        <div id="website-requests-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebisteRequests.jsp"%>
         </div>
-        <div id="website-failures-segment" class="ui segment loading" style="display: none;">
+        <div id="website-failures-segment" class="ui segment loading backOffice_part" style="display: none;">
             <%@include file="templates/backofficeAdmin/WebisteFailures.jsp"%>
         </div>
     </div>

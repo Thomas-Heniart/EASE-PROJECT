@@ -14,7 +14,7 @@ class SplashScreen extends Component {
       if (value !== null)
         this.props.connectionWithJWTToken({token: value})
             .then(() => {
-              this.props.fetchSpaces()
+              this.props.fetchCriticalInformation()
                   .then(() => {
                     this.props.navigation.navigate('Home');
                   })
