@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Segment, Form, Header, Message } from 'semantic-ui-react';
-import {editPersonalUsername, editEmail} from "../../actions/commonActions";
+import {editPersonalUsername, editEmail, askEditEmail} from "../../actions/commonActions";
 import {isEmail} from "../../utils/utils";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
