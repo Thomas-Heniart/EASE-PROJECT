@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Admin;
 
+import com.Ease.Metrics.TeamMetrics;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -30,6 +31,10 @@ public class ServletGetTeamsInformation extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             List<Team> teamList = teamManager.getTeams(sm.getHibernateQuery());
             JSONArray res = new JSONArray();
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.WEEK_OF_YEAR, -1);
+            int year = calendar.get(Calendar.YEAR);
+            int week_of_year = calendar.get(Calendar.WEEK_OF_YEAR);
             for (Team team : teamList) {
                 sm.initializeTeamWithContext(team);
                 JSONObject tmp = new JSONObject();
@@ -46,7 +51,6 @@ public class ServletGetTeamsInformation extends HttpServlet {
                     phoneNumber = "";
                 tmp.put("phone_number", phoneNumber);
                 tmp.put("credit", team.isActive() ? (float) -team.getCustomer().getAccountBalance() / 100 : 0);
-                Calendar calendar = Calendar.getInstance();
                 calendar.setTime(team.getSubscription_date());
                 int week_of_subscription = 0;
                 if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
@@ -67,6 +71,10 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 week_now += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
                 tmp.put("week_of_subscription", week_of_subscription);
                 tmp.put("week_now", week_now);
+                TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), year, week_of_year, sm.getHibernateQuery());
+                tmp.put("people_joined", teamMetrics.getPeople_joined());
+                tmp.put("people_joined_with_cards", teamMetrics.getPeople_with_cards());
+                tmp.put("people_click_on_app_three_times", teamMetrics.getPeople_click_on_app_three_times());
                 res.add(tmp);
             }
             sm.setSuccess(res);

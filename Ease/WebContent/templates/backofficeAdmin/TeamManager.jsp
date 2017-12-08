@@ -7,10 +7,22 @@
         <th>Admin email</th>
         <th>Phone number</th>
         <th>Week of sub</th>
+        <th>Plan</th>
+        <th>CC</th>
+        <th>P. joined</th>
+        <th>P. w. apps</th>
+        <th>P. click 3</th>
+    </tr>
+    <!--
+        <th>Name</th>
+        <th>Admin name</th>
+        <th>Admin email</th>
+        <th>Phone number</th>
+        <th>Week of sub</th>
         <th>Week now</th>
         <th>Plan</th>
         <th>CC</th>
-    </tr>
+    -->
     </thead>
     <tbody id="team-manager-body"></tbody>
 </table>

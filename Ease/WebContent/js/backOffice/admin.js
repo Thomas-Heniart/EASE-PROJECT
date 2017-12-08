@@ -88,7 +88,9 @@ $(document).ready(function () {
                     });
                     ajaxHandler.get("/api/v1/admin/GetWebsites", null, function () {
                     }, function (data) {
-                        websites = data;
+                        websites = data.sort(function (w1, w2) {
+                            return (w1.id <= w2.id) ? -1 : 1;
+                        });
                         websites.forEach(function (website) {
                             addWebsiteRow(website).appendTo($("#website-manager-body"));
                             addResult(website).appendTo($("#website-merging .menu"));
@@ -280,9 +282,11 @@ function addTeamRow(team, index) {
         "<td>" + team.admin_email + "</td>" +
         "<td>" + team.phone_number + "</td>" +
         "<td>" + team.week_of_subscription + "</td>" +
-        "<td>" + team.week_now + "</td>" +
         "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
         "<td>" + team.card_entered + "</td>" +
+        "<td>" + team.people_joined + "</td>" +
+        "<td>" + team.people_joined_with_cards + "</td>" +
+        "<td>" + team.people_click_on_app_three_times + "</td>" +
         "</tr>");
     elem.click(function () {
         openTeamSettings(team, elem);
@@ -546,6 +550,7 @@ function openTeamSettings(team, teamRow) {
             teamRow.remove();
         })
     });
+    $(".header", modal).text(team.name + " | " + team.admin_email + " " + team.phone_number + " | week of subscription: " + team.week_of_subscription + " | current week: " + team.week_now + " | " + ((team.plan_id === 0) ? "Free" : "Pro") + " | " + (team.card_entered ? "Card entered" : "No card"));
     modal
         .modal({
             onHide: function () {
