@@ -1,14 +1,15 @@
 package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Metrics.ClickOnApp;
+import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.User;
-import com.Ease.NewDashboard.App;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Metrics;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -56,6 +57,8 @@ public class ServletGetConnection extends HttpServlet {
             String public_key = (String) sm.getContextAttr("publicKey");
             Calendar calendar = Calendar.getInstance();
             ClickOnApp.incrementClickOnApp(app_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.DAY_OF_WEEK), sm.getHibernateQuery());
+            Metrics metrics = (Metrics) sm.getContextAttr("metrics");
+            metrics.increaseConnection(sm.getDB());
             sm.setSuccess(app.getConnectionJson(public_key));
         } catch (Exception e) {
             sm.setError(e);
