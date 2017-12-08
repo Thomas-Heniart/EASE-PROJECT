@@ -35,13 +35,13 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00026/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00026/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00026/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00026/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00026/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00026/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00026/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00027/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00027/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00027/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00027/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00027/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00027/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00027/pricingPage.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
