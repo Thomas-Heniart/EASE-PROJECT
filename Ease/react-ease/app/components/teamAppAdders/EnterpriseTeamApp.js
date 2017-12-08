@@ -30,6 +30,7 @@ import {
 import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
+import {addNotification} from "../../actions/notificationBoxActions";
 import * as api from "../../utils/api";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
@@ -451,6 +452,9 @@ class EnterpriseTeamApp extends Component {
       });
       const calls = deleting.concat(sharing, edit);
       Promise.all(calls.map(reflect)).then(response => {
+        this.props.dispatch(addNotification({
+          text: `${app.name} successfully modified!`
+        }));
         this.setEdit(false);
       });
     }).catch(err => {

@@ -58,9 +58,6 @@ export function teamEditEnterpriseCard({team_id, team_card_id, name, description
           team_card: team_card
         }
       });
-      dispatch(addNotification({
-        text: `${team_card.name} successfully modified!`
-      }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -232,9 +229,6 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
           team_card: team_card
         }
       });
-      dispatch(addNotification({
-        text: `${team_card.name} successfully modified!`
-      }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -429,9 +423,6 @@ export function teamEditLinkAppNew({team_card_id, name, description, url, img_ur
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch({type: 'TEAM_CARD_CHANGED', payload: {team_card: team_card}});
-      dispatch(addNotification({
-        text: `${team_card.name} successfully modified!`
-      }));
       return team_card;
     }).catch(err => {
       throw err;

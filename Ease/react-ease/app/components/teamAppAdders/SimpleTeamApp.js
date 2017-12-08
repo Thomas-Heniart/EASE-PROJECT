@@ -35,6 +35,7 @@ import {
   selectItemFromListById,
   sortReceiversAndMap
 } from "../../utils/helperFunctions";
+import {addNotification} from "../../actions/notificationBoxActions";
 import {connect} from "react-redux";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
@@ -241,6 +242,9 @@ class SimpleTeamApp extends Component {
       });
       const calls = deleting.concat(sharing, edit);
       Promise.all(calls.map(reflect)).then(response => {
+        this.props.dispatch(addNotification({
+          text: `${app.name} successfully modified!`
+        }));
         this.setEdit(false);
       });
     }).catch(err => {

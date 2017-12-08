@@ -7,6 +7,7 @@ import * as modalActions from "../../actions/teamModalActions";
 import {teamEditLinkAppNew, teamShareLinkCard, removeTeamCardReceiver} from "../../actions/appsActions";
 import {handleSemanticInput, reflect} from "../../utils/utils";
 import {getReceiverInList, isAdmin, sortReceiversAndMap, selectItemFromListById,} from "../../utils/helperFunctions";
+import {addNotification} from "../../actions/notificationBoxActions";
 
 const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, meReceiver, join}) => {
   return (
@@ -139,6 +140,9 @@ class LinkTeamApp extends Component {
       });
       const calls = deleting.concat(sharing, edit);
       Promise.all(calls.map(reflect)).then(response => {
+        this.props.dispatch(addNotification({
+          text: `${app.name} successfully modified!`
+        }));
         this.setEdit(false);
       });
     }).catch(err => {
