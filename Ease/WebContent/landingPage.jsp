@@ -95,7 +95,7 @@
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top affix" style="box-shadow:none;position:absolute;background-color:transparent;">
     <div class="container">
         <div class="navbar-header page-scroll">
-            <a class="navbar-brand page-scroll" href="discover"><img src="resources/images/ease_logo_blue.png" /></a>
+            <a class="navbar-brand page-scroll" href="discover"><img src="resources/images/ease_logo_blue.svg" /></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
