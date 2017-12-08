@@ -29,11 +29,12 @@ public class GetProfiles extends HttpServlet {
             JSONObject apps = new JSONObject();
             for (Profile profile : user.getProfileSet()) {
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", profile.getDb_id());
                 jsonObject.put("name", profile.getProfileInformation().getName());
                 JSONArray app_ids = new JSONArray();
                 for (App app : profile.getAppSet()) {
                     if (!app.isEmpty() && !app.isLogWithApp()) {
-                        if (app.isClassicApp()) {
+                        if (app.isClassicApp() || app.isSsoApp()) {
                             String symmetric_key = null;
                             String team_key = null;
                             if (app.getTeamCardReceiver() != null) {

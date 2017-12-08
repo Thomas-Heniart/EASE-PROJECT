@@ -13,6 +13,7 @@ public class TeamMetrics {
         Calendar calendar = Calendar.getInstance();
         return getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), hibernateQuery);
     }
+
     public static TeamMetrics getMetrics(Integer team_id, Integer year, Integer week_of_year, HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT m FROM TeamMetrics m WHERE m.team_id = :team_id AND m.year = :year AND m.week_of_year = :week");
         hibernateQuery.setParameter("team_id", team_id);
@@ -57,6 +58,12 @@ public class TeamMetrics {
 
     @Column(name = "people_with_cards_emails")
     private String people_with_cards_emails = "";
+
+    @Column(name = "people_with_personnal_apps")
+    private int people_with_personnal_apps = 0;
+
+    @Column(name = "people_with_personnal_apps_emails")
+    private String people_with_personnal_apps_emails;
 
     @Column(name = "people_click_on_app_once")
     private int people_click_on_app_once = 0;
@@ -180,6 +187,22 @@ public class TeamMetrics {
 
     public void setPeople_with_cards(int people_with_cards) {
         this.people_with_cards = people_with_cards;
+    }
+
+    public int getPeople_with_personnal_apps() {
+        return people_with_personnal_apps;
+    }
+
+    public void setPeople_with_personnal_apps(int people_with_personnal_apps) {
+        this.people_with_personnal_apps = people_with_personnal_apps;
+    }
+
+    public String getPeople_with_personnal_apps_emails() {
+        return people_with_personnal_apps_emails;
+    }
+
+    public void setPeople_with_personnal_apps_emails(String people_with_personnal_apps_emails) {
+        this.people_with_personnal_apps_emails = people_with_personnal_apps_emails;
     }
 
     public String getPeople_with_cards_emails() {
@@ -310,6 +333,8 @@ public class TeamMetrics {
         res.put("people_joined_emails", this.getPeople_joined_emails());
         res.put("people_with_cards", this.getPeople_with_cards());
         res.put("people_with_cards_emails", this.getPeople_with_cards_emails());
+        res.put("people_with_personnal_apps", this.getPeople_with_personnal_apps());
+        res.put("people_with_personnal_apps_emails", this.getPeople_with_personnal_apps_emails());
         res.put("people_click_on_app_once", this.getPeople_click_on_app_once());
         res.put("people_click_on_app_once_emails", this.getPeople_click_on_app_once_emails());
         res.put("people_click_on_app_three_times", this.getPeople_click_on_app_three_times());

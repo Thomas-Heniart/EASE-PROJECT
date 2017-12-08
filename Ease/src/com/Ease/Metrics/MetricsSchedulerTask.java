@@ -1,6 +1,7 @@
 package com.Ease.Metrics;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.App;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -8,7 +9,6 @@ import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
 
 import java.util.TimerTask;
 
@@ -75,8 +75,12 @@ public class MetricsSchedulerTask extends TimerTask {
                 int people_click_on_app_three_times = 0;
                 StringBuilder people_click_on_app_three_times_emails = new StringBuilder();
                 int people_click_on_app_five_times = 0;
+                int people_with_personnal_apps = 0;
+                StringBuilder people_with_personnal_apps_emails = new StringBuilder();
                 StringBuilder people_click_on_app_five_times_emails = new StringBuilder();
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
+                    if (!teamUser.isVerified())
+                        continue;
                     for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
                         if (teamCardReceiver.getApp().hasBeenClickedForDays(5, hibernateQuery)) {
                             people_click_on_app_once++;
@@ -98,8 +102,17 @@ public class MetricsSchedulerTask extends TimerTask {
                             break;
                         }
                     }
+                    for (App app : teamUser.getUser().getApps()) {
+                        if (app.getTeamCardReceiver() == null && !app.isEmpty()) {
+                            people_with_personnal_apps++;
+                            people_with_personnal_apps_emails.append(teamUser.getEmail()).append(";");
+                            break;
+                        }
+                    }
                 }
                 room_names.replace(room_names.length() - 2, room_names.length(), ")");
+                if (people_with_personnal_apps_emails.length() > 0)
+                    people_with_personnal_apps_emails.deleteCharAt(people_with_personnal_apps_emails.length() - 1);
                 if (people_invited_emails.length() > 0)
                     people_invited_emails.deleteCharAt(people_invited_emails.length() - 1);
                 if (people_joined_emails.length() > 0)
@@ -118,6 +131,8 @@ public class MetricsSchedulerTask extends TimerTask {
                 teamMetrics.setPeople_joined_emails(people_joined_emails.toString());
                 teamMetrics.setPeople_with_cards(people_with_cards);
                 teamMetrics.setPeople_with_cards_emails(people_with_cards_emails.toString());
+                teamMetrics.setPeople_with_personnal_apps(people_with_personnal_apps);
+                teamMetrics.setPeople_with_personnal_apps_emails(people_with_personnal_apps_emails.toString());
                 teamMetrics.setCards(cards);
                 teamMetrics.setCards_with_receiver(cards_with_receiver);
                 teamMetrics.setCards_with_receiver_and_password_policy(cards_with_receiver_and_password_policy);

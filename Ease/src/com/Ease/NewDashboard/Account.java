@@ -224,6 +224,11 @@ public class Account {
         }
     }
 
+    public void edit(JSONObject account_information, Integer password_reminder_interval, HibernateQuery hibernateQuery) throws HttpServletException {
+        this.setReminder_interval(password_reminder_interval);
+        this.edit(account_information, hibernateQuery);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

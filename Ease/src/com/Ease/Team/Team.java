@@ -4,6 +4,8 @@ import com.Ease.Catalog.Website;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Metrics.ClickOnApp;
+import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
@@ -501,9 +503,40 @@ public class Team {
         return this.getTeamUsers().values().stream().anyMatch(teamUser -> teamUser.getUsername().equals(username));
     }
 
-    public int getNumberOfPeopleWhoClickOnApps(int number_of_days, HibernateQuery hibernateQuery) {
-        return Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser ->
-                teamUser.getTeamCardReceivers().stream().filter(teamCardReceiver -> teamCardReceiver.getApp().hasBeenClickedForDays(number_of_days, hibernateQuery)).count() > 0).count());
+    public JSONArray getAverageOfClick(int year, int week_of_year, HibernateQuery hibernateQuery) {
+        System.out.println("Year: " + year);
+        System.out.println("Week: " + week_of_year);
+        JSONArray res = new JSONArray();
+        int day_one = 0;
+        int day_two = 0;
+        int day_three = 0;
+        int day_four = 0;
+        int day_five = 0;
+        int day_six = 0;
+        int day_seven = 0;
+        int teamUsers_size = this.getTeamUsers().size();
+        for (TeamUser teamUser : this.getTeamUsers().values()) {
+            if (!teamUser.isVerified())
+                continue;
+            for (App app : teamUser.getUser().getApps()) {
+                ClickOnApp clickOnAppMetric = ClickOnApp.getMetricForApp(app.getDb_id(), year, week_of_year, hibernateQuery);
+                day_one += clickOnAppMetric.getDay_one();
+                day_two += clickOnAppMetric.getDay_two();
+                day_three += clickOnAppMetric.getDay_three();
+                day_four += clickOnAppMetric.getDay_four();
+                day_five += clickOnAppMetric.getDay_five();
+                day_six += clickOnAppMetric.getDay_six();
+                day_seven += clickOnAppMetric.getDay_seven();
+            }
+        }
+        res.add(day_one / teamUsers_size);
+        res.add(day_two / teamUsers_size);
+        res.add(day_three / teamUsers_size);
+        res.add(day_four / teamUsers_size);
+        res.add(day_five / teamUsers_size);
+        res.add(day_six / teamUsers_size);
+        res.add(day_seven / teamUsers_size);
+        return res;
     }
 
     @Override

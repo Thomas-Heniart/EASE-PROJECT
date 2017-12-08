@@ -32,6 +32,7 @@
             max-height: 600px;
             max-width: 99%;
         }
+
         .ui.celled.table tr td, .ui.celled.table tr th {
             max-width: 250px;
             overflow: auto;
@@ -60,10 +61,10 @@
             <%@include file="templates/backofficeAdmin/CategoryManager.jsp" %>
         </div>
         <div id="website-requests-segment" class="ui segment loading backOffice_part" style="display: none;">
-            <%@include file="templates/backofficeAdmin/WebisteRequests.jsp"%>
+            <%@include file="templates/backofficeAdmin/WebisteRequests.jsp" %>
         </div>
         <div id="website-failures-segment" class="ui segment loading backOffice_part" style="display: none;">
-            <%@include file="templates/backofficeAdmin/WebisteFailures.jsp"%>
+            <%@include file="templates/backofficeAdmin/WebisteFailures.jsp" %>
         </div>
     </div>
 </div>

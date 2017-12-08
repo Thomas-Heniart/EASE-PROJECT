@@ -7,10 +7,22 @@
         <th>Admin email</th>
         <th>Phone number</th>
         <th>Week of sub</th>
+        <th>Plan</th>
+        <th>CC</th>
+        <th>P. joined</th>
+        <th>P. w. apps</th>
+        <th>P. click 3</th>
+    </tr>
+    <!--
+        <th>Name</th>
+        <th>Admin name</th>
+        <th>Admin email</th>
+        <th>Phone number</th>
+        <th>Week of sub</th>
         <th>Week now</th>
         <th>Plan</th>
         <th>CC</th>
-    </tr>
+    -->
     </thead>
     <tbody id="team-manager-body"></tbody>
 </table>
@@ -30,6 +42,9 @@
                                                                                          id="people_with_cards_emails">(see
                         emails)</a>
                     </p>
+                    <p>People with personal apps: <span id="people_with_personnal_apps"></span> <a href="#"
+                                                                                                   id="people_with_personnal_apps_emails">(see
+                        emails)</a></p>
                     <p>People who click on app 1 day: <span id="people_click_on_app_once"></span> <a href="#"
                                                                                                      id="people_click_on_app_once_emails">(see
                         emails)</a></p>
@@ -40,6 +55,14 @@
                                                                                                             id="people_click_on_app_five_times_emails">(see
                         emails)</a></p>
                     <button class="ui blue button">Show history</button>
+                </div>
+                <div id="click_average_graphic" style="display: none; max-width: 1050px; max-height: 400px">
+                    <canvas id="click_average_canvas" width="1000" height="400"></canvas>
+                    <button class="ui blue button">back</button>
+                </div>
+                <div id="account_data_history" style="display: none; max-width: 600px; max-height: 600px">
+                    <canvas id="account_data_chart"></canvas>
+                    <button class="ui blue button">back</button>
                 </div>
             </div>
             <div id="team_settings_right" class="ui segment loading">
@@ -71,36 +94,26 @@
                 <input name="love_money" placeholder="Add credit...">
                 <i class="inverted circular stripe link icon"></i>
             </div>
-            <button class="ui button blue">Show graph</button>
+            <button id="show_graphic" class="ui button blue">Show graph</button>
+            <button id="show_delete" class="ui button red">Delete</button>
         </div>
     </div>
-    <!-- <div class="content">
-        <div class="ui one column centered grid">
-            <div class="column">
-                Current credit (TTC): <span id="current-credit"></span>
-                <div id="send-money" class="ui icon input">
-                    <input name="love_money" placeholder="Add credit...">
-                    <i class="inverted circular stripe link icon"></i>
-                </div>
-            </div>
-            <div class="column" id="card-number">
-                Number of cards: <span></span>
-            </div>
-            <div class="column" id="link-number">
-                Number of link apps: <span></span>
-            </div>
-            <div class="column" id="single-number">
-                Number of single apps: <span></span>
-            </div>
-            <div class="column" id="enterprise-number">
-                Number of enterprise apps: <span></span>
-            </div>
-            <div class="column" id="card-with-password-reminder">
-                Number of cards with password modification: <span></span>
-            </div>
-            <div class="column">
-                <button class="ui button negative">Delete</button>
-            </div>
+</div>
+
+<div class="ui modal basic" id="team_delete">
+    <div class="ui icon header">
+        Delete team
+    </div>
+    <div class="content">
+        <p>Do you really want to delete this team</p>
+    </div>
+    <div class="actions">
+        <div class="ui red basic inverted button">
+            <i class="remove icon"></i>
+            Yes
         </div>
-    </div> -->
+        <div class="ui grey cancel inverted button">
+            Cancel
+        </div>
+    </div>
 </div>

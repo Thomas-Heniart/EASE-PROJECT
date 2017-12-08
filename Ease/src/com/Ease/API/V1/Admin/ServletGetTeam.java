@@ -23,8 +23,9 @@ public class ServletGetTeam extends HttpServlet {
             Integer week_of_year = sm.getIntParam("week_of_year", true, true);
             if (year == null || week_of_year == null) {
                 Calendar calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
+                calendar.add(Calendar.WEEK_OF_YEAR, -1);
                 week_of_year = calendar.get(Calendar.WEEK_OF_YEAR);
+                year = calendar.get(Calendar.YEAR);
             }
             sm.setSuccess(TeamMetrics.getMetrics(team_id, year, week_of_year, sm.getHibernateQuery()).getJson());
         } catch (Exception e) {

@@ -75,12 +75,12 @@ public class OnStart implements ServletContextListener {
                 delay.set(Calendar.HOUR_OF_DAY, 10);
                 delay.set(Calendar.MINUTE, 30);
                 long next_clock = delay.getTimeInMillis() - new Date().getTime();
-                /* StripeScheduledTask st = new StripeScheduledTask(teamManager, teamIdMap);
+                StripeScheduledTask st = new StripeScheduledTask(teamManager, teamIdMap);
                 time.schedule(st, 0, 12 * 60 * 60 * 1000);
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
                 RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager, context);
-                time.schedule(reminders, next_clock, 24 * 60 * 60 * 1000); */
+                time.schedule(reminders, next_clock, 24 * 60 * 60 * 1000);
                 MetricsSchedulerTask metricsSchedulerTask = new MetricsSchedulerTask(teamManager);
                 time.schedule(metricsSchedulerTask, 0, 12 * 60 * 60 * 1000);
 
