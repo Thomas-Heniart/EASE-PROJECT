@@ -33,24 +33,26 @@ public class GetProfiles extends HttpServlet {
                 jsonObject.put("name", profile.getProfileInformation().getName());
                 JSONArray app_ids = new JSONArray();
                 for (App app : profile.getAppSet()) {
-                    if (!app.isEmpty() && !app.isLogWithApp()) {
-                        if (app.isClassicApp() || app.isSsoApp()) {
-                            String symmetric_key = null;
-                            String team_key = null;
-                            if (app.getTeamCardReceiver() != null) {
-                                TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
-                                if (teamCardReceiver.getTeamCard().isTeamSingleCard() && !teamCardReceiver.getTeamUser().isTeamAdmin() && !((TeamSingleCardReceiver)teamCardReceiver).isAllowed_to_see_password())
-                                    continue;
-                                Team team = app.getTeamCardReceiver().getTeamCard().getTeam();
-                                if (!sm.getTeamUser(team).isDisabled())
-                                    team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
-                            } else
-                                symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-                            app.decipher(symmetric_key, team_key);
-                        }
-                        apps.put(app.getDb_id(), app.getRestJson());
-                        app_ids.add(app.getDb_id());
+                    if (app.isLogWithApp())
+                        continue;
+                    if (app.isClassicApp() || app.isSsoApp()) {
+                        String symmetric_key = null;
+                        String team_key = null;
+                        if (app.getTeamCardReceiver() != null) {
+                            TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
+                            if (teamCardReceiver.getTeamCard().isTeamSingleCard() && !teamCardReceiver.getTeamUser().isTeamAdmin() && !((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password())
+                                continue;
+                            Team team = app.getTeamCardReceiver().getTeamCard().getTeam();
+                            if (!sm.getTeamUser(team).isDisabled())
+                                team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
+                        } else
+                            symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
+                        app.decipher(symmetric_key, team_key);
+                        if (app.isEmpty())
+                            continue;
                     }
+                    apps.put(app.getDb_id(), app.getRestJson());
+                    app_ids.add(app.getDb_id());
                 }
                 jsonObject.put("app_ids", app_ids);
                 profiles.put(profile.getDb_id(), jsonObject);
