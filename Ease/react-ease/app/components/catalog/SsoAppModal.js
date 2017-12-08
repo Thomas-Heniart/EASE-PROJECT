@@ -510,9 +510,10 @@ class SsoAppModal extends React.Component {
     const ssoWebsites = this.props.catalog.websites.filter(item => {
       return item.sso_id === this.props.modal.website.sso_id;
     });
-    const ssoGroup = Object.keys(this.props.dashboard.sso_groups).map(item => {
-      if (this.props.dashboard.sso_groups[item].sso_id === this.props.modal.website.sso_id)
-        return this.props.dashboard.sso_groups[item];
+    const ssoGroup = Object.keys(this.props.dashboard.sso_groups).filter(item => {
+      return this.props.dashboard.sso_groups[item].sso_id === this.props.modal.website.sso_id && !this.props.dashboard.sso_groups[item].empty;
+    }).map(item => {
+      return this.props.dashboard.sso_groups[item];
     });
     this.setState({ssoGroup: ssoGroup, ssoWebsites: ssoWebsites, loading: false});
   }
