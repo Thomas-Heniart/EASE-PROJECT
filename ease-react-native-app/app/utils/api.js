@@ -1,16 +1,14 @@
 import axios from "axios";
 
-//axios.defaults.baseURL = 'https://ease.space/';
-axios.defaults.baseURL = 'http://192.168.0.19:8080/';
+axios.defaults.baseURL = 'https://ease.space/';
+//axios.defaults.baseURL = 'http://192.168.0.19:8080/';
 
 const basic_get = (url, params) => {
   return axios.get(url, {params: params})
       .then(response => {
-        console.log(response.data);
         return response.data;
       })
       .catch(err => {
-        console.log(err.response.data);
         throw err.response.data;
       });
 };
@@ -18,11 +16,9 @@ const basic_get = (url, params) => {
 const basic_post = (url, params) => {
   return axios.post(url, params)
       .then(response => {
-        console.log(response.data);
         return response.data;
       })
       .catch(err => {
-        console.log(err.response.data);
         throw err.response.data;
       });
 };

@@ -775,10 +775,12 @@
 	padding-top: 60px;
 	background-color: rgba(0, 0, 0, 0);
 	overflow: auto;
+	.popover_mask {
+		background-color: rgba(0,0,0, 0.5);
+	}
 	&.myshow {
 		z-index: 100;
 		transition: background-color .3s, z-index 0s 0s, visibility 0s 0s;
-		background-color: rgba(0,0,0, 0.5);
 		visibility: visible;
 		pointer-events: auto;
 		.easePopup {

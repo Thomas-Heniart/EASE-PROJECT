@@ -80,8 +80,8 @@ export function setUserInformation({username, email}) {
 export function fetchMyInformation() {
   return (dispatch, getState) => {
     return api.get.fetchMyInformation().then(response => {
-      AsyncStorage.setItem('LastEmail', response.email);
       const user = response.user;
+      AsyncStorage.setItem('LastEmail', user.email);
       dispatch(setUserInformation({
         username: user.first_name,
         email: user.email
@@ -96,10 +96,17 @@ export function fetchMyInformation() {
 export function fetchPersonalSpace() {
   return (dispatch, getState) => {
     return api.get.fetchPersonalSpace().then(response => {
+      const store = getState();
+      const selectedItem = store.selectedItem.itemId;
+      const profiles = response.profiles;
       dispatch({
         type: 'FETCH_PERSONAL_SPACE',
         payload: response
       });
+      if (!profiles[selectedItem])
+        dispatch(selectItem({
+          itemId: Object.keys(profiles)[0]
+        }));
       return response;
     }).catch(err => {
       throw err;

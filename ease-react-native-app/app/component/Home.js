@@ -21,13 +21,6 @@ class Home extends Component {
   openDrawer = () => {
     this._drawer._root.open();
   };
-  componentDidMount(){
-    const spaces = this.props.spaces;
-    const profile_id = Object.keys(spaces.profiles)[0];
-    this.props.selectItem({
-      itemId: profile_id
-    });
-  }
   render(){
     return (
         <Drawer
@@ -52,7 +45,7 @@ class Home extends Component {
               </Left>
               <Body>
               <BoldText style={{color: 'white', textAlign:'left'}} numberOfLines={1}>
-                {this.props.selectedItem.itemId !== -1 &&
+                {!!this.props.spaces.profiles[this.props.selectedItem.itemId] &&
                 this.props.spaces.profiles[this.props.selectedItem.itemId].name}
               </BoldText>
               </Body>
