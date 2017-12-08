@@ -106,6 +106,7 @@ public class MetricsSchedulerTask extends TimerTask {
                         if (app.getTeamCardReceiver() == null && !app.isEmpty()) {
                             people_with_personnal_apps++;
                             people_with_personnal_apps_emails.append(teamUser.getEmail()).append(";");
+                            break;
                         }
                     }
                 }
