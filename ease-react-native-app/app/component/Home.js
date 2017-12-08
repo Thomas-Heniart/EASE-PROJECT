@@ -59,7 +59,8 @@ class Home extends Component {
               <Right/>
             </Header>
             <Content>
-              {/*<AppList apps={this.props.apps.apps}/>*/}
+              {this.props.selectedItem.itemId !== -1 &&
+              <AppList/>}
             </Content>
           </Container>
         </Drawer>

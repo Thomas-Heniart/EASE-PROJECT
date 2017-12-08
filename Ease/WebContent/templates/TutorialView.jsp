@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<link rel="stylesheet" href="/cssMinified.v00024/Tutorial.css"/>
+<link rel="stylesheet" href="/cssMinified.v00025/Tutorial.css"/>
 <div id="ohehcool"></div>
 <div class="popupHandler" id="tutorial">
     <div class="easePopup show" id="importation">
