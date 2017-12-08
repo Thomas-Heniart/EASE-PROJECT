@@ -56,4 +56,13 @@ public class AppFactory {
     public App createClassicApp(String name, Website website) {
         return new ClassicApp(new AppInformation(name), website);
     }
+
+    public App createAnyApp(String name, Website website) {
+        return new AnyApp(new AppInformation(name), website, null);
+    }
+
+    public App createAnyApp(String name, Website website, String symmetric_key, Map<String, String> account_information) throws HttpServletException {
+        Account account = AccountFactory.getInstance().createAccountFromMap(account_information, symmetric_key, 0);
+        return new AnyApp(new AppInformation(name), website, account);
+    }
 }
