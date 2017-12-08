@@ -3,6 +3,8 @@ var post_api = require('../utils/post_api');
 import {selectChannelFromListById} from "../utils/helperFunctions";
 import {autoSelectTeamItem} from "./commonActions";
 import {teamCardReceiverRemovedAction, teamCardRemovedAction} from "./appsActions";
+import {addNotification} from "./notificationBoxActions";
+
 
 export function selectTeamChannel(id){
   return function(dispatch, getState){
@@ -38,14 +40,18 @@ export function editRoomManager({team_id, room_id, team_user_id}){
       channel_id: room_id,
       team_user_id: team_user_id,
       ws_id: getState().common.ws_id
-    }).then(response => {
+    }).then(room => {
       dispatch({
         type: 'TEAM_ROOM_CHANGED',
         payload: {
-          room: response
+          room: room
         }
       });
-      return response;
+      const room_manager = getState().teams[team_id].team_users[team_user_id];
+      dispatch(addNotification({
+        text: `${room_manager.username} is the new Room Manager for ${room.name}!`
+      }));
+      return room;
     }).catch(err => {
       throw err;
     });
@@ -66,9 +72,12 @@ export function fetchChannels(team_id) {
 
 export function createTeamChannel({team_id, name, purpose}){
   return function(dispatch, getState){
-    return post_api.teamChannel.createChannel(getState().common.ws_id, team_id, name, purpose).then(response => {
-      dispatch({type: 'TEAM_ROOM_CREATED', payload:{room:response}});
-      return response;
+    return post_api.teamChannel.createChannel(getState().common.ws_id, team_id, name, purpose).then(room => {
+      dispatch({type: 'TEAM_ROOM_CREATED', payload:{room:room}});
+      dispatch(addNotification({
+        text: `New room ${room.name} successfully created!`
+      }));
+      return room;
     }).catch(err => {
       throw err;
     });
@@ -78,6 +87,10 @@ export function createTeamChannel({team_id, name, purpose}){
 export function deleteTeamChannel({team_id, room_id}){
   return function (dispatch, getState){
     return post_api.teamChannel.deleteChannel(getState().common.ws_id, team_id, room_id).then(response => {
+      const room = getState().teams[team_id].rooms[room_id];
+      dispatch(addNotification({
+        text: `${room.name} has been successfully deleted!`
+      }));
       dispatch(teamRoomRemovedAction({
         team_id: team_id,
         room_id: room_id
@@ -126,14 +139,17 @@ export function addTeamUserToChannel({team_id, channel_id, team_user_id}){
 export function removeTeamUserFromChannel({team_id, room_id, team_user_id}){
   return function(dispatch, getState){
     return post_api.teamChannel.removeTeamUserFromChannel(getState().common.ws_id, team_id, room_id, team_user_id).then(response => {
-      dispatch({
-        type: 'TEAM_ROOM_MEMBER_REMOVED',
-        payload: {
-          team_id: team_id,
-          team_user_id: team_user_id,
-          room_id: room_id
-        }
-      });
+      dispatch(teamRoomMemberRemoved({
+        team_id: team_id,
+        room_id: room_id,
+        team_user_id: team_user_id
+      }));
+      const store = getState();
+      const team_user = store.teams[team_id].team_users[team_user_id];
+      const room = store.teams[team_id].rooms[room_id];
+      dispatch(addNotification({
+        text: `${team_user.username} has been removed from ${room.name}`
+      }));
       return response;
     }).catch(err => {
       throw err;
@@ -148,8 +164,13 @@ export function editTeamChannelName({team_id, room_id, name}){
       team_id: team_id,
       room_id: room_id,
       name: name
-    }).then(response => {
-      dispatch({type:'TEAM_ROOM_CHANGED', payload: {room: response}});
+    }).then(room => {
+      const old_room = getState().teams[team_id].rooms[room_id];
+      dispatch({type:'TEAM_ROOM_CHANGED', payload: {room: room}});
+      dispatch(addNotification({
+        text: `${room.name} is now the new name for ${old_room.name}`
+      }));
+      return room;
     }).catch(err => {
       throw err;
     });
@@ -158,13 +179,17 @@ export function editTeamChannelName({team_id, room_id, name}){
 
 export function editTeamChannelPurpose({team_id, room_id, purpose}){
   return function (dispatch, getState) {
-    return post_api.teamChannel.editPurpose(getState().common.ws_id, team_id, room_id, purpose).then(response => {
+    return post_api.teamChannel.editPurpose(getState().common.ws_id, team_id, room_id, purpose).then(room => {
       dispatch({
         type: 'TEAM_ROOM_CHANGED',
         payload: {
-          room: response
+          room: room
         }
-      })
+      });
+      dispatch(addNotification({
+        text: `${room.name} purpose successfully changed!`
+      }));
+      return room;
     }).catch(err => {
       throw err;
     });
@@ -266,12 +291,15 @@ export function teamRoomMemberRemoved({team_id, room_id, team_user_id}) {
   return (dispatch, getState) => {
     const store = getState();
     const user = store.teams[team_id].team_users[team_user_id];
-    user.team_card_ids.map(team_card_id => {
-      dispatch(teamCardReceiverRemovedAction({
-        team_id: team_id,
-        team_card_id: team_card_id,
-        team_user_id: team_user_id
-      }));
+    const room = store.teams[team_id].rooms[room_id];
+
+    room.team_card_ids.map(team_card_id => {
+      if (user.team_card_ids.indexOf(team_card_id) !== -1)
+        dispatch(teamCardReceiverRemovedAction({
+          team_id: team_id,
+          team_card_id: team_card_id,
+          team_user_id: team_user_id
+        }));
     });
     dispatch({
       type: 'TEAM_ROOM_MEMBER_REMOVED',

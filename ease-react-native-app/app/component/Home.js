@@ -15,10 +15,6 @@ class Home extends Component {
       inputValue: ''
     };
   }
-  changeUsername = () => {
-    this.props.changeUsername({username:this.state.inputValue});
-    this.setState({inputValue: ''});
-  };
   closeDrawer = () => {
     this._drawer._root.close();
   };
@@ -26,15 +22,11 @@ class Home extends Component {
     this._drawer._root.open();
   };
   componentDidMount(){
-    const {personal_space} = this.props.spaces;
-
-    if (this.props.selectedItem.subItemId === -1){
-      this.props.selectItemAndFetchApps({
-        itemId: -1,
-        subItemId: personal_space[0].id,
-        name: personal_space[0].name
-      });
-    }
+    const spaces = this.props.spaces;
+    const profile_id = Object.keys(spaces.profiles)[0];
+    this.props.selectItem({
+      itemId: profile_id
+    });
   }
   render(){
     return (
@@ -59,14 +51,15 @@ class Home extends Component {
                 </Button>
               </Left>
               <Body>
-              <BoldText style={{color: 'white', textAlign:'left'}} numberOfLines={1}>{this.props.selectedItem.name}</BoldText>
+              <BoldText style={{color: 'white', textAlign:'left'}} numberOfLines={1}>
+                {this.props.selectedItem.itemId !== -1 &&
+                this.props.spaces.profiles[this.props.selectedItem.itemId].name}
+              </BoldText>
               </Body>
               <Right/>
             </Header>
             <Content>
-              {this.props.apps.loading ?
-                  <Spinner/> :
-                  <AppList apps={this.props.apps.apps}/>}
+              {/*<AppList apps={this.props.apps.apps}/>*/}
             </Content>
           </Container>
         </Drawer>
@@ -106,6 +99,5 @@ function mapDispatchToProps(dispatch) {
 export default connect(store => ({
   auth: store.auth,
   selectedItem: store.selectedItem,
-  apps: store.apps,
   spaces: store.spaces
 }), mapDispatchToProps)(Home);

@@ -7,6 +7,7 @@ import {showAddTeamUserModal, showTeamAddMultipleUsersModal, showUpgradeTeamPlan
 import {renderRoomLabel} from "../../utils/renderHelpers";
 import {reflect, handleSemanticInput, isEmail} from "../../utils/utils";
 import { Header, Container, Divider, Icon, Form, Input, Message } from 'semantic-ui-react';
+import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect((store) => ({
   team: store.teams[store.teamModals.addUserModal.team_id]
@@ -118,6 +119,9 @@ class TeamAddUserModal extends React.Component {
       });
       Promise.all(calls.map(reflect)).then(values => {
         this.setState({loading: false});
+        this.props.dispatch(addNotification({
+          text: "New team user(s) successfully created!"
+        }));
         this.props.dispatch(showAddTeamUserModal({active: false}));
       });
     }).catch(err => {
@@ -158,6 +162,9 @@ class TeamAddUserModal extends React.Component {
       });
       Promise.all(calls.map(reflect)).then(values => {
         this.setState({loadingInvitationNow: false});
+        this.props.dispatch(addNotification({
+          text: "New team user(s) successfully created!"
+        }));
         this.props.dispatch(showAddTeamUserModal({active: false}));
       });
     }).catch(err => {

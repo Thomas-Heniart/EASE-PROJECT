@@ -1101,13 +1101,10 @@ module.exports = {
         throw err.response.data;
       })
     },
-    editPersonalUsername : function(username){
-      return axios.post('/api/v1/common/EditUsername', username
-      ).then(response => {
-        return response.data;
-      }).catch(err => {
-        throw err.response.data;
-      })
+    editPersonalUsername : function({username}){
+      return basic_post('/api/v1/common/EditUsername', {
+        username: username
+      });
     },
     checkPassword : function(password){
       return axios.post('/api/v1/common/CheckPassword', {
@@ -1207,11 +1204,11 @@ module.exports = {
     },
     newFeatureSeen: function(){
       return axios.post('/api/v1/common/NewFeatureSeen', {})
-        .then(response => {
-          return response.data;
-        }).catch(err => {
-          throw err;
-        })
+          .then(response => {
+            return response.data;
+          }).catch(err => {
+            throw err;
+          })
     }
   }
 };

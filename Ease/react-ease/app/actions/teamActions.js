@@ -5,6 +5,7 @@ import {dashboardAppRemovedAction} from "./dashboardActions";
 import * as UserActions from "./userActions"
 import * as ChannelActions from "./channelActions"
 import {closeAppAddUI} from "./teamAppsAddUIActions";
+import {addNotification} from "./notificationBoxActions";
 
 export function fetchTeams(){
   return (dispatch, getState) => {
@@ -94,6 +95,9 @@ export function teamInviteFriends({team_id, email1, email2, email3}){
   return (dispatch, getState) => {
     return post_api.teams.inviteFriends(team_id, email1, email2, email3).then(response => {
       dispatch({type: 'TEAM_INVITE_FRIENDS_FULFILLED', payload: response});
+      dispatch(addNotification({
+        text: "Friends successfully invited! +15€ received!"
+      }));
       return response;
     }).catch(err => {
       throw err;
@@ -109,6 +113,10 @@ export function teamAddCreditCard({team_id, cardToken}){
       ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({type: 'TEAM_ADD_CREDIT_CARD_FULFILLED', payload: {card: response, team_id: team_id}});
+      dispatch(addNotification({
+        text: "New payment method successfully setup!"
+      }));
+      return response;
     }).catch(err => {
       throw err;
     });
@@ -128,6 +136,9 @@ export function teamUpdateBillingInformation({team_id, address_city, address_cou
       business_vat_id: business_vat_id
     }).then(response => {
       dispatch({type: 'TEAM_UPDATE_BILLING_INFORMATION_FULFILLED', payload:{data: response}});
+      dispatch(addNotification({
+        text: "Billing information successfully setup!"
+      }));
       return response;
     }).catch(err => {
       throw err;
@@ -190,10 +201,13 @@ export function editTeamName({team_id, name}){
       name: name,
       ws_id: getState().common.ws_id
     }).then(r => {
+      const team = getState().teams[team_id];
+      dispatch(addNotification({
+        text: `${name} is now the new name for ${team.name}`
+      }));
       dispatch({type: 'EDIT_TEAM_NAME_FULFILLED', payload: {team_id:team_id,name:name}});
       return name;
     }).catch(err => {
-      dispatch({type: 'EDIT_TEAM_NAME_REJECTED', payload: err});
       throw err;
     });
   }
@@ -207,6 +221,9 @@ export function upgradePlan({team_id, plan_id}){
       ws_id: getState().common.ws_id
     }).then(team => {
       dispatch({type: 'UPGRADE_TEAM_PLAN_FULFILLED', payload: {team: team}});
+      dispatch(addNotification({
+        text: `Your team ${team.name} has been upgraded for free for 1 month!`
+      }));
       return team;
     }).catch(err => {
       throw err;

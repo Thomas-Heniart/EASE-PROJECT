@@ -624,7 +624,7 @@ export function AppConnection({app_id, keep_focus}){
   return (dispatch, getState) => {
     if (!document.querySelector('#new_ease_extension')){
       dispatch(showExtensionDownloadModal({active: true}));
-      return;
+      return new Promise((resolve, reject) => {reject()});
     }
     const app = getState().dashboard.apps[app_id];
     return api.dashboard.getAppConnectionInformation({

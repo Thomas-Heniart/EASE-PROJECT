@@ -1,6 +1,7 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
+import {addNotification} from "./notificationBoxActions";
 
 export function teamCreateMultiApp(app){
   return function (dispatch, getState){
@@ -30,6 +31,10 @@ export function teamCreateEnterpriseCard({team_id, channel_id, website_id, name,
       dispatch(teamCardCreatedAction({
         team_card: team_card
       }));
+      const room = getState().teams[team_id].rooms[channel_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully sent to ${room.name}`
+      }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -53,6 +58,9 @@ export function teamEditEnterpriseCard({team_id, team_card_id, name, description
           team_card: team_card
         }
       });
+      dispatch(addNotification({
+        text: `${team_card.name} successfully modified!`
+      }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -196,6 +204,10 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch(teamCardCreatedAction({team_card: team_card}));
+      const room = getState().teams[team_id].rooms[channel_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully sent to ${room.name}`
+      }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -220,6 +232,9 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
           team_card: team_card
         }
       });
+      dispatch(addNotification({
+        text: `${team_card.name} successfully modified!`
+      }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -375,6 +390,10 @@ export function teamCreateLinkAppNew({team_id, channel_id, name, description, ur
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch(teamCardCreatedAction({team_card: team_card}));
+      const room = getState().teams[team_id].rooms[channel_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully sent to ${room.name}`
+      }));
       return app;
     }).catch(err => {
       throw err;
@@ -408,9 +427,12 @@ export function teamEditLinkAppNew({team_card_id, name, description, url, img_ur
       url: url,
       img_url: img_url,
       ws_id: getState().common.ws_id
-    }).then(app => {
-      dispatch({type: 'TEAM_CARD_CHANGED', payload: {team_card: app}});
-      return app;
+    }).then(team_card => {
+      dispatch({type: 'TEAM_CARD_CHANGED', payload: {team_card: team_card}});
+      dispatch(addNotification({
+        text: `${team_card.name} successfully modified!`
+      }));
+      return team_card;
     }).catch(err => {
       throw err;
     });
@@ -614,6 +636,10 @@ export function deleteTeamCard({team_id, team_card_id}) {
       team_card_id: team_card_id,
       ws_id: getState().common.ws_id
     }).then(response => {
+      const team_card = getState().team_apps[team_card_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully deleted!`
+      }));
       dispatch(teamCardRemovedAction({
         team_id: team_id,
         team_card_id: team_card_id

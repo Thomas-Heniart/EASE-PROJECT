@@ -7,6 +7,7 @@ import {handleSemanticInput, isAppInformationEmpty} from "../../utils/utils";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {editLogWithApp, deleteApp, validateApp} from "../../actions/dashboardActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
+import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
   app: store.modals.logWithAppSettings.app,
@@ -35,6 +36,9 @@ class LogWithAppSettings extends Component {
     return this.props.dispatch(deleteApp({
       app_id: this.props.app.id
     })).then(response => {
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully removed!`
+      }));
       this.close();
     }).catch(err => {
       throw err;
@@ -49,6 +53,9 @@ class LogWithAppSettings extends Component {
       logWithApp_id: this.state.lw_app_id
     })).then(response => {
       this.setState({loading: false});
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully modified!`
+      }));
       this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});

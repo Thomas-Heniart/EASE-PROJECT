@@ -11,6 +11,7 @@ import {connect} from "react-redux";
 import {removeTeamCardReceiver, teamEditLinkAppNew} from "../../actions/appsActions";
 import {isAdmin} from "../../utils/helperFunctions";
 import {editAppName, validateApp} from "../../actions/dashboardActions";
+import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
   app: store.modals.teamLinkAppSettings.app,
@@ -66,6 +67,9 @@ class TeamLinkAppSettingsModal extends Component {
       })));
     Promise.all(calls).then(response => {
       this.setState({loading: false});
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully modified!`
+      }));
       this.close();
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
@@ -77,6 +81,9 @@ class TeamLinkAppSettingsModal extends Component {
       team_card_id: this.props.app.team_card_id,
       team_card_receiver_id: this.props.app.team_card_receiver_id
     })).then(response => {
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully removed!`
+      }));
       this.close();
     }).catch(err => {
       throw err;

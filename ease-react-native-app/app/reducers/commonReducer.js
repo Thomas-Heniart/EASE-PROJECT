@@ -39,16 +39,12 @@ export const auth = createReducer({
 });
 
 export const selectedItem = createReducer({
-  itemId: -1,
-  subItemId: -1,
-  name: ''
+  itemId: -1
 }, {
   ['SELECT_ITEM'](state, action){
     return {
       ...state,
-      itemId: action.payload.itemId,
-      subItemId: action.payload.subItemId,
-      name: action.payload.name
+      itemId: action.payload.itemId
     }
   }
 });

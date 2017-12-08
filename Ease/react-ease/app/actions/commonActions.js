@@ -5,7 +5,7 @@ import {selectTeamUser} from "./userActions";
 import {fetchDashboard} from "./dashboardActions";
 import {fetchTeams} from "./teamActions";
 import {fetchNotifications} from "./notificationsActions";
-import {push} from "react-router-redux";
+import {addNotification} from "./notificationBoxActions";
 
 function getMyChannel(channels, myId){
   for (var i = 0; i < channels.length; i++){
@@ -140,9 +140,11 @@ export function askEditEmail({password, new_email}){
 
 export function editEmail({password, new_email, digits}){
   return function (dispatch){
-    return post_api.common.editEmail(password, new_email, digits
-    ).then(response => {
+    return post_api.common.editEmail(password, new_email, digits).then(response => {
       dispatch({type: 'EDIT_EMAIL_FULFILLED', payload: response});
+      dispatch(addNotification({
+        text: "Your email has been successfully modified!"
+      }));
       return response;
     }).catch(err => {
       dispatch({type: 'EDIT_EMAIL_REJECTED', payload: err});
@@ -151,11 +153,15 @@ export function editEmail({password, new_email, digits}){
   }
 }
 
-export function editPersonalUsername(username){
+export function editPersonalUsername({username}){
   return function (dispatch){
-    return post_api.common.editPersonalUsername(username
-    ).then(response => {
+    return post_api.common.editPersonalUsername({
+      username: username
+    }).then(response => {
       dispatch({type: 'EDIT_USERNAME_FULFILLED', payload: response});
+      dispatch(addNotification({
+        text: `Your username has been changed to ${username}`
+      }));
       return response;
     }).catch(err => {
       dispatch({type: 'EDIT_USERNAME_REJECTED', payload: err});
@@ -181,6 +187,9 @@ export function editPassword({password, new_password}){
     return post_api.common.editPassword(password, new_password)
         .then(response => {
           dispatch({type: 'EDIT_PASSWORD_FULFILLED', payload: response});
+          dispatch(addNotification({
+            text: "Your password has been successfully modified!"
+          }));
           return response;
         }).catch(err => {
           dispatch({type: 'EDIT_PASSWORD_REJECTED', payload: err});

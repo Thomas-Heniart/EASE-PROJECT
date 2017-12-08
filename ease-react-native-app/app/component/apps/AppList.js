@@ -11,9 +11,9 @@ class AppList extends Component {
     return (
         <List>
           {apps.map(item => {
-            if (item.type === 'linkApp')
+            if (!!item.url)
               return <LinkApp key={item.id} app={item}/>;
-            if (item.type === "classicApp")
+            if (!!item.account_information)
               return <ClassicApp key={item.id} app={item}/>;
           })}
         </List>
