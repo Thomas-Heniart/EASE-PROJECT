@@ -1,32 +1,9 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
-import {selectTeamChannel} from "./channelActions";
-import {selectTeamUser} from "./userActions";
 import {fetchDashboard} from "./dashboardActions";
 import {fetchTeams} from "./teamActions";
 import {fetchNotifications} from "./notificationsActions";
 import {addNotification} from "./notificationBoxActions";
-
-function getMyChannel(channels, myId){
-  for (var i = 0; i < channels.length; i++){
-    if (channels[i].userIds.indexOf(myId) !== -1)
-      return channels[i].id;
-  }
-  return -1;
-}
-
-export function autoSelectTeamItem(){
-  return function (dispatch, getState){
-    const state = getState();
-    const myId = state.team.myTeamUserId;
-    const channels = state.channels.channels;
-    const channelToSelect = getMyChannel(channels, myId);
-    if (channelToSelect !== -1)
-      dispatch(selectTeamChannel(channelToSelect));
-    else
-      dispatch(selectTeamUser(myId));
-  }
-}
 
 export function fetchMyInformation(){
   return function(dispatch){
@@ -76,19 +53,6 @@ export function processLogout(){
       return response;
     }).catch(err => {
       dispatch({type: 'LOGOUT_REJECTED', payload: err});
-      throw err;
-    })
-  }
-}
-
-export function checkAuthentication(){
-  return function(dispatch){
-    dispatch({type: 'CHECK_CONNECTION_PENDING'});
-    return api.common.checkAuthentication().then(response => {
-      dispatch({type:'CHECK_CONNECTION_FULFILLED', payload: response});
-      return response;
-    }).catch(err => {
-      dispatch({type: 'CHECK_CONNECTION_REJECTED', payload: err});
       throw err;
     })
   }

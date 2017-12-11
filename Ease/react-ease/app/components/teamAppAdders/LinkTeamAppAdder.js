@@ -6,7 +6,7 @@ import {handleSemanticInput,
     credentialIconType} from "../../utils/utils";
 import {selectUserFromListById, newSelectUserFromListById} from "../../utils/helperFunctions";
 import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
-import {teamCreateLinkAppNew} from "../../actions/appsActions";
+import {teamCreateLinkCard} from "../../actions/appsActions";
 import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
 import {connect} from "react-redux";
 import { Label, Container, Icon, Segment, Input, Button, Dropdown } from 'semantic-ui-react';
@@ -82,7 +82,7 @@ class LinkTeamAppAdder extends React.Component {
   send = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    this.props.dispatch(teamCreateLinkAppNew({
+    this.props.dispatch(teamCreateLinkCard({
       team_id: this.props.card.team_id,
       channel_id: this.props.card.channel_id,
       name: this.state.appName,
