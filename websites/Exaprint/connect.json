@@ -1,0 +1,24 @@
+{
+  "name":"Exaprint",
+  "lastLogin":"",
+  "home":"https://www.exaprint.fr/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"span[class*='jq_open_login']", "grave":true},
+      {"action":"waitfor", "search":"#toolbox_login[style*='display: block;']", "grave":true},
+      {"action":"fill", "what":"login", "search":"#identifiant", "grave":true},
+      {"action":"fill", "what":"password", "search":"#mot_de_passe", "grave":true},
+      {"action":"trueClick", "search":"#connexion_submit", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#toolbox_user, span[class*='jq_open_login']"},
+    {"search":"#toolbox_user"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='/se-deconnecter']"},
+      {"action":"waitload"}
+    ]
+  }
+}

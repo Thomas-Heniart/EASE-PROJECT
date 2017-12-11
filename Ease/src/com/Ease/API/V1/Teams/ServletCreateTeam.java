@@ -1,17 +1,19 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.User.User;
-import com.Ease.Dashboard.User.UserEmail;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
+import com.Ease.User.UserEmail;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
@@ -90,22 +92,22 @@ public class ServletCreateTeam extends HttpServlet {
             }
             String teamKey = AES.keyGenerator();
             Team team = new Team(teamName);
-            String teamKey_ciphered = user.encrypt(teamKey);
+            String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             Date arrivalDate = new Date(sm.getLongParam("timestamp", true, false));
-            TeamUser owner = TeamUser.createOwner(firstName, lastName, email, username, arrivalDate, teamKey_ciphered, team);
+            TeamUser owner = TeamUser.createOwner(firstName, lastName, email, username, arrivalDate, AES.encrypt(teamKey, keyUser), team);
+            owner.getTeamUserStatus().setInvitation_sent(true);
             String jobTitle;
             if (job_index < jobRoles.length - 1)
                 jobTitle = jobRoles[job_index];
             else
                 jobTitle = sm.getStringParam("job_details", true, false);
             owner.setJobTitle(jobTitle);
-            owner.setDeciphered_teamKey(teamKey);
-            owner.setUser_id(user.getDBid());
+            owner.setUser(user);
             sm.saveOrUpdate(team);
+            sm.getTeamProperties(team.getDb_id()).put("teamKey", teamKey);
             sm.saveOrUpdate(owner);
             Channel channel = team.createDefaultChannel(owner);
             sm.saveOrUpdate(channel);
-            owner.setDashboard_user(user);
             user.addTeamUser(owner);
             team.addChannel(channel);
             team.addTeamUser(owner);
@@ -140,17 +142,17 @@ public class ServletCreateTeam extends HttpServlet {
             /* ====== Stripe END ====== */
 
             sm.saveOrUpdate(team);
-            sm.getHibernateQuery().commit();
             user.addTeamUser(owner);
-            channel.addTeamUser(owner, sm.getDB());
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            teamManager.addTeam(team);
-            team.lazyInitialize();
-            UserEmail userEmail = user.getUserEmails().get(email);
+            channel.addTeamUser(owner);
+            sm.saveOrUpdate(channel);
+            UserEmail userEmail = user.getUserEmail(email);
             if (userEmail == null)
-                user.getEmails().put(email, UserEmail.createUserEmail(email, user, true, sm.getDB()));
+                userEmail = new UserEmail(email, true, user);
             else if (!userEmail.isVerified())
-                userEmail.beVerified(sm.getDB());
+                userEmail.setVerified(true);
+            sm.saveOrUpdate(userEmail);
+            sm.initializeTeamWithContext(team);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CREATED, team.getWebSockeetJson()));
             sm.setSuccess(team.getJson());
         } catch (StripeException e) {
             sm.setError(e);

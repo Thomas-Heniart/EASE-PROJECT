@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -19,11 +20,12 @@ public class ServletFirstAppReceived extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeamId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team_id);
             if (teamUser.getTeamUserStatus().first_app_received())
                 throw new HttpServletException(HttpStatus.BadRequest, "Step already checked.");
-            if (teamUser.getSharedApps().isEmpty())
+            if (teamUser.getTeamCardReceivers().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "You must have at least one app.");
             teamUser.getTeamUserStatus().setFirst_app_received(true);
             sm.saveOrUpdate(teamUser.getTeamUserStatus());

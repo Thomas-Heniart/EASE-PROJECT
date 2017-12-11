@@ -1,9 +1,10 @@
 package com.Ease.Utils.Servlets;
 
-import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessage;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,6 +27,11 @@ public class PostServletManager extends ServletManager {
 
     public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         super(servletName, request, response, saveLogs);
+        if (ServletFileUpload.isMultipartContent(request))
+            return;
+        String contentType = request.getHeader("Content-Type");
+        if (contentType == null || (!contentType.contains("application/json") && !contentType.contains("application/JSON")))
+            return;
         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
         String json = "";
         String buffer;
@@ -41,6 +47,15 @@ public class PostServletManager extends ServletManager {
             e.printStackTrace();
             throw new IOException();
         }
+    }
+
+    public WebSocketManager getSessionWebSocketManager() {
+        WebSocketManager webSocketManager = (WebSocketManager) this.getSession().getAttribute("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            this.getSession().setAttribute("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
     }
 
     protected void setInternError() {
@@ -61,11 +76,14 @@ public class PostServletManager extends ServletManager {
 
     @Override
     protected Date getCurrentTime() throws HttpServletException {
-        Long timestamp = this.getLongParam("timestamp", false, false);
-        return new Date(timestamp);
+        /* Long timestamp = this.getLongParam("timestamp", false, false);
+        return new Date(timestamp); */
+        return new Date();
     }
 
     public Object getParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
+        if (params == null)
+            return null;
         Object param = params.get(paramName);
         if (param == null && !canBeNull)
             throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter: " + paramName);
@@ -92,7 +110,10 @@ public class PostServletManager extends ServletManager {
 
     public String getStringParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return (String) this.getParam(paramName, saveInLogs, canBeNull);
+            if (params == null)
+                return request.getParameter(paramName);
+            else
+                return (String) this.getParam(paramName, saveInLogs, canBeNull);
         } catch (ClassCastException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
         }
@@ -136,25 +157,18 @@ public class PostServletManager extends ServletManager {
             return;
         try {
             String ws_id = this.getStringParam("ws_id", false, true);
-            if (ws_id == null || ws_id.equals("-1"))
-                return;
-            Integer team_id = this.getIntParam("team_id", false, true);
-            if (team_id != null) {
-                Team team = this.getTeamUserForTeamId(team_id).getTeam();
-                System.out.println("WebSocketMessage to team " + team_id);
-                team.getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
+            System.out.println("User WSM size: " + this.getUserWebSocketManager(this.getUser().getDb_id()).getWebSocketSessions().size());
+            if (this.team != null) {
+                WebSocketManager webSocketManager = this.getTeamWebSocketManager(team.getDb_id());
+                System.out.println("Team id: " + team.getDb_id() + " Team WSM size: " + webSocketManager.getWebSocketSessions().size());
+                webSocketManager.sendObjects(this.webSocketMessages, ws_id);
             } else {
-                if (this.user != null)
-                    this.user.getWebSocketManager().sendObjects(this.webSocketMessages, ws_id);
+                if (this.getUser() != null)
+                    this.getUserWebSocketManager(this.getUser().getDb_id()).sendObjects(this.webSocketMessages, ws_id);
             }
         } catch (HttpServletException e) {
             e.printStackTrace();
         }
-    }
-
-    /* Horrible glitch */
-    public void setParam(String key, Object value) {
-        this.params.put(key, value);
     }
 
     public String getBody() {

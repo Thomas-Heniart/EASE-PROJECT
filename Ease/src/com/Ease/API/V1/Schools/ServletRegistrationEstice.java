@@ -1,12 +1,12 @@
 package com.Ease.API.V1.Schools;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Utils.*;
+import com.Ease.User.User;
+import com.Ease.User.UserFactory;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
 import org.json.simple.JSONObject;
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/api/v1/common/RegistrationEstice")
 public class ServletRegistrationEstice extends HttpServlet {
@@ -26,8 +25,6 @@ public class ServletRegistrationEstice extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             User user = sm.getUser();
-            if (user != null)
-                user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
             String username = sm.getStringParam("username", true, true);
             String email = sm.getStringParam("email", true, true);
             String password = sm.getStringParam("password", false, true);
@@ -57,25 +54,21 @@ public class ServletRegistrationEstice extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             if (!errors.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, errors);
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            User newUser = User.createUser(email, username, password, registration_date, sm.getServletContext(), db);
+            User newUser = UserFactory.getInstance().createUser(email, username, password);
+            sm.saveOrUpdate(newUser);
             if (send_news) {
                 MailJetBuilder mailJetBuilder = new MailJetBuilder(ContactslistManageContact.resource, 13300);
                 mailJetBuilder.property(ContactslistManageContact.EMAIL, newUser.getEmail());
-                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getFirstName());
+                mailJetBuilder.property(ContactslistManageContact.NAME, newUser.getUsername());
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
             sm.setUser(newUser);
-            ((Map<String, User>) sm.getContextAttr("users")).put(email, newUser);
-            ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), newUser);
-            ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(newUser.getSessionSave().getSessionId(), newUser);
 
-            Profile esticeProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
+            // Profile esticeProfile = newUser.getDashboardManager().addProfile("ISC Paris", "#373B60", db);
 
             /* Estice apps in profile */
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            /* Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website chamilo = catalog.getWebsiteWithName("Chamilo");
             esticeProfile.addEmptyApp(chamilo.getName(), chamilo, db);
             Website kwartz = catalog.getWebsiteWithName("Kwartz");
@@ -83,13 +76,8 @@ public class ServletRegistrationEstice extends HttpServlet {
             Website jobTeaser = catalog.getWebsiteWithName("JobTeaser Estice");
             esticeProfile.addEmptyApp("JobTeaser", jobTeaser, db);
             Website buVauban = catalog.getWebsiteWithName("BU Vauban");
-            esticeProfile.addEmptyApp(buVauban.getName(), buVauban, db);
-
-            db.commitTransaction(transaction);
+            esticeProfile.addEmptyApp(buVauban.getName(), buVauban, db); */
             sm.setSuccess(newUser.getJson());
-
-        } catch (GeneralException e) {
-            sm.setError(new HttpServletException(HttpStatus.BadRequest, e.getMsg()));
         } catch (Exception e) {
             sm.setError(e);
         }

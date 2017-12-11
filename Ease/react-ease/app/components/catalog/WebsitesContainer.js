@@ -40,7 +40,7 @@ class WebsitesContainer extends Component{
     let websites = this.props.catalog.websites;
     if (query.length > 0)
       websites = websites.filter(item => {
-        return item.name.toLowerCase().replace(/\s+/g, '').match(query.toLowerCase()) !== null
+        return item.name.toLowerCase().replace(/\s+/g, '').match(query.toLowerCase().replace(/\s+/g, '')) !== null
       });
     return (
         <Container fluid>

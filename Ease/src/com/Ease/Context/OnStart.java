@@ -1,8 +1,10 @@
 package com.Ease.Context;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.Catalog.Catalog;
 import com.Ease.Hibernate.HibernateDatabase;
+import com.Ease.Metrics.MetricsSchedulerTask;
 import com.Ease.Team.TeamManager;
+import com.Ease.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
@@ -42,11 +44,11 @@ public class OnStart implements ServletContextListener {
             DatabaseRequest request;
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
-                com.Ease.Catalog.Catalog catalog = new com.Ease.Catalog.Catalog();
-                catalog.populate();
+
+                Catalog catalog = new Catalog();
                 context.setAttribute("catalog", catalog);
 
-                TeamManager teamManager = new TeamManager(context, db);
+                TeamManager teamManager = new TeamManager();
                 context.setAttribute("teamManager", teamManager);
 
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
@@ -56,37 +58,34 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("publicKey", publicAndPrivateKey.getKey());
                 context.setAttribute("privateKey", publicAndPrivateKey.getValue());
 
-                context.setAttribute("userManager", new UserManager());
-
                 context.setAttribute("metrics", new Metrics(db));
 
-                /* Timers */
-                Timer time = new Timer(); // Instantiate Timer Object
+                Map<Integer, Map<String, Object>> userIdMap = new ConcurrentHashMap<>();
+                Map<Integer, Map<String, Object>> teamIdMap = new ConcurrentHashMap<>();
+                context.setAttribute("userIdMap", userIdMap);
+                context.setAttribute("teamIdMap", teamIdMap);
+
+                Timer time = new Timer();
                 Calendar delay = Calendar.getInstance();
                 int hour = delay.get(Calendar.HOUR_OF_DAY);
                 int minutes = delay.get(Calendar.MINUTE);
-                if (hour > 9 || (hour == 9 && minutes > 30))
+                if (hour > 10 || (hour == 10 && minutes > 30))
                     delay.add(Calendar.DAY_OF_YEAR, 1);
-                delay.set(Calendar.HOUR_OF_DAY, 9);
+                delay.set(Calendar.HOUR_OF_DAY, 10);
                 delay.set(Calendar.MINUTE, 30);
                 long next_clock = delay.getTimeInMillis() - new Date().getTime();
-                StripeScheduledTask st = new StripeScheduledTask(teamManager); // Instantiate SheduledTask class
-                time.schedule(st, 0, 12 * 60 * 60 * 1000); // Create Repetitively task for every 12 hours */
+                StripeScheduledTask st = new StripeScheduledTask(teamManager, teamIdMap);
+                time.schedule(st, 0, 12 * 60 * 60 * 1000);
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
-                RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager);
+                RemindersScheduledTask reminders = new RemindersScheduledTask(teamManager, context);
                 time.schedule(reminders, next_clock, 24 * 60 * 60 * 1000);
+                MetricsSchedulerTask metricsSchedulerTask = new MetricsSchedulerTask(teamManager);
+                time.schedule(metricsSchedulerTask, 0, 12 * 60 * 60 * 1000);
 
-                List<String> colors = new ArrayList<String>();
-                colors.add("#373B60");
-                colors.add("#9B59B6");
-                colors.add("#3498DB");
-                colors.add("#5FD747");
-                colors.add("#F1C50F");
-                colors.add("#FF9D34");
-                colors.add("#E74C3C");
-                colors.add("#FF5E88");
-                context.setAttribute("colors", colors);
+                byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
+                context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
+
                 Map<String, User> usersMap = new ConcurrentHashMap<>();
                 context.setAttribute("users", usersMap);
                 Map<String, User> sessionIdUserMap = new ConcurrentHashMap<>();
@@ -95,15 +94,14 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("sIdUserMap", sIdUserMap);
                 Map<String, User> tokenUserMap = new ConcurrentHashMap<>();
                 context.setAttribute("tokenUserMap", tokenUserMap);
-                byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
-                context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
                 System.out.println("done.");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date mydate = new Date();
                 String date = dateFormat.format(mydate);
                 request = db.prepareRequest("INSERT INTO logs values('Server Start', 200, NULL, '', 'Server started correctly', ?);");
                 request.setString(date);
-            } catch (GeneralException e1) {
+
+            } catch (HttpServletException e1) {
                 System.out.println("Start failed");
                 String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

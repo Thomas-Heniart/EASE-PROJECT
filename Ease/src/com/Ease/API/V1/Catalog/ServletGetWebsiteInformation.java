@@ -27,7 +27,7 @@ public class ServletGetWebsiteInformation extends HttpServlet {
             if (website_id == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing website id.");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithId(website_id);
+            Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             JSONObject res = website.getJson();
             res.put("id", website_id);
             sm.setSuccess(res);

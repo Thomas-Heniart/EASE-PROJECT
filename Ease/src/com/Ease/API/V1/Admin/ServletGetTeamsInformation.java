@@ -1,15 +1,10 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Metrics.TeamMetrics;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.GetServletManager;
-import com.stripe.model.Customer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,23 +15,28 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.Calendar;
 import java.util.List;
 
 @WebServlet("/api/v1/admin/GetTeamsInformation")
 public class ServletGetTeamsInformation extends HttpServlet {
+
+    private final static int EASE_FIRST_WEEK = 40;
+    private final static int EASE_FIRST_YEAR = 2017;
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            List<Team> teamList = new LinkedList<>();
-            teamList.addAll(teamManager.getTeams());
-            hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active = false");
-            teamList.addAll(hibernateQuery.list());
+            List<Team> teamList = teamManager.getTeams(sm.getHibernateQuery());
             JSONArray res = new JSONArray();
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.WEEK_OF_YEAR, -1);
+            int year = calendar.get(Calendar.YEAR);
+            int week_of_year = calendar.get(Calendar.WEEK_OF_YEAR);
             for (Team team : teamList) {
+                sm.initializeTeamWithContext(team);
                 JSONObject tmp = new JSONObject();
                 tmp.put("id", team.getDb_id());
                 tmp.put("name", team.getName());
@@ -44,40 +44,37 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("admin_first_name", owner.getFirstName());
                 tmp.put("admin_last_name", owner.getLastName());
                 tmp.put("admin_email", owner.getEmail());
+                tmp.put("plan_id", team.isActive() ? team.getPlan_id() : -1);
+                tmp.put("card_entered", team.isCard_entered());
                 String phoneNumber = owner.getPhone_number();
                 if (phoneNumber == null)
                     phoneNumber = "";
                 tmp.put("phone_number", phoneNumber);
-                tmp.put("team_users_size", team.getTeamUsers().size());
-                tmp.put("active_team_users", team.getActiveTeamUserNumber());
-                tmp.put("is_active", team.isActive());
-                tmp.put("credit", (float) -Customer.retrieve(team.getCustomer_id()).getAccountBalance() / 100);
-                int card_number = 0;
-                int link_number = 0;
-                int single_number = 0;
-                int enterprise_number = 0;
-                int card_with_password_reminder = 0;
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                    App app = (App) shareableApp;
-                    card_number++;
-                    if (app.isClassicApp()) {
-                        single_number++;
-                        ClassicApp classicApp = (ClassicApp) app;
-                        if (classicApp.getAccount().getPasswordChangeInterval() != null && classicApp.getAccount().getPasswordChangeInterval() > 0)
-                            card_with_password_reminder++;
-                    } else if (app.isEmpty()) {
-                        enterprise_number++;
-                        WebsiteApp websiteApp = (WebsiteApp) app;
-                        if (websiteApp.getReminderIntervalValue() != null && websiteApp.getReminderIntervalValue() > 0)
-                            card_with_password_reminder++;
-                    } else
-                        link_number++;
+                tmp.put("credit", team.isActive() ? (float) -team.getCustomer().getAccountBalance() / 100 : 0);
+                calendar.setTime(team.getSubscription_date());
+                int week_of_subscription = 0;
+                if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
+                    do {
+                        week_of_subscription += calendar.get(Calendar.WEEK_OF_YEAR);
+                        calendar.add(Calendar.WEEK_OF_YEAR, -calendar.get(Calendar.WEEK_OF_YEAR));
+                    } while (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR);
                 }
-                tmp.put("card_number", card_number);
-                tmp.put("link_number", link_number);
-                tmp.put("single_number", single_number);
-                tmp.put("enterprise_number", enterprise_number);
-                tmp.put("card_with_password_reminder", card_with_password_reminder);
+                week_of_subscription += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
+                calendar = Calendar.getInstance();
+                int week_now = 0;
+                if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
+                    do {
+                        week_now += calendar.get(Calendar.WEEK_OF_YEAR);
+                        calendar.add(Calendar.WEEK_OF_YEAR, -calendar.get(Calendar.WEEK_OF_YEAR));
+                    } while (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR);
+                }
+                week_now += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
+                tmp.put("week_of_subscription", week_of_subscription);
+                tmp.put("week_now", week_now);
+                TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), year, week_of_year, sm.getHibernateQuery());
+                tmp.put("people_joined", teamMetrics.getPeople_joined());
+                tmp.put("people_joined_with_cards", teamMetrics.getPeople_with_cards());
+                tmp.put("people_click_on_app_three_times", teamMetrics.getPeople_click_on_app_three_times());
                 res.add(tmp);
             }
             sm.setSuccess(res);

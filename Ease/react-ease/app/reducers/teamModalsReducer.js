@@ -1,26 +1,36 @@
 const initialState = {
-  addUserModalActive: false,
-  addChannelModalActive: false,
+  addUserModal: {
+    active: false,
+    team_id: -1
+  },
+  addChannelModal: {
+    active: false,
+    team_id: -1
+  },
   teamSettingsModalActive: false,
   teamAddMultipleUsersModal:{
-    active: false
+    active: false,
+    team_id: -1
   },
   teamDeleteUserModal: {
     active: false,
-    team_user_id: -1
+    team_user_id: -1,
+    team_id: -1
   },
   teamDeleteChannelModal: {
     active: false,
-    channel_id: -1
+    room_id: -1,
+    team_id: -1
   },
   teamDeleteUserFromChannelModal: {
     active: false,
-    channel_id: -1,
-    team_user_id: -1
+    room_id: -1,
+    team_user_id: -1,
+    team_id: -1
   },
   teamDeleteAppModal: {
     active: false,
-    app: null
+    app_id: -1
   },
   pinTeamAppToDashboardModal: {
     active: false,
@@ -33,42 +43,44 @@ const initialState = {
   },
   teamManageAppRequestModal: {
     active: false,
-    app: null
+    team_card_id: null
   },
   teamEditEnterpriseAppModal: {
     active: false,
-    user: null,
-    app: null
+    team_card_id: -1
   },
   teamAskJoinEnterpriseAppModal: {
     active: false,
-    user: null,
-    app: null
+    team_card_id: -1
   },
   teamAcceptMultiAppModal: {
     active: false,
     user: null,
     app: null
   },
-  teamJoinMultiAppModal: {
+  teamJoinEnterpriseAppModal: {
     active: false,
-    user:null,
-    app: null
+    team_card_id:-1
   },
   verifyTeamUserModal: {
     active: false,
-    user: null
+    team_user_id: -1,
+    team_id: -1
   },
   reactivateTeamUserModal: {
     active: false,
-    user: null
+    team_user_id: -1,
+    team_id: -1
   },
   teamTransferOwnershipModal: {
     active: false,
-    user: null
+    team_id: -1,
+    team_user_id: -1
   },
   teamPhoneNumberModal: {
-    active: false
+    active: false,
+    team_id: -1,
+    team_user_id: -1
   },
   requestWebsiteModal: {
     active: false,
@@ -77,14 +89,16 @@ const initialState = {
   },
   upgradeTeamPlanModal: {
     active: false,
-    feature_id: null
+    feature_id: -1,
+    team_id: -1
   },
   freeTrialEndModal: {
     active: false
   },
   departureDateEndModal: {
     active: false,
-    user: null
+    team_user_id: -1,
+    team_id: -1
   },
   catalogAddBookmarkModal: {
     active: false,
@@ -108,13 +122,13 @@ export default function reducer(state=initialState, action){
     case 'SHOW_ADD_TEAM_USER_MODAL': {
       return {
         ...initialState,
-        addUserModalActive: action.payload
+        addUserModal: action.payload
       }
     }
     case 'SHOW_ADD_TEAM_CHANNEL_MODAL': {
       return {
         ...initialState,
-        addChannelModalActive: action.payload
+        addChannelModal: action.payload
       }
     }
     case 'SHOW_TEAM_CHANNEL_ADD_USER_MODAL': {
@@ -183,10 +197,10 @@ export default function reducer(state=initialState, action){
         teamEditEnterpriseAppModal: action.payload
       }
     }
-    case 'SHOW_TEAM_JOIN_MULTI_APP_MODAL': {
+    case 'SHOW_TEAM_JOIN_ENTERPRISE_APP_MODAL': {
       return {
         ...state,
-        teamJoinMultiAppModal: action.payload
+        teamJoinEnterpriseAppModal: action.payload
       }
     }
     case 'SHOW_TEAM_SETTINGS_MODAL': {

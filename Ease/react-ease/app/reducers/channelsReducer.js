@@ -3,7 +3,7 @@ import {selectItemFromListById} from "../utils/helperFunctions";
 export default function reducer(state={
   channels: []
 }, action){
-  switch (action.type){
+ /* switch (action.type){
     case 'FETCH_TEAM_CHANNELS_FULFILLED': {
       return {
           ...state,
@@ -183,6 +183,6 @@ export default function reducer(state={
       }
       break;
     }
-  }
+  }*/
   return state;
 }

@@ -1,11 +1,16 @@
 package com.Ease.API.V1.Catalog;
 
-import com.Ease.Dashboard.App.LinkApp.LinkApp;
-import com.Ease.Dashboard.Profile.Profile;
-import com.Ease.Dashboard.User.User;
+import com.Ease.NewDashboard.AppInformation;
+import com.Ease.NewDashboard.LinkApp;
+import com.Ease.NewDashboard.LinkAppInformation;
+import com.Ease.NewDashboard.Profile;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,9 +25,8 @@ public class ServletAddBookmark extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             User user = sm.getUser();
-            if (user == null)
-                user = sm.getUserWithToken();
             String url = sm.getStringParam("url", false, false);
             if (url.length() > 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Url too long");
@@ -30,13 +34,19 @@ public class ServletAddBookmark extends HttpServlet {
             if (name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             String img_url = sm.getStringParam("img_url", false, false);
-            if (img_url.length() > 255)
+            if (img_url.length() > 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Name too long");
             Integer profile_id = sm.getIntParam("profile_id", true, false);
-            Profile profile = user.getDashboardManager().getProfileWithId(profile_id);
-            LinkApp app = LinkApp.createLinkApp(profile, profile.getApps().size(), name, url, img_url, sm.getDB());
-            profile.addApp(app);
-            sm.setSuccess(app.getJson());
+            Profile profile = user.getProfile(profile_id);
+            AppInformation appInformation = new AppInformation(name);
+            LinkAppInformation linkAppInformation = new LinkAppInformation(url, img_url);
+            LinkApp linkApp = new LinkApp(appInformation, linkAppInformation);
+            linkApp.setProfile(profile);
+            linkApp.setPosition(profile.getSize());
+            sm.saveOrUpdate(linkApp);
+            profile.addApp(linkApp);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, linkApp.getWebSocketJson()));
+            sm.setSuccess(linkApp.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

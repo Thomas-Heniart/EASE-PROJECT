@@ -1,9 +1,6 @@
 package com.Ease.API.Rest;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,18 +18,16 @@ public class GetGroupApps extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
-            User user = sm.getUserWithToken();
+            sm.needToBeConnected();
+            User user = sm.getUser();
             JSONObject res = new JSONObject();
             JSONArray apps = new JSONArray();
-            Integer profile_id = sm.getIntParam("group_id", true);
-            if (profile_id == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Group id cannot be null");
-            for (App app : user.getDashboardManager().getProfile(profile_id).getApps()) {
-                if (app.isPinned())
-                    continue;
+            Integer profile_id = sm.getIntParam("group_id", true, false);
+            user.getProfile(profile_id).getApps().forEach(app -> {
+
                 if (app.isLinkApp() || app.isClassicApp())
                     apps.add(app.getRestJson());
-            }
+            });
             res.put("apps", apps);
             sm.setSuccess(res);
         } catch (Exception e) {

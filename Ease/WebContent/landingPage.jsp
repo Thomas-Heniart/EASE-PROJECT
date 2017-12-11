@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00020/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00028/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00020/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00028/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;
@@ -95,13 +95,10 @@
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top affix" style="box-shadow:none;position:absolute;background-color:transparent;">
     <div class="container">
         <div class="navbar-header page-scroll">
-            <a class="navbar-brand page-scroll" href="discover"><img src="resources/landing/ease-logo.svg" /></a>
+            <a class="navbar-brand page-scroll" href="discover"><img src="resources/images/ease_logo_blue.svg" /></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li class="hidden">
-                    <a href="#page-top"></a>
-                </li>
                 <li>
                     <a href="/product">
                         <fmt:message key="landing.footer.section-product.title" />
@@ -118,7 +115,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/?skipLanding=true" id="connexionButton">
+                    <a href="/#/login?skipLanding=true" id="connexionButton">
                         <fmt:message key="landing.header.connexion-link" />
                     </a>
                 </li>
@@ -126,7 +123,7 @@
         </div>
     </div>
 </nav>
-<section style="margin-top: 60px;">
+<section class="sectionLanding">
     <div class="container">
         <div class="ui stackable grid">
             <div class="one wide column"></div>
@@ -196,7 +193,7 @@
 </script>
 <script type="text/javascript">
    function submitEmail() {
-       document.location.href = "/teams#/registration?email="+$('#divInput').find("input[name='email']").val();
+       document.location.href = "/#/registration?email="+$('#divInput').find("input[name='email']").val();
        return false;
     };
     $(document).ready(function () {

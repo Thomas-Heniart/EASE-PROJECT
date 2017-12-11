@@ -21,8 +21,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderSixDays to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderSixDaysEmail(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderSixDaysEmail(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderSixDays end...");
@@ -44,8 +44,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderSixDaysLessThanFourApps to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderSixDaysLessThanFourAppsEmail(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderSixDaysLessThanFourAppsEmail(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderSixDaysLessThanFourApps end...");
@@ -68,8 +68,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderOneWeekRegistration to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderOneWeekRegistration(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderOneWeekRegistration(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderOneWeekRegistration end...");
@@ -92,8 +92,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderThirtyDays to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderThirtyDays(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderThirtyDays(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderThirtyDays end...");
@@ -116,8 +116,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderThirtyDaysLessThanFourApps to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderThirtyDaysLessThanFourApps(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderThirtyDaysLessThanFourApps(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderThirtyDaysLessThanFourApps end...");
@@ -140,8 +140,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderEmailThreeDaysLessThanFourApps to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderThreeDaysLessThanFourApps(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderThreeDaysLessThanFourApps(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderEmailThreeDaysLessThanFourApps end...");
@@ -164,8 +164,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderEmailTwentyDays to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderTwentyDays(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderTwentyDays(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderEmailTwentyDays end...");
@@ -188,8 +188,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderEmailTwentyDaysLessThanFourApps to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderTwentyDaysLessThanFourApps(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderTwentyDaysLessThanFourApps(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderEmailTwentyDaysLessThanFourApps end...");
@@ -212,8 +212,8 @@ public class ReminderEmailManager {
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
                 System.out.println("reminderEmailTwoDaysLessThanFourApps to " + firstName + " " + email);
-                SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderTwoDaysLessThanFourApps(firstName, email);
+                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
+                sendGridMail.sendReminderTwoDaysLessThanFourApps(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderEmailTwoDaysLessThanFourApps end...");

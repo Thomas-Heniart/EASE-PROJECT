@@ -1,93 +1,83 @@
 package com.Ease.Team;
 
 import com.Ease.Context.Variables;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.Account;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Utils.*;
+import com.Ease.NewDashboard.Account;
+import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
+import com.Ease.User.NotificationFactory;
+import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import com.Ease.websocketV1.WebSocketManager;
 
 import javax.servlet.ServletContext;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by thomas on 28/04/2017.
  */
 public class TeamManager {
 
-    protected List<Team> teams;
-    protected HashMap<Integer, Team> teamIdMap;
-
-    public TeamManager(ServletContext context, DataBaseConnection db) throws HttpServletException {
-        this.teams = Team.loadTeams(context, db);
-        this.teamIdMap = new HashMap<>();
-        for (Team team : this.teams)
-            this.teamIdMap.put(team.getDb_id(), team);
-
+    public TeamManager() {
     }
 
-    public List<Team> getTeams() {
-        return teams;
+    public List<Team> getAllTeams(HibernateQuery hibernateQuery) {
+        hibernateQuery.queryString("SELECT t FROM Team t");
+        return hibernateQuery.list();
     }
 
-    public Team getTeamWithId(Integer team_id) throws HttpServletException {
-        Team team = this.teamIdMap.get(team_id);
+    public List<Team> getTeams(HibernateQuery hibernateQuery) {
+        hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active = true");
+        return hibernateQuery.list();
+    }
+
+    public Team getTeam(Integer team_id, HibernateQuery hibernateQuery) throws HttpServletException {
+        Team team = (Team) hibernateQuery.get(Team.class, team_id);
         if (team == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "No such team");
-        /* for (Channel channel : team.getChannels().values()) {
-            if (!channel.getTeamUsers().isEmpty()) {
-
-            }
-        } */
+            throw new HttpServletException(HttpStatus.BadRequest, "This team does not exist.");
         return team;
     }
 
-    public void addTeam(Team team) {
-        this.teams.add(team);
-        this.teamIdMap.put(team.getDb_id(), team);
-    }
-
-    public void removeTeam(Team team) {
-        this.teams.remove(team);
-        this.teamIdMap.remove(team.getDb_id());
-    }
-
-    public void removeTeamWithId(Integer team_id) throws HttpServletException {
-        Team team = this.getTeamWithId(team_id);
-        this.removeTeam(team);
-    }
-
-    public Team getTeamWithName(String team_name) {
-        for (Team team : this.getTeams()) {
-            if (team.getName().equals(team_name))
-                return team;
+    public void updateTeamsSubscriptions(HibernateQuery hibernateQuery, Map<Integer, Map<String, Object>> teamIdMap) {
+        for (Team team : this.getTeams(hibernateQuery)) {
+            Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
+            if (teamProperties == null) {
+                teamProperties = new ConcurrentHashMap<>();
+                teamIdMap.put(team.getDb_id(), teamProperties);
+            }
+            team.updateSubscription(teamProperties);
         }
-        return null;
+
     }
 
-    public void updateTeamsSubscriptions() {
-        for (Team team : this.getTeams())
-            team.updateSubscription();
+    public void checkFreeTrialEnd(HibernateQuery hibernateQuery, Map<Integer, Map<String, Object>> teamIdMap) {
+        for (Team team : this.getTeams(hibernateQuery)) {
+            Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
+            if (teamProperties == null) {
+                teamProperties = new ConcurrentHashMap<>();
+                teamIdMap.put(team.getDb_id(), teamProperties);
+            }
+            team.initializeStripe(teamProperties);
+            team.checkFreeTrialEnd();
+        }
     }
 
-    public void checkFreeTrialEnd(DataBaseConnection db) {
-        for (Team team : this.getTeams())
-            team.checkFreeTrialEnd(db);
-    }
-
-    public void teamUserNotRegisteredReminder() throws HttpServletException {
+    public void teamUserNotRegisteredReminder(HibernateQuery hibernateQuery) throws HttpServletException {
         System.out.println("Team users not registered reminder start...");
         List<TeamUser> three_days_teamUsers = new LinkedList<>();
         List<TeamUser> eight_days_teamUsers = new LinkedList<>();
         List<TeamUser> twelve_days_teamUsers = new LinkedList<>();
-        for (Team team : this.getTeams()) {
+        for (Team team : this.getTeams(hibernateQuery)) {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.isRegistered())
                     continue;
@@ -100,7 +90,6 @@ public class TeamManager {
             }
         }
         MailJetBuilder mailJetBuilder;
-        HibernateQuery hibernateQuery = new HibernateQuery();
         if (!three_days_teamUsers.isEmpty()) {
             System.out.println("Three days reminder emails: " + three_days_teamUsers.size());
             for (TeamUser teamUser : three_days_teamUsers) {
@@ -115,8 +104,8 @@ public class TeamManager {
                 mailJetBuilder.addVariable("last_name", admin.getLastName());
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
-                String url = Variables.URL_PATH + "teams#/teamJoin/";
-                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
+                String url = Variables.URL_PATH + "#/teamJoin/";
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE id = ?");
                 hibernateQuery.setParameter(1, teamUser.getDb_id());
                 url += (String) hibernateQuery.getSingleResult();
                 mailJetBuilder.addVariable("url", url);
@@ -137,8 +126,8 @@ public class TeamManager {
                 mailJetBuilder.addVariable("last_name", admin.getLastName());
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
-                String url = Variables.URL_PATH + "teams#/teamJoin/";
-                hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
+                String url = Variables.URL_PATH + "#/teamJoin/";
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE id = ?");
                 hibernateQuery.setParameter(1, teamUser.getDb_id());
                 url += (String) hibernateQuery.getSingleResult();
                 mailJetBuilder.addVariable("url", url);
@@ -159,7 +148,7 @@ public class TeamManager {
                 mailJetBuilder.addVariable("last_name", admin.getLastName());
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
-                String url = Variables.URL_PATH + "teams#/teamJoin/";
+                String url = Variables.URL_PATH + "#/teamJoin/";
                 hibernateQuery.querySQLString("SELECT code FROM pendingTeamInvitations WHERE teamUser_id = ?");
                 hibernateQuery.setParameter(1, teamUser.getDb_id());
                 url += (String) hibernateQuery.getSingleResult();
@@ -167,123 +156,122 @@ public class TeamManager {
                 mailJetBuilder.sendEmail();
             }
         }
-        hibernateQuery.commit();
         System.out.println("Team user not registered reminder end...");
     }
 
 
-    public void passwordReminder() throws HttpServletException {
+    public void passwordReminder(HibernateQuery hibernateQuery, ServletContext servletContext) throws HttpServletException {
 
         System.out.println("Password reminder start...");
-        Date timestamp = new Date();
-        HibernateQuery hibernateQuery = new HibernateQuery();
-        DataBaseConnection db = null;
-        try {
-            db = new DataBaseConnection(DataBase.getConnection());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            int transaction = db.startTransaction();
-            for (Team team : this.getTeams()) {
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                    App app = (App) shareableApp;
-                    if (!app.isClassicApp())
+        for (Team team : this.getTeams(hibernateQuery)) {
+            for (TeamCard teamCard : team.getTeamCardMap().values()) {
+                if (teamCard.isTeamSingleCard()) {
+                    TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                    Account account = teamSingleCard.getAccount();
+                    if (account == null)
                         continue;
-                    ClassicApp classicApp = (ClassicApp) app;
-                    Account account = classicApp.getAccount();
-                    if (account.mustUpdatePassword()) {
-                        System.out.println("Account: " + account.getDBid() + " must update password.");
-                        if (!account.passwordMustBeUpdated()) {
-                            hibernateQuery.querySQLString("UPDATE accounts SET passwordMustBeUpdated = 1 WHERE id = ?;");
-                            hibernateQuery.setParameter(1, account.getDBid());
-                            hibernateQuery.executeUpdate();
-                            account.setPasswordMustBeUpdated(true);
-                            Channel channel = shareableApp.getChannel();
-                            String url = channel.getDb_id() + "?app_id=" + app.getDBid();
-                            channel.getRoom_manager().addNotification("Password for " + app.getName() + " needs to be updated as soon as possible", url, app.getLogo(), timestamp, db);
-                        }
+                    if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
+                        account.setPassword_must_be_updated(true);
+                        hibernateQuery.saveOrUpdateObject(account);
+                        NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamSingleCard, this.getUserWebSocketManager(teamCard.getChannel().getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
                     }
-                }
-                for (SharedApp sharedApp : team.getAppManager().getSharedApps().values()) {
-                    App holder = (App) sharedApp.getHolder();
-                    if (!holder.isEmpty())
-                        continue;
-                    ClassicApp app = (ClassicApp) sharedApp;
-                    Account account = app.getAccount();
-                    if (account.mustUpdatePassword()) {
-                        System.out.println("Account: " + account.getDBid() + " must update password.");
-                        if (!account.passwordMustBeUpdated()) {
-                            hibernateQuery.querySQLString("UPDATE accounts SET passwordMustBeUpdated = 1 WHERE id = ?;");
-                            hibernateQuery.setParameter(1, account.getDBid());
-                            hibernateQuery.executeUpdate();
-                            account.setPasswordMustBeUpdated(true);
-                            Channel channel = sharedApp.getHolder().getChannel();
-                            String url = channel.getDb_id().toString() + "?app_id=" + app.getDBid();
-                            sharedApp.getTeamUser_tenant().addNotification("Your password for " + app.getName() + " needs to be updated as soon as possible", url, app.getLogo(), timestamp, db);
-                        } else {
-                            if (!account.adminNotified() && DateComparator.isOutdated(account.getLastUpdatedDate(), account.getPasswordChangeInterval(), 7)) {
-                                System.out.println("Admin must be notified");
-                                hibernateQuery.querySQLString("UPDATE accounts SET adminNotified = 1 WHERE id = ?;");
-                                hibernateQuery.setParameter(1, account.getDBid());
-                                hibernateQuery.executeUpdate();
-                                account.setAdminNotified(true);
-                                Channel channel = sharedApp.getHolder().getChannel();
-                                String url = channel.getDb_id() + "?app_id=" + app.getDBid();
-                                channel.getRoom_manager().addNotification("The password of " + sharedApp.getTeamUser_tenant().getUsername() + " for " + app.getName() + " is not up to date for the last 7 days.", url, app.getLogo(), timestamp, db);
-                            }
+                } else if (teamCard.isTeamEnterpriseCard()) {
+                    for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
+                        if (teamCardReceiver.getTeamUser().getUser() == null)
+                            continue;
+                        TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
+                        ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
+                        if (classicApp == null || classicApp.getAccount() == null)
+                            continue;
+                        Account account = classicApp.getAccount();
+                        if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
+                            account.setPassword_must_be_updated(true);
+                            hibernateQuery.saveOrUpdateObject(account);
+                            NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamEnterpriseCardReceiver, this.getUserIdMap(servletContext), hibernateQuery);
+                        } else if (teamCardReceiver.getTeamUser().isVerified() && account.mustUpdatePassword() && !account.isAdmin_notified() && DateComparator.isOutdated(account.getLast_update(), account.getReminder_interval(), 7)) {
+                            account.setAdmin_notified(true);
+                            hibernateQuery.saveOrUpdateObject(account);
+                            Channel channel = teamCard.getChannel();
+                            NotificationFactory.getInstance().createPasswordNotUpToDateNotificationOneWeek(teamEnterpriseCardReceiver, this.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
                         }
                     }
                 }
             }
-            hibernateQuery.commit();
-            db.commitTransaction(transaction);
-        } catch (GeneralException e) {
-            e.printStackTrace();
         }
-        db.close();
         System.out.println("Password reminder end...");
     }
 
-    public void passwordLostReminder() throws HttpServletException {
-        System.out.println("Password lost reminder start...");
-        HibernateQuery hibernateQuery = new HibernateQuery();
-        DataBaseConnection db = null;
-        try {
-            db = new DataBaseConnection(DataBase.getConnection());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            int transaction = db.startTransaction();
-            for (Team team : this.getTeams()) {
-                for (TeamUser teamUser : team.getTeamUsers().values()) {
-                    if (teamUser.isDisabled()) {
-                        hibernateQuery.querySQLString("SELECT DATE_ADD(DATE(?), INTERVAL 7 DAY) = CURDATE();");
-                        hibernateQuery.setParameter(1, teamUser.getDisabledDate());
-                        if ((Boolean) hibernateQuery.getSingleResult()) {
-                            if (teamUser.getAdmin_id() == null)
-                                continue;
-                            team.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Since last week " + teamUser.getUsername() + " lost the password to access your team " + team.getName() + " on Ease.space. Please give again the access to this person.", "@" + teamUser.getDb_id(), "", new Date(), db);
-                        }
-                    }
+    private Map<Integer, Map<String, Object>> getUserIdMap(ServletContext servletContext) {
+        return (Map<Integer, Map<String, Object>>) servletContext.getAttribute("userIdMap");
+    }
 
+    private WebSocketManager getUserWebSocketManager(Integer user_id, ServletContext servletContext) {
+        Map<Integer, Map<String, Object>> userIdMap = this.getUserIdMap(servletContext);
+        Map<String, Object> userProperties = userIdMap.get(user_id);
+        if (userProperties == null) {
+            userProperties = new ConcurrentHashMap<>();
+            userIdMap.put(user_id, userProperties);
+        }
+        WebSocketManager webSocketManager = (WebSocketManager) userProperties.get("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            userProperties.put("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
+    }
+
+    public void passwordLostReminder(HibernateQuery hibernateQuery, ServletContext servletContext) throws HttpServletException {
+        System.out.println("Password lost reminder start...");
+        for (Team team : this.getTeams(hibernateQuery)) {
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
+                if (teamUser.isDisabled()) {
+                    Calendar calendar = Calendar.getInstance();
+                    Calendar calendar1 = Calendar.getInstance();
+                    calendar1.setTime(teamUser.getDisabledDate());
+                    calendar1.add(Calendar.DAY_OF_YEAR, 7);
+                    if (calendar.get(Calendar.DAY_OF_YEAR) == calendar1.get(Calendar.DAY_OF_YEAR) && calendar.get(Calendar.YEAR) == calendar1.get(Calendar.YEAR)) {
+                        if (teamUser.getAdmin_id() == null)
+                            continue;
+                        TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                        NotificationFactory.getInstance().createPasswordLostOneWeekNotification(teamUser, teamUser_admin, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id(), servletContext), hibernateQuery);
+                    }
                 }
             }
-            db.commitTransaction(transaction);
-            hibernateQuery.commit();
-        } catch (GeneralException e) {
-            e.printStackTrace();
         }
-        db.close();
         System.out.println("Password lost reminder end...");
     }
 
-    public void checkDepartureDates(DataBaseConnection db) {
-        for (Team team : this.getTeams()) {
-            team.checkDepartureDates(new Date(), db);
+    public void checkDepartureDates(HibernateQuery hibernateQuery, ServletContext servletContext) throws HttpServletException {
+        for (Team team : this.getTeams(hibernateQuery)) {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
+                if (teamUser.getDepartureDate() == null)
+                    continue;
+                if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
+                    calendar.setTime(teamUser.getDepartureDate());
+                    String suffixe = "th";
+                    switch (calendar.get(Calendar.DAY_OF_MONTH)) {
+                        case 1: {
+                            suffixe = "st";
+                            break;
+                        }
+                        case 2: {
+                            suffixe = "nd";
+                            break;
+                        }
+                        case 3: {
+                            suffixe = "rd";
+                            break;
+                        }
+                    }
+                    String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
+                    if (teamUser.getUser() == null)
+                        continue;
+                    TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                    NotificationFactory.getInstance().createDepartureDateThreeDaysNotification(teamUser, teamUser_admin, formattedDate, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id(), servletContext), hibernateQuery);
+                }
+            }
         }
     }
 }

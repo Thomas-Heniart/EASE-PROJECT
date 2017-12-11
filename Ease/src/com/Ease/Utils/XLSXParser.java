@@ -1,27 +1,26 @@
 package com.Ease.Utils; 
  
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Iterator;
-
+import com.Ease.Utils.Crypto.CodeGenerator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.Ease.Utils.Crypto.CodeGenerator; 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Iterator;
  
 public class XLSXParser { 
  
   protected String infra_id; 
   protected String filePath; 
  
-  public XLSXParser(String infra_id, String filePath) throws GeneralException { 
+  public XLSXParser(String infra_id, String filePath) throws HttpServletException { 
     this.infra_id = infra_id; 
     this.filePath = filePath; 
   } 
  
-  public void parseFile(DataBaseConnection db) throws GeneralException { 
+  public void parseFile(DataBaseConnection db) throws HttpServletException { 
     File myFile = new File(filePath); 
     FileInputStream fis = null; 
     XSSFWorkbook myWorkBook = null; 
@@ -31,7 +30,7 @@ public class XLSXParser {
       myWorkBook = new XSSFWorkbook(fis); 
       sheet = myWorkBook.getSheetAt(0); 
     } catch (Exception e) { 
-      throw new GeneralException(ServletManager.Code.InternError, e); 
+      throw new HttpServletException(HttpStatus.InternError, e); 
     } 
     Iterator<Row> rowIterator = sheet.iterator(); 
     // Traversing over each row of XLSX file 

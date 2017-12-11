@@ -25,7 +25,7 @@ public class WebsiteRequest {
 
     @ManyToOne
     @JoinColumn(name = "website_id", nullable = false)
-    protected Website website;
+    private Website website;
 
     public WebsiteRequest() {
 
@@ -86,5 +86,20 @@ public class WebsiteRequest {
         res.put("integrated", this.getWebsite().getWebsiteAttributes().isIntegrated());
         res.put("website_id", this.getWebsite().getDb_id());
         return res;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WebsiteRequest that = (WebsiteRequest) o;
+
+        return db_id.equals(that.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
     }
 }

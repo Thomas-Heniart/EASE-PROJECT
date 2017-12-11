@@ -64,7 +64,7 @@ export default function reducer(state={
       }
     }
     case "TEAM_CREATE_SINGLE_APP_FULFILLED": {
-      if(state.type === action.payload.app.origin.type && state.id === action.payload.app.origin.id){
+      if(state.type === action.payload.app.type && state.id === action.payload.app.id){
         var state = {
           ...state
         };
@@ -73,7 +73,7 @@ export default function reducer(state={
       }
     }
     case "TEAM_CREATE_LINK_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
+      if(state.type === action.payload.app.type && state.id === action.payload.app.id){
         var state = {
           ...state
         };
@@ -82,7 +82,7 @@ export default function reducer(state={
       }
     }
     case "TEAM_CREATE_MULTI_APP_FULFILLED": {
-      if(state.type === action.payload.origin.type && state.id === action.payload.origin.id){
+      if(state.type === action.payload.app.type && state.id === action.payload.app.id){
         var state = {
           ...state
         };
@@ -249,7 +249,7 @@ export default function reducer(state={
       for (var i = 0; i < apps.length; i++){
         if (apps[i].id === action.payload.app_id){
           for (var j = 0; j < apps[i].receivers.length; j++){
-            if (apps[i].receivers[j].shared_app_id === action.payload.shared_app_id){
+            if (apps[i].receivers[j].id === action.payload.id){
               apps[i].receivers[j].profile_id = action.payload.profile_id;
               break;
             }
@@ -260,6 +260,30 @@ export default function reducer(state={
       return {
         ...state,
         apps: apps
+      }
+    }
+    case 'TEAM_SINGLE_CARD_JOIN_FULFILLED': {
+      var apps = state.apps;
+      var app = selectAppFromListById(apps, action.payload.team_card_id);
+
+      if (app !== null && app.requests.indexOf(action.payload.team_user_id) === -1){
+        app.requests.push(action.payload.team_user_id);
+        return {
+          ...state,
+          apps: apps
+        }
+      }
+    }
+    case 'TEAM_ENTERPRISE_CARD_JOIN_FULFILLED': {
+      var apps = state.apps;
+      var app = selectAppFromListById(apps, action.payload.team_card_id);
+
+      if (app !== null && app.requests.indexOf(action.payload.team_user_id) === -1){
+        app.requests.push(action.payload.team_user_id);
+        return {
+          ...state,
+          apps: apps
+        }
       }
     }
     case 'TEAM_APP_ASK_JOIN_FULFILLED': {
@@ -287,13 +311,13 @@ export default function reducer(state={
       }
     }
     case 'TEAM_USER_REMOVED': {
-      const user_id = action.payload.user.id;
+      const user_id = action.payload.team_user_id;
       let apps = state.apps.map(item => {
         item.receivers = item.receivers.filter(item => {
           return item.team_user_id !== user_id;
         });
-        item.sharing_requests = item.sharing_requests.filter(item => {
-          return item !== user_id;
+        item.requests = item.requests.filter(item => {
+          return item.team_user_id !== user_id;
         });
         return item;
       });
@@ -319,7 +343,7 @@ export default function reducer(state={
     case 'TEAM_APP_ADDED' : {
       let apps = state.apps;
       const app = action.payload.app;
-      if(state.type === app.origin.type && state.id === app.origin.id) {
+      if(state.type === app.type && state.id === app.id) {
         apps.unshift(app);
         return {
           ...state,
@@ -327,8 +351,8 @@ export default function reducer(state={
         }
       }
     }
-    case 'TEAM_APP_REMOVED' : {
-      const apps = state.apps.filter(app => (app.id !== action.payload.app_id));
+    case 'TEAM_CARD_REMOVED' : {
+      const apps = state.apps.filter(app => (app.id !== action.payload.team_card_id));
       return {
         ...state,
         apps: apps

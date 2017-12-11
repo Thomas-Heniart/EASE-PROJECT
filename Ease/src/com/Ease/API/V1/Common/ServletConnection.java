@@ -1,25 +1,29 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.Crypto.RSA;
+import com.Ease.User.JsonWebTokenFactory;
+import com.Ease.User.User;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketManager;
 import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Key;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/api/v1/common/Connection")
 public class ServletConnection extends HttpServlet {
@@ -35,58 +39,68 @@ public class ServletConnection extends HttpServlet {
             String email = sm.getStringParam("email", true, true);
             String password = sm.getStringParam("password", false, true);
             String client_ip = IpUtils.getIpAddr(request);
-            User user = sm.getUser();
-            if (user != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You are already logged in");
             DataBaseConnection db = sm.getDB();
             addIpInDataBase(client_ip, db);
-            if (canConnect(client_ip, db)) {
-                if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
-                    throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
-                else {
-                    String key = (String) sm.getContextAttr("privateKey");
-                    password = RSA.Decrypt(password, key);
-                    DatabaseRequest databaseRequest = db.prepareRequest("SELECT * FROM users WHERE email = ?");
-                    databaseRequest.setString(email);
-                    if (!databaseRequest.get().next())
-                        throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
-                    user = User.loadUser(email, password, sm.getServletContext(), db);
-                    sm.setUser(user);
-                    HibernateQuery hibernateQuery = new HibernateQuery();
-                    for (TeamUser teamUser : user.getTeamUsers()) {
-                        if (!teamUser.isVerified() && teamUser.getTeamKey() != null) {
-                            teamUser.finalizeRegistration();
-                            hibernateQuery.saveOrUpdateObject(teamUser);
-                        }
-                        if (teamUser.isVerified() && teamUser.getTeamKey() != null && teamUser.isDisabled()) {
-                            String deciphered_teamKey = RSA.Decrypt(teamUser.getTeamKey(), user.getKeys().getPrivateKey());
-                            teamUser.setTeamKey(user.encrypt(deciphered_teamKey));
-                            teamUser.setDeciphered_teamKey(deciphered_teamKey);
-                            teamUser.setDisabled(false);
-                            hibernateQuery.saveOrUpdateObject(teamUser);
-                            for (SharedApp sharedApp : teamUser.getSharedApps()) {
-                                sharedApp.setDisableShared(false, sm.getDB());
-                            }
-                        }
-                    }
-                    hibernateQuery.commit();
-                    ((Map<String, User>) sm.getContextAttr("users")).put(email, user);
-                    ((Map<String, User>) sm.getContextAttr("sessionIdUserMap")).put(sm.getSession().getId(), user);
-                    ((Map<String, User>) sm.getContextAttr("sIdUserMap")).put(user.getSessionSave().getSessionId(), user);
-                    sm.setUser(user);
-                    user.getDashboardManager().decipherApps(sm);
-                    removeIpFromDataBase(client_ip, db);
-                    JSONObject res = new JSONObject();
-                    res.put("user", user.getJson());
-                    sm.setSuccess(res);
-                }
-            } else {
+            if (!canConnect(client_ip, db))
                 throw new HttpServletException(HttpStatus.Forbidden, "Too much attempts to connect. Please retry in 5 minutes.");
+            if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
+                throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
+            password = sm.decipher(password);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
+            hibernateQuery.setParameter("email", email);
+            User user = (User) hibernateQuery.getSingleResult();
+            if (user == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
+            String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
+            sm.getUserProperties(user.getDb_id()).put("keyUser", keyUser);
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                sm.initializeTeamWithContext(teamUser.getTeam());
+                if (teamUser.isVerified() && !teamUser.isDisabled()) {
+                    String teamKey = teamUser.getDecipheredTeamKey(keyUser);
+                    sm.getTeamProperties(teamUser.getTeam().getDb_id()).put("teamKey", teamKey);
+                }
             }
-        } catch (GeneralException e) {
-            sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
-        } catch (Exception e) {
+            Key secret = (Key) sm.getContextAttr("secret");
+            if (user.getJsonWebToken() == null) {
+                user.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(user.getDb_id(), keyUser, secret));
+                sm.saveOrUpdate(user.getJsonWebToken());
+            } else {
+                if (user.getJsonWebToken().getExpiration_date() < new Date().getTime()) {
+                    user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret);
+                    sm.saveOrUpdate(user.getJsonWebToken());
+                }
+            }
+            removeIpFromDataBase(client_ip, db);
+            String jwt = user.getJsonWebToken().getJwt(keyUser);
+            Cookie cookie = new Cookie("JWT", jwt);
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 4);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            cookie.setPath("/");
+            cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
+            response.addCookie(cookie);
+            user.getCookies().forEach(response::addCookie);
+            sm.setUser(user);
+            JSONObject res = user.getJson();
+            res.put("JWT", jwt);
+            WebSocketManager userWebSocketManager = sm.getUserWebSocketManager(user.getDb_id());
+            List<WebSocketManager> teamWebSocketManagerList = user.getTeams().stream().map(team -> sm.getTeamWebSocketManager(team.getDb_id())).collect(Collectors.toList());
+            WebSocketManager webSocketManager = sm.getSessionWebSocketManager();
+            webSocketManager.getWebSocketSessions().forEach(webSocketSession -> {
+                userWebSocketManager.addWebSocketSession(webSocketSession);
+                teamWebSocketManagerList.forEach(webSocketManager1 -> webSocketManager1.addWebSocketSession(webSocketSession));
+            });
+            sm.getSession().setAttribute("webSocketManager", null);
+            sm.setSuccess(res);
+        } catch (HttpServletException e) {
             sm.setError(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         }
         sm.sendResponse();
     }
@@ -96,7 +110,7 @@ public class ServletConnection extends HttpServlet {
         rd.forward(request, response);
     }
 
-    public void addIpInDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
+    public void addIpInDataBase(String client_ip, DataBaseConnection db) throws HttpServletException {
         DatabaseRequest request = db.prepareRequest("SELECT * FROM askingIps WHERE ip= ?;");
         request.setString(client_ip);
         DatabaseResult rs = request.get();
@@ -123,27 +137,28 @@ public class ServletConnection extends HttpServlet {
         return dateFormat.format(new Date(date.getTime() + (expiration_time * ONE_MINUTE_IN_MILLIS)));
     }
 
-    public void removeIpFromDataBase(String client_ip, DataBaseConnection db) throws GeneralException {
+    public void removeIpFromDataBase(String client_ip, DataBaseConnection db) throws HttpServletException {
         DatabaseRequest request = db.prepareRequest("DELETE FROM askingIps WHERE ip = ?;");
         request.setString(client_ip);
         request.set();
     }
 
-    public boolean canConnect(String client_ip, DataBaseConnection db) throws GeneralException {
-        DatabaseRequest request = db.prepareRequest("SELECT attempts, expirationDate FROM askingIps WHERE ip= ?;");
-        request.setString(client_ip);
-        DatabaseResult rs = request.get();
-        int attempts = 0;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date expirationDate = new Date();
+    public boolean canConnect(String client_ip, DataBaseConnection db) throws HttpServletException {
         try {
+            DatabaseRequest request = db.prepareRequest("SELECT attempts, expirationDate FROM askingIps WHERE ip= ?;");
+            request.setString(client_ip);
+            DatabaseResult rs = request.get();
+            int attempts = 0;
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date expirationDate = new Date();
+
             if (rs.next()) {
                 attempts = Integer.parseInt(rs.getString(1));
                 expirationDate = dateFormat.parse(rs.getString(2));
             }
+            return attempts < max_attempts || expirationDate.compareTo(new Date()) <= 0;
         } catch (Exception e) {
-            throw new GeneralException(ServletManager.Code.InternError, e);
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return attempts < max_attempts || expirationDate.compareTo(new Date()) <= 0;
     }
 }

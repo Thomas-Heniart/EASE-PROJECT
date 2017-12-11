@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.User.User;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.Crypto.RSA;
@@ -25,7 +26,7 @@ public class ServletAskEditEmail extends HttpServlet {
             String private_key = (String) sm.getContextAttr("privateKey");
             password = RSA.Decrypt(password, private_key);
             User user = sm.getUser();
-            if (!user.getKeys().isGoodPassword(password))
+            if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password");
             String new_email = sm.getStringParam("new_email", true, false).toLowerCase();
             if (!Regex.isEmail(new_email))
@@ -34,16 +35,15 @@ public class ServletAskEditEmail extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid email.");
             if (user.getEmail().equals(new_email))
                 throw new HttpServletException(HttpStatus.BadRequest, "This email is already your reference email.");
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT id FROM users WHERE email = ?");
-            databaseRequest.setString(new_email);
-            if (databaseRequest.get().next())
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("SELECT u FROM User u WHERE email = :email");
+            hibernateQuery.setParameter("email", new_email);
+            if (hibernateQuery.getSingleResult() != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This email is already used for another Ease.space account.");
             String edit_email_code = CodeGenerator.generateDigits(6);
-            user.getStatus().setEdit_email_code(edit_email_code, db);
-            user.getStatus().setEmail_requested(new_email, db);
-            db.commitTransaction(transaction);
+            user.getUserStatus().setEdit_email_code(edit_email_code);
+            user.getUserStatus().setEmail_requested(new_email);
+            sm.saveOrUpdate(user.getUserStatus());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             mailJetBuilder.addVariable("first_digits", edit_email_code.substring(0, 3));

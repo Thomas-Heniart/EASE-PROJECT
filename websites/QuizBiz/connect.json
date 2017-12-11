@@ -1,0 +1,45 @@
+{
+  "name":"QuizBiz",
+  "lastlogin":"",
+  "home":"http://quizbiz.fr/",
+  "connect": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='connexion']"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login", "search":"input[name='login']"},
+      {"action":"fill", "what":"password", "search":"input[name='pass']"},
+      {"action":"trueClick", "search":"input[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='connexion']"},
+    {"search":"a[href*='logout']"}
+  ],
+  "Facebook": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='connexion']"},
+      {"action":"waitload"},
+      {"action":"trueClick", "search":"a[href*='api=facebook']"}
+    ]
+  },
+  "Linkedin": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='connexion']"},
+      {"action":"waitload"},
+      {"action":"trueClick", "search":"a[href*='api=linkedin']"}
+    ]
+  },
+  "Google": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='connexion']"},
+      {"action":"waitload"},
+      {"action":"trueClick", "search":"a[href*='api=google']"}
+    ]
+  }
+}

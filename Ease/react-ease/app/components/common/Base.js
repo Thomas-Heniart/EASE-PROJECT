@@ -1,13 +1,18 @@
 var React = require('react');
 var LoadingScreen = require('./LoadingScreen');
 import {connect} from "react-redux";
+import queryString from "query-string";
 import {withRouter} from "react-router-dom";
+import {withCookies, Cookies } from 'react-cookie';
 import {fetchNotifications} from "../../actions/notificationsActions";
-import {fetchMyInformation, setHomepage} from "../../actions/commonActions";
+import {fetchDashboard} from "../../actions/dashboardActions";
+import {fetchTeams} from "../../actions/teamActions";
+import {fetchMyInformation, setHomepage, fetchCriticalParts} from "../../actions/commonActions";
 import api from "../../utils/api";
 import ReactTooltip from 'react-tooltip';
 import WebsocketClient from './WebsocketClient';
 import ModalsContainer from "./ModalsContainer";
+import {showNewFeatureModal} from "../../actions/modalActions";
 
 @connect((store)=>{
   return {
@@ -25,14 +30,12 @@ class Base extends React.Component {
   }
   checkConnection = () => {
     window.setInterval(() => {
-      if (this.props.common.authenticated){
-        api.common.bz().then(connected => {
-          if (!connected)
-            window.location.href = '/';
-        }).catch(err => {
+      api.common.bz().then(authenticated => {
+        if (authenticated !== this.props.common.authenticated)
           window.location.href = '/';
-        });
-      }
+      }).catch(err => {
+        window.location.href = '/';
+      });
     }, 30000);
   };
   eventListener = (event) => {
@@ -40,25 +43,32 @@ class Base extends React.Component {
   };
   componentDidMount(){
     this.checkConnection();
-    if (!this.props.common.authenticated){
-      this.props.dispatch(fetchMyInformation()).then(response => {
+    this.props.dispatch(fetchMyInformation()).then(response => {
+      if (this.props.common.authenticated){
+        this.props.dispatch(fetchCriticalParts()).then(response => {
+          sessionstack('identify', {
+            userId: this.props.common.user.email, // Replace the USER-ID with the user id from your app
+            email: this.props.common.user.email, // Not required
+          });
+          this.setState({fetching: false});
+        });
+        if (!response.user.new_feature_seen)
+          this.props.dispatch(showNewFeatureModal({active: true}))
+      }else
         this.setState({fetching: false});
-        if (this.props.common.authenticated)
-          this.props.dispatch(fetchNotifications(0));
-      });
-    }else {
-      this.setState({fetching: false});
-      this.props.dispatch(fetchNotifications(0));
-    }
+    });
     document.addEventListener("GetSettingsDone", this.eventListener);
     setTimeout(() => {
-        document.dispatchEvent(new CustomEvent("GetSettings", {bubbles: true}))
+      document.dispatchEvent(new CustomEvent("GetSettings", {bubbles: true}))
     }, 5);
   }
   componentWillUnmount() {
-    setTimeout(() => {
-      document.removeEventListener("GetSettingsDone", this.eventListener);
-    }, 1000);
+    document.removeEventListener("GetSettingsDone", this.eventListener);
+  }
+  componentWillMount(){
+    const query = queryString.parse(this.props.location.search);
+    if (query.skipLanding !== undefined)
+      this.props.cookies.set('skipLanding', true, {maxAge: 9999999, path: '/'});
   }
   render(){
     if (this.state.fetching)
@@ -88,4 +98,4 @@ class Base extends React.Component {
   }
 }
 
-module.exports = withRouter(Base);
+module.exports = withCookies(withRouter(Base));

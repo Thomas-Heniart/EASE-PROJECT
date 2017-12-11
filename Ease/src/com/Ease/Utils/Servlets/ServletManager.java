@@ -1,19 +1,25 @@
 package com.Ease.Utils.Servlets;
 
-import com.Ease.Dashboard.User.JWToken;
-import com.Ease.Dashboard.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationManager;
+import com.Ease.User.User;
+import com.Ease.User.UserFactory;
+import com.Ease.User.UserKeys;
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Crypto.RSA;
+import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.StripeException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import com.stripe.model.Customer;
+import com.stripe.model.Subscription;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,8 +29,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.Key;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class ServletManager {
 
@@ -33,13 +43,12 @@ public abstract class ServletManager {
     protected String redirectUrl;
     protected String servletName;
     protected Map<String, String> args = new HashMap<>();
-    protected User user;
-    protected TeamUser teamUser;
     protected DataBaseConnection db;
     private DataBaseConnection logDb;
+    private User user;
     protected boolean saveLogs;
     protected String logResponse;
-    protected String socketId;
+    protected Team team;
     protected JSONObject jsonObjectResponse;
     protected JSONArray jsonArrayResponse;
     protected String errorMessage;
@@ -54,7 +63,6 @@ public abstract class ServletManager {
         this.servletName = servletName;
         this.request = request;
         this.response = response;
-        this.user = (User) request.getSession().getAttribute("user");
         this.saveLogs = saveLogs;
     }
 
@@ -107,8 +115,10 @@ public abstract class ServletManager {
                 this.errorMessage = httpServletException.getMsg();
             System.out.println(this.errorMessage);
             this.logResponse = this.errorMessage;
-            if (httpServletException.getHttpStatus().getValue() == HttpStatus.InternError.getValue())
+            if (httpServletException.getHttpStatus().getValue() == HttpStatus.InternError.getValue()) {
+                e.printStackTrace();
                 this.setInternError();
+            }
             response.setStatus(httpServletException.getHttpStatus().getValue());
         } catch (ClassCastException e1) {
             e.printStackTrace();
@@ -126,8 +136,83 @@ public abstract class ServletManager {
     }
 
     public void needToBeConnected() throws HttpServletException {
-        if (user == null)
-            user = this.getUserWithToken();
+        Integer user_id = (Integer) this.getSession().getAttribute("user_id");
+        String jwt = this.request.getHeader("Authorization");
+        Cookie cookies[] = this.request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ((cookie.getName()).compareTo("sId") == 0) {
+                    cookie.setValue("");
+                    cookie.setMaxAge(0);
+                    this.response.addCookie(cookie);
+                } else if ((cookie.getName()).compareTo("sTk") == 0) {
+                    cookie.setValue("");
+                    cookie.setMaxAge(0);
+                    this.response.addCookie(cookie);
+                }
+            }
+        }
+        if (jwt == null) {
+            if (request.getCookies() != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    if (cookie.getName().equals("JWT")) {
+                        jwt = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        }
+        if (jwt == null && user_id == null) {
+            throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+        } else if (jwt != null) {
+            Key secret = (Key) this.getContextAttr("secret");
+            this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
+            if (this.user == null)
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            String keyUser = this.user.getJsonWebToken().getKeyUser(jwt, secret);
+            Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
+            userProperties.put("keyUser", keyUser);
+            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            if (private_key == null) {
+                UserKeys userKeys = user.getUserKeys();
+                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
+                this.saveOrUpdate(userKeys);
+            }
+            userProperties.put("privateKey", private_key);
+            this.getSession().setAttribute("user_id", user.getDb_id());
+            this.getSession().setAttribute("is_admin", user.isAdmin());
+        } else {
+            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+            String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
+            if (keyUser == null)
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            if (private_key == null) {
+                UserKeys userKeys = user.getUserKeys();
+                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
+                this.saveOrUpdate(userKeys);
+            }
+            this.getUserProperties(user.getDb_id()).put("privateKey", private_key);
+            this.getSession().setAttribute("user_id", user.getDb_id());
+            this.getSession().setAttribute("is_admin", user.isAdmin());
+        }
+        String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
+        for (TeamUser teamUser : user.getTeamUsers()) {
+            Team team = teamUser.getTeam();
+            if (!team.isActive())
+                continue;
+            this.initializeTeamWithContext(teamUser.getTeam());
+            if (!teamUser.isVerified() || teamUser.isDisabled())
+                continue;
+            Map<String, Object> teamProperties = this.getTeamProperties(team.getDb_id());
+            String teamKey = (String) teamProperties.get("teamKey");
+            if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null) {
+                TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
+            } else if (teamUser.getTeamKey() != null)
+                teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
+        }
+        user.getCookies().forEach(cookie -> response.addCookie(cookie));
     }
 
     protected abstract Date getCurrentTime() throws HttpServletException;
@@ -139,13 +224,12 @@ public abstract class ServletManager {
             throw new HttpServletException(HttpStatus.Forbidden);
     }
 
-    public void needToBeTeamUserOfTeam(Integer team_id) throws HttpServletException {
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
+    public void needToBeTeamUserOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
+        this.team = team;
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam().getDb_id().equals(team_id) && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -153,21 +237,10 @@ public abstract class ServletManager {
 
     public void needToBeAdminOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
+        this.team = team;
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam() == team && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
-                return;
-        }
-        throw new HttpServletException(HttpStatus.Forbidden);
-    }
-
-    public void needToBeAdminOfTeam(Integer team_id) throws HttpServletException {
-        this.needToBeTeamUser();
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
-        this.timestamp = this.getCurrentTime();
-        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -175,21 +248,10 @@ public abstract class ServletManager {
 
     public void needToBeOwnerOfTeam(Team team) throws HttpServletException {
         this.needToBeTeamUser();
+        this.team = team;
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             this.timestamp = this.getCurrentTime();
-            if (!teamUser.getTeam().isBlocked() && teamUser.getTeam() == team && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
-                return;
-        }
-        throw new HttpServletException(HttpStatus.Forbidden);
-    }
-
-    public void needToBeOwnerOfTeam(Integer team_id) throws HttpServletException {
-        this.needToBeTeamUser();
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
-        this.timestamp = this.getCurrentTime();
-        for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().getDb_id().equals(team_id) && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -236,6 +298,8 @@ public abstract class ServletManager {
     public HibernateQuery getHibernateQuery() {
         if (this.hibernateQuery == null)
             this.hibernateQuery = new HibernateQuery();
+        if (!this.hibernateQuery.isOpen())
+            this.hibernateQuery = new HibernateQuery();
         return this.hibernateQuery;
     }
 
@@ -255,27 +319,28 @@ public abstract class ServletManager {
         this.logResponse = msg;
     }
 
-    private void saveLogs() throws GeneralException, HttpServletException {
-        String argsString = "";
+    private void saveLogs() throws HttpServletException {
+        StringBuilder argsString = new StringBuilder();
         Set<Entry<String, String>> setHm = args.entrySet();
         for (Entry<String, String> e : setHm) {
-            argsString += "<" + e.getKey() + ":" + e.getValue() + ">";
+            argsString.append("<").append(e.getKey()).append(":").append(e.getValue()).append(">");
         }
         if (this.logResponse == null)
             this.logResponse = "Success";
         try {
             this.logResponse = URLEncoder.encode(this.logResponse, "UTF-8");
-            argsString = URLEncoder.encode(argsString, "UTF-8");
+            argsString = new StringBuilder(URLEncoder.encode(argsString.toString(), "UTF-8"));
             DatabaseRequest request = this.getLogsDb().prepareRequest("INSERT INTO logs values(NULL, ?, ?, ?, ?, ?, default);");
             request.setString(this.servletName);
             request.setInt(this.response.getStatus());
             if (this.user == null)
                 request.setNull();
             else
-                request.setInt(this.user.getDBid());
-            request.setString(argsString);
+                request.setInt(this.user.getDb_id());
+            request.setString(argsString.toString());
             request.setString(this.logResponse);
             request.set();
+            System.out.println(request.toString());
             this.getLogsDb().close();
         } catch (UnsupportedEncodingException e) {
             this.setInternError();
@@ -283,15 +348,12 @@ public abstract class ServletManager {
     }
 
     public void sendResponse() {
-        user = (request.getSession().getAttribute("user") == null) ? user : (User) request.getSession().getAttribute("user");
         if (this.saveLogs) {
             try {
                 saveLogs();
-            } catch (GeneralException e) {
-                System.out.println(e.getMsg());
-                System.err.println("Logs not sended to database.");
             } catch (HttpServletException e) {
                 e.printStackTrace();
+                System.err.println("Logs not sended to database.");
             }
         }
         if (this.response.getStatus() != HttpStatus.Success.getValue()) {
@@ -300,23 +362,24 @@ public abstract class ServletManager {
                     this.db.rollbackTransaction();
                 if (this.hibernateQuery != null)
                     this.hibernateQuery.rollback();
-            } catch (GeneralException e) {
+            } catch (HttpServletException e) {
                 System.err.println("Rollback transaction failed.");
             }
         }
-
         try {
             if (this.response.getStatus() != HttpStatus.Success.getValue()) {
                 System.out.println("Error code: " + response.getStatus());
-                if (this.errorMessage != null)
+                if (this.errorMessage != null) {
+                    this.response.setCharacterEncoding("UTF-8");
                     response.getWriter().print(this.errorMessage);
-                else
+                } else
                     response.sendError(response.getStatus());
             } else {
                 if (this.redirectUrl != null) {
                     System.out.println("redirect to " + this.redirectUrl);
                     response.sendRedirect(this.redirectUrl);
                 } else {
+                    this.response.setCharacterEncoding("UTF-8");
                     if (this.jsonArrayResponse == null && this.jsonObjectResponse == null) {
                         response.sendError(HttpStatus.InternError.getValue());
                         try {
@@ -324,7 +387,7 @@ public abstract class ServletManager {
                                 this.db.rollbackTransaction();
                             if (this.hibernateQuery != null)
                                 this.hibernateQuery.rollback();
-                        } catch (GeneralException e) {
+                        } catch (HttpServletException e) {
                             System.out.println("Rollback failed");
                         }
                     } else {
@@ -369,36 +432,24 @@ public abstract class ServletManager {
     }
 
     public void setUser(User user) {
-        this.user = user;
-        this.getSession().setAttribute("user", user);
+        this.getSession().setAttribute("is_admin", user.isAdmin());
+        this.getSession().setAttribute("user_id", user.getDb_id());
     }
 
     public HttpSession getSession() {
         return request.getSession();
     }
 
-    public List<TeamUser> getTeamUsers() {
+    public Set<TeamUser> getTeamUsers() {
         return this.getUser().getTeamUsers();
     }
 
-    public TeamUser getTeamUserForTeam(Team team) throws HttpServletException {
-        for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team && !teamUser.isDisabled())
-                return teamUser;
-        }
-        throw new HttpServletException(HttpStatus.BadRequest);
+    public TeamUser getTeamUser(Team team) throws HttpServletException {
+        return user.getTeamUser(team);
     }
 
-    public TeamUser getTeamUserForTeamId(Integer team_id) throws HttpServletException {
-        if (team_id == null)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing team id parameter");
-        TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
-        Team team = teamManager.getTeamWithId(team_id);
-        for (TeamUser teamUser : this.getTeamUsers()) {
-            if (teamUser.getTeam() == team && !teamUser.isDisabled())
-                return teamUser;
-        }
-        return null;
+    public TeamUser getTeamUser(Integer team_id) throws HttpServletException {
+        return user.getTeamUser(team_id);
     }
 
     public Date getTimestamp() throws HttpServletException {
@@ -408,26 +459,120 @@ public abstract class ServletManager {
     }
 
     public User getUserWithToken() throws HttpServletException {
-        String token = this.request.getHeader("Authorization");
-        if (token == null || token.equals(""))
-            throw new HttpServletException(HttpStatus.AccessDenied, "Please login");
-        Map<String, User> tokenUserMap = (Map<String, User>) this.getContextAttr("tokenUserMap");
-        Key key = (Key) this.getContextAttr("secret");
-        Claims claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-        String connection_token = (String) claimsJws.get("tok");
-        User user = tokenUserMap.get(connection_token);
-        if (user == null) {
-            String user_name = (String) claimsJws.get("name");
-            String user_email = (String) claimsJws.get("email");
-            Long expiration_date = (Long) claimsJws.get("exp");
-            JWToken jwToken = JWToken.loadJWToken(connection_token, user_email, user_name, expiration_date, key, this.getDB());
-            user = User.loadUserFromJWT(jwToken, this, this.getDB());
-            tokenUserMap.put(jwToken.getConnection_token(), user);
-        }
-        user.getJwt().checkJwt(claimsJws);
-        if (user.getJwt().getExpiration_date().getTime() <= new Date().getTime())
-            throw new HttpServletException(HttpStatus.AccessDenied, "JWT expired");
-        this.user = user;
+        this.needToBeConnected();
         return this.user;
+    }
+
+    public Map<String, Object> getUserProperties(Integer user_id) {
+        Map<Integer, Map<String, Object>> userIdMap = (Map<Integer, Map<String, Object>>) this.getContextAttr("userIdMap");
+        Map<String, Object> userProperties = userIdMap.get(user_id);
+        if (userProperties == null) {
+            userProperties = new ConcurrentHashMap<>();
+            userIdMap.put(user_id, userProperties);
+        }
+        return userProperties;
+    }
+
+    public Map<String, Object> getTeamProperties(Integer team_id) {
+        Map<Integer, Map<String, Object>> teamIdMap = (Map<Integer, Map<String, Object>>) this.getContextAttr("teamIdMap");
+        Map<String, Object> teamProperties = teamIdMap.get(team_id);
+        if (teamProperties == null) {
+            teamProperties = new ConcurrentHashMap<>();
+            teamIdMap.putIfAbsent(team_id, teamProperties);
+        }
+        return teamProperties;
+    }
+
+    public WebSocketManager getUserWebSocketManager(Integer user_id) {
+        WebSocketManager webSocketManager = (WebSocketManager) this.getUserProperties(user_id).get("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            this.getUserProperties(user_id).put("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
+    }
+
+    public WebSocketManager getTeamWebSocketManager(Integer team_id) {
+        WebSocketManager webSocketManager = (WebSocketManager) this.getTeamProperties(team_id).get("webSocketManager");
+        if (webSocketManager == null) {
+            webSocketManager = new WebSocketManager();
+            this.getTeamProperties(team_id).putIfAbsent("webSocketManager", webSocketManager);
+        }
+        return webSocketManager;
+    }
+
+    public NotificationManager getUserNotificationManager(Integer user_id) {
+        NotificationManager notificationManager = (NotificationManager) this.getUserProperties(user_id).get("notificationManager");
+        if (notificationManager == null)
+            notificationManager = new NotificationManager();
+        return notificationManager;
+    }
+
+    public Team getTeam(Integer id) throws HttpServletException {
+        TeamManager teamManager = (TeamManager) this.getContextAttr("teamManager");
+        Team team = teamManager.getTeam(id, this.getHibernateQuery());
+        this.initializeTeamWithContext(team);
+        return team;
+    }
+
+    public void initializeTeamWithContext(Team team) throws HttpServletException {
+        try {
+            if (team.getCustomer_id() != null) {
+                Customer customer = (Customer) this.getTeamProperties(team.getDb_id()).get("customer");
+                if (customer == null) {
+                    customer = Customer.retrieve(team.getCustomer_id());
+                    this.getTeamProperties(team.getDb_id()).put("customer", customer);
+                }
+                team.setCustomer(customer);
+            }
+            if (team.getSubscription_id() != null) {
+                Subscription subscription = (Subscription) this.getTeamProperties(team.getDb_id()).get("subscription");
+                if (subscription == null) {
+                    subscription = Subscription.retrieve(team.getSubscription_id());
+                    this.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+                }
+                team.setSubscription(subscription);
+            }
+        } catch (StripeException e) {
+            throw new HttpServletException(HttpStatus.InternError, e);
+        }
+    }
+
+    public String getKeyUser() {
+        return (String) this.getUserProperties(this.getUser().getDb_id()).get("keyUser");
+    }
+
+    public void decipher(JSONObject jsonObject) throws HttpServletException {
+        try {
+            String private_key = (String) this.getContextAttr("privateKey");
+            for (Object entry : jsonObject.entrySet()) {
+                Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
+                jsonObject.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
+            }
+        } catch (Exception e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "That didn't work! Please refresh the page");
+        }
+    }
+
+    public String decipher(String s) throws HttpServletException {
+        try {
+            String private_key = (String) this.getContextAttr("privateKey");
+            return RSA.Decrypt(s, private_key);
+        } catch (Exception e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "That didn't work! Please refresh the page");
+        }
+    }
+
+    public String cipher(String s) throws HttpServletException {
+        String public_key = (String) this.getContextAttr("publicKey");
+        return RSA.Encrypt(s, public_key);
+    }
+
+    public Map<Integer, Map<String, Object>> getUserIdMap() {
+        return (Map<Integer, Map<String, Object>>) this.getContextAttr("userIdMap");
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
 }

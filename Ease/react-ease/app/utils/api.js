@@ -1,4 +1,5 @@
 var axios = require('axios');
+import {reflect} from "./utils";
 
 const basic_get = (url, params) => {
   return axios.get(url, {params: params})
@@ -31,11 +32,21 @@ module.exports = {
     const img_url = "https://logo.clearbit.com/" + l.hostname;
     return axios.get("https://logo.clearbit.com/" + l.hostname).then(response => {
       if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1)
-        return "";
+        return '/resources/icons/link_app.png';
       return img_url;
     }).catch(err => {
       throw err;
     })
+  },
+  getLogo: function({url: url}) {
+    const l = document.createElement("a");
+    l.href = url;
+    const img_url = "https://logo.clearbit.com/" + l.hostname;
+    return reflect(axios.get("https://logo.clearbit.com/" + l.hostname)).then(response => {
+      if (response.error)
+        return '/resources/icons/link_app.png';
+      return img_url;
+    });
   },
   fetchTeams : function(){
     return axios.get('/api/v1/teams/GetTeams',{
@@ -43,8 +54,8 @@ module.exports = {
         timestamp: new Date().getTime()
       }
     }).then(function(response){
-          return response.data;
-        });
+      return response.data;
+    });
   },
   fetchTeam : function (team_id) {
     return axios.get('/api/v1/teams/GetTeam',{
@@ -204,10 +215,10 @@ module.exports = {
     });
   },
   getWebsitesCatalog: function() {
-      return axios.get('/api/v1/catalog/GetWebsites')
-          .then(function (response) {
-        return response.data;
-      });
+    return axios.get('/api/v1/catalog/GetWebsites')
+        .then(function (response) {
+          return response.data;
+        });
   },
   getCategories: function() {
     return axios.get('/api/v1/catalog/GetCategories')
@@ -215,10 +226,62 @@ module.exports = {
           return response.data
         });
   },
+  getWebsiteConnection: function ({website_id, account_information}) {
+    return axios.get('/api/v1/catalog/GetWebsiteConnection', {
+      params: {
+        website_id: website_id
+      }
+    }).then(response => {
+        var detail = response.data;
+        detail[0].user = account_information;
+        detail.test_connection = true;
+        var message = "NewConnection";
+        var event = new CustomEvent(message, {"detail": detail});
+        document.dispatchEvent(event);
+      }).catch(err => {
+        console.log(err);
+        throw err.response;
+      })
+  },
   dashboard: {
     fetchProfiles: function(){
       return axios.get('/api/v1/dashboard/GetProfiles').then(response => {
         return response.data;
+      });
+    },
+    fetchProfileList: function () {
+      return basic_get('/api/v1/dashboard/GetProfileList');
+    },
+    fetchProfile: ({profile_id}) => {
+      return basic_get('/api/v1/dashboard/GetProfile',{
+        profile_id: profile_id
+      });
+    },
+    fetchApps: function() {
+      return basic_get('/api/v1/dashboard/GetApps');
+    },
+    fetchApp: ({app_id}) => {
+      return basic_get('/api/v1/dashboard/GetApp', {
+        app_id: app_id
+      });
+    },
+    fetchSsoGroups: () => {
+      return basic_get('/api/v1/dashboard/GetSsoGroups');
+    },
+    getAppPassword: ({app_id}) => {
+      return axios.get('/api/v1/dashboard/GetAppPassword', {
+        params: {
+          app_id: app_id
+        }
+      }).then(response => {
+        return {password: decipher(response.data.password)};
+      }).catch(err => {
+        throw err.data.response;
+      });
+    },
+    getAppConnectionInformation: ({app_id}) => {
+      return basic_get('/api/v1/dashboard/GetConnection', {
+        app_id: app_id
       });
     }
   },
@@ -236,12 +299,10 @@ module.exports = {
         throw err.response.data;
       });
     },
-    getSingleAppPassword: function ({team_id, app_id}) {
-      return axios.get('/api/v1/teams/GetSingleAppPassword', {
+    getSingleAppPassword: function ({team_card_id}) {
+      return axios.get('/api/v1/teams/GetTeamSingleCardPassword', {
         params: {
-          team_id: team_id,
-          app_id: app_id,
-          timestamp: new Date().getTime()
+          team_card_id
         }
       }).then(response => {
         return decipher(response.data.password);
@@ -251,6 +312,17 @@ module.exports = {
     }
   },
   teams: {
+    fetchTeams: () => {
+      return basic_get('/api/v1/teams/GetTeams', {
+        timestamp: new Date().getTime()
+      });
+    },
+    fetchTeamApp: ({team_id, app_id}) => {
+      return basic_get('/api/v1/teams/GetTeamCard', {
+        team_id: team_id,
+        team_card_id: app_id,
+      })
+    },
     getInvitationInformation : function({code}){
       return axios.get('/api/v1/teams/GetInvitationInformation', {
         params : {

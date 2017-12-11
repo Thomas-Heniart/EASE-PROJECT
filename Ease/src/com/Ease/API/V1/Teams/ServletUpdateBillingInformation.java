@@ -10,6 +10,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Card;
 import com.stripe.model.Customer;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,8 +30,8 @@ public class ServletUpdateBillingInformation extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getUser().getTeamUserForTeam(team);
+            Team team = sm.getTeam(team_id);
+            TeamUser teamUser = sm.getUser().getTeamUser(team);
             if (!teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
             Customer customer = Customer.retrieve(team.getCustomer_id());
@@ -40,28 +41,42 @@ public class ServletUpdateBillingInformation extends HttpServlet {
             Card card = (Card) customer.getSources().retrieve(default_source);
             Map<String, Object> updateParams = new HashMap<>();
             String address_city = sm.getStringParam("address_city", true, true);
-            if (address_city != null && !address_city.equals(""))
+            if (address_city != null && !address_city.equals("")) {
+                card.setAddressCity(address_city);
                 updateParams.put("address_city", address_city);
+            }
             String address_country = sm.getStringParam("address_country", true, true);
-            if (address_country != null && !address_country.equals(""))
+            if (address_country != null && !address_country.equals("")) {
+                card.setAddressCountry(address_country);
                 updateParams.put("address_country", address_country);
+            }
             String address_line1 = sm.getStringParam("address_line1", true, true);
-            if (address_line1 != null && !address_line1.equals(""))
+            if (address_line1 != null && !address_line1.equals("")) {
+                card.setAddressLine1(address_line1);
                 updateParams.put("address_line1", address_line1);
+            }
             String address_line2 = sm.getStringParam("address_line2", true, true);
-            if (address_line2 != null && !address_line2.equals(""))
+            if (address_line2 != null && !address_line2.equals("")) {
+                card.setAddressLine2(address_line2);
                 updateParams.put("address_line2", address_line2);
+            }
             String address_state = sm.getStringParam("address_state", true, true);
-            if (address_state != null && !address_state.equals(""))
+            if (address_state != null && !address_state.equals("")) {
+                card.setAddressState(address_state);
                 updateParams.put("address_state", address_state);
+            }
             String address_zip = sm.getStringParam("address_zip", true, true);
-            if (address_zip != null && !address_zip.equals(""))
+            if (address_zip != null && !address_zip.equals("")) {
+                card.setAddressZip(address_zip);
                 updateParams.put("address_zip", address_zip);
+            }
             card.update(updateParams);
             updateParams.clear();
             String business_vat_id = sm.getStringParam("business_vat_id", true, true);
-            if (business_vat_id != null && !business_vat_id.equals(""))
+            if (business_vat_id != null && !business_vat_id.equals("")) {
+                customer.setBusinessVatId(business_vat_id);
                 updateParams.put("business_vat_id", business_vat_id);
+            }
             if (!updateParams.isEmpty())
                 customer.update(updateParams);
             JSONObject res = new JSONObject();
@@ -71,7 +86,8 @@ public class ServletUpdateBillingInformation extends HttpServlet {
                 vat_id = "";
             res.put("business_vat_id", vat_id);
             res.put("people_invited", team.invite_people());
-            res.put("card", card.toJson());
+            JSONParser parser = new JSONParser();
+            res.put("card", parser.parse(card.toJson()));
             sm.setSuccess(res);
         } catch (StripeException e) {
             sm.setError(e);

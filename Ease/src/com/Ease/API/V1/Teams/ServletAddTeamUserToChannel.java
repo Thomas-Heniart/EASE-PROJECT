@@ -2,12 +2,13 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,19 +27,22 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            channel.addTeamUser(teamUser, sm.getDB());
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
-            if (teamUser != teamUser_connected)
-                teamUser.addNotification(teamUser_connected.getUsername() + " added you in #" + channel.getName(), channel_id.toString(), "/resources/notifications/channel.png", sm.getTimestamp(), sm.getDB());
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getJson(), teamUser.getOrigin()));
+            channel.addTeamUser(teamUser);
+            sm.saveOrUpdate(channel);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser.equals(teamUser_connected))
+                NotificationFactory.getInstance().createAddTeamUserToChannelNotification(teamUser, teamUser_connected, channel, sm.getUserIdMap(), sm.getHibernateQuery());
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("room_id", channel_id);
+            ws_obj.put("team_user_id", teamUser_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM_MEMBER, WebSocketMessageAction.CREATED, ws_obj));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

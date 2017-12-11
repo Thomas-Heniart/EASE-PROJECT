@@ -1,7 +1,5 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.simple.JSONArray;
 
@@ -12,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by thomas on 24/05/2017.
@@ -24,8 +21,8 @@ public class ServletSearchDashboardApps extends HttpServlet {
         try {
             sm.needToBeConnected();
             String search = sm.getParam("q", true);
-            List<ClassicApp> classicAppList = sm.getUser().getDashboardManager().getClassicApps();
             JSONArray jsonArray = new JSONArray();
+            /* List<ClassicApp> classicAppList = sm.getUser().getDashboardManager().getClassicApps();
             for (ClassicApp classicApp : classicAppList) {
                 if (classicApp.isPinned())
                     continue;
@@ -34,7 +31,7 @@ public class ServletSearchDashboardApps extends HttpServlet {
                     jsonArray.add(classicApp.getSearchJson());
                 else if (website.getName().toLowerCase().startsWith(search.toLowerCase()) && website.getWebsiteAttributes().isIntegrated())
                     jsonArray.add(classicApp.getSearchJson());
-            }
+            } */
             sm.setSuccess(jsonArray);
         } catch (Exception e) {
             sm.setError(e);

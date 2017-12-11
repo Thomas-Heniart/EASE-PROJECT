@@ -1,8 +1,8 @@
 package com.Ease.Utils.Crypto;
 
-import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -10,12 +10,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.Ease.Utils.GeneralException;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.ServletManager;
-import org.apache.tomcat.util.codec.binary.Base64;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 
 public class AES {
@@ -53,7 +50,7 @@ public class AES {
         return new Base64().encodeToString(secretKey.getEncoded());
     }
 
-    public static String encrypt(String strToEncrypt, String key) {
+    public static String encrypt(String strToEncrypt, String key) throws HttpServletException {
         try {
             byte[] bytesKey = new Base64().decode(key);
             // rebuild key using SecretKeySpec
@@ -68,13 +65,11 @@ public class AES {
             return Base64.encodeBase64String(cipher.doFinal(strToEncrypt.getBytes("UTF-8")));
 
         } catch (Exception e) {
-
-            System.out.println("Error while encrypting: " + e.toString());
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return null;
     }
 
-    public static String decrypt(String strToDecrypt, String key) {
+    public static String decrypt(String strToDecrypt, String key) throws HttpServletException {
         try {
             byte[] bytesKey = new Base64().decode(key);
             // rebuild key using SecretKeySpec
@@ -87,10 +82,8 @@ public class AES {
             return new String(cipher.doFinal(Base64.decodeBase64(strToDecrypt)), StandardCharsets.UTF_8);
 
         } catch (Exception e) {
-
-            System.out.println("Error while decrypting: " + e.toString());
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
-        return null;
     }
 
     public static String encryptUserKey(String plainKey, String easePass, String salt) {
@@ -110,7 +103,7 @@ public class AES {
 
     }
 
-    public static String cipherKey(String plainKey, String keyUser, String salt) throws GeneralException {
+    public static String cipherKey(String plainKey, String keyUser, String salt) throws HttpServletException {
         try {
             byte[] saltBytes = pepperedSalt(salt.getBytes(), keyUser);
 
@@ -120,7 +113,7 @@ public class AES {
 
             return encrypt(plainKey, new Base64().encodeToString(secretKey.getEncoded()));
         } catch (Exception e) {
-            throw new GeneralException(ServletManager.Code.InternError, e);
+            throw new HttpServletException(HttpStatus.InternError, e);
         }
     }
 

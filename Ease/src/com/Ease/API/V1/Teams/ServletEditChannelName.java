@@ -2,8 +2,8 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -29,9 +29,8 @@ public class ServletEditChannelName extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
             if (channel.isDefault())
@@ -47,16 +46,16 @@ public class ServletEditChannelName extends HttpServlet {
             }
             String old_name = channel.getName();
             channel.editName(name);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!old_name.equals(channel.getName())) {
                 for (TeamUser teamUser : channel.getTeamUsers()) {
-                    if (teamUser == teamUser_connected)
+                    if (teamUser.equals(teamUser_connected))
                         continue;
-                    teamUser.addNotification("#" + old_name + " has been renamed to #" + channel.getName(), channel.getDb_id().toString(), "/resources/notifications/room_renamed.png", sm.getTimestamp(), sm.getDB());
+                    NotificationFactory.getInstance().createEditRoomNameNotification(teamUser, channel, old_name, sm.getUserIdMap(), sm.getHibernateQuery());
                 }
             }
             sm.saveOrUpdate(channel);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getWebSocketJson()));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

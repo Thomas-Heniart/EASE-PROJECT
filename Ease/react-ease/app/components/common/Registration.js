@@ -69,7 +69,14 @@ class Step1 extends React.Component {
                              onClick={this.props.handleInput}/>
               <Message error content={this.state.errorMessage}/>
               <Form.Field>
-                <Button positive fluid loading={this.state.loading} type="submit" disabled={this.props.username.length < 3}>Next</Button>
+                <Button
+                    positive
+                    fluid
+                    loading={this.state.loading}
+                    type="submit"
+                    disabled={this.props.username.length < 3}>
+                  Next
+                </Button>
               </Form.Field>
             </Form>
           </Segment>

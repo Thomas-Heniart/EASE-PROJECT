@@ -521,6 +521,7 @@ class TeamCreationView extends React.Component {
     this.setState({newsletter: !this.state.newsletter});
   }
   submitStep8(){
+    window.location.reload();
     window.location.href = '/';
   }
   handleInput(e, {value , name}){
@@ -600,6 +601,7 @@ class TeamCreationView extends React.Component {
     steps.push(<InvitePeopleStep
         key="7"
         ws_id={this.props.ws_id}
+        dispatch={this.props.dispatch}
         team_id={this.state.teamId}
         onStepValidated={this.submitStep8}/>);
     return (

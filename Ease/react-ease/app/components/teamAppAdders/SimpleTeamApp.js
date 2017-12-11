@@ -3,37 +3,40 @@ import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
-    SingleAppCopyPasswordButton,
-    PasswordChangeDropdown,
-    PasswordChangeHolder,
-    PasswordChangeManagerLabel,
-    PinAppButton,
-    renderSimpleAppEditUserLabel,
-    setUserDropdownText,
-    SharingRequestButton,
-    TeamAppActionButton
+  SingleAppCopyPasswordButton,
+  PasswordChangeDropdown,
+  PasswordChangeHolder,
+  PasswordChangeManagerLabel,
+  PinAppButton,
+  renderSimpleAppEditUserLabel,
+  setUserDropdownText,
+  SharingRequestButton,
+  TeamAppActionButton
 } from "./common";
 import {
-    askJoinTeamApp,
-    teamAppDeleteReceiver,
-    teamEditSingleApp,
-    teamEditSingleAppReceiver,
-    teamShareSingleApp
+  askJoinTeamApp,
+  joinTeamSingleCard, removeTeamCardReceiver, requestTeamSingleCard,
+  teamAppDeleteReceiver,
+  teamEditSingleApp,
+  teamEditSingleAppReceiver,
+  teamShareSingleCard
 } from "../../actions/appsActions";
 import {
-    credentialIconType,
-    handleSemanticInput,
-    reflect,
-    transformCredentialsListIntoObject,
-    transformWebsiteInfoIntoListAndSetValues
+  credentialIconType,
+  handleSemanticInput,
+  reflect,
+  transformCredentialsListIntoObject,
+  transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
 import {
-    findMeInReceivers,
-    getReceiverInList,
-    isAdmin,
-    selectItemFromListById,
-    sortReceiversAndMap
+  findMeInReceivers,
+  getReceiverInList,
+  isAdmin,
+  selectItemFromListById,
+  sortReceiversAndMap
 } from "../../utils/helperFunctions";
+import {addNotification} from "../../actions/notificationBoxActions";
+import {connect} from "react-redux";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
   return <Input size="mini"
@@ -52,21 +55,22 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
 };
 
 const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
-  const meReceiver = findMeInReceivers(app.receivers, me.id);
-  const asked = app.sharing_requests.indexOf(me.id) !== -1;
+  const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
+  const asked = !!app.requests.find(request => (request.team_user_id === me.id));
+
   return (
       <div class="team_app_actions_holder">
-        {meReceiver === null &&
+        {!meReceiver &&
         <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
-        {meReceiver !== null && meReceiver.accepted &&
-        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>}
+        {/*meReceiver !== null &&
+        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>*/}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
-        <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal(true, app))}}/>}
+        <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
       </div>
   )
 };
@@ -79,7 +83,7 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
              flowing
              hideOnScroll={true}
              trigger={
-               <Label class={classnames("user-label static", accepted ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
+               <Label class={classnames("user-label static accepted", can_see_information ? 'can_see_information' : null)}>
                  {username}
                  {admin &&
                  <Icon name={can_see_information ? 'unhide' : 'hide'}/>}&nbsp;
@@ -89,15 +93,14 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
              }
              content={
                <div>
-                 {!accepted && <span>App acceptation pending...</span>}
-                 {accepted && can_see_information &&
+                 {can_see_information &&
                  <span>Mobile access: on</span>}
-                 {accepted && !can_see_information &&
+                 {!can_see_information &&
                  <span>Mobile access: off</span>}
                  <br/>
-                 {accepted && can_see_information &&
+                 {can_see_information &&
                  <span>Password copy: on</span>}
-                 {accepted && !can_see_information &&
+                 {!can_see_information &&
                  <span>Password copy: off</span>}
                </div>}/>
   )
@@ -118,7 +121,7 @@ class ReceiversLabelGroup extends Component {
     return (
         <Label.Group>
           {this.props.receivers.map((item, idx) => {
-            if (!this.state.show_all && idx > 15)
+            if (!this.state.show_all && idx > 14)
               return null;
             const user = item.user;
             const receiver = item.receiver;
@@ -126,7 +129,7 @@ class ReceiversLabelGroup extends Component {
                 <TeamAppReceiverLabel key={receiver.team_user_id}
                                       admin={this.props.meAdmin}
                                       username={user.username}
-                                      can_see_information={receiver.can_see_information}
+                                      can_see_information={receiver.allowed_to_see_password}
                                       accepted={receiver.accepted}/>
             )
           })}
@@ -165,14 +168,18 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
     )
 };
 
+@connect(store => ({
+  teams: store.teams
+}))
 class SimpleTeamApp extends Component {
   constructor(props){
     super(props);
     this.state = {
       loading: false,
       edit: false,
+      name: '',
       credentials: [],
-      password_change_interval: 0,
+      password_reminder_interval: 0,
       description: '',
       users: [],
       selected_users: []
@@ -182,8 +189,8 @@ class SimpleTeamApp extends Component {
   toggleCanSeeInformation = (id) => {
     let users = this.state.users.map(item => {
       return {
-        ...item,
-        can_see_information: item.id === id ? !item.can_see_information : item.can_see_information
+          ...item,
+        can_see_information: item.id === id ? (isAdmin(item.user.role) ? item.can_see_information : !item.can_see_information) : item.can_see_information
       }
     });
     this.setState({users: users});
@@ -200,9 +207,11 @@ class SimpleTeamApp extends Component {
     e.preventDefault();
     this.setState({loading: true});
     this.props.dispatch(teamEditSingleApp({
-      app_id: this.props.app.id,
+      name: this.state.name,
+      team_id: this.props.app.team_id,
+      team_card_id: this.props.app.id,
       description: this.state.description,
-      password_change_interval: this.state.password_change_interval,
+      password_reminder_interval: this.state.password_reminder_interval,
       account_information: transformCredentialsListIntoObject(this.state.credentials)
     })).then(response => {
       const app = response;
@@ -213,27 +222,29 @@ class SimpleTeamApp extends Component {
       this.state.users.map(item => {
         const selected = this.state.selected_users.indexOf(item.id) !== -1;
         const receiver = getReceiverInList(receivers, item.id);
-        if (!selected && receiver !== null)
-          deleting.push(this.props.dispatch(teamAppDeleteReceiver({
-            team_id:this.props.team_id,
-            shared_app_id: receiver.shared_app_id,
+        if (!selected && !!receiver)
+          deleting.push(this.props.dispatch(removeTeamCardReceiver({
+            team_id:this.props.app.team_id,
+            team_card_id: this.props.app.id,
+            team_card_receiver_id: receiver.id})));
+        if (!receiver && selected)
+          sharing.push(this.props.dispatch(teamShareSingleCard({
+            team_id: this.props.app.team_id,
+            team_card_id: app.id,
             team_user_id: item.id,
-            app_id: app.id})));
-        if (receiver === null && selected)
-          sharing.push(this.props.dispatch(teamShareSingleApp({
-            team_id: this.props.team_id,
-            app_id: app.id,
-            team_user_id: item.id,
-            can_see_information: item.can_see_information})));
-        if (selected && receiver !== null && item.can_see_information !== receiver.can_see_information)
+            allowed_to_see_password: item.can_see_information})));
+        if (selected && !!receiver && item.can_see_information !== receiver.allowed_to_see_password)
           edit.push(this.props.dispatch(teamEditSingleAppReceiver({
-            team_id: this.props.team_id,
-            shared_app_id: receiver.shared_app_id,
-            can_see_information: item.can_see_information,
-            app_id: app.id})));
+            team_id: this.props.app.team_id,
+            team_card_id: this.props.app.id,
+            team_card_receiver_id: receiver.id,
+            allowed_to_see_password: item.can_see_information})));
       });
       const calls = deleting.concat(sharing, edit);
       Promise.all(calls.map(reflect)).then(response => {
+        this.props.dispatch(addNotification({
+          text: `${app.name} successfully modified!`
+        }));
         this.setEdit(false);
       });
     }).catch(err => {
@@ -241,9 +252,9 @@ class SimpleTeamApp extends Component {
     });
   };
   setupUsers = () => {
-    const channel = selectItemFromListById(this.props.channels, this.props.app.origin.id);
+    const channel = selectItemFromListById(this.props.channels, this.props.app.channel_id);
     let selected_users = [];
-    const users = channel.userIds.map(item => {
+    const users = channel.team_user_ids.map(item => {
       const user = selectItemFromListById(this.props.users, item);
       return {
         key: item,
@@ -262,8 +273,8 @@ class SimpleTeamApp extends Component {
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
-      const can_see_information = receiver !== null ? receiver.can_see_information : false;
-      if (receiver !== null)
+      const can_see_information = !!receiver ? receiver.allowed_to_see_password : !!isAdmin(item.user.role);
+      if (!!receiver)
         selected_users.push(item.id);
       return {
         ...item,
@@ -278,26 +289,34 @@ class SimpleTeamApp extends Component {
       const app = this.props.app;
       let credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
       this.setupUsers();
-      this.setState({credentials:credentials, password_change_interval: app.password_change_interval, description: app.description});
+      this.setState({credentials:credentials, password_reminder_interval: app.password_reminder_interval, description: app.description, name: app.name});
     }
     this.setState({edit: state, loading: false});
   };
   selfJoinApp = () => {
-    this.props.dispatch(teamShareSingleApp({
-      team_id : this.props.team_id,
-      app_id: this.props.app.id,
-      team_user_id: this.props.me.id,
-      can_see_information:true
-    })).then(() => {
-      this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, this.props.app));
-    });
+    const team_card = this.props.app;
+    const me = this.props.me;
+
+    this.props.dispatch(teamShareSingleCard({
+      team_id: team_card.team_id,
+      team_card_id: team_card.id,
+      team_user_id: me.id,
+      allowed_to_see_password: true
+    }));
+  };
+  requestApp = () => {
+    const team_card = this.props.app;
+    this.props.dispatch(requestTeamSingleCard({
+      team_id: team_card.team_id,
+      team_card_id: team_card.id
+    }));
   };
   acceptRequest = (state) => {
     const app = this.props.app;
     const me = this.props.me;
     const meReceiver = findMeInReceivers(app.receivers, me.id);
     if (state)
-        this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
+      this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
     else
       this.props.dispatch(teamAppDeleteReceiver({
         team_id: this.props.team_id,
@@ -309,7 +328,7 @@ class SimpleTeamApp extends Component {
   render(){
     const app = this.props.app;
     const me = this.props.me;
-    const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.origin.id).room_manager_id);
+    const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
@@ -325,24 +344,28 @@ class SimpleTeamApp extends Component {
         });
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
-          {meReceiver !== null && !meReceiver.accepted &&
-          <AcceptRefuseAppHeader pinneable={website.pinneable} onAccept={this.acceptRequest.bind(null, true)} onRefuse={this.acceptRequest.bind(null, false)}/>}
           <Segment>
             <Header as="h4">
-              {website.name}
-              {meReceiver !== null && meReceiver.accepted &&
-              <PinAppButton is_pinned={meReceiver.profile_id !== -1} onClick={e => {this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app))}}/>}
-              {app.sharing_requests.length > 0 && isAdmin(me.role) &&
-              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal(true, app))}}/>}
+              {!this.state.edit ?
+                  app.name :
+                  <Input size="mini"
+                         class="team-app-input"
+                         onChange={this.handleInput}
+                         name="name"
+                         value={this.state.name}
+                         placeholder="Card name..."
+                         type="text"
+                         required/>}
+              {app.requests.length > 0 && isAdmin(me.role) &&
+              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
             </Header>
-            {meReceiver !== null && !meReceiver.accepted &&
-            <div class="overlay"/>}
             {!this.state.edit &&
             <TeamSimpleAppButtonSet app={app}
                                     me={me}
                                     selfJoin={this.selfJoinApp}
-                                    requestApp={e => {this.props.dispatch(askJoinTeamApp(app.id))}}
-                                    dispatch={this.props.dispatch} editMode={this.setEdit.bind(null, true)}/>}
+                                    requestApp={this.requestApp}
+                                    dispatch={this.props.dispatch}
+                                    editMode={this.setEdit.bind(null, true)}/>}
             <div class="display_flex">
               <div class="logo_column">
                 <div class="logo">
@@ -352,14 +375,12 @@ class SimpleTeamApp extends Component {
               <div class="main_column">
                 <div class="credentials">
                   {credentials}
-                  {((meReceiver !== null && meReceiver.can_see_information) || me.id === room_manager.id) &&
-                  <SingleAppCopyPasswordButton team_id={this.props.team_id} app_id={app.id}/>}
+                  {((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id) &&
+                  <SingleAppCopyPasswordButton team_card_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
-                        <PasswordChangeHolder value={app.password_change_interval}/> :
-                        <PasswordChangeDropdown value={this.state.password_change_interval} onChange={this.handleInput}/>}
-                    {((!this.state.edit && app.password_change_interval !== 0) || (this.state.edit && this.state.password_change_interval !== 0)) &&
-                    <PasswordChangeManagerLabel username={room_manager.username}/>}
+                        <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username} /> :
+                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
                   </div>
                 </div>
                 <div>
@@ -376,6 +397,7 @@ class SimpleTeamApp extends Component {
                           selection={true}
                           renderLabel={renderSimpleAppEditUserLabel}
                           multiple
+                          noResultsMessage='No more results found'
                           placeholder="Tag your team members here..."/>}
                 </div>
                 {(this.state.description || app.description || this.state.edit) &&

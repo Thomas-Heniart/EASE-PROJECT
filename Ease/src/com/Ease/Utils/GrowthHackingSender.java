@@ -56,13 +56,13 @@ public class GrowthHackingSender implements Runnable {
 			Mail doneMail = new Mail("thomas@ease.space", "azeqsdwxc1008!!//", "Thomas @Ease");
 			doneMail.sendGrowthHackingDoneEmail();
 			db.close();
-		} catch(GeneralException e) {
+		} catch(HttpServletException e) {
 			e.printStackTrace();
 			if (j < emails.size() - 1 && email != null) {
 				try {
 					Mail failMail = new Mail("thomas@ease.space", "azeqsdwxc1008!!//", "Thomas @Ease");
 					failMail.sendGrowthHackingFailEmail(email);
-				} catch (GeneralException e1) {
+				} catch (HttpServletException e1) {
 					e1.printStackTrace();
 				}
 			}

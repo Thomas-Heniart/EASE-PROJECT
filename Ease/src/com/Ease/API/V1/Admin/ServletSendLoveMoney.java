@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -22,8 +21,7 @@ public class ServletSendLoveMoney extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             Integer team_id = sm.getIntParam("team_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
             Integer credit = sm.getIntParam("credit", true, false);
             if (credit < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Don't be an asshole ^^ ");

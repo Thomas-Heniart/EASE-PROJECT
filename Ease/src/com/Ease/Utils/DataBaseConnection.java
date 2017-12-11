@@ -1,10 +1,6 @@
 package com.Ease.Utils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DataBaseConnection {
 
@@ -18,20 +14,20 @@ public class DataBaseConnection {
 		this.transaction = 0;
 	}
 	
-	public DatabaseRequest prepareRequest(String request) throws GeneralException {
+	public DatabaseRequest prepareRequest(String request) throws HttpServletException {
 		this.request = new DatabaseRequest(con, request);
 		return this.request;
 	}
 	
-	public DatabaseResult get() throws GeneralException {
+	public DatabaseResult get() throws HttpServletException {
 		return this.request.get();
 	}
 	
-	public Integer set() throws GeneralException {
+	public Integer set() throws HttpServletException {
 		return this.request.set();
 	}
 	
-	public ResultSet get(String request) throws GeneralException {
+	public ResultSet get(String request) throws HttpServletException {
 		
 		ResultSet rs;
 		try {
@@ -40,11 +36,11 @@ public class DataBaseConnection {
 			rs = con.createStatement().executeQuery(request);
 			return rs;
 		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 	}
 	
-	public Integer set(String request) throws GeneralException {
+	public Integer set(String request) throws HttpServletException {
 		
 		try {
 			Statement stmt = con.createStatement();
@@ -62,42 +58,42 @@ public class DataBaseConnection {
 	        stmt.close();
 	        return id_row;
 		} catch (SQLException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 	}
 	
-	public int startTransaction() throws GeneralException {
+	public int startTransaction() throws HttpServletException {
 		this.transaction++;
 		if (this.transaction == 1) {
 			try {
 				con.createStatement().executeUpdate("START TRANSACTION");
 			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
+				throw new HttpServletException(HttpStatus.InternError, e);
 			}
 		}
 		return (this.transaction);
 	}
 	
-	public void commitTransaction(int transaction) throws GeneralException {
+	public void commitTransaction(int transaction) throws HttpServletException {
 		if (this.transaction == transaction) {
 			this.transaction--;
 			if (this.transaction == 0) {
 				try {
 					con.createStatement().executeUpdate("COMMIT");
 				} catch (SQLException e) {
-					throw new GeneralException(ServletManager.Code.InternError, e);
+					throw new HttpServletException(HttpStatus.InternError, e);
 				}
 			}
 		} else {
-			throw new GeneralException(ServletManager.Code.InternError, "Bad transaction commit");
+			throw new HttpServletException(HttpStatus.InternError, "Bad transaction commit");
 		}
 	}
-	public void rollbackTransaction() throws GeneralException {
+	public void rollbackTransaction() throws HttpServletException {
 		if (this.transaction > 0) {
 			try {
 				con.createStatement().executeUpdate("ROLLBACK");
 			} catch (SQLException e) {
-				throw new GeneralException(ServletManager.Code.InternError, e);
+				throw new HttpServletException(HttpStatus.InternError, e);
 			}
 		}
 	}

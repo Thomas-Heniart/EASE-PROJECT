@@ -48,7 +48,7 @@ function TeamSimpleAppButtonSet(props) {
         {(meSender || me.role > 1) &&
         <button class="button-unstyle team_app_delete"
                 data-tip="Delete App"
-                onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app))}}>
+                onClick={e => {props.dispatch(modalActions.showTeamDeleteAppModal(true, app.id))}}>
           <i class="fa fa-trash"/>
         </button>}
       </div>

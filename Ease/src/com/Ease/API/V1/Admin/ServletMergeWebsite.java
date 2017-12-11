@@ -2,20 +2,9 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.WebsiteApp.WebsiteApp;
-import com.Ease.Dashboard.User.User;
-import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
-import com.Ease.Utils.DataBaseConnection;
-import com.Ease.Utils.DatabaseRequest;
+import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketMessage;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,9 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 @WebServlet("/api/v1/admin/MergeWebsite")
 public class ServletMergeWebsite extends HttpServlet {
@@ -37,50 +23,17 @@ public class ServletMergeWebsite extends HttpServlet {
             Integer id = Integer.parseInt(sm.getStringParam("id", true, false));
             Integer id_to_merge = sm.getIntParam("id_to_merge", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithId(id);
-            Website website_to_merge = catalog.getWebsiteWithId(id_to_merge);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
-            DataBaseConnection db = sm.getDB();
-            Map<String, User> userMap = (Map<String, User>) sm.getContextAttr("users");
-            int transaction2 = db.startTransaction();
-            for (Team team : teamManager.getTeams()) {
-                int transaction = db.startTransaction();
-                for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                    App app = (App) shareableApp;
-                    if (!app.isClassicApp() && !app.isEmpty())
-                        continue;
-                    WebsiteApp websiteApp = (WebsiteApp) app;
-                    if (website_to_merge != websiteApp.getSite())
-                        continue;
-                    websiteApp.setWebsite(website, db);
-                    app.setName(website.getName(), db);
-                    JSONObject target = shareableApp.getOrigin();
-                    target.put("team_id", team.getDb_id());
-                    webSocketMessageList.add(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_APP, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
-                }
-                db.commitTransaction(transaction);
-                System.out.println(webSocketMessageList.size() + " messages send");
-                team.getWebSocketManager().sendObjects(webSocketMessageList);
-                webSocketMessageList.clear();
+            Website website = catalog.getWebsiteWithId(id, sm.getHibernateQuery());
+            Website website_to_merge = catalog.getWebsiteWithId(id_to_merge, sm.getHibernateQuery());
+            for (WebsiteApp websiteApp : website_to_merge.getWebsiteAppSet()) {
+                websiteApp.setWebsite(website);
+                sm.saveOrUpdate(websiteApp);
             }
-            for (User user : userMap.values()) {
-                for (App app : user.getDashboardManager().getApps()) {
-                    if (!app.isWebsiteApp())
-                        continue;
-                    WebsiteApp websiteApp = (WebsiteApp) app;
-                    if (website_to_merge != websiteApp.getSite())
-                        continue;
-                    websiteApp.setWebsite(website, db);
-                }
+            for (TeamWebsiteCard teamWebsiteCard : website_to_merge.getTeamWebsiteCardSet()) {
+                teamWebsiteCard.setWebsite(website);
+                sm.saveOrUpdate(teamWebsiteCard);
             }
-            DatabaseRequest databaseRequest = db.prepareRequest("UPDATE websiteApps SET website_id = ? WHERE website_id = ?;");
-            databaseRequest.setInt(website.getDb_id());
-            databaseRequest.setInt(website_to_merge.getDb_id());
-            databaseRequest.set();
-            catalog.removeWebsite(website_to_merge.getDb_id());
             sm.deleteObject(website_to_merge);
-            db.commitTransaction(transaction2);
             sm.setSuccess("Websites merged");
         } catch (Exception e) {
             sm.setError(e);

@@ -58,6 +58,11 @@
                 padding: 1% 1% 1% 1%;
                 border-radius: 5px;
             }
+            @media screen and (max-width: 768px) {
+                .truc {
+                    margin: 0;
+                }
+            }
             .button {
                 text-align: center;
                 margin-top: 20px;
@@ -65,7 +70,7 @@
         </style>
     </head>
     <body>
-    <img src="https://ease.space/resources/images/Ease_Logo.png" style="width:256px;height:133px;"/>
+    <img src="resources/images/ease_logo_white.svg" style="width:250px;height:50px;"/>
     <h1>Mentions Légales</h1>
     <div class="truc">
         <h2>Editeur du site</h2>

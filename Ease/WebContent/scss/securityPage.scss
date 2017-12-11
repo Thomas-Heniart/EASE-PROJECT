@@ -92,6 +92,7 @@ header {
       color: $themeColor;
       text-decoration: none;
       position: relative;
+      display: inline-flex;
       &.active {
         font-weight: bold;
         &:before {
@@ -339,6 +340,7 @@ section#security {
         color: $themeColor;
         text-decoration: none;
         position: relative;
+        display: inline-flex;
         &.active {
           font-weight: bold;
           &:before {

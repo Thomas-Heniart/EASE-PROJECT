@@ -1,12 +1,11 @@
 package com.Ease.Catalog;
 
 import com.Ease.Context.Variables;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
-import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.GeneralException;
+import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.Utils.ServletManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,7 +14,6 @@ import org.json.simple.parser.ParseException;
 import javax.persistence.*;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,52 +27,58 @@ public class Website {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "login_url")
-    protected String login_url;
+    private String login_url;
 
     @Column(name = "website_name")
-    protected String name;
+    private String name;
 
     @Column(name = "folder")
-    protected String folder;
+    private String folder;
 
     @Column(name = "website_homepage")
-    protected String website_homepage;
+    private String website_homepage;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "website_attributes_id")
-    protected WebsiteAttributes websiteAttributes;
+    private WebsiteAttributes websiteAttributes;
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    protected Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    protected Category category;
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "sso")
-    protected Sso sso;
+    private Sso sso;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "signIn_website_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
-    protected Set<Website> signIn_websites = ConcurrentHashMap.newKeySet();
+    private Set<Website> signIn_websites = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "signIn_website_id"))
-    protected Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
+    private Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    protected Set<WebsiteRequest> websiteRequests = ConcurrentHashMap.newKeySet();
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteRequest> websiteRequests = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    protected Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteApp> websiteAppSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TeamWebsiteCard> teamWebsiteCardSet = ConcurrentHashMap.newKeySet();
 
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
@@ -201,6 +205,22 @@ public class Website {
         this.websiteCredentials = websiteCredentials;
     }
 
+    public Set<WebsiteApp> getWebsiteAppSet() {
+        return websiteAppSet;
+    }
+
+    public void setWebsiteAppSet(Set<WebsiteApp> websiteAppSet) {
+        this.websiteAppSet = websiteAppSet;
+    }
+
+    public Set<TeamWebsiteCard> getTeamWebsiteCardSet() {
+        return teamWebsiteCardSet;
+    }
+
+    public void setTeamWebsiteCardSet(Set<TeamWebsiteCard> teamWebsiteCardSet) {
+        this.teamWebsiteCardSet = teamWebsiteCardSet;
+    }
+
     public void addConnectWith_website(Website website) {
         this.getConnectWith_websites().add(website);
     }
@@ -233,8 +253,16 @@ public class Website {
         this.getWebsiteCredentials().remove(websiteCredentials);
     }
 
+    public void addWebsiteApp(WebsiteApp websiteApp) {
+        this.getWebsiteAppSet().add(websiteApp);
+    }
+
+    public void removeWebsiteApp(WebsiteApp websiteApp) {
+        this.getWebsiteAppSet().remove(websiteApp);
+    }
+
     public String getLogo() {
-        return "/resources/websites/" + this.getFolder() + "/logo.png";
+        return this.getWebsiteAttributes().getLogo_url() == null ? ("/resources/websites/" + this.getFolder() + "/logo.png") : this.getWebsiteAttributes().getLogo_url();
     }
 
     public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {
@@ -246,6 +274,16 @@ public class Website {
             if (value.length() >= 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + websiteInformation.getInformation_name());
             res.put(websiteInformation.getInformation_name(), value);
+        }
+        return res;
+    }
+
+    public Map<String, String> getInformationFromJson(JSONObject information) {
+        Map<String, String> res = new ConcurrentHashMap<>();
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
+            String value = (String) information.get(websiteInformation.getInformation_name());
+            if (value != null && !value.equals("") && value.length() <= 255)
+                res.put(websiteInformation.getInformation_name(), value);
         }
         return res;
     }
@@ -285,59 +323,13 @@ public class Website {
         return res;
     }
 
-    /* @TODO to be replaced ASAP do it with a JSON*/
-
-    public Map<String, String> getNeededInfos(ServletManager sm) throws HttpServletException {
-        try {
-            Map<String, String> res = new HashMap<>();
-            for (WebsiteInformation information : this.getWebsiteInformationList()) {
-                String info_name = information.getInformation_name();
-                String value = sm.getServletParam(info_name, false);
-                if (value == null || value.isEmpty())
-                    throw new HttpServletException(HttpStatus.BadRequest, "Wrong info: " + info_name + ".");
-                if (info_name.equals("password")) {
-                    //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
-                    String keyDate = sm.getServletParam("keyDate", true);
-                    if (keyDate != null && !keyDate.equals(""))
-                        value = RSA.Decrypt(value, Integer.parseInt(keyDate));
-                }
-                res.put(info_name, value);
-            }
-            return res;
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError, "Oops, please contact us at thomas@ease.space");
-        }
-    }
-
-    public Map<String, String> getNeededInfosForEdition(ServletManager sm) throws GeneralException {
-        Map<String, String> infos = new HashMap<String, String>();
-        for (WebsiteInformation info : this.getWebsiteInformationList()) {
-            String info_name = info.getInformation_name();
-            String value = sm.getServletParam(info_name, false);
-            if (value == null || value.equals("")) {
-                if (info_name.equals("password"))
-                    continue;
-                else
-                    throw new GeneralException(ServletManager.Code.ClientWarning, "Wrong info: " + info_name + ".");
-            }
-            if (info_name.equals("password")) {
-                //Mettre un param keyDate dans le post si besoin de decrypter en RSA. Correspond à la private key RSA,
-                String keyDate = sm.getServletParam("keyDate", true);
-                if (keyDate != null && !keyDate.equals(""))
-                    value = RSA.Decrypt(value, Integer.parseInt(keyDate));
-            }
-            infos.put(info_name, value);
-        }
-        return infos;
-    }
-
     /* For current version of askInfo */
     public JSONObject getConnectionJson() throws HttpServletException {
         if (!this.getWebsiteAttributes().isIntegrated())
             throw new HttpServletException(HttpStatus.BadRequest, "Please, wait until we integrate this website");
         JSONParser parser = new JSONParser();
         try {
-            JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.PROJECT_PATH + "/resources/websites/" + this.getFolder() + "/connect.json"));
+            JSONObject a = (JSONObject) parser.parse(new FileReader(Variables.WEBSITES_FOLDER_PATH + this.getFolder() + "/connect.json"));
             a.put("loginUrl", this.getLogin_url());
             a.put("website_name", this.getName());
             a.put("siteSrc", this.getFolder());
@@ -358,5 +350,20 @@ public class Website {
         for (WebsiteRequest websiteRequest : this.getWebsiteRequests())
             res = websiteRequest.getJson();
         return res;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Website website = (Website) o;
+
+        return db_id.equals(website.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
     }
 }

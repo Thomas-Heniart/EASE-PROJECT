@@ -16,15 +16,15 @@ public class Sso {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "name")
-    protected String name;
+    private String name;
 
     @Column(name = "img_path")
-    protected String imgPath;
+    private String imgPath;
 
-    @OneToMany(mappedBy = "sso", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "sso", orphanRemoval = true)
     @MapKey(name = "db_id")
     private Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
 
@@ -77,5 +77,20 @@ public class Sso {
         websites.addAll(this.getWebsiteMap().keySet());
         res.put("websites", websites);
         return res;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sso sso = (Sso) o;
+
+        return db_id.equals(sso.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
     }
 }

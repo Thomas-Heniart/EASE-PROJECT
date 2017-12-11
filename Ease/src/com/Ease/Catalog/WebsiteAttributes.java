@@ -12,20 +12,23 @@ public class WebsiteAttributes {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "addedDate")
     @Temporal(TemporalType.TIMESTAMP)
-    protected Date addedDate = new Date();
+    private Date addedDate = new Date();
 
     @Column(name = "new")
-    protected boolean new_website = true;
+    private boolean new_website = true;
 
     @Column(name = "public")
-    protected boolean public_website;
+    private boolean public_website;
 
     @Column(name = "integrated")
-    protected boolean integrated = false;
+    private boolean integrated = false;
+
+    @Column(name = "logo_url")
+    private String logo_url;
 
     public WebsiteAttributes(Boolean public_website) {
         this.public_website = public_website;
@@ -73,5 +76,28 @@ public class WebsiteAttributes {
 
     public void setIntegrated(boolean integrated) {
         this.integrated = integrated;
+    }
+
+    public String getLogo_url() {
+        return logo_url;
+    }
+
+    public void setLogo_url(String logo_url) {
+        this.logo_url = logo_url;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WebsiteAttributes that = (WebsiteAttributes) o;
+
+        return db_id.equals(that.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
     }
 }

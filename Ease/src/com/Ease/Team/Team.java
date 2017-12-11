@@ -2,24 +2,20 @@ package com.Ease.Team;
 
 import com.Ease.Catalog.Website;
 import com.Ease.Context.Variables;
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.ShareableApp;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Mail.SendGridMail;
-import com.Ease.Utils.*;
-import com.Ease.websocketV1.WebSocketManager;
-import com.stripe.exception.*;
+import com.Ease.Metrics.ClickOnApp;
+import com.Ease.NewDashboard.App;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
-import javax.servlet.ServletContext;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,80 +38,55 @@ public class Team {
         inverse_plansMap.put("EaseFreemium", 1);
     }
 
-    public static List<Team> loadTeams(ServletContext context, DataBaseConnection db) throws HttpServletException {
-        HibernateQuery query = new HibernateQuery();
-        query.queryString("SELECT t FROM Team t WHERE t.active = true");
-        List<Team> teams = query.list();
-        for (Team team : teams) {
-            team.lazyInitialize();
-            team.getAppManager().setShareableApps(App.loadShareableAppsForTeam(team, context, db));
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                List<SharedApp> sharedApps = App.loadSharedAppsForShareableApp(shareableApp, team, context, db);
-                shareableApp.setSharedApps(sharedApps);
-                team.getAppManager().setSharedApps(sharedApps);
-            }
-        }
-        query.commit();
-        return teams;
-    }
-
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "name")
-    protected String name;
+    private String name;
 
     @Column(name = "customer_id")
-    protected String customer_id;
+    private String customer_id;
 
     @Column(name = "subscription_id")
-    protected String subscription_id;
+    private String subscription_id;
 
     @Column(name = "subscription_date")
-    protected Date subscription_date;
+    private Date subscription_date;
 
     @Column(name = "card_entered")
-    protected boolean card_entered = false;
+    private boolean card_entered = false;
 
     @Column(name = "invite_people")
-    protected boolean invite_people = false;
+    private boolean invite_people = false;
 
     @Column(name = "active")
-    protected boolean active = true;
+    private boolean active = true;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
-    protected Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
+    private Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "db_id")
-    protected Map<Integer, Channel> channels = new ConcurrentHashMap<>();
+    private Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
-    @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
-    protected Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
+    @ManyToMany(mappedBy = "teams")
+    private Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
-    @Transient
-    protected Map<Integer, TeamUser> teamUsersWaitingForVerification = new ConcurrentHashMap<>();
-
-    @Transient
-    protected AppManager appManager = new AppManager();
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "db_id")
+    private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
 
     @Transient
-    private int activeSubscriptions;
-
-    @Transient
-    private WebSocketManager webSocketManager = new WebSocketManager();
-
-    @Transient
-    private Channel default_channel;
+    private Customer customer;
 
     @Transient
     private Subscription subscription;
 
     @Transient
-    private Customer customer;
+    private Channel default_channel;
 
     public Team(String name) {
         this.name = name;
@@ -156,30 +127,6 @@ public class Team {
         this.subscription_id = subscription_id;
     }
 
-    public Subscription getSubscription() throws HttpServletException {
-        try {
-            if (subscription == null)
-                subscription = Subscription.retrieve(this.getSubscription_id());
-            return subscription;
-        } catch (StripeException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
-    }
-
-    public Customer getCustomer() throws HttpServletException {
-        try {
-            if (customer == null)
-                customer = Customer.retrieve(this.getCustomer_id());
-            return customer;
-        } catch (StripeException e) {
-            throw new HttpServletException(HttpStatus.InternError, e);
-        }
-    }
-
     public boolean isCard_entered() {
         return card_entered;
     }
@@ -212,6 +159,45 @@ public class Team {
         this.active = active;
     }
 
+    public synchronized Map<Integer, TeamCard> getTeamCardMap() {
+        return teamCardMap;
+    }
+
+    public void setTeamCardMap(Map<Integer, TeamCard> teamCardMap) {
+        this.teamCardMap = teamCardMap;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
+
+    public TeamCard getTeamCard(Integer id) throws HttpServletException {
+        TeamCard teamCard = this.getTeamCardMap().get(id);
+        if (teamCard == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "This teamCard does not exist");
+        return teamCard;
+    }
+
+    public void addTeamCard(TeamCard teamCard) {
+        this.getTeamCardMap().put(teamCard.getDb_id(), teamCard);
+    }
+
+    public void removeTeamCard(TeamCard teamCard) {
+        this.getTeamCardMap().remove(teamCard.getDb_id());
+    }
+
     public boolean isFreemium() throws HttpServletException {
         return this.getSubscription().getPlan().getId().equals("EaseFreemium");
     }
@@ -240,24 +226,12 @@ public class Team {
         this.channels = channels;
     }
 
-    public Set<Website> getTeamWebsites() {
+    public synchronized Set<Website> getTeamWebsites() {
         return teamWebsites;
     }
 
     public void setTeamWebsites(Set<Website> teamWebsites) {
         this.teamWebsites = teamWebsites;
-    }
-
-    public AppManager getAppManager() {
-        return appManager;
-    }
-
-    public void lazyInitialize() {
-        for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
-            TeamUser teamUser = entry.getValue();
-            if (!teamUser.isVerified())
-                this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
-        }
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
@@ -286,8 +260,6 @@ public class Team {
 
     public void addTeamUser(TeamUser teamUser) {
         this.getTeamUsers().put(teamUser.getDb_id(), teamUser);
-        if (!teamUser.isVerified())
-            this.teamUsersWaitingForVerification.put(teamUser.getDb_id(), teamUser);
     }
 
     public void addChannel(Channel channel) {
@@ -327,10 +299,6 @@ public class Team {
             this.name = name;
     }
 
-    public JSONObject getJson() throws HttpServletException {
-        return this.getSimpleJson();
-    }
-
     public Map<String, String> getAdministratorsUsernameAndEmail() {
         Map<String, String> res = new HashMap<>();
         for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
@@ -355,83 +323,29 @@ public class Team {
         return res;
     }
 
-    public void askVerificationForTeamUser(TeamUser teamUser, String code) {
-        for (Map.Entry<String, String> usernameAndEmail : this.getAdministratorsUsernameAndEmail().entrySet()) {
-            String username = usernameAndEmail.getKey();
-            String email = usernameAndEmail.getValue();
-            SendGridMail sendGridMail = new SendGridMail("Benjamin @Ease", "benjamin@ease.space");
-            sendGridMail.sendTeamUserVerificationEmail(username, email, teamUser.getUsername(), code);
-        }
+    public JSONObject getWebSockeetJson() throws HttpServletException {
+        JSONObject res = new JSONObject();
+        res.put("team", this.getJson());
+        return res;
     }
 
-    public void validateTeamUserRegistration(String deciphered_teamKey, TeamUser teamUser, DataBaseConnection db) throws HttpServletException {
-        if (!this.teamUsersWaitingForVerification.containsKey(teamUser.getDb_id()))
-            throw new HttpServletException(HttpStatus.BadRequest, "teamUser already validated");
-        try {
-            DatabaseRequest request = db.prepareRequest("SELECT userKeys.publicKey FROM (userKeys JOIN users ON userKeys.id = users.key_id) JOIN teamUsers ON users.id = teamUsers.user_id WHERE teamUsers.id = ?;");
-            request.setInt(teamUser.getDb_id());
-            DatabaseResult rs = request.get();
-            rs.next();
-            String userPublicKey = rs.getString(1);
-            teamUser.validateRegistration(deciphered_teamKey, userPublicKey, db);
-            this.teamUsersWaitingForVerification.remove(teamUser);
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError);
-        }
-
+    public JSONObject getJson() throws HttpServletException {
+        JSONObject res = this.getSimpleJson();
+        JSONArray rooms = new JSONArray();
+        JSONArray teamUsers = new JSONArray();
+        for (Channel channel : this.getChannels().values())
+            rooms.add(channel.getJson());
+        for (TeamUser teamUser : this.getTeamUsers().values())
+            teamUsers.add(teamUser.getJson());
+        res.put("rooms", rooms);
+        res.put("team_users", teamUsers);
+        return res;
     }
 
     public void editName(String name) {
         if (name.equals(this.getName()))
             return;
         this.name = name;
-    }
-
-    public JSONArray getShareableAppsForChannel(Integer channel_id) throws HttpServletException {
-        Channel channel = this.getChannelWithId(channel_id);
-        JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-            if (channel != shareableApp.getChannel())
-                continue;
-            jsonArray.add(shareableApp.getShareableJson());
-        }
-        return jsonArray;
-    }
-
-    public JSONArray getShareableAppsForTeamUser(Integer teamUser_id) throws HttpServletException {
-        TeamUser teamUser = this.getTeamUserWithId(teamUser_id);
-        JSONArray jsonArray = new JSONArray();
-        for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-            if (!shareableApp.getTeamUser_tenants().contains(teamUser))
-                continue;
-            App app = (App) shareableApp;
-            if (app.isLinkApp()) {
-                SharedApp sharedApp = shareableApp.getSharedAppForTeamUser(teamUser);
-                if (sharedApp == null)
-                    continue;
-                if (sharedApp.isPinned())
-                    jsonArray.add(shareableApp.getShareableJson());
-            } else
-                jsonArray.add(shareableApp.getShareableJson());
-        }
-        return jsonArray;
-    }
-
-    public void decipherApps(String deciphered_teamKey) throws HttpServletException {
-        try {
-            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-                App app = (App) shareableApp;
-                if (app.isClassicApp())
-                    ((ClassicApp) app).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
-                    App app1 = (App) sharedApp;
-                    if (app1.isClassicApp())
-                        ((ClassicApp) app1).getAccount().decipherWithTeamKeyIfNeeded(deciphered_teamKey);
-                }
-            }
-        } catch (GeneralException e) {
-            throw new HttpServletException(HttpStatus.InternError);
-        }
     }
 
     public Channel getChannelNamed(String name) {
@@ -447,43 +361,44 @@ public class Team {
         int res = 0;
         for (Map.Entry<Integer, TeamUser> entry : this.getTeamUsers().entrySet()) {
             TeamUser teamUser = entry.getValue();
-            if (teamUser.isActive_subscription())
+            if (teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty())
                 res++;
         }
         return res;
     }
 
-    public void updateSubscription() {
-        if (this.subscription_id == null || this.subscription_id.equals(""))
-            return;
-        this.activeSubscriptions = 0;
-        this.getTeamUsers().forEach((id, teamUser) -> {
-            for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser)) {
-                if (!((App) sharedApp).isReceived())
-                    continue;
-                teamUser.setActive_subscription(true);
-                break;
-            }
-            if (teamUser.isActive_subscription())
-                activeSubscriptions++;
-        });
-        System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
+    public void updateSubscription(Map<String, Object> teamProperties) {
         try {
-            if (this.getSubscription().getQuantity() != activeSubscriptions) {
+            if (this.subscription_id == null || this.subscription_id.equals(""))
+                return;
+            int activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
+            System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
+            this.initializeStripe(teamProperties);
+            if (this.getSubscription().getQuantity() <= activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
                 this.getSubscription().update(updateParams);
+                this.getSubscription().setQuantity(activeSubscriptions);
             }
-        } catch (AuthenticationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-        } catch (CardException e) {
-            e.printStackTrace();
-        } catch (APIException e) {
-            e.printStackTrace();
+        }
+    }
+
+    public void initializeStripe(Map<String, Object> teamProperties) {
+        try {
+            Customer customer = (Customer) teamProperties.get("customer");
+            if (customer == null) {
+                customer = Customer.retrieve(this.getCustomer_id());
+                teamProperties.put("customer", customer);
+            }
+            this.setCustomer(customer);
+            Subscription subscription = (Subscription) teamProperties.get("subscription");
+            if (subscription == null) {
+                subscription = Subscription.retrieve(this.getSubscription_id());
+                teamProperties.put("subscription", subscription);
+            }
+            this.setSubscription(subscription);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -530,23 +445,11 @@ public class Team {
                 customer.update(customerParams);
                 customer.setAccountBalance(Long.valueOf(team_account_balance));
                 return team_account_balance;
-            } catch (AuthenticationException e) {
-                e.printStackTrace();
-            } catch (InvalidRequestException e) {
-                e.printStackTrace();
-            } catch (APIConnectionException e) {
-                e.printStackTrace();
-            } catch (CardException e) {
-                e.printStackTrace();
-            } catch (APIException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return null;
-    }
-
-    public WebSocketManager getWebSocketManager() {
-        return webSocketManager;
     }
 
     public Channel createDefaultChannel(TeamUser owner) {
@@ -563,14 +466,14 @@ public class Team {
         return null;
     }
 
-    public void checkFreeTrialEnd(DataBaseConnection db) {
+    public void checkFreeTrialEnd() {
         MailJetBuilder mailJetBuilder;
         if (this.card_entered)
             return;
         try {
             if (!this.isFreemium())
                 return;
-            String link = Variables.URL_PATH + "teams#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
+            String link = Variables.URL_PATH + "#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateComparator.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
@@ -591,55 +494,63 @@ public class Team {
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
             }
-            for (ShareableApp shareableApp : this.getAppManager().getShareableApps().values()) {
-                ((App) shareableApp).setDisabled(this.isBlocked(), db);
-                for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
-                    if (!this.isBlocked() && sharedApp.getTeamUser_tenant().isDisabled())
-                        continue;
-                    ((App) sharedApp).setDisabled(this.isBlocked(), db);
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void checkDepartureDates(Date date, DataBaseConnection db) {
-        try {
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd");
-            for (TeamUser teamUser : this.getTeamUsers().values()) {
-                if (teamUser.getDepartureDate() == null)
-                    continue;
-                if (teamUser.isDisabled()) {
-                    System.out.println(this.getAppManager().getSharedAppsForTeamUser(teamUser).size());
-                    for (SharedApp sharedApp : this.getAppManager().getSharedAppsForTeamUser(teamUser))
-                        ((App) sharedApp).setDisabled(true, db);
-                }
-                if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
-                    calendar.setTime(teamUser.getDepartureDate());
-                    String suffixe = "th";
-                    switch (calendar.get(Calendar.DAY_OF_MONTH)) {
-                        case 1: {
-                            suffixe = "st";
-                            break;
-                        }
-                        case 2: {
-                            suffixe = "nd";
-                            break;
-                        }
-                        case 3: {
-                            suffixe = "rd";
-                            break;
-                        }
-                    }
-                    String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
-                    this.getTeamUserWithId(teamUser.getAdmin_id()).addNotification("Reminder: the departure of @" + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "@" + teamUser.getDb_id() + "/flexPanel", "/resources/notifications/user_departure.png", date, db);
+    public synchronized boolean hasTeamUserWithUsername(String username) {
+        return this.getTeamUsers().values().stream().anyMatch(teamUser -> teamUser.getUsername().equals(username));
+    }
 
-                }
+    public JSONArray getAverageOfClick(int year, int week_of_year, HibernateQuery hibernateQuery) {
+        System.out.println("Year: " + year);
+        System.out.println("Week: " + week_of_year);
+        JSONArray res = new JSONArray();
+        int day_one = 0;
+        int day_two = 0;
+        int day_three = 0;
+        int day_four = 0;
+        int day_five = 0;
+        int day_six = 0;
+        int day_seven = 0;
+        int teamUsers_size = this.getTeamUsers().size();
+        for (TeamUser teamUser : this.getTeamUsers().values()) {
+            if (!teamUser.isVerified())
+                continue;
+            for (App app : teamUser.getUser().getApps()) {
+                ClickOnApp clickOnAppMetric = ClickOnApp.getMetricForApp(app.getDb_id(), year, week_of_year, hibernateQuery);
+                day_one += clickOnAppMetric.getDay_one();
+                day_two += clickOnAppMetric.getDay_two();
+                day_three += clickOnAppMetric.getDay_three();
+                day_four += clickOnAppMetric.getDay_four();
+                day_five += clickOnAppMetric.getDay_five();
+                day_six += clickOnAppMetric.getDay_six();
+                day_seven += clickOnAppMetric.getDay_seven();
             }
-        } catch (HttpServletException e) {
-            e.printStackTrace();
         }
+        res.add(day_one / teamUsers_size);
+        res.add(day_two / teamUsers_size);
+        res.add(day_three / teamUsers_size);
+        res.add(day_four / teamUsers_size);
+        res.add(day_five / teamUsers_size);
+        res.add(day_six / teamUsers_size);
+        res.add(day_seven / teamUsers_size);
+        return res;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Team team = (Team) o;
+
+        return db_id.equals(team.db_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id.hashCode();
     }
 }

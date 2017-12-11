@@ -1,10 +1,12 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
 import com.Ease.Context.Variables;
-import com.Ease.Dashboard.User.User;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Servlets.PostServletManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -15,7 +17,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -29,11 +30,9 @@ public class ServletUploadWebsite extends HttpServlet {
     private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession httpSession = request.getSession();
+        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            User user = (User) httpSession.getAttribute("user");
-            if (user == null || !user.isAdmin())
-                throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
+            sm.needToBeEaseAdmin();
             if (!ServletFileUpload.isMultipartContent(request))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong form enctype");
             // configures upload settings
@@ -59,31 +58,35 @@ public class ServletUploadWebsite extends HttpServlet {
 
             // parses the request's content to extract file data
             List<FileItem> formItems = upload.parseRequest(request);
-
+            Website website = null;
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (formItems != null && formItems.size() > 0) {
                 // iterates over form's fields
                 for (FileItem item : formItems) {
                     if (item.isFormField()) {
                         if (item.getFieldName().equals("website_id")) {
                             Catalog catalog = (Catalog) request.getServletContext().getAttribute("catalog");
-                            String folder = catalog.getWebsiteWithId(Integer.parseInt(item.getString())).getFolder();
-                            uploadPath = Variables.PROJECT_PATH + Variables.WEBSITES_PATH + folder;
+                            website = catalog.getWebsiteWithId(Integer.parseInt(item.getString()), hibernateQuery);
+                            String folder = website.getFolder();
+                            uploadPath = Variables.WEBSITES_FOLDER_PATH + folder;
                             File uploadDir = new File(uploadPath);
                             if (!uploadDir.exists()) {
                                 uploadDir.mkdir();
                             }
                         }
                     }
-                    // processes only fields that are not form fields
+                }
+                if (website == null)
+                    throw new HttpServletException(HttpStatus.BadRequest, "No website");
+                // processes only fields that are not form fields
+                for (FileItem item : formItems) {
                     if (!item.isFormField()) {
-                        // System.out.println(uploadPath);
                         String fileName = new File(item.getName()).getName();
                         String filePath;
                         File storeFile;
                         if (fileName.endsWith(".json")) {
 
                             filePath = uploadPath + File.separator + "connect.json";
-                            // System.out.println(filePath);
                             storeFile = new File(filePath);
                             if (storeFile.exists())
                                 storeFile.renameTo(new File(uploadPath + File.separator + "connect_old.json"));
@@ -94,21 +97,20 @@ public class ServletUploadWebsite extends HttpServlet {
                             storeFile = new File(filePath);
                             if (storeFile.exists())
                                 storeFile.renameTo(new File(uploadPath + File.separator + "logo_old.png"));
+                            website.getWebsiteAttributes().setLogo_url(null);
+                            hibernateQuery.saveOrUpdateObject(website);
                             item.write(storeFile);
-
                         }
-                        response.sendRedirect("/admin");
                     }
                 }
             }
-            response.setStatus(200);
-            response.sendRedirect("/admin");
-        } catch (HttpServletException e) {
-            response.setStatus(e.getHttpStatus().getValue());
+            hibernateQuery.commit();
+            sm.setRedirectUrl("/admin");
         } catch (Exception e) {
-            response.setStatus(500);
+            e.printStackTrace();
+            sm.setError(e);
         }
-        response.getWriter().println("Error");
+        sm.sendResponse();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

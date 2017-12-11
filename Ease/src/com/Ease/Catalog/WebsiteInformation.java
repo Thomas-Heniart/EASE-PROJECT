@@ -13,22 +13,22 @@ public class WebsiteInformation {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
     @Column(name = "information_name")
-    protected String information_name;
+    private String information_name;
 
     @Column(name = "information_type")
-    protected String information_type;
+    private String information_type;
 
     @Column(name = "priority")
-    protected Integer priority;
+    private Integer priority;
 
     @Column(name = "placeholder")
-    protected String placeholder;
+    private String placeholder;
 
     @Column(name = "placeholder_icon")
-    protected String placeholder_icon;
+    private String placeholder_icon;
 
     @ManyToOne
     @JoinColumn(name = "website_id")
@@ -117,5 +117,15 @@ public class WebsiteInformation {
         res.put("placeholderIcon", this.getPlaceholder_icon());
         res.put("priority", this.getPriority());
         return res;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WebsiteInformation that = (WebsiteInformation) o;
+
+        return db_id.equals(that.db_id);
     }
 }

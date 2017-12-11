@@ -1,10 +1,12 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 
@@ -24,9 +26,8 @@ public class ServletUpgradePlan extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeOwnerOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeOwnerOfTeam(team);
             Integer plan_id = sm.getIntParam("plan_id", true, false);
             if (plan_id <= team.getPlan_id())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot downgrade your plan");
@@ -52,7 +53,9 @@ public class ServletUpgradePlan extends HttpServlet {
             Subscription subscription = Subscription.create(params);
             team.setSubscription_id(subscription.getId());
             team.setSubscription(subscription);
+            sm.getTeamProperties(team_id).put("subscription", subscription);
             sm.saveOrUpdate(team);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CHANGED, team.getWebSockeetJson()));
             sm.setSuccess(team.getJson());
         } catch (StripeException e) {
             sm.setError(e);

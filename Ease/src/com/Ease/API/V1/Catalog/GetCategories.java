@@ -20,7 +20,7 @@ public class GetCategories extends HttpServlet {
             sm.needToBeConnected();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONObject res = new JSONObject();
-            res.put("categories", catalog.getCategoriesJson());
+            res.put("categories", catalog.getCategoriesJson(sm.getHibernateQuery()));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

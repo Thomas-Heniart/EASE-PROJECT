@@ -20,7 +20,7 @@ public class GetSsoList extends HttpServlet {
             sm.needToBeConnected();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONObject res = new JSONObject();
-            res.put("ssoList", catalog.getSsoListJson());
+            res.put("ssoList", catalog.getSsoListJson(sm.getHibernateQuery()));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

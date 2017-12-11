@@ -1,11 +1,7 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.SharedApp;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -32,12 +28,11 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
         try {
 
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             if (!team.isValidFreemium())
                 throw new HttpServletException(HttpStatus.Forbidden, "This is a feature from pro plan.");
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_modify = team.getTeamUserWithId(teamUser_id);
             if (!teamUser.isSuperior(teamUser_to_modify))
@@ -50,13 +45,8 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid departure date.");
                 teamUser_to_modify.setDepartureDate(new Date(departureDate));
             }
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            for (SharedApp sharedApp : teamUser_to_modify.getSharedApps())
-                ((App) sharedApp).setDisabled(false, db);
-            db.commitTransaction(transaction);
             sm.saveOrUpdate(teamUser_to_modify);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_modify.getJson(), teamUser_to_modify.getOrigin()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser_to_modify.getWebSocketJson()));
             sm.setSuccess(teamUser_to_modify.getJson());
         } catch (Exception e) {
             sm.setError(e);

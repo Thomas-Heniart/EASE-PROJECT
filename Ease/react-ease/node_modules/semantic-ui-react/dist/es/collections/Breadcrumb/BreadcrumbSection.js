@@ -3,7 +3,9 @@ import _classCallCheck from 'babel-runtime/helpers/classCallCheck';
 import _createClass from 'babel-runtime/helpers/createClass';
 import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructorReturn';
 import _inherits from 'babel-runtime/helpers/inherits';
+import _invoke from 'lodash/invoke';
 import cx from 'classnames';
+
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
@@ -27,11 +29,15 @@ var BreadcrumbSection = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = BreadcrumbSection.__proto__ || Object.getPrototypeOf(BreadcrumbSection)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (e) {
-      var onClick = _this.props.onClick;
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = BreadcrumbSection.__proto__ || Object.getPrototypeOf(BreadcrumbSection)).call.apply(_ref, [this].concat(args))), _this), _this.computeElementType = function () {
+      var _this$props = _this.props,
+          link = _this$props.link,
+          onClick = _this$props.onClick;
 
 
-      if (onClick) onClick(e, _this.props);
+      if (link || onClick) return 'a';
+    }, _this.handleClick = function (e) {
+      return _invoke(_this.props, 'onClick', e, _this.props);
     }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
@@ -43,16 +49,12 @@ var BreadcrumbSection = function (_Component) {
           children = _props.children,
           className = _props.className,
           content = _props.content,
-          href = _props.href,
-          link = _props.link,
-          onClick = _props.onClick;
+          href = _props.href;
 
 
       var classes = cx(useKeyOnly(active, 'active'), 'section', className);
       var rest = getUnhandledProps(BreadcrumbSection, this.props);
-      var ElementType = getElementType(BreadcrumbSection, this.props, function () {
-        if (link || onClick) return 'a';
-      });
+      var ElementType = getElementType(BreadcrumbSection, this.props, this.computeElementType);
 
       return React.createElement(
         ElementType,

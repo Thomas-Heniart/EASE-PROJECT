@@ -1,20 +1,15 @@
 package com.Ease.Utils;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
+import com.Ease.Context.Variables;
+import com.Ease.User.User;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
-
-import com.Ease.Context.Variables;
-import com.Ease.Dashboard.User.User;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 public class Mail {
 
@@ -42,7 +37,7 @@ public class Mail {
 		}
 	}
 	
-	public Mail(String sender, String password) throws GeneralException {
+	public Mail(String sender, String password) throws HttpServletException {
 		try {
 			props = new Properties();
 			props.put("mail.smtp.host", "smtp.gmail.com");
@@ -60,11 +55,11 @@ public class Mail {
 			message.setSender(address);
 			message.setFrom(address);
 		} catch (MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 	}
 	
-	public Mail(String sender, String password, String who) throws GeneralException {
+	public Mail(String sender, String password, String who) throws HttpServletException {
 		try {
 			props = new Properties();
 			props.put("mail.smtp.host", "smtp.gmail.com");
@@ -84,40 +79,40 @@ public class Mail {
 			message.setSender(address);
 			message.setFrom(address);
 		} catch (MessagingException | UnsupportedEncodingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 	}
 	
-	public void sendTestEmail(String email) throws GeneralException {
+	public void sendTestEmail(String email) throws HttpServletException {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
 			message.setSubject(MimeUtility.encodeText("Keep it good !!!!!!!!!", "utf-8", null));
 			message.setContent("!!!! Just a simple hello to keep contact !!!!", "text/html;charset=utf-8");
 			Transport.send(message);
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 	}
 	
-	public void sendGrowthHackingDoneEmail() throws GeneralException {
+	public void sendGrowthHackingDoneEmail() throws HttpServletException {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("benjamin@ease.space, thomas@ease.space, victor@ease.space"));
 			message.setSubject(MimeUtility.encodeText("Mail list clean done", "utf-8", null));
 			message.setContent("Mail list clean done goto <a href='" + Variables.URL_PATH + "/admin.jsp?verifyEmails=true' >admin</a>", "text/html;charset=utf-8");
 			Transport.send(message);
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 	}
 	
-	public void sendGrowthHackingFailEmail(String lastEmail) throws GeneralException {
+	public void sendGrowthHackingFailEmail(String lastEmail) throws HttpServletException {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("benjamin@ease.space, thomas@ease.space, victor@ease.space"));
 			message.setSubject(MimeUtility.encodeText("Mail list cleaner fails", "utf-8", null));
 			message.setContent("Mail list clean failed at : " + lastEmail, "text/html;charset=utf-8");
 			Transport.send(message);
 		} catch (UnsupportedEncodingException | MessagingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 	}
 	
@@ -310,7 +305,7 @@ public class Mail {
 					+ link + "'>https://ease.space/...</a></p>" + "<p></p>" + "<p>See you soon !</p>" + "<p></p>"
 					+ "<p>The Ease team</p>" + "<p></p>" + "<p></p>" + "<hr>" + "<p></p>"
 					+ "<p>Hello " + friendName + " & bienvenue sur Ease.space !</p>" + "<p></p>"
-					+ "<p>Vous avez été invité par " + user.getFirstName() + "(" + user.getEmail() + ")</p>" + "<p></p>"
+					+ "<p>Vous avez été invité par " + user.getUsername() + "(" + user.getEmail() + ")</p>" + "<p></p>"
 					+ "<p>Ease est ton espace personnel intelligent et sécurisé qui regroupe l'ensemble des sites sur lesquels tu as un compte, et qui t’y connecte et déconnecte automatiquement! Ease fonctionne sur Chrome et Safari.</p>"
 					+ "<p></p>"
 					+ "<p>Autrement dit, une fois tes identifiants enregistrés sur ton espace Ease, tu n’auras plus jamais à les utiliser. Et ce, où que tu sois, quelque soit l’ordinateur et en toute sécurité. Seul pré-requis: avoir internet !</p>"
@@ -326,7 +321,7 @@ public class Mail {
 	}
 
 	public void sendPricingContact(String email, String name, String phoneNumber, String jobPosition, String company,
-			int collaborators, String needs) throws GeneralException {
+			int collaborators, String needs) throws HttpServletException {
 		try {
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("victor@ease.space"));
 			message.setSubject(MimeUtility.encodeText("Nouvelle demande de client", "utf-8", null));
@@ -341,7 +336,7 @@ public class Mail {
 					+ "<p>Besoins spécifiques: " + needs + "</p>", "text/html;charset=utf-8");
 			Transport.send(message);
 		} catch (MessagingException | UnsupportedEncodingException e) {
-			throw new GeneralException(ServletManager.Code.InternError, e);
+			throw new HttpServletException(HttpStatus.InternError, e);
 		}
 		
 	}

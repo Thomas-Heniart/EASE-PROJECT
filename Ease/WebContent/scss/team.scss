@@ -1,10 +1,102 @@
 @import 'variables';
 @import 'mixins';
+@import 'dashboard';
 
 button.only-text-button {
   color: $themeDarkGrayTextColor;
   &:hover {
     color: black;
+  }
+}
+
+.next_button {
+  i {
+    margin-left: 0 !important;
+    margin-right: 5px !important;
+  }
+}
+
+.show_team {
+  .app {
+    margin-bottom: 7px;
+  }
+  .team {
+    margin-bottom: 4px;
+    font-size: 16px;
+    white-space: nowrap;
+    font-weight: 300;
+    span {
+      background-color: #363b60;
+      color: white;
+      border-radius: 3px;
+      padding: 2px;
+      padding-right: 10px;
+      overflow: hidden;
+      display: inline-block;
+      max-width: 250px;
+      text-overflow: ellipsis;
+      i {
+        font-size: 13px;
+        margin-right: 10px;
+        margin-left: 4px;
+      }
+    }
+  }
+  .room {
+    font-size: 16px;
+    color: #414141;
+    margin-bottom: 0;
+    white-space: nowrap;
+    span {
+      overflow: hidden;
+      display: inline-block;
+
+      max-width: 250px;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+#invitationButton {
+  .button {
+    width: 100%;
+    font-weight: 400;
+    &.basic:hover {
+      color: #179B69 !important;
+    }
+  }
+}
+
+#test_credentials {
+  text-decoration: underline;
+  font-size: 16px;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 15px;
+  i {
+    text-decoration: none;
+  }
+}
+
+#popup_team_single_card {
+  .segment {
+    padding: 15px 30px 0 30px !important;
+    max-height: 200px;
+    height: auto;
+    .checkbox {
+      width: 100%;
+      margin: 0 0 15px 0;
+      label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #939eb7;
+      }
+      &.checked {
+        label {
+          color: #45c997;
+        }
+      }
+    }
   }
 }
 
@@ -345,50 +437,48 @@ button.only-text-button {
 }
 
 
-#add_logwith_form{
-  .ui.segments{
-    font-size: 16px;
-    &.facebook {
-      border: solid 1px #3b5998 !important;
-      .first {
-        background-color: #3b5998;
-      }
-    }
-    &.linkedin {
-      border: solid 1px #1f88be !important;
-      .first {
-        background-color: #1f88be;
-      }
-    }
+.logwith_app_selectors.ui.segments{
+  font-size: 16px;
+  &.facebook {
+    border: solid 1px #3b5998 !important;
     .first {
-      color: white;
-      i {
-        margin-right: 20px;
-      }
+      background-color: #3b5998;
     }
-    .errorMessage {
-      color: #eb555c;
+  }
+  &.linkedin {
+    border: solid 1px #1f88be !important;
+    .first {
+      background-color: #1f88be;
     }
-    .ui.list {
-      font-size: 16px;
-      .item {
-        cursor: pointer;
-        @include display-flex();
-        @include align-items(center);
-        opacity: .7;
-        &:hover {
-          opacity: 1;
-        }
-        .icon {
-          margin-right: 10px;
-        }
-      }
-      .item.active {
-        color: #3b5998;
+  }
+  .first {
+    color: white;
+    i {
+      margin-right: 20px;
+    }
+  }
+  .errorMessage {
+    color: #eb555c;
+  }
+  .ui.list {
+    font-size: 16px;
+    .item {
+      cursor: pointer;
+      @include display-flex();
+      @include align-items(center);
+      opacity: .7;
+      &:hover {
         opacity: 1;
-        span {
-          text-decoration: underline;
-        }
+      }
+      .icon {
+        margin-right: 10px;
+      }
+    }
+    .item.active {
+      color: #3b5998;
+      opacity: 1;
+      span {
+        text-decoration: underline;
       }
     }
   }
@@ -428,10 +518,10 @@ button.only-text-button {
   height: 140px;
   padding: 20px !important;
   .ssoListGrid {
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     .showSegment {
       padding: 0 !important;
-      margin-bottom: 20px;
+      margin-top: 20px;
       white-space: nowrap;
       .appLogo {
         width: 35px;
@@ -850,10 +940,9 @@ i.icon.pin_button {
     & > .ui.label {
       background-color: transparent;
       color: $themeLightGreyTextColor;
-      border: 1px solid $themeLightGreyTextColor;
+      box-shadow: 0 0 0 1px rgba(34,36,38,0.15) inset;
       &.accepted {
         background-color: $themeButtonGreenColor;
-        border: 1px solid $themeButtonGreenColor;
         color: white;
       }
     }
@@ -1035,6 +1124,51 @@ button.action_text_button {
       font-size: 1em;
     }
   }
+}
+
+.ease_popup.ease_new_feature_popup {
+  width: 830px;
+  //height: 500px;
+  height: 90%;
+  margin-bottom: 50px;
+  overflow-x: auto;
+  padding: 30px;
+  .header {
+    padding: 0 30px 10px 30px;
+    margin: 0;
+    border:none;
+    text-align: center;
+  }
+  .popup_content {
+    font-size: 16px;
+    p {
+      margin-left: 20px;
+      display: inline-flex;
+      span {
+        margin-left: 10px;
+      }
+      &.no_margin {
+        margin-left: 0;
+        &.no_inline {
+          display: flex;
+        }
+      }
+      img {
+        width: 200px;
+        height: 120px;
+        margin: 0 0 0 10px;
+        &.phone {
+          width: 150px;
+          height: 130px;
+          margin: 0 30px 0 30px;
+        }
+      }
+    }
+  }
+  .infoColor {
+    color: $themeBlue2Color;
+  }
+
 }
 
 #team_settings_modal {
@@ -1496,7 +1630,7 @@ button.action_text_button {
 
 .ease_modal {
   display: block;
-  z-index: 12;
+  z-index: 15;
   position: fixed;
   top: 0;
   left: 0;
@@ -2086,6 +2220,11 @@ button.action_text_button {
                     font-size: .7em;
                     opacity: .8;
                   }
+                  .userNotAccepted {
+                    font-style: italic;
+                    color: rgba(232, 232, 232, 0.6);
+                    width: 100%;
+                  }
                 }
               }
             }
@@ -2110,6 +2249,28 @@ button.action_text_button {
       }
       ::-webkit-scrollbar-thumb:window-inactive {
         background: #d9d9de;
+      }
+      #invitation {
+        padding: .3rem .6rem 0 .6rem;
+        .segment {
+          padding: 12px;
+          &.resend {
+            background-color: #ff9a00;
+          }
+          &.send {
+            background-color: #eb555c;
+          }
+          span {
+            text-decoration: underline;
+            cursor: pointer;
+            &.right {
+              float: right;
+            }
+            .icon {
+              text-decoration: none;
+            }
+          }
+        }
       }
       #client_header {
         @include flex-basis(60px);
@@ -2242,6 +2403,7 @@ button.action_text_button {
           .apps_container {
             @include display-flex();
             @include flex(1);
+            z-index: 1;
             padding-top: .25em;
             padding-bottom: .25em;
             .apps_scroller_div {
@@ -2403,9 +2565,6 @@ button.action_text_button {
                 @include flex(1);
                 overflow: auto;
                 font-size: .8rem;
-                border-top: .25rem solid transparent;
-                border-right: .25rem solid transparent;
-                border-bottom: .25rem solid transparent;
               }
             }
             #team_tab {

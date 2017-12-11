@@ -33,6 +33,10 @@ public class HibernateQuery {
         this.query = this.session.createNativeQuery(query);
     }
 
+    public void setMaxResults(int limit) {
+        this.query.setMaxResults(limit);
+    }
+
     public void setParameter(String parameter, Object value) {
         this.query.setParameter(parameter, value);
     }
@@ -47,7 +51,6 @@ public class HibernateQuery {
 
     public void commit() throws HttpServletException {
         try {
-            //this.session.flush();
             if (!this.transaction.isActive())
                 return;
             this.transaction.commit();
@@ -56,12 +59,7 @@ public class HibernateQuery {
             System.out.println("Hibernate transaction rollback");
             this.transaction.rollback();
             throw new HttpServletException(HttpStatus.InternError, e);
-        } /* finally {
-            if (this.session != null) {
-                System.out.println("Hibernate close session.");
-                this.session.close();
-            }
-        } */
+        }
     }
 
     public Object load(Class c, Serializable s) {
@@ -78,7 +76,11 @@ public class HibernateQuery {
 
     public Object getSingleResult() {
         try {
-            return this.query.getSingleResult();
+            List rs = this.query.list();
+            if (rs.isEmpty())
+                return null;
+            else
+                return this.query.list().get(0);
         } catch (NoResultException e) {
             return null;
         }
@@ -90,9 +92,13 @@ public class HibernateQuery {
 
     public void rollback() {
         this.transaction.rollback();
-        /* if (this.session != null) {
-            this.session.close();
-        } */
     }
 
+    public Object get(Class someClass, Integer id) {
+        return this.session.get(someClass, id);
+    }
+
+    public boolean isOpen() {
+        return this.session.isOpen();
+    }
 }

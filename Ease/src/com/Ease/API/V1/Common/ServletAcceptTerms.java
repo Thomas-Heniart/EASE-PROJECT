@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -16,7 +17,9 @@ public class ServletAcceptTerms extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            sm.getUser().getStatus().setTerms_reviewed(true, sm.getDB());
+            User user = sm.getUser();
+            user.getUserStatus().setTerms_reviewed(true);
+            sm.saveOrUpdate(user.getUserStatus());
             sm.setSuccess(sm.getUser().getJson());
         } catch (Exception e) {
             sm.setError(e);

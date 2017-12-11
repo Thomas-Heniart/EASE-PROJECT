@@ -28,13 +28,12 @@ public class ServletGetTeamUser extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true);
             Integer teamUser_id = sm.getIntParam("team_user_id", true);
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             JSONObject jsonObject = teamUser.getJson();
             JSONArray channels = new JSONArray();
             for (Channel channel : team.getChannelsForTeamUser(teamUser))
                 channels.add(channel.getDb_id());
-            jsonObject.put("apps", team.getShareableAppsForTeamUser(teamUser_id));
             sm.setSuccess(jsonObject);
         } catch (Exception e) {
             sm.setError(e);

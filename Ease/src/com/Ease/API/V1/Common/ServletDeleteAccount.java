@@ -1,7 +1,8 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Dashboard.User.User;
-import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.*;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/api/v1/common/DeleteAccount")
 public class ServletDeleteAccount extends HttpServlet {
@@ -24,19 +24,34 @@ public class ServletDeleteAccount extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             if (password == null || password.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password does not not match.");
-            String key = (String) sm.getContextAttr("privateKey");
-            password = RSA.Decrypt(password, key);
+            password = sm.decipher(password);
             User user = sm.getUser();
-            if (!user.getKeys().isGoodPassword(password))
+            if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password does not match.");
             if (!user.getTeamUsers().isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "It is not possible to delete your account as long as you are part of a team. Please delete your team (or ask your admin to be deleted of your team) before deleting your personal Ease.space account.");
-            user.deleteFromDb(sm.getDB());
-            user.logoutFromSession(sm.getSession().getId(), sm.getServletContext(), sm.getDB());
-            Map<String, User> users = (Map<String, User>) sm.getContextAttr("users");
-            users.remove(user.getEmail());
-            sm.setSuccess("Account deleted");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
+            hibernateQuery.setParameter("id", user.getDb_id());
+            hibernateQuery.executeUpdate();
+            user.getApps().forEach(app -> {
+                if (app.isLogWithApp()) {
+                    ((LogWithApp) app).setLoginWith_app(null);
+                    sm.saveOrUpdate(app);
+                } else if (app.isSsoApp()) {
+                    SsoApp ssoApp = (SsoApp) app;
+                    SsoGroup ssoGroup = ssoApp.getSsoGroup();
+                    ssoGroup.removeSsoApp(ssoApp);
+                }
+            });
+            user.getApps().forEach(sm::deleteObject);
+            user.getApps().clear();
+            user.getProfileSet().forEach(sm::deleteObject);
+            user.getProfileSet().clear();
+            user.getSsoGroupSet().clear();
+            sm.deleteObject(user);
             sm.getSession().invalidate();
+            sm.setSuccess("Account deleted");
         } catch (Exception e) {
             sm.setError(e);
         }

@@ -1,6 +1,6 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.*;

@@ -25,11 +25,23 @@ import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
 import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 import ClassicAppModal from "../catalog/ClassicAppModal";
 import SsoAppModal from "../catalog/SsoAppModal";
-
+import ClassicAppSettingsModal from "../modals/ClassicAppSettingsModal";
+import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
+import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
+import TeamSingleAppSettingsModal from "../modals/TeamSingleAppSettingsModal";
+import TeamEnterpriseAppSettingsModal from "../modals/TeamEnterpriseAppSettingsModal";
+import TeamLinkAppSettingsModal from "../modals/TeamLinkAppSettingsModal";
+import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
+import LockedTeamAppModal from "../modals/LockedTeamAppModal";
+import LogWithAppSettings from "../modals/LogWithAppSettings";
+import SsoAppSettingsModal from "../modals/SsoAppSettingsModal";
+import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
+import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
+import NewFeatureModal from "../modals/NewFeatureModal";
 
 @connect(store => ({
-  addUserModalActive: store.teamModals.addUserModalActive,
-  addChannelModalActive: store.teamModals.addChannelModalActive,
+  addUserModal: store.teamModals.addUserModal,
+  addChannelModal: store.teamModals.addChannelModal,
   teamDeleteUserModal: store.teamModals.teamDeleteUserModal,
   teamDeleteChannelModal: store.teamModals.teamDeleteChannelModal,
   teamDeleteUserFromChannelModal: store.teamModals.teamDeleteUserFromChannelModal,
@@ -39,7 +51,7 @@ import SsoAppModal from "../catalog/SsoAppModal";
   teamEditEnterpriseAppModal: store.teamModals.teamEditEnterpriseAppModal,
   teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
   teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
-  teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
+  teamJoinEnterpriseAppModal: store.teamModals.teamJoinEnterpriseAppModal,
   teamAskJoinEnterpriseAppModal: store.teamModals.teamAskJoinEnterpriseAppModal,
   teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
   verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
@@ -53,7 +65,8 @@ import SsoAppModal from "../catalog/SsoAppModal";
   departureDateEndModal: store.teamModals.departureDateEndModal,
   catalogAddBookmarkModal: store.teamModals.catalogAddBookmarkModal,
   catalogAddAppModal: store.teamModals.catalogAddAppModal,
-  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal
+  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal,
+  modals: store.modals
 }))
 class ModalsContainer extends Component{
   constructor(props){
@@ -62,9 +75,9 @@ class ModalsContainer extends Component{
   render() {
     return (
         <div>
-          {this.props.addUserModalActive &&
-          <TeamAddUserModal key="1"/>}
-          {this.props.addChannelModalActive &&
+          {this.props.addUserModal.active &&
+          <TeamAddUserModal/>}
+          {this.props.addChannelModal.active &&
           <TeamAddChannelModal/>}
           {this.props.teamDeleteUserModal.active &&
           <TeamDeleteUserModal/>}
@@ -84,7 +97,7 @@ class ModalsContainer extends Component{
           <TeamManageAppRequestModal/>}
           {this.props.teamAcceptMultiAppModal.active &&
           <AcceptEnterpriseAppModal/>}
-          {this.props.teamJoinMultiAppModal.active &&
+          {this.props.teamJoinEnterpriseAppModal.active &&
           <JoinEnterpriseAppModal/>}
           {this.props.teamAskJoinEnterpriseAppModal.active &&
           <AskJoinEnterpriseAppModal/>}
@@ -114,6 +127,32 @@ class ModalsContainer extends Component{
           <ClassicAppModal/>}
           {this.props.catalogAddSSOAppModal.active &&
           <SsoAppModal/>}
+          {this.props.modals.classicAppSettings.active &&
+          <ClassicAppSettingsModal/>}
+          {this.props.modals.extensionDownload.active &&
+          <ExtensionDownloadModal/>}
+          {this.props.modals.linkAppSettings.active &&
+          <LinkAppSettingsModal/>}
+          {this.props.modals.passwordLostInformation.active &&
+          <PasswordLostInformationModal/>}
+          {this.props.modals.lockedTeamApp.active &&
+          <LockedTeamAppModal/>}
+          {this.props.modals.logWithAppSettings.active &&
+          <LogWithAppSettings/>}
+          {this.props.modals.chooseAppCredentials.active &&
+          <ChooseAppCredentialsModal/>}
+          {this.props.modals.teamSingleAppSettings.active &&
+          <TeamSingleAppSettingsModal/>}
+          {this.props.modals.teamEnterpriseAppSettings.active &&
+          <TeamEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamLinkAppSettings.active &&
+          <TeamLinkAppSettingsModal/>}
+          {this.props.modals.updateAppPassword.active &&
+          <UpdateAppPasswordModal/>}
+          {this.props.modals.ssoAppSettings.active &&
+          <SsoAppSettingsModal/>}
+          {this.props.modals.newFeature.active &&
+          <NewFeatureModal/>}
         </div>
     )
   }

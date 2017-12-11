@@ -20,9 +20,12 @@ public class ServletEditUsername extends HttpServlet {
         try {
             sm.needToBeConnected();
             String username = sm.getStringParam("username", true, false);
+            username = username.toLowerCase();
             if (!Regex.isValidUsername(username))
                 throw new HttpServletException(HttpStatus.BadRequest, "You must provide a valid username.");
-            sm.getUser().setFirstName(username, sm.getDB());
+            sm.getUser().setUsername(username);
+            sm.saveOrUpdate(sm.getUser());
+            sm.getUser().getCookies().forEach(response::addCookie);
             sm.setSuccess("Username edited");
         } catch (Exception e) {
             sm.setError(e);

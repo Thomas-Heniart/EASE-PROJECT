@@ -20,7 +20,7 @@ public class ServletGetWebsiteRequests extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            JSONArray requests = catalog.getWebsiteRequests();
+            JSONArray requests = catalog.getWebsiteRequests(sm.getHibernateQuery());
             JSONObject res = new JSONObject();
             res.put("website_requests", requests);
             sm.setSuccess(res);

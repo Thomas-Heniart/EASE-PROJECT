@@ -1,17 +1,19 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.ShareableApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,8 +22,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by thomas on 09/06/2017.
@@ -32,32 +32,53 @@ public class ServletDeleteChannel extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             Channel channel = team.getChannelWithId(channel_id);
             if (!teamUser.isTeamOwner() && channel.getRoom_manager() != teamUser)
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
-            List<ShareableApp> shareableAppsToRemove = new LinkedList<>();
-            for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                if (shareableApp.getChannel() == channel) {
-                    shareableAppsToRemove.add(shareableApp);
+            for (TeamCard teamCard : channel.getTeamCardMap().values()) {
+                for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
+                    App app = teamCardReceiver.getApp();
+                    if (app.isWebsiteApp()) {
+                        WebsiteApp websiteApp = (WebsiteApp) app;
+                        websiteApp.getLogWithAppSet().forEach(logWithApp -> {
+                            Profile profile1 = logWithApp.getProfile();
+                            profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                            sm.deleteObject(logWithApp);
+                        });
+                    } else if (app.isLinkApp()) {
+                        TeamLinkCard teamLinkCard = (TeamLinkCard) teamCard;
+                        LinkApp linkApp = (LinkApp) app;
+                        TeamCardReceiver other_receiver = teamCard.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> !teamCardReceiver.equals(teamCardReceiver1)).findFirst().orElse(null);
+                        if (other_receiver != null) {
+                            LinkApp linkApp1 = (LinkApp) other_receiver.getApp();
+                            if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
+                                LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
+                                sm.saveOrUpdate(linkAppInformation);
+                                linkApp.setLinkAppInformation(linkAppInformation);
+                                sm.saveOrUpdate(linkApp);
+                            }
+                        }
+                    }
+                    Profile profile = teamCardReceiver.getApp().getProfile();
+                    if (profile != null)
+                        profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 }
             }
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            for (ShareableApp shareableApp : shareableAppsToRemove)
-                team.getAppManager().removeShareableApp(shareableApp, db);
-            channel.delete(db);
-            db.commitTransaction(transaction);
+            channel.getTeamCardMap().clear();
+            channel.getPending_teamUsers().clear();
             team.removeChannel(channel);
             sm.deleteObject(channel);
             sm.saveOrUpdate(team);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.REMOVED, channel_id, channel.getOrigin()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("room_id", channel_id);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.REMOVED, ws_obj));
             sm.setSuccess("Channel delete");
         } catch (Exception e) {
             sm.setError(e);

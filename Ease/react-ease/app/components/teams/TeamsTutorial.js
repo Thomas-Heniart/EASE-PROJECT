@@ -28,11 +28,9 @@ function TeamsTutorialTip(props){
   )
 }
 
-@connect((store)=>{
-  return {
-    teamName: store.team.name
-  };
-})
+@connect((store)=>({
+  teams: store.teams
+}))
 class TeamsTutorial extends React.Component {
   constructor(props){
     super(props);
@@ -80,7 +78,7 @@ class TeamsTutorial extends React.Component {
         key="0"
         skip={this.skipTutorial}
         validateStep={this.incrementStep}
-        title={'This is where the ' + this.props.teamName + ' web accounts will be shared and organized'}
+        title={'This is where the ' + this.props.teams[this.props.team_id].name + ' web accounts will be shared and organized'}
         step={this.state.step}
         button_text={'Next tip'}
         maxStep={this.state.maxStep}/>);
@@ -106,7 +104,7 @@ class TeamsTutorial extends React.Component {
         key="3"
         validateStep={this.skipTutorial}
         title="Sharing accounts"
-        body="You can send multiple types of accounts regarding your needs. Just hit the + button."
+        body='You can send multiple types of accounts regarding your needs. Just hit the "add new app" button.'
         step={this.state.step}
         button_text={'Done!'}
         maxStep={this.state.maxStep}/>);

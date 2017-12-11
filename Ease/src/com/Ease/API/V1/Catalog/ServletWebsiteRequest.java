@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.*;
-import com.Ease.Dashboard.User.User;
+import com.Ease.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
@@ -48,19 +48,17 @@ public class ServletWebsiteRequest extends HttpServlet {
             website.setWebsiteInformationList(websiteInformationSet);
             sm.saveOrUpdate(websiteAttributes);
             sm.saveOrUpdate(website);
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            catalog.addWebsite(website);
             String email = user.getEmail();
             WebsiteRequest websiteRequest = new WebsiteRequest(url, email, website);
-            website.addWebsiteRequest(websiteRequest);
             sm.saveOrUpdate(websiteRequest);
+            website.addWebsiteRequest(websiteRequest);
             if (userCredentials != null) {
                 HibernateQuery hibernateQuery = sm.getHibernateQuery();
                 hibernateQuery.queryString("SELECT key FROM ServerPublicKey key");
                 ServerPublicKey serverPublicKey = (ServerPublicKey) hibernateQuery.getSingleResult();
                 WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt((String) userCredentials.get("login"), serverPublicKey.getPublicKey()), RSA.Encrypt((String) userCredentials.get("password"), serverPublicKey.getPublicKey()), website, serverPublicKey);
-                website.addWebsiteCredentials(websiteCredentials);
                 sm.saveOrUpdate(websiteCredentials);
+                website.addWebsiteCredentials(websiteCredentials);
             }
             sm.setSuccess("Request sent");
         } catch (Exception e) {

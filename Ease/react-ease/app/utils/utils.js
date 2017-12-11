@@ -4,16 +4,39 @@ export const emailRegexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*
 export const urlRegexp = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 export const usernameRegexp = /^[a-z0-9_\-]{3,21}$/;
 export const roomNameRegexp = /^[a-z0-9_\-]{1,21}$/;
-
+export const monthInMs = 2629746000;
 export const userNameRuleString = 'Please choose a username that is all lowercase, containing only letters, numbers, periods, hyphens and underscores. From 3 to 22 characters.';
 
 export function isUrl(url){
   return url.match(urlRegexp) !== null;
 }
 
+export function isEmail(email){
+  return email.match(emailRegexp) !== null;
+}
+
 export function reflect(promise){
   return promise.then(function(v){ return {data:v, error: false }},
       function(e){ return {data:e, error: true }});
+}
+
+export function needPasswordUpdate(last_update, interval){
+  if (!interval)
+    return false;
+  return last_update + monthInMs * interval < new Date().getTime();
+}
+
+export function teamUserDepartureDatePassed(departure_date){
+  return !!departure_date && new Date().getTime() > departure_date;
+}
+
+export function isAppInformationEmpty(information){
+  let empty_params = 0;
+  Object.keys(information).map(item => {
+    if (!information[item].length)
+      empty_params++;
+  });
+  return empty_params > 1;
 }
 
 export function handleSemanticInput(e, {name, value, checked}){
@@ -22,6 +45,12 @@ export function handleSemanticInput(e, {name, value, checked}){
     return;
   }
   this.setState({[name]: value});
+}
+
+export function objectToList(obj){
+  return Object.keys(obj).map(id => {
+    return obj[id]
+  });
 }
 
 export function transformCredentialsListIntoObject(credentials){
@@ -45,9 +74,24 @@ export function transformWebsiteInfoIntoList(informations){
 
 export function transformWebsiteInfoIntoListAndSetValues(information, values){
   return transformWebsiteInfoIntoList(information).map(item => {
-    item.value = values[item.name];
+    item.value = !!values[item.name] ? values[item.name] : '';
     return item;
   });
+}
+
+export function isCredentialsMatch(prev, next){
+  let match = true;
+  Object.keys(prev).map(key => {
+    if (prev[key] !== next[key])
+      match = false;
+  });
+  if (match){
+    Object.keys(next).map(key => {
+      if (next[key] !== prev[key])
+        match = false;
+    });
+  }
+  return match;
 }
 
 export function getTeamAppPasswordAndCopyToClipboard({team_id, shared_app_id}){
@@ -135,11 +179,11 @@ export const teamUserRoles = {
 };
 
 export const passwordChangeValues = {
-  0: 'No reminder',
-  1: "1 month",
-  3: "3 months",
-  6: "6 months",
-  12: "12 months"
+  0: 'No password update reminder',
+  1: "Every 1 month",
+  3: "Every 3 months",
+  6: "Every 6 months",
+  12: "Every 12 months"
 };
 
 export const credentialIconType = {
@@ -151,15 +195,15 @@ export const credentialIconType = {
 };
 
 export const passwordChangeOptions = [
-  {key: 0, text: 'No reminder', value: 0},
-  {key: 1, text: '1 month', value: 1},
-  {key: 3, text: '3 months', value: 3},
-  {key: 6, text: '6 months', value: 6},
-  {key: 12, text: '12 months', value: 12},
+  {key: 0, text: 'No password update reminder', value: 0},
+  {key: 1, text: 'Every 1 month', value: 1},
+  {key: 3, text: 'Every 3 months', value: 3},
+  {key: 6, text: 'Every 6 months', value: 6},
+  {key: 12, text: 'Every 12 months', value: 12},
 ];
 
 export const teamUserRoleValues = [
-  {key: '1', text: 'member', value:1},
-  {key: '2', text: 'admin', value:2},
-  {key: '3', text: 'owner', value:3}
+  {key: 1, text: 'member', value:1},
+  {key: 2, text: 'admin', value:2},
+  {key: 3, text: 'owner', value:3}
 ];

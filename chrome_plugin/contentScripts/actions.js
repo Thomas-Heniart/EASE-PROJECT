@@ -25,6 +25,14 @@ function fire_onchange(a) {
     a.dispatchEvent(d);
 }
 
+function extrapolateUrlFromCookie(cookie) {
+    var prefix = cookie.secure ? "https://" : "http://";
+    if (cookie.domain.charAt(0) == ".")
+        prefix += "www";
+
+    return prefix + cookie.domain + cookie.path;
+}
+
 var actions = {
     fillThenSubmit: function (msg, callback, sendResponse) {
         var actionStep = msg.detail[msg.bigStep].website[msg.todo].todo[msg.actionStep];

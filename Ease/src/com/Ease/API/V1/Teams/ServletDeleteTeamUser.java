@@ -1,14 +1,12 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Dashboard.App.App;
-import com.Ease.Dashboard.App.SharedApp;
-import com.Ease.Dashboard.App.WebsiteApp.ClassicApp.ClassicApp;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
+import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -16,6 +14,7 @@ import com.Ease.websocketV1.WebSocketMessage;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -36,51 +35,37 @@ public class ServletDeleteTeamUser extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeAdminOfTeam(team_id);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeAdminOfTeam(team);
             Integer team_user_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser_to_delete = team.getTeamUserWithId(team_user_id);
-            TeamUser teamUser_connected = sm.getTeamUserForTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
+            if (!teamUser_to_delete.getTeamSingleCardToFillSet().isEmpty()) {
+                StringBuilder message = new StringBuilder("This persone cannot be delete while he/she is responsble to fill credentials. To delete ").append(teamUser_to_delete.getUsername()).append("  you need to delete him/her first from ");
+                teamUser_to_delete.getTeamSingleCardToFillSet().forEach(teamSingleCard -> message.append(teamSingleCard.getName()).append(", "));
+                message.replace(message.length() - 2, message.length(), ".");
+                throw new HttpServletException(HttpStatus.Forbidden, message.toString());
+            }
             List<Channel> channelList = new LinkedList<>();
             for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
                 if (channel.getRoom_manager() == teamUser_to_delete)
                     channelList.add(channel);
             }
             if (!channelList.isEmpty()) {
-                String message = "This user cannot be deleted as long as he/she remains Room Manager of ";
-                for (Channel channel : channelList) {
-                    message += ("#" + channel.getName());
-                    if (channelList.indexOf(channel) == channelList.size() - 1)
-                        message += ".";
-                    else
-                        message += ", ";
-                }
-                throw new HttpServletException(HttpStatus.Forbidden, message);
+                StringBuilder message = new StringBuilder("This user cannot be deleted as long as he/she remains Room Manager of ");
+                channelList.forEach(channel -> message.append("#").append(channel.getName()).append(", "));
+                message.replace(message.length() - 2, message.length(), ".");
+                throw new HttpServletException(HttpStatus.Forbidden, message.toString());
             }
             String forEmail = "";
-            for (SharedApp sharedApp : team.getAppManager().getSharedAppsForTeamUser(teamUser_to_delete)) {
-                App holder = (App) sharedApp.getHolder();
-                if (holder.isEmpty() || (holder.isClassicApp() && sharedApp.getHolder().getTeamUser_tenants().size() == 1)) {
-                    ClassicApp classicApp = (ClassicApp) sharedApp;
-                    String login = classicApp.getAccount().getInformationNamed("login");
-                    forEmail += holder.getName();
-                    if (login != null)
-                        forEmail += " (" + login + ")";
-                    forEmail += ", ";
-                }
-
-            }
             if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
                 forEmail = forEmail.substring(0, forEmail.length() - 2);
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                 mailJetBuilder.setTemplateId(180165);
                 mailJetBuilder.addTo(teamUser_connected.getEmail());
-                /* mailJetBuilder.setTemplateErrorDeliver();
-                mailJetBuilder.setTemplateErrorReporting(); */
                 mailJetBuilder.addVariable("first_name", teamUser_to_delete.getFirstName());
                 mailJetBuilder.addVariable("last_name", teamUser_to_delete.getLastName());
                 mailJetBuilder.addVariable("team_name", team.getName());
@@ -95,16 +80,46 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     sm.saveOrUpdate(teamUser);
                 }
             }
-            DataBaseConnection db = sm.getDB();
-            int transaction = db.startTransaction();
-            teamUser_to_delete.delete(db);
-            db.commitTransaction(transaction);
+            for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
+                App app = teamCardReceiver.getApp();
+                if (app.isWebsiteApp()) {
+                    WebsiteApp websiteApp = (WebsiteApp) app;
+                    websiteApp.getLogWithAppSet().forEach(logWithApp -> {
+                        Profile profile1 = logWithApp.getProfile();
+                        profile1.removeAppAndUpdatePositions(logWithApp, sm.getHibernateQuery());
+                        sm.deleteObject(logWithApp);
+                    });
+                } else if (app.isLinkApp()) {
+                    TeamLinkCard teamLinkCard = (TeamLinkCard) teamCardReceiver.getTeamCard();
+                    LinkApp linkApp = (LinkApp) app;
+                    TeamCardReceiver other_receiver = teamLinkCard.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver1 -> !teamCardReceiver.equals(teamCardReceiver1)).findFirst().orElse(null);
+                    if (other_receiver != null) {
+                        LinkApp linkApp1 = (LinkApp) other_receiver.getApp();
+                        if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
+                            LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
+                            sm.saveOrUpdate(linkAppInformation);
+                            linkApp1.setLinkAppInformation(linkAppInformation);
+                            sm.saveOrUpdate(linkApp1);
+                        }
+                    }
+                    teamLinkCard.removeTeamCardReceiver(teamCardReceiver);
+                }
+                Profile profile = app.getProfile();
+                if (profile != null)
+                    profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
+                sm.deleteObject(teamCardReceiver);
+            }
+            team.getChannels().values().forEach(channel -> {
+                channel.removeTeamUser(teamUser_to_delete);
+                channel.removePendingTeamUser(teamUser_to_delete);
+            });
             team.removeTeamUser(teamUser_to_delete);
             sm.deleteObject(teamUser_to_delete);
-            WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, team_user_id, teamUser_to_delete.getOrigin());
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("team_user_id", team_user_id);
+            WebSocketMessage webSocketMessage = WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.REMOVED, ws_obj);
             sm.addWebSocketMessage(webSocketMessage);
-            if (teamUser_to_delete.getDashboard_user() != null)
-                teamUser_to_delete.getDashboard_user().getWebSocketManager().sendObject(webSocketMessage);
             sm.setSuccess("TeamUser deleted");
         } catch (Exception e) {
             sm.setError(e);

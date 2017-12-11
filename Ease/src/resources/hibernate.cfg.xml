@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD//EN"
-        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        "http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
@@ -14,7 +14,8 @@
         <property name="hibernate.connection.username">client</property>
         <property name="hibernate.connection.password">P6au23q7</property>
         <property name="hibernate.connection.pool_size">10</property>
-        <property name="show_sql">true</property>
+        <!-- <property name="show_sql">true</property> -->
+        <property name="hibernate.generate_statistics">true</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.c3p0.min_size">5</property>
@@ -33,10 +34,48 @@
         <mapping class="com.Ease.Catalog.WebsiteInformation"/>
         <mapping class="com.Ease.Catalog.WebsiteFailure"/>
         <mapping class="com.Ease.Catalog.Sso"/>
-        <mapping class="com.Ease.Catalog.Category" />
-        <mapping class="com.Ease.Catalog.WebsiteRequest" />
-        <mapping class="com.Ease.Catalog.WebsiteCredentials" />
-        <mapping class="com.Ease.Catalog.ServerPublicKey" />
+        <mapping class="com.Ease.Catalog.Category"/>
+        <mapping class="com.Ease.Catalog.WebsiteRequest"/>
+        <mapping class="com.Ease.Catalog.WebsiteCredentials"/>
+        <mapping class="com.Ease.Catalog.ServerPublicKey"/>
         <mapping class="com.Ease.Team.TeamUserStatus"/>
+        <mapping class="com.Ease.NewDashboard.Profile"/>
+        <mapping class="com.Ease.NewDashboard.ProfileInformation"/>
+        <mapping class="com.Ease.NewDashboard.App"/>
+        <mapping class="com.Ease.NewDashboard.AppInformation"/>
+        <mapping class="com.Ease.NewDashboard.LinkApp"/>
+        <mapping class="com.Ease.NewDashboard.LinkAppInformation"/>
+        <mapping class="com.Ease.NewDashboard.WebsiteApp"/>
+        <mapping class="com.Ease.NewDashboard.LogWithApp"/>
+        <mapping class="com.Ease.NewDashboard.ClassicApp"/>
+        <mapping class="com.Ease.NewDashboard.Account"/>
+        <mapping class="com.Ease.NewDashboard.AccountInformation"/>
+        <mapping class="com.Ease.NewDashboard.SsoApp"/>
+        <mapping class="com.Ease.NewDashboard.SsoGroup"/>
+        <mapping class="com.Ease.NewDashboard.AnyApp" />
+        <mapping class="com.Ease.Team.TeamCard.TeamCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamWebsiteCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamSingleCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamEnterpriseCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamLinkCard"/>
+        <mapping class="com.Ease.Team.TeamCard.JoinTeamCardRequest"/>
+        <mapping class="com.Ease.Team.TeamCard.JoinTeamSingleCardRequest"/>
+        <mapping class="com.Ease.Team.TeamCard.JoinTeamEnterpriseCardRequest"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamCardReceiver"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver"/>
+        <mapping class="com.Ease.Team.TeamCardReceiver.TeamLinkCardReceiver"/>
+        <mapping class="com.Ease.User.User"/>
+        <mapping class="com.Ease.User.Administrator"/>
+        <mapping class="com.Ease.User.UserStatus"/>
+        <mapping class="com.Ease.User.UserEmail"/>
+        <mapping class="com.Ease.User.UserKeys"/>
+        <mapping class="com.Ease.User.Options"/>
+        <mapping class="com.Ease.User.Notification"/>
+        <mapping class="com.Ease.User.PendingNotification"/>
+        <mapping class="com.Ease.User.JsonWebToken"/>
+        <mapping class="com.Ease.User.PasswordLost"/>
+        <mapping class="com.Ease.Metrics.ClickOnApp"/>
+        <mapping class="com.Ease.Metrics.TeamMetrics"/>
     </session-factory>
 </hibernate-configuration>

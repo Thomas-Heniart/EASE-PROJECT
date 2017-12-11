@@ -33,12 +33,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00020/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/securityPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00028/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00028/securityPage.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
@@ -94,7 +94,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/?skipLanding=true" id="connexionButton">
+                    <a href="/#/login?skipLanding=true" id="connexionButton">
                         <fmt:message key="landing.header.connexion-link" />
                     </a>
                 </li>
@@ -119,7 +119,7 @@
         <ul class="docs-nav">
             <li><a href="#1" class="cc-active">1. <fmt:message key="security.menu.title1"/></a></li>
             <li><a href="#2" class="cc-active">2. <fmt:message key="security.menu.title2"/></a></li>
-            <li><a href="#3" class="cc-active"><p style="position: absolute;">3.</p><p style="margin-left: 18px;"><fmt:message key="security.menu.title3"/></p></a></li>
+            <li><a href="#3" class="cc-active"><p>3.</p><p style="margin-left: 3px;"><fmt:message key="security.menu.title3"/></p></a></li>
             <li><a href="#4" class="cc-active">4. <fmt:message key="security.menu.title4"/></a></li>
             <li><a href="#5" class="cc-active">5. <fmt:message key="security.menu.title5"/></a></li>
             <li><a href="#6" class="cc-active">6. <fmt:message key="security.menu.title6"/></a></li>
@@ -225,7 +225,7 @@
                 <p><fmt:message key="security.whitepaper.text"/></p>
             </div>
             <div style="text-align: center">
-                <a href="/teams#/registration" class="btn btn-xl signUpButton">
+                <a href="/#/registration" class="btn btn-xl signUpButton">
                     <fmt:message key="security.button.text"/>
                 </a>
             </div>

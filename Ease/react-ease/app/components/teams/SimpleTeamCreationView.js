@@ -410,7 +410,8 @@ class SimpleTeamCreationView extends React.Component {
     this.setState({newsletter: !this.state.newsletter});
   }
   submitStep8(){
-    window.location.href = `/teams#/teams/${this.state.teamId}`;
+    window.location.reload(true);
+    window.location.href = `${window.location.origin}/#/teams/${this.state.teamId}`;
   }
   handleInput(e, {value , name}){
     this.setState({[name]: value});
@@ -466,6 +467,7 @@ class SimpleTeamCreationView extends React.Component {
                       key="6"/>);
     steps.push(<InvitePeopleStep
         key="7"
+        dispatch={this.props.dispatch}
         ws_id={this.props.ws_id}
         team_id={this.state.teamId}
         onStepValidated={this.submitStep8}/>);

@@ -1,15 +1,13 @@
 import React, {Component} from "react";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import {selectItemFromListById, isOwner} from "../../utils/helperFunctions";
+import {objectToList} from "../../utils/utils";
 import post_api from "../../utils/post_api";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 
 @connect(store => ({
-  team_id: store.team.id,
-  team_name: store.team.name,
-  myId: store.team.myTeamUserId,
-  users: store.users.users
+  teams: store.teams
 }))
 class FreeTrialEndModal extends Component {
   constructor(props){
@@ -21,7 +19,8 @@ class FreeTrialEndModal extends Component {
   }
   confirm = (e) => {
     e.preventDefault();
-    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const team = this.props.teams[this.props.team_id];
+    const me = team.team_users[team.my_team_user_id];
     const meOwner = isOwner(me.role);
 
     if (meOwner)
@@ -36,9 +35,10 @@ class FreeTrialEndModal extends Component {
     }
   };
   render(){
-    const me = selectItemFromListById(this.props.users, this.props.myId);
+    const team = this.props.teams[this.props.team_id];
+    const me = team.team_users[team.my_team_user_id];
     const meOwner = isOwner(me.role);
-    const teamOwner = this.props.users.find(item => (isOwner(item.role)));
+    const teamOwner = objectToList(team.team_users).find(item => (isOwner(item.role)));
 
     return (
         <div class="popupHandler myshow" style={{zIndex: '10'}}>
@@ -50,7 +50,7 @@ class FreeTrialEndModal extends Component {
             <Header as="h3" attached="top">
               Free trial ended
             </Header>
-          <Form style={{color: "#96a1b9"}} class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
+          <Form style={{color: "#96a1b9"}} class="container" onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
             <Form.Field>
               {meOwner ?
                   <p>Your free trial on Pro is over! Now you can choose to update your billing info or leave it like this. Not updating your billing info will remain access blocked, for you and your team members, to {this.props.team_name}.</p> :
@@ -63,11 +63,9 @@ class FreeTrialEndModal extends Component {
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button
-                attached='bottom'
                 type="submit"
                 loading={this.state.loading}
                 positive
-                onClick={this.confirm}
                 class="modal-button uppercase"
                 content={meOwner ? 'Update billing information' : 'Ask team update'}/>
           </Form>

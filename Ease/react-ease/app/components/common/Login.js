@@ -1,10 +1,9 @@
 var React = require('react');
 var classnames = require('classnames');
 import {withCookies, Cookies } from 'react-cookie';
-var base64 = require('base-64');
 import post_api from '../../utils/post_api';
 import {connect} from "react-redux";
-import {setLoginRedirectUrl, fetchMyInformation} from "../../actions/commonActions"
+import {setLoginRedirectUrl, fetchMyInformation, processConnection} from "../../actions/commonActions";
 
 class UnknownUserForm extends React.Component{
   constructor(props){
@@ -25,12 +24,16 @@ class UnknownUserForm extends React.Component{
     e.preventDefault();
     this.setState({error: false});
     this.props.setView('loading');
-    post_api.common.connect(this.state.email, this.state.password).then(r => {
+
+    this.props.dispatch(processConnection({
+      email:this.state.email,
+      password:this.state.password
+    })).then(response => {
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
       this.props.setView('unknown');
-    })
+    });
   }
   render() {
     return (
@@ -96,12 +99,15 @@ class KnownUserForm extends React.Component{
     e.preventDefault();
     this.setState({error: false});
     this.props.setView('loading');
-    post_api.common.connect(this.props.email, this.state.password).then(r => {
+    this.props.dispatch(processConnection({
+      email:this.props.email,
+      password:this.state.password
+    })).then(response => {
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
       this.props.setView('known');
-    })
+    });
   }
   render() {
     return (
@@ -152,19 +158,23 @@ class PasswordLost extends React.Component{
     super(props);
     this.state = {
       email: '',
-      errorMessage: '',
-      error: false
+      errorMessage: ''
     };
-    this.handleInput = this.handleInput.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
-  handleInput(e){
+  handleInput = (e) => {
     this.setState({[e.target.name]: e.target.value});
-  }
-  onSubmit(e){
+  };
+  onSubmit = (e) => {
     e.preventDefault();
-    this.setState({error: false});
-  }
+    this.setState({errorMessage: ''});
+    post_api.common.passwordLost({
+      email: this.state.email
+    }).then(response => {
+      this.setState({errorMessage: response.msg});
+    }).catch(err => {
+      this.setState({errorMessage: err});
+    });
+  };
   render() {
     return (
         <div class={classnames('easePopup landingPopup', this.props.activeView === 'passwordLost' ? 'show' : null)} id="passwordLost">
@@ -176,15 +186,15 @@ class PasswordLost extends React.Component{
                     <p>Lost password ?</p>
                   </div>
                 </div>
-                <form method="POST" action="passwordLost" id="passwordLostForm">
+                <form method="POST" onSubmit={this.onSubmit} id="passwordLostForm">
                   <div class="row text-center">
                     <p class="popupText">For security reasons, resetting your EASE password will delete all account
                       passwords you added to the platform.</p>
                   </div>
                   <div class="row">
-                    <input type="email" name="email" placeholder="Email"/>
+                    <input type="email" name="email" placeholder="Email" value={this.state.email} onChange={this.handleInput}/>
                   </div>
-                  <div class={classnames("row alertDiv text-center", this.state.error ? 'show' : null)}>
+                  <div class={classnames("row alertDiv text-center", !!this.state.errorMessage.length ? 'show' : null)}>
                     <p>{this.state.errorMessage}</p>
                   </div>
                   <div class="row text-center">
@@ -206,28 +216,26 @@ class PasswordLost extends React.Component{
 function Loader(props){
   return (
       <div class="sk-fading-circle show" id="loading">
-        <div class="sk-circle1 sk-circle"></div>
-        <div class="sk-circle2 sk-circle"></div>
-        <div class="sk-circle3 sk-circle"></div>
-        <div class="sk-circle4 sk-circle"></div>
-        <div class="sk-circle5 sk-circle"></div>
-        <div class="sk-circle6 sk-circle"></div>
-        <div class="sk-circle7 sk-circle"></div>
-        <div class="sk-circle8 sk-circle"></div>
-        <div class="sk-circle9 sk-circle"></div>
-        <div class="sk-circle10 sk-circle"></div>
-        <div class="sk-circle11 sk-circle"></div>
-        <div class="sk-circle12 sk-circle"></div>
+        <div class="sk-circle1 sk-circle"/>
+        <div class="sk-circle2 sk-circle"/>
+        <div class="sk-circle3 sk-circle"/>
+        <div class="sk-circle4 sk-circle"/>
+        <div class="sk-circle5 sk-circle"/>
+        <div class="sk-circle6 sk-circle"/>
+        <div class="sk-circle7 sk-circle"/>
+        <div class="sk-circle8 sk-circle"/>
+        <div class="sk-circle9 sk-circle"/>
+        <div class="sk-circle10 sk-circle"/>
+        <div class="sk-circle11 sk-circle"/>
+        <div class="sk-circle12 sk-circle"/>
       </div>
   )
 }
 
-@connect((store)=>{
-  return {
-    authenticated: store.common.authenticated,
-    redirect: store.common.loginRedirectUrl
-  };
-})
+@connect((store)=>({
+  authenticated: store.common.authenticated,
+  redirect: store.common.loginRedirectUrl
+}))
 class Login extends React.Component {
   constructor(props){
     super(props);
@@ -240,15 +248,12 @@ class Login extends React.Component {
       redirect : ''
     };
     if (this.props.authenticated)
-      window.location.href = "/home";
-    this.state.knownUser = this.state.knownFname !== undefined && this.state.knownEmail !== undefined;
+      this.props.history.replace('/main/dashboard');
+    this.state.knownUser = !!this.state.knownFname && !!this.state.knownEmail;
     if (this.state.knownUser) {
-      this.state.knownFname = base64.decode(this.state.knownFname);
       this.state.activeView = 'known';
+      this.state.knownFname = atob(this.state.knownFname);
     }
-    this.setView = this.setView.bind(this);
-    this.goBack = this.goBack.bind(this);
-    this.finishLoggingIn = this.finishLoggingIn.bind(this);
   }
   componentDidMount(){
     if (this.props.redirect.length > 0){
@@ -256,21 +261,21 @@ class Login extends React.Component {
       this.props.dispatch(setLoginRedirectUrl(''));
     }
   }
-  finishLoggingIn(){
-    if (this.state.redirect.length > 0){
-      this.props.dispatch(fetchMyInformation()).then(response => {
-        this.props.history.push(this.state.redirect);
-      });
-    }else {
-      window.location.href = "/home";
-    }
+  componentWillMount(){
+    document.title = "Ease.space";
   }
-  setView(name){
+  finishLoggingIn = () => {
+    if (this.state.redirect.length > 0)
+      this.props.history.replace(this.state.redirect);
+    else
+      this.props.history.replace('/main/dashboard');
+  };
+  setView = (name) => {
     this.setState({lastActive: this.state.activeView, activeView: name});
-  }
-  goBack(){
+  };
+  goBack = () => {
     this.setState({lastActive: this.state.activeView, activeView:this.state.lastActive});
-  }
+  };
   render(){
     if (this.props.authenticated)
       return null;
@@ -283,11 +288,13 @@ class Login extends React.Component {
             {this.state.activeView === 'loading' &&
             <Loader/>}
             <UnknownUserForm setView={this.setView}
+                             dispatch={this.props.dispatch}
                              activeView={this.state.activeView}
                              knownFname={this.state.knownFname}
                              knownUser={this.state.knownUser}
-                              finishLogin={this.finishLoggingIn}/>
+                             finishLogin={this.finishLoggingIn}/>
             <KnownUserForm setView={this.setView}
+                           dispatch={this.props.dispatch}
                            activeView={this.state.activeView}
                            fname={this.state.knownFname}
                            email={this.state.knownEmail}

@@ -4,12 +4,13 @@ import com.Ease.Context.Variables;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.simple.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,14 +29,14 @@ public class ServletAskJoinChannel extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
-            sm.needToBeTeamUserOfTeam(team_id);
             Integer channel_id = sm.getIntParam("channel_id", true, false);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
-            Team team = teamManager.getTeamWithId(team_id);
-            TeamUser teamUser = sm.getTeamUserForTeam(team);
+            Team team = sm.getTeam(team_id);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
             Channel channel = team.getChannelWithId(channel_id);
-            channel.addPendingTeamUser(teamUser, sm.getDB());
-            channel.getRoom_manager().addNotification(teamUser.getUsername() + " would like to join #" + channel.getName(), channel.getDb_id() + "/flexPanel", "/resources/notifications/channel.png", sm.getTimestamp(), sm.getDB());
+            channel.addPendingTeamUser(teamUser);
+            sm.saveOrUpdate(channel);
+            NotificationFactory.getInstance().createAskJoinChannelNotification(teamUser, channel, sm.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id()), sm.getHibernateQuery());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
             TeamUser room_manager = channel.getRoom_manager();
@@ -46,9 +47,13 @@ public class ServletAskJoinChannel extends HttpServlet {
             mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
             mailJetBuilder.addVariable("last_name", teamUser.getLastName());
             mailJetBuilder.addVariable("teamUser", teamUser.getUsername());
-            mailJetBuilder.addVariable("link", Variables.URL_PATH + "teams#/teams" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/" + channel.getDb_id() + "/flexPanel");
             mailJetBuilder.sendEmail();
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CHANGED, channel.getJson(), channel.getOrigin()));
+            JSONObject ws_obj = new JSONObject();
+            ws_obj.put("team_id", team_id);
+            ws_obj.put("team_user_id", teamUser.getDb_id());
+            ws_obj.put("room_id", channel.getDb_id());
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM_REQUEST, WebSocketMessageAction.CREATED, ws_obj));
             sm.setSuccess(channel.getJson());
         } catch (Exception e) {
             sm.setError(e);

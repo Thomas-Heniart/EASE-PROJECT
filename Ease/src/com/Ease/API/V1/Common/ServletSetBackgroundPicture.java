@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.User.Options;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -17,7 +18,9 @@ public class ServletSetBackgroundPicture extends HttpServlet {
         try {
             sm.needToBeConnected();
             Boolean active = sm.getBooleanParam("active", true, false);
-            sm.getUser().getOptions().setBackground_picked(active, sm.getDB());
+            Options options = sm.getUser().getOptions();
+            options.setBackground_picked(active);
+            sm.saveOrUpdate(options);
             sm.setSuccess("Background picture edited");
         } catch (Exception e) {
             sm.setError(e);
