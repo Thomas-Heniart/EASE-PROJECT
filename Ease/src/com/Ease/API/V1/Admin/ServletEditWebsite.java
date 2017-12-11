@@ -5,10 +5,12 @@ import com.Ease.Catalog.Category;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.AnyApp;
+import com.Ease.NewDashboard.App;
+import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.websocketV1.WebSocketMessage;
 import org.json.simple.JSONArray;
 
 import javax.servlet.RequestDispatcher;
@@ -18,8 +20,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @WebServlet("/api/v1/admin/EditWebsite")
@@ -77,31 +77,30 @@ public class ServletEditWebsite extends HttpServlet {
             }
             sm.saveOrUpdate(website.getWebsiteAttributes());
             sm.saveOrUpdate(website);
-            List<WebSocketMessage> webSocketMessageList = new LinkedList<>();
-            if (website.getWebsiteAttributes().isIntegrated()) {
-                for (Team team : teamManager.getTeams(sm.getHibernateQuery())) {
-                    /* for (ShareableApp shareableApp : team.getAppManager().getShareableApps().values()) {
-                        App app = (App) shareableApp;
-                        if (!app.isClassicApp() && !app.isEmpty())
-                            continue;
-                        WebsiteApp websiteApp = (WebsiteApp) app;
-                        if (website != websiteApp.getSite())
-                            continue;
-                        String old_name = app.getName();
-                        app.setName(website.getName(), db);
-                        for (SharedApp sharedApp : shareableApp.getSharedApps().values()) {
-                            App app1 = (App) sharedApp;
-                            if (app1.getName().equals(old_name))
-                                app1.setName(website.getName(), db);
-                        }
-                        JSONObject target = shareableApp.getOrigin();
-                        target.put("team_id", team.getDb_id());
-                        team.getWebSocketManager().sendObject(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, shareableApp.getShareableJson(), target));
-                    } */
-                    System.out.println(webSocketMessageList.size() + " messages send");
-                    sm.getTeamWebSocketManager(team.getDb_id()).sendObjects(webSocketMessageList);
-                    webSocketMessageList.clear();
+            website.getTeamWebsiteCardSet().forEach(teamWebsiteCard -> {
+                if (teamWebsiteCard.getName().equals(name)) {
+                    teamWebsiteCard.setName(name);
+                    sm.saveOrUpdate(teamWebsiteCard);
                 }
+            });
+            website.getWebsiteAppSet().forEach(websiteApp -> {
+                if (websiteApp.getAppInformation().getName().equals(name)) {
+                    websiteApp.getAppInformation().setName(name);
+                    sm.saveOrUpdate(websiteApp.getAppInformation());
+                }
+                if (websiteApp.isAnyApp() && website.getWebsiteAttributes().isIntegrated()) {
+                    AnyApp anyApp = (AnyApp) websiteApp;
+                    App tmp_app = new ClassicApp(anyApp.getAppInformation(), website, anyApp.getAccount());
+                    tmp_app.setProfile(anyApp.getProfile());
+                    tmp_app.setPosition(anyApp.getPosition());
+                    sm.saveOrUpdate(tmp_app);
+                    /* @TODO WebSocket message here */
+                }
+            });
+            if (website.getWebsiteAttributes().isIntegrated()) {
+                hibernateQuery.queryString("DELETE FROM AnyApp a WHERE a.website.db_id = :id");
+                hibernateQuery.setParameter("id", website.getDb_id());
+                hibernateQuery.executeUpdate();
             }
             sm.setSuccess("Catalog edited");
         } catch (Exception e) {
