@@ -58,7 +58,8 @@
     "semantic-ui-react": "^0.77.1",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
-    "style-loader": "^0.17.0"
+    "style-loader": "^0.17.0",
+    "webpack": "^2.5.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
@@ -69,7 +70,7 @@
     "firebase-tools": "^3.9.0",
     "html-webpack-plugin": "^2.28.0",
     "style-loader": "^0.17.0",
-    "webpack": "^3.10.0",
+    "webpack": "^2.5.1",
     "webpack-dev-server": "^2.4.5"
   }
 }

@@ -1,6 +1,5 @@
 var React = require('react');
 var classnames = require('classnames');
-var TeamAddAppsButton = require('./TeamAddAppsButton');
 var EaseMainNavbar = require('./common/EaseMainNavbar');
 import {NavLink, withRouter} from "react-router-dom";
 
@@ -21,7 +20,6 @@ function TeamHeader(props){
       <header id="client_header">
         <div className="channel_header">
           <div className="tab_header">
-            {/*<TeamAddAppsButton target={props.item} setAddAppView={props.setAddAppView}/>*/}
             <div className="channel_title">
               <div id="channel_name_container" className="channel_name_container">
                             <span id="channel_name" className="channel_name">

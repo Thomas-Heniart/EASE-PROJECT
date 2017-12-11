@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {getClearbitLogo} from '../../utils/api';
 import {Button, Container, Header, Icon, Input, Label, Popup, Segment, Dropdown} from 'semantic-ui-react';
-import {PinAppButton,   renderLinkAppAddUserLabel, setUserDropdownText, TeamAppActionButton} from "./common";
+import {renderLinkAppAddUserLabel, setUserDropdownText, TeamAppActionButton} from "./common";
 import * as modalActions from "../../actions/teamModalActions";
-import {teamEditLinkAppNew, teamShareLinkCard, removeTeamCardReceiver} from "../../actions/appsActions";
+import {teamEditLinkCard, teamShareLinkCard, removeTeamCardReceiver} from "../../actions/appsActions";
 import {handleSemanticInput, reflect} from "../../utils/utils";
 import {getReceiverInList, isAdmin, sortReceiversAndMap, selectItemFromListById,} from "../../utils/helperFunctions";
 import {addNotification} from "../../actions/notificationBoxActions";
@@ -111,7 +111,7 @@ class LinkTeamApp extends Component {
   modify = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    this.props.dispatch(teamEditLinkAppNew({
+    this.props.dispatch(teamEditLinkCard({
       team_card_id: this.props.app.id,
       name: this.state.name,
       url: this.state.url,

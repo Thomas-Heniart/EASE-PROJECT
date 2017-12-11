@@ -289,7 +289,7 @@
   z-index: 50;
   .notification_box {
     width: 300px;
-    padding: 30px;
+    padding: 15px;
     font-size: 16px;
     line-height: 1.56;
     margin-top: 10px;
@@ -326,11 +326,11 @@
   opacity: 1;
 }
 
-.test-enter {
+.notification-box-enter {
 
 }
 
-.test-enter.test-enter-active {
+.notification-box-enter.notification-box-enter-active {
   -webkit-animation-name: animSlideElastic;
   animation-name: animSlideElastic;
   -webkit-animation-duration: 1s;
@@ -339,11 +339,11 @@
   animation-timing-function: linear;
 }
 
-.test-leave {
+.notification-box-leave {
 
 }
 
-.test-leave.test-leave-active {
+.notification-box-leave.notification-box-leave-active {
   -webkit-animation-name: animSlide;
   animation-name: animSlide;
   -webkit-animation-duration: .25s;
