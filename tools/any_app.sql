@@ -5,3 +5,5 @@ CREATE TABLE anyApps (
   FOREIGN KEY (id) REFERENCES websiteApps(id),
   FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
+
+ALTER TABLE websiteAttributes ADD COLUMN logo_url VARCHAR(2000);
