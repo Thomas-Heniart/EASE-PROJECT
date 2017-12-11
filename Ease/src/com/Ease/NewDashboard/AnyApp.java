@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
@@ -32,8 +33,28 @@ public class AnyApp extends WebsiteApp {
     }
 
     @Override
+    public boolean isAnyApp() {
+        return true;
+    }
+
+    @Override
+    public void decipher(String symmetric_key, String team_key) throws HttpServletException {
+        if (this.getAccount() == null)
+            return;
+        this.getAccount().decipher(team_key == null ? symmetric_key : team_key);
+    }
+
+    @Override
     public JSONObject getJson() {
-        return super.getJson();
+        JSONObject res = super.getJson();
+        res.put("empty", this.isEmpty());
+        res.put("account_information", new JSONObject());
+        if (this.getAccount() == null)
+            return res;
+        res.put("last_update_date", this.getAccount().getLast_update().getTime());
+        res.put("password_reminder_interval", this.getAccount().getReminder_interval());
+        res.put("account_information", this.getAccount().getJsonWithoutPassword());
+        return res;
     }
 
     @Override

@@ -28,12 +28,7 @@ public class ServletEditLinkApp extends HttpServlet {
             Integer app_id = sm.getIntParam("app_id", true, false);
             User user = sm.getUser();
             App app = user.getApp(app_id, sm.getHibernateQuery());
-            if (app == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "This app does not exist");
-            Profile profile = app.getProfile();
-            if (app.getTeamCardReceiver() != null || (profile != null && !profile.getUser().equals(user)))
-                throw new HttpServletException(HttpStatus.Forbidden);
-            if (!app.isLinkApp())
+            if (!app.isLinkApp() || app.getTeamCardReceiver() != null)
                 throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
