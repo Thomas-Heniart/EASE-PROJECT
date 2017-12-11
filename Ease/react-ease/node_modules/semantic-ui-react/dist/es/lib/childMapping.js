@@ -63,15 +63,15 @@ export var mergeChildMappings = function mergeChildMappings() {
   _forEach(_keys(next), function (nextKey) {
     if (_has(nextKeysPending, nextKey)) {
       _forEach(nextKeysPending[nextKey], function (pendingKey) {
-        childMapping[pendingKey] = getValue(pendingKey, next, prev);
+        childMapping[pendingKey] = getValue(pendingKey, prev, next);
       });
     }
 
-    childMapping[nextKey] = getValue(nextKey, next, prev);
+    childMapping[nextKey] = getValue(nextKey, prev, next);
   });
 
   _forEach(pendingKeys, function (pendingKey) {
-    childMapping[pendingKey] = getValue(pendingKey, next, prev);
+    childMapping[pendingKey] = getValue(pendingKey, prev, next);
   });
 
   return childMapping;

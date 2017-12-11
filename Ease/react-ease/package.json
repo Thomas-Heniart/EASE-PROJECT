@@ -37,14 +37,13 @@
     "pui-react-overlay-trigger": "^8.3.1",
     "pui-react-tooltip": "^8.3.1",
     "query-string": "^4.3.4",
-    "react": "^15.5.4",
+    "react": "^16.2.0",
     "react-addons-css-transition-group": "^15.6.0",
     "react-cookie": "^2.0.8",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
     "react-dnd-scrollzone": "^4.0.0",
-    "react-dom": "^15.5.4",
-    "react-phone-number-input": "^0.12.7",
+    "react-dom": "^16.2.0",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
@@ -56,7 +55,7 @@
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^4.3.0",
     "redux-thunk": "^2.2.0",
-    "semantic-ui-react": "^0.71.5",
+    "semantic-ui-react": "^0.77.1",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
     "style-loader": "^0.17.0"
@@ -70,7 +69,7 @@
     "firebase-tools": "^3.9.0",
     "html-webpack-plugin": "^2.28.0",
     "style-loader": "^0.17.0",
-    "webpack": "^2.5.1",
+    "webpack": "^3.10.0",
     "webpack-dev-server": "^2.4.5"
   }
 }

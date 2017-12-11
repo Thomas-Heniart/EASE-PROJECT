@@ -23,6 +23,7 @@ export default (function (source, target) {
     // deleted keys
     if (!_has(target, key)) res[key] = '[DELETED]';
     // new keys / changed values
+    // Note, we tolerate isEqual here as this is a dev only utility and not included in production code
     else if (!_isEqual(val, target[key])) res[key] = target[key];
   }, {});
 });

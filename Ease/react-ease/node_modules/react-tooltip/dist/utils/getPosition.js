@@ -65,7 +65,8 @@ exports.default = function (e, target, node, place, effect, offset) {
 
 
     if (result && outsideHorizontal().result) {
-      return { result: false }; // No need to change, if change to vertical will out of space
+      return { result: false // No need to change, if change to vertical will out of space
+      };
     }
     if (!result && getTipOffsetLeft('left') < 0 && getTipOffsetRight('right') <= windowWidth) {
       result = true; // If vertical ok, but let out of side and right won't out of side
@@ -79,7 +80,8 @@ exports.default = function (e, target, node, place, effect, offset) {
         newPlace = _outsideVertical2.newPlace;
 
     if (result && outsideHorizontal().result) {
-      return { result: false }; // No need to change, if change to vertical will out of space
+      return { result: false // No need to change, if change to vertical will out of space
+      };
     }
     if (!result && getTipOffsetRight('right') > windowWidth && getTipOffsetLeft('left') >= 0) {
       result = true;

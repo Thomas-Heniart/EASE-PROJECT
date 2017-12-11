@@ -10,7 +10,7 @@ const ModuleFilenameHelpers = require("./ModuleFilenameHelpers");
 class EvalSourceMapDevToolModuleTemplatePlugin {
 	constructor(compilation, options) {
 		this.compilation = compilation;
-		this.sourceMapComment = options.append || "//# sourceMappingURL=[url]";
+		this.sourceMapComment = options.append || "//# sourceURL=[module]\n//# sourceMappingURL=[url]";
 		this.moduleFilenameTemplate = options.moduleFilenameTemplate || "webpack:///[resource-path]?[hash]";
 		this.options = options;
 	}
@@ -55,19 +55,20 @@ class EvalSourceMapDevToolModuleTemplatePlugin {
 			sourceMap.sources = moduleFilenames;
 			if(sourceMap.sourcesContent) {
 				sourceMap.sourcesContent = sourceMap.sourcesContent.map(function(content, i) {
-					return `${content}\n\n\n${ModuleFilenameHelpers.createFooter(modules[i], this.requestShortener)}`;
+					return typeof content === "string" ? `${content}\n\n\n${ModuleFilenameHelpers.createFooter(modules[i], this.requestShortener)}` : null;
 				}, this);
 			}
 			sourceMap.sourceRoot = options.sourceRoot || "";
 			sourceMap.file = `${module.id}.js`;
 
-			const footer = self.sourceMapComment.replace(/\[url\]/g, `data:application/json;charset=utf-8;base64,${new Buffer(JSON.stringify(sourceMap), "utf8").toString("base64")}`); //eslint-disable-line
+			const footer = self.sourceMapComment.replace(/\[url\]/g, `data:application/json;charset=utf-8;base64,${new Buffer(JSON.stringify(sourceMap), "utf8").toString("base64")}`) + //eslint-disable-line
+				`\n//# sourceURL=webpack-internal:///${module.id}\n`; // workaround for chrome bug
 			source.__EvalSourceMapDevToolData = new RawSource(`eval(${JSON.stringify(content + footer)});`);
 			return source.__EvalSourceMapDevToolData;
 		});
 		moduleTemplate.plugin("hash", function(hash) {
 			hash.update("eval-source-map");
-			hash.update("1");
+			hash.update("2");
 		});
 	}
 }
