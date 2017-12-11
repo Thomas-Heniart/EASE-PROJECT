@@ -35,7 +35,7 @@ public class ServletSendFillerReminder extends HttpServlet {
                 TeamUser room_manager = teamSingleCard.getChannel().getRoom_manager();
                 NotificationFactory.getInstance().createRemindTeamSingleCardFiller(teamSingleCard, sm.getTeamUser(teamSingleCard.getTeam()), room_manager, sm.getUserWebSocketManager(room_manager.getUser().getDb_id()), sm.getHibernateQuery());
             } else
-                NotificationFactory.getInstance().createRemindTeamSingleCardFiller((TeamSingleCardReceiver) teamSingleCard.getTeamCardReceiver(filler), sm.getTeamUser(teamSingleCard.getTeam()), sm.getUserIdMap(), sm.getHibernateQuery());
+                NotificationFactory.getInstance().createRemindTeamSingleCardFiller((TeamSingleCardReceiver) teamSingleCard.getTeamCardReceiver(filler), sm.getTeamUser(team), sm.getUserIdMap(), sm.getHibernateQuery());
             sm.setSuccess("Notification sent");
         } catch (Exception e) {
             sm.setError(e);

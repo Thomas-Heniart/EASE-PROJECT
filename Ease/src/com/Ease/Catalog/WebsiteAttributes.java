@@ -27,6 +27,9 @@ public class WebsiteAttributes {
     @Column(name = "integrated")
     private boolean integrated = false;
 
+    @Column(name = "logo_url")
+    private String logo_url;
+
     public WebsiteAttributes(Boolean public_website) {
         this.public_website = public_website;
     }
@@ -73,6 +76,14 @@ public class WebsiteAttributes {
 
     public void setIntegrated(boolean integrated) {
         this.integrated = integrated;
+    }
+
+    public String getLogo_url() {
+        return logo_url;
+    }
+
+    public void setLogo_url(String logo_url) {
+        this.logo_url = logo_url;
     }
 
     @Override

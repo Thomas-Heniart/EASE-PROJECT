@@ -31,7 +31,7 @@ public class ServletEditClassicApp extends HttpServlet {
             Integer app_id = sm.getIntParam("app_id", true, false);
             User user = sm.getUser();
             App app = user.getApp(app_id, sm.getHibernateQuery());
-            if (!app.isClassicApp())
+            if (!app.isClassicApp() || app.getTeamCardReceiver() != null)
                 throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
