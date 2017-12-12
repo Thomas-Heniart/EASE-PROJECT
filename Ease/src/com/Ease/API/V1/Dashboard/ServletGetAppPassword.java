@@ -1,8 +1,6 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.ClassicApp;
-import com.Ease.NewDashboard.SsoApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
@@ -31,35 +29,34 @@ public class ServletGetAppPassword extends HttpServlet {
             Integer app_id = sm.getIntParam("app_id", true, false);
             App app = user.getApp(app_id, sm.getHibernateQuery());
             JSONObject res = new JSONObject();
-            if (!app.isClassicApp() && !app.isSsoApp())
+            if (!app.isClassicApp() && !app.isSsoApp() && !app.isSoftwareApp() && !app.isAnyApp())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot ask password for this app");
+            Account account;
             String password;
-            String symmetric_key = null;
-            symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            if (app.isSsoApp()) {
-                SsoApp ssoApp = (SsoApp) app;
-                if (ssoApp.getAccount() == null)
-                    throw new HttpServletException(HttpStatus.BadRequest, "This app is empty");
-                ssoApp.decipher(symmetric_key, null);
-                password = ssoApp.getAccount().getInformationNamed("password").getDeciphered_information_value();
-            } else {
-                ClassicApp classicApp = (ClassicApp) app;
-                if (classicApp.getAccount() == null)
-                    throw new HttpServletException(HttpStatus.BadRequest, "This app is empty");
-                TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
-                String team_key = null;
-                if (teamCardReceiver != null) {
-                    TeamUser teamUser = sm.getTeamUser(teamCardReceiver.getTeamCard().getTeam());
-                    if (teamCardReceiver.isTeamSingleCardReceiver() && (!((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password() && !teamUser.isTeamAdmin()))
-                        throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to see the password");
-                    Team team = teamCardReceiver.getTeamCard().getTeam();
-                    sm.initializeTeamWithContext(team);
-                    sm.needToBeTeamUserOfTeam(team);
-                    team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
-                }
-                classicApp.decipher(symmetric_key, team_key);
-                password = classicApp.getAccount().getInformationNamed("password").getDeciphered_information_value();
+            String team_key = null;
+            String keyUser = sm.getKeyUser();
+            if (app.isClassicApp())
+                account = ((ClassicApp) app).getAccount();
+            else if (app.isSsoApp())
+                account = ((SsoApp) app).getAccount();
+            else if (app.isSoftwareApp())
+                account = ((SoftwareApp) app).getAccount();
+            else
+                account = ((AnyApp) app).getAccount();
+            if (account == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "This app is empty");
+            TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
+            if (teamCardReceiver != null) {
+                TeamUser teamUser = sm.getTeamUser(teamCardReceiver.getTeamCard().getTeam());
+                if (teamCardReceiver.isTeamSingleCardReceiver() && (!((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password() && !teamUser.isTeamAdmin()))
+                    throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to see the password");
+                Team team = teamCardReceiver.getTeamCard().getTeam();
+                sm.initializeTeamWithContext(team);
+                sm.needToBeTeamUserOfTeam(team);
+                team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
             }
+            app.decipher(keyUser, team_key);
+            password = account.getInformationNamed("password").getDeciphered_information_value();
             res.put("password", sm.cipher(password));
             sm.setSuccess(res);
         } catch (Exception e) {
