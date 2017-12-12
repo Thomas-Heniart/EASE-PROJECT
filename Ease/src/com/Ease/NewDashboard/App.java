@@ -120,6 +120,10 @@ abstract public class App {
         return false;
     }
 
+    public boolean isSoftwareApp() {
+        return false;
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.getDb_id());
