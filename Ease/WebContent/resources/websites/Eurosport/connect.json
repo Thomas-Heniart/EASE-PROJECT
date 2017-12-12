@@ -1,0 +1,36 @@
+{
+	"name":"Eurosport",
+	"lastLogin":"",
+	"home":"http://www.eurosport.fr/",
+	"connect":{
+		"todo":[
+			{"action": "click", "search": "#nav--disconnect-mode"},
+			{"action":"fill", "what":"login", "search":"#login__form #login__email"},
+			{"action":"fill", "what":"password", "search":"#login__form #login__email"},
+			{"action":"click", "search":"#login__form button#login__button"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action": "click", "search": "#nav--connect-mode"},
+			{"action": "waitfor", "search": "#myprofile-account"},
+			{"action": "click", "search": "#myprofile-account"},
+			{"action": "waitfor", "search": "#account-logout-link"},
+			{"action":"click", "search":"#account-logout-link"}			
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action": "waitload"},
+		{"search":"#avatar-eurosport"}
+	],
+    "Facebook":{
+        "todo":[ 
+            {"action":"click", "search":"#social-button-facebook-login"} 
+        ]
+    },
+    "Google": {
+    	"todo": [
+            {"action":"click", "search":"social-button-google-login"} 
+    	]
+    }
+}

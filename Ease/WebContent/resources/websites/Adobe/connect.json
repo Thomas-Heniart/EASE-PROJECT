@@ -1,0 +1,76 @@
+{
+  "name": "Adobe",
+  "lastLogin": "",
+  "home": "https://www.adobe.com",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".Gnav-action-login"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#adobeid_username",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#adobeid_password",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "#sign_in"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".Gnav-action-login"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "trueClick",
+        "search": "a.button.mod-main.mod-facebook"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[data-profile='sign-out']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#adobeid_username"
+      },
+      {
+        "action": "goto",
+        "url": "https://www.adobe.com"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".Gnav-active"
+    },
+    {
+      "action": "waitfor",
+      "search": "a[data-profile='sign-out'], .Gnav-action-login"
+    },
+    {
+      "search": "a[data-profile='sign-out']"
+    }
+  ]
+}

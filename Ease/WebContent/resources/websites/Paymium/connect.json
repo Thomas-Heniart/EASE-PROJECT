@@ -1,0 +1,23 @@
+{
+  "name":"Paymium",
+  "lastLogin":"",
+  "home":"https://paymium.com/",
+  "connect":{
+    "todo":[
+        {"action":"aclick", "search":"a[href*='log-in']"},
+      {"action":"fill", "what":"login", "search":"#name"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"div.login button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"li.logout a"},
+      {"action":"waitfor", "search":"a[href*='log-in']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"li.logout, a[href*='log-in']"},
+    {"search": "li.logout"}
+  ]
+}

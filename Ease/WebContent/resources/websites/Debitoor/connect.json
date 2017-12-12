@@ -1,0 +1,23 @@
+{
+	"name":"Debitoor",
+	"lastLogin":"",
+	"home":"https://app.debitoor.com/",
+	"connect":{
+		"todo":[
+			{"action": "goto", "url": "https://app.debitoor.com/"},
+			{"action": "waitload"},
+			{"action":"fill", "what":"login", "search":"form input[name=email]"},
+			{"action":"fill", "what":"password", "search":"form input[name=password]"},
+			{"action":"click", "search":"form input[type=submit]"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":".btn-logout"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action": "waitfor", "search": "form input[name=password], .customizable-nav__user-menu"},
+		{"search":".customizable-nav__user-menu"}
+	]
+}

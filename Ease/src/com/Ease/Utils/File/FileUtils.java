@@ -10,9 +10,9 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class FileUtils {
-    public static void createWebsiteLogo(String folder, String name) throws HttpServletException {
+
+    private static void createLogo(String uploadPath, String name) throws HttpServletException {
         try {
-            String uploadPath = Variables.WEBSITES_FOLDER_PATH + folder;
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists())
                 uploadDir.mkdir();
@@ -28,6 +28,14 @@ public class FileUtils {
         } catch (Exception e) {
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
+
+    public static void createWebsiteLogo(String folder, String name) throws HttpServletException {
+        createLogo(Variables.WEBSITES_FOLDER_PATH + folder, name);
+    }
+
+    public static void createSoftwareLogo(String folder, String name) throws HttpServletException {
+        createLogo(/* Variables.SOFTWARE_FOLDER_PATH +*/ folder, name);
     }
 
     private static byte[] download(URL url) throws IOException {

@@ -1,0 +1,30 @@
+{
+    "name":"Duolingo",
+    "lastLogin":"",
+    "home":"https://www.duolingo.com/",
+    "connect":{
+        "todo":[
+          {"action":"fill", "what":"login", "search":"#top_login"},
+          {"action":"fill", "what":"password", "search":"#top_password"},
+          {"action":"click", "search":"#login-button"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        {"action":"click", "search":"#login-form .signup-facebook"}
+    	]
+    },
+    "Google":{
+    	"todo":[
+        {"action":"click", "search":"#login-form .signup-gplus"}
+    	]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"#header_userdrop_logout"}
+          ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#header_userdrop_logout"}
+    ]
+}

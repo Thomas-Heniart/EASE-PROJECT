@@ -1,0 +1,21 @@
+{
+	"name":"Crunchyroll",
+	"lastLogin":"",
+	"home":"https://www.crunchyroll.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login_form #login_form_name"},
+			{"action":"fill", "what":"password", "search":"#login_form #login_form_password"},
+			{"action":"click", "search":"#login_form button[type='submit']"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"a[href*='logout']"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"action":"waitfor", "search":"a[href*='logout'], #login_form"},
+		{"search":"a[href*='logout']"}
+	]
+}

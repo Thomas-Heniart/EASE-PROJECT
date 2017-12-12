@@ -1,0 +1,23 @@
+{
+  "name":"hubiC",
+  "lastLogin":"",
+  "home":"https://hubic.com/home/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#sign-in-email"},
+      {"action":"fill", "what":"password", "search":"#sign-in-password"},
+      {"action":"click", "search":"#sign-in-login"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a.browser-account-menu-logoff"},
+      {"action":"waitload"},
+      {"action":"aclick", "search":"a[href='/home/']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.browser-account-menu-logoff, #sign-in-login"},
+    {"search":"a.browser-account-menu-logoff"}
+  ]
+}

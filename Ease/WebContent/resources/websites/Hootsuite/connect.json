@@ -1,0 +1,39 @@
+{
+    "name":"Hootsuite",
+    "lastLogin":"",
+    "home":"https://hootsuite.com/dashboard",
+    "connect":{
+        "todo":[
+          {"action":"aclick", "search":"a[href*='login']"},
+          {"action":"fill", "what":"login", "search":"#loginEmailInput"},
+          {"action":"fill", "what":"password", "search":"#loginPasswordInput"},
+          {"action":"click", "search":"._emailPasswordForm button[type='submit']"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        {"action":"aclick", "search":"a[href*='login']"},
+        {"action":"click", "search":"._socialLoginFacebook"}
+    	]
+    },
+    "Google":{
+    	"todo":[
+        {"action":"aclick", "search":"a[href*='login']"},
+        {"action":"click", "search":"._socialLoginGoogle"}
+    	]
+    },
+    "Twitter":{
+    	"todo":[
+        {"action":"aclick", "search":"a[href*='login']"},
+        {"action":"click", "search":"._socialLoginTwitter"}
+    	]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a.logout"}
+          ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a.logout"}
+    ]
+}

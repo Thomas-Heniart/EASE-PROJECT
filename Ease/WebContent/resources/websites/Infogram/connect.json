@@ -1,0 +1,40 @@
+{
+  "name":"Infogram",
+  "lastlogin":"",
+  "home":"https://infogr.am/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login", "search":"input#login_name"},
+      {"action":"fill", "what":"password", "search":"input#login_pass"},
+      {"action":"clickona", "search":"#submit-login"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"clickona", "search":".toolbar-profile-menu-item.icon-logout a"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"search":"#app-container"}
+  ],
+  "Facebook": {
+    "todo": [
+      {"action":"clickona", "search":".soc_connect .sc_fb"}
+    ]
+  },
+  "LinkedIn": {
+    "todo": [
+      {"action":"clickona", "search":".soc_connect .sc_in"}
+    ]
+  },
+  "Google": {
+    "todo": [
+      {"action":"clickona", "search":".soc_connect .sc_gp"}
+    ]
+  },
+  "Twitter": {
+    "todo": [
+      {"action":"clickona", "search":".soc_connect .sc_tw"}
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name":"cadastre.gouv",
+  "lastLogin":"",
+  "home":"https://www.cadastre.gouv.fr/scpc/accueil.do",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#identifiant", "grave":true},
+      {"action":"fill", "what":"password", "search":"#motDePasse", "grave":true},
+      {"action":"trueClick", "search":"form[name='authentificationBoiteForm'] p.buttons input[type='image']", "grave":true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[onclick*='deconnection']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#mon_cpte, form[name='authentificationBoiteForm']"},
+    {"search":"#mon_cpte"}
+  ]
+}

@@ -1,0 +1,32 @@
+{
+    "name":"Inoreader",
+    "lastlogin":"",
+    "home":"http://www.inoreader.com/login",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#login_form #username", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#login_form #password", "grave":"true"},
+    		{"action":"click", "search":"#login_form .signin_button", "grave":"true"}
+    	]
+    },
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":"#login_form .fb_button"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"click", "search":"#login_form .g_button"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":"#sb_rp_settings_menu .inno_toolbar_button_menu_item:last-child()"},
+    		{"action":"waitload"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#sb_rp_settings"}
+    ]
+    
+}

@@ -1,0 +1,30 @@
+{
+  "name":"GuruShots",
+  "lastLogin":"",
+  "home":"https://gurushots.com/",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":"a.signin"},
+      {"action":"waitfor", "search":"#login input[name='login']"},
+      {"action":"fill", "what":"login", "search":"#login input[name='login']"},
+      {"action":"fill", "what":"password", "search":"#login input[type='password']"},
+      {"action":"click", "search":"#login button[type='submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo": [
+      {"action":"clickona", "search":"a.signin"},
+      {"action":"waitfor", "search":"#login .fbBtn"},
+      {"action":"click", "search":"#login .fbBtn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a.signout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"a.signout"}
+  ]
+}

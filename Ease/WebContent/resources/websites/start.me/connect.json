@@ -1,0 +1,45 @@
+{
+  "name":"start.me",
+  "lastLogin":"",
+  "home":"https://start.me/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='/users/sign_in']", "grave":true},
+      {"action":"waitfor", "search":"iframe[src*='sign_in']", "grave":true},
+      {"action":"enterFrame", "search":"iframe[src*='sign_in']", "grave":true},
+      {"action":"fill", "what":"login", "search":"#user_email", "grave":true},
+      {"action":"fill", "what":"password", "search":"#user_password", "grave":true},
+      {"action":"trueClick", "search":"#user_remember_me", "grave":true},
+      {"action":"trueClick", "search":"input[name*='commit']", "grave":true},
+      {"action":"exitFrame"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":"i[class*='fa-sign-out']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"i[class*='fa-sign-out'], a[href*='/users/sign_in']"},
+    {"search":"i[class*='fa-sign-out']"}
+  ],
+  "Facebook":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='/users/sign_in']", "grave":true},
+      {"action":"waitfor", "search":"iframe[src*='sign_in']", "grave":true},
+      {"action":"enterFrame", "search":"iframe[src*='sign_in']", "grave":true},
+      {"action":"trueClick", "search":"a[href*='https://start.me/users/auth/facebook?from=start.me']", "grave":true},
+      {"action":"exitFrame"}
+    ]
+  },
+  "Twitter":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='/users/sign_in']", "grave":true},
+      {"action":"waitfor", "search":"iframe[src*='sign_in']", "grave":true},
+      {"action":"enterFrame", "search":"iframe[src*='sign_in']", "grave":true},
+      {"action":"trueClick", "search":"a[href*='https://start.me/users/auth/twitter?from=start.me']", "grave":true},
+      {"action":"exitFrame"}
+    ]
+  }
+}

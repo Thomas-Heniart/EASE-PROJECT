@@ -1,0 +1,21 @@
+{
+    "name":"Mailchimp",
+    "lastLogin":"",
+    "home":"https://login.mailchimp.com/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input#username"},
+            {"action":"val", "what":"password", "search":"input#password"},
+            {"action":"click", "search":"button.button-large.button-wide.full-width.p1"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"https://mailchimp.com/login/out/"},
+            {"action":"goto", "url":"https://login.mailchimp.com/"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[data-dojo-attach-point='accountButton']"}
+    ]
+}

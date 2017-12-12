@@ -1,0 +1,20 @@
+{
+    "name":"Adecco",
+    "lastlogin":"",
+    "home":"https://espace-personnel.adecco.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":".authentication-form input[type='email']", "grave":"true"},
+    		{"action":"fill", "what":"password","search":".authentication-form input[type='password']", "grave":"true"},
+    		{"action":"click", "search":"input[type='submit']", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://espace-personnel.adecco.fr/Pages/logout.aspx"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='/Pages/logout.aspx']"}
+    ]
+}

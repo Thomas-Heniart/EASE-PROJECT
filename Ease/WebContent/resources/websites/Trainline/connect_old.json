@@ -1,0 +1,74 @@
+{
+  "name": "Trainline",
+  "lastLogin": "",
+  "home": "https://www.trainline.eu/",
+  "connect": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "button.header__signin-button"
+      },
+      {
+        "action": "trueClick",
+        "search": "button.header__signin-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "#signin-form input[name='email']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#signin-form input[name='email']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#signin-form input[name='password']"
+      },
+      {
+        "action": "click",
+        "search": "#signin-form .signin__button"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "button.header__signin-button"
+      },
+      {
+        "action": "trueClick",
+        "search": "button.header__signin-button"
+      },
+      {
+        "action": "waitfor",
+        "search": ".social-signin-facebook"
+      },
+      {
+        "action": "click",
+        "search": ".social-signin-facebook"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "click",
+        "search": ".user-menu__icon--signout",
+        "grave": true
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#dot[style='display: none;']"
+    },
+    {
+      "search": "button.header__signin-button",
+      "type": "absent"
+    }
+  ]
+}

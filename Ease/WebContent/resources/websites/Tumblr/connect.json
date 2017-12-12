@@ -1,0 +1,23 @@
+{
+	"name":"tumblr",
+	"lastLogin":"",
+	"home":"https://www.tumblr.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#signup_determine_email", "grave":true},
+            {"action":"click", "search":"#signup_forms_submit"},
+			{"action":"fill", "what":"password", "search":"#signup_password", "grave":true},
+			{"action":"waitfor", "search":"span.signup_login_btn.active"},
+			{"action":"click", "search":"#signup_forms_submit"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://www.tumblr.com/logout"},
+			{"action":"goto", "url":"https://www.tumblr.com/login"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#account_button"}
+	]
+}

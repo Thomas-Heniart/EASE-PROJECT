@@ -1,0 +1,20 @@
+{
+	"name":"KickoffLabs",
+	"lastLogin":"",
+	"home":"https://app.kickofflabs.com/login",
+	"connect": {
+		"todo": [
+			{"action":"fill", "what":"login", "search":"#user_email", "grave":"true"},
+			{"action":"fill", "what":"password", "search":"#user_password", "grave":"true"},
+			{"action":"click", "search":"input[type='submit']"}
+		]
+	},
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://app.kickofflabs.com/logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='logout']"}
+    ]
+}

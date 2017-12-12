@@ -1,0 +1,26 @@
+{
+    "name":"AirBnb",
+    "lastLogin":"",
+    "home":"https://www.airbnb.com/Login",
+    "connect":{
+        "todo":[
+        	{"action":"fill", "what":"login", "search":"#signin_email", "grave":true},
+            {"action":"fill", "what":"password", "search":"#signin_password"},
+            {"action":"click", "search":"#user-login-btn"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+    		{"action":"goto", "url":"http://www.airbnb.com/oauth_connect?from=facebook_login&service=facebook"}
+    	]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"https://www.airbnb.com/logout"},
+            {"action":"goto", "url":"https://www.airbnb.com/Login"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"div.logged_in"}
+    ]
+}

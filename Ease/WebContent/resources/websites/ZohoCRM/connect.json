@@ -1,0 +1,43 @@
+{
+  "name":"Zoho CRM",
+  "lastlogin":"",
+  "home":"https://crm.zoho.com/",
+  "connect": {
+    "todo": [
+      {"action":"waitfor", "search":"iframe[src*='login']"},
+      {"action":"enterFrame", "search":"iframe[src*='login']"},
+      {"action":"fill", "what":"login", "search":"form#login #lid"},
+      {"action":"fill", "what":"password", "search":"form#login #pwd"},
+      {"action":"click", "search":"form#login #submit_but"},
+      {"action":"exitFrame"}
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {"action":"waitfor", "search":"iframe[src*='login']"},
+      {"action":"enterFrame", "search":"iframe[src*='login']"},
+      {"action":"click", "search":"#fb_open"},
+      {"action":"exitFrame"}
+    ]
+  },
+  "LinkedIn": {
+    "todo": [
+      {"action":"waitfor", "search":"iframe[src*='login']"},
+      {"action":"enterFrame", "search":"iframe[src*='login']"},
+      {"action":"click", "search":"#linkedin_open"},
+      {"action":"exitFrame"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"clickona", "search":"a[data-zcqa='signOut']"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"a.signin"},
+      {"action":"goto", "url":"https://crm.zoho.com"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[data-zcqa='signOut'], iframe[src*='login']"},
+    {"search":"a[data-zcqa='signOut']"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+    "name":"InVision",
+    "lastlogin":"",
+    "home":"https://projects.invisionapp.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#emailAddress"},
+    		{"action":"fill", "what":"password", "search":"#password"},
+    		{"action":"click", "search":"button.form__button"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"a.logout"},
+    		{"action":"waitload"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"action":"waitfor", "search":"a.logout, #emailAddress"},
+    	{"search":"a.logout"}
+    ]
+}
