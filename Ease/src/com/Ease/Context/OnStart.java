@@ -44,7 +44,6 @@ public class OnStart implements ServletContextListener {
             DatabaseRequest request;
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
-
                 Catalog catalog = new Catalog();
                 context.setAttribute("catalog", catalog);
 
