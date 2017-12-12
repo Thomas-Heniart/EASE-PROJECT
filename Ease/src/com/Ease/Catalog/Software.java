@@ -1,8 +1,12 @@
 package com.Ease.Catalog;
 
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
+import org.apache.commons.collections4.map.HashedMap;
 import org.json.simple.JSONObject;
 
 import javax.persistence.*;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -116,6 +120,19 @@ public class Software {
         JSONObject connection_information = new JSONObject();
         this.getSoftwareConnectionInformationSet().forEach(softwareConnectionInformation -> connection_information.put(softwareConnectionInformation.getInformation_name(), softwareConnectionInformation.getJson()));
         res.put("connection_information", connection_information);
+        return res;
+    }
+
+    public Map<String, String> getInformationNeeded(JSONObject account_information) throws HttpServletException {
+        Map<String, String> res = new HashedMap<>();
+        for (SoftwareConnectionInformation softwareConnectionInformation : this.getSoftwareConnectionInformationSet()) {
+            String value = (String) account_information.get(softwareConnectionInformation.getInformation_name());
+            if (value == null || value.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing information: " + softwareConnectionInformation.getInformation_name());
+            res.put(softwareConnectionInformation.getInformation_name(), value);
+        }
+        if (res.size() != this.getSoftwareConnectionInformationSet().size())
+            throw new HttpServletException(HttpStatus.BadRequest, "Some parameters are missing");
         return res;
     }
 }
