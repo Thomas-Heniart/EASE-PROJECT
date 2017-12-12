@@ -1,0 +1,21 @@
+{
+	"name":"ITSocial",
+	"lastLogin":"",
+	"home":"http://itsocial.fr/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login_email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#login_pass", "grave":true},
+			{"action":"trueClick", "search":"#login_button", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action": "trueClick", "search": ".td_ul_logout > li:last-child a"},
+			{"action": "waitload"}
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":".td_ul_logout"}
+	]
+}
