@@ -41,7 +41,7 @@ export function isAppInformationEmpty(information){
 
 export function handleSemanticInput(e, {name, value, checked}){
   if (checked !== undefined){
-    this.setState({[name]: !checked});
+    this.setState({[name]: checked});
     return;
   }
   this.setState({[name]: value});
