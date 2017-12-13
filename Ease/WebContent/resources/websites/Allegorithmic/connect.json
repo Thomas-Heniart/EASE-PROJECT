@@ -1,0 +1,30 @@
+{
+  "name":"Allegorithmic",
+  "lastLogin":"",
+  "home":"https://www.allegorithmic.com/user/login",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#edit-name"},
+      {"action":"fill", "what":"password", "search":"#edit-pass"},
+      {"action":"trueClick", "search":"#edit-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#header-logout"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"#header-account"}
+  ],
+  "Facebook": {
+    "todo": [
+      {"action": "trueClick", "search": "a[data-hybridauth-provider='Facebook']"}
+    ]
+  },
+  "Google": {
+    "todo": [
+      {"action": "trueClick", "search": "a[data-hybridauth-provider='Google']"}
+    ]
+  }
+}

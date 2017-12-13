@@ -1,0 +1,24 @@
+{
+  "name":"Instaply",
+  "lastLogin":"",
+  "home":"https://app.instaply.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#signin-email"},
+      {"action":"fill", "what":"password", "search":"#signin-password"},
+      {"action":"click", "search":"button[data-test-id='signin-submit-button']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"click", "search":"div[data-test-id='user-menu-button']"},
+      {"action":"waitfor", "search":"a.signout"},
+      {"action":"clickona", "search":"a.signout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"div[data-test-id='user-menu-button'], #signin-email"},
+    {"search":"div[data-test-id='user-menu-button']"}
+  ]
+}

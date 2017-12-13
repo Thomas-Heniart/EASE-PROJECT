@@ -475,7 +475,7 @@ module.exports = {
     }
   },
   teamApps: {
-    createSingleApp: ({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers, ws_id}) => {
+    createSingleCard: ({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -510,7 +510,7 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    shareSingleApp: ({team_id, team_card_id, team_user_id, allowed_to_see_password, ws_id}) => {
+    shareSingleCard: ({team_id, team_card_id, team_user_id, allowed_to_see_password, ws_id}) => {
       return axios.post('/api/v1/teams/AddTeamSingleCardReceiver', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -523,7 +523,7 @@ module.exports = {
         throw err.response.data;
       });
     },
-    editSingleApp: ({team_id, team_card_id, description, account_information, password_reminder_interval, name, ws_id}) => {
+    editSingleCard: ({team_id, team_card_id, description, account_information, password_reminder_interval, name, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -609,7 +609,7 @@ module.exports = {
         throw err.response.data;
       });
     },
-    acceptEnterpriseApp: ({team_id, shared_app_id, account_information, ws_id}) => {
+    acceptEnterpriseCard: ({team_id, shared_app_id, account_information, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -637,7 +637,7 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    createLinkAppNew: ({team_id, channel_id, name, description, url, img_url, ws_id, receivers}) => {
+    createLinkCard: ({team_id, channel_id, name, description, url, img_url, ws_id, receivers}) => {
       return axios.post('/api/v1/teams/CreateTeamLinkCard', {
         team_id: team_id,
         channel_id: channel_id,
@@ -660,7 +660,7 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    editLinkAppNew: ({team_card_id, name, description, url, img_url, ws_id}) => {
+    editLinkCard: ({team_card_id, name, description, url, img_url, ws_id}) => {
       return basic_post('/api/v1/teams/EditTeamLinkCard', {
         team_card_id: team_card_id,
         name : name,
@@ -699,21 +699,7 @@ module.exports = {
         return response.data;
       });
     },
-    createLinkApp: function(ws_id, team_id, app){
-      return axios.post('/api/v1/teams/CreateShareableLinkApp', {
-        ws_id: ws_id,
-        team_id: team_id,
-        channel_id: app.channel_id,
-        team_user_id: app.team_user_id,
-        name: app.name,
-        url: app.url,
-        description:app.description,
-        timestamp: new Date().getTime()
-      }).then(response => {
-        return response.data;
-      });
-    },
-    deleteApp: function ({team_id, team_card_id, ws_id}) {
+    deleteCard: function ({team_id, team_card_id, ws_id}) {
       return basic_post('/api/v1/teams/DeleteTeamCard', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -834,7 +820,7 @@ module.exports = {
         team_card_id: team_card_id
       });
     },
-    acceptTamCardRequest: ({team_id, team_card_id, request_id, ws_id}) => {
+    acceptTeamCardRequest: ({team_id, team_card_id, request_id, ws_id}) => {
       return basic_post('/api/v1/teams/AcceptJoinTeamCard', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -894,7 +880,7 @@ module.exports = {
         throw err.response.data;
       })
     },
-    createTeam: function({name, email, first_name, last_name, username, jobRole, jobDetails, digits,plan_id}){
+    createTeam: function({name, email, first_name, last_name, username, jobRole, jobDetails, digits,plan_id, ws_id}){
       return axios.post('/api/v1/teams/CreateTeam', {
         team_name: name,
         email: email,
@@ -905,6 +891,7 @@ module.exports = {
         job_details: jobDetails,
         digits: digits,
         plan_id: plan_id,
+        ws_id:ws_id,
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;

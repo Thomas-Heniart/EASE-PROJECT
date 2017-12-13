@@ -1,0 +1,23 @@
+{
+  "name":"Food Cheri",
+  "lastLogin":"",
+  "home":"https://www.foodcheri.com/",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":"a#login"},
+      {"action":"waitfor", "search":"#form-login"},
+      {"action":"fill", "what":"login", "search":"#form-login #email"},
+      {"action":"fill", "what":"password", "search":"#form-login #password"},
+      {"action":"click", "search":"#form-login button"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"goto", "url":"https://www.foodcheri.com/logout"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a#login, a[href*='account/order']"},
+    {"search":"a[href*='account/order']"}
+  ]
+}

@@ -1,0 +1,27 @@
+{
+    "name":"Pixabay",
+    "lastLogin":"",
+    "home":"https://pixabay.com/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://pixabay.com/accounts/login"},
+            {"action":"fill", "what":"login", "search":"#id_username"},
+            {"action":"fill", "what":"password", "search":"#id_password"},
+            {"action":"click", "search":"input[type='submit']"}
+        ]
+    },
+    "Facebook": {
+    	"todo":[
+    		{"action":"goto", "url":"https://pixabay.com/accounts/login"},
+    		{"action":"aclick", "search":"a[href*='facebook.com/dialog/oauth']"}
+    	]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='logout']"}
+ 		]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ]
+}

@@ -1,0 +1,21 @@
+{
+  "name":"Marches publics",
+  "lastlogin":"",
+  "home":"https://www.marches-publics.gouv.fr/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login","search":"#ctl0_bandeauEntreprise_identifiantTop"},
+      {"action":"fill", "what":"password","search":"#ctl0_bandeauEntreprise_passwordTop"},
+      {"action":"click", "search":"#ctl0_bandeauEntreprise_authentificationButton"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"search":"a.deconnexion"}
+  ],
+  "logout": {
+    "todo": [
+      {"action":"clickona", "search":"a.deconnexion"},
+      {"action":"waitload"}
+    ]
+  }
+}

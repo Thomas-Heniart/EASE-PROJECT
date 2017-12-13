@@ -1,0 +1,34 @@
+{
+    "name":"Strikingly",
+    "lastLogin":"",
+    "home":"https://www.strikingly.com/",
+    "connect":{
+        "todo":[
+        	{"action":"aclick", "search":"a[href*='login']"},
+          {"action":"fill", "what":"login", "search":"#user_email"},
+          {"action":"fill", "what":"password", "search":"#user_password"},
+          {"action":"click", "search":"#new_user input[name='commit']"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        {"action":"aclick", "search":"a[href*='login']"},
+    		{"action":"clickona", "search":".facebook-login"}
+    	]
+    },
+    "Linkedin":{
+    	"todo":[
+        {"action":"aclick", "search":"a[href*='login']"},
+    		{"action":"aclick", "search":"a[href*='auth/linkedin']"}
+    	]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a[href*='logout']"},
+            {"action":"waitfor", "search":"a[href*='login']"}
+          ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ]
+}

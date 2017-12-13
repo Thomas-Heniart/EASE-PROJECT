@@ -6,7 +6,6 @@ var TeamMenu = require('./TeamMenu');
 var TeamSideBar = require('./TeamSideBar');
 var TeamHeader = require('./TeamHeader');
 var FlexPanels = require('./TeamFlexPanels');
-var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var TeamAppAddingUi = require('./TeamAppAddingUi');
 var TeamAppsContainer = require('./TeamAppsContainer');
 var TeamSettings = require('./teamModals/TeamSettings');

@@ -1,0 +1,24 @@
+{
+  "name":"yousign",
+  "lastLogin":"",
+  "home":"https://webapp.yousign.com",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":".c-auth__content form input[type='email']", "grave":true},
+      {"action":"fill", "what":"password", "search":".c-auth__content form input[type='password']", "grave":true},
+      {"action":"trueClick", "search":".c-auth__content form button[type='submit']", "grave":true}
+    ]
+  },
+
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":"a[ng-click*='disconnect']"},
+      {"action":"waitfor", "search":".c-auth__content form button[type='submit']"},
+      {"action":"goto", "url":"https://webapp.yousign.com"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".c-auth__content form input[type='password'], a[ng-click*='disconnect']"},
+    {"search":"a[ng-click*='disconnect']"}
+  ]
+}

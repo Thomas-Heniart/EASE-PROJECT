@@ -40,7 +40,7 @@ export function fetchTeamAppList({team_id, ids}){
       const team_apps = getState().team_apps;
       let calls = [];
       ids.map(id => {
-        if (team_apps[id] === undefined)
+        if (!team_apps[id])
           calls.push(dispatch(fetchTeamApp({
             team_id: team_id,
             app_id: id
@@ -66,28 +66,6 @@ export function fetchTeamApp({team_id, app_id}){
     }).catch(err => {
       throw err;
     });
-  }
-}
-
-export function fetchTeam(id) {
-  return (dispatch) => {
-    dispatch({type:'FETCH_TEAM_PENDING', payload:id});
-    return api.fetchTeam(id).then((response) => {
-      dispatch({type: "FETCH_TEAM_FULFILLED", payload: response});
-    }).catch((err) => {
-      dispatch({type:"FETCH_TEAM_REJECTED", payload: err});
-      throw err;
-    });
-  }
-}
-
-export function fetchTeamAndUsersAndChannels(team_id){
-  return (dispatch) => {
-    return dispatch(fetchTeam(team_id)).then(() => {
-      return dispatch(UserActions.fetchUsers(team_id)).then(()=> {
-        return dispatch(ChannelActions.fetchChannels(team_id));
-      })
-    })
   }
 }
 
@@ -173,16 +151,6 @@ export function unsubscribe({team_id,password}){
     }).catch(err => {
       throw err;
     });
-  }
-}
-
-export function fetchTeamItemApps(itemId){
-  return function (dispatch, getState){
-    dispatch(closeAppAddUI());
-    if (itemId[0] !== '@')
-      return dispatch(ChannelActions.fetchTeamChannelApps(Number(itemId)));
-    else
-      return dispatch(UserActions.fetchTeamUserApps(Number(itemId.slice(1, itemId.length))));
   }
 }
 

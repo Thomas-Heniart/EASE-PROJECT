@@ -14,9 +14,9 @@ class NotificationBox extends Component {
     return (
         <div class="notification_box">
           <Icon name="delete" link onClick={() => {this.props.dispatch(deleteNotificationAction({id: notification.id}))}}/>
-          <strong>
+          <span>
             {notification.text}
-          </strong>
+          </span>
         </div>
     )
   }
@@ -35,7 +35,7 @@ class NotificationBoxContainer extends Component{
         <ReactCSSTransitionGroup
             as="div"
             id="notification_box_container"
-            transitionName="test"
+            transitionName="notification-box"
             transitionEnterTimeout={990}
             transitionLeaveTimeout={240}>
           {notifications.map(item => {

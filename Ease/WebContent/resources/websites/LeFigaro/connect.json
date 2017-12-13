@@ -1,0 +1,31 @@
+{
+    "name":"LeFigaro",
+    "lastlogin":"",
+    "home":"https://plus.lefigaro.fr/fpservice/fp_auth/login?goto_url=http://www.lefigaro.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#edit-name"},
+    		{"action":"fill", "what":"password", "search":"#edit-pass"},
+    		{"action":"click", "search":"#edit-submit"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://plus.lefigaro.fr/deconnexion?goto_url=http://www.lefigaro.fr/"},
+    		{"action":"goto", "url":"https://plus.lefigaro.fr/fpservice/fp_auth/login?goto_url=http://www.lefigaro.fr/"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"span.figh-connection-user__img"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":".fp-social-auth-facebook"}
+    	]
+    },
+    "Linkedin": {
+    	"todo": [
+    		{"action":"click", "search":".fp-social-auth-linkedin"}
+    	]
+    }
+}

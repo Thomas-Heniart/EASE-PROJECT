@@ -101,15 +101,7 @@ function UserList(props){
   )
 }
 
-@connect((store)=>{
-  return {
-    team_name: store.team.name,
-    team_id: store.team.id,
-    users: store.users.users,
-    channels: store.channels.channels,
-    selectedItem: store.selection
-  };
-})
+@connect()
 class TeamSideBar extends React.Component{
   constructor(props){
     super(props);

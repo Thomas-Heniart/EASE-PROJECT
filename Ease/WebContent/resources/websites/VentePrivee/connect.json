@@ -1,0 +1,26 @@
+{
+    "name":"Vente privée",
+    "lastLogin":"",
+    "home":"https://secure.fr.vente-privee.com/ns/fr-fr/home/default",
+    "connect":{
+        "todo":[
+            {"action":"goto", "url":"https://secure.fr.vente-privee.com/authentication/portal/"},
+            {"action":"waitfor", "search":"#mail,#txtEmail"},
+            {"action":"fill", "what":"login", "search":"#mail"},
+            {"action":"fill", "what":"login", "search":"#txtEmail"},
+            {"action":"fill", "what":"password", "search":"#mdp"},
+            {"action":"fill", "what":"password", "search":"#txtPassword"},
+            {"action":"click", "search":"#loginBtn"},
+            {"action":"click", "search":"#btSubmit"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"http://fr.vente-privee.com/vp4/Login/Logout.ashx"},
+            {"action":"goto", "url":"https://secure.fr.vente-privee.com/authentication/portal/"}
+            ]
+    },
+    "checkAlreadyLogged":[
+    	{"search":".icon-deconnexion"}
+  	]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "CentralTest",
+  "lastlogin": "",
+  "home": "https://app.centraltest.com/isc-paris/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login_login"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login_mdpmd5"
+      },
+      {
+        "action": "click",
+        "search": "button[name='userLogin']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#login_login, a[href*='logout']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}

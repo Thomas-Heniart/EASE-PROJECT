@@ -1,0 +1,26 @@
+{
+	"name":"FutureLearn",
+	"lastLogin":"",
+	"home":"https://www.futurelearn.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://www.futurelearn.com/sign-in"},
+			{"action":"fill", "what":"login", "search":"#email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#password", "grave":true},
+			{"action":"click", "search":"#sign-in button[type='submit']", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"click", "search":"#user-options form button[type='submit']"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href='#user-options']"}
+	],
+	"Facebook":{
+		"todo":[
+			{"action":"goto", "url":"https://www.futurelearn.com/auth/facebook"}
+		]
+	}
+}

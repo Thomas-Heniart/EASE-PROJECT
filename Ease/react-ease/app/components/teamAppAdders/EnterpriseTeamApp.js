@@ -11,11 +11,10 @@ import {
 import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {
-  teamAppDeleteReceiver,
   teamEditEnterpriseCard,
   teamEditEnterpriseCardReceiver,
   teamShareEnterpriseCard,
-  removeTeamCardReceiver, requestTeamSingleCard
+  removeTeamCardReceiver
 } from "../../actions/appsActions";
 import {
   copyTextToClipboard,
@@ -27,7 +26,7 @@ import {
   transformWebsiteInfoIntoListAndSetValues,
   needPasswordUpdate
 } from "../../utils/utils";
-import {findMeInReceivers, getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
+import {getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
@@ -44,8 +43,6 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
-        {/*!!meReceiver &&
-        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>*/}
         {(isAdmin(me.role) || !!meReceiver) &&
         <TeamAppActionButton text='Edit App'
                              icon='pencil'
@@ -337,19 +334,6 @@ class EnterpriseTeamApp extends Component {
       return user;
     });
     this.setState({users: users});
-  };
-  acceptRequest = (state) => {
-    const meReceiver = findMeInReceivers(this.props.app.receivers, this.props.me.id);
-    if (state) {
-      this.props.dispatch(modalActions.showTeamAcceptMultiAppModal(true, this.props.me, this.props.app));
-    } else {
-      this.props.dispatch(teamAppDeleteReceiver({
-        team_id: this.props.team_id,
-        app_id: this.props.app.id,
-        shared_app_id: meReceiver.shared_app_id,
-        team_user_id: meReceiver.team_user_id
-      }));
-    }
   };
   selfJoinApp = () => {
     this.props.dispatch(modalActions.showTeamJoinEnterpriseAppModal({

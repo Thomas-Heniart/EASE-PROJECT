@@ -1,0 +1,22 @@
+{
+  "name":"Mise en scene",
+  "lastlogin":"",
+  "home":"https://www.mise-en-scene.be",
+  "connect": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"fill", "what":"login","search":"#email"},
+      {"action":"fill", "what":"password","search":"#pass"},
+      {"action":"click", "search":"#send2"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"search":"a[href*='logout']"}
+  ],
+  "logout": {
+    "todo": [
+      {"action":"clickona", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  }
+}

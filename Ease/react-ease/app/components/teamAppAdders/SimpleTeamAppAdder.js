@@ -18,10 +18,7 @@ import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divide
 import {reduxActionBinder} from "../../actions/index";
 
 @connect(store => ({
-  team_id: store.team.id,
-  myId: store.team.myTeamUserId,
   teams: store.teams,
-  plan_id: store.team.plan_id,
   card: store.teamCard,
   modal: store.modals
 }), reduxActionBinder)

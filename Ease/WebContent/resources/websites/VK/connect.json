@@ -1,0 +1,26 @@
+{
+  "name":"VK",
+  "home":"https://vk.com/",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url": "https://vk.com/"},
+      {"action":"fill", "what":"login", "search":"input#index_email"},
+      {"action":"fill", "what":"password", "search":"input#index_pass"},
+      {"action":"click", "search":"button#index_login_button"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"#top_logout_link"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"#top_profile_link"}
+  ],
+  "Facebook": {
+    "todo": [
+      {"action": "goto", "url": "https://vk.com/"},
+      {"action":"click", "search":".index_fb_continue_with_wrap"}
+    ]
+  }
+}

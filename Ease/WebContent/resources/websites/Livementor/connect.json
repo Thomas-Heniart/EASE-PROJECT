@@ -1,0 +1,32 @@
+{
+	"name":"Livementor",
+	"lastLogin":"",
+	"home":"https://www.livementor.com/",
+	"connect":{
+		"todo":[
+            {"action":"goto", "url":"https://www.livementor.com/connexion"},
+			{"action":"waitfor", "search":"form#new_user"},
+			{"action":"fill", "what":"login", "search":"#user_email"},
+			{"action":"fill", "what":"password", "search":"#user_password"},
+			{"action":"click", "search":".submit-login input[type='submit']"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://www.livementor.com/log_out"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='log_out']"}
+	],
+	"Facebook":{
+		"todo":[
+			{"action":"goto", "url":"https://www.livementor.com/users/auth/facebook"}
+		]
+	},
+	"Google":{
+		"todo":[
+			{"action":"goto", "url":"https://www.livementor.com/users/auth/google?account=choose"}
+		]
+	}
+}

@@ -1,0 +1,28 @@
+{
+    "name":"Intercom",
+    "lastlogin":"",
+    "home":"https://app.intercom.io/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#admin_email"},
+    		{"action":"fill", "what":"password", "search":"#admin_password"},
+    		{"action":"click", "search":"button[type='submit']"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[href*='sign_out']"},
+    		{"action":"waitload"},
+    		{"action":"goto", "url":"https://app.intercom.io"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='google_auth']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"action":"waitfor", "search":"a[href*='sign_out'], #admin_email"},
+    	{"search":"a[href*='sign_out']"}
+    ]
+}

@@ -847,14 +847,7 @@ class TeamUserFlexTab extends React.Component{
   }
 }
 
-@connect((store)=>{
-  return {
-    channels: store.channels.channels,
-    users: store.users.users,
-    selectionProps: store.selection,
-    plan_id: store.team.plan_id
-  };
-})
+@connect()
 class FlexPanels extends React.Component {
   constructor(props){
     super(props);
@@ -868,7 +861,7 @@ class FlexPanels extends React.Component {
 
     return (
         <div id="flex_contents">
-          {item.purpose !== undefined &&
+          {!!item.purpose &&
           <TeamChannelFlexTab
               me={me}
               channel={item}
@@ -876,7 +869,7 @@ class FlexPanels extends React.Component {
               toggleFlexFunc={this.closePanel}
               plan_id={team.plan_id}
               dispatch={this.props.dispatch}/>}
-          {item.username !== undefined &&
+          {!!item.username &&
           <TeamUserFlexTab
               me={me}
               user={item}

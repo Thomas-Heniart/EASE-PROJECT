@@ -8,7 +8,7 @@ import {showTeamLinkAppSettingsModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {connect} from "react-redux";
-import {removeTeamCardReceiver, teamEditLinkAppNew} from "../../actions/appsActions";
+import {removeTeamCardReceiver, teamEditLinkCard} from "../../actions/appsActions";
 import {isAdmin} from "../../utils/helperFunctions";
 import {editAppName, validateApp} from "../../actions/dashboardActions";
 import {addNotification} from "../../actions/notificationBoxActions";
@@ -58,7 +58,7 @@ class TeamLinkAppSettingsModal extends Component {
         name: this.state.appName
       })));
     if (this.state.url !== this.props.app.url)
-      calls.push(this.props.dispatch(teamEditLinkAppNew({
+      calls.push(this.props.dispatch(teamEditLinkCard({
         team_card_id: team_app.id,
         name:team_app.name,
         description: team_app.description,

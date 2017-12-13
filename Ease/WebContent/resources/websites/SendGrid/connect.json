@@ -1,0 +1,24 @@
+{
+    "name":"SendGrid",
+    "lastlogin":"",
+    "home":"https://app.sendgrid.com/",
+    "connect": {
+      "todo": [
+        {"action":"fill", "what":"login","search":"#usernameContainer-input-id", "grave":"true"},
+        {"action":"fill", "what":"password","search":"#passwordContainer-input-id", "grave":"true"},
+        {"action":"click", "search":"button[type='submit']", "grave":"true"}
+      ]
+    },
+    "logout": {
+      "todo": [
+        {"action":"clickona", "search":"li[data-logout='logout'] a"},
+        {"action":"waitfor", "search":"a[href*='login']"},
+        {"action":"aclick", "search":"a[href*='login']"}
+      ]
+    },
+    "checkAlreadyLogged": [
+      {"action":"waitfor", "search":"#usernameContainer-input-id, li[data-logout='logout'] a"},
+      {"search":"li[data-logout='logout'] a"}
+    ]
+    
+}

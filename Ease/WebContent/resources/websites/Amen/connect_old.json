@@ -1,0 +1,28 @@
+{
+  "name":"amen.fr",
+  "lastLogin":"",
+  "home":"https://controlpanel.amen.fr/welcome.html",
+  "connect":{
+    "todo":[
+      {"action":"waitfor", "search":"#formLogin button[type='submit']"},
+      {"action":"fill", "what":"login", "search":"#formLogin input[name='userName']"},
+      {"action":"fill", "what":"password", "search":"#formLogin input[type='password']"},
+      {"action":"click", "search":"#formLogin button[type='submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"waitfor", "search":".standard-login-block button.fb-social-btn"},
+      {"action":"click", "search":".standard-login-block button.fb-social-btn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a.logout"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.logout, #formLogin button[type='submit']"},
+    {"search":"a.logout"}
+  ]
+}

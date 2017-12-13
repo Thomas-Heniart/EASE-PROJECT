@@ -51,9 +51,6 @@ const Receivers = ({receivers, onChange, onDelete, myId}) => {
 
 @connect(store => ({
   team_id: store.teamCard.team_id,
-  users: store.users.users,
-  myId: store.team.myTeamUserId,
-  plan_id: store.team.plan_id,
   teams: store.teams,
   card: store.teamCard
 }), reduxActionBinder)

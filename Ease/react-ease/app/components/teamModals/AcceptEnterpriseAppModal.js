@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {showPinTeamAppToDashboardModal, showTeamAcceptMultiAppModal} from '../../actions/teamModalActions';
-import {teamAcceptEnterpriseApp} from "../../actions/appsActions";
+import {teamAcceptEnterpriseCard} from "../../actions/appsActions";
 import api from "../../utils/api";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {findMeInReceivers} from "../../utils/helperFunctions";
@@ -56,7 +56,7 @@ class AcceptEnterpriseAppModal extends Component {
     e.preventDefault();
     this.setState({loading: true});
     const meReceiver = findMeInReceivers(this.props.app.receivers, this.props.user.id);
-    this.props.dispatch(teamAcceptEnterpriseApp({
+    this.props.dispatch(teamAcceptEnterpriseCard({
       team_id: this.props.team_id,
       app_id: this.props.app.id,
       shared_app_id: meReceiver.shared_app_id,

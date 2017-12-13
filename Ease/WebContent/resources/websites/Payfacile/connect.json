@@ -1,0 +1,25 @@
+{
+  "name":"Payfacile",
+  "lastLogin":"",
+  "home":"https://www.payfacile.com/",
+  "connect":{
+    "todo":[
+      {"action":"waitfor", "search":"#signInForm input[name='email']"},
+      {"action":"fill", "what":"login", "search":"#signInForm input[name='email']"},
+      {"action":"waitfor", "search":"#signInForm input[name='password']"},
+      {"action":"fill", "what":"password", "search":"#signInForm input[name='password']"},
+      {"action":"click", "search":"#signInForm button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a.user-menu-dropdown-button"},
+      {"action":"waitfor", "search":"a[href*='sign-out']"},
+      {"action":"aclick", "search":"a[href*='sign-out']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#signInForm, a.user-menu-dropdown-button"},
+    {"search":"a.user-menu-dropdown-button"}
+  ]
+}

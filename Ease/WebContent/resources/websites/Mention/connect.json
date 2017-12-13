@@ -1,0 +1,112 @@
+{
+  "name": "Mention",
+  "lastLogin": "",
+  "home": "https://web.mention.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": ".mnt-Login-form input[name='username']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": ".mnt-Login-form input[name='username']",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": ".mnt-Login-form input[name='password']",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": ".mnt-Login-form input[type='submit']",
+        "grave": true
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "div.is-twitter"
+      },
+      {
+        "action": "trueClick",
+        "search": "div.is-twitter",
+        "grave": true
+      }
+    ]
+  },
+  "Linkedin": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "div.is-linkedin"
+      },
+      {
+        "action": "trueClick",
+        "search": "div.is-linkedin",
+        "grave": true
+      }
+    ]
+  },
+  "Twitter": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "div.is-facebook"
+      },
+      {
+        "action": "trueClick",
+        "search": "div.is-facebook",
+        "grave": true
+      }
+    ]
+  },
+  "Google": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "div.is-google"
+      },
+      {
+        "action": "trueClick",
+        "search": "div.is-google",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".mnt-TopbarUser-userDropoverTrigger",
+        "grave": true
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']",
+        "grave": true
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".mnt-Login-form input[name='username'], .mnt-TopbarUser-userDropoverTrigger"
+    },
+    {
+      "search": ".mnt-TopbarUser-userDropoverTrigger"
+    }
+  ]
+}

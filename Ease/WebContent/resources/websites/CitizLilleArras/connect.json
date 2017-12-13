@@ -1,0 +1,22 @@
+{
+  "name":"Citiz Lille Arras",
+  "lastLogin":"",
+  "home":"https://reservation.citiz.fr/lille/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#ctl00_cph_LoginView1_LoginControl_Login1_UserName"},
+      {"action":"fill", "what":"password", "search":"#ctl00_cph_LoginView1_LoginControl_Login1_Password"},
+      {"action":"click", "search":"#ctl00_cph_LoginView1_LoginControl_Login1_LoginButton"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#ctl00_LoginViewName_LogoutLink"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#ctl00_LoginViewName_LogoutLink, #ctl00_cph_LoginView1_LoginControl_Login1_UserName"},
+    {"search":"#ctl00_LoginViewName_LogoutLink"}
+  ]
+}

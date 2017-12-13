@@ -6,19 +6,15 @@ import {
   SingleAppCopyPasswordButton,
   PasswordChangeDropdown,
   PasswordChangeHolder,
-  PasswordChangeManagerLabel,
-  PinAppButton,
   renderSimpleAppEditUserLabel,
   setUserDropdownText,
   SharingRequestButton,
   TeamAppActionButton
 } from "./common";
 import {
-  askJoinTeamApp,
-  joinTeamSingleCard, removeTeamCardReceiver, requestTeamSingleCard,
-  teamAppDeleteReceiver,
+  removeTeamCardReceiver, requestTeamSingleCard,
   teamEditSingleApp,
-  teamEditSingleAppReceiver,
+  teamEditSingleCardReceiver,
   teamShareSingleCard
 } from "../../actions/appsActions";
 import {
@@ -29,7 +25,6 @@ import {
   transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
 import {
-  findMeInReceivers,
   getReceiverInList,
   isAdmin,
   selectItemFromListById,
@@ -65,8 +60,6 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
-        {/*meReceiver !== null &&
-        <TeamAppActionButton text='Leave App' icon='sign out' onClick={e => {dispatch(modalActions.showTeamLeaveAppModal(true, app, me.id))}}/>*/}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
@@ -234,7 +227,7 @@ class SimpleTeamApp extends Component {
             team_user_id: item.id,
             allowed_to_see_password: item.can_see_information})));
         if (selected && !!receiver && item.can_see_information !== receiver.allowed_to_see_password)
-          edit.push(this.props.dispatch(teamEditSingleAppReceiver({
+          edit.push(this.props.dispatch(teamEditSingleCardReceiver({
             team_id: this.props.app.team_id,
             team_card_id: this.props.app.id,
             team_card_receiver_id: receiver.id,
@@ -310,20 +303,6 @@ class SimpleTeamApp extends Component {
       team_id: team_card.team_id,
       team_card_id: team_card.id
     }));
-  };
-  acceptRequest = (state) => {
-    const app = this.props.app;
-    const me = this.props.me;
-    const meReceiver = findMeInReceivers(app.receivers, me.id);
-    if (state)
-      this.props.dispatch(modalActions.showPinTeamAppToDashboardModal(true, app));
-    else
-      this.props.dispatch(teamAppDeleteReceiver({
-        team_id: this.props.team_id,
-        app_id: app.id,
-        shared_app_id: meReceiver.shared_app_id,
-        team_user_id: meReceiver.team_user_id
-      }));
   };
   render(){
     const app = this.props.app;
