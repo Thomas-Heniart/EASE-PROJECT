@@ -29,7 +29,8 @@ class SimpleTeamAppAdder extends Component {
   constructor(props){
     super(props);
     this.state = {
-      app_name: this.props.card.app.name,
+      app_name: this.props.card.name,
+      app_url: this.state.card.url,
       loading: false,
       app: this.props.card.app,
       credentials: [],
@@ -197,6 +198,17 @@ class SimpleTeamAppAdder extends Component {
                   <div class="main_column">
                     <div class="credentials">
                       <div class="display-inline-flex">
+                        {this.props.card.subtype === 'AnyApp' &&
+                        <Input className="team-app-input"
+                               placeholder="Website URL"
+                               name="app_url"
+                               value={this.state.app_url}
+                               autoComplete="off"
+                               onChange={this.handleInput}
+                               size="mini"
+                               label={<Label><Icon name="home"/></Label>}
+                               labelPosition="left"
+                               required/>}
                         <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
                         {/*{this.state.password_reminder_interval !== 0 &&*/}
                         {/*<PasswordChangeManagerLabel username={this.state.room_manager_name}/>}*/}
