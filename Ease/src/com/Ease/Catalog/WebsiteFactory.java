@@ -18,7 +18,7 @@ public class WebsiteFactory {
     private WebsiteFactory() {
     }
 
-    public Website createWebsiteAndLogo(String email, String url, String name, String img_url, HibernateQuery hibernateQuery) throws HttpServletException {
+    public Website createWebsiteAndLogo(String url, String name, String img_url, HibernateQuery hibernateQuery) throws HttpServletException {
         String folder = url.split("//")[1].split("/")[0].replaceAll("\\.", "_");
         WebsiteAttributes websiteAttributes = new WebsiteAttributes(true);
         Website website = new Website(url, folder, folder, url, websiteAttributes);
@@ -37,13 +37,6 @@ public class WebsiteFactory {
         website.setWebsiteInformationList(websiteInformationSet);
         hibernateQuery.saveOrUpdateObject(websiteAttributes);
         hibernateQuery.saveOrUpdateObject(website);
-        website.addWebsiteRequest(this.createWebsiteRequest(email, website, hibernateQuery));
         return website;
-    }
-
-    public WebsiteRequest createWebsiteRequest(String email, Website website, HibernateQuery hibernateQuery) {
-        WebsiteRequest websiteRequest = new WebsiteRequest(website.getLogin_url(), email, website);
-        hibernateQuery.saveOrUpdateObject(websiteRequest);
-        return websiteRequest;
     }
 }

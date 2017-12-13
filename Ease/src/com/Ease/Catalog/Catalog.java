@@ -122,11 +122,4 @@ public class Catalog {
         hibernateQuery.setParameter("url", minified_url);
         return (Website) hibernateQuery.getSingleResult();
     }
-
-    public Software getSoftwareWithFolderOrName(String name, String folder, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT s FROM Software s WHERE s.name = :name OR s.folder = :folder");
-        hibernateQuery.setParameter("name", name);
-        hibernateQuery.setParameter("folder", folder);
-        return (Software) hibernateQuery.getSingleResult();
-    }
 }

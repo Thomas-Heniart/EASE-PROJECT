@@ -2,8 +2,6 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.NewDashboard.AnyApp;
-import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -27,20 +25,10 @@ public class ServletMergeWebsite extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id, sm.getHibernateQuery());
             Website website_to_merge = catalog.getWebsiteWithId(id_to_merge, sm.getHibernateQuery());
-            website_to_merge.getWebsiteAppSet().forEach(websiteApp -> {
-                if (websiteApp.isAnyApp() && website.getWebsiteAttributes().isIntegrated()) {
-                    AnyApp anyApp = (AnyApp) websiteApp;
-                    WebsiteApp tmp_app = new ClassicApp(anyApp.getAppInformation(), website, anyApp.getAccount());
-                    tmp_app.setProfile(anyApp.getProfile());
-                    tmp_app.setPosition(anyApp.getPosition());
-                    sm.saveOrUpdate(tmp_app);
-                    website.addWebsiteApp(tmp_app);
-                    /* @TODO WebSocket message here */
-                } else {
-                    websiteApp.setWebsite(website);
-                    sm.saveOrUpdate(websiteApp);
-                }
-            });
+            for (WebsiteApp websiteApp : website_to_merge.getWebsiteAppSet()) {
+                websiteApp.setWebsite(website);
+                sm.saveOrUpdate(websiteApp);
+            }
             for (TeamWebsiteCard teamWebsiteCard : website_to_merge.getTeamWebsiteCardSet()) {
                 teamWebsiteCard.setWebsite(website);
                 sm.saveOrUpdate(teamWebsiteCard);

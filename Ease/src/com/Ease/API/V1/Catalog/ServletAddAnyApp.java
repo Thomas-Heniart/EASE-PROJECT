@@ -1,11 +1,11 @@
 package com.Ease.API.V1.Catalog;
 
-import com.Ease.Catalog.*;
-import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Catalog.Catalog;
+import com.Ease.Catalog.Website;
+import com.Ease.Catalog.WebsiteFactory;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.AppFactory;
 import com.Ease.NewDashboard.Profile;
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -36,7 +36,6 @@ public class ServletAddAnyApp extends HttpServlet {
             App app;
             String symmetric_key = sm.getKeyUser();
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            //sm.decipher(account_information);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
@@ -45,18 +44,9 @@ public class ServletAddAnyApp extends HttpServlet {
             else {
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
-                    website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, sm.getHibernateQuery());
+                    website = WebsiteFactory.getInstance().createWebsiteAndLogo(url, name, img_url, sm.getHibernateQuery());
                 }
                 app = AppFactory.getInstance().createAnyApp(name, website, symmetric_key, account_information);
-            }
-            Boolean credentials_provided = sm.getBooleanParam("credentials_provided", true, false);
-            if (credentials_provided) {
-                HibernateQuery hibernateQuery = sm.getHibernateQuery();
-                hibernateQuery.queryString("SELECT key FROM ServerPublicKey key");
-                ServerPublicKey serverPublicKey = (ServerPublicKey) hibernateQuery.getSingleResult();
-                WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt((String) account_information.get("login"), serverPublicKey.getPublicKey()), RSA.Encrypt((String) account_information.get("password"), serverPublicKey.getPublicKey()), website, serverPublicKey);
-                sm.saveOrUpdate(websiteCredentials);
-                website.addWebsiteCredentials(websiteCredentials);
             }
             app.setProfile(profile);
             app.setPosition(profile.getSize());

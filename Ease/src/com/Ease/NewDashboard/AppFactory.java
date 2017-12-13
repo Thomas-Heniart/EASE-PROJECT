@@ -1,6 +1,5 @@
 package com.Ease.NewDashboard;
 
-import com.Ease.Catalog.Software;
 import com.Ease.Catalog.Website;
 import com.Ease.Utils.HttpServletException;
 import org.json.simple.JSONObject;
@@ -65,10 +64,5 @@ public class AppFactory {
     public App createAnyApp(String name, Website website, String symmetric_key, Map<String, String> account_information) throws HttpServletException {
         Account account = AccountFactory.getInstance().createAccountFromMap(account_information, symmetric_key, 0);
         return new AnyApp(new AppInformation(name), website, account);
-    }
-
-    public App createSoftwareApp(String name, Software software, String symmetric_key, Map<String, String> account_information) throws HttpServletException {
-        Account account = AccountFactory.getInstance().createAccountFromMap(account_information, symmetric_key, 0);
-        return new SoftwareApp(new AppInformation(name), software, account);
     }
 }
