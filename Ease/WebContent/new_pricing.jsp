@@ -84,7 +84,7 @@
                         <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
                         <div class="text-center" style="margin-bottom:26px">
                             <button class="button-unstyle big-button button">
-                                <a href="/teams#/registration" class="link-unstyle" style="font-size: 18px;">
+                                <a href="/#/registration" class="link-unstyle" style="font-size: 18px;">
                                     <fmt:message key="pricing.free.button"/>
                                 </a>
                             </button>
