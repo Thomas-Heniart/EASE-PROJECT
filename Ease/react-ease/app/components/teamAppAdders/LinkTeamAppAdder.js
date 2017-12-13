@@ -14,9 +14,7 @@ import {reduxActionBinder} from "../../actions/index";
 import { setUserDropdownText, renderLinkAppAddUserLabel} from "./common";
 
 @connect(store => ({
-  team_id: store.team.id,
   teams: store.teams,
-  selectedItem: store.selection,
   card: store.teamCard
 }), reduxActionBinder)
 class LinkTeamAppAdder extends React.Component {
