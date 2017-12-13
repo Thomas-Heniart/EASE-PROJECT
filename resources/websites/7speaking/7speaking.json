@@ -1,0 +1,73 @@
+{
+    "website":"7speaking",
+    
+    "tested":"WORKING. FAILS TO CHECK",
+    
+    "urls":{
+        "login":"https://www.7speaking.com/newsite/controlnew/newlogin.cfm?&red=0&lm=ENG"
+    },
+    
+    "elements":{
+        
+        "userField":{
+            "id":"username"
+        },
+        "passField":{
+            "id":"password"
+        },
+        "buttonLogIn":{
+            "tagName":"input",
+            "type":"button",
+            "name":"btn"
+        }
+        
+    },
+    
+    "connectionSteps":[
+        {
+            "action":"goTo",
+            "url":"login"
+        },
+        
+        {
+                "action":"catchFail",
+                "if":"missingElement",
+                "elementName":"passField",
+                "actionsIfFail":[{"action":"end"}],
+                "send":"alreadyConnected"
+        },
+        
+        {
+            "action":"do",
+            "elements":[
+                {
+                    "name":"userField",
+                    "action":"fill",
+                    "value":"user"
+                },
+                {
+                    "name":"passField",
+                    "action":"fill",
+                    "value":"pass"
+                },
+                {
+                    "name":"buttonLogIn",
+                    "action":"click"
+                }
+            ]
+        },
+        
+        {
+            "action":"nextPage",
+            "lastPage":true
+        },
+        
+        {
+            "action":"catchFail",
+            "if":"existingElement",
+            "elementName":"passField",
+            "actionsIfFail":[],
+            "send":"wrongPassword"
+        }
+    ]
+}

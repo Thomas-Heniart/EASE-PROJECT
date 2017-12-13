@@ -1,0 +1,29 @@
+{
+    "name":"Babbel",
+    "lastlogin":"",
+    "home":"https://www.babbel.com",
+    "connect": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[href*='sign_in']"},
+    		{"action":"waitload"},
+    		{"action":"fill", "what":"login", "search":"#account_email"},
+    		{"action":"fill", "what":"password", "search":"#account_password"},
+    		{"action":"click", "search":"input[name='commit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.babbel.com/logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='/logout']"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[href*='sign_in']"},
+    		{"action":"waitload"},
+    		{"action":"clickona", "search":".btn-facebook"}
+    	]
+    }
+}

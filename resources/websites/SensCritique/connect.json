@@ -1,0 +1,26 @@
+{
+    "name":"SensCritique",
+    "lastLogin":"",
+    "home":"http://www.senscritique.com/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input[name='email']", "grave":true},
+            {"action":"fill", "what":"password", "search":"input[type='password']"},
+            {"action":"click", "search":"input.lahe-signin-confirm"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"goto","url":"http://www.senscritique.com/logout"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ],
+    "Facebook":{
+    	"todo":[
+    		{"action":"goto", "url":"http://www.senscritique.com/oauthapi/facebook"}
+        ]
+     }
+}

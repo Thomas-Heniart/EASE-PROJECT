@@ -1,0 +1,23 @@
+{ 
+    "name":"Nestor", 
+    "lastLogin":"", 
+    "home":"https://www.nestorparis.com/", 
+    "connect":{ 
+        "todo":[ 
+        	{"action":"clickona", "search":"button[data-target='#signinModal']"},
+        	{"action":"waitfor", "search":"form[name='SigninForm']"},
+            {"action":"fill", "what":"login", "search":"form[name='SigninForm'] input[name='email']"}, 
+            {"action":"fill", "what":"password", "search":"form[name='SigninForm'] input[name='password']"}, 
+            {"action":"click", "search":"form[name='SigninForm'] button[type='submit']"} 
+        ] 
+    },
+    "logout":{ 
+        "todo":[ 
+          {"action":"clickona", "search":"div[aria-labelledby='dropdownAccountMenu'] a:last-child()"},
+          {"action":"waitload"}
+        ] 
+    }, 
+    "checkAlreadyLogged":[ 
+        {"search":"div[aria-labelledby='dropdownAccountMenu']"} 
+    ] 
+}

@@ -1,0 +1,21 @@
+{
+    "name":"Uptobox",
+    "lastlogin":"",
+    "home":"https://login.uptobox.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"input#login-form-username", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"input#login-form-password", "grave":"true"},
+    		{"action":"click", "search":"input#submit_butt", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href='http://uptobox.com/?op=logout']"},
+    		{"action":"goto", "url":"https://login.uptobox.com/"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='uptobox.com/?op=logout']"}
+    ]
+}

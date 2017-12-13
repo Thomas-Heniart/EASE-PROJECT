@@ -1,0 +1,54 @@
+{
+  "name":"Spotify",
+  "lastLogin":"",
+  "home":"https://play.spotify.com",
+  "connect":{
+    "todo":[
+      {
+        "action": "click",
+        "search": "#has-account"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-username"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-username"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login-password"
+      },
+      {
+        "action": "click",
+        "search": ".row-submit button"
+      }
+    ]
+  },
+  "logout":{
+    "todo":[{"action":"goto","url":"https://play.spotify.com/logout"}]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#nav-profile, .sessionInfo, #has-account"},
+    {"search":"#nav-profile, .sessionInfo"}
+  ],
+  "Facebook":{
+    "todo":[
+      {"action":"waitfor", "search":"#has-account"},
+      {
+        "action": "click",
+        "search": "#has-account"
+      },
+      {
+        "action": "waitload"
+      },
+      {"action":"click", "search":"#fb-login-btn"}
+    ]
+  }
+}

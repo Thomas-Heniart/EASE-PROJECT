@@ -1,0 +1,25 @@
+{
+    "name":"eDreams",
+    "lastlogin":"",
+    "home":"http://www.edreams.net/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":".email_login_container input.email_input"},
+    		{"action":"fill", "what":"password", "search":".email_login_container input.password_input"},
+    		{"action":"click", "search":".email_login_container button.od-login-start-button"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":"div[data-page=logout]"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"div[data-page=logout]"}
+    ],
+    "Facebook":{
+        "todo":[
+            {"action": "click", "search": ".login_facebook_button"}
+        ]
+    }
+}

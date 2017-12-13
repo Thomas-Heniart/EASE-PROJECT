@@ -1,0 +1,21 @@
+{ 
+    "name":"ownCloud", 
+    "lastLogin":"", 
+    "home":"http://accueil.etud-espas.fr/owncloud/", 
+    "connect":{ 
+        "todo":[ 
+            {"action":"fill", "what":"login", "search":"#user"}, 
+            {"action":"fill", "what":"password", "search":"#password"}, 
+            {"action":"click", "search":"#submit"} 
+        ] 
+    }, 
+    "logout":{ 
+        "todo":[ 
+          {"action":"aclick", "search":"a#logout"}, 
+          {"action":"goto", "url":"http://accueil.etud-espas.fr/owncloud"} 
+        ] 
+    }, 
+    "checkAlreadyLogged":[ 
+        {"search":"#expandDisplayName"} 
+    ] 
+}

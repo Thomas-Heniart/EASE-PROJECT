@@ -1,0 +1,29 @@
+{
+    "name":"Asana",
+    "lastlogin":"",
+    "home":"https://app.asana.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#email_input", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#password_input", "grave":"true"},
+    		{"action":"click", "search":"#submit_button", "grave":"true"}
+    	]
+    },
+    "Google": {
+    	"todo": [
+    		{"action":"click", "search":".button--oath"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"waitfor", "search":".topbar-settingsMenuButton"},
+    		{"action":"clickona", "search":".topbar-settingsMenuButton"},
+    		{"action":"waitfor", "search":".topbarSettingsMenu-logout"},
+    		{"action":"clickona", "search":".topbarSettingsMenu-logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#defaultSplash-phrases"}
+    ]
+    
+}

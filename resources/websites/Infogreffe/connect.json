@@ -1,0 +1,22 @@
+{
+  "name":"Infogreffe",
+  "lastlogin":"",
+  "home":"https://www.infogreffe.fr/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login","search":"#formConnexionLayout #formConnexionLogin", "grave":"true"},
+      {"action":"fill", "what":"password","search":"#formConnexionLayout #formConnexionPassword", "grave":"true"},
+      {"action":"click", "search":"#formConnexionLayout #boutonConnexion", "grave":"true"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"clickona", "search":"#lienDeconnexion"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"search":"#lienDeconnexion"}
+  ]
+
+}

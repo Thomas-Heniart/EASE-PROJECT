@@ -1,0 +1,21 @@
+{
+	"name":"Harvard Publishing",
+	"lastLogin":"",
+	"home":"https://cb.hbsp.harvard.edu/cbmp/pages/home",
+	"connect":{
+		"todo":[
+            {"action":"aclick", "search":"#hbp-signin-link"},
+			{"action":"fill", "what":"login", "search":"#loginForm #j_username"},
+			{"action":"fill", "what":"password", "search":"#loginForm #j_password"},
+			{"action":"click", "search":"#loginForm input[type='submit']"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='logout']"}
+	],
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='logout']"}
+        ]
+    }
+}

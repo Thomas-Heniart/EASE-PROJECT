@@ -1,0 +1,23 @@
+{
+  "name":"Sellsy",
+  "lastLogin":"",
+  "home":"https://www.sellsy.fr",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"fill", "what":"login", "search":"#login_email", "grave":true},
+      {"action":"fill", "what":"password", "search":"#login_pwd", "grave":true},
+      {"action":"trueClick", "search":"#loginForm button[type='submit']", "grave":true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']", "grave":true},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], #login_email, a[href*='login']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

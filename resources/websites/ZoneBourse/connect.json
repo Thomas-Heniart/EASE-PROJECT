@@ -1,0 +1,23 @@
+{
+    "name":"Zone Bourse",
+    "lastLogin":"",
+    "home":"http://www.zonebourse.com/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input[name='login']"},
+            {"action":"fill", "what":"password", "search":"input[name='password']"},
+            {"action":"click", "search":"input.hlSubmit"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"http://www.zonebourse.com/indexbasesans.php?lien=quitter&action=supp"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"img.htAvt"}
+    ],
+    "checkChangeLogin":[
+        {"action":"click", "search":"#loginbutton"}
+    ]
+}

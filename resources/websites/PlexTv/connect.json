@@ -1,0 +1,23 @@
+{
+  "name":"Plex.tv",
+  "lastlogin":"",
+  "home":"https://www.plex.tv/",
+  "connect": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='sign-in']"},
+      {"action":"fill", "what":"login", "search":"#login"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"button[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"clickona", "search":"a.plex-btn-signout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a.plex-btn-signout, a[href*='sign-in']"},
+    {"search":"a.plex-btn-signout"}
+  ]
+}

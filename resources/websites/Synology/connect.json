@@ -1,0 +1,39 @@
+{
+  "name":"Synology",
+  "lastLogin":"",
+  "home":"https://account.synology.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#login_form input[name='email']"},
+      {"action":"fill", "what":"password", "search":"#login_form input[name='password']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"waitfor", "search":".socially_login a[href*='Facebook']"},
+      {"action":"clickona", "search":".socially_login a[href*='Facebook']"}
+    ]
+  },
+  "LinkedIn":{
+    "todo":[
+      {"action":"waitfor", "search":".socially_login a[href*='Linkedin']"},
+      {"action":"clickona", "search":".socially_login a[href*='Linkedin']"}
+    ]
+  },
+  "Google":{
+    "todo":[
+      {"action":"waitfor", "search":".socially_login a[href*='Google']"},
+      {"action":"clickona", "search":".socially_login a[href*='Google']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"button.logout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"button.logout, #login_form"},
+    {"search":"button.logout"}
+  ]
+}
