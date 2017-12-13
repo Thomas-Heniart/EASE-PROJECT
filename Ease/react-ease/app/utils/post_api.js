@@ -880,7 +880,7 @@ module.exports = {
         throw err.response.data;
       })
     },
-    createTeam: function({name, email, first_name, last_name, username, jobRole, jobDetails, digits,plan_id}){
+    createTeam: function({name, email, first_name, last_name, username, jobRole, jobDetails, digits,plan_id, ws_id}){
       return axios.post('/api/v1/teams/CreateTeam', {
         team_name: name,
         email: email,
@@ -891,6 +891,7 @@ module.exports = {
         job_details: jobDetails,
         digits: digits,
         plan_id: plan_id,
+        ws_id:ws_id,
         timestamp: new Date().getTime()
       }).then(response => {
         return response.data;

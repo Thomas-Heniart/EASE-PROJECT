@@ -27,9 +27,9 @@ class Step1 extends React.Component{
         this.props.incrementStep(1);
       else
         this.props.incrementStep(2);
-        easeTracker.trackEvent("TeamCreationEnterEmail", {
-            "plan_id": this.props.plan_id
-        });
+      easeTracker.trackEvent("TeamCreationEnterEmail", {
+        "plan_id": this.props.plan_id
+      });
     }).catch(err => {
       this.setState({processing: false, error: true, errorMessage: err});
     });
@@ -78,9 +78,9 @@ class Step2 extends React.Component{
     post_api.teams.checkTeamCreationDigits(this.props.email, this.props.digits).then(response => {
       this.setState({loading: false});
       this.props.onStepValidated();
-        easeTracker.trackEvent("TeamCreationEnterDigits", {
-            "plan_id": this.props.plan_id
-        });
+      easeTracker.trackEvent("TeamCreationEnterDigits", {
+        "plan_id": this.props.plan_id
+      });
     }).catch(err => {
       this.setState({loading: false, errorMesage: err});
     })
@@ -143,9 +143,9 @@ class Step4 extends React.Component{
       return;
     }
     this.props.onStepValidated();
-      easeTracker.trackEvent("TeamCreationEnterUsername", {
-          "plan_id": this.props.plan_id
-      });
+    easeTracker.trackEvent("TeamCreationEnterUsername", {
+      "plan_id": this.props.plan_id
+    });
   }
   render() {
     return (
@@ -185,59 +185,59 @@ class Step4 extends React.Component{
 }
 
 class Step5 extends React.Component {
-    constructor(props) {
-        super(props);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.roles = jobRoles.map((item, idx) => {
-            return {
-                key: idx,
-                value: idx,
-                text: item
-            }
-        });
-        this.jobRole = props.jobRole;
-        this.jobDetails = props.jobDetails;
-    }
-    onSubmit(e) {
-        e.preventDefault();
-        this.props.incStep();
-        easeTracker.trackEvent("TeamCreationEnterJob", {
-            "job": this.roles[this.props.jobRole],
-            "detail": this.props.jobDetails,
-            "plan_id": this.props.plan_id
-        });
-    }
-    render() {
-        return (
-            <div class="contents" id="step5">
-              <Segment>
-                <Header as="h1">
-                  Tell us about your role
-                </Header>
-                <Divider hidden clearing/>
-                <Form onSubmit={this.onSubmit}>
-                  <Form.Field>
-                    <label>What type of work do you do?</label>
-                    <Select placeholder="Select your role" name="jobRole" options={this.roles}
-                            onChange={this.props.handleInput}/>
-                  </Form.Field>
-                    {this.props.jobRole === 15 &&
-                    <Form.Input
-                        label="Could you please elaborate? (More info will help us improve Ease.space!)"
-                        placeholder="Details..."
-                        type="text"
-                        name="jobDetails"
-                        required
-                        onChange={this.props.handleInput}/>}
-                  <Form.Field>
-                    <Button positive fluid type="submit"
-                            disabled={this.props.jobRole === null || (this.props.jobRole === 15 && this.props.jobDetails.length === 0)}>Next</Button>
-                  </Form.Field>
-                </Form>
-              </Segment>
-            </div>
-        )
-    }
+  constructor(props) {
+    super(props);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.roles = jobRoles.map((item, idx) => {
+      return {
+        key: idx,
+        value: idx,
+        text: item
+      }
+    });
+    this.jobRole = props.jobRole;
+    this.jobDetails = props.jobDetails;
+  }
+  onSubmit(e) {
+    e.preventDefault();
+    this.props.incStep();
+    easeTracker.trackEvent("TeamCreationEnterJob", {
+      "job": this.roles[this.props.jobRole],
+      "detail": this.props.jobDetails,
+      "plan_id": this.props.plan_id
+    });
+  }
+  render() {
+    return (
+        <div class="contents" id="step5">
+          <Segment>
+            <Header as="h1">
+              Tell us about your role
+            </Header>
+            <Divider hidden clearing/>
+            <Form onSubmit={this.onSubmit}>
+              <Form.Field>
+                <label>What type of work do you do?</label>
+                <Select placeholder="Select your role" name="jobRole" options={this.roles}
+                        onChange={this.props.handleInput}/>
+              </Form.Field>
+              {this.props.jobRole === 15 &&
+              <Form.Input
+                  label="Could you please elaborate? (More info will help us improve Ease.space!)"
+                  placeholder="Details..."
+                  type="text"
+                  name="jobDetails"
+                  required
+                  onChange={this.props.handleInput}/>}
+              <Form.Field>
+                <Button positive fluid type="submit"
+                        disabled={this.props.jobRole === null || (this.props.jobRole === 15 && this.props.jobDetails.length === 0)}>Next</Button>
+              </Form.Field>
+            </Form>
+          </Segment>
+        </div>
+    )
+  }
 }
 
 class Step6 extends React.Component{
@@ -261,15 +261,16 @@ class Step6 extends React.Component{
       jobRole: this.props.jobRole,
       jobDetails: this.props.jobDetails,
       digits: this.props.digits,
-        plan_id: this.props.plan_id
+      plan_id: this.props.plan_id,
+      ws_id: this.props.ws_id
     }).then(response => {
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
       this.props.onStepValidated();
-        easeTracker.trackEvent("TeamCreationFinished", {
-            "plan_id": this.props.plan_id
-        });
+      easeTracker.trackEvent("TeamCreationFinished", {
+        "plan_id": this.props.plan_id
+      });
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
     });
@@ -457,6 +458,7 @@ class SimpleTeamCreationView extends React.Component {
                       digits={this.state.digits}
                       username={this.state.username}
                       first_name={this.state.fname}
+                      ws_id={this.props.ws_id}
                       last_name={this.state.lname}
                       email={this.state.email}
                       teamName={this.state.teamName}
