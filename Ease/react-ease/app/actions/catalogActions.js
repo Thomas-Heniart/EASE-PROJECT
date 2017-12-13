@@ -41,6 +41,43 @@ export function testCredentials({account_information, website_id}) {
   }
 }
 
+export function catalogAddAnyApp({name, url, img_url, profile_id, account_information}){
+  return (dispatch, getState) => {
+    post_api.catalog.addAnyApp({
+      name: name,
+      url: url,
+      img_url: img_url,
+      profile_id: profile_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({
+        type: 'DASHBOARD_APP_CREATED',
+        payload: {
+          app: response
+        }
+      });
+    })
+  }
+}
+
+export function catalogAddSoftwareCredentials({software, account_information}){
+  return (dispatch, getState) => {
+    post_api.catalog.addSoftwareCredentials({
+      software: software,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({
+        type: 'DASHBOARD_APP_CREATED',
+        payload: {
+          app: response
+        }
+      });
+    })
+  }
+}
+
 export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
   return (dispatch, getState) => {
     post_api.catalog.addSsoApp({
@@ -187,7 +224,7 @@ export function catalogRequestWebsite({url, account_information}){
   }
 }
 
-export function catalogAddBookmarkModal({name, url, img_url}){
+export function catalogAddBookmarkModal({name, url, img_url, logoLetter}){
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       dispatch({
@@ -197,6 +234,7 @@ export function catalogAddBookmarkModal({name, url, img_url}){
           name: name,
           url: url,
           img_url: img_url,
+          logoLetter: logoLetter,
           resolve: resolve,
           reject: reject
         }
@@ -235,6 +273,31 @@ export function showCatalogAddSSOAppModal({active, website}){
     payload: {
       active: active,
       website: website
+    }
+  }
+}
+
+export function showCatalogAddAnyAppModal({active, name, url, img_url, logoLetter}){
+  return {
+    type: 'SHOW_CATALOG_ADD_ANY_APP_MODAL',
+    payload: {
+      active: active,
+      name: name,
+      url: url,
+      img_url: img_url,
+      logoLetter: logoLetter
+    }
+  }
+}
+
+export function showCatalogAddSoftwareAppModal({active, name, img_url, logoLetter}){
+  return {
+    type: 'SHOW_CATALOG_ADD_SOFTWARE_APP_MODAL',
+    payload: {
+      active: active,
+      name: name,
+      img_url: img_url,
+      logoLetter: logoLetter
     }
   }
 }

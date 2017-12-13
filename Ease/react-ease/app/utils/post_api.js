@@ -197,6 +197,29 @@ module.exports = {
         account_information: account_information,
         ws_id: ws_id
       });
+    },
+    addAnyApp: ({name, url, img_url, profile_id, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/catalog/AddAnyApp', {
+        name: name,
+        url: url,
+        img_url: img_url,
+        profile_id: profile_id,
+        account_information: account_information,
+        ws_id: ws_id
+      });
+    },
+    addSoftwareCredentials: ({software, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/catalog/AddAnyApp', {
+        software: software,
+        account_information: account_information,
+        ws_id: ws_id
+      });
     }
   },
   teamChannel: {
