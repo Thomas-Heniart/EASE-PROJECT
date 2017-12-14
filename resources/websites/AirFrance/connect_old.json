@@ -10,7 +10,7 @@
       },
       {
         "action": "waitfor",
-        "search": "#fbNumber--overlay.overlay__popin__data--first_focus"
+        "search": "#myAccountLogonForm"
       },
       {
         "action": "fill",
