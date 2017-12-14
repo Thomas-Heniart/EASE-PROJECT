@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Categories from "./Categories";
 import WebsitesContainer from "./WebsitesContainer";
 import AddBookmark from './AddBookmark';
@@ -12,7 +12,7 @@ import { Switch, Route } from 'react-router-dom';
 @connect(store => ({
   catalog: store.catalog
 }), reduxActionBinder)
-class Catalog extends React.Component {
+class Catalog extends Component {
   constructor(props) {
     super(props);
     this.state = {

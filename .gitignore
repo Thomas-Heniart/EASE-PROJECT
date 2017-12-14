@@ -23,3 +23,5 @@ Ease/.idea/*
 Ease/WebContent/safariExtension/\.DS_Store
 
 extension/*
+
+Ease/node_modules/*
