@@ -1,12 +1,13 @@
 import api from "../utils/api";
 import axios from "axios";
+import base64 from "base-64";
 import {AsyncStorage} from "react-native";
 import { Toast } from 'native-base';
 
 function parseJwt (token) {
   let base64Url = token.split('.')[1];
   let str = base64Url.replace('-', '+').replace('_', '/');
-  return JSON.parse(atob(str));
+  return JSON.parse(base64.decode(str));
 }
 
 export function connectionChanged(connectionInfo){
@@ -51,7 +52,6 @@ export function connection({email, password}) {
       password: password
     }).then(response => {
       AsyncStorage.setItem('JWTToken', response.JWT);
-      const information = parseJwt(response.JWT);
       axios.defaults.headers.common['Authorization'] = response.JWT;
       dispatch({
         type: 'CONNECTION',
@@ -60,7 +60,7 @@ export function connection({email, password}) {
           email: response.email
         }
       });
-      return information;
+      return response;
     }).catch(err => {
       throw err;
     });
@@ -80,10 +80,11 @@ export function setUserInformation({username, email}) {
 export function fetchMyInformation() {
   return (dispatch, getState) => {
     return api.get.fetchMyInformation().then(response => {
-      AsyncStorage.setItem('LastEmail', response.email);
+      const user = response.user;
+      AsyncStorage.setItem('LastEmail', user.email);
       dispatch(setUserInformation({
-        username: response.first_name,
-        email: response.email
+        username: user.first_name,
+        email: user.email
       }));
       return response;
     }).catch(err => {
@@ -95,10 +96,17 @@ export function fetchMyInformation() {
 export function fetchPersonalSpace() {
   return (dispatch, getState) => {
     return api.get.fetchPersonalSpace().then(response => {
+      const store = getState();
+      const selectedItem = store.selectedItem.itemId;
+      const profiles = response.profiles;
       dispatch({
         type: 'FETCH_PERSONAL_SPACE',
         payload: response
       });
+      if (!profiles[selectedItem])
+        dispatch(selectItem({
+          itemId: Object.keys(profiles)[0]
+        }));
       return response;
     }).catch(err => {
       throw err;
@@ -191,13 +199,11 @@ export function selectItemAndFetchApps({itemId, subItemId, name}){
   }
 }
 
-export function selectItem({itemId, subItemId, name}) {
+export function selectItem({itemId}) {
   return {
     type: 'SELECT_ITEM',
     payload: {
-      itemId: itemId,
-      subItemId: subItemId,
-      name: name
+      itemId: itemId
     }
   }
 }

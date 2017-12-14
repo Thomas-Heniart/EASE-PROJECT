@@ -60,6 +60,7 @@ class Catalog extends React.Component {
           {/website/.test(this.props.location.pathname) &&
           <div className='container' style={{marginBottom:'30px'}}>
             <Input fluid
+                   autoFocus
                    className="inputSearch"
                    placeholder='Search'
                    name="query"

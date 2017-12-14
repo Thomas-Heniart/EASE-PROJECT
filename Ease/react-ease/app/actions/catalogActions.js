@@ -1,5 +1,6 @@
 import api from "../utils/api";
 import post_api from "../utils/post_api";
+import {addNotification} from "./notificationBoxActions";
 
 export function fetchCatalog(){
   return (dispatch,getState) => {
@@ -86,14 +87,18 @@ export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
       sso_group_id: sso_group_id,
       website_id: website_id,
       ws_id: getState().common.ws_id
-    }).then(response => {
+    }).then(app => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
         payload:{
-          app:response
+          app:app
         }
       });
-      return response;
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully sent to ${profile.name}!`
+      }));
+      return app;
     }).catch(err => {
       throw err;
     });
@@ -108,14 +113,18 @@ export function catalogAddClassicApp({name, website_id, profile_id, account_info
       profile_id: profile_id,
       account_information: account_information,
       ws_id: getState().common.ws_id
-    }).then(response => {
+    }).then(app => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
         payload:{
-          app:response
+          app:app
         }
       });
-      return response;
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully sent to ${profile.name}!`
+      }));
+      return app;
     }).catch(err => {
       throw err;
     })
@@ -173,14 +182,18 @@ export function catalogAddLogWithApp({name, website_id, profile_id, logWith_app_
       profile_id: profile_id,
       logWith_app_id: logWith_app_id,
       ws_id: getState().common.ws_id
-    }).then(response => {
+    }).then(app => {
       dispatch({
         type: 'DASHBOARD_APP_CREATED',
         payload:{
-          app:response
+          app:app
         }
       });
-      return response;
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully sent to ${profile.name}!`
+      }));
+      return app;
     }).catch(err => {
       throw err;
     })
@@ -202,6 +215,10 @@ export function catalogAddBookmark({name, profile_id, url, img_url}){
           app:app
         }
       });
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully added as Bookmark in ${profile.name}!`
+      }));
       return app;
     }).catch(err => {
       throw err;

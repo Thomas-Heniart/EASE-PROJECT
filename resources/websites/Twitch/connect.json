@@ -1,0 +1,31 @@
+{
+    "name":"Twitch",
+    "lastLogin":"",
+    "home":"https://www.twitch.tv",
+    "connect":{
+        "todo":[
+        	{"action":"aclick", "search":"#header_login"},
+        	{"action":"waitload"},
+        	{"action":"fill", "what":"login", "search":"#username", "grave":true},
+            {"action":"fill", "what":"password", "search":"input[name='password']"},
+            {"action":"click", "search":"button.primary.button.js-login-button"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+        	{"action":"aclick", "search":"#header_login"},
+        	{"action":"waitload"},
+        	{"action":"click", "search":".fb_button"}
+    	]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"clickona", "search":"#user_display_name"},
+        	{"action":"clickona", "search":"#self_logout"},
+            {"action":"waitload"}
+            ]
+    },
+    "checkAlreadyLogged":[
+    	{"search":"#user_display_name"}
+    ]
+}

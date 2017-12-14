@@ -1,0 +1,35 @@
+{
+	"name":"Buffer",
+	"lastLogin":"",
+	"home":"https://buffer.com/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"input#email"},
+			{"action":"fill", "what":"password", "search":"input#password"},
+			{"action":"click", "search":"input#sign-into-account-button"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"submit", "search":"form#signout-form"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"form#signout-form"}
+	],
+    "Facebook":{
+    	"todo":[
+    		{"action":"clickona", "search":"#facebook-sign-on"}
+    	]	
+    },
+    "Linkedin":{
+    	"todo":[
+    		{"action":"clickona", "search":"#linkedin-sign-on"}
+    	]	
+    },
+    "Twitter":{
+    	"todo":[
+    		{"action":"clickona", "search":"#twitter-sign-on"}
+    	]	
+    }
+}

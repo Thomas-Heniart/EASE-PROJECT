@@ -262,7 +262,7 @@ public class Website {
     }
 
     public String getLogo() {
-        return "/resources/websites/" + this.getFolder() + "/logo.png";
+        return this.getWebsiteAttributes().getLogo_url() == null ? ("/resources/websites/" + this.getFolder() + "/logo.png") : this.getWebsiteAttributes().getLogo_url();
     }
 
     public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {

@@ -1,0 +1,30 @@
+{
+  "name":"Sikana.tv",
+  "lastLogin":"",
+  "home":"https://www.sikana.tv/",
+  "connect":{
+    "todo":[
+      {"action": "trueClick", "search": "#navbar-login-button"},
+      {"action":"waitfor", "search":"form[action*='login_check'] #_submit"},
+      {"action":"fill", "what":"login", "search":"form[action*='login_check'] #username"},
+      {"action":"fill", "what":"password", "search":"form[action*='login_check'] #password"},
+      {"action":"click", "search":"form[action*='login_check'] #_submit"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action": "trueClick", "search": "#navbar-login-button"},
+      {"action":"waitfor", "search":"form[action*='login_check'] #_submit"},
+      {"action":"trueClick", "search":"a[onclick*='fb_login']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], #navbar-login-button"},
+    {"search":"a[href*=logout]"}
+  ]
+}

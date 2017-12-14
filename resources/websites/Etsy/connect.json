@@ -1,0 +1,25 @@
+{
+    "name":"Etsy",
+    "lastLogin":"",
+    "home":"https://www.etsy.com/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#signin-form input[name='username']"},
+            {"action":"fill", "what":"password", "search":"#signin-form input[name='password']"},
+            {"action":"click", "search":"#signin-form input#signin-button"}
+            ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"aclick", "search":"a.sign-out"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a.sign-out"}
+    ],
+    "Facebook":{
+    	"todo":[
+    		{"action":"clickona", "search":"a.facebook-connect-button"}
+    	]
+    }
+}

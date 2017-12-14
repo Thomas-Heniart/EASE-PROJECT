@@ -9,6 +9,7 @@ import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebs
 import {editClassicApp, deleteSsoApp, validateApp, editAppName, editSsoGroup} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
+import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
   app: store.modals.ssoAppSettings.app,
@@ -54,6 +55,9 @@ class SsoAppSettingsModal extends Component{
     return this.props.dispatch(deleteSsoApp({
       app_id: this.props.app.id
     })).then(response => {
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully removed!`
+      }));
       this.close();
     }).catch(err => {
       throw err;
@@ -77,6 +81,9 @@ class SsoAppSettingsModal extends Component{
       })));
     Promise.all(calls).then(response => {
       this.setState({loading: false});
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully modified!`
+      }));
       this.close();
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});

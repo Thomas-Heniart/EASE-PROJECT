@@ -1,0 +1,32 @@
+{
+  "name":"SportEasy",
+  "lastLogin":"",
+  "home":"https://www.sporteasy.net/",
+  "connect":{
+    "todo":[
+      {"action":"search", "search":"a[href*='logout'], a[href*='login']"},
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"waitfor", "search":"#login_form #id_username"},
+      {"action":"fill", "what":"login", "search":"#login_form #id_username"},
+      {"action":"fill", "what":"password", "search":"#login_form #id_password"},
+      {"action":"click", "search":"#login_form button[type='submit']"}
+    ]
+  },
+  "Facebook": {
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"waitfor", "search":"#login_form form[action*='facebook'] a"},
+      {"action":"clickona", "search":"#login_form form[action*='facebook'] a"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"search", "search":"a[href*='logout'], a[href*='login']"},
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='login']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

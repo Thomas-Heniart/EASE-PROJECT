@@ -1,0 +1,30 @@
+{
+    "name":"Canva",
+    "lastlogin":"",
+    "home":"https://www.canva.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.canva.com/login"},
+    		{"action":"waitfor", "search":"#email"},
+    		{"action":"fill", "what":"login", "search":"#email"},
+    		{"action":"fill", "what":"password", "search":"#password"},
+    		{"action":"click", "search":"input[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.canva.com/logout"},
+    		{"action":"waitfor", "search":".authPage"},
+    		{"action":"goto", "url":"https://www.canva.com/login"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"div.avatar"}
+    ],
+    "Facebook": {
+    	"todo": [
+            {"action":"waitfor", "search":".fb_reset"},
+    		{"action":"click", "search":".buttonFacebook"}
+    	]
+    }
+}

@@ -4,6 +4,7 @@ import {createTeamUser, createTeamUserNow} from "../../actions/userActions";
 import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
 import {showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import { Header, Label, Container, Divider, Icon, TextArea, Form, Input, Button, Message } from 'semantic-ui-react';
+import {addNotification} from "../../actions/notificationBoxActions";
 
 class PreviewStep extends React.Component {
   constructor(props){
@@ -189,6 +190,11 @@ class TeamAddMultipleUsersModal extends React.Component {
           invitations[idx].error = '';
       });
       invitations = invitations.filter(item => (item.error.length > 0));
+      if (calls.length !==invitations.length){
+        this.props.dispatch(addNotification({
+          text: "New team user(s) successfully created!"
+        }));
+      }
       if (invitations.length === 0){
         this.props.dispatch(showTeamAddMultipleUsersModal({active: false}));
         return;
@@ -230,6 +236,11 @@ class TeamAddMultipleUsersModal extends React.Component {
           invitations[idx].error = '';
       });
       invitations = invitations.filter(item => (item.error.length > 0));
+      if (calls.length !==invitations.length){
+        this.props.dispatch(addNotification({
+          text: "New team user(s) successfully created!"
+        }));
+      }
       if (invitations.length === 0){
         this.props.dispatch(showTeamAddMultipleUsersModal({active: false}));
         return;

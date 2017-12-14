@@ -10,6 +10,7 @@ import {editClassicApp, deleteApp, validateApp} from "../../actions/dashboardAct
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 import * as api from "../../utils/api";
+import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
   app: store.modals.classicAppSettings.app
@@ -52,6 +53,9 @@ class ClassicAppSettingsModal extends Component {
     return this.props.dispatch(deleteApp({
       app_id: this.props.app.id
     })).then(response => {
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully removed!`
+      }));
       this.close();
     }).catch(err => {
       throw err;
@@ -66,6 +70,9 @@ class ClassicAppSettingsModal extends Component {
       account_information: transformCredentialsListIntoObject(this.state.credentials)
     })).then(response => {
       this.setState({loading: false});
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully modified!`
+      }));
       this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});

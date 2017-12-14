@@ -24,6 +24,10 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _invoke2 = require('lodash/invoke');
+
+var _invoke3 = _interopRequireDefault(_invoke2);
+
 var _classnames = require('classnames');
 
 var _classnames2 = _interopRequireDefault(_classnames);
@@ -57,11 +61,15 @@ var BreadcrumbSection = function (_Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = BreadcrumbSection.__proto__ || Object.getPrototypeOf(BreadcrumbSection)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (e) {
-      var onClick = _this.props.onClick;
+    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = BreadcrumbSection.__proto__ || Object.getPrototypeOf(BreadcrumbSection)).call.apply(_ref, [this].concat(args))), _this), _this.computeElementType = function () {
+      var _this$props = _this.props,
+          link = _this$props.link,
+          onClick = _this$props.onClick;
 
 
-      if (onClick) onClick(e, _this.props);
+      if (link || onClick) return 'a';
+    }, _this.handleClick = function (e) {
+      return (0, _invoke3.default)(_this.props, 'onClick', e, _this.props);
     }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
   }
 
@@ -73,16 +81,12 @@ var BreadcrumbSection = function (_Component) {
           children = _props.children,
           className = _props.className,
           content = _props.content,
-          href = _props.href,
-          link = _props.link,
-          onClick = _props.onClick;
+          href = _props.href;
 
 
       var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), 'section', className);
       var rest = (0, _lib.getUnhandledProps)(BreadcrumbSection, this.props);
-      var ElementType = (0, _lib.getElementType)(BreadcrumbSection, this.props, function () {
-        if (link || onClick) return 'a';
-      });
+      var ElementType = (0, _lib.getElementType)(BreadcrumbSection, this.props, this.computeElementType);
 
       return _react2.default.createElement(
         ElementType,

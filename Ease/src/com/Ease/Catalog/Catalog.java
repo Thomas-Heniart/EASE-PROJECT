@@ -113,4 +113,13 @@ public class Catalog {
         }
         return res;
     }
+
+    public Website getWebsiteWithUrl(String url, HibernateQuery hibernateQuery) {
+        String[] splitted_url = url.split("//");
+        String minified_url = splitted_url[0] + "//" + splitted_url[1].split("/")[0];
+        System.out.println("Minified url: " + minified_url);
+        hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
+        hibernateQuery.setParameter("url", minified_url);
+        return (Website) hibernateQuery.getSingleResult();
+    }
 }

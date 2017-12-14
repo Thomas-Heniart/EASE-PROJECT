@@ -1,0 +1,51 @@
+{
+    "name":"AirFrance",
+    "lastlogin":"",
+    "home":"https://www.airfrance.fr/en",
+    "connect": {
+    	"todo": [
+    	   {"action": "trueClick", "search": ".header__loggin a"},
+           {"action": "waitfor", "search": "#fbNumber--overlay"},
+           {"action": "waitfor", "search": "#fbPassword--overlay"},
+           {"action": "fill", "what": "login", "search": "#fbNumber--overlay"},
+           {"action": "fill", "what": "password", "search": "#fbPassword--overlay"},
+           {"action": "trueClick", "search": "#button--overlay"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"trueClick", "search":"#idUserDisconnect"},
+    	]
+    },
+    "Facebook": {
+    	"todo": [
+           {"action": "trueClick", "search": ".header__loggin a"},
+           {"action": "waitfor", "search": "#connection_idSocialLogin_facebook"},
+           {"action": "trueClick", "search": "#connection_idSocialLogin_facebook"}
+    	]
+    },
+    "Twitter": {
+        "todo": [
+           {"action": "trueClick", "search": ".header__loggin a"},
+           {"action": "waitfor", "search": "#connection_idSocialLogin_twitter"},
+           {"action": "trueClick", "search": "#connection_idSocialLogin_twitter"}            
+        ]
+    },
+    "LinkedIn": {
+        "todo": [
+           {"action": "trueClick", "search": ".header__loggin a"},
+           {"action": "waitfor", "search": "#connection_idSocialLogin_linkedin"},
+           {"action": "trueClick", "search": "#connection_idSocialLogin_linkedin"}
+        ]
+    },
+    "Google": {
+        "todo": [
+           {"action": "trueClick", "search": ".header__loggin a"},
+           {"action": "waitfor", "search": "#connection_idSocialLogin_googleplus"},
+           {"action": "trueClick", "search": "#connection_idSocialLogin_googleplus"}            
+        ]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#idAccountMenuLink"}
+    ]
+}

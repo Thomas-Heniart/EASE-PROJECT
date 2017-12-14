@@ -12,44 +12,24 @@ import {connect} from "react-redux";
 
 class PersonalSpaceProfileList extends Component {
   render() {
-    const {profiles, select} = this.props;
+    const {spaces, selectedItem, selectItem} = this.props;
+    const profiles = Object.keys(spaces.profiles).map(id => {
+      let profile = spaces.profiles[id];
+      profile.id = id;
+      return profile;
+    });
+
     return (
         <View style={{marginBottom:15}}>
           <BoldText style={styles.sectionHeader}>Personal space</BoldText>
           {profiles.map(item => {
             return (
                 <SideBarChooseButton
-                    active={this.props.selectedItem.itemId === -1 && this.props.selectedItem.subItemId === item.id}
+                    active={selectedItem.itemId === item.id}
                     key={item.id}
-                    onPress={() => {select(-1, item.id, item.name)}}>
+                    onPress={() => {selectItem(item.id)}}>
                   <Text style={styles.subSection}>
                     {item.name}
-                  </Text>
-                </SideBarChooseButton>
-            )
-          })}
-        </View>
-    )
-  }
-}
-
-class TeamRoomList extends Component {
-  render(){
-    const {team, select} = this.props;
-    const rooms = team.rooms;
-    return (
-        <View style={{marginBottom:15}}>
-          <BoldText style={styles.sectionHeader}>
-            {team.name}
-          </BoldText>
-          {rooms.map(item => {
-            return (
-                <SideBarChooseButton
-                    active={this.props.selectedItem.itemId === team.id && this.props.selectedItem.subItemId === item.id}
-                    key={item.id}
-                    onPress={() => {select(team.id, item.id, `# ${item.name}`)}}>
-                  <Text style={styles.subSection}>
-                    # {item.name}
                   </Text>
                 </SideBarChooseButton>
             )
@@ -64,16 +44,13 @@ class HomeSideBar extends Component {
     this.props.logout();
     this.props.navigation.navigate('Login');
   };
-  selectItem = (itemId, subItemId, name) => {
-    this.props.selectItemAndFetchApps({
-      itemId: itemId,
-      subItemId: subItemId,
-      name: name
+  selectItem = (itemId) => {
+    this.props.selectItem({
+      itemId: itemId
     });
     this.props.close();
   };
   render(){
-    const spaces = this.props.spaces;
     return (
         <View style={{backgroundColor:'#373B60', flex:1, paddingTop:20, paddingBottom:20}}>
           <View style={{flexDirection:"row", alignItems:'center', marginBottom:20, paddingLeft:20, paddingRight:20}}>
@@ -84,9 +61,10 @@ class HomeSideBar extends Component {
           </View>
           <ScrollView style={{flex:1, paddingLeft:20, paddingRight:20, marginBottom:20}}>
             <PersonalSpaceProfileList
-                select={this.selectItem}
-                profiles={spaces.personal_space}
-                selectedItem={this.props.selectedItem}/>
+                spaces={this.props.spaces}
+                selectedItem={this.props.selectedItem}
+                selectItem={this.selectItem}
+                close={this.props.close}/>
           </ScrollView>
           <View style={{paddingLeft:20, paddingRight:20}}>
             <TouchableHighlight style={styles.mainButtons}>

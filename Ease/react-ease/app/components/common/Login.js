@@ -128,6 +128,7 @@ class KnownUserForm extends React.Component{
                     <input type="password" name="password" placeholder="Password"
                            value={this.state.password}
                            onChange={this.handleInput}
+                           autoFocus
                            required/>
                   </div>
                   <div class="row">

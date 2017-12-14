@@ -1,0 +1,23 @@
+{
+  "name":"Frichti",
+  "lastLogin":"",
+  "home":"https://www.frichti.co/",
+  "connect":{
+    "todo":[
+      {"action":"clickona", "search":"a.nav__link.nav__link--account"},
+      {"action":"waitfor", "search":"#input-email"},
+      {"action":"fill", "what":"login", "search":"#input-email"},
+      {"action":"fill", "what":"password", "search":"#input-password"},
+      {"action":"click", "search":"form button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"click", "search":".js-logout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"section.account__orders"}
+  ]
+}

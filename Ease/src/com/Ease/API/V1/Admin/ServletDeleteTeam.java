@@ -7,6 +7,7 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import com.stripe.exception.InvalidRequestException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import org.json.simple.JSONObject;
@@ -30,11 +31,15 @@ public class ServletDeleteTeam extends HttpServlet {
             Team team = sm.getTeam(team_id);
             Subscription subscription = team.getSubscription();
             if (subscription != null) {
-                subscription.cancel(new HashMap<>());
-                Customer customer = team.getCustomer();
-                String default_source = customer.getDefaultSource();
-                if (default_source != null && !default_source.equals(""))
-                    customer.getSources().retrieve(default_source).delete();
+                try {
+                    subscription.cancel(new HashMap<>());
+                    Customer customer = team.getCustomer();
+                    String default_source = customer.getDefaultSource();
+                    if (default_source != null && !default_source.equals(""))
+                        customer.getSources().retrieve(default_source).delete();
+                } catch (InvalidRequestException e) {
+                    e.printStackTrace();
+                }
             }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {

@@ -1,0 +1,26 @@
+{
+    "name":"Yoopies",
+    "lastLogin":"",
+    "home":"https://www.yoopies.fr/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#login_header_username", "grave":true},
+            {"action":"fill", "what":"password", "search":"#login_header_plainPassword"},
+            {"action":"click", "search":"#submitConnect"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"goto","url":"https://yoopies.fr/logout"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":"input.btn-facebook-connect"}
+    	]
+    }
+}

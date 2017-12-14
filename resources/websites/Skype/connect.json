@@ -1,0 +1,36 @@
+{
+    "name":"Skype",
+    "lastLogin":"",
+    "home":"https://login.skype.com/login/",
+    "connect":{
+        "url":"https://login.skype.com/login/",
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input[name='username']"},
+            {"action":"submit", "search":"form#loginForm"},
+            {"action":"waitfor", "search":"input[name='loginfmt']"},
+            {"action":"fill", "what":"login", "search":"input[name='loginfmt']"},
+            {"action":"fill", "what":"login", "search":"input[name='SUName0']"},
+            {"action":"click", "search":"#idSIButton9"},
+            {"action":"waitfor", "search":"#idA_PWD_ForgotPassword"},
+            {"action":"wait", "timeout":"500"},
+            {"action":"fill", "what":"password", "search":"input[name='passwd']"},
+            {"action":"submit","search":"form[name='f1']"}
+        ]
+    },
+    "Facebook":{
+    	"todo":[
+    		{"action":"aclick", "search":"a.loginChoice.fbIcon"},
+    		{"action":"fill", "what":"password", "search":"input[name='pass']"},
+    		{"action":"click", "search":"input[type='submit']"}
+    	]	
+    },
+    "logout":{
+        "todo":[
+        	{"action":"waitfor", "search":"a[data-link-type='logout']"},
+            {"action":"aclick", "search":"a[data-link-type='logout']"}
+            ]
+    },
+    "checkAlreadyLogged":[
+       		{"search":"li.account.authenticated.username"}
+	]
+}

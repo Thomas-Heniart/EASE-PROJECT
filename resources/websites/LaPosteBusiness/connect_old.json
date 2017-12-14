@@ -1,0 +1,24 @@
+{
+  "name":"La Poste Business",
+  "lastLogin":"",
+  "home":"https://pro.boutique.laposte.fr/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='authentification']"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login", "search":"#j_username"},
+      {"action":"fill", "what":"password", "search":"#formPass"},
+      {"action":"click", "search":"#authentificationEnvoyer"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":"a[href*='deconnexionPopin']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='deconnexionPopin'], a[href*='authentification']"},
+    {"search":"a[href*='deconnexionPopin']"}
+  ]
+}

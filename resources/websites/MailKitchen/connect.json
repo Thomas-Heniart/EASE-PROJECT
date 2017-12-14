@@ -1,0 +1,21 @@
+{
+  "name":"MailKitchen",
+  "lastLogin":"",
+  "home":"https://mail.mailkitchen.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"input#input-login"},
+      {"action":"fill", "what":"password", "search":"input#input-pass"},
+      {"action":"click", "search":"#login-form-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='deconnexion']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"a[href*='deconnexion']"}
+  ]
+}

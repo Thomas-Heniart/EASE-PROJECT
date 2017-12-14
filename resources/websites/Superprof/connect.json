@@ -1,0 +1,27 @@
+{
+    "name":"Superprof",
+    "lastlogin":"",
+    "home":"http://www.superprof.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"http://www.superprof.fr/connexion.html"},
+    		{"action":"fill", "what":"login", "search":".connection-form input[name='email']"},
+    		{"action":"fill", "what":"password", "search":".connection-form input[name='password']"},
+    		{"action":"click", "search":".connection-form input[type='submit']"}
+       	]
+    },
+    "Facebook": {
+    	"todo": [
+    		{"action":"goto", "url":"http://www.superprof.fr/connexion.html"},
+    		{"action":"clickona", "search":".facebook-connect"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='deconnexion']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='deconnexion']"}
+    ]
+}

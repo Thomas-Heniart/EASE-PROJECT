@@ -8,6 +8,7 @@ import {handleSemanticInput} from "../../utils/utils";
 import {editLinkApp, validateApp, deleteApp} from "../../actions/dashboardActions";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
+import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
   app: store.modals.linkAppSettings.app
@@ -42,6 +43,9 @@ class LinkAppSettingsModal extends Component {
     return this.props.dispatch(deleteApp({
       app_id: this.props.app.id
     })).then(response => {
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully removed!`
+      }));
       this.close();
     }).catch(err => {
       throw err;
@@ -57,6 +61,9 @@ class LinkAppSettingsModal extends Component {
       img_url: this.state.logo
     })).then(response => {
       this.setState({loading: false});
+      this.props.dispatch(addNotification({
+        text: `${this.props.app.name} has been successfully modified!`
+      }));
       this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});

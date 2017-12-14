@@ -26,14 +26,14 @@
           content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
     <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" href="/cssMinified.v00024/bootstrap.css"/>
+<!--    <link rel="stylesheet" href="/cssMinified.v00029/bootstrap.css"/>-->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00024/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00029/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00024/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00024/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00024/lib/fonts/untitled-font-4/styles.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00024/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00029/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00029/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00029/lib/fonts/untitled-font-4/styles.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00029/team.css"/>
     <link rel="stylesheet" href="/css/lib/loading.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00022/jsencrypt.js"></script>
@@ -68,7 +68,7 @@
 <BODY>
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=24"></script>
+<script src="teams_bundle.js?v=31"></script>
 <script type="text/javascript">
   !function(a,b){var c=window;c.SessionStack=a,c[a]=c[a]||function(){
     c[a].q=c[a].q||[],c[a].q.push(arguments)},c[a].t=b;var d=document.createElement("script");

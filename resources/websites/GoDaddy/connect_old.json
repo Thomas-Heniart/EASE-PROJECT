@@ -1,0 +1,34 @@
+{
+  "name":"GoDaddy",
+  "lastLogin":"",
+  "home":"https://godaddy.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='sso.godaddy.com/?realm']"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"#login-form #submitBtn"},
+      {"action":"fill", "what":"login", "search":"#login-form #username"},
+      {"action":"fill", "what":"password", "search":"#login-form #password"},
+      {"action":"click", "search":"#login-form #submitBtn"}
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='sso.godaddy.com/?realm']"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"#login-form #submitBtn"},
+      {"action":"trueClick", "search":"#fb-signup-btn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".main-content.clip-x"},
+    {"action":"waitfor", "search":"a[href*='sso.godaddy.com'], a[href*='logout']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

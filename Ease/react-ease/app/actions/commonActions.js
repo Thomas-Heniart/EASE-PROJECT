@@ -1,32 +1,9 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
-import {selectTeamChannel} from "./channelActions";
-import {selectTeamUser} from "./userActions";
 import {fetchDashboard} from "./dashboardActions";
 import {fetchTeams} from "./teamActions";
 import {fetchNotifications} from "./notificationsActions";
-import {push} from "react-router-redux";
-
-function getMyChannel(channels, myId){
-  for (var i = 0; i < channels.length; i++){
-    if (channels[i].userIds.indexOf(myId) !== -1)
-      return channels[i].id;
-  }
-  return -1;
-}
-
-export function autoSelectTeamItem(){
-  return function (dispatch, getState){
-    const state = getState();
-    const myId = state.team.myTeamUserId;
-    const channels = state.channels.channels;
-    const channelToSelect = getMyChannel(channels, myId);
-    if (channelToSelect !== -1)
-      dispatch(selectTeamChannel(channelToSelect));
-    else
-      dispatch(selectTeamUser(myId));
-  }
-}
+import {addNotification} from "./notificationBoxActions";
 
 export function fetchMyInformation(){
   return function(dispatch){
@@ -81,19 +58,6 @@ export function processLogout(){
   }
 }
 
-export function checkAuthentication(){
-  return function(dispatch){
-    dispatch({type: 'CHECK_CONNECTION_PENDING'});
-    return api.common.checkAuthentication().then(response => {
-      dispatch({type:'CHECK_CONNECTION_FULFILLED', payload: response});
-      return response;
-    }).catch(err => {
-      dispatch({type: 'CHECK_CONNECTION_REJECTED', payload: err});
-      throw err;
-    })
-  }
-}
-
 export function setLoginRedirectUrl(url){
   return {
     type: 'SET_LOGIN_REDIRECT_URL',
@@ -140,9 +104,11 @@ export function askEditEmail({password, new_email}){
 
 export function editEmail({password, new_email, digits}){
   return function (dispatch){
-    return post_api.common.editEmail(password, new_email, digits
-    ).then(response => {
+    return post_api.common.editEmail(password, new_email, digits).then(response => {
       dispatch({type: 'EDIT_EMAIL_FULFILLED', payload: response});
+      dispatch(addNotification({
+        text: "Your email has been successfully modified!"
+      }));
       return response;
     }).catch(err => {
       dispatch({type: 'EDIT_EMAIL_REJECTED', payload: err});
@@ -151,11 +117,15 @@ export function editEmail({password, new_email, digits}){
   }
 }
 
-export function editPersonalUsername(username){
+export function editPersonalUsername({username}){
   return function (dispatch){
-    return post_api.common.editPersonalUsername(username
-    ).then(response => {
+    return post_api.common.editPersonalUsername({
+      username: username
+    }).then(response => {
       dispatch({type: 'EDIT_USERNAME_FULFILLED', payload: response});
+      dispatch(addNotification({
+        text: `Your username has been changed to ${username}`
+      }));
       return response;
     }).catch(err => {
       dispatch({type: 'EDIT_USERNAME_REJECTED', payload: err});
@@ -181,6 +151,9 @@ export function editPassword({password, new_password}){
     return post_api.common.editPassword(password, new_password)
         .then(response => {
           dispatch({type: 'EDIT_PASSWORD_FULFILLED', payload: response});
+          dispatch(addNotification({
+            text: "Your password has been successfully modified!"
+          }));
           return response;
         }).catch(err => {
           dispatch({type: 'EDIT_PASSWORD_REJECTED', payload: err});

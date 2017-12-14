@@ -6,7 +6,6 @@ var TeamMenu = require('./TeamMenu');
 var TeamSideBar = require('./TeamSideBar');
 var TeamHeader = require('./TeamHeader');
 var FlexPanels = require('./TeamFlexPanels');
-var TeamAppAdderButtons = require('./TeamAppAdderButtons');
 var TeamAppAddingUi = require('./TeamAppAddingUi');
 var TeamAppsContainer = require('./TeamAppsContainer');
 var TeamSettings = require('./teamModals/TeamSettings');
@@ -30,6 +29,7 @@ import {sendTeamUserInvitation} from "../actions/userActions";
 var EaseHeader = require('./common/EaseHeader');
 var api = require('../utils/api');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import NotificationBoxContainer from "./common/NotificationBoxContainer";
 
 @connect((store)=>({
   teams: store.teams,
@@ -217,6 +217,7 @@ class TeamView extends React.Component {
                      component={StaticUpgradeTeamPlanModal}/>
             </Switch>}
           </div>}
+          <NotificationBoxContainer/>
         </div>
     )
   }

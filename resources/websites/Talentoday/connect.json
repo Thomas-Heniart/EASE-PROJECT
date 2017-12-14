@@ -1,0 +1,80 @@
+{
+  "name": "Talentoday",
+  "lastlogin": "",
+  "home": "https://www.talentoday.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[ng-click*='login']"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password"
+      },
+      {
+        "action": "click",
+        "search": "form.log_in_form input[type='submit']"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[ng-click*='login']"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "click",
+        "search": "a[href*='oauth/facebook']"
+      }
+    ]
+  },
+  "LinkedIn": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[ng-click*='login']"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "click",
+        "search": "a[href*='oauth/linkedin']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[ng-click*='login'], a[ng-click*='logout']"
+    },
+    {
+      "search": "a[ng-click*='logout']"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[ng-click*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}

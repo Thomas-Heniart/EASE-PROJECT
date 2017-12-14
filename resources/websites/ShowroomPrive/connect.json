@@ -1,0 +1,25 @@
+{
+    "name":"ShowroomPrive",
+    "lastlogin":"",
+    "home":"https://www.showroomprive.com/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login", "search":"#Login_tbLogin"},
+    		{"action":"fill", "what":"password", "search":"#Login_tbPass"},
+    		{"action":"clickona", "search":"#Login_LienLogin"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://www.showroomprive.com/Deconnect.aspx"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"span.icon-mon_compte"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"clickona", "search":".header__connexion_fb"}
+    	]
+    }
+}

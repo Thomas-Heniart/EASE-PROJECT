@@ -193,8 +193,6 @@ public class ClickOnApp {
             default:
                 break;
         }
-        System.out.println("Day number: " + day_number);
-        this.getDays()[day_number]++;
     }
 
     public boolean hasBeenClickedForDays(int number_of_days) {

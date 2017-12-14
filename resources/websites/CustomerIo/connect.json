@@ -1,0 +1,22 @@
+{
+  "name":"Customer.io",
+  "lastLogin":"",
+  "home":"https://fly2.customer.io/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#new_user #user_email"},
+      {"action":"fill", "what":"password", "search":"#new_user #user_password"},
+      {"action":"click", "search":"#new_user input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a.logout-btn"},
+      {"action":"waitfor", "search":"#new_user #user_email"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.logout-btn, #new_user #user_email"},
+    {"search":"a.logout-btn"}
+  ]
+}

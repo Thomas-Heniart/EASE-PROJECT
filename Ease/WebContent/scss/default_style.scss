@@ -46,6 +46,31 @@
   transition-property: transform;
 }
 
+@media screen and (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .basic_scrollbar {
   ::-webkit-scrollbar {
     position: absolute !important;
@@ -133,6 +158,40 @@
 .hvr-grow:hover, .hvr-grow:focus, .hvr-grow:active {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.row, .container {
+  &:before {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+    display: table;
+    content: " ";
+  }
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
 
 .ease-background {
@@ -249,12 +308,20 @@ i.icon.hide {
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 .ui.input.max-border-radius input {
   border-radius: 500px;
 }
 
 .ui.fluid.search > .input {
   width: 100%;
+}
+
+.ui.button.loading, button.ui.button.loading {
+  pointer-events: none !important;
 }
 
 .ui.checkbox.mini {

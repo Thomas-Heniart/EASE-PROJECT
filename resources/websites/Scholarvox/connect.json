@@ -1,0 +1,51 @@
+{
+  "name": "Scholarvox",
+  "lastlogin": "",
+  "home": "https://www.scholarvox.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a.btn_login"
+      },
+      {
+        "action": "waitfor",
+        "search": "#frm-login #username"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#frm-login #username"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#frm-login #password"
+      },
+      {
+        "action": "click",
+        "search": "#frm-login #btn-login"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a.btn_login, a[href*='logout']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "clickona",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}

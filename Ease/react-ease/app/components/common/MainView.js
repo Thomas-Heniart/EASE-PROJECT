@@ -8,6 +8,7 @@ import { Switch, Route } from 'react-router-dom';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "../dashboard/CustomDragLayer";
+import NotificationBoxContainer from "../common/NotificationBoxContainer";
 var SimpleTeamCreationView = require('../teams/SimpleTeamCreationView');
 import {connect} from "react-redux";
 import {showExtensionDownloadModal} from "../../actions/modalActions";
@@ -31,6 +32,7 @@ class MainView extends Component {
           </Switch>
           <EaseHeader/>
           <CustomDragLayer/>
+          <NotificationBoxContainer/>
         </div>
     )
   }

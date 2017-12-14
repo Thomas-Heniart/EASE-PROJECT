@@ -1,0 +1,111 @@
+{
+	"name":"youtube",
+	"lastLogin":"",
+	"sso":"Google",
+	"home":"https://youtube.com",
+	"folder":"Youtube",
+	"connect":{
+      "todo":[
+        {
+          "action": "waitfor",
+          "search": "paper-button#button"
+        },
+        {
+          "action": "trueClick",
+          "search": "paper-button#button"
+        },
+        {"action":"waitload"},
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #profileIdentifier + div div[role='button'], #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#profileIdentifier + div div[role='button']"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierLink"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierLink"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "fill",
+          "what": "login",
+          "search": "#identifierId",
+          "grave": "true"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "waitfor",
+          "search": "#password input"
+        },
+        {
+          "action": "waitfor",
+          "search": "#passwordNext"
+        },
+        {
+          "action": "fill",
+          "what": "password",
+          "search": "#password input",
+          "grave": "true"
+        },
+        {
+          "action": "waitfor",
+          "search": "#passwordNext"
+        },
+        {
+          "action": "click",
+          "search": "#passwordNext"
+        }
+      ]
+	},
+	"logout":{
+      "todo":[
+        {
+          "action": "trueClick",
+          "search": "#img"
+        },
+        {"action":"waitfor", "search":"a[href='/logout']"},
+        {
+          "action": "trueClick",
+          "search": "a[href='/logout']"
+        },
+        {"action":"waitload"}
+      ]
+	},
+	"checkAlreadyLogged":[
+      {
+        "action": "waitfor",
+        "search": "ytd-topbar-menu-button-renderer #img, paper-button#button, #identifierId, #profileIdentifier + div div[role='button'], #identifierLink"
+      },
+      {
+        "search": "ytd-topbar-menu-button-renderer #img"
+      }
+	]
+}

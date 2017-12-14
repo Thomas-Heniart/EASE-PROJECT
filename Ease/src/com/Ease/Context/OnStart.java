@@ -33,7 +33,6 @@ public class OnStart implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent evt) {
         ServletContext context = evt.getServletContext();
-        Variables.WEBSITES_FOLDER_PATH = context.getRealPath("/resources/websites/");
         DataBaseConnection db;
         try {
             db = new DataBaseConnection(DataBase.getConnection());
@@ -45,7 +44,6 @@ public class OnStart implements ServletContextListener {
             DatabaseRequest request;
             try {
                 System.out.println("ServletContextListener starting on \"" + Variables.ENVIRONNEMENT + "\" ...");
-
                 Catalog catalog = new Catalog();
                 context.setAttribute("catalog", catalog);
 

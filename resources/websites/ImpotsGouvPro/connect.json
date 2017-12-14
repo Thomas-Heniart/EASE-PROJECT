@@ -1,0 +1,22 @@
+{
+  "name":"Impots.gouv Pro",
+  "lastLogin":"",
+  "home":"https://cfspro.impots.gouv.fr/mire/accueil.do",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#LMDP_Spi_tmp"},
+      {"action":"fill", "what":"password", "search":"#LMDP_Password_tmp"},
+      {"action":"click", "search":"#lmdp form button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='finsession']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='finsession'], #LMDP_Spi_tmp"},
+    {"search":"a[href*=finsession]"}
+  ]
+}

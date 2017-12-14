@@ -1,0 +1,28 @@
+{
+  "name":"Brico Dépôt",
+  "lastLogin":"",
+  "home":"https://www.bricodepot.fr",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":".fancybox-close", "grave":true},
+      {"action":"trueClick", "search":"div[data-mobile-href*='login']", "grave":true},
+      {"action":"waitfor", "search":"#username-HeaderLayer"},
+      {"action":"waitfor", "search":"#password-HeaderLayer"},
+      {"action":"waitfor", "search":"form[name='loginFormName'] button[type='submit']"},
+      {"action":"fill", "what":"login", "search":"#username-HeaderLayer", "grave":true},
+      {"action":"fill", "what":"password", "search":"#password-HeaderLayer", "grave":true},
+      {"action":"trueClick", "search":"form[name='loginFormName'] button[type='submit']", "grave":true},
+      {"action":"waitfor", "search":"a.jsbd-LoginForm-logout-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a.jsbd-LoginForm-logout-submit", "grave":true},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.jsbd-LoginForm-logout-submit, div[data-mobile-href*='login']"},
+    {"search":"a.jsbd-LoginForm-logout-submit"}
+  ]
+}
