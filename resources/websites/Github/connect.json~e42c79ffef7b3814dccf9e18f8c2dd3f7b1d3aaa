@@ -1,0 +1,23 @@
+{
+	"name":"Github",
+	"lastLogin":"",
+	"home":"https://github.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login_field", "grave":true},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"input[type='submit']", "grave":true}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://github.com/logout"},
+			{"action":"click", "search":"input[type='submit']"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://github.com/login"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"img.avatar"}
+	]
+}

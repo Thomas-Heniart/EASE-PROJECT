@@ -1,0 +1,27 @@
+{
+  "name":"speedtree",
+  "lastLogin":"",
+  "home":"https://store.speedtree.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a.nav-top-not-logged-in"},
+      {"action":"waitfor", "search":"form.login input[type='submit']"},
+      {"action":"fill", "what":"login", "search":"form.login #username"},
+      {"action":"fill", "what":"password", "search":"form.login #password"},
+      {"action":"click", "search":"form.login input[type='submit']"},
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"a[href*='customer-logout/?_wpnonce']"},
+      {"action":"trueClick", "search":"a[href*='customer-logout/?_wpnonce']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a.nav-top-not-logged-in"},
+    {"search":"a[href*='logout']"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name":"Appcues",
+  "lastLogin":"",
+  "home":"https://my.appcues.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":".login-form input[name='email']"},
+      {"action":"fill", "what":"password", "search":".login-form input[name='password']"},
+      {"action":"click", "search":".login-form button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='logout']"},
+      {"action":"waitfor", "search":".login-form"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], .login-form"},
+    {"search":"a[href*='logout']"}
+  ]
+}

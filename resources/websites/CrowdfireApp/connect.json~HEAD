@@ -1,0 +1,48 @@
+{
+  "name":"Crowdfire",
+  "lastLogin":"",
+  "home":"https://crowdfireapp.com/",
+  "Facebook":{
+    "todo":[
+      {"action":"trueClick", "search":"button[data-target='#signinModal']"},
+      {"action":"waitfor", "search":"#signinModal .cf-btn-facebook"},
+      {"action":"trueClick", "search":"#signinModal .cf-btn-facebook"}
+    ]
+  },
+  "Twitter":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='signin']"},
+      {"action":"waitfor", "search":".overlay-dialog--signin"},
+      {"action":"click", "search":".button--twitter"}
+    ]
+  },
+  "Google":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='signin']"},
+      {"action":"waitfor", "search":".overlay-dialog--signin"},
+      {"action":"click", "search":".button--google"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":".menuHeader__addAccount div"},
+      {"action":"waitfor", "search":".addAccount__header__settings a"},
+      {"action":"trueClick", "search":".addAccount__header__settings a"},
+      {"action":"waitfor", "search":".appMain__body"},
+      {"action":"waitfor", "search":".settings__content .appMain__body button.settings__action:last-child()"},
+      {"action":"trueClick", "search":".settings__content button.settings__action:last-child()"},
+      {"action":"waitfor", "search":".popup__action.btn-red:last-child()"},
+      {"action":"waitfor", "search":"body.ReactModal__Body--open"},
+      {"action":"trueClick", "search":".popup__action.btn-red:last-child()"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".menuHeader__addAccount, button[data-target='#signinModal']"},
+    {"search":".menuHeader__addAccount"}
+  ],
+  "connect": {
+    "todo": [
+    ]
+  }
+}

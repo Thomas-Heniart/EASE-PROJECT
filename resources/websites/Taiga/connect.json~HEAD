@@ -1,0 +1,31 @@
+{
+  "name":"TAIGA",
+  "lastLogin":"",
+  "home":"https://tree.taiga.io/login",
+  "connect":{
+    "todo":[
+      {"action":"waitfor", "search":".login-form button[type='submit']"},
+      {"action":"fill", "what":"login", "search":".login-form input[name='username']"},
+      {"action":"fill", "what":"password", "search":".login-form input[type='password']"},
+      {"action":"click", "search":".login-form button[type='submit']"}
+    ]
+  },
+  "GitLab":{
+    "todo":[
+      {"action":"waitfor", "search":"a[href*='login']"},
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"click", "search":"div.tg-gitlab-login-button a"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":"a[ng-click='vm.logout()']"},
+      {"action":"waitfor", "search":"a.login"},
+      {"action":"goto", "url":"https://tree.taiga.io/login"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[ng-click='vm.logout()'], .login-form input[name='username']"},
+    {"search":"a[ng-click='vm.logout()']"}
+  ]
+}

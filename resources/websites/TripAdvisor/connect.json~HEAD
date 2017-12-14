@@ -1,0 +1,42 @@
+{
+  	"name":"TripAdvisor",
+  	"lastLogin":"",
+  	"home":"https://www.tripadvisor.com/",
+  	"connect":{
+    	"todo":[
+          {"action":"aclick", "search":"a.login-button"},
+          {"action":"waitfor", "search":"#regSignIn .regSubmitBtn"},
+          {"action":"waitfor", "search":"#regSignIn input[type='email']"},
+          {"action":"fill", "what":"login", "search":"#regSignIn input[type='email']"},
+          {"action":"fill", "what":"password", "search":"#regSignIn input[type='password']"},
+          {"action":"trueClick", "search":"#regSignIn .regSubmitBtn"}
+    	]
+  	},
+  	"logout":{
+    	"todo":[
+      		{"action":"trueClick", "search":"a[href*='SignOut']"},
+			{"action":"waitload"},
+			{"action":"waitload"}
+    	]
+  	},
+  	"checkAlreadyLogged":[
+		{"action":"waitfor", "search":"a.login-button, a[href*='SignOut']"},
+    	{"search":"a[href*='SignOut']"}
+  	],
+  	"Facebook":{
+      "todo":[
+        {"action":"aclick", "search":"a.login-button"},
+        {"action":"waitfor", "search":"#regSignIn .regSubmitBtn"},
+        {"action":"waitfor", "search":"#facebookBtn"},
+        {"action":"trueClick", "search":"#facebookBtn"}
+      ]
+  	},
+  	"Google":{
+      "todo":[
+        {"action":"aclick", "search":"a.login-button"},
+        {"action":"waitfor", "search":"#regSignIn .regSubmitBtn"},
+        {"action":"waitfor", "search":"#googleBtn"},
+        {"action":"trueClick", "search":"#googleBtn"}
+      ]
+  	}
+}

@@ -1,0 +1,20 @@
+{
+	"name":"ProjetVoltaire",
+	"lastLogin":"",
+	"home":"https://www.projet-voltaire.fr/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login-username"},
+			{"action":"fill", "what":"password", "search":"#login-pwd"},
+			{"action":"click", "search":"#authenticationForm input[type='submit']"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a#disconnectAction"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a#disconnectAction"}
+	]
+}

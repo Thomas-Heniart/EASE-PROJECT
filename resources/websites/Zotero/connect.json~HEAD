@@ -1,0 +1,21 @@
+{
+    "name":"Zotero",
+    "lastLogin":"",
+    "home":"https://www.zotero.org/",
+    "connect":{
+        "todo":[
+          {"action":"goto", "url":"https://www.zotero.org/user/login/"},
+          {"action":"fill", "what":"login", "search":"#username"},
+          {"action":"fill", "what":"password", "search":"#password"},
+          {"action":"click", "search":"button#login"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a[href*='logout']"}
+          ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ]
+}

@@ -1,0 +1,67 @@
+{
+  "name": "Gitlab",
+  "lastLogin": "",
+  "home": "https://gitlab.com/users/sign_in",
+  "folder": "Gitlab",
+  "connect": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "#user_login"
+      },
+
+        {
+        "action": "waitfor",
+        "search": "#user_password"
+      },
+        {
+        "action": "waitfor",
+        "search": "#loginbutton"
+      },
+
+
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#user_login",
+        "grave": true
+      },
+  
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#user_password",
+        "grave": true
+      },
+
+      {
+        "action": "click",
+        "search": "#new_user input[name='commit']",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "erasecookies",
+        "name": "c_user"
+      },
+      {
+        "action": "goto",
+        "url": "http://www.facebook.com"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "search": "body.home"
+    }
+  ],
+  "checkChangeLogin": [
+    {
+      "action": "click",
+      "search": "#loginbutton"
+    }
+  ]
+}

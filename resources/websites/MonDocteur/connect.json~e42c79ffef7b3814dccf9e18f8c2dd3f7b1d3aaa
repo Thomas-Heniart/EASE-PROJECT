@@ -1,0 +1,22 @@
+{
+  "name":"MonDocteur",
+  "lastLogin":"",
+  "home":"https://www.mondocteur.fr/",
+  "connect":{
+    "todo":[
+      {"action": "goto", "url": "https://www.mondocteur.fr/identification.html"},
+      {"action":"fill", "what":"login", "search":"#loginForm #loginForm_username"},
+      {"action":"fill", "what":"password", "search":"#loginForm #loginForm_password"},
+      {"action":"click", "search":"#loginForm input[type=submit]"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[onclick*=logout]"},
+      {"action": "waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"a[onclick*=logout]"}
+  ]
+}

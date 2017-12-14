@@ -1,0 +1,21 @@
+{
+  "name":"Free Code Camp",
+  "lastLogin":"",
+  "home":"https://www.freecodecamp.com/signin",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='email-signin']"},
+      {"action":"fill", "what":"login", "search":"#email"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"goto", "url":"https://www.freecodecamp.com/signout"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search": "img.profile-picture"}
+  ]
+}

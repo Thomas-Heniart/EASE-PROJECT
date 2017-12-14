@@ -1,0 +1,23 @@
+{
+  "name":"Shutterstock",
+  "lastLogin":"",
+  "home":"https://www.shutterstock.com/",
+  "connect":{
+    "todo":[
+      {"action":"goto", "url":"https://www.shutterstock.com/login"},
+      {"action":"fill", "what":"login", "search":"#login-username"},
+      {"action":"fill", "what":"password", "search":"#login-password"},
+      {"action":"click", "search":"#login"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='login']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

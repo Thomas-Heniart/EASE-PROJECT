@@ -1,0 +1,35 @@
+{
+  "name":"Paybis",
+  "lastLogin":"",
+  "home":"https://paybis.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"fill", "what":"login", "search":"#loginform-email"},
+      {"action":"fill", "what":"password", "search":"#loginform-password"},
+      {"action":"click", "search":"#login-form button[type='submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"trueClick", "search":"a.facebook.auth-link"}
+    ]
+  },
+  "Google":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='login']"},
+      {"action":"trueClick", "search":"a.google.auth-link"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='login']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

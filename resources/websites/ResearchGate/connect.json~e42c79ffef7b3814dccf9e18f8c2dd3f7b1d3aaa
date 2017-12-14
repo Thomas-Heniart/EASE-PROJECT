@@ -1,0 +1,24 @@
+{
+    "name":"ResearchGate",
+    "lastlogin":"",
+    "home":"https://www.researchgate.net/",
+    "connect": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[href*='login']"},
+    		{"action":"waitfor", "search":"#input-header-login"},
+    		{"action":"fill", "what":"login", "search":"#input-header-login"},
+    		{"action":"fill", "what":"password", "search":"#input-header-password"},
+    		{"action":"click", "search":"#headerLoginForm input[name='loginSubmit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":".js-log-out"},
+    		{"action":"waitload"},
+    		{"action":"goto", "url":"https://www.researchgate.net"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":".js-log-out"}
+    ]
+}

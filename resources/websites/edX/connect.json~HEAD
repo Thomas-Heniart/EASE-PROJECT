@@ -1,0 +1,27 @@
+{
+    "name":"edX",
+    "lastlogin":"",
+    "home":"https://courses.edx.org",
+    "connect": {
+    	"todo": [
+    		{"action":"goto", "url":"https://courses.edx.org/login"},
+    		{"action":"fill", "what":"login", "search":"#login-email"},
+    		{"action":"fill", "what":"password", "search":"#login-password"},
+    		{"action":"click", "search":"button[type='submit']"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://courses.edx.org/logout"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a.user-link"}
+    ],
+    "Facebook": {
+    	"todo": [
+    		{"action":"goto", "url":"https://courses.edx.org/login"},
+    		{"action":"click", "search":"button.button-oa2-facebook"}
+    	]
+    }
+}

@@ -1,0 +1,32 @@
+{
+	"name":"SlideShare",
+	"lastLogin":"",
+	"home":"https://slideshare.net/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#user_login"},
+			{"action":"fill", "what":"password", "search":"#user_password"},
+			{"action":"click", "search":"#login_from_loginpage"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[href='https://www.slideshare.net/logout']"},
+			{"action":"waitload"},
+			{"action":"goto", "url":"https://slideshare.net/login"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#user-dropdown"}
+	],
+	"Facebook":{
+		"todo":[
+			{"action":"clickona", "search":"#fb-login"}
+		]
+	},
+	"LinkedIn":{
+		"todo":[
+			{"action":"clickona", "search":".j-linkedin-connect"}
+		]
+	}
+}

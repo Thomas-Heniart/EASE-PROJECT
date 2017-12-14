@@ -1,0 +1,34 @@
+{
+    "name":"Quandora",
+    "lastLogin":"",
+    "home":{"http":"https://", "subdomain":"siteName", "domain":"quandora.com"},
+    "connect":{
+      "todo":[
+        {"action":"fill", "what":"login", "search":"#login input[name*='username']"},
+        {"action":"fill", "what":"password", "search":"#login input[name*='password']"},
+        {"action":"click", "search":"#submit-btn"}
+      ]
+    },
+    "logout":{
+      "todo":[
+        {"action":"clickona", "search":"#q-app-navbar-menu-btn a"},
+        {"action":"clickona", "search":"a[href*='logout']"},
+        {"action":"waitload"},
+        {"action":"aclick", "search":"a[href*='quandora.com']"}
+      ]
+    },
+    "checkAlreadyLogged":[
+      {"action":"waitfor", "search":"a[href*='logout'], #login input[name*='username']"},
+      {"search":"a[href*='logout']"}
+    ],
+    "Facebook":{
+      "todo":[
+        {"action":"clickona", "search":"a.social-button__facebook"}
+      ]
+    },
+    "LinkedIn": {
+      "todo": [
+        {"action":"clickona", "search":"a.social-button__linkedin"}
+      ]
+    }
+}

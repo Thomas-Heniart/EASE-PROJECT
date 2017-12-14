@@ -1,0 +1,85 @@
+{
+  "name": "Alan",
+  "lastLogin": "",
+  "home": "https://alan.eu/login",
+  "folder": "Alan",
+  "connect": {
+   "todo": [
+      {
+        "action": "waitfor",
+        "search": "#email"
+      },
+
+        {
+        "action": "waitfor",
+        "search": "#password"
+      },
+        {
+        "action": "waitfor",
+        "search": ".btn-primary"
+      },
+
+
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#email",
+        "grave": true
+      },
+  
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password",
+        "grave": true
+      },
+
+      {
+        "action": "trueClick",
+        "search": ".btn-primary",
+        "grave": true
+      }
+    ]
+  },
+
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".dropdown > .dropdown-link",
+        "grave": true
+      },
+
+       {
+        "action": "trueClick",
+        "search": ".dropdown-menu.dropdown-topmenu > div:last-child",
+        "grave": true
+      },
+      {
+      	"action":"waitfor",
+      	"search":"#new-landing"
+      },
+      {
+      	"action":"goto",
+      	"url":"https://alan.eu/login"
+      }
+    ]
+  },
+
+  "checkAlreadyLogged": [
+  	{
+  		"action":"waitfor",
+  		"search":"#email, .dropdown > .dropdown-link"
+  	}
+    {
+        "search": ".dropdown > .dropdown-link"
+    }
+  ]
+}
+
+
+
+
+
+
+

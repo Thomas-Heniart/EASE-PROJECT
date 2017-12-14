@@ -1,0 +1,22 @@
+{
+    "name":"UXPin",
+    "lastLogin":"",
+    "home":"https://app.uxpin.com/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#login-login"},
+            {"action":"fill", "what":"password", "search":"#login-password"},
+            {"action":"click", "search":"#loginform_button1"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"clickona", "search":"a[href='#account-settings']"},
+        	{"action":"waitfor", "search":"a[href*='Logout']"},
+        	{"action":"aclick", "search":"a[href*='Logout']"}
+ 		]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href='#account-settings']"}
+    ]
+}

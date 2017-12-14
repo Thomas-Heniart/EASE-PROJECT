@@ -1,0 +1,20 @@
+{
+	"name":"Fun",
+	"lastLogin":"",
+	"home":"https://www.fun-mooc.fr/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":".login-form input[name='email']", "grave":true},
+			{"action":"fill", "what":"password", "search":".login-form input[name='password']", "grave":true},
+			{"action":"click", "search":".login-form button[name='submit']", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+    		{"action":"goto", "url":"https://www.fun-mooc.fr/logout"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a.dashboard-user-link"}
+	]
+}

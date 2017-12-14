@@ -1,0 +1,21 @@
+{
+	"name":"WebAurion",
+	"lastLogin":"",
+	"home":"http://aurion.edhec.edu/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#j_username"},
+			{"action":"fill", "what":"password", "search":"#j_password"},
+			{"action":"click", "search":"input[type='submit']"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":".divLogoBarreBoutons"}
+	],
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":".divLogoBarreBoutons ul li:last-child a:last-child"},
+            {"action":"waitload"}
+        ]
+    }
+}

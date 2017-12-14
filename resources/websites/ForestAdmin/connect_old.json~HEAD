@@ -1,0 +1,24 @@
+{
+  "name":"Forest",
+  "lastLogin":"",
+  "home":"http://app.forestadmin.com/projects",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":".l-auth__form input[type='text']"},
+      {"action":"fill", "what":"password", "search":".l-auth__form input[type='password']"},
+      {"action":"click", "search":".l-auth__content button[type='submit']"},
+      {"action":"waitfor", "search":".l-auth__form input[type='password'], .l-project_container"},
+      {"action":"click", "search":".l-auth__content button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":".l-project__logout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".l-project__logout, .l-auth__content button[type='submit']"},
+    {"search":".l-project__logout"}
+  ]
+}

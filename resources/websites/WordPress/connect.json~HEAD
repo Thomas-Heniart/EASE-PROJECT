@@ -1,0 +1,23 @@
+{
+    "name":"WordPress",
+    "lastLogin":"",
+    "home":"https://wordpress.com",
+    "connect":{
+        "todo":[
+            {"action":"aclick", "search":"a.login-link"},
+            {"action":"fill", "what":"login", "search":"input#user_login"},
+            {"action":"fill", "what":"password", "search":"input#user_pass"},
+            {"action":"click", "search":"input#wp-submit"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"goto", "url": "https://wordpress.com/me"},
+        	{"action":"click", "search":"button.me-sidebar__signout-button"},
+        	{"action":"waitload"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"img.gravatar"}
+    ]
+}

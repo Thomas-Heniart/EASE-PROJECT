@@ -1,0 +1,28 @@
+{
+  "name":"Ulule",
+  "lastLogin":"",
+  "home":"https://ulule.com",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='signin']"},
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"button[type='submit']"}
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='signin']"},
+      {"action":"aclick", "search":"a[href*='login/facebook']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='signout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='signout'], a[href*='signin'], #username"},
+    {"search":"a[href*='signout']"}
+  ]
+}

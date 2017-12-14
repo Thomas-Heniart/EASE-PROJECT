@@ -1,0 +1,22 @@
+{
+    "name":"Satismeter",
+    "lastLogin":"",
+    "home":"https://app.satismeter.com/",
+    "connect":{
+      "todo":[
+        {"action":"waitfor", "search":"form[name='login']"},
+        {"action":"fill", "what":"login", "search":"form[name='login'] input[name='email']"},
+        {"action":"fill", "what":"password", "search":"form[name='login'] input[name='password']"},
+        {"action":"click", "search":"form[name='login'] button[type='submit']"}
+      ]
+    },
+    "logout":{
+      "todo":[
+        {"action":"clickona", "search":"a.nav-logout"}
+      ]
+    },
+    "checkAlreadyLogged":[
+      {"action":"waitfor", "search":"a.nav-logout, form[name='login']"},
+      {"search":"a.nav-logout"}
+    ]
+}

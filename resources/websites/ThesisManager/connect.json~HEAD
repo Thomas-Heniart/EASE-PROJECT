@@ -1,0 +1,22 @@
+{
+	"name":"ThesisManager",
+	"lastLogin":"",
+	"home":"https://eudonet.ieseg.fr/student/generic_info.aspx",
+	"connect": {
+		"todo": [
+			{"action":"goto", "url":"https://srvadfs.ieseg.fr/adfs/ls/?wa=wsignin1.0&wtrealm=https%3a%2f%2feudonet.ieseg.fr%2fStudent%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252fstudent%252fauthent_etudiant.aspx&wct=2016-04-27T12%3a58%3a43Z"},
+			{"action":"fill", "what":"login", "search":"#txtUserName", "grave":"true"},
+			{"action":"fill", "what":"password", "search":"#txtPassword", "grave":"true"},
+			{"action":"click", "search":"#SubmitButton"}
+		]
+	},
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a.deconnexion"},
+    		{"action":"goto", "url":"https://srvadfs.ieseg.fr/adfs/ls/?wa=wsignin1.0&wtrealm=https%3a%2f%2feudonet.ieseg.fr%2fStudent%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252fstudent%252fauthent_etudiant.aspx&wct=2016-04-27T12%3a58%3a43Z"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a.deconnexion"}
+    ]
+}

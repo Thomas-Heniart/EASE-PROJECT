@@ -1,0 +1,36 @@
+{
+    "name":"GMAT Club",
+    "lastLogin":"",
+    "home":"http://gmatclub.com/forum",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":".enterForm form input[name='username']"},
+            {"action":"fill", "what":"password", "search":".enterForm form input[name='password']"},
+            {"action":"click", "search":".enterForm form input[type='submit']"}
+            ]
+    },
+    "Facebook":{
+      "todo":[
+        {"action":"aclick", "search":"a[href*='provider=facebook']"}
+      ]
+    },
+    "Google":{
+      "todo":[
+        {"action":"aclick", "search":"a[href*='provider=google']"}
+      ]
+    },
+    "Linkedin":{
+      "todo":[
+        {"action":"aclick", "search":"a[href*='provider=linkedin']"}
+      ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"goto", "url":"http://gmatclub.com/forum/ucp.php?mode=logout"},
+            {"action":"waitload"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#notify[style='display: block;']"}
+    ]
+}

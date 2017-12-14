@@ -1,0 +1,22 @@
+{ 
+    "name":"FreshBooks", 
+    "lastLogin":"", 
+    "home":"https://my.freshbooks.com/", 
+    "connect":{ 
+        "todo":[ 
+            {"action":"fill", "what":"login", "search":".js-login-username"}, 
+            {"action":"fill", "what":"password", "search":".js-login-password"}, 
+            {"action":"click", "search":"button[type='submit']"} 
+        ] 
+    },
+    "logout":{ 
+        "todo":[ 
+          {"action":"click", "search":".js-logout"},
+          {"action":"waitload"}
+        ] 
+    }, 
+    "checkAlreadyLogged":[ 
+    	{"action":"waitfor", "search":".js-logout, .js-login-username"},
+        {"search":".js-logout"} 
+    ] 
+}

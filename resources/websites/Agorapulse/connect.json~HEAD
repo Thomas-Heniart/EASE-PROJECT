@@ -1,0 +1,23 @@
+{
+    "name":"Agorapulse",
+    "lastlogin":"",
+    "home":"https://manager.agorapulse.com",
+    "connect": {
+    	"todo": [
+    		
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"a.fb-sdk-logout-link"}
+    	]
+    },
+    "Facebook": {
+    	"todo": [
+    		{"action":"click", "search":"#loginLink"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a.fb-sdk-logout-link"}
+    ]
+}

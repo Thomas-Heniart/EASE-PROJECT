@@ -1,0 +1,26 @@
+{
+  "name":"iTunes Connect",
+  "lastlogin":"",
+  "home":"https://itunesconnect.apple.com/",
+  "connect": {
+    "todo": [
+      {"action":"waitfor", "search":"iframe#aid-auth-widget-iFrame"},
+      {"action":"enterFrame", "search":"iframe#aid-auth-widget-iFrame"},
+      {"action":"fill", "what":"login", "search":"#appleId"},
+      {"action":"fill", "what":"password", "search":"#pwd"},
+      {"action":"click", "search":"#sign-in"},
+      {"action":"exitFrame"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"waitfor", "search":"a[href*='logout']"},
+      {"action":"aclick", "search":"a[href*='logout']"},
+      {"action":"waitfor", "search":"body.login-page.page-ready"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"body.home-page.page-ready, body.login-page.page-ready"},
+    {"search":"body.home-page.page-ready"}
+  ]
+}

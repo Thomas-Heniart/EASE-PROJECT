@@ -46,6 +46,7 @@ class Catalog extends React.Component {
                     className="inputSearch centered"
                     placeholder='Search'
                     name="query"
+                    autoFocus
                     onChange={this.handleInput}
                     value={this.state.query} />
               </div>

@@ -1,0 +1,22 @@
+{
+    "name":"OVH",
+    "lastLogin":"",
+    "home":"https://www.ovh.com/manager/",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"form.pagination-centered input[type='text']"},
+            {"action":"fill", "what":"password", "search":"form.pagination-centered input[type='password']"},
+            {"action":"click", "search":"form.pagination-centered button[type='submit'].btn"}
+        ]
+    },
+    "logout":{
+        "todo":[
+          {"action":"trueClick", "search":"#navbar-account > ul li:last-child() ul.dropdown-menu li:last-child() button"},
+          {"action":"waitload"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"action":"waitfor", "search":"#navbar-account, form.pagination-centered"},
+        {"search":"#navbar-account"}
+    ]
+}

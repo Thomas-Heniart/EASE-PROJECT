@@ -1,0 +1,21 @@
+{
+    "name":"Kill Tilt",
+    "lastlogin":"",
+    "home":"http://www.kill-tilt.fr/",
+    "connect": {
+    	"todo": [
+    		{"action":"waitfor", "search":"form.bbp-login-form"},
+    		{"action":"fill", "what":"login", "search":"form.bbp-login-form #user_login"},
+    		{"action":"fill", "what":"password", "search":"form.bbp-login-form #user_pass"},
+    		{"action":"click", "search":"form.bbp-login-form #user-submit"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*='logout']"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href*='logout']"}
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "name":"FashionJobs",
+    "lastlogin":"",
+    "home":"http://fr.fashionjobs.com/v2-login/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#login-page-email", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#login-page-password", "grave":"true"},
+    		{"action":"click", "search":"form.form button[type='submit']", "grave":"true"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"http://fr.fashionjobs.com/v2-logout/"},
+    		{"action":"goto", "url":"http://fr.fashionjobs.com/v2-login/"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[href='http://fr.fashionjobs.com/v2-logout/']"}
+    ]
+}
