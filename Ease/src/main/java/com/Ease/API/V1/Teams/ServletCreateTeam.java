@@ -17,6 +17,7 @@ import com.Ease.websocketV1.WebSocketMessageType;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -153,7 +154,9 @@ public class ServletCreateTeam extends HttpServlet {
             sm.saveOrUpdate(userEmail);
             sm.initializeTeamWithContext(team);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CREATED, team.getWebSockeetJson()));
-            sm.setSuccess(team.getJson());
+            JSONObject tmp = team.getJson();
+            tmp.put("my_team_user_id", owner.getDb_id());
+            sm.setSuccess(tmp);
         } catch (StripeException e) {
             sm.setError(e);
         } catch (Exception e) {
