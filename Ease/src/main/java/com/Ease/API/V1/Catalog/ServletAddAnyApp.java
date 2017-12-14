@@ -45,7 +45,8 @@ public class ServletAddAnyApp extends HttpServlet {
             else {
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
-                    website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, sm.getHibernateQuery());
+                    JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+                    website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
                 }
                 app = AppFactory.getInstance().createAnyApp(name, website, symmetric_key, account_information);
             }
