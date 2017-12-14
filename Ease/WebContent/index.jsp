@@ -41,7 +41,7 @@
     <script type="text/javascript">
       (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
       ;r.type="text/javascript";r.async=true
-      ;r.src="/js/thirdParty/new_amplitude_analytics.js?0"
+      ;r.src="https://cdn.amplitude.com/libs/amplitude-4.0.0-min.gz.js"
       ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
         e.amplitude.runQueuedFunctions()}else{
         console.log("[Amplitude] Error: could not load SDK")}}
@@ -68,7 +68,7 @@
 <BODY>
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=31"></script>
+<script src="teams_bundle.js?v=32"></script>
 <script type="text/javascript">
   !function(a,b){var c=window;c.SessionStack=a,c[a]=c[a]||function(){
     c[a].q=c[a].q||[],c[a].q.push(arguments)},c[a].t=b;var d=document.createElement("script");
