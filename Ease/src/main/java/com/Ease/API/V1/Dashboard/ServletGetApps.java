@@ -92,7 +92,7 @@ public class ServletGetApps extends HttpServlet {
                     }
                     app.decipher(symmetric_key, team_key);
                 }
-                res.add(app.getJson());
+                res.put(app.getJson());
             }
             sm.setSuccess(res);
         } catch (Exception e) {

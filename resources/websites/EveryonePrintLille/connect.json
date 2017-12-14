@@ -1,0 +1,20 @@
+{
+	"name":"Everyone Print Lille",
+	"lastLogin":"",
+	"home":"http://lille-eprinting.edhec.edu/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#Username"},
+			{"action":"fill", "what":"password", "search":"input[name='Password']"},
+			{"action":"clickona", "search":"a[href*='SubmitLogin']"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='Logout']"}
+	],
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*='Logout']"}
+        ]
+    }
+}

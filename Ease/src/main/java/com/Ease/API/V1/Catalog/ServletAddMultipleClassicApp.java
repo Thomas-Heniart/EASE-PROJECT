@@ -36,13 +36,14 @@ public class ServletAddMultipleClassicApp extends HttpServlet {
             DataBaseConnection db = sm.getDB();
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             String private_key = (String) sm.getContextAttr("privateKey");
-            for (Object entry : account_information.entrySet()) {
-                Map.Entry<String, String> accountInformation = (Map.Entry<String, String>) entry;
-                account_information.put(accountInformation.getKey(), RSA.Decrypt(accountInformation.getValue(), private_key));
+            for (Object object : account_information.keySet()) {
+                String key = (String) object;
+                String value = account_information.getString(key);
+                account_information.put(key, RSA.Decrypt(value, private_key));
             }
             List<App> appList = new LinkedList<>();
-            for (Object app_to_add : apps_to_add) {
-                JSONObject websiteAndName = (JSONObject) app_to_add;
+            for (int i = 0; i < apps_to_add.length(); i++) {
+                JSONObject websiteAndName = apps_to_add.getJSONObject(i);
                 String name = (String) websiteAndName.get("name");
                 Integer website_id = Math.toIntExact((Long) websiteAndName.get("website_id"));
                 Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), user.getTeams());
@@ -63,7 +64,7 @@ public class ServletAddMultipleClassicApp extends HttpServlet {
                 appList.add(classicApp);
             }
             for (App app : appList)
-                apps.add(app.getJson());
+                apps.put(app.getJson());
             JSONObject res = new JSONObject();
             res.put("apps", apps);
             sm.setSuccess(res);

@@ -42,7 +42,7 @@ public class ServletGetWebsites extends HttpServlet {
                     JSONObject teamObj = new JSONObject();
                     teamObj.put("id", team.getDb_id());
                     teamObj.put("name", team.getName());
-                    teams.add(teamObj);
+                    teams.put(teamObj);
                 }
                 tmp.put("teams", teams);
                 Sso sso = website.getSso();
@@ -50,14 +50,14 @@ public class ServletGetWebsites extends HttpServlet {
                 tmp.put("category_id", website.getCategory() == null ? -1 : website.getCategory().getDb_id());
                 JSONArray connectWtih = new JSONArray();
                 for (Website website1 : website.getConnectWith_websites())
-                    connectWtih.add(website1.getDb_id());
+                    connectWtih.put(website1.getDb_id());
                 tmp.put("connectWith", connectWtih);
                 JSONObject website_credentials = null;
                 for (WebsiteCredentials websiteCredentials : website.getWebsiteCredentials())
                     website_credentials = websiteCredentials.getJson();
                 if (website_credentials != null)
                     tmp.put("website_credentials", website_credentials);
-                res.add(tmp);
+                res.put(tmp);
             }
             sm.setSuccess(res);
         } catch (Exception e) {

@@ -1,0 +1,24 @@
+{
+    "name":"HostelWorld",
+    "lastLogin":"",
+    "home":"http://www.hostelworld.com/",
+    "connect":{
+        "todo":[
+            {"action": "clickona", "search":"#userLoginLink"},
+            {"action":"waitfor", "search":["#loginModal.open"]},
+            {"action":"fill", "what":"login", "search":"#frmLogin input[name='username']"},
+            {"action":"fill", "what":"password", "search":"#frmLogin input[name='password']"},
+            {"action":"click", "search":"#frmLogin button#frmLoginSubmit"}
+            ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"clickona", "search":"a#logout"},
+            {"action" :"waitfor", "search": "li.loginlink"},
+            {"action": "goto", "url": "http://www.hostelworld.com/"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"li.logedin"}
+    ]
+}

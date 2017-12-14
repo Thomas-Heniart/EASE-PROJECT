@@ -149,22 +149,27 @@ public abstract class ServletManager {
                     cookie.setValue("");
                     cookie.setMaxAge(0);
                     this.response.addCookie(cookie);
-                }
-            }
-        }
-        if (jwt == null) {
-            if (request.getCookies() != null) {
-                for (Cookie cookie : request.getCookies()) {
-                    if (cookie.getName().equals("JWT")) {
-                        jwt = cookie.getValue();
-                        break;
-                    }
-                }
+                } else if (cookie.getName().equals("JWT"))
+                    jwt = cookie.getValue();
             }
         }
         if (jwt == null && user_id == null) {
             throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-        } else if (jwt != null) {
+        } else if (user_id != null) {
+            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+            String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
+            if (keyUser == null)
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+            if (private_key == null) {
+                UserKeys userKeys = user.getUserKeys();
+                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
+                this.saveOrUpdate(userKeys);
+            }
+            this.getUserProperties(user.getDb_id()).put("privateKey", private_key);
+            this.getSession().setAttribute("user_id", user.getDb_id());
+            this.getSession().setAttribute("is_admin", user.isAdmin());
+        } else {
             Key secret = (Key) this.getContextAttr("secret");
             this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
             if (this.user == null)
@@ -179,20 +184,6 @@ public abstract class ServletManager {
                 this.saveOrUpdate(userKeys);
             }
             userProperties.put("privateKey", private_key);
-            this.getSession().setAttribute("user_id", user.getDb_id());
-            this.getSession().setAttribute("is_admin", user.isAdmin());
-        } else {
-            this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
-            String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
-            if (keyUser == null)
-                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
-            if (private_key == null) {
-                UserKeys userKeys = user.getUserKeys();
-                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
-                this.saveOrUpdate(userKeys);
-            }
-            this.getUserProperties(user.getDb_id()).put("privateKey", private_key);
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
         }

@@ -1,0 +1,22 @@
+{
+    "name":"UrbanOutfitters",
+    "lastLogin":"",
+    "home":"http://www.urbanoutfitters.com/",
+    "connect":{
+        "todo":[
+          {"action":"clickona", "search":"#utility_signin"},
+          {"action":"waitfor", "search":"#checkoutEmail"},
+          {"action":"fill", "what":"login", "search":"#checkoutEmail"},
+          {"action":"fill", "what":"password", "search":"#checkoutPassword"},
+          {"action":"click", "search":"input[name*='ProfileFormHandler.login']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"a[ng-click='logOut()']"}
+          ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[ng-click='logOut()']"}
+    ]
+}

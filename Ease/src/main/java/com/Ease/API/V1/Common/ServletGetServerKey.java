@@ -24,7 +24,7 @@ public class ServletGetServerKey extends HttpServlet {
             JSONArray res_private_key = new JSONArray();
             int index = 0;
             while (index < server_private_key.length()) {
-                res_private_key.add(RSA.Encrypt(server_private_key.substring(index, Math.min(index + 50, server_private_key.length())), public_key));
+                res_private_key.put(RSA.Encrypt(server_private_key.substring(index, Math.min(index + 50, server_private_key.length())), public_key));
                 index += 50;
             }
             JSONObject res = new JSONObject();

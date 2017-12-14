@@ -1,0 +1,21 @@
+{
+    "name":"TidioChat",
+    "lastlogin":"",
+    "home":"http://www.tidiochat.com/",
+    "connect": {
+    	"todo": [
+            {"action": "clickona", "search": "a.account-show-login"},
+    		{"action":"fill", "what":"login", "search":"#login-form #login-email"},
+    		{"action":"fill", "what":"password", "search":"#login-form #login-password"},
+    		{"action":"click", "search":"#login-form #login-form-submit"}
+       	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"clickona", "search":"a[data-action=logout]"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"a[data-action=logout]"}
+    ]
+}

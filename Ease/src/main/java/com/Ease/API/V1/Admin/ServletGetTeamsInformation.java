@@ -75,7 +75,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("people_joined", teamMetrics.getPeople_joined());
                 tmp.put("people_joined_with_cards", teamMetrics.getPeople_with_cards());
                 tmp.put("people_click_on_app_three_times", teamMetrics.getPeople_click_on_app_three_times());
-                res.add(tmp);
+                res.put(tmp);
             }
             sm.setSuccess(res);
         } catch (Exception e) {

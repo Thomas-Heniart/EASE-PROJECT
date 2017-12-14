@@ -22,12 +22,13 @@ public class SoftwareFactory {
         else
             FileUtils.createSoftwareLogo(folder, name);
         hibernateQuery.saveOrUpdateObject(software);
-        connectionInformation.forEach((information_name, object) -> {
-            JSONObject properties = (JSONObject) object;
-            SoftwareConnectionInformation softwareConnectionInformation = new SoftwareConnectionInformation(software, (String) information_name, (String) properties.get("information_type"), Math.toIntExact((Long) properties.get("priority")));
+        for (Object object : connectionInformation.keySet()) {
+            String key = String.valueOf(object);
+            JSONObject properties = connectionInformation.getJSONObject(key);
+            SoftwareConnectionInformation softwareConnectionInformation = new SoftwareConnectionInformation(software, key, properties.getString("information_type"), properties.getInt("priority"));
             hibernateQuery.saveOrUpdateObject(softwareConnectionInformation);
             software.addSoftwareConnectionInformation(softwareConnectionInformation);
-        });
+        }
         return software;
     }
 }

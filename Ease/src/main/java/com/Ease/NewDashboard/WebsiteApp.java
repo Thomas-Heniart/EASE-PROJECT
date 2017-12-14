@@ -2,6 +2,7 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -10,6 +11,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "websiteApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class WebsiteApp extends App {

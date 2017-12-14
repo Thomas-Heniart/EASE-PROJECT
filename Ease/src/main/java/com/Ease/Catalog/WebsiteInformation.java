@@ -1,5 +1,6 @@
 package com.Ease.Catalog;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
@@ -8,6 +9,8 @@ import javax.persistence.*;
  * Created by thomas on 25/04/2017.
  */
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "websitesInformations")
 public class WebsiteInformation {
     @Id

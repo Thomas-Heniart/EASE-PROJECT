@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Metrics.ClickOnApp;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,6 +12,8 @@ import javax.persistence.*;
 import java.util.Calendar;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "apps")
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract public class App {

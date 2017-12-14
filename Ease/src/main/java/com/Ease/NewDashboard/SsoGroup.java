@@ -3,6 +3,7 @@ package com.Ease.NewDashboard;
 import com.Ease.Catalog.Sso;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ssoGroups")
 public class SsoGroup {
     @Id

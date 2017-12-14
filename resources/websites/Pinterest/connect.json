@@ -1,0 +1,32 @@
+{
+    "name":"Pinterest",
+    "lastLogin":"",
+    "home":"https://pinterest.com/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://pinterest.com/login"},
+           	{"action":"fill", "what":"login", "search":"input[type='email']"},
+            {"action":"fill", "what":"password", "search":"input[type='password']"},
+            {"action":"click", "search":"button[type='submit']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"goto", "url":"https://pinterest.com/logout/"},
+        	{"action":"waitfor", "search":"input[type='email']"},
+        	{"action":"goto", "url":"https://pinterest.com/"}
+           	]
+    },
+    "checkAlreadyLogged":[
+        {"search":"div.usernameLink"}
+    ],
+     "Facebook": {
+    	"todo": [
+    		{"action":"goto", "url":"https://pinterest.com/login"},
+    		{"action":"waitfor", "search":"input[type='email']"},
+    		{"action":"enterFrame", "search":"iframe[title='fb:login_button Facebook Social Plugin']"},
+    		{"action":"click", "search":"#u_0_2"},
+    		{"action":"exitFrame"}
+    	]
+    }
+}

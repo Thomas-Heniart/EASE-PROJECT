@@ -1,0 +1,30 @@
+{ 
+    "name":"Flat", 
+    "lastLogin":"", 
+    "home":"https://flat.io/auth/signin", 
+    "connect":{ 
+        "todo":[ 
+            {"action":"fill", "what":"login", "search":"#emailInput"}, 
+            {"action":"fill", "what":"password", "search":"input[name='password']"}, 
+            {"action":"click", "search":"input[type='submit']"} 
+        ] 
+    },
+    "Facebook":{ 
+        "todo":[ 
+            {"action":"aclick", "search":"a.btn-facebook"} 
+        ] 
+    },
+    "Google":{ 
+        "todo":[ 
+            {"action":"aclick", "search":"a.btn-google"} 
+        ] 
+    },
+    "logout":{ 
+        "todo":[ 
+          {"action":"aclick", "search":"a[href*='logout']"} 
+        ] 
+    }, 
+    "checkAlreadyLogged":[ 
+        {"search":"a[href*='logout']"} 
+    ] 
+}

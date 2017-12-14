@@ -2,10 +2,13 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "accountsInformations")
 public class AccountInformation {
     @Id

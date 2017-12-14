@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/api/v1/admin/SendWebsitesIntegrated")
 public class ServletSendWebsitesIntegrated extends HttpServlet {
@@ -24,21 +23,20 @@ public class ServletSendWebsitesIntegrated extends HttpServlet {
             sm.needToBeEaseAdmin();
             JSONObject emailAndWebsiteIds = sm.getJsonParam("emailAndWebsiteIds", false, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            for (Object object : emailAndWebsiteIds.entrySet()) {
-                Map.Entry<String, Object> entry = (Map.Entry<String, Object>) object;
-                String email = entry.getKey();
-                JSONArray websiteIds = (JSONArray) entry.getValue();
-                String website_names = "";
-                for (Object object1 : websiteIds) {
-                    Integer id = Math.toIntExact((Long) object1);
-                    website_names += catalog.getWebsiteWithId(id, sm.getHibernateQuery()).getName() + ", ";
+            for (Object object : emailAndWebsiteIds.keySet()) {
+                String email = (String) object;
+                JSONArray websiteIds = emailAndWebsiteIds.getJSONArray(email);
+                StringBuilder website_names = new StringBuilder();
+                for (int i = 0; i < websiteIds.length(); i++) {
+                    Integer id = websiteIds.getInt(i);
+                    website_names.append(catalog.getWebsiteWithId(id, sm.getHibernateQuery()).getName()).append(", ");
                 }
-                website_names = website_names.substring(0, website_names.length() - 2);
+                website_names = new StringBuilder(website_names.substring(0, website_names.length() - 2));
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
                 mailJetBuilder.addTo(email);
                 mailJetBuilder.setTemplateId(265363);
-                mailJetBuilder.addVariable("app_name", website_names);
+                mailJetBuilder.addVariable("app_name", website_names.toString());
                 mailJetBuilder.addVariable("url", Variables.URL_PATH + "#/main/catalog");
                 mailJetBuilder.sendEmail();
             }

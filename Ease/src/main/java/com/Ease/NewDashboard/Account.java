@@ -7,6 +7,7 @@ import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
@@ -15,6 +16,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "accounts")
 public class Account {
     @Id
@@ -44,6 +47,7 @@ public class Account {
     @Column(name = "adminNotified")
     private boolean admin_notified = false;
 
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountInformation> accountInformationSet = ConcurrentHashMap.newKeySet();
 

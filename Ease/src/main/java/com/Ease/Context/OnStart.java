@@ -2,13 +2,16 @@ package com.Ease.Context;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Hibernate.HibernateDatabase;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Metrics.MetricsSchedulerTask;
+import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
+import net.sf.ehcache.CacheManager;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletContext;
@@ -100,6 +103,13 @@ public class OnStart implements ServletContextListener {
                 request = db.prepareRequest("INSERT INTO logs values('Server Start', 200, NULL, '', 'Server started correctly', ?);");
                 request.setString(date);
 
+
+                HibernateQuery hibernateQuery = new HibernateQuery();
+                ClassicApp app = (ClassicApp) hibernateQuery.get(ClassicApp.class, 30881);
+                app.getAccount().getAccountInformationSet();
+                System.out.println("App cached: " + (CacheManager.ALL_CACHE_MANAGERS.get(0).getCache("com.Ease.NewDashboard.Account").getSize() > 0));
+                System.out.println("Collection cached: " + (CacheManager.ALL_CACHE_MANAGERS.get(0).getCache("com.Ease.NewDashboard.Account.accountInformationSet").getSize() > 0));
+                hibernateQuery.commit();
             } catch (HttpServletException e1) {
                 System.out.println("Start failed");
                 String logResponse = URLEncoder.encode(e1.getMsg(), "UTF-8");

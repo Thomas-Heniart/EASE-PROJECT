@@ -4,12 +4,15 @@ import com.Ease.Catalog.Website;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "classicApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class ClassicApp extends WebsiteApp {

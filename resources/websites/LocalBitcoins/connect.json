@@ -1,0 +1,23 @@
+{
+  "name":"LocalBitcoins",
+  "lastLogin":"",
+  "home":"https://localbitcoins.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='accounts/login']"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login", "search":"#id_username"},
+      {"action":"fill", "what":"password", "search":"#id_password"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='accounts/login']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

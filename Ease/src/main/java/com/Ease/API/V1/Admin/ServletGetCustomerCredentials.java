@@ -29,7 +29,7 @@ public class ServletGetCustomerCredentials extends HttpServlet {
                 tmp.put("login", columns[1]);
                 tmp.put("password", columns[2]);
                 tmp.put("public_key", columns[3]);
-                res.add(tmp);
+                res.put(tmp);
             }
             hibernateQuery.commit();
             sm.setSuccess(res);

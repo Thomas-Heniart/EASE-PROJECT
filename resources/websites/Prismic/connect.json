@@ -1,0 +1,21 @@
+{
+  "name":"Prismic",
+  "lastlogin":"",
+  "home":"https://prismic.io/dashboard/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login", "search":"form[action*='login'] input[name='email']"},
+      {"action":"fill", "what":"password", "search":"form[action*='login'] input[name='password']"},
+      {"action":"click", "search":"form[action*='login'] input[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"click", "search":"button#logout"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"button#logout, form[action*='login']"},
+    {"search":"button#logout"}
+  ]
+}

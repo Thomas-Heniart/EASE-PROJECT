@@ -1,0 +1,21 @@
+{
+    "name":"easyJet",
+    "lastLogin":"",
+    "home":"https://www.easyjet.com/fr/secure/UpdateAccount.mvc/EditAccount",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"input#emailaddress", "grave":true},
+            {"action":"fill", "what":"password", "search":"input#password"},
+            {"action":"click", "search":"input#sign-in-button"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"aclick","search":"a[href='https://www.easyjet.com/FR/secure/MemberSignIn.mvc/LogOut']"},
+        	{"action":"goto", "url":"https://www.easyjet.com/fr/secure/UpdateAccount.mvc/EditAccount"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href='https://www.easyjet.com/FR/secure/MemberSignIn.mvc/LogOut']"}
+    ]
+}

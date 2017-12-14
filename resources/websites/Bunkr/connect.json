@@ -1,0 +1,31 @@
+{
+	"name":"Bunkr",
+	"lastLogin":"",
+	"home":"https://bunkrapp.com/",
+	"connect":{
+		"todo":[
+			{"action":"goto", "url":"https://bunkrapp.com/signin/"},
+			{"action":"fill", "what":"login", "search":"#bkr-signin-mail", "grave":true},
+			{"action":"fill", "what":"password", "search":"#bkr-signin-password"},
+			{"action":"click", "search":"#bkr-btn-submit-signin", "grave":true}
+			]
+	},
+	"Facebook":{
+		"todo":[
+		{"action":"goto", "url":"https://bunkrapp.com/oauth/facebook/login/"}
+		]
+	},
+	"GMail":{
+		"todo":[
+		{"action":"goto", "url":"https://bunkrapp.com/oauth/google/login/"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"http://bunkrapp.com/logout/"}
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"ul.dsg-navbar-right.nav.navbar-nav.navbar-right"}
+	]
+}

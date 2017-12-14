@@ -63,13 +63,13 @@ public class ServletGetPeopleChartData extends HttpServlet {
             people_click_on_app_five_times.put("borderColor", "rgba(55, 59, 96, 0.75)"); /*373B60*/
             //people_click_on_app_five_times.put("backgroundColor", "rgba(55, 59, 96, 0.75)");
             people_click_on_app_five_times.put("data", new JSONArray());
-            datasets.add(people_invited);
-            datasets.add(people_joined);
-            datasets.add(people_with_cards);
-            datasets.add(people_with_personal_apps);
-            datasets.add(people_click_on_app_once);
-            datasets.add(people_click_on_app_three_times);
-            datasets.add(people_click_on_app_five_times);
+            datasets.put(people_invited);
+            datasets.put(people_joined);
+            datasets.put(people_with_cards);
+            datasets.put(people_with_personal_apps);
+            datasets.put(people_click_on_app_once);
+            datasets.put(people_click_on_app_three_times);
+            datasets.put(people_click_on_app_five_times);
             data.put("labels", labels);
             data.put("datasets", datasets);
             res.put("data", data);
@@ -79,15 +79,15 @@ public class ServletGetPeopleChartData extends HttpServlet {
             calendar.setTime(team.getSubscription_date());
             int i = 0;
             while (calendar.get(Calendar.YEAR) <= current_year && calendar.get(Calendar.WEEK_OF_YEAR) <= current_week) {
-                labels.add(i++);
+                labels.put(i++);
                 TeamMetrics teamMetrics = TeamMetrics.getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
-                ((JSONArray) people_invited.get("data")).add(teamMetrics.getPeople_invited());
-                ((JSONArray) people_joined.get("data")).add(teamMetrics.getPeople_joined());
-                ((JSONArray) people_with_cards.get("data")).add(teamMetrics.getPeople_with_cards());
-                ((JSONArray) people_with_personal_apps.get("data")).add(teamMetrics.getPeople_with_personnal_apps());
-                ((JSONArray) people_click_on_app_once.get("data")).add(teamMetrics.getPeople_click_on_app_once());
-                ((JSONArray) people_click_on_app_three_times.get("data")).add(teamMetrics.getPeople_click_on_app_three_times());
-                ((JSONArray) people_click_on_app_five_times.get("data")).add(teamMetrics.getPeople_click_on_app_five_times());
+                ((JSONArray) people_invited.get("data")).put(teamMetrics.getPeople_invited());
+                ((JSONArray) people_joined.get("data")).put(teamMetrics.getPeople_joined());
+                ((JSONArray) people_with_cards.get("data")).put(teamMetrics.getPeople_with_cards());
+                ((JSONArray) people_with_personal_apps.get("data")).put(teamMetrics.getPeople_with_personnal_apps());
+                ((JSONArray) people_click_on_app_once.get("data")).put(teamMetrics.getPeople_click_on_app_once());
+                ((JSONArray) people_click_on_app_three_times.get("data")).put(teamMetrics.getPeople_click_on_app_three_times());
+                ((JSONArray) people_click_on_app_five_times.get("data")).put(teamMetrics.getPeople_click_on_app_five_times());
                 calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
             sm.setSuccess(res);

@@ -1,0 +1,21 @@
+{
+    "name":"SpeakingAgency",
+    "lastLogin":"",
+    "home":"https://my-speaking-agency.com/portail/web/employee",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#form_login", "grave":true},
+            {"action":"fill", "what":"password", "search":"#form_password"},
+            {"action":"click", "search":"#form_bouton_connexion"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"goto","url":"https://my-speaking-agency.com/portail/web/employee/logout"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*='logout']"}
+    ]
+}

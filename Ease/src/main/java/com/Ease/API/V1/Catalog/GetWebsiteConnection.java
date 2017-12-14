@@ -29,7 +29,7 @@ public class GetWebsiteConnection extends HttpServlet {
             connection_json.put("app_name", website.getName());
             connection_json.put("type", "ClassicApp");
             JSONArray res = new JSONArray();
-            res.add(connection_json);
+            res.put(connection_json);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

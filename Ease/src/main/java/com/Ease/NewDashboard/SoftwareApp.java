@@ -2,11 +2,14 @@ package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Software;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "softwareApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class SoftwareApp extends App {

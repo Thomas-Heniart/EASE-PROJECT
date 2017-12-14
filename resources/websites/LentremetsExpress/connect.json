@@ -1,0 +1,22 @@
+{
+    "name":"L'entremets-express",
+    "lastLogin":"",
+    "home":"http://lentremets-express.fr/",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"http://lentremets-express.fr/login"},
+            {"action":"fill", "what":"login", "search":"input[name='_username']", "grave":true},
+            {"action":"fill", "what":"password", "search":"input[name='_password']"},
+            {"action":"click", "search":"form[action='/user/login_check'] button[type='submit']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+			{"action":"goto", "url":"http://lentremets-express.fr/user/logout"},
+			{"action":"waitload"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href='/user/profile']"}
+    ]
+}

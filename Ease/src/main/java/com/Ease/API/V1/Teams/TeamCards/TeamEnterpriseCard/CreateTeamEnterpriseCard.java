@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/api/v1/teams/CreateTeamEnterpriseCard")
 public class CreateTeamEnterpriseCard extends HttpServlet {
@@ -56,15 +55,15 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
             TeamCard teamCard = new TeamEnterpriseCard(name, team, channel, description, website, password_reminder_interval);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
-            for (Object object : receivers.entrySet()) {
-                Map.Entry<String, JSONObject> entry = (Map.Entry<String, JSONObject>) object;
-                Integer teamUser_id = Integer.valueOf(entry.getKey());
-                JSONObject account_information = (JSONObject) entry.getValue().get("account_information");
+            for (Object object : receivers.keySet()) {
+                String key = (String) object;
+                Integer teamUser_id = Integer.valueOf(key);
+                JSONObject account_information = receivers.getJSONObject("account_information");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
                 Account account = null;
-                if (account_information != null && !account_information.isEmpty()) {
+                if (account_information != null && account_information.length() != 0) {
                     sm.decipher(account_information);
                     String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
                     account = AccountFactory.getInstance().createAccountFromMap(website.getInformationFromJson(account_information), teamKey, password_reminder_interval);

@@ -58,7 +58,7 @@ public class CreateTeamSingleCard extends HttpServlet {
             Integer teamUser_filler_id = sm.getIntParam("team_user_filler_id", true, true);
             TeamUser teamUser_filler = null;
             Map<String, String> account_information = new HashMap<>();
-            if (!account_information_obj.isEmpty()) {
+            if (account_information_obj.length() != 0) {
                 sm.decipher(account_information_obj);
                 account_information = website.getInformationNeeded(account_information_obj);
             }
@@ -73,10 +73,11 @@ public class CreateTeamSingleCard extends HttpServlet {
             TeamCard teamCard = new TeamSingleCard(name, team, channel, description, website, reminder_interval, account, teamUser_filler);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
-            for (Object object : receivers.entrySet()) {
-                Map.Entry<String, JSONObject> entry = (Map.Entry<String, JSONObject>) object;
-                Integer teamUser_id = Integer.valueOf(entry.getKey());
-                Boolean allowed_to_see_password = (Boolean) entry.getValue().get("allowed_to_see_password");
+            for (Object object : receivers.keySet()) {
+                String key = String.valueOf(object);
+                JSONObject value = receivers.getJSONObject(key);
+                Integer teamUser_id = Integer.valueOf(key);
+                Boolean allowed_to_see_password = value.getBoolean("allowed_to_see_password");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");

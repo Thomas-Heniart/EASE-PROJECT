@@ -1,0 +1,24 @@
+{
+  "name":"ALSO",
+  "lastLogin":"",
+  "home":"https://a2.alsofrance.fr/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#SignUpForm input[name='CLECLI']"},
+      {"action":"fill", "what":"password", "search":"#SignUpForm input[name='MDP']"},
+      {"action":"trueClick", "search":"#vert100javascriptifValidateInputdocumentSignUpFormsubmit a"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#ongquit div"},
+      {"action":"waitload"},
+      {"action":"waitfor", "search":"a[href='http://www.alsofrance.fr']"},
+      {"action":"goto", "url":"https://a2.alsofrance.fr/"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#ongquit, #SignUpForm input[name='CLECLI']"},
+    {"search":"#ongquit"}
+  ]
+}

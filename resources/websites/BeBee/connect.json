@@ -1,0 +1,21 @@
+{
+    "name":"BeBee",
+    "lastLogin":"",
+    "home":"https://www.bebee.com",
+    "connect":{
+        "todo":[
+        	{"action":"goto", "url":"https://www.bebee.com/login"},
+            {"action":"fill", "what":"login", "search":"#email"},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"click", "search":"#formLogin button[type='submit']"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href='/logout']"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href='/logout']"}
+    ]
+}

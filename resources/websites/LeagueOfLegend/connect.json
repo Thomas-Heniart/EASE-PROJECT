@@ -1,0 +1,25 @@
+{
+    "name":"League Of Legend",
+    "lastLogin":"",
+    "home":"http://euw.leagueoflegends.com/",
+    "connect":{
+        "todo":[
+            {"action":"clickona", "search":"#riotbar-account a:eq(1)"},
+            {"action":"waitload"},
+            {"action":"fill", "what":"login", "search":"#login-form-username"},
+            {"action":"fill", "what":"password", "search":"#login-form-password"},
+            {"action":"click", "search":"#login-button"}
+        ]
+    },
+    
+    "logout":{
+        "todo":[
+        	{"action":"clickona","search":"#riotbar-account-dropdown-links a[data-riotbar-account-action='logout']"},
+        	{"action":"waitload"},
+        	{"action":"waitload"}
+        ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#riotbar-account-dropdown-links"}
+    ]
+}

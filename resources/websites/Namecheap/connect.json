@@ -1,0 +1,21 @@
+{
+    "name":"Namecheap",
+    "lastLogin":"",
+    "home":"https://www.namecheap.com/",
+    "connect":{
+        "todo":[
+        	{"action":"fill", "what":"login", "search":"input[name='LoginUserName']"},
+            {"action":"val", "what":"password", "search":"input[name='LoginPassword']"},
+            {"action":"clickona", "search":"a.head-loginb.ncRedirectButton.btn.sign-in-btn.btn-block"}
+        ]
+    },
+    "logout":{
+        "todo":[
+        	{"action":"goto", "url":"https://www.namecheap.com/myaccount/signout.aspx"},
+            {"action":"goto", "url":"https://www.namecheap.com/"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"div#apnav"}
+    ]
+}

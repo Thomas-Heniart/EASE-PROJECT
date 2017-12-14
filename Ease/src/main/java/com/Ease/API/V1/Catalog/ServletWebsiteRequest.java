@@ -1,8 +1,8 @@
 package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.*;
-import com.Ease.User.User;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @WebServlet("/api/v1/catalog/WebsiteRequest")
@@ -33,9 +32,10 @@ public class ServletWebsiteRequest extends HttpServlet {
             JSONObject userCredentials = sm.getJsonParam("account_information", false, true);
             if (userCredentials != null) {
                 String private_key = (String) sm.getContextAttr("privateKey");
-                for (Object entry : userCredentials.entrySet()) {
-                    Map.Entry<String, String> userCredential = (Map.Entry<String, String>) entry;
-                    userCredentials.put(userCredential.getKey(), RSA.Decrypt(userCredential.getValue(), private_key));
+                for (Object entry : userCredentials.keySet()) {
+                    String key = String.valueOf(entry);
+                    String value = userCredentials.getString(key);
+                    userCredentials.put(key, RSA.Decrypt(value, private_key));
                 }
             }
             WebsiteAttributes websiteAttributes = new WebsiteAttributes(true);

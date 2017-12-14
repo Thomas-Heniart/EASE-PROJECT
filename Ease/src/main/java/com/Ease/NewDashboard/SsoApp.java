@@ -3,12 +3,15 @@ package com.Ease.NewDashboard;
 import com.Ease.Catalog.Website;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "ssoApps")
 @PrimaryKeyJoinColumn(name = "id")
 public class SsoApp extends WebsiteApp {

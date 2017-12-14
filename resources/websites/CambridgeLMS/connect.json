@@ -1,0 +1,22 @@
+{
+	"name":"Cambridge LMS",
+	"lastLogin":"",
+	"home":"https://www.cambridgelms.org/main/",
+	"connect":{
+		"todo":[
+			{"action":"enterFrame", "search":"iframe#cas_iframe"},
+			{"action":"fill", "what":"login", "search":"#username"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"exitFrame"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[href*='logout']"},
+			{"action":"waitload"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"a[href*='logout']"}
+	]
+}

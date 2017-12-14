@@ -27,7 +27,7 @@ public class ServletGetChannels extends HttpServlet {
             sm.getUser().getTeamUser(team);
             JSONArray jsonArray = new JSONArray();
             for (Channel channel : team.getChannels().values())
-                jsonArray.add(channel.getSimpleJson());
+                jsonArray.put(channel.getSimpleJson());
             sm.setSuccess(jsonArray);
         } catch (Exception e) {
             sm.setError(e);

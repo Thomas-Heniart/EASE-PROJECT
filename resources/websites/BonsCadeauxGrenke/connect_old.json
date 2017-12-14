@@ -1,0 +1,23 @@
+{
+  "name":"Bons cadeaux GRENKE",
+  "lastLogin":"",
+  "home":"http://www.bonscadeauxgrenke.fr/em.php",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"form[action='ctrl_identification.php'] input[name='pseudo']"},
+      {"action":"fill", "what":"password", "search":"form[action='ctrl_identification.php'] input[name='passe']"},
+      {"action":"trueClick", "search":"form[action='ctrl_identification.php'] input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='deconnexion']"},
+      {"action":"waitload"},
+      {"action":"aclick", "search":"a[href='em.php']"},
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='deconnexion'], form[action='ctrl_identification.php'] input[type='submit']"},
+    {"search":"a[href*='deconnexion']"}
+  ]
+}

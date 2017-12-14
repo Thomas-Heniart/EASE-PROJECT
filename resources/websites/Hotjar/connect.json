@@ -1,0 +1,22 @@
+{
+    "name":"Hotjar",
+    "lastLogin":"",
+    "home":"https://insights.hotjar.com/login",
+    "connect":{
+        "todo":[
+            {"action":"fill", "what":"login", "search":"#email"},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"click", "search":".login-form button[type='submit']"}
+            ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"clickona", "search":"#btnHeaderLogout"},
+            {"action":"waitfor", "search":".login-form"},
+            {"action":"goto", "url":"https://insights.hotjar.com/login"}
+            ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#btnHeaderLogout"}
+    ]
+}

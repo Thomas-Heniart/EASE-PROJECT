@@ -12,6 +12,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 10/04/2017.
  */
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teams")
 public class Team {
 

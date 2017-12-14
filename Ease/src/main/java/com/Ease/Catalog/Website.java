@@ -6,6 +6,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -22,6 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 24/04/2017.
  */
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "websites")
 public class Website {
     @Id
@@ -46,6 +49,7 @@ public class Website {
     private WebsiteAttributes websiteAttributes;
 
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
     @ManyToOne
@@ -58,13 +62,16 @@ public class Website {
 
     @ManyToMany
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "signIn_website_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Website> signIn_websites = ConcurrentHashMap.newKeySet();
 
     @ManyToMany
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "websiteAndSignInWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "signIn_website_id"))
     private Set<Website> connectWith_websites = ConcurrentHashMap.newKeySet();
 
     @ManyToMany
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "teamAndWebsiteMap", joinColumns = @JoinColumn(name = "website_id"), inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams = ConcurrentHashMap.newKeySet();
 

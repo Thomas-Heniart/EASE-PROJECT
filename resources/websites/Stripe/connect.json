@@ -1,0 +1,24 @@
+{
+  "name":"Stripe",
+  "lastLogin":"",
+  "home":"https://dashboard.stripe.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#email"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"click", "search":"button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a.db-UserAccount"},
+      {"action":"waitfor", "search":".db-UserAccount-popover .db-Menu a:last-child()"},
+      {"action":"clickona", "search":".db-UserAccount-popover .db-Menu a:last-child()"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a.db-UserAccount, #email"},
+    {"search":"a.db-UserAccount"}
+  ]
+}

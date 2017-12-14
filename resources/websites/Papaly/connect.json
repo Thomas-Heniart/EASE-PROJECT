@@ -1,0 +1,47 @@
+{
+  "name":"Papaly",
+  "lastLogin":"",
+  "home":"https://papaly.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a.login-button"},
+      {"action":"fill", "what":"login", "search":"#user-login-form #user_email"},
+      {"action":"fill", "what":"password", "search":"#user-login-form #user_password"},
+      {"action":"click", "search":"#user-login-form input[type='submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"aclick", "search":"a.login-button"},
+      {"action":"click", "search":"#facebook-login"}
+    ]
+  },
+  "LinkedIn":{
+    "todo":[
+      {"action":"aclick", "search":"a.login-button"},
+      {"action":"click", "search":"#linkedin-login"}
+    ]
+  },
+  "Google":{
+    "todo":[
+      {"action":"aclick", "search":"a.login-button"},
+      {"action":"click", "search":"#google-login"}
+    ]
+  },
+  "Twitter":{
+    "todo":[
+      {"action":"aclick", "search":"a.login-button"},
+      {"action":"click", "search":"#twitter-login"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"click", "search":"div.logout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"div.logout, a.login-button"},
+    {"search":"div.logout"}
+  ]
+}

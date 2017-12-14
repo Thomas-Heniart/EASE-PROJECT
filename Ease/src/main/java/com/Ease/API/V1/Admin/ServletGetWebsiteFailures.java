@@ -25,7 +25,7 @@ public class ServletGetWebsiteFailures extends HttpServlet {
             hibernateQuery.queryString("SELECT w FROM WebsiteFailure w ORDER BY w.count DESC");
             List<WebsiteFailure> websiteFailureList = hibernateQuery.list();
             for (WebsiteFailure websiteFailure : websiteFailureList)
-                res.add(websiteFailure.getJson());
+                res.put(websiteFailure.getJson());
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
