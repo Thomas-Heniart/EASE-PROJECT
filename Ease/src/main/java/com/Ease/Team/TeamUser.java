@@ -5,6 +5,7 @@ import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.NotificationFactory;
 import com.Ease.User.PendingNotification;
@@ -15,7 +16,11 @@ import com.Ease.Utils.DataBaseConnection;
 import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import com.Ease.websocketV1.*;
+import com.Ease.websocketV1.WebSocketManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 10/04/2017.
  */
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamUsers")
 public class TeamUser {
 
@@ -115,6 +121,9 @@ public class TeamUser {
 
     @OneToMany(mappedBy = "teamUser_filler")
     private Set<TeamSingleCard> teamSingleCardToFillSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "teamUser_filler")
+    private Set<TeamSingleSoftwareCard> teamSingleSoftwareCardSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<JoinTeamCardRequest> joinTeamCardRequestSet = ConcurrentHashMap.newKeySet();
@@ -329,6 +338,14 @@ public class TeamUser {
 
     public void setTeamSingleCardToFillSet(Set<TeamSingleCard> teamSingleCardToFillSet) {
         this.teamSingleCardToFillSet = teamSingleCardToFillSet;
+    }
+
+    public Set<TeamSingleSoftwareCard> getTeamSingleSoftwareCardSet() {
+        return teamSingleSoftwareCardSet;
+    }
+
+    public void setTeamSingleSoftwareCardSet(Set<TeamSingleSoftwareCard> teamSingleSoftwareCardSet) {
+        this.teamSingleSoftwareCardSet = teamSingleSoftwareCardSet;
     }
 
     public Set<JoinTeamCardRequest> getJoinTeamCardRequestSet() {

@@ -5,12 +5,15 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamEnterpriseCards")
 @PrimaryKeyJoinColumn(name = "id")
 @OnDelete(action = OnDeleteAction.CASCADE)

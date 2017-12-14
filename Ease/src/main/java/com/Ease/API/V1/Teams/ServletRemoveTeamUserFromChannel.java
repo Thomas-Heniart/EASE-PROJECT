@@ -7,7 +7,6 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
-import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
@@ -50,7 +49,8 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             if (channel.getRoom_manager().equals(teamUser_to_remove))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot remove the room manager.");
-            Set<TeamSingleCard> teamSingleCardSet = teamUser_to_remove.getTeamSingleCardToFillSet().stream().filter(teamSingleCard -> teamSingleCard.getChannel().equals(channel)).collect(Collectors.toSet());
+            Set<TeamCard> teamSingleCardSet = teamUser_to_remove.getTeamSingleCardToFillSet().stream().filter(teamSingleCard -> teamSingleCard.getChannel().equals(channel)).collect(Collectors.toSet());
+            teamSingleCardSet.addAll(teamUser_to_remove.getTeamSingleSoftwareCardSet().stream().filter(teamSingleSoftwareCard -> teamSingleSoftwareCard.getChannel().equals(channel)).collect(Collectors.toSet()));
             if (!teamSingleCardSet.isEmpty()) {
                 StringBuilder message = new StringBuilder(teamUser_to_remove.getUsername()).append(" cannot be removed from this channel as long as this person is responsible to fill credentials for ");
                 teamSingleCardSet.forEach(teamSingleCard -> message.append(teamSingleCard.getName()).append(", "));

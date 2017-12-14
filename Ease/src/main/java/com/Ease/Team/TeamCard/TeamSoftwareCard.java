@@ -1,6 +1,6 @@
 package com.Ease.Team.TeamCard;
 
-import com.Ease.Catalog.Website;
+import com.Ease.Catalog.Software;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -13,34 +13,39 @@ import javax.persistence.*;
 @Entity
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "teamWebsiteCards")
+@Table(name = "teamSoftwareCards")
 @PrimaryKeyJoinColumn(name = "id")
 @OnDelete(action = OnDeleteAction.CASCADE)
-public abstract class TeamWebsiteCard extends TeamCard {
+public abstract class TeamSoftwareCard extends TeamCard {
 
     @ManyToOne
-    @JoinColumn(name = "website_id")
-    private Website website;
+    @JoinColumn(name = "software_id")
+    private Software software;
 
     @Column(name = "password_reminder_interval")
-    private Integer password_reminder_interval;
+    private Integer password_reminder_interval = 0;
 
-    public TeamWebsiteCard() {
+    public TeamSoftwareCard() {
 
     }
 
-    public TeamWebsiteCard(String name, Team team, Channel channel, String description, Website website, Integer password_reminder_interval) {
+    public TeamSoftwareCard(String name, Team team, Channel channel, String description, Software software) {
         super(name, team, channel, description);
-        this.website = website;
+        this.software = software;
+    }
+
+    public TeamSoftwareCard(String name, Team team, Channel channel, String description, Software software, Integer password_reminder_interval) {
+        super(name, team, channel, description);
+        this.software = software;
         this.password_reminder_interval = password_reminder_interval;
     }
 
-    public Website getWebsite() {
-        return website;
+    public Software getSoftware() {
+        return software;
     }
 
-    public void setWebsite(Website website) {
-        this.website = website;
+    public void setSoftware(Software software) {
+        this.software = software;
     }
 
     public Integer getPassword_reminder_interval() {
@@ -52,25 +57,20 @@ public abstract class TeamWebsiteCard extends TeamCard {
     }
 
     @Override
-    public boolean isTeamWebsiteCard() {
-        return true;
-    }
-
-    @Override
     public String getLogo() {
-        return this.getWebsite().getLogo();
+        return this.getSoftware().getLogo();
     }
 
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("website", this.getWebsite().getCatalogJson());
+        res.put("website", this.getSoftware().getJson());
         res.put("password_reminder_interval", this.getPassword_reminder_interval());
         return res;
     }
 
     @Override
     public String getSubtype() {
-        return this.getWebsite().getWebsiteAttributes().isIntegrated() ? "classic" : "any";
+        return "software";
     }
 }

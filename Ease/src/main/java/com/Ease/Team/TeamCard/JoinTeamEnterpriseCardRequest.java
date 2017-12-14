@@ -9,6 +9,7 @@ import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.json.JSONObject;
@@ -16,6 +17,8 @@ import org.json.JSONObject;
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "joinTeamEnterpriseCardRequests")
 @PrimaryKeyJoinColumn(name = "id")
 @OnDelete(action = OnDeleteAction.CASCADE)
