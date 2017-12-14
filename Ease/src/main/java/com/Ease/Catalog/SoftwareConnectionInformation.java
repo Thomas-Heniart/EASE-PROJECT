@@ -22,6 +22,9 @@ public class SoftwareConnectionInformation {
     @Column(name = "information_type")
     private String information_type;
 
+    @Column(name = "placeholder")
+    private String placeholder;
+
     @Column(name = "priority")
     private Integer priority;
 
@@ -29,11 +32,12 @@ public class SoftwareConnectionInformation {
 
     }
 
-    public SoftwareConnectionInformation(Software software, String information_name, String information_type, Integer priority) {
+    public SoftwareConnectionInformation(Software software, String information_name, String information_type, String placeholder, Integer priority) {
         this.software = software;
         this.information_name = information_name;
         this.information_type = information_type;
         this.priority = priority;
+        this.placeholder = placeholder;
     }
 
     public Integer getDb_id() {
@@ -68,6 +72,14 @@ public class SoftwareConnectionInformation {
         this.information_type = information_type;
     }
 
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+    }
+
     public Integer getPriority() {
         return priority;
     }
@@ -78,8 +90,10 @@ public class SoftwareConnectionInformation {
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
+        res.put("information_name", this.getInformation_name());
         res.put("information_type", this.getInformation_type());
         res.put("priority", this.getPriority());
+        res.put("placeholder", this.getPlaceholder());
         return res;
     }
 

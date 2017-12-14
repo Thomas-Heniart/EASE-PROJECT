@@ -69,6 +69,7 @@ public class ServletEditAnyApp extends HttpServlet {
                         anyApp.setWebsite(website);
                 } else {
                     String img_url = sm.getStringParam("img_url", false, true);
+                    JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(user.getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
                     anyApp.setWebsite(website);
                 }
