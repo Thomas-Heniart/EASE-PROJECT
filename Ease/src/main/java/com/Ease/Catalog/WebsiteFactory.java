@@ -19,7 +19,7 @@ public class WebsiteFactory {
     }
 
     public Website createWebsiteAndLogo(String email, String url, String name, String img_url, HibernateQuery hibernateQuery) throws HttpServletException {
-        String folder = url.split("//")[1].split("/")[0].replaceAll("\\.", "_");
+        String folder = url.split("//")[1].split("/")[0].replaceAll("\\W", "_");
         WebsiteAttributes websiteAttributes = new WebsiteAttributes(true);
         Website website = new Website(url, folder, folder, url, websiteAttributes);
         if (img_url == null || img_url.equals("") || !img_url.startsWith("https://logo.clearbit.com/")) {

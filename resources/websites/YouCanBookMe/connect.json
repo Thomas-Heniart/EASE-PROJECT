@@ -1,27 +1,27 @@
 {
   "name":"you can book.me",
   "lastLogin":"",
-  "home":"https://app.youcanbook.me/#/login/",
+  "home":"https://app.youcanbook.me/#/",
   "connect":{
     "todo":[
-      {"action":"fill", "what":"login", "search":"#email"},
-      {"action":"fill", "what":"password", "search":"#password"},
-      {"action":"trueClick", "search":".buttonPrimary"}
+      {"action":"fill", "what":"login", "search":"#email", "grave":true},
+      {"action":"fill", "what":"password", "search":"#password", "grave":true},
+      {"action":"trueClick", "search":".buttonPrimary", "grave":true}
     ]
   },
   "Facebook": {
     "todo": [
-      {"action":"trueClick", "search":".buttonLogin img[src*='facebook']"}
+      {"action":"trueClick", "search":".loginButton img[src*='facebook']"}
     ]
   },
   "logout":{
     "todo":[
-      {"action":"clickona", "search":"a.TnavLogout"},
+      {"action":"trueClick", "search":"a.TnavLogout"},
       {"action":"waitload"}
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"waitfor", "search":"a.TnavLogout, #email"},
-    {"search": "a.TnavLogout"}
+    {"action":"waitfor", "search":"div.accountMenu, header.publicHeader"},
+    {"search": "div.accountMenu"}
   ]
 }
