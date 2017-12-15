@@ -59,5 +59,13 @@ CREATE TABLE teamSingleSoftwareCards (
   FOREIGN KEY (account_id) REFERENCES accounts (id)
 );
 
-ALTER TABLE teamSingleSoftwareCards ADD COLUMN teamUser_filler_id INT(10) UNSIGNED;
-ALTER TABLE teamSingleSoftwareCards ADD FOREIGN KEY (teamUser_filler_id) REFERENCES teamUsers(id);
+ALTER TABLE teamSingleSoftwareCards
+  ADD COLUMN teamUser_filler_id INT(10) UNSIGNED;
+ALTER TABLE teamSingleSoftwareCards
+  ADD FOREIGN KEY (teamUser_filler_id) REFERENCES teamUsers (id);
+
+CREATE TABLE teamEnterpriseSoftwareCards (
+  id INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES teamSoftwareCards (id)
+);

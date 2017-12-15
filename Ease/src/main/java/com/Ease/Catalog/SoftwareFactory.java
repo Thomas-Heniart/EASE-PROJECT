@@ -25,7 +25,7 @@ public class SoftwareFactory {
         for (Object object : connectionInformation.keySet()) {
             String key = String.valueOf(object);
             JSONObject properties = connectionInformation.getJSONObject(key);
-            SoftwareConnectionInformation softwareConnectionInformation = new SoftwareConnectionInformation(software, key, properties.getString("information_type"), properties.getString("placeholder"), properties.getInt("priority"));
+            SoftwareConnectionInformation softwareConnectionInformation = new SoftwareConnectionInformation(software, key, properties.getString("type"), properties.getString("placeholder"), properties.getInt("priority"));
             hibernateQuery.saveOrUpdateObject(softwareConnectionInformation);
             software.addSoftwareConnectionInformation(softwareConnectionInformation);
         }
