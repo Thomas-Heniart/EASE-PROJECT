@@ -135,4 +135,18 @@ public class Software {
             throw new HttpServletException(HttpStatus.BadRequest, "Some parameters are missing");
         return res;
     }
+
+    public JSONObject getAllCredentialsFromJson(JSONObject account_information) throws HttpServletException {
+        JSONObject res = new JSONObject();
+        this.getSoftwareConnectionInformationSet().forEach(softwareConnectionInformation -> res.putOpt(softwareConnectionInformation.getInformation_name(), account_information.getString(softwareConnectionInformation.getInformation_name())));
+        if (res.length() != this.getSoftwareConnectionInformationSet().size())
+            throw new HttpServletException(HttpStatus.BadRequest, "Some credentials are missing");
+        return res;
+    }
+
+    public JSONObject getPresentCredentialsFromJson(JSONObject account_information) {
+        JSONObject res = new JSONObject();
+        this.getSoftwareConnectionInformationSet().forEach(softwareConnectionInformation -> res.putOpt(softwareConnectionInformation.getInformation_name(), account_information.getString(softwareConnectionInformation.getInformation_name())));
+        return res;
+    }
 }
