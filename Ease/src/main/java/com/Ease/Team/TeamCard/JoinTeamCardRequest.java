@@ -4,11 +4,14 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "joinTeamCardRequests")
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract public class JoinTeamCardRequest {

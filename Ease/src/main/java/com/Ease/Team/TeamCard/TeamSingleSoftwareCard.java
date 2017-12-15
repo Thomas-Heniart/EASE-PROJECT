@@ -1,12 +1,10 @@
 package com.Ease.Team.TeamCard;
 
-import com.Ease.Catalog.Website;
+import com.Ease.Catalog.Software;
 import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -17,10 +15,10 @@ import javax.persistence.*;
 @Entity
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "teamSingleCards")
+@Table(name = "teamSingleSoftwareCards")
 @PrimaryKeyJoinColumn(name = "id")
 @OnDelete(action = OnDeleteAction.CASCADE)
-public class TeamSingleCard extends TeamWebsiteCard {
+public class TeamSingleSoftwareCard extends TeamSoftwareCard {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "account_id")
@@ -30,13 +28,31 @@ public class TeamSingleCard extends TeamWebsiteCard {
     @JoinColumn(name = "teamUser_filler_id")
     private TeamUser teamUser_filler;
 
-    public TeamSingleCard() {
+    public TeamSingleSoftwareCard() {
 
     }
 
-    public TeamSingleCard(String name, Team team, Channel channel, String description, Website website, Integer password_reminder_interval, Account account, TeamUser teamUser_filler) {
-        super(name, team, channel, description, website, password_reminder_interval);
+    public TeamSingleSoftwareCard(String name, Team team, Channel channel, String description, Software software) {
+        super(name, team, channel, description, software);
+    }
+
+    public TeamSingleSoftwareCard(String name, Team team, Channel channel, String description, Software software, Account account) {
+        super(name, team, channel, description, software);
         this.account = account;
+    }
+
+    public TeamSingleSoftwareCard(String name, Team team, Channel channel, String description, Software software, Integer password_reminder_interval, Account account) {
+        super(name, team, channel, description, software, password_reminder_interval);
+        this.account = account;
+    }
+
+    public TeamSingleSoftwareCard(String name, Team team, Channel channel, String description, Software software, TeamUser teamUser_filler) {
+        super(name, team, channel, description, software);
+        this.teamUser_filler = teamUser_filler;
+    }
+
+    public TeamSingleSoftwareCard(String name, Team team, Channel channel, String description, Software software, Integer password_reminder_interval, TeamUser teamUser_filler) {
+        super(name, team, channel, description, software, password_reminder_interval);
         this.teamUser_filler = teamUser_filler;
     }
 
@@ -56,16 +72,15 @@ public class TeamSingleCard extends TeamWebsiteCard {
         this.teamUser_filler = teamUser_filler;
     }
 
-    public void decipherAccount(String symmetric_key) throws HttpServletException {
-        if (this.getAccount().getDeciphered_private_key() != null)
-            return;
-        this.getAccount().decipher(symmetric_key);
+    @Override
+    public String getType() {
+        return "teamSingleCard";
     }
 
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("empty", this.getAccount() == null || !this.getAccount().satisfyWebsite((this.getWebsite())));
+        res.put("empty", this.getAccount() == null);
         res.put("account_information", new JSONObject());
         res.put("team_user_filler_id", this.getTeamUser_filler() == null ? -1 : this.getTeamUser_filler().getDb_id());
         if (this.getAccount() == null)
@@ -73,25 +88,5 @@ public class TeamSingleCard extends TeamWebsiteCard {
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
         return res;
-    }
-
-    @Override
-    public String getType() {
-        return "teamSingleCard";
-    }
-
-    @Override
-    public boolean isTeamSingleCard() {
-        return true;
-    }
-
-    @Override
-    public void decipher(String symmetric_key) throws HttpServletException {
-        if (this.getAccount() == null || this.getAccount().getDeciphered_private_key() != null)
-            return;
-        this.getAccount().decipher(symmetric_key);
-        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
-            teamCardReceiver.getApp().decipher(null, symmetric_key);
-        }
     }
 }

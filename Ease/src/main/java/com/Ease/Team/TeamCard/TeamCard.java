@@ -6,6 +6,7 @@ import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,6 +17,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamCards")
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract public class TeamCard {
@@ -43,10 +46,12 @@ abstract public class TeamCard {
     private Date creation_date;
 
     @OneToMany(mappedBy = "teamCard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
     private Map<Integer, TeamCardReceiver> teamCardReceiverMap = new ConcurrentHashMap<>();
 
     @OneToMany(mappedBy = "teamCard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
     private Map<Integer, JoinTeamCardRequest> joinTeamCardRequestMap = new ConcurrentHashMap<>();
 
@@ -134,6 +139,7 @@ abstract public class TeamCard {
         res.put("name", this.getName());
         res.put("logo", this.getLogo());
         res.put("type", this.getType());
+        res.put("subtype", this.getSubtype());
         res.put("creation_date", this.getCreation_date().getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("channel_id", this.getChannel().getDb_id());
@@ -157,6 +163,8 @@ abstract public class TeamCard {
     }
 
     public abstract String getType();
+
+    public abstract String getSubtype();
 
     public void addTeamCardReceiver(TeamCardReceiver teamCardReceiver) {
         this.getTeamCardReceiverMap().put(teamCardReceiver.getDb_id(), teamCardReceiver);

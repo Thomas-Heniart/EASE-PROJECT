@@ -34,7 +34,7 @@ public class WebsiteFactory {
         for (Object object : connection_information.keySet()) {
             String key = (String) object;
             JSONObject information = connection_information.getJSONObject(key);
-            WebsiteInformation websiteInformation = new WebsiteInformation(key, information.getString("information_type"), information.getInt("priority"), information.getString("placeholder"), "", website);
+            WebsiteInformation websiteInformation = new WebsiteInformation(key, information.getString("type"), information.getInt("priority"), information.getString("placeholder"), "", website);
             websiteInformationSet.add(websiteInformation);
         }
         hibernateQuery.saveOrUpdateObject(websiteAttributes);

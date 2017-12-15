@@ -2,6 +2,7 @@ package com.Ease.Team.TeamCard;
 
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.json.JSONObject;
@@ -9,6 +10,8 @@ import org.json.JSONObject;
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamLinkCards")
 @PrimaryKeyJoinColumn(name = "id")
 @OnDelete(action = OnDeleteAction.CASCADE)
@@ -54,6 +57,11 @@ public class TeamLinkCard extends TeamCard {
     @Override
     public String getType() {
         return "teamLinkCard";
+    }
+
+    @Override
+    public String getSubtype() {
+        return "";
     }
 
     @Override
