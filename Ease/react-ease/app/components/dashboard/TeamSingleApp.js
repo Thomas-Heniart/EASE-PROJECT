@@ -3,7 +3,10 @@ import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel,
   DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator
 } from "./utils";
-import {showTeamSingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
+import {
+  showTeamSingleAppSettingsModal, showLockedTeamAppModal,
+  showUpdateAppPasswordModal
+} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
 import {connect} from "react-redux";
@@ -31,6 +34,12 @@ class TeamSingleApp extends Component {
       this.setState({loading: false});
     });
   };
+  connectWithPasswordUpdate = (e) => {
+    this.props.dispatch(showUpdateAppPasswordModal({
+      active: true,
+      app: this.props.app
+    }));
+  };
   render(){
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -39,7 +48,8 @@ class TeamSingleApp extends Component {
     const filler = team.team_users[team_app.team_user_filler_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = team.rooms[team_app.channel_id];
-    const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+    const roomManager = team.team_users[room.room_manager_id];
+    const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
 
     return (
         <div class='app'>
@@ -59,7 +69,7 @@ class TeamSingleApp extends Component {
             {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id &&
             <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}/>}
             <div class="logo_handler">
-              <img class="logo" src={team_app.logo} onClick={this.connect}/>
+              <img class="logo" src={team_app.logo} onClick={password_update ? this.connectWithPasswordUpdate : this.connect}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}>
                 Settings
               </button>
