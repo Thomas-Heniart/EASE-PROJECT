@@ -66,7 +66,7 @@ public abstract class TeamSoftwareCard extends TeamCard {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("website", this.getSoftware().getJson());
+        res.put("software", this.getSoftware().getJson());
         res.put("password_reminder_interval", this.getPassword_reminder_interval());
         return res;
     }

@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Software;
+import com.Ease.Catalog.SoftwareFactory;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
@@ -45,6 +46,13 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Software software = catalog.getSoftwareWithFolderOrName(name, folder, hibernateQuery);
+            if (software == null) {
+                JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+                String logo_url = sm.getStringParam("logo_url", false, true);
+                if (logo_url != null && logo_url.length() > 2000)
+                    throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter logo_url");
+                software = SoftwareFactory.getInstance().createSoftwareAndLogo(name, folder, logo_url, connection_information, hibernateQuery);
+            }
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)
@@ -60,6 +68,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                     teamSingleSoftwareCard.setTeamUser_filler(teamUser_filler);
                 }
             } else {
+                account_information = software.getAllCredentialsFromJson(account_information);
                 account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval);
                 teamSingleSoftwareCard.setAccount(account);
             }
@@ -91,7 +100,6 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamSingleSoftwareCard.addTeamCardReceiver(teamCardReceiver);
             }
-
             sm.setSuccess(teamSingleSoftwareCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
