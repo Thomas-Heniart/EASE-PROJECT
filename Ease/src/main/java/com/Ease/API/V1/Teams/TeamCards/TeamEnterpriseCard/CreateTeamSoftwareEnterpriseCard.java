@@ -66,8 +66,9 @@ public class CreateTeamSoftwareEnterpriseCard extends HttpServlet {
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             for (Object object : receivers.keySet()) {
                 String key = (String) object;
+                JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
-                JSONObject account_information = receivers.getJSONObject("account_information");
+                JSONObject account_information = value.getJSONObject("account_information");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");

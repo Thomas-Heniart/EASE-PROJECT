@@ -68,13 +68,13 @@ public class CreateTeamAnySingleCard extends HttpServlet {
             TeamUser teamUser_filler = null;
             Map<String, String> account_information = new HashMap<>();
             if (account_information_obj.length() != 0) {
-                sm.decipher(account_information_obj);
+                //sm.decipher(account_information_obj);
                 account_information = website.getInformationNeeded(account_information_obj);
             }
-            if (teamUser_filler_id != null && !teamUser_filler_id.equals(-1))
+            if (teamUser_filler_id != null && teamUser_filler_id != -1)
                 teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
             else if (account_information.isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "You must fill the or choose someone to fill it");
+                throw new HttpServletException(HttpStatus.BadRequest, "You must fill the card or choose someone to fill it");
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             Account account = null;
             if (account_information != null && !account_information.isEmpty())

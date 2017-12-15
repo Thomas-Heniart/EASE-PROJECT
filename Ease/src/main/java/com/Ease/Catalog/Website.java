@@ -274,8 +274,10 @@ public class Website {
 
     public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {
         Map<String, String> res = new ConcurrentHashMap<>();
+        System.out.println("Get information needed");
         for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
-            String value = (String) information.get(websiteInformation.getInformation_name());
+            System.out.println("Get information needed loop");
+            String value = information.getString(websiteInformation.getInformation_name());
             if (value == null || value.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + websiteInformation.getInformation_name());
             if (value.length() >= 255)
@@ -310,12 +312,13 @@ public class Website {
         res.put("name", this.getName());
         res.put("logo", this.getLogo());
         res.put("pinneable", this.getWebsiteAttributes().isIntegrated());
+        res.put("landing_url", this.getWebsite_homepage());
+        res.put("login_url", this.getLogin_url());
         return res;
     }
 
     public JSONObject getCatalogJson() {
         JSONObject res = this.getJson();
-        res.put("landing_url", this.getWebsite_homepage());
         res.put("category_id", this.getCategory() == null ? null : this.getCategory().getDb_id());
         res.put("sso_id", this.getSso() == null ? null : this.getSso().getDb_id());
         JSONArray signIn_websites_ids = new JSONArray();

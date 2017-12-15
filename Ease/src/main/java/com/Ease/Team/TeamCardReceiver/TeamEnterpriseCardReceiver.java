@@ -2,7 +2,6 @@ package com.Ease.Team.TeamCardReceiver;
 
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Team.TeamUser;
@@ -22,7 +21,6 @@ import javax.persistence.Table;
 public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
 
 
-
     public TeamEnterpriseCardReceiver() {
 
     }
@@ -39,9 +37,9 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
     @Override
     public JSONObject getCardJson() {
         JSONObject res = super.getCardJson();
-        Account account = ((ClassicApp)this.getApp()).getAccount();
+        Account account = this.getApp().getAccount();
         res.put("account_information", new JSONObject());
-        res.put("empty", account == null || !account.satisfyWebsite(((TeamWebsiteCard)this.getTeamCard()).getWebsite()));
+        res.put("empty", account == null || !account.satisfyWebsite(((TeamWebsiteCard) this.getTeamCard()).getWebsite()));
         if (account == null)
             return res;
         res.put("account_information", account.getJsonWithoutPassword());
@@ -50,7 +48,7 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
     }
 
     public void decipher(String deciphered_teamKey) throws HttpServletException {
-        ClassicApp app = (ClassicApp) this.getApp();
+        App app = this.getApp();
         if (app.getAccount() == null || app.getAccount().getDeciphered_private_key() != null)
             return;
         app.getAccount().decipher(deciphered_teamKey);

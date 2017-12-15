@@ -27,6 +27,7 @@ public class AnyApp extends WebsiteApp {
         this.account = account;
     }
 
+    @Override
     public Account getAccount() {
         return account;
     }
