@@ -3,13 +3,14 @@ package com.Ease.Team.TeamCard;
 import com.Ease.Catalog.Website;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.Cacheable;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 @Entity
 @Cacheable
@@ -35,12 +36,5 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
     @Override
     public boolean isTeamEnterpriseCard() {
         return true;
-    }
-
-    @Override
-    public void decipher(String teamKey) throws HttpServletException {
-        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
-            teamCardReceiver.getApp().decipher(null, teamKey);
-        }
     }
 }

@@ -4,7 +4,6 @@ import com.Ease.Catalog.Website;
 import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -90,8 +89,6 @@ public class TeamSingleCard extends TeamWebsiteCard {
         if (this.getAccount() == null || this.getAccount().getDeciphered_private_key() != null)
             return;
         this.getAccount().decipher(symmetric_key);
-        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
-            teamCardReceiver.getApp().decipher(null, symmetric_key);
-        }
+        super.decipher(symmetric_key);
     }
 }

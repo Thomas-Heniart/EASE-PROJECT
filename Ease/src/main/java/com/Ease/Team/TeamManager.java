@@ -224,7 +224,7 @@ public class TeamManager {
         System.out.println("Password lost reminder start...");
         for (Team team : this.getTeams(hibernateQuery)) {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
-                if (teamUser.isDisabled()) {
+                if (teamUser.isDisabled() && teamUser.getDisabledDate() != null) {
                     Calendar calendar = Calendar.getInstance();
                     Calendar calendar1 = Calendar.getInstance();
                     calendar1.setTime(teamUser.getDisabledDate());

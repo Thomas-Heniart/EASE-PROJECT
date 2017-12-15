@@ -3,6 +3,8 @@ package com.Ease.Team.TeamCard;
 import com.Ease.Catalog.Software;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -72,5 +74,12 @@ public abstract class TeamSoftwareCard extends TeamCard {
     @Override
     public String getSubtype() {
         return "software";
+    }
+
+    @Override
+    public void decipher(String teamKey) throws HttpServletException {
+        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
+            teamCardReceiver.getApp().decipher(null, teamKey);
+        }
     }
 }
