@@ -71,6 +71,7 @@
         <mapping class="com.Ease.Team.TeamCardReceiver.TeamLinkCardReceiver"/>
         <mapping class="com.Ease.Team.TeamCard.TeamSoftwareCard"/>
         <mapping class="com.Ease.Team.TeamCard.TeamSingleSoftwareCard"/>
+        <mapping class="com.Ease.Team.TeamCard.TeamEnterpriseSoftwareCard"/>
         <mapping class="com.Ease.User.User"/>
         <mapping class="com.Ease.User.Administrator"/>
         <mapping class="com.Ease.User.UserStatus"/>

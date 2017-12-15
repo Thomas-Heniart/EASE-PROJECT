@@ -229,7 +229,9 @@ abstract public class TeamCard {
     }
 
     public void decipher(String teamKey) throws HttpServletException {
-        return;
+        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
+            teamCardReceiver.getApp().decipher(null, teamKey);
+        }
     }
 
     @Override

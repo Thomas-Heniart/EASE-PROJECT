@@ -5,6 +5,7 @@ import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -88,5 +89,13 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
         return res;
+    }
+
+    @Override
+    public void decipher(String symmetric_key) throws HttpServletException {
+        if (this.getAccount() == null || this.getAccount().getDeciphered_private_key() != null)
+            return;
+        this.getAccount().decipher(symmetric_key);
+        super.decipher(symmetric_key);
     }
 }

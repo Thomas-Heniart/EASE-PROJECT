@@ -474,7 +474,7 @@ public class Team {
         if (this.card_entered)
             return;
         try {
-            if (!this.isFreemium())
+            if (!this.isFreemium() || this.getSubscription_id() == null || this.getCustomer_id() == null)
                 return;
             String link = Variables.URL_PATH + "#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;

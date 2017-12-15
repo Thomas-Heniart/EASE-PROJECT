@@ -81,4 +81,13 @@ public class AppFactory {
         Account account = AccountFactory.getInstance().createAccountFromJson(account_information, symmetric_key, 0);
         return new SoftwareApp(new AppInformation(name), software, account);
     }
+
+    public App createSoftwareApp(String name, Software software, String symmetric_key, JSONObject account_information, Integer password_reminder_interval) throws HttpServletException {
+        Account account = AccountFactory.getInstance().createAccountFromJson(account_information, symmetric_key, password_reminder_interval);
+        return new SoftwareApp(new AppInformation(name), software, account);
+    }
+
+    public App createSoftwareApp(String name, Software software) {
+        return new SoftwareApp(new AppInformation(name), software);
+    }
 }
