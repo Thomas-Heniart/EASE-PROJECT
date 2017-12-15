@@ -57,7 +57,8 @@ public class ServletEditAnyApp extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = anyApp.getWebsite();
             if (!website.getLogin_url().equals(url)) {
-                website = catalog.getWebsiteWithUrl(url, hibernateQuery);
+                JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+                website = catalog.getWebsiteWithUrl(url, connection_information, hibernateQuery);
                 if (website != null) {
                     if (website.getWebsiteAttributes().isIntegrated()) {
                         App tmp_app = AppFactory.getInstance().createClassicApp(name, website, keyUser, account);
@@ -69,7 +70,6 @@ public class ServletEditAnyApp extends HttpServlet {
                         anyApp.setWebsite(website);
                 } else {
                     String img_url = sm.getStringParam("img_url", false, true);
-                    JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(user.getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
                     anyApp.setWebsite(website);
                 }
