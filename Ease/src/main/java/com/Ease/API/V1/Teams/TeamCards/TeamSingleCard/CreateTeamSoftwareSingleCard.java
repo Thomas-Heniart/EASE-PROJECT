@@ -15,6 +15,9 @@ import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -44,10 +47,12 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             String folder = name.replaceAll("\\W", "_");
             Integer channel_id = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channel_id);
+            if (!channel.getTeamUsers().contains(teamUser_connected))
+                throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            Software software = catalog.getSoftwareWithFolderOrName(name, folder, hibernateQuery);
+            JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+            Software software = catalog.getSoftwareWithFolderOrName(name, folder, connection_information, hibernateQuery);
             if (software == null) {
-                JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
                 String logo_url = sm.getStringParam("logo_url", false, true);
                 if (logo_url != null && logo_url.length() > 2000)
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter logo_url");
@@ -100,6 +105,9 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamSingleSoftwareCard.addTeamCardReceiver(teamCardReceiver);
             }
+            channel.addTeamCard(teamSingleSoftwareCard);
+            team.addTeamCard(teamSingleSoftwareCard);
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CREATED, teamSingleSoftwareCard.getWebSocketJson()));
             sm.setSuccess(teamSingleSoftwareCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
