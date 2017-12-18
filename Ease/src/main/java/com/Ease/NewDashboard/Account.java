@@ -211,8 +211,7 @@ public class Account {
             AccountInformation accountInformation = this.getInformationNamed(key);
             String old_value = null;
             if (accountInformation == null) {
-                accountInformation = new AccountInformation(key, RSA.Encrypt(value, this.getPublic_key()), value);
-                accountInformation.setAccount(this);
+                accountInformation = new AccountInformation(key, RSA.Encrypt(value, this.getPublic_key()), value, this);
                 hibernateQuery.saveOrUpdateObject(accountInformation);
                 this.getAccountInformationSet().add(accountInformation);
             } else {

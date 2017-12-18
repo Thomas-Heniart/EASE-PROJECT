@@ -33,7 +33,7 @@ public class ServletEditSsoGroup extends HttpServlet {
             ssoGroup.decipher(keyUser);
             Account account = ssoGroup.getAccount();
             if (account == null)
-                ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0));
+                ssoGroup.setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0, sm.getHibernateQuery()));
             else
                 account.edit(account_information, sm.getHibernateQuery());
             sm.saveOrUpdate(ssoGroup);

@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.File.FileUtils;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashSet;
@@ -36,7 +37,17 @@ public class WebsiteFactory {
         for (Object object : connection_information.keySet()) {
             String key = (String) object;
             JSONObject information = connection_information.getJSONObject(key);
-            WebsiteInformation websiteInformation = new WebsiteInformation(key, information.getString("type"), information.getInt("priority"), information.getString("placeholder"), "", website);
+            Integer priority;
+            String type;
+            String placeholder;
+            try {
+                priority = information.getInt("priority");
+                type = information.getString("type");
+                placeholder = information.getString("placeholder");
+            } catch (JSONException e) {
+                throw new HttpServletException(HttpStatus.BadRequest, "One or more properties missing in connection_information");
+            }
+            WebsiteInformation websiteInformation = new WebsiteInformation(key, type, priority, placeholder, "", website);
             hibernateQuery.saveOrUpdateObject(websiteInformation);
             websiteInformationSet.add(websiteInformation);
         }

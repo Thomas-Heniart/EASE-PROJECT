@@ -42,13 +42,13 @@ public class ServletAddAnyApp extends HttpServlet {
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             if (website != null && website.getWebsiteAttributes().isIntegrated())
-                app = AppFactory.getInstance().createClassicApp(name, website, symmetric_key, account_information, 0);
+                app = AppFactory.getInstance().createClassicApp(name, website, symmetric_key, account_information, 0, sm.getHibernateQuery());
             else {
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
                 }
-                app = AppFactory.getInstance().createAnyApp(name, website, symmetric_key, account_information);
+                app = AppFactory.getInstance().createAnyApp(name, website, symmetric_key, account_information, sm.getHibernateQuery());
             }
             Boolean credentials_provided = sm.getBooleanParam("credentials_provided", true, false);
             if (credentials_provided) {

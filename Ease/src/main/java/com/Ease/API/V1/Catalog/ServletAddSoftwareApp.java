@@ -43,7 +43,7 @@ public class ServletAddSoftwareApp extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter logo_url");
                 software = SoftwareFactory.getInstance().createSoftwareAndLogo(name, folder, logo_url, connection_information, hibernateQuery);
             }
-            App app = AppFactory.getInstance().createSoftwareApp(name, software, sm.getKeyUser(), account_information);
+            App app = AppFactory.getInstance().createSoftwareApp(name, software, sm.getKeyUser(), account_information, sm.getHibernateQuery());
             app.setProfile(profile);
             app.setPosition(profile.getSize());
             sm.saveOrUpdate(app);

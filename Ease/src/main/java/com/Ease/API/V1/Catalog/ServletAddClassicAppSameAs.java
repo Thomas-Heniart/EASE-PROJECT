@@ -45,10 +45,11 @@ public class ServletAddClassicAppSameAs extends HttpServlet {
             Set<AccountInformation> accountInformationSet = new HashSet<>();
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             same_app.decipher(keyUser, null);
-            for (AccountInformation accountInformation : ((ClassicApp) same_app).getAccount().getAccountInformationSet())
-                accountInformationSet.add(new AccountInformation(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_and_private_key.getKey()), accountInformation.getDeciphered_information_value()));
-            Account account = new Account(((ClassicApp) same_app).getAccount().getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), keyUser), accountInformationSet, public_and_private_key.getValue());
-            accountInformationSet.stream().forEach(accountInformation -> accountInformation.setAccount(account));
+            Account account = new Account(same_app.getAccount().getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), keyUser), accountInformationSet, public_and_private_key.getValue());
+            sm.saveOrUpdate(account);
+            for (AccountInformation accountInformation : same_app.getAccount().getAccountInformationSet())
+                accountInformationSet.add(new AccountInformation(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_and_private_key.getKey()), accountInformation.getDeciphered_information_value(), account));
+            account.setAccountInformationSet(accountInformationSet);
             Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             Profile profile = user.getProfile(profile_id);
             AppInformation appInformation = new AppInformation(name);

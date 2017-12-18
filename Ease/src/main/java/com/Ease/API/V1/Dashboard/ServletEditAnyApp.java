@@ -49,7 +49,7 @@ public class ServletEditAnyApp extends HttpServlet {
             Account account = anyApp.getAccount();
             if (account == null || account.getAccountInformationSet().isEmpty()) {
                 Map<String, String> accountInformation = anyApp.getWebsite().getInformationNeeded(account_information);
-                account = AccountFactory.getInstance().createAccountFromMap(accountInformation, keyUser, 0);
+                account = AccountFactory.getInstance().createAccountFromMap(accountInformation, keyUser, 0, sm.getHibernateQuery());
                 anyApp.setAccount(account);
             } else
                 account.edit(account_information, hibernateQuery);
@@ -61,7 +61,7 @@ public class ServletEditAnyApp extends HttpServlet {
                 website = catalog.getWebsiteWithUrl(url, connection_information, hibernateQuery);
                 if (website != null) {
                     if (website.getWebsiteAttributes().isIntegrated()) {
-                        App tmp_app = AppFactory.getInstance().createClassicApp(name, website, keyUser, account);
+                        App tmp_app = AppFactory.getInstance().createClassicApp(name, website, keyUser, account, sm.getHibernateQuery());
                         tmp_app.setProfile(anyApp.getProfile());
                         tmp_app.setPosition(anyApp.getPosition());
                         sm.deleteObject(anyApp);

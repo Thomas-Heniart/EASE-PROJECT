@@ -4,9 +4,7 @@ import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Catalog.WebsiteFactory;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.NewDashboard.AnyApp;
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -62,17 +60,19 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
-                    if (website.getWebsiteAttributes().isIntegrated()) {
-                        for (TeamCardReceiver teamCardReceiver : teamEnterpriseCard.getTeamCardReceiverMap().values()) {
-                            AnyApp anyApp = (AnyApp) teamCardReceiver.getApp();
-                            App tmp_app = new ClassicApp(anyApp.getAppInformation(), website, anyApp.getAccount());
-                            tmp_app.setProfile(anyApp.getProfile());
-                            tmp_app.setPosition(anyApp.getPosition());
-                            sm.saveOrUpdate(tmp_app);
-                            teamCardReceiver.setApp(tmp_app);
-                            sm.deleteObject(tmp_app);
-                            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
-                        }
+                }
+                if (website.getWebsiteAttributes().isIntegrated()) {
+                    String teamKey = sm.getTeamKey(team);
+                    for (TeamCardReceiver teamCardReceiver : teamEnterpriseCard.getTeamCardReceiverMap().values()) {
+                        AnyApp anyApp = (AnyApp) teamCardReceiver.getApp();
+                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), teamKey, hibernateQuery);
+                        App tmp_app = new ClassicApp(anyApp.getAppInformation(), website, account);
+                        tmp_app.setProfile(anyApp.getProfile());
+                        tmp_app.setPosition(anyApp.getPosition());
+                        teamCardReceiver.setApp(tmp_app);
+                        sm.saveOrUpdate(teamCardReceiver);
+                        sm.deleteObject(anyApp);
+                        sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
                     }
                 }
                 teamEnterpriseCard.setWebsite(website);

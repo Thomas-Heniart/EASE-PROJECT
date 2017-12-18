@@ -78,7 +78,7 @@ public class CreateTeamAnySingleCard extends HttpServlet {
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             Account account = null;
             if (account_information != null && !account_information.isEmpty())
-                account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, reminder_interval);
+                account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, reminder_interval, sm.getHibernateQuery());
             TeamCard teamCard = new TeamSingleCard(name, team, channel, description, website, reminder_interval, account, teamUser_filler);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
@@ -93,9 +93,9 @@ public class CreateTeamAnySingleCard extends HttpServlet {
                 App app;
                 if (account != null) {
                     if (website.getWebsiteAttributes().isIntegrated())
-                        app = AppFactory.getInstance().createClassicApp(name, website, teamKey, account_information, reminder_interval);
+                        app = AppFactory.getInstance().createClassicApp(name, website, teamKey, account_information, reminder_interval, sm.getHibernateQuery());
                     else
-                        app = AppFactory.getInstance().createAnyApp(name, website, teamKey, account_information, reminder_interval);
+                        app = AppFactory.getInstance().createAnyApp(name, website, teamKey, account_information, reminder_interval, sm.getHibernateQuery());
                 } else {
                     if (website.getWebsiteAttributes().isIntegrated())
                         app = AppFactory.getInstance().createClassicApp(name, website);
