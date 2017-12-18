@@ -29,20 +29,12 @@ public class ServletGetAppPassword extends HttpServlet {
             Integer app_id = sm.getIntParam("app_id", true, false);
             App app = user.getApp(app_id, sm.getHibernateQuery());
             JSONObject res = new JSONObject();
-            if (!app.isClassicApp() && !app.isSsoApp() && !app.isSoftwareApp() && !app.isAnyApp())
+            if (app.isLinkApp())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot ask password for this app");
-            Account account;
+            Account account = app.getAccount();
             String password;
             String team_key = null;
             String keyUser = sm.getKeyUser();
-            if (app.isClassicApp())
-                account = ((ClassicApp) app).getAccount();
-            else if (app.isSsoApp())
-                account = ((SsoApp) app).getAccount();
-            else if (app.isSoftwareApp())
-                account = ((SoftwareApp) app).getAccount();
-            else
-                account = ((AnyApp) app).getAccount();
             if (account == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This app is empty");
             TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();

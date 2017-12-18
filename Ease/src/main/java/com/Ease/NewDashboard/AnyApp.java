@@ -32,6 +32,7 @@ public class AnyApp extends WebsiteApp {
         return account;
     }
 
+    @Override
     public void setAccount(Account account) {
         this.account = account;
     }

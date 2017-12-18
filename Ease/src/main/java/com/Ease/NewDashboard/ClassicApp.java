@@ -39,6 +39,7 @@ public class ClassicApp extends WebsiteApp {
         return account;
     }
 
+    @Override
     public void setAccount(Account account) {
         this.account = account;
     }

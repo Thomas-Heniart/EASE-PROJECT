@@ -42,6 +42,7 @@ public class SoftwareApp extends App {
         return account;
     }
 
+    @Override
     public void setAccount(Account account) {
         this.account = account;
     }

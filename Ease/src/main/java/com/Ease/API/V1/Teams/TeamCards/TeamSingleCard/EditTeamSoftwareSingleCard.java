@@ -3,6 +3,7 @@ package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -31,7 +32,9 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This card does not exist");
             Team team = teamSingleSoftwareCard.getTeam();
             sm.initializeTeamWithContext(team);
-            sm.needToBeAdminOfTeam(team);
+            TeamUser teamUser = sm.getTeamUser(team);
+            if (!teamUser.isTeamAdmin() && (teamSingleSoftwareCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleSoftwareCard.getTeamUser_filler())))
+                throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");

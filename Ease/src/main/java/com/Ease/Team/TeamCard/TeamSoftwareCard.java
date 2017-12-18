@@ -82,4 +82,9 @@ public abstract class TeamSoftwareCard extends TeamCard {
             teamCardReceiver.getApp().decipher(null, teamKey);
         }
     }
+
+    @Override
+    public boolean isTeamSoftwareCard() {
+        return true;
+    }
 }

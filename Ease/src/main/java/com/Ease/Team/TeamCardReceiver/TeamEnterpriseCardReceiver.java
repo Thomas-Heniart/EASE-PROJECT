@@ -3,6 +3,7 @@ package com.Ease.Team.TeamCardReceiver;
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamSoftwareCard;
 import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
@@ -39,12 +40,27 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         JSONObject res = super.getCardJson();
         Account account = this.getApp().getAccount();
         res.put("account_information", new JSONObject());
-        res.put("empty", account == null || !account.satisfyWebsite(((TeamWebsiteCard) this.getTeamCard()).getWebsite()));
+        res.put("empty", this.isEmpty());
         if (account == null)
             return res;
         res.put("account_information", account.getJsonWithoutPassword());
         res.put("last_update_date", account.getLast_update().getTime());
         return res;
+    }
+
+    private boolean isEmpty() {
+        Account account = this.getApp().getAccount();
+        if (account == null)
+            return true;
+        TeamCard teamCard = this.getTeamCard();
+        if (teamCard.isTeamWebsiteCard()) {
+            TeamWebsiteCard teamWebsiteCard = (TeamWebsiteCard) teamCard;
+            return !account.satisfyWebsite(teamWebsiteCard.getWebsite());
+        } else if (teamCard.isTeamSoftwareCard()) {
+            TeamSoftwareCard teamSoftwareCard = (TeamSoftwareCard) teamCard;
+            return !account.satisfySoftware(teamSoftwareCard.getSoftware());
+        }
+        return false;
     }
 
     public void decipher(String deciphered_teamKey) throws HttpServletException {

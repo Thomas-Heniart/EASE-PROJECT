@@ -186,6 +186,10 @@ abstract public class TeamCard {
         return false;
     }
 
+    public boolean isTeamSoftwareCard() {
+        return false;
+    }
+
     public boolean isTeamSingleCard() {
         return false;
     }
