@@ -50,7 +50,7 @@ public class EditTeamAnySingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             teamSingleCard.setName(name);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            //sm.decipher(account_information);
+            sm.decipher(account_information);
             account_information = teamSingleCard.getWebsite().getAllCredentialsFromJson(account_information);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)

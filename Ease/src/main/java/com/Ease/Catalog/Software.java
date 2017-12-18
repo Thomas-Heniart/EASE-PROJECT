@@ -2,7 +2,6 @@ package com.Ease.Catalog;
 
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.persistence.*;
@@ -127,13 +126,8 @@ public class Software {
     public Map<String, String> getInformationNeeded(JSONObject account_information) throws HttpServletException {
         Map<String, String> res = new HashMap<>();
         for (SoftwareConnectionInformation softwareConnectionInformation : this.getSoftwareConnectionInformationSet()) {
-            String value;
-            try {
-                value = (String) account_information.get(softwareConnectionInformation.getInformation_name());
-            } catch (JSONException e) {
-                throw new HttpServletException(HttpStatus.BadRequest, "Missing information: " + softwareConnectionInformation.getInformation_name());
-            }
-            if (value.equals(""))
+            String value = account_information.optString(softwareConnectionInformation.getInformation_name());
+            if (value == null || value.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing information: " + softwareConnectionInformation.getInformation_name());
             res.put(softwareConnectionInformation.getInformation_name(), value);
         }
@@ -145,13 +139,8 @@ public class Software {
     public JSONObject getAllCredentialsFromJson(JSONObject account_information) throws HttpServletException {
         JSONObject res = new JSONObject();
         for (SoftwareConnectionInformation softwareConnectionInformation : this.getSoftwareConnectionInformationSet()) {
-            String value;
-            try {
-                value = (String) account_information.get(softwareConnectionInformation.getInformation_name());
-            } catch (JSONException e) {
-                throw new HttpServletException(HttpStatus.BadRequest, "Missing information: " + softwareConnectionInformation.getInformation_name());
-            }
-            if (value.equals(""))
+            String value = account_information.optString(softwareConnectionInformation.getInformation_name());
+            if (value == null || value.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing information: " + softwareConnectionInformation.getInformation_name());
             res.put(softwareConnectionInformation.getInformation_name(), value);
         }
@@ -162,7 +151,7 @@ public class Software {
 
     public JSONObject getPresentCredentialsFromJson(JSONObject account_information) {
         JSONObject res = new JSONObject();
-        this.getSoftwareConnectionInformationSet().forEach(softwareConnectionInformation -> res.putOpt(softwareConnectionInformation.getInformation_name(), account_information.getString(softwareConnectionInformation.getInformation_name())));
+        this.getSoftwareConnectionInformationSet().forEach(softwareConnectionInformation -> res.putOpt(softwareConnectionInformation.getInformation_name(), account_information.optString(softwareConnectionInformation.getInformation_name())));
         return res;
     }
 }

@@ -37,7 +37,7 @@ public class ServletAddAnyApp extends HttpServlet {
             App app;
             String symmetric_key = sm.getKeyUser();
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            //sm.decipher(account_information);
+            sm.decipher(account_information);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");

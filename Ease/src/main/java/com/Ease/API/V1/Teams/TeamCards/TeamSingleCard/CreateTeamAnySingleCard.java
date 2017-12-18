@@ -68,7 +68,7 @@ public class CreateTeamAnySingleCard extends HttpServlet {
             TeamUser teamUser_filler = null;
             Map<String, String> account_information = new HashMap<>();
             if (account_information_obj.length() != 0) {
-                //sm.decipher(account_information_obj);
+                sm.decipher(account_information_obj);
                 account_information = website.getInformationNeeded(account_information_obj);
             }
             if (teamUser_filler_id != null && teamUser_filler_id != -1)
