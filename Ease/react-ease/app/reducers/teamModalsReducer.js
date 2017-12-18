@@ -105,6 +105,7 @@ const initialState = {
     name: '',
     url: '',
     img_url: '',
+    logoLetter: '',
     resolve: null,
     reject: null
   },
@@ -115,6 +116,19 @@ const initialState = {
   catalogAddSSOAppModal: {
     active: false,
     website: null
+  },
+  catalogAddAnyAppModal: {
+    active: false,
+    name: '',
+    url: '',
+    img_url: '',
+    logoLetter: ''
+  },
+  catalogAddSoftwareAppModal: {
+    active: false,
+    name: '',
+    img_url: '',
+    logoLetter: ''
   }
 };
 export default function reducer(state=initialState, action){
@@ -279,6 +293,18 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         catalogAddSSOAppModal: action.payload
+      }
+    }
+    case 'SHOW_CATALOG_ADD_ANY_APP_MODAL': {
+      return {
+        ...state,
+        catalogAddAnyAppModal: action.payload
+      }
+    }
+    case 'SHOW_CATALOG_ADD_SOFTWARE_APP_MODAL': {
+      return {
+        ...state,
+        catalogAddSoftwareAppModal: action.payload
       }
     }
   }

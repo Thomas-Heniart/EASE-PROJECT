@@ -6,7 +6,8 @@ export const teamCard = createReducer({
   app: {},
   name: '',
   url: '',
-  type: ''
+  type: '',
+  subtype: ''
 }, {
   ['RESET_TEAM_CARD'](state, action){
     return {
@@ -16,7 +17,8 @@ export const teamCard = createReducer({
       app: action.payload.app,
       name: action.payload.name,
       url: action.payload.url,
-      type: action.payload.type
+      type: action.payload.type,
+      subtype: action.payload.subtype
     }
   },
   ['ADD_TEAM_CARD'](state, action){
@@ -27,7 +29,8 @@ export const teamCard = createReducer({
       app: action.payload.app,
       name: action.payload.name,
       url: action.payload.url,
-      type: action.payload.type
+      type: action.payload.type,
+      subtype: action.payload.subtype
     }
   }
 });

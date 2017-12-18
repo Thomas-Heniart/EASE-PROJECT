@@ -17,6 +17,14 @@ export const modals = createReducer({
     active: false,
     app: null
   },
+  anyAppSettings: {
+    active: false,
+    app: null
+  },
+  softwareAppSettings: {
+    active: false,
+    app: null
+  },
   teamSingleAppSettings: {
     active: false,
     app: null
@@ -90,6 +98,18 @@ export const modals = createReducer({
     return {
       ...state,
       ssoAppSettings: action.payload
+    }
+  },
+  ['SHOW_ANY_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      anyAppSettings: action.payload
+    }
+  },
+  ['SHOW_SOFTWARE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      softwareAppSettings: action.payload
     }
   },
   ['SHOW_CHOOSE_APP_CREDENTIALS_MODAL'](state, action){
