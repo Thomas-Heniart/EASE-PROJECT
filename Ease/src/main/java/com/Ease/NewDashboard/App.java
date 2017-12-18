@@ -33,7 +33,7 @@ abstract public class App {
     @Column(name = "position")
     private Integer position;
 
-    @OneToOne(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "app")
     private TeamCardReceiver teamCardReceiver;
 
     @Column(name = "new")

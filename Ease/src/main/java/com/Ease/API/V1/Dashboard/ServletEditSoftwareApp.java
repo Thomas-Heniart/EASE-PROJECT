@@ -41,7 +41,7 @@ public class ServletEditSoftwareApp extends HttpServlet {
             Account account = softwareApp.getAccount();
             if (account == null || account.getAccountInformationSet().isEmpty()) {
                 Map<String, String> accountInformation = softwareApp.getSoftware().getInformationNeeded(account_information);
-                account = AccountFactory.getInstance().createAccountFromMap(accountInformation, sm.getKeyUser(), 0);
+                account = AccountFactory.getInstance().createAccountFromMap(accountInformation, sm.getKeyUser(), 0, sm.getHibernateQuery());
                 softwareApp.setAccount(account);
             } else
                 account.edit(account_information, hibernateQuery);

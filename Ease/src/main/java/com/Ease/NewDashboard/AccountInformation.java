@@ -29,14 +29,14 @@ public class AccountInformation {
     @Transient
     private String deciphered_information_value;
 
-    public AccountInformation() {
-
-    }
-
-    public AccountInformation(String information_name, String information_value, String deciphered_information_value) {
+    public AccountInformation(String information_name, String information_value, String deciphered_information_value, Account account) {
         this.information_name = information_name;
         this.information_value = information_value;
         this.deciphered_information_value = deciphered_information_value;
+        this.account = account;
+    }
+
+    public AccountInformation() {
     }
 
     public Integer getDb_id() {
@@ -91,5 +91,10 @@ public class AccountInformation {
         AccountInformation that = (AccountInformation) o;
 
         return db_id != null ? db_id.equals(that.db_id) : that.db_id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return db_id != null ? db_id.hashCode() : 0;
     }
 }

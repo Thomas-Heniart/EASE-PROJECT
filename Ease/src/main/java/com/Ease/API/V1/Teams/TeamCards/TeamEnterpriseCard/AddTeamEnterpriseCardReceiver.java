@@ -46,7 +46,7 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
             Account account = null;
             if (account_information != null && account_information.length() != 0) {
                 String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
+                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamEnterpriseCard.getPassword_reminder_interval(), sm.getHibernateQuery());
             }
             AppInformation appInformation = new AppInformation(teamEnterpriseCard.getName());
             App app = new ClassicApp(appInformation, teamEnterpriseCard.getWebsite(), account);

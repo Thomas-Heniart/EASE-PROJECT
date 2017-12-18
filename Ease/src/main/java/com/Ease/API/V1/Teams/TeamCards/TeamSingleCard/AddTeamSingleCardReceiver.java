@@ -44,8 +44,7 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             if (teamSingleCard.getAccount() != null)
                 teamSingleCard.getAccount().decipher(teamKey);
-            Account account = AccountFactory.getInstance().createAccountFromAccount(teamSingleCard.getAccount(), teamKey);
-            App app = AppFactory.getInstance().createClassicApp(teamSingleCard.getName(), teamSingleCard.getWebsite(), teamKey, account);
+            App app = AppFactory.getInstance().createClassicApp(teamSingleCard.getName(), teamSingleCard.getWebsite(), teamKey, teamSingleCard.getAccount(), sm.getHibernateQuery());
             TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser_receiver, allowed_to_see_password);
             if (teamUser_receiver.isVerified()) {
                 Profile profile = teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());

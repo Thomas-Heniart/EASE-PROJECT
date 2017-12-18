@@ -37,7 +37,7 @@ public class ServletCreateSsoGroup extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "account information cannot be empty");
             sm.decipher(account_information);
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            Account account = AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0);
+            Account account = AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0, sm.getHibernateQuery());
             SsoGroup ssoGroup = new SsoGroup(user, sso, account);
             sm.saveOrUpdate(ssoGroup);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.CREATED, ssoGroup.getWebSocketJson()));

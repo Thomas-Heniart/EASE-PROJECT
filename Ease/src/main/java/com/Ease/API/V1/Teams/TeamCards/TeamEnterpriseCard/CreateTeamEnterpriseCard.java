@@ -65,8 +65,8 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                 Account account = null;
                 if (account_information != null && account_information.length() != 0) {
                     sm.decipher(account_information);
-                    String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-                    account = AccountFactory.getInstance().createAccountFromMap(website.getInformationFromJson(account_information), teamKey, password_reminder_interval);
+                    String teamKey = sm.getTeamKey(team);
+                    account = AccountFactory.getInstance().createAccountFromMap(website.getInformationFromJson(account_information), teamKey, password_reminder_interval, sm.getHibernateQuery());
                 }
                 AppInformation appInformation = new AppInformation(website.getName());
                 App app = new ClassicApp(appInformation, website, account);

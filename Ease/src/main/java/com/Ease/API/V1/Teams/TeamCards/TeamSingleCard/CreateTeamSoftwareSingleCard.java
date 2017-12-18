@@ -74,7 +74,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 }
             } else {
                 account_information = software.getAllCredentialsFromJson(account_information);
-                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval);
+                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, hibernateQuery);
                 teamSingleSoftwareCard.setAccount(account);
             }
             sm.saveOrUpdate(teamSingleSoftwareCard);
@@ -89,7 +89,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
                 App app;
                 if (account != null)
-                    app = AppFactory.getInstance().createSoftwareApp(name, software, teamKey, account_information, password_reminder_interval);
+                    app = AppFactory.getInstance().createSoftwareApp(name, software, teamKey, account_information, password_reminder_interval, hibernateQuery);
                 else
                     app = AppFactory.getInstance().createSoftwareApp(name, software);
                 TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamSingleSoftwareCard, teamUser, allowed_to_see_password);

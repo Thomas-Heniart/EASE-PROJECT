@@ -68,33 +68,35 @@ public class EditTeamAnySingleCard extends HttpServlet {
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
-                    if (website.getWebsiteAttributes().isIntegrated()) {
-                        for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {
-                            AnyApp anyApp = (AnyApp) teamCardReceiver.getApp();
-                            App tmp_app = new ClassicApp(anyApp.getAppInformation(), website, anyApp.getAccount());
-                            tmp_app.setProfile(anyApp.getProfile());
-                            tmp_app.setPosition(anyApp.getPosition());
-                            sm.saveOrUpdate(tmp_app);
-                            teamCardReceiver.setApp(tmp_app);
-                            sm.deleteObject(tmp_app);
-                            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
-                        }
+                }
+                if (website.getWebsiteAttributes().isIntegrated()) {
+                    for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {
+                        AnyApp anyApp = (AnyApp) teamCardReceiver.getApp();
+                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), teamKey, sm.getHibernateQuery());
+                        App tmp_app = new ClassicApp(new AppInformation(anyApp.getAppInformation().getName()), website, account);
+                        tmp_app.setProfile(anyApp.getProfile());
+                        tmp_app.setPosition(anyApp.getPosition());
+                        teamCardReceiver.setApp(tmp_app);
+                        sm.saveOrUpdate(teamCardReceiver);
+                        sm.deleteObject(anyApp);
+                        sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
                     }
                 }
                 teamSingleCard.setWebsite(website);
             }
             if (teamSingleCard.getAccount() == null) {
-                Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval());
+                Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery());
                 teamSingleCard.setAccount(account);
                 for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
-                    teamCardReceiver.getApp().setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval()));
+                    teamCardReceiver.getApp().setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery()));
                 NotificationFactory.getInstance().createAppFilledNotification(teamUser, teamSingleCard, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamSingleCard.setTeamUser_filler(null);
 
             } else {
                 teamSingleCard.getAccount().edit(account_information, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery());
-                for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
+                for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {
                     teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
+                }
             }
             sm.saveOrUpdate(teamSingleCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleCard.getWebSocketJson()));
