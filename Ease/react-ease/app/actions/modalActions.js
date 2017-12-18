@@ -68,6 +68,26 @@ export function showSsoAppSettingsModal({active, app}) {
   }
 }
 
+export function showAnyAppSettingsModal({active, app}) {
+  return {
+    type: 'SHOW_ANY_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showSoftwareAppSettingsModal({active, app}) {
+  return {
+    type: 'SHOW_SOFTWARE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
 export function showExtensionDownloadModal({active}){
   return {
     type: 'SHOW_EXTENSION_DOWNLOAD_MODAL',
