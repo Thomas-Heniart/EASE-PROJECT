@@ -2,7 +2,7 @@ package com.Ease.API.V1.Teams.TeamCards.TeamEnterpriseCard;
 
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountFactory;
-import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.NewDashboard.App;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
@@ -48,14 +48,15 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             sm.decipher(account_information);
             Map<String, String> accountInformation = teamEnterpriseCard.getWebsite().getInformationFromJson(account_information);
             TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
-            ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
+            App app = teamEnterpriseCardReceiver.getApp();
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-            classicApp.decipher(null, teamKey);
-            if (classicApp.getAccount() == null) {
-                Account account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
-                classicApp.setAccount(account);
+            app.decipher(null, teamKey);
+            Account account = app.getAccount();
+            if (account == null) {
+                account = AccountFactory.getInstance().createAccountFromMap(accountInformation, teamKey, teamEnterpriseCard.getPassword_reminder_interval());
+                app.setAccount(account);
             } else
-                classicApp.getAccount().edit(account_information, sm.getHibernateQuery());
+                account.edit(account_information, sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());

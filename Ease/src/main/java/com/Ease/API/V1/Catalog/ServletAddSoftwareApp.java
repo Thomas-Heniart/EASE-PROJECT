@@ -34,10 +34,10 @@ public class ServletAddSoftwareApp extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             String folder = name.replaceAll("\\W", "_");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            Software software = catalog.getSoftwareWithFolderOrName(name, folder, hibernateQuery);
+            JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+            Software software = catalog.getSoftwareWithFolderOrName(name, folder, connection_information, hibernateQuery);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             if (software == null) {
-                JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
                 String logo_url = sm.getStringParam("logo_url", false, true);
                 if (logo_url != null && logo_url.length() > 2000)
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter logo_url");

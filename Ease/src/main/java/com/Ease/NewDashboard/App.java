@@ -127,6 +127,13 @@ abstract public class App {
         return false;
     }
 
+    public Account getAccount() {
+        return null;
+    }
+
+    public void setAccount(Account account) {
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.getDb_id());

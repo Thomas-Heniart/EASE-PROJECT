@@ -5,6 +5,7 @@ import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Collection;
 import java.util.List;
@@ -114,19 +115,35 @@ public class Catalog {
         return res;
     }
 
-    public Website getWebsiteWithUrl(String url, HibernateQuery hibernateQuery) {
+    public Website getWebsiteWithUrl(String url, JSONObject connection_information, HibernateQuery hibernateQuery) {
         String[] splitted_url = url.split("//");
         String minified_url = splitted_url[0] + "//" + splitted_url[1].split("/")[0];
         System.out.println("Minified url: " + minified_url);
         hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
         hibernateQuery.setParameter("url", minified_url);
-        return (Website) hibernateQuery.getSingleResult();
+        Website website = (Website) hibernateQuery.getSingleResult();
+        if (website == null || website.getWebsiteInformationList().size() != connection_information.length())
+            return null;
+        for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
+            JSONObject tmp = connection_information.getJSONObject(websiteInformation.getInformation_name());
+            if (tmp == null)
+                return null;
+        }
+        return website;
     }
 
-    public Software getSoftwareWithFolderOrName(String name, String folder, HibernateQuery hibernateQuery) {
+    public Software getSoftwareWithFolderOrName(String name, String folder, JSONObject connection_information, HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT s FROM Software s WHERE s.name = :name OR s.folder = :folder");
         hibernateQuery.setParameter("name", name);
         hibernateQuery.setParameter("folder", folder);
-        return (Software) hibernateQuery.getSingleResult();
+        Software software = (Software) hibernateQuery.getSingleResult();
+        if (software == null || software.getSoftwareConnectionInformationSet().size() != connection_information.length())
+            return null;
+        for (SoftwareConnectionInformation softwareConnectionInformation : software.getSoftwareConnectionInformationSet()) {
+            JSONObject tmp = connection_information.getJSONObject(softwareConnectionInformation.getInformation_name());
+            if (tmp == null)
+                return null;
+        }
+        return software;
     }
 }

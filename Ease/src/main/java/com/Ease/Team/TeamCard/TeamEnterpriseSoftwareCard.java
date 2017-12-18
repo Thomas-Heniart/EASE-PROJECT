@@ -33,4 +33,9 @@ public class TeamEnterpriseSoftwareCard extends TeamSoftwareCard {
     public String getType() {
         return "teamEnterpriseCard";
     }
+
+    @Override
+    public boolean isTeamEnterpriseCard() {
+        return true;
+    }
 }

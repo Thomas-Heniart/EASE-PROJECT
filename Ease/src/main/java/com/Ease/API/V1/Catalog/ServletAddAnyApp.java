@@ -32,7 +32,8 @@ public class ServletAddAnyApp extends HttpServlet {
             Integer profile_id = sm.getIntParam("profile_id", true, false);
             Profile profile = sm.getUser().getProfile(profile_id);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = catalog.getWebsiteWithUrl(url, sm.getHibernateQuery());
+            JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+            Website website = catalog.getWebsiteWithUrl(url, connection_information, sm.getHibernateQuery());
             App app;
             String symmetric_key = sm.getKeyUser();
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
@@ -45,7 +46,6 @@ public class ServletAddAnyApp extends HttpServlet {
             else {
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
-                    JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
                 }
                 app = AppFactory.getInstance().createAnyApp(name, website, symmetric_key, account_information);

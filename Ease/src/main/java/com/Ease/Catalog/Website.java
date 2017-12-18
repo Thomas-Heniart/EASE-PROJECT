@@ -8,6 +8,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.persistence.*;
@@ -274,8 +275,10 @@ public class Website {
 
     public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {
         Map<String, String> res = new ConcurrentHashMap<>();
+        System.out.println("Get information needed");
         for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
-            String value = (String) information.get(websiteInformation.getInformation_name());
+            System.out.println("Get information needed loop");
+            String value = information.getString(websiteInformation.getInformation_name());
             if (value == null || value.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + websiteInformation.getInformation_name());
             if (value.length() >= 255)
@@ -285,13 +288,36 @@ public class Website {
         return res;
     }
 
-    public Map<String, String> getInformationFromJson(JSONObject information) {
+    public Map<String, String> getInformationFromJson(JSONObject information) throws HttpServletException {
         Map<String, String> res = new ConcurrentHashMap<>();
         for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
-            String value = (String) information.get(websiteInformation.getInformation_name());
+            String value;
+            try {
+                value = information.getString(websiteInformation.getInformation_name());
+            } catch (JSONException e) {
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter: " + websiteInformation.getInformation_name());
+            }
             if (value != null && !value.equals("") && value.length() <= 255)
                 res.put(websiteInformation.getInformation_name(), value);
         }
+        return res;
+    }
+
+    public JSONObject getAllCredentialsFromJson(JSONObject account_information) throws HttpServletException {
+        JSONObject res = new JSONObject();
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
+            String value;
+            try {
+                value = account_information.getString(websiteInformation.getInformation_name());
+            } catch (JSONException e) {
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter: " + websiteInformation.getInformation_name());
+            }
+            if (value.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter: " + websiteInformation.getInformation_name());
+            res.put(websiteInformation.getInformation_name(), value);
+        }
+        if (res.length() != this.getWebsiteInformationList().size())
+            throw new HttpServletException(HttpStatus.BadRequest, "Some credentials are missing");
         return res;
     }
 
@@ -310,12 +336,13 @@ public class Website {
         res.put("name", this.getName());
         res.put("logo", this.getLogo());
         res.put("pinneable", this.getWebsiteAttributes().isIntegrated());
+        res.put("landing_url", this.getWebsite_homepage());
+        res.put("login_url", this.getLogin_url());
         return res;
     }
 
     public JSONObject getCatalogJson() {
         JSONObject res = this.getJson();
-        res.put("landing_url", this.getWebsite_homepage());
         res.put("category_id", this.getCategory() == null ? null : this.getCategory().getDb_id());
         res.put("sso_id", this.getSso() == null ? null : this.getSso().getDb_id());
         JSONArray signIn_websites_ids = new JSONArray();

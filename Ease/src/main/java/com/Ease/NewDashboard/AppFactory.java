@@ -67,6 +67,11 @@ public class AppFactory {
         return new AnyApp(new AppInformation(name), website, account);
     }
 
+    public App createAnyApp(String name, Website website, String symmetric_key, Map<String, String> account_information, Integer reminder_interval) throws HttpServletException {
+        Account account = AccountFactory.getInstance().createAccountFromMap(account_information, symmetric_key, reminder_interval);
+        return new AnyApp(new AppInformation(name), website, account);
+    }
+
     public App createAnyApp(String name, Website website, String symmetric_key, JSONObject account_information) throws HttpServletException {
         Account account = AccountFactory.getInstance().createAccountFromJson(account_information, symmetric_key, 0);
         return new AnyApp(new AppInformation(name), website, account);

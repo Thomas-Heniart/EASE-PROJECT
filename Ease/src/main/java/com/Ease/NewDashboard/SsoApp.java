@@ -36,6 +36,7 @@ public class SsoApp extends WebsiteApp {
         this.ssoGroup = ssoGroup;
     }
 
+    @Override
     public Account getAccount() {
         if (this.getSsoGroup() == null)
             return null;

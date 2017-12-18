@@ -81,26 +81,37 @@ public class MetricsSchedulerTask extends TimerTask {
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
                     if (!teamUser.isVerified())
                         continue;
+                    int week_clicks = 0;
                     for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
                         if (teamCardReceiver.getApp().hasBeenClickedForDays(5, hibernateQuery)) {
+                            week_clicks = 5;
+                            break;
+                        } else if (teamCardReceiver.getApp().hasBeenClickedForDays(3, hibernateQuery))
+                            week_clicks = 3;
+                        else if (teamCardReceiver.getApp().hasBeenClickedForDays(1, hibernateQuery))
+                            week_clicks = 1;
+                    }
+                    switch (week_clicks) {
+                        case 5:
                             people_click_on_app_once++;
                             people_click_on_app_three_times++;
                             people_click_on_app_five_times++;
-                            people_click_on_app_once_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
-                            people_click_on_app_three_times_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
-                            people_click_on_app_five_times_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
+                            people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
+                            people_click_on_app_three_times_emails.append(teamUser.getEmail()).append(";");
+                            people_click_on_app_five_times_emails.append(teamUser.getEmail()).append(";");
                             break;
-                        } else if (teamCardReceiver.getApp().hasBeenClickedForDays(3, hibernateQuery)) {
+                        case 3:
                             people_click_on_app_once++;
                             people_click_on_app_three_times++;
-                            people_click_on_app_once_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
-                            people_click_on_app_three_times_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
+                            people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
+                            people_click_on_app_three_times_emails.append(teamUser.getEmail()).append(";");
                             break;
-                        } else if (teamCardReceiver.getApp().hasBeenClickedForDays(1, hibernateQuery)) {
+                        case 1:
                             people_click_on_app_once++;
-                            people_click_on_app_once_emails.append(teamCardReceiver.getTeamUser().getEmail()).append(";");
+                            people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
                             break;
-                        }
+                        default:
+                            break;
                     }
                     for (App app : teamUser.getUser().getApps()) {
                         if (app.getTeamCardReceiver() == null && !app.isEmpty()) {

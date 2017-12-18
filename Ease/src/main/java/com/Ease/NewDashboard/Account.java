@@ -1,5 +1,7 @@
 package com.Ease.NewDashboard;
 
+import com.Ease.Catalog.Software;
+import com.Ease.Catalog.SoftwareConnectionInformation;
 import com.Ease.Catalog.Website;
 import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Hibernate.HibernateQuery;
@@ -262,6 +264,17 @@ public class Account {
             return false;
         for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
             AccountInformation accountInformation = this.getInformationNamed(websiteInformation.getInformation_name());
+            if (accountInformation == null || (accountInformation.getDeciphered_information_value() == null && accountInformation.getInformation_value() != null) || accountInformation.getDeciphered_information_value().equals(""))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean satisfySoftware(Software software) {
+        if (this.getAccountInformationSet().size() != software.getSoftwareConnectionInformationSet().size())
+            return false;
+        for (SoftwareConnectionInformation softwareConnectionInformation : software.getSoftwareConnectionInformationSet()) {
+            AccountInformation accountInformation = this.getInformationNamed(softwareConnectionInformation.getInformation_name());
             if (accountInformation == null || (accountInformation.getDeciphered_information_value() == null && accountInformation.getInformation_value() != null) || accountInformation.getDeciphered_information_value().equals(""))
                 return false;
         }

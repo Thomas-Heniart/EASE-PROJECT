@@ -37,10 +37,12 @@ public class SoftwareApp extends App {
         this.software = software;
     }
 
+    @Override
     public Account getAccount() {
         return account;
     }
 
+    @Override
     public void setAccount(Account account) {
         this.account = account;
     }
