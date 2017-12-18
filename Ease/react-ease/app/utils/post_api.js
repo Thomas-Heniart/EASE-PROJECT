@@ -93,6 +93,30 @@ module.exports = {
         ws_id:ws_id
       })
     },
+    editAnyApp: ({app_id, name, url, img_url, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/dashboard/EditAnyApp', {
+        app_id: app_id,
+        name: name,
+        url: url,
+        img_url: img_url,
+        account_information: account_information,
+        ws_id: ws_id
+      });
+    },
+    editSoftwareApp: ({app_id, name, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/dashboard/EditSoftwareApp', {
+        app_id: app_id,
+        name: name,
+        account_information: account_information,
+        ws_id: ws_id
+      });
+    },
     editAppName: ({app_id, name,ws_id}) => {
       return basic_post('/api/v1/dashboard/EditAppName', {
         app_id: app_id,
@@ -198,7 +222,7 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    addAnyApp: ({name, url, img_url, profile_id, account_information, ws_id}) => {
+    addAnyApp: ({name, url, img_url, profile_id, account_information, connection_information, credentials_provided, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -208,16 +232,21 @@ module.exports = {
         img_url: img_url,
         profile_id: profile_id,
         account_information: account_information,
+        connection_information: connection_information,
+        credentials_provided: credentials_provided,
         ws_id: ws_id
       });
     },
-    addSoftwareCredentials: ({software, account_information, ws_id}) => {
+    addSoftwareApp: ({name, logo_url, profile_id, account_information, connection_information, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
-      return basic_post('/api/v1/catalog/AddAnyApp', {
-        software: software,
+      return basic_post('/api/v1/catalog/AddSoftwareApp', {
+        name: name,
+        logo_url: logo_url,
+        profile_id: profile_id,
         account_information: account_information,
+        connection_information: connection_information,
         ws_id: ws_id
       });
     }

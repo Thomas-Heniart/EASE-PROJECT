@@ -38,6 +38,13 @@ module.exports = {
       throw err;
     })
   },
+  getClearbitLogoAutoComplete : function (name) {
+    return axios.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=" + name).then(response => {
+      return response.data[0].logo;
+    }).catch(err => {
+      throw err;
+    })
+  },
   getLogo: function({url: url}) {
     const l = document.createElement("a");
     l.href = url;
