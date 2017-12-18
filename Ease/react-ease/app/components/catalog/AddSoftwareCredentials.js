@@ -1,49 +1,101 @@
 import React from 'react';
 import {connect} from "react-redux";
-import { NavLink } from 'react-router-dom';
-import { getClearbitLogo } from "../../utils/api";
+import { getClearbitLogoAutoComplete } from "../../utils/api";
 import {handleSemanticInput} from "../../utils/utils";
 import { Input, Container, Button, Icon, Segment } from 'semantic-ui-react';
+import {reduxActionBinder} from "../../actions/index";
 
 @connect(store => ({
-}))
+  catalog: store.catalog
+}), reduxActionBinder)
 class AddSoftwareCredentials extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       name: '',
-      img_url: '/resources/icons/link_app.png'
+      img_url: ''
     };
   }
   handleInput = handleSemanticInput.bind(this);
   getLogo = () => {
-    getClearbitLogo(this.state.url).then(response => {
-      this.setState({img_url: response});
-    });
+    const name = this.state.name.replace(/\s+/g, '').toLowerCase();
+    if (name === '')
+      this.setState({img_url: ''});
+    else
+      getClearbitLogoAutoComplete(name).then(response => {
+        this.setState({img_url: response});
+      }).catch(err => {
+          this.setState({img_url: ''});
+      });
+  };
+  changeUrl = (e, {name, value}) => {
+    this.setState({[name]: value}, this.getLogo);
+  };
+  imgNone = (e) => {
+    e.preventDefault();
+    this.setState({img_url:''});
+  };
+  logoLetter = () => {
+    let first = '';
+    let second = '';
+    let space = false;
+    for (let letter = 0; letter < this.state.name.length; letter++) {
+      if (first.length < 1 && this.state.name[letter] !== ' ')
+        first = this.state.name[letter];
+      else if (first.length > 0 && second.length < 1 && this.state.name[letter] !== ' ' && space === true)
+        second = this.state.name[letter];
+      else if (this.state.name[letter] === ' ')
+        space = true;
+    }
+    if (second !== '')
+      return first.toUpperCase() + second.toUpperCase();
+    else
+      return first.toUpperCase();
   };
   send = (e) => {
+    e.preventDefault();
+    this.props.catalogAddSoftwareAppModal({
+      active: true,
+      name: this.state.name,
+      img_url: this.state.img_url,
+      logoLetter: this.logoLetter()
+    }).then(app => {
+      this.setState({name: '', url: '', img_url:''});
+    }).catch(() => {
+    });
   };
   render() {
     return (
       <Container fluid class="mrgn0" as="form" onSubmit={this.send}>
-        <p>Add Software Credentials</p>
+        <p style={{fontSize:'18px',fontWeight:'bold',color:'#949eb7',marginTop:'20px'}}>Add Software Credentials</p>
         <Segment clearing className="addBookmark">
-          <NavLink to={`/main/catalog`}>
-            <Icon name="close" link class="closeButton"/>
-          </NavLink>
           <div className="display_flex">
             <div className="logo">
-              <img src={this.state.img_url} alt="website logo"/>
+              {this.state.img_url ?
+                <div style={{backgroundImage:`url('${this.state.img_url}')`}}>
+                  <button className="button-unstyle action_button close_button" onClick={this.imgNone}>
+                    <Icon name="close" class="mrgn0" link/>
+                  </button>
+                </div>
+                : this.state.name ?
+                <div style={{backgroundColor:'#373b60',color:'white'}}>
+                  <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                </div>
+                :
+                  <div style={{backgroundColor:'white',color: '#dededf'}}>
+                    <Icon name='wait' style={{margin:'auto'}}/>
+                  </div>}
             </div>
             <div className="main_column width100">
               <div className="display-inline-flex width100" style={{marginTop:'4%'}}>
                 <Input className="width100"
-                       placeholder="Name your Bookmark"
+                       autoFocus
+                       placeholder="Name your Software"
                        name="name"
                        fluid
                        value={this.state.name}
                        autoComplete="off"
-                       onChange={this.handleInput}
+                       onChange={this.changeUrl}
                        size="mini"
                        required/>
               </div>
