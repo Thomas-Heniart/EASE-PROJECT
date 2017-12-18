@@ -79,6 +79,11 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
     }
 
     @Override
+    public boolean isTeamSingleCard() {
+        return true;
+    }
+
+    @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
         res.put("empty", this.getAccount() == null);
