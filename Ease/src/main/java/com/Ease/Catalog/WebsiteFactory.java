@@ -31,6 +31,8 @@ public class WebsiteFactory {
             websiteAttributes.setLogo_url(img_url);
         }
         Set<WebsiteInformation> websiteInformationSet = new HashSet<>();
+        hibernateQuery.saveOrUpdateObject(websiteAttributes);
+        hibernateQuery.saveOrUpdateObject(website);
         for (Object object : connection_information.keySet()) {
             String key = (String) object;
             JSONObject information = connection_information.getJSONObject(key);
@@ -39,8 +41,6 @@ public class WebsiteFactory {
             websiteInformationSet.add(websiteInformation);
         }
         website.setWebsiteInformationList(websiteInformationSet);
-        hibernateQuery.saveOrUpdateObject(websiteAttributes);
-        hibernateQuery.saveOrUpdateObject(website);
         website.addWebsiteRequest(this.createWebsiteRequest(email, website, hibernateQuery));
         return website;
     }
