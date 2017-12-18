@@ -11,6 +11,8 @@ import TeamEnterpriseApp from "./TeamEnterpriseApp";
 import TeamSingleApp from "./TeamSingleApp";
 import TeamLinkApp from "./TeamLinkApp";
 import SsoApp from  "./SsoApp";
+import AnyApp from "./AnyApp"
+import SoftwareApp from "./SoftwareApp";
 import {createProfileAndInsertApp, moveApp, beginAppDrag,endAppDrag} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 
@@ -41,6 +43,10 @@ class AppWrapper extends Component {
         return <TeamEnterpriseApp app={app} dispatch={dispatch}/>;
       case 'ssoApp':
         return <SsoApp app={app} dispatch={dispatch}/>;
+      case 'anyApp':
+        return <AnyApp app={app} dispatch={dispatch}/>;
+      case 'softwareApp':
+        return <SoftwareApp app={app} dispatch={dispatch}/>;
       default:
         return null;
     }
