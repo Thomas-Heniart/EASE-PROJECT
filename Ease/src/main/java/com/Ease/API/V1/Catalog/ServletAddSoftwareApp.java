@@ -37,6 +37,7 @@ public class ServletAddSoftwareApp extends HttpServlet {
             JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
             Software software = catalog.getSoftwareWithFolderOrName(name, folder, connection_information, hibernateQuery);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            sm.decipher(account_information);
             if (software == null) {
                 String logo_url = sm.getStringParam("logo_url", false, true);
                 if (logo_url != null && logo_url.length() > 2000)

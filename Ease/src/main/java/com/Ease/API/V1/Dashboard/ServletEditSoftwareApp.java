@@ -37,6 +37,7 @@ public class ServletEditSoftwareApp extends HttpServlet {
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            sm.decipher(account_information);
             SoftwareApp softwareApp = (SoftwareApp) app;
             Account account = softwareApp.getAccount();
             if (account == null || account.getAccountInformationSet().isEmpty()) {

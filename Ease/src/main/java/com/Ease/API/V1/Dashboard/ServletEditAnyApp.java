@@ -38,7 +38,7 @@ public class ServletEditAnyApp extends HttpServlet {
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             JSONObject account_information = sm.getJsonParam("account_information", true, false);
-            //sm.decipher(account_information);
+            sm.decipher(account_information);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             App app = user.getApp(app_id, hibernateQuery);
             if (!app.isAnyApp() || app.getTeamCardReceiver() != null)

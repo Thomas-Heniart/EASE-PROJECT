@@ -48,7 +48,7 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
             teamSingleSoftwareCard.setPassword_reminder_interval(password_reminder_interval);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            //sm.decipher(account_information);
+            sm.decipher(account_information);
             account_information = teamSingleSoftwareCard.getSoftware().getAllCredentialsFromJson(account_information);
             teamSingleSoftwareCard.getAccount().edit(account_information, password_reminder_interval, hibernateQuery);
             sm.saveOrUpdate(teamSingleSoftwareCard);
