@@ -38,6 +38,7 @@ import LockedTeamAppModal from "../modals/LockedTeamAppModal";
 import LogWithAppSettings from "../modals/LogWithAppSettings";
 import SsoAppSettingsModal from "../modals/SsoAppSettingsModal";
 import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
+import ChooseAnyAppCredentialsModal from "../teamAppAdders/ChooseAnyAppCredentialsModal";
 import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
 import NewFeatureModal from "../modals/NewFeatureModal";
 import AddAnyAppModal from "../catalog/AddAnyAppModal";
@@ -147,6 +148,8 @@ class ModalsContainer extends Component{
           <LogWithAppSettings/>}
           {this.props.modals.chooseAppCredentials.active &&
           <ChooseAppCredentialsModal/>}
+          {this.props.modals.chooseAnyAppCredentials.active &&
+          <ChooseAnyAppCredentialsModal/>}
           {this.props.modals.teamSingleAppSettings.active &&
           <TeamSingleAppSettingsModal/>}
           {this.props.modals.teamEnterpriseAppSettings.active &&

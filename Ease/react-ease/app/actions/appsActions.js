@@ -29,10 +29,106 @@ export function teamCreateEnterpriseCard({team_id, channel_id, website_id, name,
   }
 }
 
+export function teamCreateAnyEnterpriseCard({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, receivers}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.createAnyEnterpriseCard({
+      team_id: team_id,
+      channel_id: channel_id,
+      name: name,
+      description: description,
+      password_reminder_interval: password_reminder_interval,
+      url: url,
+      img_url: img_url,
+      connection_information: connection_information,
+      receivers: receivers,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardCreatedAction({
+        team_card: team_card
+      }));
+      const room = getState().teams[team_id].rooms[channel_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully sent to ${room.name}`
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamCreateSoftwareEnterpriseCard({team_id, channel_id, name, description, password_reminder_interval, logo_url, connection_information, receivers}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.createSoftwareEnterpriseCard({
+      team_id: team_id,
+      channel_id: channel_id,
+      name: name,
+      description: description,
+      password_reminder_interval: password_reminder_interval,
+      logo_url: logo_url,
+      receivers: receivers,
+      connection_information: connection_information,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardCreatedAction({
+        team_card: team_card
+      }));
+      const room = getState().teams[team_id].rooms[channel_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully sent to ${room.name}`
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function teamEditEnterpriseCard({team_id, team_card_id, name, description, password_reminder_interval}) {
   return (dispatch, getState) => {
     return post_api.teamApps.editEnterpriseCard({
       team_id: team_id,
+      team_card_id: team_card_id,
+      name: name,
+      description: description,
+      password_reminder_interval: password_reminder_interval,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEditAnyEnterpriseCard({team_card_id, name, description, password_reminder_interval, url, img_url, connection_information}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.editAnyEnterpriseCard({
+      team_card_id: team_card_id,
+      name: name,
+      description: description,
+      password_reminder_interval: password_reminder_interval,
+      url: url,
+      img_url: img_url,
+      connection_information: connection_information,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEditSoftwareEnterpriseCard({team_card_id, name, description, password_reminder_interval}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.editSoftwareEnterpriseCard({
       team_card_id: team_card_id,
       name: name,
       description: description,
@@ -113,10 +209,108 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
   }
 }
 
+export function teamCreateAnySingleCard({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.createTeamAnySingleCard({
+      team_id: team_id,
+      channel_id: channel_id,
+      name: name,
+      description: description,
+      password_reminder_interval: password_reminder_interval,
+      url: url,
+      img_url: img_url,
+      connection_information: connection_information,
+      team_user_filler_id: team_user_filler_id,
+      account_information: account_information,
+      receivers: receivers,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardCreatedAction({team_card: team_card}));
+      const room = getState().teams[team_id].rooms[channel_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully sent to ${room.name}`
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamCreateSoftwareSingleCard({team_id, channel_id, name, description, password_reminder_interval, logo_url, team_user_filler_id, connection_information, account_information, receivers}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.createTeamSoftwareSingleCard({
+      team_id: team_id,
+      channel_id: channel_id,
+      name: name,
+      description: description,
+      password_reminder_interval: password_reminder_interval,
+      logo_url: logo_url,
+      team_user_filler_id: team_user_filler_id,
+      connection_information: connection_information,
+      account_information: account_information,
+      receivers: receivers,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardCreatedAction({team_card: team_card}));
+      const room = getState().teams[team_id].rooms[channel_id];
+      dispatch(addNotification({
+        text: `${team_card.name} successfully sent to ${room.name}`
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function teamEditSingleApp({team_id, team_card_id, description, account_information, password_reminder_interval, name}){
   return function (dispatch, getState){
     return post_api.teamApps.editSingleCard({
       team_id: team_id,
+      name: name,
+      team_card_id: team_card_id,
+      description: description,
+      account_information: account_information,
+      password_reminder_interval: password_reminder_interval,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEditAnySingleCard({team_card_id, description, url, img_url, connection_information, account_information, password_reminder_interval, name}){
+  return function (dispatch, getState){
+    return post_api.teamApps.editAnySingleCard({
+      name: name,
+      team_card_id: team_card_id,
+      description: description,
+      url: url,
+      img_url: img_url,
+      connection_information: connection_information,
+      account_information: account_information,
+      password_reminder_interval: password_reminder_interval,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEditSoftwareSingleCard({team_card_id, description, account_information, password_reminder_interval, name}){
+  return function (dispatch, getState){
+    return post_api.teamApps.editSoftwareSingleCard({
       name: name,
       team_card_id: team_card_id,
       description: description,
