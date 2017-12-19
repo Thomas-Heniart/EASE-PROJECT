@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${language}" />
-<fmt:setBundle basename="com.Ease.Languages.text" />
+<fmt:setBundle basename="languages/text" />
 <section id="userFeedbacks">
 		<div class="container">
 			<div class="row">
