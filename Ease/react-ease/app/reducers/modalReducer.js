@@ -17,6 +17,14 @@ export const modals = createReducer({
     active: false,
     app: null
   },
+  anyAppSettings: {
+    active: false,
+    app: null
+  },
+  softwareAppSettings: {
+    active: false,
+    app: null
+  },
   teamSingleAppSettings: {
     active: false,
     app: null
@@ -40,6 +48,9 @@ export const modals = createReducer({
     team_user_id: -1
   },
   chooseAppCredentials: {
+    active: false
+  },
+  chooseAnyAppCredentials: {
     active: false
   },
   updateAppPassword: {
@@ -92,10 +103,28 @@ export const modals = createReducer({
       ssoAppSettings: action.payload
     }
   },
+  ['SHOW_ANY_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      anyAppSettings: action.payload
+    }
+  },
+  ['SHOW_SOFTWARE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      softwareAppSettings: action.payload
+    }
+  },
   ['SHOW_CHOOSE_APP_CREDENTIALS_MODAL'](state, action){
     return {
       ...state,
       chooseAppCredentials: action.payload
+    };
+  },
+  ['SHOW_CHOOSE_ANY_APP_CREDENTIALS_MODAL'](state, action){
+    return {
+      ...state,
+      chooseAnyAppCredentials: action.payload
     };
   },
   ['SHOW_TEAM_LINK_APP_SETTINGS_MODAL'](state, action){
@@ -110,10 +139,34 @@ export const modals = createReducer({
       teamSingleAppSettings: action.payload
     }
   },
+  ['SHOW_TEAM_ANY_SINGLE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamAnySingleAppSettings: action.payload
+    }
+  },
+  ['SHOW_TEAM_SOFTWARE_SINGLE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamSoftwareSingleAppSettings: action.payload
+    }
+  },
   ['SHOW_TEAM_ENTERPRISE_APP_SETTINGS_MODAL'](state, action){
     return {
       ...state,
       teamEnterpriseAppSettings: action.payload
+    }
+  },
+  ['SHOW_TEAM_ANY_ENTERPRISE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamAnyEnterpriseAppSettings: action.payload
+    }
+  },
+  ['SHOW_TEAM_SOFTWARE_ENTERPRISE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamSoftwareEnterpriseAppSettings: action.payload
     }
   },
   ['SHOW_UPDATE_APP_PASSWORD_PASSWORD'](state, action){

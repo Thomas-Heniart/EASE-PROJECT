@@ -28,16 +28,25 @@ import SsoAppModal from "../catalog/SsoAppModal";
 import ClassicAppSettingsModal from "../modals/ClassicAppSettingsModal";
 import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
 import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
+import AnyAppSettingsModal from "../modals/AnyAppSettingsModal";
+import SoftwareAppSettingsModal from "../modals/SoftwareAppSettingsModal";
 import TeamSingleAppSettingsModal from "../modals/TeamSingleAppSettingsModal";
+import TeamAnySingleAppSettingsModal from "../modals/TeamAnySingleAppSettingsModal";
+import TeamSoftwareSingleAppSettingsModal from "../modals/TeamSoftwareSingleAppSettingsModal";
 import TeamEnterpriseAppSettingsModal from "../modals/TeamEnterpriseAppSettingsModal";
+import TeamAnyEnterpriseAppSettingsModal from "../modals/TeamAnyEnterpriseAppSettingsModal";
+import TeamSoftwareEnterpriseAppSettingsModal from "../modals/TeamSoftwareEnterpriseAppSettingsModal";
 import TeamLinkAppSettingsModal from "../modals/TeamLinkAppSettingsModal";
 import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
 import LockedTeamAppModal from "../modals/LockedTeamAppModal";
 import LogWithAppSettings from "../modals/LogWithAppSettings";
 import SsoAppSettingsModal from "../modals/SsoAppSettingsModal";
 import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
+import ChooseAnyAppCredentialsModal from "../teamAppAdders/ChooseAnyAppCredentialsModal";
 import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
 import NewFeatureModal from "../modals/NewFeatureModal";
+import AddAnyAppModal from "../catalog/AddAnyAppModal";
+import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -66,6 +75,8 @@ import NewFeatureModal from "../modals/NewFeatureModal";
   catalogAddBookmarkModal: store.teamModals.catalogAddBookmarkModal,
   catalogAddAppModal: store.teamModals.catalogAddAppModal,
   catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal,
+  catalogAddAnyAppModal: store.teamModals.catalogAddAnyAppModal,
+  catalogAddSoftwareAppModal: store.teamModals.catalogAddSoftwareAppModal,
   modals: store.modals
 }))
 class ModalsContainer extends Component{
@@ -141,18 +152,36 @@ class ModalsContainer extends Component{
           <LogWithAppSettings/>}
           {this.props.modals.chooseAppCredentials.active &&
           <ChooseAppCredentialsModal/>}
+          {this.props.modals.chooseAnyAppCredentials.active &&
+          <ChooseAnyAppCredentialsModal/>}
           {this.props.modals.teamSingleAppSettings.active &&
           <TeamSingleAppSettingsModal/>}
+          {this.props.modals.teamAnySingleAppSettings.active &&
+          <TeamAnySingleAppSettingsModal/>}
+          {this.props.modals.teamSoftwareSingleAppSettings.active &&
+          <TeamSoftwareSingleAppSettingsModal/>}
           {this.props.modals.teamEnterpriseAppSettings.active &&
           <TeamEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamAnyEnterpriseAppSettings.active &&
+          <TeamAnyEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamSoftwareEnterpriseAppSettings.active &&
+          <TeamSoftwareEnterpriseAppSettingsModal/>}
           {this.props.modals.teamLinkAppSettings.active &&
           <TeamLinkAppSettingsModal/>}
           {this.props.modals.updateAppPassword.active &&
           <UpdateAppPasswordModal/>}
           {this.props.modals.ssoAppSettings.active &&
           <SsoAppSettingsModal/>}
+          {this.props.modals.anyAppSettings.active &&
+          <AnyAppSettingsModal/>}
+          {this.props.modals.softwareAppSettings.active &&
+          <SoftwareAppSettingsModal/>}
           {this.props.modals.newFeature.active &&
           <NewFeatureModal/>}
+          {this.props.catalogAddAnyAppModal.active &&
+          <AddAnyAppModal/>}
+          {this.props.catalogAddSoftwareAppModal.active &&
+          <AddSoftwareCredentialsModal/>}
         </div>
     )
   }

@@ -150,7 +150,7 @@ class EaseMainNavbar extends React.Component {
           </Dropdown>
           <NotificationList history={this.props.history}/>
           <TeamsList user={this.props.user} url={this.props.match.url}/>
-          <Menu.Item as={NavLink} data-tip="Apps Catalogue" id="catalog_button" to={'/main/catalog'}>
+          <Menu.Item as={NavLink} data-tip="Apps Catalogue" id="catalog_button" to={'/main/catalog/website'}>
             <Icon name="plus circle"/>
             &nbsp;
             Add new App

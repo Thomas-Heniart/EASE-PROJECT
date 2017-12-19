@@ -48,6 +48,26 @@ export function showTeamSingleAppSettingsModal({active, app}){
   }
 }
 
+export function showTeamAnySingleAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_ANY_SINGLE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showTeamSoftwareSingleAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_SOFTWARE_SINGLE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
 export function showTeamEnterpriseAppSettingsModal({active, app}){
   return {
     type: 'SHOW_TEAM_ENTERPRISE_APP_SETTINGS_MODAL',
@@ -58,9 +78,49 @@ export function showTeamEnterpriseAppSettingsModal({active, app}){
   }
 }
 
+export function showTeamAnyEnterpriseAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_ANY_ENTERPRISE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showTeamSoftwareEnterpriseAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_SOFTWARE_ENTERPRISE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
 export function showSsoAppSettingsModal({active, app}) {
   return {
     type: 'SHOW_SSO_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showAnyAppSettingsModal({active, app}) {
+  return {
+    type: 'SHOW_ANY_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showSoftwareAppSettingsModal({active, app}) {
+  return {
+    type: 'SHOW_SOFTWARE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
       app:app
@@ -105,6 +165,23 @@ export function showChooseAppCredentialsModal({active, card_name, receivers, des
       card_name: card_name,
       receivers: receivers,
       description: description,
+      password_reminder_interval: password_reminder_interval
+    }
+  }
+}
+
+export function showChooseAnyAppCredentialsModal({active, card_name, receivers, description, url, img_url, logoLetter, subtype, password_reminder_interval}){
+  return {
+    type: 'SHOW_CHOOSE_ANY_APP_CREDENTIALS_MODAL',
+    payload: {
+      active: active,
+      card_name: card_name,
+      receivers: receivers,
+      description: description,
+      url: url,
+      img_url: img_url,
+      logoLetter: logoLetter,
+      subtype: subtype,
       password_reminder_interval: password_reminder_interval
     }
   }

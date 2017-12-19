@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { Grid, Image, Icon, Modal, Header, Input, Container, Loader } from 'semantic-ui-react';
-import {selectItemFromListById} from "../../utils/helperFunctions";
+import { Input, Container, Loader } from 'semantic-ui-react';
+import {handleSemanticInput} from "../../utils/utils";
 import AppsContainer from "./AppsContainer";
-import RequestForm from './RequestForm';
+import AddAnyApp from './AddAnyApp'
 import {connect} from "react-redux";
 import { Switch, Route } from 'react-router-dom';
 import CategoryAppsContainer from "./CategoryAppsContainer";
@@ -15,24 +15,22 @@ class WebsitesContainer extends Component{
   constructor(props){
     super(props);
     this.state = {
-      websites: []
+      query: ''
     }
   }
-  componentDidMount(){
-
-  }
+  handleInput = handleSemanticInput.bind(this);
   openModal = (item) => {
     if (!item.sso_id) {
-        this.props.showCatalogAddAppModal({
-            active: true,
-            website: item
-        });
+      this.props.showCatalogAddAppModal({
+        active: true,
+        website: item
+      });
     }
     else {
-        this.props.showCatalogAddSSOAppModal({
-            active: true,
-            website: item
-        });
+      this.props.showCatalogAddSSOAppModal({
+        active: true,
+        website: item
+      });
     }
   };
   render(){
@@ -57,10 +55,7 @@ class WebsitesContainer extends Component{
                    render={(props) => <CategoryAppsContainer {...props} websites={websites} openModal={this.openModal}/>}/>
           </Switch>}
           {websites.length === 0 && this.props.catalog.loaded &&
-          <div>
-            <h3>Cannot find your App?</h3>
-            <RequestForm />
-          </div>}
+            <AddAnyApp query={query}/>}
         </Container>
     )
   }

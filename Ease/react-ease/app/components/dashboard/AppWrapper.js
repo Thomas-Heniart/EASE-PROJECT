@@ -8,9 +8,15 @@ import ClassicApp from "./ClassicApp";
 import LinkApp from "./LinkApp";
 import LogWithApp from "./LogWithApp";
 import TeamEnterpriseApp from "./TeamEnterpriseApp";
+import TeamAnyEnterpriseApp from "./TeamAnyEnterpriseApp";
+import TeamSoftwareEnterpriseApp from "./TeamSoftwareEnterpriseApp";
 import TeamSingleApp from "./TeamSingleApp";
+import TeamAnySingleApp from "./TeamAnySingleApp";
+import TeamSoftwareSingleApp from "./TeamSoftwareSingleApp";
 import TeamLinkApp from "./TeamLinkApp";
 import SsoApp from  "./SsoApp";
+import AnyApp from "./AnyApp"
+import SoftwareApp from "./SoftwareApp";
 import {createProfileAndInsertApp, moveApp, beginAppDrag,endAppDrag} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 
@@ -36,11 +42,25 @@ class AppWrapper extends Component {
       case 'teamLinkApp':
         return <TeamLinkApp app={app} dispatch={dispatch}/>;
       case 'teamSingleApp':
-        return <TeamSingleApp app={app} dispatch={dispatch}/>;
+        if (app.sub_type === 'classic')
+          return <TeamSingleApp app={app} dispatch={dispatch}/>;
+        else if (app.sub_type === 'any')
+          return <TeamAnySingleApp app={app} dispatch={dispatch}/>;
+        else
+          return <TeamSoftwareSingleApp app={app} dispatch={dispatch}/>;
       case 'teamEnterpriseApp':
-        return <TeamEnterpriseApp app={app} dispatch={dispatch}/>;
+        if (app.sub_type === 'classic')
+          return <TeamEnterpriseApp app={app} dispatch={dispatch}/>;
+        else if (app.sub_type === 'any')
+          return <TeamAnyEnterpriseApp app={app} dispatch={dispatch}/>;
+        else
+          return <TeamSoftwareEnterpriseApp app={app} dispatch={dispatch}/>;
       case 'ssoApp':
         return <SsoApp app={app} dispatch={dispatch}/>;
+      case 'anyApp':
+        return <AnyApp app={app} dispatch={dispatch}/>;
+      case 'softwareApp':
+        return <SoftwareApp app={app} dispatch={dispatch}/>;
       default:
         return null;
     }

@@ -42,6 +42,62 @@ export function testCredentials({account_information, website_id}) {
   }
 }
 
+export function catalogAddAnyApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided}){
+  return (dispatch, getState) => {
+    return post_api.catalog.addAnyApp({
+      name: name,
+      url: url,
+      img_url: img_url,
+      profile_id: profile_id,
+      account_information: account_information,
+      connection_information: connection_information,
+      credentials_provided: credentials_provided,
+      ws_id: getState().common.ws_id
+    }).then(app => {
+      dispatch({
+        type: 'DASHBOARD_APP_CREATED',
+        payload: {
+          app: app
+        }
+      });
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully sent to ${profile.name}!`
+      }));
+      return app;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function catalogAddSoftwareApp({name, logo_url, profile_id, account_information, connection_information}){
+  return (dispatch, getState) => {
+    return post_api.catalog.addSoftwareApp({
+      name: name,
+      logo_url: logo_url,
+      profile_id: profile_id,
+      account_information: account_information,
+      connection_information: connection_information,
+      ws_id: getState().common.ws_id
+    }).then(app => {
+      dispatch({
+        type: 'DASHBOARD_APP_CREATED',
+        payload: {
+          app: app
+        }
+      });
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully sent to ${profile.name}!`
+      }));
+      return app;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function catalogAddSsoApp({name, profile_id, sso_group_id, website_id}){
   return (dispatch, getState) => {
     post_api.catalog.addSsoApp({
@@ -204,7 +260,7 @@ export function catalogRequestWebsite({url, account_information}){
   }
 }
 
-export function catalogAddBookmarkModal({name, url, img_url}){
+export function catalogAddBookmarkModal({name, url, img_url, logoLetter}){
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       dispatch({
@@ -252,6 +308,72 @@ export function showCatalogAddSSOAppModal({active, website}){
     payload: {
       active: active,
       website: website
+    }
+  }
+}
+
+export function catalogAddAnyAppModal({name, url, img_url, logoLetter}){
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'SHOW_CATALOG_ADD_ANY_APP_MODAL',
+        payload: {
+          active: true,
+          name: name,
+          url: url,
+          img_url: img_url,
+          logoLetter: logoLetter,
+          resolve: resolve,
+          reject: reject
+        }
+      })
+    })
+  }
+}
+
+export function showCatalogAddAnyAppModal({active, name, url, img_url, logoLetter, resolve, reject}){
+  return {
+    type: 'SHOW_CATALOG_ADD_ANY_APP_MODAL',
+    payload: {
+      active: active,
+      name: name,
+      url: url,
+      img_url: img_url,
+      logoLetter: logoLetter,
+      resolve: resolve,
+      reject: reject
+    }
+  }
+}
+
+export function catalogAddSoftwareAppModal({name, img_url, logoLetter}){
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'SHOW_CATALOG_ADD_SOFTWARE_APP_MODAL',
+        payload: {
+          active: true,
+          name: name,
+          img_url: img_url,
+          logoLetter: logoLetter,
+          resolve: resolve,
+          reject: reject
+        }
+      })
+    })
+  }
+}
+
+export function showCatalogAddSoftwareAppModal({active, name, img_url, logoLetter, resolve, reject}){
+  return {
+    type: 'SHOW_CATALOG_ADD_SOFTWARE_APP_MODAL',
+    payload: {
+      active: active,
+      name: name,
+      img_url: img_url,
+      logoLetter: logoLetter,
+      resolve: resolve,
+      reject: reject
     }
   }
 }

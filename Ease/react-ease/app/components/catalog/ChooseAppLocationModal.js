@@ -73,10 +73,17 @@ class ChooseAppLocationModal extends React.Component {
     return (
       <Form class="container" id="add_bookmark_form" onSubmit={confirm}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-              <div class="squared_image_handler">
-                  <img src={website.logo} alt="Website logo"/>
+            {website.logo ?
+            <div className="squared_image_handler">
+              <img src={website.logo} alt="Website logo"/>
+            </div>
+            :
+            <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
+              <div style={{margin:'auto'}}>
+                <p style={{margin:'auto'}}>{this.props.logoLetter}</p>
               </div>
-              <span class="app_name">{appName}</span>
+            </div>}
+            <span className="app_name">{appName}</span>
           </Form.Field>
           <Form.Field>
               <div style={{marginBottom: '10px'}}>Where would you like to send this app?</div>
