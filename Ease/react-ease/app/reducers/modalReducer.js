@@ -139,10 +139,34 @@ export const modals = createReducer({
       teamSingleAppSettings: action.payload
     }
   },
+  ['SHOW_TEAM_ANY_SINGLE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamAnySingleAppSettings: action.payload
+    }
+  },
+  ['SHOW_TEAM_SOFTWARE_SINGLE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamSoftwareSingleAppSettings: action.payload
+    }
+  },
   ['SHOW_TEAM_ENTERPRISE_APP_SETTINGS_MODAL'](state, action){
     return {
       ...state,
       teamEnterpriseAppSettings: action.payload
+    }
+  },
+  ['SHOW_TEAM_ANY_ENTERPRISE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamAnyEnterpriseAppSettings: action.payload
+    }
+  },
+  ['SHOW_TEAM_SOFTWARE_ENTERPRISE_APP_SETTINGS_MODAL'](state, action){
+    return {
+      ...state,
+      teamSoftwareEnterpriseAppSettings: action.payload
     }
   },
   ['SHOW_UPDATE_APP_PASSWORD_PASSWORD'](state, action){

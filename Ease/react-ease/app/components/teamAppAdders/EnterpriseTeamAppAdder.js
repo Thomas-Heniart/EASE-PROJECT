@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {fetchWebsiteInfo} from "../../utils/api";
+import {fetchWebsiteInfo, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
 import {handleSemanticInput,
   transformCredentialsListIntoObject,
   transformWebsiteInfoIntoList,
@@ -60,12 +60,15 @@ class EnterpriseTeamAppAdder extends Component {
     this.state = {
       loading: false,
       app: this.props.card.app,
-      app_name: this.props.card.app.name,
+      app_url: this.props.card.url,
+      app_name: this.props.card.name,
       password_reminder_interval: 0,
       description: '',
       users: [],
       selected_users: [],
-      fill_in_switch: false
+      fill_in_switch: false,
+      img_url: this.props.card.app.logo,
+      subtype: this.props.card.subtype
     }
   }
   handleInput = handleSemanticInput.bind(this);
@@ -85,6 +88,52 @@ class EnterpriseTeamAppAdder extends Component {
       return user;
     });
     this.setState({users: users});
+  };
+  getLogo = () => {
+    if (this.props.card.subtype === 'AnyApp')
+      getClearbitLogo(this.state.app_url).then(response => {
+        this.setState({img_url: response});
+      }).catch(err => {
+        this.setState({img_url: ''});
+      });
+    else if (this.props.card.subtype === 'softwareApp') {
+      const name = this.state.app_name.replace(/\s+/g, '').toLowerCase();
+      if (name === '')
+        this.setState({img_url: ''});
+      else
+        getClearbitLogoAutoComplete(name).then(response => {
+          this.setState({img_url: response});
+        }).catch(err => {
+          this.setState({img_url: ''});
+        });
+    }
+  };
+  changeUrl = (e, {value}) => {
+    this.setState({app_url: value}, this.getLogo);
+  };
+  handleInputName = (e, {value}) => {
+    this.setState({app_name: value}, this.getLogo);
+  };
+  imgNone = (e) => {
+    e.preventDefault();
+    this.setState({img_url:''});
+  };
+  logoLetter = () => {
+    let first = '';
+    let second = '';
+    let space = false;
+    for (let letter = 0; letter < this.state.app_name.length; letter++) {
+      if (first.length < 1 && this.state.app_name[letter] !== ' ')
+        first = this.state.app_name[letter];
+      else if (first.length > 0 && second.length < 1 && this.state.app_name[letter] !== ' ' && space === true)
+        second = this.state.app_name[letter];
+      else if (this.state.app_name[letter] === ' ')
+        space = true;
+    }
+    if (second !== '')
+      return first.toUpperCase() + second.toUpperCase();
+    else
+      return first.toUpperCase();
   };
   chooseAllUsers = () => {
     let selected = [];
@@ -189,7 +238,7 @@ class EnterpriseTeamAppAdder extends Component {
                              name="app_name"
                              value={this.state.app_name}
                              autoComplete="off"
-                             onChange={this.handleInput}
+                             onChange={this.handleInputName}
                              size="mini"
                              label={<Label><Icon name="home"/></Label>}
                              labelPosition="left"
@@ -201,12 +250,37 @@ class EnterpriseTeamAppAdder extends Component {
                 <div class="display_flex">
                   <div class="logo_column">
                     <div class="logo">
-                      <img src={app.logo}/>
+                      {this.state.img_url ?
+                        <div style={{backgroundImage:`url('${this.state.img_url}')`}}>
+                          {(this.state.subtype === 'AnyApp' || this.state.subtype === 'softwareApp') &&
+                          <button className="button-unstyle action_button close_button" onClick={this.imgNone}>
+                            <Icon name="close" class="mrgn0" link/>
+                          </button>}
+                        </div>
+                        : this.state.app_name ?
+                          <div style={{backgroundColor:'#373b60',color:'white'}}>
+                            <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                          </div>
+                          :
+                          <div style={{backgroundColor:'white',color: '#dededf'}}>
+                            <Icon name='wait' style={{margin:'auto'}}/>
+                          </div>}
                     </div>
                   </div>
                   <div class="main_column">
                     <div class="credentials">
                       <div class="display-inline-flex align_items_center">
+                        {this.props.card.subtype === 'AnyApp' &&
+                        <Input className="team-app-input any_app"
+                               placeholder="Website URL"
+                               name="app_url"
+                               value={this.state.app_url}
+                               autoComplete="off"
+                               onChange={this.changeUrl}
+                               size="mini"
+                               label={<Label><Icon name="home"/></Label>}
+                               labelPosition="left"
+                               required/>}
                         <PasswordChangeDropdownEnterprise value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
                       </div>
                     </div>

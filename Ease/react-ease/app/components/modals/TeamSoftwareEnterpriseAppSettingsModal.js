@@ -1,33 +1,44 @@
 import React, {Component} from "react";
-import AppSettingsNameInput from "./AppSettingsNameInput";
-import {handleSemanticInput} from "../../utils/utils";
+import TeamAppSettingsNameInput from "./TeamAppSettingsNameInput";
+import {handleSemanticInput, isCredentialsMatch} from "../../utils/utils";
 import {Message, Input, Label,Form, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import {showAnyAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, RemoveSection} from "./utils";
-import {transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editAnyApp, deleteApp, validateApp} from "../../actions/dashboardActions";
-import {CopyPasswordIcon} from "../dashboard/utils";
-import { getClearbitLogo } from "../../utils/api";
+import {showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
+import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
+import {editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
+import {CopyPasswordIcon} from "../dashboard/utils";
+import {isAdmin} from "../../utils/helperFunctions";
+import {
+  removeTeamCardReceiver, teamEditSoftwareEnterpriseCard,
+  teamEditEnterpriseCardReceiver
+} from "../../actions/appsActions";
 import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
-  app: store.modals.anyAppSettings.app
+  teams: store.teams,
+  team_apps: store.team_apps,
+  app: store.modals.teamSoftwareEnterpriseAppSettings.app
 }))
-class AnyAppSettingsModal extends Component {
+class TeamSoftwareEnterpriseAppSettingsModal extends Component {
   constructor(props){
     super(props);
     this.state = {
       appName: this.props.app.name,
       view: 'Account',
       credentials: [],
-      isEmpty: this.props.app.empty,
+      team_app: this.props.team_apps[this.props.app.team_card_id],
+      isEmpty: false,
       loading: false,
-      errorMessage:'',
-      url: this.props.app.website.landing_url,
-      editUrl: false
+      errorMessage:''
     };
+    const team_app = this.state.team_app;
+    const team = this.props.teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    this.state.source_credentials = meReceiver.account_information;
+    this.state.isEmpty = meReceiver.empty;
   }
   handleInput = handleSemanticInput.bind(this);
   handleCredentialInput = (e, {name, value}) => {
@@ -38,35 +49,24 @@ class AnyAppSettingsModal extends Component {
     });
     this.setState({credentials: credentials});
   };
-  getLogo = () => {
-    getClearbitLogo(this.state.url).then(response => {
-      this.setState({img_url: response});
-    }).catch(err => {
-      this.setState({img_url: ''});
-    });
-  };
-  changeUrl = (e, {value}) => {
-    this.setState({url: value}, this.getLogo);
-  };
   toggleCredentialEdit = (name) => {
     const credentials = this.state.credentials.map(item => {
       if (item.name === name)
         item.edit = !item.edit;
       if (!item.edit)
-        item.value = this.props.app.account_information[item.name];
+        item.value = this.state.source_credentials[item.name];
       return item;
     });
     this.setState({credentials: credentials});
   };
-  toggleUrlEdit = () => {
-    this.setState({editUrl: !this.state.editUrl});
-  };
   close = () => {
-    this.props.dispatch(showAnyAppSettingsModal({active: false}));
+    this.props.dispatch(showTeamSoftwareEnterpriseAppSettingsModal({active: false}));
   };
   remove = () => {
-    return this.props.dispatch(deleteApp({
-      app_id: this.props.app.id
+    return this.props.dispatch(removeTeamCardReceiver({
+      team_id: this.props.app.team_id,
+      team_card_id: this.props.app.team_card_id,
+      team_card_receiver_id: this.props.app.team_card_receiver_id
     })).then(response => {
       this.props.dispatch(addNotification({
         text: `${this.props.app.name} has been successfully removed!`
@@ -78,42 +78,65 @@ class AnyAppSettingsModal extends Component {
   };
   edit = (e) => {
     e.preventDefault();
-    this.setState({loading: true, errorMessage: ''});
-    this.props.dispatch(editAnyApp({
-      app_id: this.props.app.id,
-      name: this.state.appName,
-      url: this.state.url,
-      img_url: this.state.img_url,
-      account_information: transformCredentialsListIntoObject(this.state.credentials),
-      connection_information: this.props.app.website.information
-    })).then(response => {
+    const team_app = this.state.team_app;
+    const team = this.props.teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    const account_information = transformCredentialsListIntoObject(this.state.credentials);
+
+    this.setState({errorMessage: '', loading:true});
+    let calls = [];
+    if (this.state.appName !== this.props.app.name)
+      calls.push(this.props.dispatch(editAppName({
+        app_id: this.props.app.id,
+        name: this.state.appName
+      })));
+    if (!isCredentialsMatch(this.state.source_credentials, account_information))
+      calls.push(this.props.dispatch(teamEditEnterpriseCardReceiver({
+        team_id: team_app.team_id,
+        team_card_id: team_app.id,
+        team_card_receiver_id: meReceiver.id,
+        account_information: account_information
+      })));
+    Promise.all(calls).then(response => {
       this.setState({loading: false});
       this.props.dispatch(addNotification({
         text: `${this.props.app.name} has been successfully modified!`
       }));
       this.close();
     }).catch(err => {
-      this.setState({loading: false, errorMessage: err});
+      this.setState({errorMessage: err, loading: false});
     });
   };
   componentWillMount(){
-    const {app} = this.props;
-    const credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information).map(item => {
+    const {app, teams} = this.props;
+    const team_app = this.state.team_app;
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+
+    const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.software.connection_information, meReceiver.account_information).map(item => {
       return {
         ...item,
         edit: false
       }
     });
-    if (this.props.app.new)
+    if (app)
       this.props.dispatch(validateApp({
-        app_id: this.props.app.id
+        app_id: app.id
       }));
     this.setState({credentials: credentials});
   }
   render(){
     const {view, credentials} = this.state;
-    const app = this.props.app;
-    const inputs = credentials.map((item,idx) => {
+    const {app, teams} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meAdmin = isAdmin(me.role);
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    const room = teams[team_app.team_id].rooms[team_app.channel_id];
+    const inputs = credentials.map((item, idx) => {
       if (item.name === 'password')
         return (
           <Form.Field key={idx}>
@@ -134,14 +157,15 @@ class AnyAppSettingsModal extends Component {
                 labelPosition='left'>
                 <Label><Icon name="lock"/></Label>
                 <input/>
-                {!app.empty &&
+                {!this.state.isEmpty &&
                 <CopyPasswordIcon app_id={app.id}/>}
               </Input>
               {!this.state.isEmpty &&
               <Icon
                 name="pencil"
                 onClick={this.toggleCredentialEdit.bind(null, item.name)}
-                fitted link
+                fitted
+                link
                 style={{paddingLeft: '15px'}}/>}
             </div>
           </Form.Field>
@@ -168,7 +192,8 @@ class AnyAppSettingsModal extends Component {
             <Icon
               name="pencil"
               onClick={this.toggleCredentialEdit.bind(null, item.name)}
-              fitted link
+              fitted
+              link
               style={{paddingLeft: '15px'}}/>}
           </div>
         </Form.Field>
@@ -178,41 +203,27 @@ class AnyAppSettingsModal extends Component {
       <SimpleModalTemplate
         onClose={this.close}
         headerContent={"App settings"}>
-        <Container class="app_settings_modal">
+        <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
-              <img src={this.state.img_url ? this.state.img_url : app.website.logo} alt="Website logo"/>
+              <img src={this.props.app.logo} alt="Website logo"/>
             </div>
-            <AppSettingsNameInput value={this.state.appName} onChange={this.handleInput}/>
+            <TeamAppSettingsNameInput
+              team_name={team.name}
+              room_name={room.name}
+              value={this.state.appName}
+              onChange={this.handleInput}/>
           </div>
-          <AppSettingsMenu view={view} onChange={this.handleInput}/>
+          {!this.state.isEmpty &&
+          <AppSettingsMenu
+            view={view}
+            onChange={this.handleInput}/>}
           {view === 'Account' &&
           <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
+            {this.state.isEmpty &&
             <Form.Field>
-              <label>URL</label>
-              <div className="display_flex align_items_center">
-                <Input
-                  fluid
-                  icon
-                  disabled={!this.state.editUrl && !this.state.isEmpty}
-                  className="modalInput team-app-input"
-                  size='large'
-                  required={this.state.isEmpty}
-                  type='url'
-                  name='url'
-                  onChange={this.changeUrl}
-                  label={{ icon: 'home'}}
-                  value={this.state.url}
-                  placeholder='URL'
-                  labelPosition='left'/>
-                {!this.state.isEmpty &&
-                <Icon
-                  name="pencil"
-                  onClick={this.toggleUrlEdit}
-                  fitted link
-                  style={{paddingLeft: '15px'}}/>}
-              </div>
-            </Form.Field>
+              <Icon name="wrench" style={{color: '#ff9a00'}}/> your admin asked you to enter the credentials.
+            </Form.Field>}
             {inputs}
             <Message error content={this.state.errorMessage}/>
             <Button
@@ -223,7 +234,7 @@ class AnyAppSettingsModal extends Component {
               content="CONFIRM"/>
           </Form>}
           {view === 'Remove' &&
-          <RemoveSection onRemove={this.remove}/>}
+          <TeamAppRemoveSection onRemove={this.remove}/>}
           {view === 'Share' &&
           <ShareSection/>}
         </Container>
@@ -232,4 +243,4 @@ class AnyAppSettingsModal extends Component {
   }
 }
 
-export default AnyAppSettingsModal;
+export default TeamSoftwareEnterpriseAppSettingsModal;

@@ -31,7 +31,11 @@ import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
 import AnyAppSettingsModal from "../modals/AnyAppSettingsModal";
 import SoftwareAppSettingsModal from "../modals/SoftwareAppSettingsModal";
 import TeamSingleAppSettingsModal from "../modals/TeamSingleAppSettingsModal";
+import TeamAnySingleAppSettingsModal from "../modals/TeamAnySingleAppSettingsModal";
+import TeamSoftwareSingleAppSettingsModal from "../modals/TeamSoftwareSingleAppSettingsModal";
 import TeamEnterpriseAppSettingsModal from "../modals/TeamEnterpriseAppSettingsModal";
+import TeamAnyEnterpriseAppSettingsModal from "../modals/TeamAnyEnterpriseAppSettingsModal";
+import TeamSoftwareEnterpriseAppSettingsModal from "../modals/TeamSoftwareEnterpriseAppSettingsModal";
 import TeamLinkAppSettingsModal from "../modals/TeamLinkAppSettingsModal";
 import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
 import LockedTeamAppModal from "../modals/LockedTeamAppModal";
@@ -152,8 +156,16 @@ class ModalsContainer extends Component{
           <ChooseAnyAppCredentialsModal/>}
           {this.props.modals.teamSingleAppSettings.active &&
           <TeamSingleAppSettingsModal/>}
+          {this.props.modals.teamAnySingleAppSettings.active &&
+          <TeamAnySingleAppSettingsModal/>}
+          {this.props.modals.teamSoftwareSingleAppSettings.active &&
+          <TeamSoftwareSingleAppSettingsModal/>}
           {this.props.modals.teamEnterpriseAppSettings.active &&
           <TeamEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamAnyEnterpriseAppSettings.active &&
+          <TeamAnyEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamSoftwareEnterpriseAppSettings.active &&
+          <TeamSoftwareEnterpriseAppSettingsModal/>}
           {this.props.modals.teamLinkAppSettings.active &&
           <TeamLinkAppSettingsModal/>}
           {this.props.modals.updateAppPassword.active &&

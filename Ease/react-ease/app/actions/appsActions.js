@@ -285,7 +285,7 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
   }
 }
 
-export function teamEditAnySingleCard({team_card_id, description, url, img_url, connection_information, account_information, password_reminder_interval, name}){
+export function teamEditAnySingleApp({team_card_id, description, url, img_url, connection_information, account_information, password_reminder_interval, name}){
   return function (dispatch, getState){
     return post_api.teamApps.editAnySingleCard({
       name: name,
@@ -308,7 +308,7 @@ export function teamEditAnySingleCard({team_card_id, description, url, img_url, 
   }
 }
 
-export function teamEditSoftwareSingleCard({team_card_id, description, account_information, password_reminder_interval, name}){
+export function teamEditSoftwareSingleApp({team_card_id, description, account_information, password_reminder_interval, name}){
   return function (dispatch, getState){
     return post_api.teamApps.editSoftwareSingleCard({
       name: name,

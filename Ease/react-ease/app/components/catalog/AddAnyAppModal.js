@@ -334,12 +334,19 @@ class AddAnyAppModal extends React.Component {
         {this.state.view === 3 &&
         <ChooseTypeAppModal
           {...this.props}
-          website={{logo: this.state.img_url}}
+          website={{
+            logo: this.state.img_url,
+            information: {
+              login: {placeholder: "Login",priority:0,type:"text"},
+              password: {placeholder:"Password",priority:1,type:"password"}
+            }
+          }}
+          url={this.state.url}
           logoLetter={this.props.modal.logoLetter}
           appName={this.state.name}
           team_id={this.state.selectedTeam}
           room_id={this.state.selectedRoom}
-          subtype={'anyApp'}
+          subtype={'AnyApp'}
           close={this.close} />}
       </SimpleModalTemplate>
     )

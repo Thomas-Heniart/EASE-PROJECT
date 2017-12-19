@@ -48,9 +48,49 @@ export function showTeamSingleAppSettingsModal({active, app}){
   }
 }
 
+export function showTeamAnySingleAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_ANY_SINGLE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showTeamSoftwareSingleAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_SOFTWARE_SINGLE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
 export function showTeamEnterpriseAppSettingsModal({active, app}){
   return {
     type: 'SHOW_TEAM_ENTERPRISE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showTeamAnyEnterpriseAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_ANY_ENTERPRISE_APP_SETTINGS_MODAL',
+    payload: {
+      active: active,
+      app:app
+    }
+  }
+}
+
+export function showTeamSoftwareEnterpriseAppSettingsModal({active, app}){
+  return {
+    type: 'SHOW_TEAM_SOFTWARE_ENTERPRISE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
       app:app

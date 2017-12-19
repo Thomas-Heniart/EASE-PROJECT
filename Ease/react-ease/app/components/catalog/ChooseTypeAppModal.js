@@ -27,7 +27,8 @@ class ChooseTypeAppModal extends React.Component {
       channel_id: room_id,
       website: this.state.website,
       type: this.state.value,
-      name: this.state.website.name,
+      name: this.state.website.name ? this.state.website.name : this.props.appName,
+      url: this.props.url,
       subtype: this.state.subtype
     });
     this.props.history.push(`/teams/${team_id}/${room_id}`);
