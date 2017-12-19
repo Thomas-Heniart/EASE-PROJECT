@@ -29,7 +29,23 @@ export const modals = createReducer({
     active: false,
     app: null
   },
+  teamAnySingleAppSettings: {
+    active: false,
+    app: null
+  },
+  teamSoftwareSingleAppSettings: {
+    active: false,
+    app: null
+  },
   teamEnterpriseAppSettings: {
+    active: false,
+    app: null
+  },
+  teamAnyEnterpriseAppSettings: {
+    active: false,
+    app: null
+  },
+  teamSoftwareEnterpriseAppSettings: {
     active: false,
     app: null
   },
