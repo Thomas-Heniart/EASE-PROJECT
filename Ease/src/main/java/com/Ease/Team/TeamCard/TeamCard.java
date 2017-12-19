@@ -139,7 +139,7 @@ abstract public class TeamCard {
         res.put("name", this.getName());
         res.put("logo", this.getLogo());
         res.put("type", this.getType());
-        res.put("subtype", this.getSubtype());
+        res.put("sub_type", this.getSubtype());
         res.put("creation_date", this.getCreation_date().getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("channel_id", this.getChannel().getDb_id());
