@@ -91,6 +91,7 @@ abstract public class TeamCardReceiver {
         res.put("team_card_receiver_id", this.getDb_id());
         res.put("sharing_date", this.getSharing_date().getTime());
         res.put("type", this.getType());
+        res.put("sub_type", this.getTeamCard().getSubtype());
         return res;
     }
 
