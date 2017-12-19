@@ -33,7 +33,7 @@ public class ServletEditWebsite extends HttpServlet {
             String folder = sm.getStringParam("folder", true, false);
             String login_url = sm.getStringParam("login_url", true, false);
             String landing_url = sm.getStringParam("landing_url", true, false);
-            JSONArray teams = (JSONArray) sm.getParam("teams", false, false);
+            JSONArray teams = sm.getArrayParam("teams", false, false);
             JSONArray connectWith_ids = sm.getArrayParam("connectWith", false, false);
             Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true, false));
             Integer category_id = sm.getIntParam("category_id", true, false);
