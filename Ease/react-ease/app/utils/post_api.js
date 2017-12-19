@@ -93,7 +93,7 @@ module.exports = {
         ws_id:ws_id
       })
     },
-    editAnyApp: ({app_id, name, url, img_url, account_information, ws_id}) => {
+    editAnyApp: ({app_id, name, url, img_url, account_information, connection_information, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -103,6 +103,7 @@ module.exports = {
         url: url,
         img_url: img_url,
         account_information: account_information,
+        connection_information: connection_information,
         ws_id: ws_id
       });
     },
