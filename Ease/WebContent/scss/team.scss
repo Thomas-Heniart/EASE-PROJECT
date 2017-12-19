@@ -975,11 +975,36 @@ i.icon.pin_button {
   .logo_column {
     width: 80px;
     margin-right:1rem;
-    .logo, .logo img {
-      width: 100%;
-      background-color: white;
-      border-radius: 5px;
+    .logo {
+      div {
+        width: 80px;
+        height: 80px;
+        font-size: 24px;
+        border: solid 1px #dededf;
+        border-radius: 5px;
+        background-size: cover;
+        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
+        display: flex;
+        i.close {
+          position: absolute;
+          top: 72px;
+          left: 19px;
+          font-size: 18px;
+          text-shadow: 0 0 2px #fff;
+        }
+      }
+      img {
+        box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
+        border-radius: 7px;
+        width: 80px;
+        height: 80px;
+      }
     }
+    //.logo, .logo img {
+    //  width: 100%;
+    //  background-color: white;
+    //  border-radius: 5px;
+    //}
   }
   .main_column {
     @include flex(1);
