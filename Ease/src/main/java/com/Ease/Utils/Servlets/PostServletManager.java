@@ -21,7 +21,7 @@ import java.util.List;
 public class PostServletManager extends ServletManager {
 
     protected JSONObject params;
-    protected List<WebSocketMessage> webSocketMessages = new LinkedList<>();
+    private List<WebSocketMessage> webSocketMessages = new LinkedList<>();
 
     public PostServletManager(String servletName, HttpServletRequest request, HttpServletResponse response, boolean saveLogs) throws IOException {
         super(servletName, request, response, saveLogs);
@@ -68,38 +68,21 @@ public class PostServletManager extends ServletManager {
 
     @Override
     protected Date getCurrentTime() throws HttpServletException {
-        /* Long timestamp = this.getLongParam("timestamp", false, false);
-        return new Date(timestamp); */
         return new Date();
-    }
-
-    public Object getParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
-        if (params == null)
-            return null;
-        Object param = params.get(paramName);
-        if (param == null && !canBeNull)
-            throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter: " + paramName);
-        if (param != null && saveInLogs)
-            args.put(paramName, param.toString());
-        return param;
     }
 
     public JSONObject getJsonParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return params.getJSONObject(paramName);
+            return canBeNull ? params.optJSONObject(paramName) : params.getJSONObject(paramName);
         } catch (Exception e) {
-            if (!canBeNull)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected JSON).");
             return null;
         }
     }
 
     public JSONArray getArrayParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return params.getJSONArray(paramName);
+            return canBeNull ? params.optJSONArray(paramName) : params.getJSONArray(paramName);
         } catch (Exception e) {
-            if (canBeNull)
-                return null;
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Array).");
         }
     }
@@ -109,10 +92,8 @@ public class PostServletManager extends ServletManager {
             if (params == null)
                 return request.getParameter(paramName);
             else
-                return params.getString(paramName);
+                return canBeNull ? params.optString(paramName) : params.getString(paramName);
         } catch (Exception e) {
-            if (canBeNull)
-                return null;
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
         }
 
@@ -120,30 +101,24 @@ public class PostServletManager extends ServletManager {
 
     public Long getLongParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return params.getLong(paramName);
+            return canBeNull ? params.optLong(paramName) : params.getLong(paramName);
         } catch (Exception e) {
-            if (canBeNull)
-                return null;
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Long).");
         }
     }
 
     public Integer getIntParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return params.getInt(paramName);
+            return canBeNull ? params.optInt(paramName) : params.getInt(paramName);
         } catch (Exception e) {
-            if (canBeNull)
-                return null;
             throw new HttpServletException(HttpStatus.BadRequest, "Expected parameter: " + paramName + " type Integer");
         }
     }
 
     public Boolean getBooleanParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return params.getBoolean(paramName);
+            return canBeNull ? params.optBoolean(paramName) : params.getBoolean(paramName);
         } catch (Exception e) {
-            if (canBeNull)
-                return null;
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Boolean).");
         }
     }

@@ -68,8 +68,8 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             String teamKey = sm.getTeamKey(team);
             TeamUser teamUser_filler = null;
             if (account_information == null || account_information.keySet().isEmpty()) {
-                Integer teamUser_filler_id = sm.getIntParam("teamUser_filler_id", true, false);
-                if (teamUser_filler_id != -1) {
+                Integer teamUser_filler_id = sm.getIntParam("teamUser_filler_id", true, true);
+                if (teamUser_filler_id != null && teamUser_filler_id != -1) {
                     teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
                     teamSingleSoftwareCard.setTeamUser_filler(teamUser_filler);
                 }
