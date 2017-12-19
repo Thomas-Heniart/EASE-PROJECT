@@ -7,7 +7,7 @@ pageEncoding="UTF-8"%>
 	<c:set var="language" value="fr_FR" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}" />
-<fmt:setBundle basename="com.Ease.Languages.text" />
+<fmt:setBundle basename="languages/text" />
 <html lang="${language}">
 <head>
 	<title> Ease.space | Pricing</title>

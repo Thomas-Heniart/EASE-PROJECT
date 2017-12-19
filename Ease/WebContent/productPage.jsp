@@ -6,7 +6,7 @@
     <c:set var="language" value="fr_FR" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}" />
-<fmt:setBundle basename="com.Ease.Languages.text" />
+<fmt:setBundle basename="languages/text" />
 <!DOCTYPE html>
 <head>
     <title> Ease.space | Product</title>
