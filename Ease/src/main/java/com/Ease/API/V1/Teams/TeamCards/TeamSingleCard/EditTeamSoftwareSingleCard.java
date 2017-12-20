@@ -32,6 +32,7 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This card does not exist");
             Team team = teamSingleSoftwareCard.getTeam();
             sm.initializeTeamWithContext(team);
+            sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
             if (!teamUser.isTeamAdmin() && (teamSingleSoftwareCard.getTeamUser_filler_test() == null || !teamUser.equals(teamSingleSoftwareCard.getTeamUser_filler_test())))
                 throw new HttpServletException(HttpStatus.Forbidden);
@@ -39,8 +40,8 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             teamSingleSoftwareCard.setName(name);
-            String description = sm.getStringParam("description", true, false);
-            if (description.length() > 255)
+            String description = sm.getStringParam("description", true, true);
+            if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter description");
             teamSingleSoftwareCard.setDescription(description);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
@@ -49,7 +50,7 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             teamSingleSoftwareCard.setPassword_reminder_interval(password_reminder_interval);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             sm.decipher(account_information);
-            account_information = teamSingleSoftwareCard.getSoftware().getAllCredentialsFromJson(account_information);
+            account_information = teamSingleSoftwareCard.getSoftware().getPresentCredentialsFromJson(account_information);
             teamSingleSoftwareCard.getAccount().edit(account_information, password_reminder_interval, hibernateQuery);
             sm.saveOrUpdate(teamSingleSoftwareCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleSoftwareCard.getWebSocketJson()));

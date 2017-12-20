@@ -58,6 +58,7 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         this.teamUser_filler_test = teamUser_filler_test;
     }
 
+    @Override
     public Account getAccount() {
         return account;
     }

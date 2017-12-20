@@ -40,6 +40,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
         this.teamUser_filler = teamUser_filler;
     }
 
+    @Override
     public Account getAccount() {
         return account;
     }
