@@ -1,5 +1,7 @@
 var React = require('react');
 import SimpleTeamApp from "./teamAppAdders/SimpleTeamApp";
+import SimpleTeamSoftwareApp from "./teamAppAdders/SimpleTeamSoftwareApp";
+import SimpleTeamAnyApp from "./teamAppAdders/SimpleTeamAnyApp";
 import TeamLinkApp from "./teamAppAdders/LinkTeamApp";
 import EnterpriseTeamApp from "./teamAppAdders/EnterpriseTeamApp";
 import queryString from "query-string";
@@ -198,18 +200,44 @@ class TeamAppsContainer extends React.Component{
             </div>}
             {!this.state.loading ?
                 team_cards.map(item => {
-                  if (item.type === 'teamSingleCard')
-                    return (
+                  if (item.type === 'teamSingleCard') {
+                    if (item.sub_type === 'software')
+                      return (
+                      <SimpleTeamSoftwareApp
+                        app={item}
+                        users={users}
+                        channels={channels}
+                        me={me}
+                        key={item.id}
+                        plan_id={plan_id}
+                        team_id={team.id}
+                        dispatch={this.props.dispatch}/>
+                      );
+                    else if (item.sub_type === 'any')
+                      return (
+                        <SimpleTeamAnyApp
+                          app={item}
+                          users={users}
+                          channels={channels}
+                          me={me}
+                          key={item.id}
+                          plan_id={plan_id}
+                          team_id={team.id}
+                          dispatch={this.props.dispatch}/>
+                      );
+                    else
+                      return (
                         <SimpleTeamApp
-                            app={item}
-                            users={users}
-                            channels={channels}
-                            me={me}
-                            key={item.id}
-                            plan_id={plan_id}
-                            team_id={team.id}
-                            dispatch={this.props.dispatch}/>
-                    );
+                          app={item}
+                          users={users}
+                          channels={channels}
+                          me={me}
+                          key={item.id}
+                          plan_id={plan_id}
+                          team_id={team.id}
+                          dispatch={this.props.dispatch}/>
+                      );
+                  }
                   if (item.type === 'teamLinkCard')
                     return (
                         <TeamLinkApp

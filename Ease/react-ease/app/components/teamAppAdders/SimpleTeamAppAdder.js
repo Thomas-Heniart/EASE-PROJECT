@@ -6,7 +6,7 @@ import {handleSemanticInput,
   credentialIconType} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite} from "../../actions/teamModalActions";
-import {showChooseAppCredentialsModal, showChooseAnyAppCredentialsModal} from "../../actions/modalActions";
+import {showChooseAppCredentialsModal, showChooseAnyAppCredentialsModal, showChooseSoftwareAppCredentialsModal} from "../../actions/modalActions";
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {connect} from "react-redux";
 import {
@@ -153,7 +153,7 @@ class SimpleTeamAppAdder extends Component {
   componentWillMount(){
     let users = this.props.item.team_user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
-      if (user.role > 1) {
+      if (user.role > 1 || this.props.card.subtype === 'softwareApp' || this.props.card.subtype === 'AnyApp') {
         return {
           key: item,
           text: setUserDropdownText(user),
@@ -195,7 +195,7 @@ class SimpleTeamAppAdder extends Component {
         description: this.state.description,
         password_reminder_interval: this.state.password_reminder_interval
       }));
-    else
+    else if (this.props.card.subtype === 'AnyApp')
       this.props.dispatch(showChooseAnyAppCredentialsModal({
         active: true,
         card_name: this.state.app_name,
@@ -203,7 +203,19 @@ class SimpleTeamAppAdder extends Component {
         description: this.state.description,
         url: this.state.app_url,
         img_url: this.state.img_url,
-        subtype: this.state.subtype,
+        subtype: this.props.card.subtype,
+        logoLetter: this.logoLetter(),
+        password_reminder_interval: this.state.password_reminder_interval
+      }));
+    else
+      this.props.dispatch(showChooseSoftwareAppCredentialsModal({
+        active: true,
+        card_name: this.state.app_name,
+        receivers: receivers,
+        description: this.state.description,
+        url: this.state.app_url,
+        img_url: this.state.img_url,
+        subtype: this.props.card.subtype,
         logoLetter: this.logoLetter(),
         password_reminder_interval: this.state.password_reminder_interval
       }));

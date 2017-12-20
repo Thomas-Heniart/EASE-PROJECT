@@ -141,7 +141,7 @@ class TeamSoftwareSingleAppSettingsModal extends Component{
                 className="modalInput team-app-input"
                 size='large'
                 required={this.state.isEmpty}
-                type={item.type}
+                type={item.information_type}
                 name={item.name}
                 onChange={this.handleCredentialInput}
                 value={(item.edit || this.state.isEmpty) ? item.value : '********'}
@@ -173,7 +173,7 @@ class TeamSoftwareSingleAppSettingsModal extends Component{
               disabled={!item.edit && !this.state.isEmpty}
               className="modalInput team-app-input"
               size='large'
-              type={item.type}
+              type={item.information_type}
               name={item.name}
               required={this.state.isEmpty}
               onChange={this.handleCredentialInput}

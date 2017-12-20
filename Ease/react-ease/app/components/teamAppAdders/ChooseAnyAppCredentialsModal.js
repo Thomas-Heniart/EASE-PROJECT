@@ -211,7 +211,7 @@ class ChoosePersonWhoHasCredentials extends React.Component {
   settingsCard: store.modals.chooseAnyAppCredentials,
   receivers: store.modals.chooseAnyAppCredentials.receivers
 }), reduxActionBinder)
-class ChooseAppCredentialsModal extends React.Component {
+class ChooseAnyAppCredentialsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -300,6 +300,12 @@ class ChooseAppCredentialsModal extends React.Component {
           password_reminder_interval: this.props.settingsCard.password_reminder_interval,
           team_user_filler_id: this.state.userSelected,
           account_information: {},
+          url: this.props.settingsCard.url,
+          img_url: this.props.settingsCard.img_url,
+          connection_information: {
+            login: {placeholder: "Login", priority: 0, type: "text", value:""},
+            password: {placeholder:"Password", priority:1, type:"password", value:""}
+          },
           receivers: newReceivers
         })).then(response => {
           this.setState({loading: false});
@@ -317,12 +323,18 @@ class ChooseAppCredentialsModal extends React.Component {
         result = Object.assign(result, item);
         return result;
       }, {});
+      const connection_information = this.state.credentials.reduce((prev, curr) =>{
+        return {...prev, [curr.name]: {type:curr.type,priority:curr.priority,placeholder:curr.placeholder}}
+      }, {});
       this.props.dispatch(teamCreateAnySingleCard({
         team_id: this.props.card.team_id,
         channel_id: this.props.card.channel_id,
         name: this.props.settingsCard.card_name,
         description: this.props.settingsCard.description,
         password_reminder_interval: this.props.settingsCard.password_reminder_interval,
+        url: this.props.settingsCard.url,
+        img_url: this.props.settingsCard.img_url,
+        connection_information: connection_information,
         account_information: transformCredentialsListIntoObject(this.state.credentials),
         receivers: newReceivers
       })).then(response => {
@@ -366,4 +378,4 @@ class ChooseAppCredentialsModal extends React.Component {
   }
 }
 
-export default ChooseAppCredentialsModal;
+export default ChooseAnyAppCredentialsModal;

@@ -264,11 +264,13 @@ class TeamAnyEnterpriseAppSettingsModal extends Component {
                   value={this.state.url}
                   placeholder='URL'
                   labelPosition='left'/>
-                {(!this.state.isEmpty && meAdmin) &&
+                {!this.state.isEmpty &&
                 <Icon
                   name="pencil"
                   onClick={this.toggleUrlEdit}
-                  fitted link
+                  fitted
+                  disabled={!meAdmin}
+                  link={{meAdmin}}
                   style={{paddingLeft: '15px'}}/>}
               </div>
             </Form.Field>

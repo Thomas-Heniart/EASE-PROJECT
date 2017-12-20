@@ -149,7 +149,7 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
                 className="modalInput team-app-input"
                 size='large'
                 required={this.state.isEmpty}
-                type={item.type}
+                type={item.information_type}
                 name={item.name}
                 onChange={this.handleCredentialInput}
                 value={(item.edit || this.state.isEmpty) ? item.value : '********'}
@@ -181,7 +181,7 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
               className="modalInput team-app-input"
               size='large'
               required={this.state.isEmpty}
-              type={item.type}
+              type={item.information_type}
               name={item.name}
               onChange={this.handleCredentialInput}
               label={{ icon: credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}}

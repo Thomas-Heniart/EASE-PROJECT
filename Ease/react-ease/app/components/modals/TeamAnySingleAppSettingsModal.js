@@ -258,7 +258,9 @@ class TeamAnySingleAppSettingsModal extends Component{
                 <Icon
                   name="pencil"
                   onClick={this.toggleUrlEdit}
-                  fitted link
+                  fitted
+                  link={meAdmin}
+                  disabled={!meAdmin}
                   style={{paddingLeft: '15px'}}/>}
               </div>
             </Form.Field>

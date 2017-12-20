@@ -187,6 +187,22 @@ export function showChooseAnyAppCredentialsModal({active, card_name, receivers, 
   }
 }
 
+export function showChooseSoftwareAppCredentialsModal({active, card_name, receivers, description, url, img_url, logoLetter, subtype, password_reminder_interval}){
+  return {
+    type: 'SHOW_CHOOSE_SOFTWARE_APP_CREDENTIALS_MODAL',
+    payload: {
+      active: active,
+      card_name: card_name,
+      receivers: receivers,
+      description: description,
+      img_url: img_url,
+      logoLetter: logoLetter,
+      subtype: subtype,
+      password_reminder_interval: password_reminder_interval
+    }
+  }
+}
+
 export function showUpdateAppPasswordModal({active, app}) {
   return {
     type: 'SHOW_UPDATE_APP_PASSWORD_PASSWORD',
