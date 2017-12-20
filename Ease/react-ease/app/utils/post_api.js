@@ -741,7 +741,7 @@ module.exports = {
       });
     },
     editAnyEnterpriseCard: ({team_card_id, name, description, password_reminder_interval, url, img_url, connection_information, ws_id}) => {
-      return basic_post('/api/v1/teams/EditTeamEnterpriseCard', {
+      return basic_post('/api/v1/teams/EditTeamAnyEnterpriseCard', {
         team_card_id: team_card_id,
         name: name,
         description: description,
@@ -753,7 +753,7 @@ module.exports = {
       });
     },
     editSoftwareEnterpriseCard: ({team_card_id, name, description, password_reminder_interval, ws_id}) => {
-      return basic_post('/api/v1/teams/EditTeamEnterpriseCard', {
+      return basic_post('/api/v1/teams/EditTeamSoftwareEnterpriseCard', {
         team_card_id: team_card_id,
         name: name,
         description: description,

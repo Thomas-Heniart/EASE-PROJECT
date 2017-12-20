@@ -6,11 +6,57 @@ import {handleSemanticInput,
   credentialIconType} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite} from "../../actions/teamModalActions";
-import {teamCreateEnterpriseCard} from "../../actions/appsActions";
+import {teamCreateEnterpriseCard, teamCreateAnyEnterpriseCard, teamCreateSoftwareEnterpriseCard} from "../../actions/appsActions";
 import {connect} from "react-redux";
 import {setUserDropdownText, PasswordChangeDropdownEnterprise} from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
+
+const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, first}) => {
+  return (
+    <div style={{position: 'relative'}}>
+      {first &&
+      <Icon onClick={e => removeField(item)} name='remove circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+      <Input size="mini"
+             id={item.priority}
+             autoFocus={item.autoFocus}
+             readOnly={readOnly}
+             class="team-app-input"
+             required={isMe}
+             autoComplete='on'
+             name={item.name}
+             onChange={(e, data) => {onChange(receiver_id, data)}}
+             label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+             labelPosition="left"
+             placeholder={isMe ? item.placeholder : `${item.placeholder} (Optional)`}
+             value={item.value}
+             type={item.type}/>
+    </div>
+  )
+};
+
+const OtherInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, first}) => {
+  return (
+    <div style={{position: 'relative'}}>
+      {first &&
+      <Icon onClick={e => removeField(item)} name='remove circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+      <Input size="mini"
+             id={item.priority}
+             autoFocus={item.autoFocus}
+             readOnly={readOnly}
+             class="team-app-input"
+             required={isMe}
+             autoComplete='on'
+             name={item.name}
+             onChange={(e, data) => {onChange(receiver_id, data)}}
+             label={<Label><Icon name={'wait'}/></Label>}
+             labelPosition="left"
+             placeholder={isMe ? 'New field' : 'New field (Optional)'}
+             value={item.value}
+             type={item.type}/>
+    </div>
+  )
+};
 
 const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) => {
   return <Input size="mini"
@@ -26,24 +72,29 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) =
                 type={item.type}/>;
 };
 
-const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe}) => {
+const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe, addFields, removeField, first}) => {
   return (
       <div class="receiver">
         <Label class="receiver-label"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
         {
           receiver.credentials.map(item => {
-            return <TeamAppCredentialInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item}/>
+            if (item.name !== 'login' && item.name !== 'password')
+              return <OtherInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item} removeField={removeField} first={first}/>;
+            else
+              return <CredentialInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item} removeField={removeField} first={first}/>;
           })
         }
+        {first &&
+        <span onClick={addFields} style={{color:'#414141'}}><Icon name='plus circle'/>Add a field</span>}
       </div>
   )
 };
 
-const Receivers = ({receivers, onChange, onDelete, myId}) => {
+const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField, classic}) => {
   return (
       <div class="receivers">
-        {receivers.map(item => {
-            return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete}/>;
+        {receivers.map((item, idx) => {
+            return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete} addFields={addFields} removeField={removeField} first={idx === 0 && !classic}/>;
         })}
       </div>
   )
@@ -68,7 +119,8 @@ class EnterpriseTeamAppAdder extends Component {
       selected_users: [],
       fill_in_switch: false,
       img_url: this.props.card.app.logo,
-      subtype: this.props.card.subtype
+      subtype: this.props.card.subtype,
+      priority: 2
     }
   }
   handleInput = handleSemanticInput.bind(this);
@@ -76,15 +128,39 @@ class EnterpriseTeamAppAdder extends Component {
     const selected_users = this.state.selected_users.filter(item => (item !== id));
     this.setState({selected_users: selected_users});
   };
-  handleReceiverInput = (id, {name, value}) => {
+  handleReceiverInput = (userId, {id, value}) => {
     const users = this.state.users.map(user => {
-      if (user.id === id){
+      if (user.id === userId){
         user.credentials.map(item => {
-          if (item.name === name)
+          if (item.priority === id)
             item.value = value;
           return item;
         })
       }
+      return user;
+    });
+    this.setState({users: users});
+  };
+  addFields = () => {
+
+    const users = this.state.users.map(user => {
+      let inputs = user.credentials.slice();
+      const newInput = {name:`field${this.state.priority}`,placeholder:`Field ${this.state.priority}`,priority:this.state.priority,type:"text",value:""};
+      inputs.push(newInput);
+      user.credentials = inputs;
+      return user;
+    });
+    this.setState({users: users, priority: this.state.priority + 1});
+  };
+  removeField = (field) => {
+    const users = this.state.users.map(user => {
+      const inputs = user.credentials.filter(item => {
+        return item.priority !== field.priority;
+      }).map((item, idx) => {
+        item.priority = idx;
+        return item
+      });
+      user.credentials = inputs;
       return user;
     });
     this.setState({users: users});
@@ -203,19 +279,54 @@ class EnterpriseTeamAppAdder extends Component {
       result = Object.assign(result, item);
       return result;
     }, {});
-    this.props.dispatch(teamCreateEnterpriseCard({
-      team_id: this.props.team_id,
-      channel_id: this.props.item.id,
-      website_id: this.state.app.id,
-      name: this.state.app_name,
-      description: this.state.description,
-      password_reminder_interval: this.state.password_reminder_interval,
-      receivers: newReceivers
-    })).then(response => {
-      this.setState({loading: false});
-      this.close();
-      this.props.resetTeamCard();
-    });
+    const connection_information = this.state.users[0].credentials.reduce((prev, curr) =>{
+      return {...prev, [curr.name]: {type:curr.type,priority:curr.priority,placeholder:curr.placeholder}}
+    }, {});
+    if (this.props.card.subtype === 'AnyApp')
+      this.props.dispatch(teamCreateAnyEnterpriseCard({
+        team_id: this.props.team_id,
+        channel_id: this.props.item.id,
+        name: this.state.app_name,
+        description: this.state.description,
+        password_reminder_interval: this.state.password_reminder_interval,
+        url: this.state.app_url,
+        img_url: this.state.img_url,
+        connection_information: connection_information,
+        receivers: newReceivers
+      })).then(response => {
+        this.setState({loading: false});
+        this.close();
+        this.props.resetTeamCard();
+      });
+    else if (this.props.card.subtype === 'softwareApp')
+      this.props.dispatch(teamCreateSoftwareEnterpriseCard({
+        team_id: this.props.team_id,
+        channel_id: this.props.item.id,
+        name: this.state.app_name,
+        description: this.state.description,
+        password_reminder_interval: this.state.password_reminder_interval,
+        logo_url: this.state.img_url,
+        connection_information: connection_information,
+        receivers: newReceivers
+      })).then(response => {
+        this.setState({loading: false});
+        this.close();
+        this.props.resetTeamCard();
+      });
+    else
+      this.props.dispatch(teamCreateEnterpriseCard({
+        team_id: this.props.team_id,
+        channel_id: this.props.item.id,
+        website_id: this.state.app.id,
+        name: this.state.app_name,
+        description: this.state.description,
+        password_reminder_interval: this.state.password_reminder_interval,
+        receivers: newReceivers
+      })).then(response => {
+        this.setState({loading: false});
+        this.close();
+        this.props.resetTeamCard();
+      });
   };
   close = () => {
     this.props.resetTeamCard();
@@ -284,7 +395,7 @@ class EnterpriseTeamAppAdder extends Component {
                         <PasswordChangeDropdownEnterprise value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
                       </div>
                     </div>
-                    <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput}/>
+                    <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput} removeField={this.removeField} addFields={this.addFields} classic={this.props.card.subtype === 'classicApp'}/>
                     <div>
                       {this.state.selected_users.length !== this.state.users.length &&
                       <Dropdown
