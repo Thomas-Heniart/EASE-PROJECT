@@ -4,6 +4,7 @@ import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
@@ -37,14 +38,21 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "This is not a team single card");
-            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
             if (teamCard.containsTeamUser(teamUser_receiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-            if (teamSingleCard.getAccount() != null)
-                teamSingleCard.getAccount().decipher(teamKey);
-            App app = AppFactory.getInstance().createClassicApp(teamSingleCard.getName(), teamSingleCard.getWebsite(), teamKey, teamSingleCard.getAccount(), sm.getHibernateQuery());
+            if (teamCard.getAccount() != null)
+                teamCard.getAccount().decipher(teamKey);
+            App app;
+            if (teamCard.isTeamWebsiteCard()) {
+                TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                app = AppFactory.getInstance().createClassicApp(teamSingleCard.getName(), teamSingleCard.getWebsite(), teamKey, teamSingleCard.getAccount(), sm.getHibernateQuery());
+            }
+            else {
+                TeamSingleSoftwareCard teamSingleSoftwareCard = (TeamSingleSoftwareCard) teamCard;
+                app = AppFactory.getInstance().createSoftwareApp(teamCard.getName(), teamSingleSoftwareCard.getSoftware(), teamKey, teamCard.getAccount(), sm.getHibernateQuery());
+            }
             TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser_receiver, allowed_to_see_password);
             if (teamUser_receiver.isVerified()) {
                 Profile profile = teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
@@ -58,6 +66,7 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             if (!teamUser_receiver.equals(teamUser_connected))
                 NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);
+            teamUser_receiver.addTeamCardReceiver(teamCardReceiver);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getWebSocketJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
 import com.Ease.NewDashboard.*;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
@@ -32,6 +33,7 @@ public class DeleteTeamCard extends HttpServlet {
             sm.initializeTeamWithContext(team);
             sm.needToBeAdminOfTeam(teamCard.getTeam());
             TeamUser teamUser_admin = sm.getTeamUser(team);
+            Channel channel = teamCard.getChannel();
             for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                 App app = teamCardReceiver.getApp();
                 if (app.isWebsiteApp()) {
@@ -63,6 +65,7 @@ public class DeleteTeamCard extends HttpServlet {
                     NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
             }
             team.removeTeamCard(teamCard);
+            channel.removeTeamCard(teamCard);
             sm.deleteObject(teamCard);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("team_id", team.getDb_id());

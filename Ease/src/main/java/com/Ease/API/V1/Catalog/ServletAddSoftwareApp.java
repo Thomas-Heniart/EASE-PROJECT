@@ -48,6 +48,7 @@ public class ServletAddSoftwareApp extends HttpServlet {
             app.setProfile(profile);
             app.setPosition(profile.getSize());
             sm.saveOrUpdate(app);
+            profile.addApp(app);
             sm.setSuccess(app.getJson());
         } catch (Exception e) {
             sm.setError(e);

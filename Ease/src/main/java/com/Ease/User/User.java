@@ -415,4 +415,8 @@ public class User {
     public App getApp(App app) {
         return this.getApps().stream().filter(app::equals).findFirst().orElse(null);
     }
+
+    public void addSsoGroup(SsoGroup ssoGroup) {
+        this.getSsoGroupSet().add(ssoGroup);
+    }
 }

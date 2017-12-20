@@ -1,8 +1,8 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -24,21 +24,20 @@ public class EditTeamSingleCardReceiver extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
-            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(team_card_id);
-            if (!teamCard.isTeamSingleCard())
-                throw new HttpServletException(HttpStatus.Forbidden);
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
-            TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            TeamSingleCardReceiver teamSingleCardReceiver = (TeamSingleCardReceiver) hibernateQuery.get(TeamSingleCardReceiver.class, team_card_receiver_id);
+            if (teamSingleCardReceiver == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "No such receiver");
+            TeamCard teamCard = teamSingleCardReceiver.getTeamCard();
+            Team team = teamCard.getTeam();
+            sm.initializeTeamWithContext(team);
+            sm.needToBeAdminOfTeam(team);
             Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
-            TeamSingleCardReceiver teamSingleCardReceiver = (TeamSingleCardReceiver) teamCardReceiver;
             teamSingleCardReceiver.setAllowed_to_see_password(allowed_to_see_password);
-            sm.saveOrUpdate(teamCard);
+            sm.saveOrUpdate(teamSingleCardReceiver);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamSingleCardReceiver.getWebSocketJson()));
-            sm.setSuccess(teamCardReceiver.getCardJson());
+            sm.setSuccess(teamSingleCardReceiver.getCardJson());
         } catch (Exception e) {
             sm.setError(e);
         }

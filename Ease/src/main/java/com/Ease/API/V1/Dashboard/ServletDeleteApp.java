@@ -46,8 +46,10 @@ public class ServletDeleteApp extends HttpServlet {
             if (profile != null)
                 profile.removeAppAndUpdatePositions(app, hibernateQuery);
             sm.deleteObject(app);
-            if (ssoGroup != null && ssoGroup.getSsoAppMap().isEmpty())
+            if (ssoGroup != null && ssoGroup.getSsoAppMap().isEmpty()) {
+                user.removeSsoGroup(ssoGroup);
                 sm.deleteObject(ssoGroup);
+            }
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("app_id", app_id);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.REMOVED, jsonObject));

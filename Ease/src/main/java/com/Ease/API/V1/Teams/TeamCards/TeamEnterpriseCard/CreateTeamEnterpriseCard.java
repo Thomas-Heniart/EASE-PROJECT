@@ -58,7 +58,8 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
             for (Object object : receivers.keySet()) {
                 String key = (String) object;
                 Integer teamUser_id = Integer.valueOf(key);
-                JSONObject account_information = receivers.getJSONObject("account_information");
+                JSONObject properties = receivers.getJSONObject(key);
+                JSONObject account_information = properties.optJSONObject("account_information");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
@@ -66,7 +67,11 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                 if (account_information != null && account_information.length() != 0) {
                     sm.decipher(account_information);
                     String teamKey = sm.getTeamKey(team);
-                    account = AccountFactory.getInstance().createAccountFromMap(website.getInformationFromJson(account_information), teamKey, password_reminder_interval, sm.getHibernateQuery());
+                    if (teamUser.equals(teamUser_connected))
+                        account_information = website.getAllCredentialsFromJson(account_information);
+                    else
+                        account_information = website.getPresentCredentialsFromJson(account_information);
+                    account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, sm.getHibernateQuery());
                 }
                 AppInformation appInformation = new AppInformation(website.getName());
                 App app = new ClassicApp(appInformation, website, account);

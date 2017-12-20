@@ -2,19 +2,18 @@ package com.Ease.API.V1.Catalog;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
-import com.Ease.User.User;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.AppInformation;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.SsoApp;
 import com.Ease.NewDashboard.SsoGroup;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
-import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,7 +53,6 @@ public class ServletAddSsoApp extends HttpServlet {
             sm.saveOrUpdate(ssoApp);
             profile.addApp(ssoApp);
             ssoGroup.addSsoApp(ssoApp);
-            JSONObject jsonObject = new JSONObject();
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_APP, WebSocketMessageAction.CREATED, ssoApp.getWebSocketJson()));
             sm.setSuccess(ssoApp.getJson());
         } catch (Exception e) {

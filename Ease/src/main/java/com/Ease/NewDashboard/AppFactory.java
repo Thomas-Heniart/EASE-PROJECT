@@ -96,4 +96,9 @@ public class AppFactory {
     public App createSoftwareApp(String name, Software software) {
         return new SoftwareApp(new AppInformation(name), software);
     }
+
+    public App createSoftwareApp(String name, Software software, String symmetric_key, Account account_to_copy, HibernateQuery hibernateQuery) throws HttpServletException {
+        Account account = AccountFactory.getInstance().createAccountFromAccount(account_to_copy, symmetric_key, hibernateQuery);
+        return new SoftwareApp(new AppInformation(name), software, account);
+    }
 }

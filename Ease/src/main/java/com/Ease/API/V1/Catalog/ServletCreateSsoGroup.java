@@ -40,6 +40,7 @@ public class ServletCreateSsoGroup extends HttpServlet {
             Account account = AccountFactory.getInstance().createAccountFromJson(account_information, keyUser, 0, sm.getHibernateQuery());
             SsoGroup ssoGroup = new SsoGroup(user, sso, account);
             sm.saveOrUpdate(ssoGroup);
+            user.addSsoGroup(ssoGroup);
             sm.addWebSocketMessage(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.SSO_GROUP, WebSocketMessageAction.CREATED, ssoGroup.getWebSocketJson()));
             sm.setSuccess(ssoGroup.getJson());
         } catch (Exception e) {
