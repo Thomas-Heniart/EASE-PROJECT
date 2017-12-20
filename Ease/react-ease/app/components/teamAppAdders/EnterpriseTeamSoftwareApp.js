@@ -189,11 +189,11 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
                             class="team-app-input"
                             readOnly={true}
                             name={item.name}
-                            label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+                            label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
                             labelPosition="left"
                             placeholder={item.placeholder}
                             value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
-                            type={item.type}/>;
+                            type={item.information_type}/>;
             })}
             {receiver.user.id === me.id &&
             <CopyPasswordButton app_id={receiver.receiver.app_id}/>}
@@ -206,7 +206,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
 
 const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
   const isRequired = receiver.user.id === myId && item.name !== 'password';
-  const label = <Label><Icon name={credentialIconType[item.name]}/></Label>;
+  const label = <Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>;
   let placeholder = item.placeholder;
   if (item.name === 'password' && !receiver.empty)
     placeholder = '••••••••';
@@ -222,7 +222,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
                 labelPosition="left"
                 placeholder={placeholder}
                 value={item.value}
-                type={item.type}/>;
+                type={item.information_type}/>;
 };
 
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, password_reminder_interval}) => {
@@ -370,10 +370,10 @@ class EnterpriseTeamSoftwareApp extends Component {
       const receiver = this.props.app.receivers.find(receiver => (receiver.team_user_id === item.user.id));
       let credentials;
       if (!!receiver) {
-        credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, receiver.account_information);
+        credentials = transformWebsiteInfoIntoListAndSetValues(app.software.connection_information, receiver.account_information);
         selected_users.push(item.user.id);
       } else
-        credentials = transformWebsiteInfoIntoList(app.website.information);
+        credentials = transformWebsiteInfoIntoList(app.software.connection_information);
       return {
         ...item,
         credentials: credentials,
@@ -456,7 +456,7 @@ class EnterpriseTeamSoftwareApp extends Component {
       return {
         user: user,
         receiver: receiver,
-        credentials: transformWebsiteInfoIntoListAndSetValues(app.website.information, receiver.account_information),
+        credentials: transformWebsiteInfoIntoListAndSetValues(app.software.connection_information, receiver.account_information),
       }
     }).sort((a,b) => {
       if (a.user.id === this.props.me.id)
@@ -470,7 +470,7 @@ class EnterpriseTeamSoftwareApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const meReceiver = getReceiverInList(app.receivers, me.id);
-    const website = app.website;
+    const website = app.software;
     const users = this.getUsers();
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
     return (

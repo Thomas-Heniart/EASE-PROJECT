@@ -28,7 +28,7 @@ class TeamAnyEnterpriseApp extends Component {
   }
   componentWillMount() {
     const {app, teams} = this.props;
-    const team_app = this.state.team_app;
+    const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
