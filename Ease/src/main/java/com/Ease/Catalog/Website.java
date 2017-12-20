@@ -311,6 +311,17 @@ public class Website {
         return res;
     }
 
+    public JSONObject getPresentCredentialsFromJson(JSONObject account_information) {
+        JSONObject res = new JSONObject();
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
+            String value = account_information.optString(websiteInformation.getInformation_name());
+            if (value == null || value.equals(""))
+                continue;
+            res.put(websiteInformation.getInformation_name(), value);
+        }
+        return res;
+    }
+
     public JSONObject getJson() {
         JSONObject res = this.getSimpleJson();
         JSONObject information = new JSONObject();

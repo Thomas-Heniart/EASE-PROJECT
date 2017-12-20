@@ -1,5 +1,6 @@
 package com.Ease.Team.TeamCard;
 
+import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -240,6 +241,10 @@ public abstract class TeamCard {
 
     public Integer getPassword_reminder_interval() {
         return -1;
+    }
+
+    public Account getAccount() {
+        return null;
     }
 
     @Override

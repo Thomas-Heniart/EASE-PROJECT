@@ -41,8 +41,8 @@ public class EditTeamAnySingleCard extends HttpServlet {
             TeamUser teamUser = sm.getTeamUser(team);
             if (!teamUser.isTeamAdmin() && (teamSingleCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleCard.getTeamUser_filler())))
                 throw new HttpServletException(HttpStatus.Forbidden);
-            String description = sm.getStringParam("description", true, false);
-            if (description.length() > 255)
+            String description = sm.getStringParam("description", true, true);
+            if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             teamSingleCard.setDescription(description);
             String name = sm.getStringParam("name", true, false);
@@ -51,7 +51,6 @@ public class EditTeamAnySingleCard extends HttpServlet {
             teamSingleCard.setName(name);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             sm.decipher(account_information);
-            account_information = teamSingleCard.getWebsite().getAllCredentialsFromJson(account_information);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
             if (password_reminder_interval < 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
@@ -84,6 +83,7 @@ public class EditTeamAnySingleCard extends HttpServlet {
                 }
                 teamSingleCard.setWebsite(website);
             }
+            account_information = teamSingleCard.getWebsite().getPresentCredentialsFromJson(account_information);
             if (teamSingleCard.getAccount() == null) {
                 Account account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery());
                 teamSingleCard.setAccount(account);
