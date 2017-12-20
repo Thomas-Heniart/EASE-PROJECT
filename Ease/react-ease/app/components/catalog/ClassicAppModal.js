@@ -398,7 +398,7 @@ class ClassicAppModal extends React.Component {
       profiles.map(item => {
         item.app_ids.map(id => {
           const app = dashboard_apps[id];
-          if (app.type !== 'teamLinkApp' && app.type !== 'linkApp' && app.type !== 'softwareApp') {
+          if (app.type !== 'teamLinkApp' && app.type !== 'linkApp' && app.type !== 'softwareApp' && app.sub_type !== 'software') {
             if (app.website.id === website.id)
               apps.push(app);
           }
