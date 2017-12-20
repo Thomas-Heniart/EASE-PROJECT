@@ -62,6 +62,7 @@ public class DeleteTeamCard extends HttpServlet {
                 if (!teamUser.equals(sm.getTeamUser(team)))
                     NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
             }
+            team.removeTeamCard(teamCard);
             sm.deleteObject(teamCard);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("team_id", team.getDb_id());

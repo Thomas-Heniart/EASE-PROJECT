@@ -1,9 +1,13 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.Account;
+import com.Ease.NewDashboard.AccountFactory;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -51,7 +55,20 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             sm.decipher(account_information);
             account_information = teamSingleSoftwareCard.getSoftware().getPresentCredentialsFromJson(account_information);
-            teamSingleSoftwareCard.getAccount().edit(account_information, password_reminder_interval, hibernateQuery);
+            Account account = teamSingleSoftwareCard.getAccount();
+            if (account == null) {
+                String teamKey = sm.getTeamKey(team);
+                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, hibernateQuery);
+                teamSingleSoftwareCard.setAccount(account);
+                for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
+                    teamCardReceiver.getApp().setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleSoftwareCard.getPassword_reminder_interval(), sm.getHibernateQuery()));
+                NotificationFactory.getInstance().createAppFilledNotification(teamUser, teamSingleSoftwareCard, sm.getUserIdMap(), sm.getHibernateQuery());
+                teamSingleSoftwareCard.setTeamUser_filler_test(null);
+            } else {
+                teamSingleSoftwareCard.getAccount().edit(account_information, password_reminder_interval, hibernateQuery);
+                for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
+                    teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
+            }
             sm.saveOrUpdate(teamSingleSoftwareCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleSoftwareCard.getWebSocketJson()));
             sm.setSuccess(teamSingleSoftwareCard.getJson());

@@ -75,11 +75,14 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                     Profile profile = teamUser.getOrCreateProfile(sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
                     app.setProfile(profile);
                     app.setPosition(profile.getSize());
+                    sm.saveOrUpdate(app);
+                    profile.addApp(app);
                 }
                 sm.saveOrUpdate(teamCardReceiver);
                 if (!teamUser.equals(teamUser_connected))
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
+                teamUser.addTeamCardReceiver(teamCardReceiver);
             }
             team.addTeamCard(teamCard);
             channel.addTeamCard(teamCard);

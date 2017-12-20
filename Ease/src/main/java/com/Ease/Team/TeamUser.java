@@ -611,4 +611,8 @@ public class TeamUser {
     public void removeTeamCardReceiver(TeamCardReceiver teamCardReceiver) {
         this.getTeamCardReceivers().remove(teamCardReceiver);
     }
+
+    public void addTeamCardReceiver(TeamCardReceiver teamCardReceiver) {
+        this.getTeamCardReceivers().add(teamCardReceiver);
+    }
 }
