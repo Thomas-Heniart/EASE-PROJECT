@@ -419,4 +419,8 @@ public class User {
     public void addSsoGroup(SsoGroup ssoGroup) {
         this.getSsoGroupSet().add(ssoGroup);
     }
+
+    public void removeTeamUser(TeamUser teamUser) {
+        this.getTeamUsers().remove(teamUser);
+    }
 }

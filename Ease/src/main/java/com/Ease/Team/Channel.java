@@ -161,7 +161,7 @@ public class Channel {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", this.getDb_id());
         jsonObject.put("name", this.getName());
-        jsonObject.put("purpose", this.getPurpose());
+        jsonObject.put("purpose", this.getPurpose() == null ? "" : this.getPurpose());
         JSONArray jsonArray = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers())
             jsonArray.put(teamUser.getDb_id());

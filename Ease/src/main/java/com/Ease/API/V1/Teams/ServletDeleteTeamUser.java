@@ -7,6 +7,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -115,6 +116,9 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 channel.removePendingTeamUser(teamUser_to_delete);
             });
             team.removeTeamUser(teamUser_to_delete);
+            User user = teamUser_to_delete.getUser();
+            if (user != null)
+                user.removeTeamUser(teamUser_to_delete);
             sm.deleteObject(teamUser_to_delete);
             JSONObject ws_obj = new JSONObject();
             ws_obj.put("team_id", team_id);

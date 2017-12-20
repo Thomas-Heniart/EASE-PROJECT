@@ -60,10 +60,11 @@ public class EditTeamAnySingleCard extends HttpServlet {
             String url = sm.getStringParam("url", false, false);
             if (!Regex.isSimpleUrl(url) || url.length() > 2000)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter url");
-            if (!url.equals(teamSingleCard.getWebsite().getLogin_url())) {
+            JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+            Website website = teamSingleCard.getWebsite();
+            if (!url.equals(teamSingleCard.getWebsite().getLogin_url()) || connection_information.length() != website.getWebsiteInformationList().size()) {
                 Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-                JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
-                Website website = catalog.getWebsiteWithUrl(url, connection_information, sm.getHibernateQuery());
+                website = catalog.getWebsiteWithUrl(url, connection_information, sm.getHibernateQuery());
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
