@@ -213,11 +213,17 @@ class SimpleTeamAnyApp extends Component {
   modify = (e) => {
     e.preventDefault();
     this.setState({loading: true});
+    const connection_information = this.state.credentials.reduce((prev, curr) =>{
+      return {...prev, [curr.name]: {type:curr.type,priority:curr.priority,placeholder:curr.placeholder}}
+    }, {});
     this.props.dispatch(teamEditAnySingleApp({
       name: this.state.name,
       team_id: this.props.app.team_id,
       team_card_id: this.props.app.id,
       description: this.state.description,
+      url: this.state.url,
+      img_url: this.state.img_url,
+      connection_information: connection_information,
       password_reminder_interval: this.state.password_reminder_interval,
       account_information: transformCredentialsListIntoObject(this.state.credentials)
     })).then(response => {
