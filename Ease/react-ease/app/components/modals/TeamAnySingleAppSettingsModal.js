@@ -32,7 +32,8 @@ class TeamAnySingleAppSettingsModal extends Component{
       loading: false,
       errorMessage:'',
       url: this.props.team_apps[this.props.app.team_card_id].website.landing_url,
-      img_url: ''
+      img_url: '',
+      priority: 2
     };
     this.state.isEmpty = this.state.team_app.empty;
   }
@@ -41,6 +42,16 @@ class TeamAnySingleAppSettingsModal extends Component{
     const credentials = this.state.credentials.map(item => {
       if (item.name === name)
         item.value = value;
+      return item;
+    });
+    this.setState({credentials: credentials});
+  };
+  handlePlaceholder = (e, {id, value}) => {
+    let credentials = this.state.credentials.map(item => {
+      if (id === item.priority) {
+        item.placeholder = value;
+        item.name = value.toLowerCase();
+      }
       return item;
     });
     this.setState({credentials: credentials});
@@ -54,6 +65,21 @@ class TeamAnySingleAppSettingsModal extends Component{
   };
   changeUrl = (e, {value}) => {
     this.setState({url: value}, this.getLogo);
+  };
+  addFields = () => {
+    let inputs = this.state.credentials.slice();
+    const newInput = {name:`${this.state.priority}`,placeholder:"Click to rename",priority:this.state.priority,type:"text",value:""};
+    inputs.push(newInput);
+    this.setState({credentials: inputs, priority: this.state.priority + 1});
+  };
+  removeField = (field) => {
+    const inputs = this.state.credentials.filter(item => {
+      return item.priority !== field.priority;
+    }).map((item, idx) => {
+      item.priority = idx;
+      return item
+    });
+    this.setState({credentials: inputs});
   };
   toggleCredentialEdit = (name) => {
     const team_app = this.state.team_app;
@@ -90,6 +116,9 @@ class TeamAnySingleAppSettingsModal extends Component{
     e.preventDefault();
     const team_app = this.state.team_app;
     const account_information = transformCredentialsListIntoObject(this.state.credentials);
+    const connection_information = this.state.credentials.reduce((prev, curr) =>{
+      return {...prev, [curr.name]: {type:curr.type,priority:curr.priority,placeholder:curr.placeholder}}
+    }, {});
     this.setState({errorMessage: '', loading:true});
     let calls = [];
     if (this.state.appName !== this.state.app.name)
@@ -104,7 +133,7 @@ class TeamAnySingleAppSettingsModal extends Component{
         description: team_app.description,
         url: this.state.url,
         img_url: this.state.img_url ? this.state.img_url : this.props.app.logo,
-        connection_information: team_app.website.information,
+        connection_information: connection_information,
         account_information: account_information,
         password_reminder_interval: team_app.password_reminder_interval,
       })));
@@ -144,11 +173,14 @@ class TeamAnySingleAppSettingsModal extends Component{
     const inputs = credentials.map((item, idx) => {
       if (item.name === 'password')
         return (
-          <Form.Field key={idx}>
+          <Form.Field key={idx} style={{position:'relative'}}>
             <label>{item.placeholder}</label>
+            {this.state.isEmpty && me.id === team_app.team_user_filler_id &&
+            <Icon onClick={e => this.removeField(item)} size='large' name='remove circle' style={{position:'absolute',top:'12',left:'354',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
             <div className="display_flex align_items_center">
               <Input
                 fluid
+                id={item.priority}
                 icon
                 disabled={!item.edit && !this.state.isEmpty}
                 className="modalInput team-app-input"
@@ -177,11 +209,17 @@ class TeamAnySingleAppSettingsModal extends Component{
           </Form.Field>
         );
       return (
-        <Form.Field key={idx}>
-          <label>{item.placeholder}</label>
+        <Form.Field key={idx} style={{position:'relative'}}>
+          {(!this.state.isEmpty || me.id !== team_app.team_user_filler_id || item.name === 'login') &&
+          <label>{item.placeholder}</label>}
+          {(this.state.isEmpty && me.id === team_app.team_user_filler_id && item.name !== 'login') &&
+          <Input id={item.priority} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={this.handlePlaceholder} required/>}
+          {(this.state.isEmpty && me.id === team_app.team_user_filler_id) &&
+          <Icon onClick={e => this.removeField(item)} size='large' name='remove circle' style={{position:'absolute',top:'12',left:'354',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
           <div className="display_flex align_items_center">
             <Input
               fluid
+              id={item.priority}
               icon
               disabled={!item.edit && !this.state.isEmpty}
               className="modalInput team-app-input"
@@ -265,6 +303,8 @@ class TeamAnySingleAppSettingsModal extends Component{
               </div>
             </Form.Field>
             {inputs}
+            {this.state.isEmpty && me.id === team_app.team_user_filler_id &&
+            <p onClick={this.addFields} style={{color:'#414141'}}><Icon name='plus circle'/>Add a field</p>}
             <Message error content={this.state.errorMessage}/>
             <Button
               type="submit"
