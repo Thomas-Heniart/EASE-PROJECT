@@ -42,7 +42,7 @@ public class ServletDeleteTeam extends HttpServlet {
                 }
             }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
+            team.getTeamCardSet().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null) {
                     profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), hibernateQuery);
@@ -50,7 +50,7 @@ public class ServletDeleteTeam extends HttpServlet {
                     teamCardReceiver.getApp().setPosition(null);
                 }
             });
-            team.getTeamCardMap().clear();
+            team.getTeamCardSet().clear();
             team.setSubscription_id(null);
             team.setCard_entered(false);
             team.setActive(false);

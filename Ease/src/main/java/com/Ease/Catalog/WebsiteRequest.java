@@ -23,7 +23,7 @@ public class WebsiteRequest {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date = new Date();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "website_id", nullable = false)
     private Website website;
 

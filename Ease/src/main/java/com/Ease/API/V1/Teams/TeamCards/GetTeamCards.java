@@ -20,7 +20,7 @@ public class GetTeamCards extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
             JSONArray res = new JSONArray();
-            team.getTeamCardMap().values().forEach(teamCard -> res.put(teamCard.getJson()));
+            team.getTeamCardSet().forEach(teamCard -> res.put(teamCard.getJson()));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

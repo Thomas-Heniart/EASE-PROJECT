@@ -71,7 +71,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 Integer teamUser_filler_id = sm.getIntParam("teamUser_filler_id", true, true);
                 if (teamUser_filler_id != null && teamUser_filler_id != -1) {
                     teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
-                    teamSingleSoftwareCard.setTeamUser_filler(teamUser_filler);
+                    teamSingleSoftwareCard.setTeamUser_filler_test(teamUser_filler);
                 }
             } else {
                 account_information = software.getAllCredentialsFromJson(account_information);

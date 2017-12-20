@@ -45,7 +45,7 @@ public class ServletUnsubscribe extends HttpServlet {
             if (default_source != null && !default_source.equals(""))
                 customer.getSources().retrieve(default_source).delete();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            team.getTeamCardMap().values().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
+            team.getTeamCardSet().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null) {
                     profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), hibernateQuery);
@@ -53,7 +53,7 @@ public class ServletUnsubscribe extends HttpServlet {
                     teamCardReceiver.getApp().setPosition(null);
                 }
             });
-            team.getTeamCardMap().clear();
+            team.getTeamCardSet().clear();
             team.setSubscription_id(null);
             team.setCard_entered(false);
             team.setActive(false);

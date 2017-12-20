@@ -41,7 +41,7 @@ public class ServletDeleteChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
-            for (TeamCard teamCard : channel.getTeamCardMap().values()) {
+            for (TeamCard teamCard : channel.getTeamCardSet()) {
                 for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                     App app = teamCardReceiver.getApp();
                     if (app.isWebsiteApp()) {
@@ -70,7 +70,7 @@ public class ServletDeleteChannel extends HttpServlet {
                         profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 }
             }
-            channel.getTeamCardMap().clear();
+            channel.getTeamCardSet().clear();
             channel.getPending_teamUsers().clear();
             team.removeChannel(channel);
             sm.deleteObject(channel);

@@ -16,7 +16,7 @@ public class UserEmail {
     @Column(name = "verified")
     private boolean verified = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

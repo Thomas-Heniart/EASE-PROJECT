@@ -33,7 +33,7 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             Team team = teamSingleSoftwareCard.getTeam();
             sm.initializeTeamWithContext(team);
             TeamUser teamUser = sm.getTeamUser(team);
-            if (!teamUser.isTeamAdmin() && (teamSingleSoftwareCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleSoftwareCard.getTeamUser_filler())))
+            if (!teamUser.isTeamAdmin() && (teamSingleSoftwareCard.getTeamUser_filler_test() == null || !teamUser.equals(teamSingleSoftwareCard.getTeamUser_filler_test())))
                 throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)

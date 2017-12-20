@@ -3,11 +3,11 @@ package com.Ease.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 10/04/2017.
  */
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "channels")
 public class Channel {
     @Id
@@ -22,7 +24,7 @@ public class Channel {
     @Column(name = "id")
     protected Integer db_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
     protected Team team;
 
@@ -32,21 +34,23 @@ public class Channel {
     @Column(name = "purpose")
     protected String purpose;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private TeamUser room_manager;
 
     @ManyToMany
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "channelAndTeamUserMap", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "team_user_id"))
     protected Set<TeamUser> teamUsers = ConcurrentHashMap.newKeySet();
 
     @ManyToMany
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "pendingJoinChannelRequests", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "teamUser_id"))
     private Set<TeamUser> pending_teamUsers = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKey(name = "db_id")
-    private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<TeamCard> teamCardSet = ConcurrentHashMap.newKeySet();
 
     public Channel(Team team, String name, String purpose, TeamUser room_manager) {
         this.team = team;
@@ -114,12 +118,12 @@ public class Channel {
         this.pending_teamUsers = pending_teamUsers;
     }
 
-    public synchronized Map<Integer, TeamCard> getTeamCardMap() {
-        return teamCardMap;
+    public synchronized Set<TeamCard> getTeamCardSet() {
+        return teamCardSet;
     }
 
-    public void setTeamCardMap(Map<Integer, TeamCard> teamCardMap) {
-        this.teamCardMap = teamCardMap;
+    public void setTeamCardSet(Set<TeamCard> teamCardSet) {
+        this.teamCardSet = teamCardSet;
     }
 
     public void addTeamUser(TeamUser teamUser) {
@@ -169,7 +173,7 @@ public class Channel {
         jsonObject.put("default", this.isDefault());
         jsonObject.put("room_manager_id", this.getRoom_manager().getDb_id());
         JSONArray teamCards = new JSONArray();
-        this.getTeamCardMap().values().stream().sorted((t1, t2) -> Long.compare(t2.getCreation_date().getTime(), t1.getCreation_date().getTime())).forEach(teamCard -> teamCards.put(teamCard.getDb_id()));
+        this.getTeamCardSet().stream().sorted((t1, t2) -> Long.compare(t2.getCreation_date().getTime(), t1.getCreation_date().getTime())).forEach(teamCard -> teamCards.put(teamCard.getDb_id()));
         jsonObject.put("team_card_ids", teamCards);
         jsonObject.put("team_id", team.getDb_id());
         return jsonObject;
@@ -211,11 +215,11 @@ public class Channel {
     }
 
     public void addTeamCard(TeamCard teamCard) {
-        this.getTeamCardMap().put(teamCard.getDb_id(), teamCard);
+        this.getTeamCardSet().add(teamCard);
     }
 
     public void removeTeamCard(TeamCard teamCard) {
-        this.getTeamCardMap().remove(teamCard);
+        this.getTeamCardSet().remove(teamCard);
     }
 
     @Override

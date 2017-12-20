@@ -164,7 +164,7 @@ public class TeamManager {
 
         System.out.println("Password reminder start...");
         for (Team team : this.getTeams(hibernateQuery)) {
-            for (TeamCard teamCard : team.getTeamCardMap().values()) {
+            for (TeamCard teamCard : team.getTeamCardSet()) {
                 if (teamCard.isTeamSingleCard()) {
                     TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
                     Account account = teamSingleCard.getAccount();

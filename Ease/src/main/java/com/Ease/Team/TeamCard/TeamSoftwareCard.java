@@ -20,7 +20,7 @@ import javax.persistence.*;
 @OnDelete(action = OnDeleteAction.CASCADE)
 public abstract class TeamSoftwareCard extends TeamCard {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "software_id")
     private Software software;
 

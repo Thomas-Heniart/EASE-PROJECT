@@ -22,10 +22,12 @@ import javax.persistence.*;
 public class TeamSingleCard extends TeamWebsiteCard {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "teamUser_filler_id")
     private TeamUser teamUser_filler;
 

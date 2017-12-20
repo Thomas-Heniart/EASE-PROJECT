@@ -18,7 +18,7 @@ import javax.persistence.*;
 @OnDelete(action = OnDeleteAction.CASCADE)
 public abstract class TeamWebsiteCard extends TeamCard {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "website_id")
     private Website website;
 
