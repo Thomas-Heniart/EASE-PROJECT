@@ -42,7 +42,7 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
                 disabled={disabled}
                 name={item.name}
                 onChange={onChange}
-                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+                label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
                 labelPosition="left"
                 placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
                 value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
@@ -189,27 +189,6 @@ class SimpleTeamAnyApp extends Component {
   changeUrl = (e, {value}) => {
     this.setState({url: value}, this.getLogo);
   };
-  imgNone = (e) => {
-    e.preventDefault();
-    this.setState({img_url:''});
-  };
-  logoLetter = () => {
-    let first = '';
-    let second = '';
-    let space = false;
-    for (let letter = 0; letter < this.state.name.length; letter++) {
-      if (first.length < 1 && this.state.name[letter] !== ' ')
-        first = this.state.name[letter];
-      else if (first.length > 0 && second.length < 1 && this.state.name[letter] !== ' ' && space === true)
-        second = this.state.name[letter];
-      else if (this.state.name[letter] === ' ')
-        space = true;
-    }
-    if (second !== '')
-      return first.toUpperCase() + second.toUpperCase();
-    else
-      return first.toUpperCase();
-  };
   modify = (e) => {
     e.preventDefault();
     this.setState({loading: true});
@@ -337,7 +316,6 @@ class SimpleTeamAnyApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
-    const img = this.state.edit ? this.state.img_url : website.logo;
     const credentials = !this.state.edit ?
       transformWebsiteInfoIntoListAndSetValues(website.information, app.account_information).map(item => {
         return <TeamAppCredentialInput key={item.priority}
@@ -375,17 +353,7 @@ class SimpleTeamAnyApp extends Component {
           <div class="display_flex">
             <div class="logo_column">
               <div class="logo">
-                {img ?
-                  <div style={{backgroundImage:`url('${img}')`}}>
-                    {this.state.edit &&
-                    <button className="button-unstyle action_button close_button" onClick={this.imgNone}>
-                      <Icon name="close" class="mrgn0" link/>
-                    </button>}
-                  </div>
-                  :
-                  <div style={{backgroundColor:'#373b60',color:'white'}}>
-                    <p style={{margin:'auto'}}>{this.logoLetter()}</p>
-                  </div>}
+                <img src={(this.state.edit && this.state.img_url) ? this.state.img_url : website.logo}/>
               </div>
             </div>
             <div class="main_column">

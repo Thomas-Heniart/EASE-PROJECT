@@ -190,7 +190,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
                             class="team-app-input"
                             readOnly={true}
                             name={item.name}
-                            label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+                            label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
                             labelPosition="left"
                             placeholder={item.placeholder}
                             value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
@@ -207,7 +207,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
 
 const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
   const isRequired = receiver.user.id === myId && item.name !== 'password';
-  const label = <Label><Icon name={credentialIconType[item.name]}/></Label>;
+  const label = <Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>;
   let placeholder = item.placeholder;
   if (item.name === 'password' && !receiver.empty)
     placeholder = '••••••••';
@@ -520,7 +520,7 @@ class EnterpriseTeamAnyApp extends Component {
           <div class="display_flex">
             <div class="logo_column">
               <div class="logo">
-                <img src={website.logo}/>
+                <img src={(this.state.edit && this.state.img_url) ? this.state.img_url : website.logo}/>
               </div>
             </div>
             <div class="main_column">
