@@ -1,0 +1,24 @@
+{
+    "name":"ProDouane",
+    "lastLogin":"",
+    "home":"https://pro.douane.gouv.fr/",
+    "connect": {
+    	"todo": [
+            {"action":"enterFrame", "search":"frame[name='prodouane']"},
+                    {"action":"fill","what": "login", "search":"#login"},
+            {"action":"fill", "what":"password", "search":"#pass"},
+            {"action":"trueClick", "search":"div[onclick*='login']"},
+            {"action":"exitFrame"}
+]
+    },
+    "logout":{
+        "todo":[
+            {"action": "goto", "url": "https://pro.douane.gouv.fr/logout.asp"},
+            {"action": "waitload"}
+         ]
+    },
+    "checkAlreadyLogged":[
+            {"action":"enterFrame", "search":"frame[name='prodouane']"},
+        {"search":"div[onclick*='logout']"}
+    ]
+}
