@@ -154,4 +154,14 @@ public class Software {
         this.getSoftwareConnectionInformationSet().forEach(softwareConnectionInformation -> res.putOpt(softwareConnectionInformation.getInformation_name(), account_information.optString(softwareConnectionInformation.getInformation_name())));
         return res;
     }
+
+    public boolean isDifferentConnectionInformation(JSONObject connection_information) {
+        if (connection_information.length() != this.getSoftwareConnectionInformationSet().size())
+            return true;
+        for (SoftwareConnectionInformation softwareConnectionInformation : this.getSoftwareConnectionInformationSet()) {
+            if (!connection_information.has(softwareConnectionInformation.getInformation_name()))
+                return true;
+        }
+        return false;
+    }
 }
