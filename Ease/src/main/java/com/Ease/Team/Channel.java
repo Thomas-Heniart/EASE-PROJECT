@@ -24,7 +24,7 @@ public class Channel {
     @Column(name = "id")
     protected Integer db_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     protected Team team;
 
@@ -34,7 +34,7 @@ public class Channel {
     @Column(name = "purpose")
     protected String purpose;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private TeamUser room_manager;
 

@@ -18,11 +18,11 @@ public class WebsiteCredentials {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "website_id", nullable = false)
     private Website website;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "serverPublicKey_id", nullable = false)
     private ServerPublicKey serverPublicKey;
 

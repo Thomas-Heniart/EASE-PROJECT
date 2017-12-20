@@ -16,7 +16,7 @@ public class PendingNotification {
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "teamUser_id")
     private TeamUser teamUser;
 

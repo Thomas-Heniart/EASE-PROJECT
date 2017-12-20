@@ -8,7 +8,7 @@ public class TestC {
     @GeneratedValue
     protected Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private TestA testA;
 
     public TestC() {

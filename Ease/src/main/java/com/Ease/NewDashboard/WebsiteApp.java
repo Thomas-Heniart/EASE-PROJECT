@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @PrimaryKeyJoinColumn(name = "id")
 public abstract class WebsiteApp extends App {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "website_id")
     private Website website;
 

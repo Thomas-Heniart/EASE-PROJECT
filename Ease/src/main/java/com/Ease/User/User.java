@@ -353,6 +353,7 @@ public class User {
     }
 
     public TeamUser getTeamUser(Team team) throws HttpServletException {
+        System.out.println("Team ids: " + this.getTeamUsers().stream().findFirst().get().getTeam().equals(team));
         TeamUser teamUser = this.getTeamUsers().stream().filter(teamUser1 -> teamUser1.getTeam().equals(team)).findAny().orElse(null);
         if (teamUser == null)
             throw new HttpServletException(HttpStatus.BadRequest, "You are not part of this team");

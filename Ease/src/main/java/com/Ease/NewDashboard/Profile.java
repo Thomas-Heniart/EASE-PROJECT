@@ -25,7 +25,7 @@ public class Profile {
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

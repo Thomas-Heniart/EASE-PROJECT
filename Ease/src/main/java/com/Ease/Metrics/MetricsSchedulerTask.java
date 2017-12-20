@@ -54,7 +54,7 @@ public class MetricsSchedulerTask extends TimerTask {
                     cards++;
                     if (!teamCard.getTeamCardReceiverMap().isEmpty()) {
                         cards_with_receiver++;
-                        if (teamCard.isTeamWebsiteCard() && ((TeamWebsiteCard) teamCard).getPassword_reminder_interval() > 0)
+                        if (teamCard.getPassword_reminder_interval() > 0)
                             cards_with_receiver_and_password_policy++;
                     }
                     if (teamCard.isTeamSingleCard())

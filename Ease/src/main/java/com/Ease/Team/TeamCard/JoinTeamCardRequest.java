@@ -20,11 +20,11 @@ abstract public class JoinTeamCardRequest {
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "teamCard_id")
     private TeamCard teamCard;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "teamUser_id")
     private TeamUser teamUser;
 

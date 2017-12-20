@@ -53,13 +53,11 @@ public class Website {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
     @JoinColumn(name = "sso")
     private Sso sso;
 

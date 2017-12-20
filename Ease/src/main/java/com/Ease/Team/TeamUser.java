@@ -43,7 +43,7 @@ public class TeamUser {
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -65,8 +65,7 @@ public class TeamUser {
     @Column(name = "active")
     private boolean active;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
@@ -131,9 +130,8 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamSingleCard> teamSingleCardToFillSet = ConcurrentHashMap.newKeySet();
 
-    /* @OneToMany(mappedBy = "teamUser_filler_test")
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
-    @Transient
+    @OneToMany(mappedBy = "teamUser_filler_test")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamSingleSoftwareCard> teamSingleSoftwareCardSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)

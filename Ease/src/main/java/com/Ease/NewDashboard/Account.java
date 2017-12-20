@@ -207,7 +207,7 @@ public class Account {
     public void edit(JSONObject account_information, HibernateQuery hibernateQuery) throws HttpServletException {
         for (Object object : account_information.keySet()) {
             String key = String.valueOf(object);
-            String value = account_information.getString(key);
+            String value = account_information.optString(key);
             AccountInformation accountInformation = this.getInformationNamed(key);
             String old_value = null;
             if (accountInformation == null) {
@@ -248,10 +248,7 @@ public class Account {
     }
 
     public AccountInformation getInformationNamed(String information_name) {
-        AccountInformation information = this.getAccountInformationSet().stream().filter(accountInformation -> accountInformation.getInformation_name().equals(information_name)).findFirst().orElse(null);
-        if (information == null)
-            return null;
-        return information;
+        return this.getAccountInformationSet().stream().filter(accountInformation -> accountInformation.getInformation_name().equals(information_name)).findFirst().orElse(null);
     }
 
     public boolean mustUpdatePassword() {

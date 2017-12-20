@@ -91,7 +91,6 @@ public class EditTeamAnySingleCard extends HttpServlet {
                     teamCardReceiver.getApp().setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery()));
                 NotificationFactory.getInstance().createAppFilledNotification(teamUser, teamSingleCard, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamSingleCard.setTeamUser_filler(null);
-
             } else {
                 teamSingleCard.getAccount().edit(account_information, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery());
                 for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {

@@ -25,11 +25,11 @@ public class SsoGroup {
     @MapKey(name = "db_id")
     private Map<Integer, SsoApp> ssoAppMap = new ConcurrentHashMap<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "sso_id")
     private Sso sso;
 

@@ -548,10 +548,12 @@ public class Team {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        System.out.println("Je suis là");
+        System.out.println("o is null: " + (o == null));
+        System.out.println("o class: " + o.getClass().toString() + " my class: " + getClass().toString());
         if (o == null || getClass() != o.getClass()) return false;
 
         Team team = (Team) o;
-
         return db_id.equals(team.db_id);
     }
 

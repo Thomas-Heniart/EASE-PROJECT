@@ -27,7 +27,7 @@ abstract public class App {
     @JoinColumn(name = "app_info_id")
     private AppInformation appInformation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 

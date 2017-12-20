@@ -18,7 +18,7 @@ public class SoftwareApp extends App {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "software_id")
     private Software software;
 

@@ -20,7 +20,7 @@ import javax.persistence.*;
 @OnDelete(action = OnDeleteAction.CASCADE)
 public abstract class TeamSoftwareCard extends TeamCard {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "software_id")
     private Software software;
 
@@ -50,6 +50,7 @@ public abstract class TeamSoftwareCard extends TeamCard {
         this.software = software;
     }
 
+    @Override
     public Integer getPassword_reminder_interval() {
         return password_reminder_interval;
     }

@@ -26,8 +26,7 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @ManyToOne
     @JoinColumn(name = "teamUser_filler_id")
     private TeamUser teamUser_filler_test;
 

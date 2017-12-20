@@ -16,7 +16,7 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "id")
 public class SsoApp extends WebsiteApp {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "ssoGroup_id")
     private SsoGroup ssoGroup;
 

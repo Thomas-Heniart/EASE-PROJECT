@@ -27,11 +27,11 @@ public abstract class TeamCard {
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
@@ -236,6 +236,10 @@ public abstract class TeamCard {
         for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceiverMap().values()) {
             teamCardReceiver.getApp().decipher(null, teamKey);
         }
+    }
+
+    public Integer getPassword_reminder_interval() {
+        return -1;
     }
 
     @Override

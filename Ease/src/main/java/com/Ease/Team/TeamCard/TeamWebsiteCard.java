@@ -18,7 +18,7 @@ import javax.persistence.*;
 @OnDelete(action = OnDeleteAction.CASCADE)
 public abstract class TeamWebsiteCard extends TeamCard {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "website_id")
     private Website website;
 
@@ -43,6 +43,7 @@ public abstract class TeamWebsiteCard extends TeamCard {
         this.website = website;
     }
 
+    @Override
     public Integer getPassword_reminder_interval() {
         return password_reminder_interval;
     }
