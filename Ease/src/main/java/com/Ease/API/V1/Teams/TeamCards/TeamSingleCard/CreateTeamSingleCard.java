@@ -86,11 +86,13 @@ public class CreateTeamSingleCard extends HttpServlet {
                     app = AppFactory.getInstance().createClassicApp(name, website, teamKey, account_information, reminder_interval, sm.getHibernateQuery());
                 else
                     app = AppFactory.getInstance().createClassicApp(name, website);
+                sm.saveOrUpdate(app);
                 TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser, allowed_to_see_password);
                 if (teamUser.isVerified()) {
                     Profile profile = teamUser.getOrCreateProfile(sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
                     app.setProfile(profile);
                     app.setPosition(profile.getSize());
+                    profile.addApp(app);
                 }
                 sm.saveOrUpdate(teamCardReceiver);
                 if (teamUser_filler != null && teamUser.equals(teamUser_filler))
@@ -98,6 +100,7 @@ public class CreateTeamSingleCard extends HttpServlet {
                 if (!teamUser.equals(teamUser_connected))
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
+                teamUser.addTeamCardReceiver(teamCardReceiver);
             }
             channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);

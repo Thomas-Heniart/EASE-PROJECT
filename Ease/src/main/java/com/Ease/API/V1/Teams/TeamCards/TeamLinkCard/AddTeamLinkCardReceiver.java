@@ -3,6 +3,7 @@ package com.Ease.API.V1.Teams.TeamCards.TeamLinkCard;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.AppFactory;
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -39,9 +40,12 @@ public class AddTeamLinkCardReceiver extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             App app;
-            if (teamUser.isVerified())
-                app = AppFactory.getInstance().createLinkApp(teamLinkCard.getName(), teamLinkCard.getUrl(), teamLinkCard.getImg_url(), teamUser.getOrCreateProfile(sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), hibernateQuery));
-            else
+            if (teamUser.isVerified()) {
+                Profile profile = teamUser.getOrCreateProfile(sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), hibernateQuery);
+                app = AppFactory.getInstance().createLinkApp(teamLinkCard.getName(), teamLinkCard.getUrl(), teamLinkCard.getImg_url(), profile);
+                sm.saveOrUpdate(app);
+                profile.addApp(app);
+            } else
                 app = AppFactory.getInstance().createLinkApp(teamLinkCard.getName(), teamLinkCard.getUrl(), teamLinkCard.getImg_url());
             TeamCardReceiver teamCardReceiver = new TeamLinkCardReceiver(app, teamLinkCard, teamUser);
             TeamUser teamUser_connected = sm.getTeamUser(team);

@@ -78,7 +78,7 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
                     String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
                     account = AccountFactory.getInstance().createAccountFromMap(website.getInformationFromJson(account_information), teamKey, password_reminder_interval, sm.getHibernateQuery());
                 }
-                AppInformation appInformation = new AppInformation(website.getName());
+                AppInformation appInformation = new AppInformation(name);
                 App app;
                 if (website.getWebsiteAttributes().isIntegrated())
                     app = new ClassicApp(appInformation, website, account);
@@ -94,6 +94,7 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
                 if (!teamUser.equals(teamUser_connected))
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
+                teamUser.addTeamCardReceiver(teamCardReceiver);
             }
             team.addTeamCard(teamCard);
             channel.addTeamCard(teamCard);

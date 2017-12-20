@@ -50,6 +50,8 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
                 Profile profile = teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
                 app.setProfile(profile);
                 app.setPosition(profile.getSize());
+                sm.saveOrUpdate(app);
+                profile.addApp(app);
             }
             sm.saveOrUpdate(teamCardReceiver);
             TeamUser teamUser_connected = sm.getTeamUser(team);

@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams.TeamCards.TeamLinkCard;
 
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.AppFactory;
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -54,19 +55,23 @@ public class CreateTeamLinkCard extends HttpServlet {
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             TeamCard teamCard = new TeamLinkCard(name, team, channel, description, url, img_url);
             sm.saveOrUpdate(teamCard);
-            for (int i=0; i < receivers.length(); i++) {
+            for (int i = 0; i < receivers.length(); i++) {
                 Integer teamUser_id = receivers.getInt(i);
                 TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
                 App app;
-                if (teamUser_receiver.isVerified())
-                    app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url, teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery()));
-                else
+                if (teamUser_receiver.isVerified()) {
+                    Profile profile = teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
+                    app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url, profile);
+                    sm.saveOrUpdate(app);
+                    profile.addApp(app);
+                } else
                     app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url);
                 TeamCardReceiver teamCardReceiver = new TeamLinkCardReceiver(app, teamCard, teamUser_receiver);
                 sm.saveOrUpdate(teamCardReceiver);
                 if (!teamUser_receiver.equals(teamUser_connected))
                     NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamCard.addTeamCardReceiver(teamCardReceiver);
+                teamUser_receiver.addTeamCardReceiver(teamCardReceiver);
             }
             channel.addTeamCard(teamCard);
             team.addTeamCard(teamCard);

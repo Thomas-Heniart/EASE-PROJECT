@@ -1,10 +1,10 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
-import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
@@ -29,23 +29,19 @@ public class RemoveTeamCardReceiver extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeTeamUserOfTeam(team);
-            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
-            TeamCard teamCard = team.getTeamCard(team_card_id);
-            TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(team_card_receiver_id);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            TeamCardReceiver teamCardReceiver = (TeamCardReceiver) hibernateQuery.get(TeamCardReceiver.class, team_card_receiver_id);
+            TeamCard teamCard = teamCardReceiver.getTeamCard();
+            Team team = teamCard.getTeam();
+            sm.initializeTeamWithContext(team);
+            sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = teamCardReceiver.getTeamUser();
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.isTeamAdmin() && !teamUser.equals(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden);
-            if (teamCard.isTeamSingleCard()) {
-                TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
-                teamSingleCard.setTeamUser_filler(null);
-                sm.saveOrUpdate(teamSingleCard);
-            }
             teamCard.removeTeamCardReceiver(teamCardReceiver);
+            teamUser.removeTeamCardReceiver(teamCardReceiver);
             App app = teamCardReceiver.getApp();
             if (app.isWebsiteApp()) {
                 WebsiteApp websiteApp = (WebsiteApp) app;
@@ -75,8 +71,8 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             if (!teamUser.equals(teamUser_connected))
                 NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_connected, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("team_id", team_id);
-            jsonObject.put("team_card_id", team_card_id);
+            jsonObject.put("team_id", team.getDb_id());
+            jsonObject.put("team_card_id", teamCard.getDb_id());
             jsonObject.put("team_card_receiver_id", team_card_receiver_id);
             jsonObject.put("team_user_id", teamUser.getDb_id());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.REMOVED, jsonObject));

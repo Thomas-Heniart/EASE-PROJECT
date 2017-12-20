@@ -68,7 +68,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             String teamKey = sm.getTeamKey(team);
             TeamUser teamUser_filler = null;
             if (account_information == null || account_information.keySet().isEmpty()) {
-                Integer teamUser_filler_id = sm.getIntParam("teamUser_filler_id", true, true);
+                Integer teamUser_filler_id = sm.getIntParam("team_user_filler_id", true, true);
                 if (teamUser_filler_id != null && teamUser_filler_id != -1) {
                     teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
                     teamSingleSoftwareCard.setTeamUser_filler_test(teamUser_filler);
@@ -93,11 +93,13 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                     app = AppFactory.getInstance().createSoftwareApp(name, software, teamKey, account_information, password_reminder_interval, hibernateQuery);
                 else
                     app = AppFactory.getInstance().createSoftwareApp(name, software);
+                sm.saveOrUpdate(app);
                 TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamSingleSoftwareCard, teamUser, allowed_to_see_password);
                 if (teamUser.isVerified()) {
                     Profile profile = teamUser.getOrCreateProfile(sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
                     app.setProfile(profile);
                     app.setPosition(profile.getSize());
+                    profile.addApp(app);
                 }
                 sm.saveOrUpdate(teamCardReceiver);
                 if (teamUser_filler != null && teamUser.equals(teamUser_filler))
@@ -105,6 +107,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 if (!teamUser.equals(teamUser_connected))
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
                 teamSingleSoftwareCard.addTeamCardReceiver(teamCardReceiver);
+                teamUser.addTeamCardReceiver(teamCardReceiver);
             }
             channel.addTeamCard(teamSingleSoftwareCard);
             team.addTeamCard(teamSingleSoftwareCard);
