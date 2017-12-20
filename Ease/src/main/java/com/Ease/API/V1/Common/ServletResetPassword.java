@@ -88,7 +88,7 @@ public class ServletResetPassword extends HttpServlet {
                     teamUser.setTeamKey(AES.encrypt(teamKey, keyUser));
                     teamUser.setDisabled(false);
                     sm.saveOrUpdate(teamUser);
-                    for (TeamCard teamCard : team.getTeamCardMap().values()) {
+                    for (TeamCard teamCard : team.getTeamCardSet()) {
                         if (teamCard.isTeamSingleCard()) {
                             ((TeamSingleCard) teamCard).setAccount(null);
                             teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> ((ClassicApp) teamCardReceiver.getApp()).setAccount(null));

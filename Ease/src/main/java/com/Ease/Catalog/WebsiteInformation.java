@@ -33,7 +33,7 @@ public class WebsiteInformation {
     @Column(name = "placeholder_icon")
     private String placeholder_icon;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "website_id")
     protected Website website;
 

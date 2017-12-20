@@ -57,7 +57,7 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                 message.replace(message.length() - 2, message.length(), ".");
                 throw new HttpServletException(HttpStatus.BadRequest, message.toString());
             }
-            for (TeamCard teamCard : channel.getTeamCardMap().values()) {
+            for (TeamCard teamCard : channel.getTeamCardSet()) {
                 TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamUser_to_remove);
                 if (teamCardReceiver == null)
                     continue;

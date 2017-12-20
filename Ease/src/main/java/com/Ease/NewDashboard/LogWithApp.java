@@ -16,7 +16,7 @@ import javax.persistence.*;
 @PrimaryKeyJoinColumn(name = "id")
 public class LogWithApp extends WebsiteApp {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "logWith_website_app_id")
     private WebsiteApp loginWith_app;
 

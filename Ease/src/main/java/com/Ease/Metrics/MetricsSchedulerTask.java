@@ -50,7 +50,7 @@ public class MetricsSchedulerTask extends TimerTask {
                 int single_cards = 0;
                 int enterprise_cards = 0;
                 int link_cards = 0;
-                for (TeamCard teamCard : team.getTeamCardMap().values()) {
+                for (TeamCard teamCard : team.getTeamCardSet()) {
                     cards++;
                     if (!teamCard.getTeamCardReceiverMap().isEmpty()) {
                         cards_with_receiver++;

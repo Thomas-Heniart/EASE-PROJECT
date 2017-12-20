@@ -29,7 +29,7 @@ public class Notification {
     @Column(name = "is_new")
     private boolean newNotification = true;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

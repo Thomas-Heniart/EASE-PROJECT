@@ -91,8 +91,13 @@ public class PostServletManager extends ServletManager {
         try {
             if (params == null)
                 return request.getParameter(paramName);
-            else
-                return canBeNull ? params.optString(paramName) : params.getString(paramName);
+            else {
+                if (canBeNull) {
+                    String val = params.optString(paramName);
+                    return val.equals("") ? null : val;
+                } else
+                    return params.getString(paramName);
+            }
         } catch (Exception e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
         }
@@ -101,7 +106,11 @@ public class PostServletManager extends ServletManager {
 
     public Long getLongParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return canBeNull ? params.optLong(paramName) : params.getLong(paramName);
+            if (canBeNull) {
+                Long val = params.optLong(paramName);
+                return val == 0 ? null : val;
+            } else
+                return params.getLong(paramName);
         } catch (Exception e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Long).");
         }
@@ -109,7 +118,11 @@ public class PostServletManager extends ServletManager {
 
     public Integer getIntParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return canBeNull ? params.optInt(paramName) : params.getInt(paramName);
+            if (canBeNull) {
+                Integer val = params.optInt(paramName);
+                return val == 0 ? null : val;
+            } else
+                return params.getInt(paramName);
         } catch (Exception e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Expected parameter: " + paramName + " type Integer");
         }
@@ -117,7 +130,11 @@ public class PostServletManager extends ServletManager {
 
     public Boolean getBooleanParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
-            return canBeNull ? params.optBoolean(paramName) : params.getBoolean(paramName);
+            if (canBeNull) {
+                Boolean val = params.getBoolean(paramName);
+                return !val ? null : val;
+            } else
+                return params.getBoolean(paramName);
         } catch (Exception e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Boolean).");
         }

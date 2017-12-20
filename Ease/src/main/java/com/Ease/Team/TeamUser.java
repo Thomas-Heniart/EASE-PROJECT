@@ -33,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 10/04/2017.
  */
 @Entity
+@Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamUsers")
 public class TeamUser {
@@ -40,35 +41,37 @@ public class TeamUser {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    protected Integer db_id;
+    private Integer db_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "firstName")
-    protected String firstName;
+    private String firstName;
 
     @Column(name = "lastName")
-    protected String lastName;
+    private String lastName;
 
     @Column(name = "email")
-    protected String email;
+    private String email;
 
     @Column(name = "teamKey")
     private String teamKey;
 
     @Column(name = "state")
-    protected Integer state = 0;
+    private Integer state = 0;
 
     @Column(name = "active")
-    protected boolean active;
+    private boolean active;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "teamUserRole_id")
     private TeamUserRole teamUserRole;
 
@@ -93,6 +96,7 @@ public class TeamUser {
     private Integer admin_id;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "status_id")
     private TeamUserStatus teamUserStatus;
 
@@ -107,28 +111,37 @@ public class TeamUser {
     private String invitation_code;
 
     @ManyToMany(mappedBy = "teamUsers")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Channel> channels = ConcurrentHashMap.newKeySet();
 
     @ManyToMany(mappedBy = "pending_teamUsers")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Channel> pending_channels = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
     @OneToMany(mappedBy = "teamUser_filler")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamSingleCard> teamSingleCardToFillSet = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "teamUser_filler")
+    /* @OneToMany(mappedBy = "teamUser_filler_test")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE) */
+    @Transient
     private Set<TeamSingleSoftwareCard> teamSingleSoftwareCardSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<JoinTeamCardRequest> joinTeamCardRequestSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<PendingNotification> pendingNotificationSet = ConcurrentHashMap.newKeySet();
 
     public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {

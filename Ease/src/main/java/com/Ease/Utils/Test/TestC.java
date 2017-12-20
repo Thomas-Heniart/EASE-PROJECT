@@ -1,9 +1,6 @@
 package com.Ease.Utils.Test;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity(name = "testC")
 public class TestC {
@@ -11,7 +8,7 @@ public class TestC {
     @GeneratedValue
     protected Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private TestA testA;
 
     public TestC() {

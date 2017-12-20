@@ -12,7 +12,7 @@ public class SoftwareConnectionInformation {
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "software_id")
     private Software software;
 

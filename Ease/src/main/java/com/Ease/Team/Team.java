@@ -68,19 +68,22 @@ public class Team {
     private boolean active = true;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
     private Map<Integer, TeamUser> teamUsers = new ConcurrentHashMap<>();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
     private Map<Integer, Channel> channels = new ConcurrentHashMap<>();
 
     @ManyToMany(mappedBy = "teams")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Website> teamWebsites = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKey(name = "db_id")
-    private Map<Integer, TeamCard> teamCardMap = new ConcurrentHashMap<>();
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<TeamCard> teamCardSet = ConcurrentHashMap.newKeySet();
 
     @Transient
     private Customer customer;
@@ -162,12 +165,12 @@ public class Team {
         this.active = active;
     }
 
-    public synchronized Map<Integer, TeamCard> getTeamCardMap() {
-        return teamCardMap;
+    public synchronized Set<TeamCard> getTeamCardSet() {
+        return teamCardSet;
     }
 
-    public void setTeamCardMap(Map<Integer, TeamCard> teamCardMap) {
-        this.teamCardMap = teamCardMap;
+    public void setTeamCardSet(Set<TeamCard> teamCardSet) {
+        this.teamCardSet = teamCardSet;
     }
 
     public Customer getCustomer() {
@@ -187,18 +190,18 @@ public class Team {
     }
 
     public TeamCard getTeamCard(Integer id) throws HttpServletException {
-        TeamCard teamCard = this.getTeamCardMap().get(id);
+        TeamCard teamCard = this.getTeamCardSet().stream().filter(teamCard1 -> teamCard1.getDb_id().equals(id)).findFirst().orElse(null);
         if (teamCard == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This teamCard does not exist");
         return teamCard;
     }
 
     public void addTeamCard(TeamCard teamCard) {
-        this.getTeamCardMap().put(teamCard.getDb_id(), teamCard);
+        this.getTeamCardSet().add(teamCard);
     }
 
     public void removeTeamCard(TeamCard teamCard) {
-        this.getTeamCardMap().remove(teamCard.getDb_id());
+        this.getTeamCardSet().remove(teamCard);
     }
 
     public boolean isFreemium() throws HttpServletException {
@@ -255,7 +258,7 @@ public class Team {
     }
 
     public TeamUser getTeamUserWithId(Integer teamUser_id) throws HttpServletException {
-        TeamUser teamUser = this.teamUsers.get(teamUser_id);
+        TeamUser teamUser = this.getTeamUsers().get(teamUser_id);
         if (teamUser == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This teamUser does not exist");
         return teamUser;

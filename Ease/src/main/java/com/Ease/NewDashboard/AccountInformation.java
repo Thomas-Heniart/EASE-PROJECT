@@ -16,7 +16,7 @@ public class AccountInformation {
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 

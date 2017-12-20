@@ -21,17 +21,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamCards")
 @Inheritance(strategy = InheritanceType.JOINED)
-abstract public class TeamCard {
+public abstract class TeamCard {
     @Id
     @GeneratedValue
     @Column(name = "id")
     private Integer db_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
