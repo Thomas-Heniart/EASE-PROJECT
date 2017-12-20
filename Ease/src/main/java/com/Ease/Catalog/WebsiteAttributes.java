@@ -1,5 +1,7 @@
 package com.Ease.Catalog;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -7,6 +9,8 @@ import java.util.Date;
  * Created by thomas on 24/04/2017.
  */
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "websiteAttributes")
 public class WebsiteAttributes {
     @Id

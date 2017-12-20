@@ -40,6 +40,7 @@ public class Profile {
     private ProfileInformation profileInformation;
 
     @OneToMany(mappedBy = "profile")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<App> appSet = ConcurrentHashMap.newKeySet();
 
     @OneToOne(mappedBy = "profile")

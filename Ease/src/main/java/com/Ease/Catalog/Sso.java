@@ -1,5 +1,6 @@
 package com.Ease.Catalog;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by thomas on 24/04/2017.
  */
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "sso")
 public class Sso {
     @Id
@@ -25,6 +28,7 @@ public class Sso {
     private String imgPath;
 
     @OneToMany(mappedBy = "sso", orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
     private Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
 

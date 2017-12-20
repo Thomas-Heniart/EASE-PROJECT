@@ -45,6 +45,7 @@ public class Website {
     private String website_homepage;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "website_attributes_id")
     private WebsiteAttributes websiteAttributes;
 
@@ -53,10 +54,12 @@ public class Website {
     private Set<WebsiteInformation> websiteInformationList = ConcurrentHashMap.newKeySet();
 
     @ManyToOne
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "sso")
     private Sso sso;
 

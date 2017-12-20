@@ -3,14 +3,18 @@ package com.Ease.Team.TeamCardReceiver;
 import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamUser;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamLinkCardReceivers")
 @PrimaryKeyJoinColumn(name = "id")
 @OnDelete(action = OnDeleteAction.CASCADE)

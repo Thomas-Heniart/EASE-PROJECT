@@ -1,5 +1,6 @@
 package com.Ease.Catalog;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "categories")
 public class Category {
     @Id
@@ -23,6 +26,7 @@ public class Category {
     private Integer position;
 
     @OneToMany(mappedBy = "category")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
     private Map<Integer, Website> websiteMap = new ConcurrentHashMap<>();
 

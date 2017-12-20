@@ -9,6 +9,7 @@ import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.apache.commons.codec.binary.Base64;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "users")
 public class User {
     public static final int MAX_PROFILE = 4;
@@ -59,15 +62,19 @@ public class User {
     private Set<UserEmail> userEmailSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Profile> profileSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<SsoGroup> ssoGroupSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamUser> teamUsers = ConcurrentHashMap.newKeySet();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Notification> notificationSet = ConcurrentHashMap.newKeySet();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
