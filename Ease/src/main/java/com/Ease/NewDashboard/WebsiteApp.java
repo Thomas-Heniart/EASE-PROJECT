@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "websiteApps")
 @PrimaryKeyJoinColumn(name = "id")
-public class WebsiteApp extends App {
+public abstract class WebsiteApp extends App {
 
     @ManyToOne
     @JoinColumn(name = "website_id")

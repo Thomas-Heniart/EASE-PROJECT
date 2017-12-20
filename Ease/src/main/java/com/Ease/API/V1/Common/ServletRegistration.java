@@ -81,7 +81,6 @@ public class ServletRegistration extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Profile profile_perso = new Profile(newUser, 0, 0, new ProfileInformation("Me"));
             sm.saveOrUpdate(profile_perso);
-
             newUser.addProfile(profile_perso);
             Website linkedin = catalog.getWebsiteWithName("LinkedIn", hibernateQuery);
             Website gmail = catalog.getWebsiteWithName("Gmail", hibernateQuery);
@@ -100,6 +99,7 @@ public class ServletRegistration extends HttpServlet {
             gmailApp.setPosition(1);
             sm.saveOrUpdate(gmailApp);
             profile_perso.addApp(gmailApp);
+            ssoGroup.addSsoApp(gmailApp);
             ClassicApp twitterApp = new ClassicApp(new AppInformation(twitter.getName()), twitter);
             twitterApp.setProfile(profile_perso);
             twitterApp.setPosition(2);

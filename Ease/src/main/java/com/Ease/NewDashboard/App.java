@@ -23,6 +23,7 @@ abstract public class App {
     private Integer db_id;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "app_info_id")
     private AppInformation appInformation;
 
@@ -34,6 +35,7 @@ abstract public class App {
     private Integer position;
 
     @OneToOne(mappedBy = "app")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private TeamCardReceiver teamCardReceiver;
 
     @Column(name = "new")

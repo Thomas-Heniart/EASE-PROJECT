@@ -3,12 +3,15 @@ package com.Ease.Team.TeamCardReceiver;
 import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamUser;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "teamCardReceivers")
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract public class TeamCardReceiver {
@@ -25,11 +28,11 @@ abstract public class TeamCardReceiver {
     @JoinColumn(name = "app_id")
     private App app;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teamCard_id")
     private TeamCard teamCard;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teamUser_id")
     private TeamUser teamUser;
 
