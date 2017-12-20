@@ -308,13 +308,14 @@ export function teamEditAnySingleApp({team_card_id, description, url, img_url, c
   }
 }
 
-export function teamEditSoftwareSingleApp({team_card_id, description, account_information, password_reminder_interval, name}){
+export function teamEditSoftwareSingleApp({team_card_id, description, account_information, connection_information, password_reminder_interval, name}){
   return function (dispatch, getState){
     return post_api.teamApps.editSoftwareSingleCard({
       name: name,
       team_card_id: team_card_id,
       description: description,
       account_information: account_information,
+      connection_information: connection_information,
       password_reminder_interval: password_reminder_interval,
       ws_id: getState().common.ws_id
     }).then(team_card => {

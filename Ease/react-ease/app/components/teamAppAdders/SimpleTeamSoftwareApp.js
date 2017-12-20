@@ -184,7 +184,8 @@ class SimpleTeamSoftwareApp extends Component {
       team_card_id: this.props.app.id,
       description: this.state.description,
       password_reminder_interval: this.state.password_reminder_interval,
-      account_information: transformCredentialsListIntoObject(this.state.credentials)
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      connection_information: this.props.app.software.connection_information
     })).then(response => {
       const app = response;
       const receivers = app.receivers;

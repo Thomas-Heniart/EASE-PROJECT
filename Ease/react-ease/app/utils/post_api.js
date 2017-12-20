@@ -647,7 +647,7 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    editSoftwareSingleCard: ({team_card_id, description, account_information, password_reminder_interval, name, ws_id}) => {
+    editSoftwareSingleCard: ({team_card_id, description, account_information, connection_information, password_reminder_interval, name, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -656,6 +656,7 @@ module.exports = {
         name: name,
         description: description,
         account_information: account_information,
+        connection_information: connection_information,
         password_reminder_interval: password_reminder_interval,
         ws_id: ws_id
       });
