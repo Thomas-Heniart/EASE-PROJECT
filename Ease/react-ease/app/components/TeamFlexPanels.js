@@ -861,7 +861,7 @@ class FlexPanels extends React.Component {
 
     return (
         <div id="flex_contents">
-          {!!item.purpose &&
+          {!!item.name &&
           <TeamChannelFlexTab
               me={me}
               channel={item}
