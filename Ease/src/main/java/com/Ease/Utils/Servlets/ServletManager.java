@@ -16,6 +16,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
@@ -106,20 +107,32 @@ public abstract class ServletManager {
 
     public void setError(Exception e) {
         try {
-            HttpServletException httpServletException = (HttpServletException) e;
-            System.out.println("Error code: " + httpServletException.getHttpStatus().getValue());
-            if (httpServletException.getMsg() == null && httpServletException.getJsonObject() != null) {
+            HttpServletException exception;
+            switch (e.getClass().getSimpleName()) {
+                case "HttpServletException":
+                    exception = (HttpServletException) e;
+                    break;
+                case "JSONException":
+                    JSONException jsonException = (JSONException) e;
+                    exception = new HttpServletException(HttpStatus.BadRequest, jsonException.getMessage());
+                    break;
+                default:
+                    throw new ClassCastException();
+
+            }
+            System.out.println("Error code: " + exception.getHttpStatus().getValue());
+            if (exception.getMsg() == null && exception.getJsonObject() != null) {
                 response.setContentType("application/json");
-                this.errorMessage = httpServletException.getJsonObject().toString();
+                this.errorMessage = exception.getJsonObject().toString();
             } else
-                this.errorMessage = httpServletException.getMsg();
+                this.errorMessage = exception.getMsg();
             System.out.println(this.errorMessage);
             this.logResponse = this.errorMessage;
-            if (httpServletException.getHttpStatus().getValue() == HttpStatus.InternError.getValue()) {
+            if (exception.getHttpStatus().getValue() == HttpStatus.InternError.getValue()) {
                 e.printStackTrace();
                 this.setInternError();
             }
-            response.setStatus(httpServletException.getHttpStatus().getValue());
+            response.setStatus(exception.getHttpStatus().getValue());
         } catch (ClassCastException e1) {
             e.printStackTrace();
             this.logResponse = e.toString() + ".\nStackTrace:";
