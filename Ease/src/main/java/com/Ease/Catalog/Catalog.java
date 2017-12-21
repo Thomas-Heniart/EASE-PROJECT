@@ -116,11 +116,8 @@ public class Catalog {
     }
 
     public Website getWebsiteWithUrl(String url, JSONObject connection_information, HibernateQuery hibernateQuery) {
-        String[] splitted_url = url.split("//");
-        String minified_url = splitted_url[0] + "//" + splitted_url[1].split("/")[0];
-        System.out.println("Minified url: " + minified_url);
         hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
-        hibernateQuery.setParameter("url", minified_url);
+        hibernateQuery.setParameter("url", url);
         Website website = (Website) hibernateQuery.getSingleResult();
         if (website == null || website.getWebsiteInformationList().size() != connection_information.length())
             return null;
