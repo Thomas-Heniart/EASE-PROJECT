@@ -56,16 +56,13 @@ CREATE TABLE `teamSoftwareCards` (
 CREATE TABLE `teamSingleSoftwareCards` (
   `id`         INT(10) UNSIGNED NOT NULL,
   `account_id` INT(10) UNSIGNED DEFAULT NULL,
+  `teamUser_filler_id` INT(10) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `account_id` (`account_id`),
   CONSTRAINT `teamsinglesoftwarecards_ibfk_1` FOREIGN KEY (`id`) REFERENCES `teamSoftwareCards` (`id`),
-  CONSTRAINT `teamsinglesoftwarecards_ibfk_2` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
+  CONSTRAINT `teamsinglesoftwarecards_ibfk_2` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`),
+  CONSTRAINT `teamsinglesoftwarecards_ibfk_3` FOREIGN KEY (`teamUser_filler_id`) REFERENCES `teamUsers` (`id`)
 );
-
-ALTER TABLE teamSingleSoftwareCards
-  ADD COLUMN teamUser_filler_id INT(10) UNSIGNED;
-ALTER TABLE teamSingleSoftwareCards
-  ADD FOREIGN KEY (teamUser_filler_id) REFERENCES teamUsers (id);
 
 CREATE TABLE `teamEnterpriseSoftwareCards` (
   `id` INT(10) UNSIGNED NOT NULL,
