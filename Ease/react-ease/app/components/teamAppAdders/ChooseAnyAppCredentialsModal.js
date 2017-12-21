@@ -9,8 +9,9 @@ import {reduxActionBinder} from "../../actions/index";
 
 const CredentialInput = ({item, onChange, removeField}) => {
   return (
-    <Form.Field>
+    <Form.Field style={{position:'relative'}}>
       <label style={{fontSize: '16px', fontWeight: '300', color: '#424242',display:'inline-flex',width:'120px'}}>{item.placeholder}</label>
+      <Icon name='circle' size='large' style={{position:'absolute',bottom:'36px',left:'354px',zIndex:'1',color:'white',margin:'0'}} />
       <Icon onClick={e => removeField(item)} size='large' name='remove circle' style={{position:'relative',top:'14',left:'234',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
       <Input size="large"
              id={item.priority}
@@ -31,8 +32,9 @@ const CredentialInput = ({item, onChange, removeField}) => {
 
 const OtherInput = ({item, onChange, onChangePlaceholder, onFocus, removeField}) => {
   return (
-    <Form.Field>
+    <Form.Field style={{position:'relative'}}>
       <Input id={item.priority} onFocus={onFocus} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={onChangePlaceholder} required/>
+      <Icon name='circle' style={{position:'absolute',bottom:'36px',left:'354px',zIndex:'1',color:'white',margin:'0'}} />
       <Icon onClick={e => removeField(item)} size='large' name='remove circle' style={{position:'relative',top:'14',left:'234',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
       <Input size="large"
              id={item.priority}
@@ -121,7 +123,7 @@ class AddCardForm extends React.Component {
           <Button
             type="submit"
             loading={loading}
-            disabled={loading || !this.checkValueInput()}
+            disabled={loading || !this.checkValueInput() || credentials.length < 1}
             onClick={confirm}
             positive
             className="modal-button uppercase"
