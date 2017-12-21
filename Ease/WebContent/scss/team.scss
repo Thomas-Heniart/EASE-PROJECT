@@ -16,6 +16,17 @@ button.only-text-button {
   }
 }
 
+.add_field {
+  cursor: pointer;
+  color: #414141;
+  &:hover {
+    text-decoration: underline;
+    i {
+      text-decoration: none;
+    }
+  }
+}
+
 .show_team {
   .app {
     margin-bottom: 7px;
@@ -1288,7 +1299,7 @@ button.action_text_button {
   .popup_content {
     font-size: 16px;
     p {
-      margin-left: 20px;
+      margin: 10px 20px 10px 0;
       display: inline-flex;
       span {
         margin-left: 10px;

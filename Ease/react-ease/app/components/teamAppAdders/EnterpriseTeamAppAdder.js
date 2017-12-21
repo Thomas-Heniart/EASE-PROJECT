@@ -16,10 +16,12 @@ const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, is
   return (
     <div style={{position: 'relative'}}>
       {first &&
-      <Icon onClick={e => removeField(item)} name='remove circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+      <Icon name='circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'white',margin:'0'}} />}
+      {first &&
+      <Icon onClick={e => removeField(item)} name='remove circle' style={{cursor:'pointer',position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
       <Input size="mini"
              id={item.priority}
-             autoFocus={item.autoFocus}
+             autoFocus={item.autoFocus && isMe}
              readOnly={readOnly}
              class="team-app-input"
              required={isMe}
@@ -39,7 +41,9 @@ const OtherInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, f
   return (
     <div style={{position: 'relative'}}>
       {first &&
-      <Icon onClick={e => removeField(item)} name='remove circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+      <Icon name='circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'white',margin:'0'}} />}
+      {first &&
+      <Icon onClick={e => removeField(item)} name='remove circle' style={{cursor:'pointer',position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
       <Input size="mini"
              id={item.priority}
              autoFocus={item.autoFocus}
@@ -85,7 +89,7 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnl
           })
         }
         {first &&
-        <span onClick={addFields} style={{color:'#414141'}}><Icon name='plus circle'/>Add a field</span>}
+        <span onClick={addFields} className={'add_field'} style={{fontSize:'14px',marginTop:'8px'}}><Icon name='plus circle'/>Add a field</span>}
       </div>
   )
 };
@@ -142,10 +146,9 @@ class EnterpriseTeamAppAdder extends Component {
     this.setState({users: users});
   };
   addFields = () => {
-
     const users = this.state.users.map(user => {
       let inputs = user.credentials.slice();
-      const newInput = {name:`field${this.state.priority}`,placeholder:`Field ${this.state.priority}`,priority:this.state.priority,type:"text",value:""};
+      const newInput = {name:`field${this.state.priority + 1}`,placeholder:`Field ${this.state.priority + 1}`,priority:this.state.priority,type:"text",value:""};
       inputs.push(newInput);
       user.credentials = inputs;
       return user;

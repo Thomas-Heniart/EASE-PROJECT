@@ -109,7 +109,7 @@ class SoftwareApp extends Component {
         className='dashboard_popup_soft_and_any'
         position="top center"
         on='click'
-        open={this.props.active ? false : this.state.isOpen}
+        open={(this.props.active || app.empty) ? false : this.state.isOpen}
         onClose={this.handleOpenClose}
         onOpen={this.handleOpenClose}
         hideOnScroll

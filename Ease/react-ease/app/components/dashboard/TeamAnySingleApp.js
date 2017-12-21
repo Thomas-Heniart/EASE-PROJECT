@@ -18,7 +18,6 @@ class TeamAnySingleApp extends Component {
   constructor(props){
     super(props);
     this.state = {
-      credentials: [],
       loading: false,
       isOpen: false,
       copiedPassword: null,
@@ -26,13 +25,8 @@ class TeamAnySingleApp extends Component {
     };
     this.password = '';
   }
-  componentWillMount() {
-    const {app} = this.props;
-    const credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
-    this.setState({credentials: credentials});
-  }
   handleOpenClose = () => {
-    if (!this.props.active) {
+    if (!this.props.active && !this.props.team_apps[this.props.app.team_card_id].empty) {
       if (this.state.isOpen === false)
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -74,7 +68,8 @@ class TeamAnySingleApp extends Component {
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = team.rooms[team_app.channel_id];
     const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
-    const inputs = this.state.credentials.map((item,idx) => {
+    const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, team_app.account_information);
+    const inputs = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
@@ -161,10 +156,10 @@ class TeamAnySingleApp extends Component {
               size='mini'
               placeholder='URL'
               disabled
-              value={app.website.landing_url}
+              value={team_app.website.landing_url}
               label={
                 <Label style={{backgroundColor:'#373b60',color:'white',fontWeight:'300'}}
-                       onClick={e => window.open(app.website.landing_url)}>
+                       onClick={e => window.open(team_app.website.landing_url)}>
                   Go to <Icon name='external'/>
                 </Label>}/>
           </div>

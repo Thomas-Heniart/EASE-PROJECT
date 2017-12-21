@@ -14,7 +14,8 @@ const CredentialInput = ({item, onChange, removeField}) => {
   return (
     <Form.Field>
       <label style={{fontSize: '16px', fontWeight: '300', color: '#424242',display:'inline-flex',width:'120px'}}>{item.placeholder}</label>
-      <Icon onClick={e => removeField(item)} size='large' name='remove circle' style={{position:'relative',top:'14',left:'234',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
+      <Icon size='large' name='circle' style={{position:'relative',top:'14',left:'235',zIndex:'1',color:'white',margin:'0'}} />
+      <Icon onClick={e => removeField(item)} size='large' name='remove circle' style={{cursor:'pointer',position:'relative',top:'14',left:'206',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
       <Input size="large"
              id={item.priority}
              autoFocus={item.autoFocus}
@@ -32,11 +33,12 @@ const CredentialInput = ({item, onChange, removeField}) => {
   )
 };
 
-const OtherInput = ({item, onChange, onChangePlaceholder, removeField}) => {
+const OtherInput = ({item, onChange, onChangePlaceholder, onFocus, removeField}) => {
   return (
     <Form.Field>
-      <Input id={item.priority} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={onChangePlaceholder} required/>
-      <Icon onClick={e => removeField(item)} size='large' name='remove circle' style={{position:'relative',top:'14',left:'234',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
+      <Input id={item.priority} onFocus={onFocus} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={onChangePlaceholder} required/>
+      <Icon size='large' name='circle' style={{position:'relative',top:'14',left:'235',zIndex:'1',color:'white',margin:'0'}} />
+      <Icon onClick={e => removeField(item)} size='large' name='remove circle' style={{cursor:'pointer',position:'relative',top:'14',left:'206',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
       <Input size="large"
              id={item.priority}
              autoFocus={item.autoFocus}
@@ -66,6 +68,9 @@ class SecondStep extends React.Component {
       loading: false
     }
   }
+  handleFocus = (e) => {
+    e.target.select();
+  };
   handleCredentialInput = (e, {id, value}) => {
     let credentials = this.state.inputs.map(item => {
       if (id === item.priority)
@@ -166,7 +171,7 @@ class SecondStep extends React.Component {
     const {website, logoLetter, appName} = this.props;
     const credentialsInputs = this.state.inputs.map(item => {
       if (item.name !== 'login' && item.name !== 'password')
-        return <OtherInput key={item.priority} onChange={this.handleCredentialInput} onChangePlaceholder={this.handlePlaceholder} removeField={this.removeField} item={item}/>;
+        return <OtherInput key={item.priority} onChange={this.handleCredentialInput} onChangePlaceholder={this.handlePlaceholder} onFocus={this.handleFocus} removeField={this.removeField} item={item}/>;
       else
         return <CredentialInput key={item.priority} onChange={this.handleCredentialInput} removeField={this.removeField} item={item}/>;
     });
@@ -187,7 +192,7 @@ class SecondStep extends React.Component {
         </div>
         <Form onSubmit={this.send}>
           {credentialsInputs}
-          <p onClick={this.addFields} style={{color:'#414141'}}><Icon name='plus circle'/>Add a field</p>
+          <p><span onClick={this.addFields} className='add_field'><Icon name='plus circle'/>Add a field</span></p>
           <Message error content={this.state.errorMessage}/>
           <Button
             type="submit"

@@ -68,7 +68,7 @@ class TeamDeleteRoomModal extends Component {
               </List>
             </Form.Field>
             <Form.Field>
-              <span>Are you sure you want to delete <strong>#{channel_name}</strong> ?</span>
+              <p>Are you sure you want to delete <strong>#{channel_name}</strong> ?</p>
               <Checkbox label="Yes, I am absolutely sure" name="confirm" checked={this.state.confirm} onClick={this.handleInput}/>
             </Form.Field>
             <Message error content={this.state.errorMessage}/>

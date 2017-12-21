@@ -708,6 +708,14 @@ button.only-text-button {
   margin-left: 0 !important;
   margin-right: 5px !important; }
 
+.add_field {
+  cursor: pointer;
+  color: #414141; }
+  .add_field:hover {
+    text-decoration: underline; }
+    .add_field:hover i {
+      text-decoration: none; }
+
 .show_team .app {
   margin-bottom: 7px; }
 .show_team .team {
@@ -1692,7 +1700,7 @@ button.action_text_button {
   .ease_popup.ease_new_feature_popup .popup_content {
     font-size: 16px; }
     .ease_popup.ease_new_feature_popup .popup_content p {
-      margin-left: 20px;
+      margin: 10px 20px 10px 0;
       display: inline-flex; }
       .ease_popup.ease_new_feature_popup .popup_content p span {
         margin-left: 10px; }

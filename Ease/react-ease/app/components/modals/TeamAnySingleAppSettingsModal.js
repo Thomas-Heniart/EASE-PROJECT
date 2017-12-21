@@ -38,6 +38,9 @@ class TeamAnySingleAppSettingsModal extends Component{
     this.state.isEmpty = this.state.team_app.empty;
   }
   handleInput = handleSemanticInput.bind(this);
+  handleFocus = (e) => {
+    e.target.select();
+  };
   handleCredentialInput = (e, {name, value}) => {
     const credentials = this.state.credentials.map(item => {
       if (item.name === name)
@@ -126,7 +129,7 @@ class TeamAnySingleAppSettingsModal extends Component{
         app_id: this.state.app.id,
         name: this.state.appName
       })));
-    if (!isCredentialsMatch(this.state.team_app.account_information, account_information))
+    if (!isCredentialsMatch(this.state.team_app.account_information, account_information) || this.state.url !== this.props.team_apps[this.props.app.team_card_id].website.landing_url)
       calls.push(this.props.dispatch(teamEditAnySingleApp({
         name: team_app.name,
         team_card_id: team_app.id,
@@ -175,8 +178,10 @@ class TeamAnySingleAppSettingsModal extends Component{
         return (
           <Form.Field key={idx} style={{position:'relative'}}>
             <label>{item.placeholder}</label>
+            {(this.state.isEmpty && me.id === team_app.team_user_filler_id) &&
+            <Icon size='large' name='circle' style={{position:'absolute',top:'12',left:'354',zIndex:'1',color:'white',margin:'0'}} />}
             {this.state.isEmpty && me.id === team_app.team_user_filler_id &&
-            <Icon onClick={e => this.removeField(item)} size='large' name='remove circle' style={{position:'absolute',top:'12',left:'354',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+            <Icon onClick={e => this.removeField(item)} size='large' name='remove circle' style={{cursor:'pointer',position:'absolute',top:'12',left:'354',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
             <div className="display_flex align_items_center">
               <Input
                 fluid
@@ -194,7 +199,7 @@ class TeamAnySingleAppSettingsModal extends Component{
                 labelPosition='left'>
                 <Label><Icon name="lock"/></Label>
                 <input/>
-                {!app.empty && (meReceiver.allowed_to_see_password || meAdmin) &&
+                {!team_app.empty && (meReceiver.allowed_to_see_password || meAdmin) &&
                 <CopyPasswordIcon app_id={app.id}/>}
               </Input>
               {!this.state.isEmpty &&
@@ -213,9 +218,11 @@ class TeamAnySingleAppSettingsModal extends Component{
           {(!this.state.isEmpty || me.id !== team_app.team_user_filler_id || item.name === 'login') &&
           <label>{item.placeholder}</label>}
           {(this.state.isEmpty && me.id === team_app.team_user_filler_id && item.name !== 'login') &&
-          <Input id={item.priority} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={this.handlePlaceholder} required/>}
+          <Input id={item.priority} onFocus={this.handleFocus} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={this.handlePlaceholder} required/>}
           {(this.state.isEmpty && me.id === team_app.team_user_filler_id) &&
-          <Icon onClick={e => this.removeField(item)} size='large' name='remove circle' style={{position:'absolute',top:'12',left:'354',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+          <Icon size='large' name='circle' style={{position:'absolute',top:'12',left:'354',zIndex:'1',color:'white',margin:'0'}} />}
+          {(this.state.isEmpty && me.id === team_app.team_user_filler_id) &&
+          <Icon onClick={e => this.removeField(item)} size='large' name='remove circle' style={{cursor:'pointer',position:'absolute',top:'12',left:'354',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
           <div className="display_flex align_items_center">
             <Input
               fluid
@@ -251,7 +258,7 @@ class TeamAnySingleAppSettingsModal extends Component{
         <Container class="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
-              <img src={this.state.img_url ? this.state.img_url: this.props.app.logo} alt="Website logo"/>
+              <img src={this.state.img_url ? this.state.img_url: team_app.logo} alt="Website logo"/>
             </div>
             <TeamAppSettingsNameInput
               team_name={team.name}
@@ -304,7 +311,7 @@ class TeamAnySingleAppSettingsModal extends Component{
             </Form.Field>
             {inputs}
             {this.state.isEmpty && me.id === team_app.team_user_filler_id &&
-            <p onClick={this.addFields} style={{color:'#414141'}}><Icon name='plus circle'/>Add a field</p>}
+            <p><span onClick={this.addFields} className='add_field'><Icon name='plus circle'/>Add a field</span></p>}
             <Message error content={this.state.errorMessage}/>
             <Button
               type="submit"

@@ -29,10 +29,10 @@ const CredentialInput = ({item, onChange, removeField}) => {
   )
 };
 
-const OtherInput = ({item, onChange, onChangePlaceholder, removeField}) => {
+const OtherInput = ({item, onChange, onChangePlaceholder, onFocus, removeField}) => {
   return (
     <Form.Field>
-      <Input id={item.priority} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={onChangePlaceholder} required/>
+      <Input id={item.priority} onFocus={onFocus} transparent style={{fontSize:'16px',fontWeight:'300',color:'#424242',display:'inline-flex',width:'120px'}} value={item.placeholder} onChange={onChangePlaceholder} required/>
       <Icon onClick={e => removeField(item)} size='large' name='remove circle' style={{position:'relative',top:'14',left:'234',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
       <Input size="large"
              id={item.priority}
@@ -59,6 +59,9 @@ class AddCardForm extends React.Component {
       errorMessage: ''
     }
   }
+  handleFocus = (e) => {
+    e.target.select();
+  };
   checkValueInput = () => {
     let i = 0;
     let j = 0;
@@ -88,7 +91,7 @@ class AddCardForm extends React.Component {
     } = this.props;
     const credentialsInputs = credentials.map(item => {
       if (item.name !== 'login' && item.name !== 'password')
-        return <OtherInput key={item.priority} onChange={handleCredentialInput} onChangePlaceholder={handlePlaceholder} removeField={removeField} item={item}/>;
+        return <OtherInput key={item.priority} onChange={handleCredentialInput} onChangePlaceholder={handlePlaceholder} onFocus={this.handleFocus} removeField={removeField} item={item}/>;
       else
         return <CredentialInput key={item.priority} onChange={handleCredentialInput} removeField={removeField} item={item}/>;
     });
@@ -109,7 +112,7 @@ class AddCardForm extends React.Component {
         </div>
         <Form  onSubmit={confirm} error={this.state.errorMessage.length > 0}>
           {credentialsInputs}
-          <p onClick={addFields} style={{color:'#414141'}}><Icon name='plus circle'/>Add a field</p>
+          <p><span onClick={addFields} className='add_field'><Icon name='plus circle'/>Add a field</span></p>
           <div className='checkbox_credentials'>
             <Checkbox toggle onChange={handleInput} name='check' checked={check}/>
             To create auto-connection on this site, the Ease.space robot can use my password as test.

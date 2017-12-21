@@ -83,7 +83,6 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const account_information = transformCredentialsListIntoObject(this.state.credentials);
-
     this.setState({errorMessage: '', loading:true});
     let calls = [];
     if (this.state.appName !== this.props.app.name)
@@ -206,7 +205,7 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
         <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
-              <img src={this.props.app.logo} alt="Website logo"/>
+              <img src={team_app.logo} alt="Website logo"/>
             </div>
             <TeamAppSettingsNameInput
               team_name={team.name}
