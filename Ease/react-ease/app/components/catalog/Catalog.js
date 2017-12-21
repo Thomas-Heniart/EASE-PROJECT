@@ -71,7 +71,7 @@ class Catalog extends React.Component {
           <div class="mainContainer" ref={(ref) => {this.main_container = ref}} style={{paddingTop:'0'}}>
             <div className="container">
               <Grid>
-                <Grid.Column width={3}>
+                <Grid.Column width={3} style={{paddingTop:'0'}}>
                   {/website/.test(this.props.location.pathname) &&
                   <div id="catalog-nav">
                     <p>Categories</p>

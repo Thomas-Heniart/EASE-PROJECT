@@ -3,7 +3,7 @@ import { Grid, Image, Icon, Header, Input, Container, Loader } from 'semantic-ui
 
 const AppsContainer  = ({websites, title, openModal}) => {
   return (
-      <Container fluid>
+      <Container fluid style={{marginBottom:'20px'}}>
         <h3>
           {title}
         </h3>

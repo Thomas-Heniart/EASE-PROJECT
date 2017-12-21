@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import { Grid, Image, Icon, Modal, Header, Input, Container, Loader } from 'semantic-ui-react';
+import AddAnyApp from './AddAnyApp'
 import AppsContainer from "./AppsContainer";
 import {selectItemFromListById} from "../../utils/helperFunctions";
 import {connect} from "react-redux";
@@ -25,6 +26,7 @@ class CategoryAppsContainer extends Component {
         <Container fluid>
           {category && websites.length > 0 &&
           <AppsContainer title={category.name} websites={websites} openModal={this.props.openModal}/>}
+          <AddAnyApp query={this.props.query}/>
           {others.length > 0 &&
           <AppsContainer title={'Other results'} websites={others} openModal={this.props.openModal}/>}
         </Container>
