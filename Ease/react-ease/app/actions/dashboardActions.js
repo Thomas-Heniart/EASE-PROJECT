@@ -17,6 +17,8 @@ export function fetchDashboard(){
       const sso_groups = response[2];
       const team_app_calls = [];
 
+      easeTracker.setUserProperty("AppCount", Object.keys(apps).length);
+
       apps.map(app => {
         if (!!app.team_id)
           team_app_calls.push(dispatch(fetchTeamApp({

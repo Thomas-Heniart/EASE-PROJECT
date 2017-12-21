@@ -1,7 +1,7 @@
 {
   "name": "Coaching Assembly",
   "lastlogin": "",
-  "home":{"http":"https://", "subdomain":"subdomain", "domain":"coachingassembly.com/dashboard"},
+  "home":{"http":"https://www.coachingassembly.com"},
   "connect": {
     "todo": [
       {

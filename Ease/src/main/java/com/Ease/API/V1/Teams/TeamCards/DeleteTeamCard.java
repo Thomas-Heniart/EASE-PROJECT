@@ -63,6 +63,7 @@ public class DeleteTeamCard extends HttpServlet {
                 TeamUser teamUser = teamCardReceiver.getTeamUser();
                 if (!teamUser.equals(sm.getTeamUser(team)))
                     NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
+                teamUser.removeTeamCardReceiver(teamCardReceiver);
             }
             team.removeTeamCard(teamCard);
             channel.removeTeamCard(teamCard);
