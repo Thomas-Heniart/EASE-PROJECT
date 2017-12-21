@@ -4,11 +4,10 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.Account;
-import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
@@ -179,20 +178,18 @@ public class TeamManager {
                     for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                         if (teamCardReceiver.getTeamUser().getUser() == null)
                             continue;
-                        TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
-                        ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
-                        if (classicApp == null || classicApp.getAccount() == null)
-                            continue;
-                        Account account = classicApp.getAccount();
+                        App app = teamCardReceiver.getApp();
+                        if (app == null || app.getAccount() == null);
+                        Account account = app.getAccount();
                         if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
                             account.setPassword_must_be_updated(true);
                             hibernateQuery.saveOrUpdateObject(account);
-                            NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamEnterpriseCardReceiver, this.getUserIdMap(servletContext), hibernateQuery);
+                            NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamCardReceiver, this.getUserIdMap(servletContext), hibernateQuery);
                         } else if (teamCardReceiver.getTeamUser().isVerified() && account.mustUpdatePassword() && !account.isAdmin_notified() && DateComparator.isOutdated(account.getLast_update(), account.getReminder_interval(), 7)) {
                             account.setAdmin_notified(true);
                             hibernateQuery.saveOrUpdateObject(account);
                             Channel channel = teamCard.getChannel();
-                            NotificationFactory.getInstance().createPasswordNotUpToDateNotificationOneWeek(teamEnterpriseCardReceiver, this.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
+                            NotificationFactory.getInstance().createPasswordNotUpToDateNotificationOneWeek(teamCardReceiver, this.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
                         }
                     }
                 }

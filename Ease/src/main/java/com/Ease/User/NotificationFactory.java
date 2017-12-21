@@ -7,7 +7,6 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
@@ -189,19 +188,19 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
-    public void createPasswordNotUpToDateNotification(TeamSingleCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+    public void createPasswordNotUpToDateNotification(TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         Channel channel = teamCard.getChannel();
         Notification notification = this.createNotification(channel.getRoom_manager().getUser(), "Password for " + teamCard.getName() + " needs to be updated as soon as possible", teamCard.getLogo(), teamCard);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
-    public void createPasswordNotUpToDateNotification(TeamEnterpriseCardReceiver teamEnterpriseCardReceiver, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
-        TeamUser teamUser = teamEnterpriseCardReceiver.getTeamUser();
+    public void createPasswordNotUpToDateNotification(TeamCardReceiver teamCardReceiver, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        TeamUser teamUser = teamCardReceiver.getTeamUser();
         User user = teamUser.getUser();
-        String content = "Your password " + teamEnterpriseCardReceiver.getApp().getAppInformation().getName() + " needs to be updated as soon as possible";
-        String url = "#/main/dashboard?app_id=" + teamEnterpriseCardReceiver.getApp().getDb_id();
-        String icon = teamEnterpriseCardReceiver.getApp().getLogo();
+        String content = "Your password " + teamCardReceiver.getApp().getAppInformation().getName() + " needs to be updated as soon as possible";
+        String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
+        String icon = teamCardReceiver.getApp().getLogo();
         if (user != null) {
             Notification notification = this.createNotification(user, content, icon, url);
             hibernateQuery.saveOrUpdateObject(notification);
@@ -213,12 +212,12 @@ public class NotificationFactory {
     }
 
 
-    public void createPasswordNotUpToDateNotificationOneWeek(TeamEnterpriseCardReceiver teamEnterpriseCardReceiver, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        TeamCard teamCard = teamEnterpriseCardReceiver.getTeamCard();
-        Team team = teamEnterpriseCardReceiver.getTeamCard().getTeam();
+    public void createPasswordNotUpToDateNotificationOneWeek(TeamCardReceiver teamCardReceiver, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        TeamCard teamCard = teamCardReceiver.getTeamCard();
+        Team team = teamCardReceiver.getTeamCard().getTeam();
         Channel channel = teamCard.getChannel();
         String url = team.getDb_id() + "/" + channel.getDb_id() + "?app_id=" + teamCard.getDb_id();
-        Notification notification = this.createNotification(channel.getRoom_manager().getUser(), "The password of " + teamEnterpriseCardReceiver.getTeamUser().getUsername() + " for " + teamCard.getName() + " is not up to date for the last 7 days", teamCard.getLogo(), url);
+        Notification notification = this.createNotification(channel.getRoom_manager().getUser(), "The password of " + teamCardReceiver.getTeamUser().getUsername() + " for " + teamCard.getName() + " is not up to date for the last 7 days", teamCard.getLogo(), url);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
