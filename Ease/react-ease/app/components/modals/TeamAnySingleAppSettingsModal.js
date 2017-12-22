@@ -124,7 +124,7 @@ class TeamAnySingleAppSettingsModal extends Component{
     }, {});
     this.setState({errorMessage: '', loading:true});
     let calls = [];
-    if (this.state.appName !== this.state.app.name)
+    if (this.state.appName !== this.props.app.name)
       calls.push(this.props.dispatch(editAppName({
         app_id: this.state.app.id,
         name: this.state.appName

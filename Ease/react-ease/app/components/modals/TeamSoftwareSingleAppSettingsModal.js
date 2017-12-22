@@ -109,10 +109,9 @@ class TeamSoftwareSingleAppSettingsModal extends Component{
     const connection_information = this.state.credentials.reduce((prev, curr) =>{
       return {...prev, [curr.name]: {type:curr.information_type,priority:curr.priority,placeholder:curr.placeholder}}
     }, {});
-    console.log('c_i: ', connection_information);
     this.setState({errorMessage: '', loading:true});
     let calls = [];
-    if (this.state.appName !== this.state.app.name)
+    if (this.state.appName !== this.props.app.name)
       calls.push(this.props.dispatch(editAppName({
         app_id: this.state.app.id,
         name: this.state.appName
