@@ -19,7 +19,10 @@ class AddBookmark extends React.Component {
   handleInput = handleSemanticInput.bind(this);
   getLogo = () => {
     getClearbitLogo(this.state.url).then(response => {
-      this.setState({img_url: response});
+      if (response !== "")
+        this.setState({img_url: response});
+      else
+        this.setState({img_url: '/resources/icons/link_app.png'});
     }).catch(err => {
       this.setState({img_url: '/resources/icons/link_app.png'});
     });

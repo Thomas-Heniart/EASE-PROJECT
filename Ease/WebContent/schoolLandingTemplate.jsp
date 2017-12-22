@@ -41,12 +41,12 @@
     <link rel="manifest" href="manifest.json">
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00030/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00032/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00030/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00032/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
 </head>
 
 <body id="landingBody" class="school">

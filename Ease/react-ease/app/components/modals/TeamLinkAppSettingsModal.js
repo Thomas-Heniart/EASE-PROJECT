@@ -25,12 +25,13 @@ class TeamLinkAppSettingsModal extends Component {
       view: 'Account',
       url: this.props.app.url,
       appName: this.props.app.name,
-      logo: this.props.app.logo,
+      logo: '',
       team_app: this.props.team_apps[this.props.app.team_card_id],
       loading: false,
       edit: false,
       errorMessage: ''
-    }
+    };
+    this.state.logo = this.state.team_app.logo
   }
   handleInput = handleSemanticInput.bind(this);
   linkInput = (e, {value}) => {

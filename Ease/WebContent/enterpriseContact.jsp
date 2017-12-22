@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00030/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00030/enterpriseContact.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00032/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00032/enterpriseContact.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
