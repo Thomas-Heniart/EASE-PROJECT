@@ -31,8 +31,8 @@ module.exports = {
     l.href = url;
     const img_url = "https://logo.clearbit.com/" + l.hostname;
     return axios.get("https://logo.clearbit.com/" + l.hostname).then(response => {
-      // if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1)
-      //   return '/resources/icons/link_app.png';
+      if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1)
+        return '';
       return img_url;
     }).catch(err => {
       throw err;

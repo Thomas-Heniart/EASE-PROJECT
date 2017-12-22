@@ -70,7 +70,7 @@ class AddAnyApp extends React.Component {
   };
   render() {
     return (
-      <Container fluid class="mrgn0" as="form" onSubmit={this.send}>
+      <Container fluid class="mrgn0 add_any" as="form" onSubmit={this.send}>
         <p style={{fontSize:'18px',fontWeight:'bold',color:'#949eb7'}}>Add a website</p>
         <Segment clearing className="addBookmark">
           <NavLink to={`/main/catalog/website`}>

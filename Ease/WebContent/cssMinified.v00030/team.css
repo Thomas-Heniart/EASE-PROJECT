@@ -905,6 +905,8 @@ button.only-text-button {
       font-weight: bold;
       color: #949eb7;
       margin-bottom: 0; }
+  #catalog .add_any {
+    margin-top: 20px !important; }
   #catalog header {
     height: 118px;
     left: 0;
@@ -984,8 +986,7 @@ button.only-text-button {
       #catalog .listCategory a:hover {
         color: #949eb7; }
   #catalog .logoCatalog {
-    padding-left: 20px;
-    margin-bottom: 20px; }
+    padding-left: 20px; }
     #catalog .logoCatalog img {
       width: 50px;
       height: 50px;
