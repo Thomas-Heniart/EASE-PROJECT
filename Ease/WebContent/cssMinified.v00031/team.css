@@ -891,7 +891,8 @@ button.only-text-button {
     border: none; }
   #catalog > .mainContainer {
     padding-top: 20px;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: scroll;
     -webkit-flex-grow: 1;
     -moz-flex-grow: 1;
     -ms-flex-positive: 1;

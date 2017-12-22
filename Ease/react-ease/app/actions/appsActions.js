@@ -493,7 +493,7 @@ export function teamEditLinkCard({team_card_id, name, description, url, img_url}
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch(teamCardChangedAction({
-        tam_card: team_card
+        team_card: team_card
       }));
       return team_card;
     }).catch(err => {

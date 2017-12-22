@@ -40,7 +40,7 @@ class TeamLinkApp extends Component {
             {me.disabled &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
             <div class="logo_handler">
-              <img class="logo" src={app.logo} onClick={this.process}/>
+              <img class="logo" src={team_app.logo} onClick={this.process}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamLinkAppSettingsModal({active: true, app: app}))}}>
                 Settings
               </button>
