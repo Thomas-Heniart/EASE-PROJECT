@@ -56,13 +56,14 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             teamSingleSoftwareCard.setPassword_reminder_interval(password_reminder_interval);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             sm.decipher(account_information);
-            account_information = teamSingleSoftwareCard.getSoftware().getPresentCredentialsFromJson(account_information);
             JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
             Software software = teamSingleSoftwareCard.getSoftware();
             if (software.isDifferentConnectionInformation(connection_information)) {
                 software = SoftwareFactory.getInstance().createSoftwareAndLogo(software.getName(), software.getFolder(), software.getLogo_url(), connection_information, hibernateQuery);
                 teamSingleSoftwareCard.setSoftware(software);
             }
+            account_information = software.getPresentCredentialsFromJson(account_information);
+            System.out.println(account_information.toString());
             Account account = teamSingleSoftwareCard.getAccount();
             if (account == null) {
                 String teamKey = sm.getTeamKey(team);
