@@ -119,7 +119,7 @@ public class Catalog {
         hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
         hibernateQuery.setParameter("url", url);
         Website website = (Website) hibernateQuery.getSingleResult();
-        if (website == null || website.getWebsiteInformationList().size() != connection_information.length())
+        if (website == null || website.getFolder().equals("undefined") || website.getWebsiteInformationList().size() != connection_information.length())
             return null;
         for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
             JSONObject tmp = connection_information.getJSONObject(websiteInformation.getInformation_name());
