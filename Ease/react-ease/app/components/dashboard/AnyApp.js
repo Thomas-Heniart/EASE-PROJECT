@@ -13,18 +13,12 @@ class AnyApp extends Component {
   constructor(props){
     super(props);
     this.state = {
-      credentials: [],
       loading: false,
       isOpen: false,
       copiedPassword: null,
       copiedOther: null
     };
     this.password = '';
-  }
-  componentWillMount() {
-    const {app} = this.props;
-    const credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
-    this.setState({credentials: credentials});
   }
   handleOpenClose = () => {
     if (!this.props.active) {
@@ -62,7 +56,8 @@ class AnyApp extends Component {
   };
   render(){
     const {app} = this.props;
-    const inputs = this.state.credentials.map((item,idx) => {
+    const credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
+    const inputs = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (

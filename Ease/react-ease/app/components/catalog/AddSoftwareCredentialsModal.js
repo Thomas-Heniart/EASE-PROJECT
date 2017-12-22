@@ -299,7 +299,7 @@ class AddSoftwareCredentialsModal extends React.Component {
     return (
       <SimpleModalTemplate
         onClose={this.close}
-        headerContent={'Choose app location'}>
+        headerContent={'Setup your App'}>
         {this.state.view === 1 &&
         <ChooseAppLocationModal
           website={{logo: this.state.img_url}}

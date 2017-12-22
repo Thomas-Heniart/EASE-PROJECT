@@ -144,7 +144,7 @@ class TeamSingleAppSettingsModal extends Component{
                     labelPosition='left'>
                   <Label><Icon name="lock"/></Label>
                   <input/>
-                  {!app.empty && (meReceiver.allowed_to_see_password || meAdmin) &&
+                  {!team_app.empty && (meReceiver.allowed_to_see_password || meAdmin) &&
                   <CopyPasswordIcon app_id={app.id}/>}
                 </Input>
                 {!this.state.isEmpty &&

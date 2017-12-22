@@ -103,7 +103,7 @@ class AddAnyApp extends React.Component {
                        autoComplete="off"
                        onChange={this.handleInput}
                        size="mini"
-                       autoFocus
+                       autoFocus={this.props.focus}
                        onFocus={this.moveCaretAtEnd}
                        required />
               </div>

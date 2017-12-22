@@ -98,7 +98,7 @@ const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField,
   return (
       <div class="receivers">
         {receivers.map((item, idx) => {
-            return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete} addFields={addFields} removeField={removeField} first={idx === 0 && !classic}/>;
+          return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete} addFields={addFields} removeField={removeField} first={idx === 0 && !classic}/>;
         })}
       </div>
   )
@@ -398,7 +398,7 @@ class EnterpriseTeamAppAdder extends Component {
                         <PasswordChangeDropdownEnterprise value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
                       </div>
                     </div>
-                    <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput} removeField={this.removeField} addFields={this.addFields} classic={this.props.card.subtype === 'classicApp'}/>
+                    <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput} removeField={this.removeField} addFields={this.addFields} classic={this.props.card.subtype === 'classic'}/>
                     <div>
                       {this.state.selected_users.length !== this.state.users.length &&
                       <Dropdown
@@ -433,7 +433,7 @@ class EnterpriseTeamAppAdder extends Component {
                 icon="send"
                 content="Send"
                 loading={this.state.loading}
-                disabled={this.state.loading}
+                disabled={this.state.loading || this.state.users[0].credentials.length < 1}
                 floated="right"
                 class="mrgn0"
                 positive

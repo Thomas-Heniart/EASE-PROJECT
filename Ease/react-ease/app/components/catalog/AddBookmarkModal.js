@@ -148,7 +148,7 @@ class AddBookmarkModal extends Component {
     return (
         <SimpleModalTemplate
             onClose={this.close}
-            headerContent={'Choose app location'}>
+            headerContent={'Setup your App'}>
           <ChooseAppLocationModal
             website={{logo: this.state.img_url}}
             appName={this.state.name}
