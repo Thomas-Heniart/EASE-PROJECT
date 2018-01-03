@@ -98,6 +98,10 @@ public class HibernateQuery {
         return this.session.get(someClass, id);
     }
 
+    public Object get(Class someClass, Long id) {
+        return this.session.get(someClass, id);
+    }
+
     public boolean isOpen() {
         return this.session.isOpen();
     }

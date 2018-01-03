@@ -33,10 +33,10 @@ extension.runtime.onMessage("connectToChrome", function (msg, sendResponse) {
 
 extension.runtime.onMessage("scrapChrome", function (msg, sendResponse) {
     function waitload(callback) {
-        if ($("div[jscontroller='VXdfxd']").length != 0) {
+        if ($("div[jscontroller='VXdfxd']").length !== 0) {
             console.log("start scrap");
             callback();
-        } else if ($(".gga").length != 0) {
+        } else if ($(".gga").length !== 0) {
             console.log("no pass");
             sendResponse([]);
         } else {
@@ -71,7 +71,7 @@ extension.runtime.onMessage("scrapChrome", function (msg, sendResponse) {
 
     waitload(function () {
         var loadingString = "";
-        var waitingTime = 5;
+        var waitingTime = 100;
         var passwordEyes = $(".mUbCce.fKz7Od.cXmCRb[role='button'][jsaction*='click:cOuCgd']");
         var nbOfPass = passwordEyes.length;
         var results = [];
@@ -84,8 +84,35 @@ extension.runtime.onMessage("scrapChrome", function (msg, sendResponse) {
             var website = $("div[role='rowheader'] div", entireRow).text();
             var login = $("div[role='gridcell']:nth-child(2) div", entireRow).text();
 
+            var interval = setInterval(function () {
+                console.log(entireRow);
+                console.log(loadingString + " and field: " + field.val() + " and login: " + login + " and website: " + website + " and index: " + index);
+                console.log(field.val());
+                console.log(waitingTime);
+
+                if (field.val() !== "••••••••" && field.val() !== loadingString) {
+                    if (waitingTime === 100) {
+                        loadingString = field.val();
+                        waitingTime = 500;
+                    } else {
+                        if (login !== "")
+                            results.push({website: website, login: login, pass: field.val()});
+                        console.log(results);
+                        console.log(index);
+                        clearInterval(interval);
+                        if (index + 1 < nbOfPass)
+                            getPass(index + 1);
+                        else
+                            sendResponse(results);
+                    }
+                } else {
+                    if (field.val() === "••••••••")
+                        eyeElem[0].click();
+                }
+            }, waitingTime);
+
             //var field = $(element).find(".bba.EW.a-Fa");
-            function waitPass() {
+            /* function waitPass() {
                 console.log(entireRow);
                 console.log(loadingString + " and field: " + field.val() + " and login: " + login + " and website: " + website + " and index: " + index);
                 if (field.val() != "••••••••" && field.val() != loadingString) {
@@ -108,10 +135,8 @@ extension.runtime.onMessage("scrapChrome", function (msg, sendResponse) {
                         eyeElem.click();
                     setTimeout(waitPass, waitingTime);
                 }
-            }
-            console.log(eyeElem);
-            eyeElem.click();
-            waitPass();
+            } */
+            //waitPass();
             /* } else {
                 if (index + 1 < nbOfPass)
                     getPass(index + 1);
