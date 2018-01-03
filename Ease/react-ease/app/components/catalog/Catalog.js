@@ -84,7 +84,7 @@ class Catalog extends React.Component {
                       <Route path={`${this.props.match.path}/softwareCredentials`} component={AddSoftwareCredentials}/>
                       <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
                       <Route exact path={`${this.props.match.path}/website/addWebsite`}
-                             render={(props) => <AddAnyApp focus={true}/>}/>
+                             render={(props) => <AddAnyApp cross focus={true}/>}/>
                       <Route path={`${this.props.match.path}/website`}
                              render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>
                     </Switch>}
