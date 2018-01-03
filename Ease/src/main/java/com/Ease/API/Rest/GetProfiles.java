@@ -50,9 +50,9 @@ public class GetProfiles extends HttpServlet {
                         } else
                             symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
                         app.decipher(symmetric_key, team_key);
+                        apps.put(String.valueOf(app.getDb_id()), app.getRestJson());
+                        app_ids.put(app.getDb_id());
                     }
-                    apps.put(String.valueOf(app.getDb_id()), app.getRestJson());
-                    app_ids.put(app.getDb_id());
                 }
                 jsonObject.put("app_ids", app_ids);
                 profiles.put(String.valueOf(profile.getDb_id()), jsonObject);

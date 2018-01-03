@@ -79,8 +79,10 @@ public class ServletRemoveTeamUserFromChannel extends HttpServlet {
                             if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
                                 LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
                                 sm.saveOrUpdate(linkAppInformation);
-                                linkApp1.setLinkAppInformation(linkAppInformation);
-                                sm.saveOrUpdate(linkApp1);
+                                hibernateQuery.queryString("UPDATE LinkApp l SET l.linkAppInformation = :info WHERE l.db_id = :id");
+                                hibernateQuery.setParameter("info", linkAppInformation);
+                                hibernateQuery.setParameter("id", linkApp.getDb_id());
+                                linkApp.setLinkAppInformation(linkAppInformation);
                             }
                         }
                         teamLinkCard.removeTeamCardReceiver(teamCardReceiver);

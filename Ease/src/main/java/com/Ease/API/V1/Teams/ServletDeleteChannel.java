@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -60,8 +61,11 @@ public class ServletDeleteChannel extends HttpServlet {
                             if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
                                 LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
                                 sm.saveOrUpdate(linkAppInformation);
+                                HibernateQuery hibernateQuery = sm.getHibernateQuery();
+                                hibernateQuery.queryString("UPDATE LinkApp l SET l.linkAppInformation = :info WHERE l.db_id = :id");
+                                hibernateQuery.setParameter("info", linkAppInformation);
+                                hibernateQuery.setParameter("id", linkApp.getDb_id());
                                 linkApp.setLinkAppInformation(linkAppInformation);
-                                sm.saveOrUpdate(linkApp);
                             }
                         }
                     }
