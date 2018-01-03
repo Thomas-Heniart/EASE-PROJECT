@@ -209,7 +209,7 @@ public class Team {
     }
 
     public boolean isValidFreemium() throws HttpServletException {
-        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()) || this.getCustomer().getAccountBalance() < 0);
+        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() != null && this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()) || this.getCustomer().getAccountBalance() < 0);
     }
 
     public synchronized Map<Integer, TeamUser> getTeamUsers() {
