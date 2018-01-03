@@ -73,9 +73,10 @@ class AddAnyApp extends React.Component {
       <Container fluid class="mrgn0 add_any" as="form" onSubmit={this.send}>
         <p style={{fontSize:'18px',fontWeight:'bold',color:'#949eb7'}}>Add a website</p>
         <Segment clearing className="addBookmark">
+          {this.props.cross &&
           <NavLink to={`/main/catalog/website`}>
             <Icon name="close" link class="closeButton"/>
-          </NavLink>
+          </NavLink>}
           <div className="display_flex">
             <div className="logo">
               {this.state.img_url ?
