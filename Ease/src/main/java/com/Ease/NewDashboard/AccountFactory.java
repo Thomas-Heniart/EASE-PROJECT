@@ -66,4 +66,17 @@ public class AccountFactory {
         account.setAccountInformationSet(accountInformationSet);
         return account;
     }
+
+    public Account createAccountFromAccountCopy(Account account, HibernateQuery hibernateQuery) {
+        Set<AccountInformation> accountInformationSet = new HashSet<>();
+        Account account_copy = new Account(account.getReminder_interval(), account.getPublic_key(), account.getPrivate_key(), accountInformationSet, null);
+        hibernateQuery.saveOrUpdateObject(account_copy);
+        for (AccountInformation accountInformation : account.getAccountInformationSet()) {
+            AccountInformation accountInformation1 = new AccountInformation(accountInformation.getInformation_name(), accountInformation.getInformation_value(), null, account_copy);
+            hibernateQuery.saveOrUpdateObject(accountInformation1);
+            accountInformationSet.add(accountInformation1);
+        }
+        account_copy.setAccountInformationSet(accountInformationSet);
+        return account_copy;
+    }
 }

@@ -409,10 +409,10 @@ public class TeamUser {
         res.put("role", this.teamUserRole.getRoleValue());
         res.put("invitation_sent", this.getTeamUserStatus().isInvitation_sent());
         res.put("arrival_date", arrivalDate.getTime());
-        res.put("departure_date", (departureDate == null) ? null : departureDate.getTime());
+        res.putOpt("departure_date", (departureDate == null) ? null : departureDate.getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("state", this.state);
-        res.put("phone_number", this.getPhone_number());
+        res.putOpt("phone_number", this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getChannels())
             channel_ids.put(channel.getDb_id());

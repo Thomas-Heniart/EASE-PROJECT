@@ -5,6 +5,7 @@ import com.Ease.Importation.ImportedAccount;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
@@ -12,11 +13,15 @@ import javax.ws.rs.core.*;
 @Produces({MediaType.APPLICATION_JSON})
 public class ImportedAccountResource {
 
+    @Context
+    private HttpServletRequest request;
+
     private HibernateQuery hibernateQuery = new HibernateQuery();
 
     @GET
     @Path("/{id}")
     public Response getImportedAccount(@PathParam("id") Long id) throws HttpServletException {
+        System.out.println("Request is null: " + (this.request == null));
         ImportedAccount importedAccount = (ImportedAccount) hibernateQuery.get(ImportedAccount.class, id);
         if (importedAccount == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No such imported account");
@@ -27,17 +32,16 @@ public class ImportedAccountResource {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     public Response putImportedAccount(ImportedAccount importedAccount) throws HttpServletException {
-        ImportedAccount importedAccount1 = (ImportedAccount) this.hibernateQuery.get(ImportedAccount.class, importedAccount.getId());
-        if (importedAccount1 == null)
-            importedAccount1 = importedAccount;
-        this.hibernateQuery.saveOrUpdateObject(importedAccount1);
+        importedAccount.getImportedAccountInformationSet().forEach(importedAccountInformation -> importedAccountInformation.setImportedAccount(importedAccount));
+        this.hibernateQuery.saveOrUpdateObject(importedAccount);
         this.hibernateQuery.commit();
-        return Response.status(Response.Status.OK).entity(importedAccount1).build();
+        return Response.status(Response.Status.OK).entity(importedAccount).build();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response postImportedAccount(ImportedAccount importedAccount) throws HttpServletException {
+        importedAccount.getImportedAccountInformationSet().forEach(importedAccountInformation -> importedAccountInformation.setImportedAccount(importedAccount));
         this.hibernateQuery.saveOrUpdateObject(importedAccount);
         this.hibernateQuery.commit();
         return Response.status(Response.Status.OK).entity(importedAccount).build();

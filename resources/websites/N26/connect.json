@@ -1,0 +1,24 @@
+{
+  "name":"N26",
+  "lastLogin":"",
+  "home":"https://my.n26.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"input[name='email']"},
+      {"action":"fill", "what":"password", "search":"input[name='password']"},
+      {"action":"trueClick", "search":"a.btn.login"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":".UIHeader__logout-button"},
+      {"action":"waitfor", "search":".UIConfirm .btn.ok"},
+      {"action":"trueClick", "search":".UIConfirm .btn.ok"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search": "a.login, .UIHeader__logout-button"},
+    {"search":".UIHeader__logout-button"}
+  ]
+}

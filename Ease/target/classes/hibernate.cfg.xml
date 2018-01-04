@@ -86,5 +86,7 @@
         <mapping class="com.Ease.User.PasswordLost"/>
         <mapping class="com.Ease.Metrics.ClickOnApp"/>
         <mapping class="com.Ease.Metrics.TeamMetrics"/>
+        <mapping class="com.Ease.Importation.ImportedAccount"/>
+        <mapping class="com.Ease.Importation.ImportedAccountInformation"/>
     </session-factory>
 </hibernate-configuration>

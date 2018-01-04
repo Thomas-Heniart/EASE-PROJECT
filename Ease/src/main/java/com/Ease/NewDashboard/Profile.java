@@ -151,6 +151,10 @@ public class Profile {
         return app;
     }
 
+    public void removeApp(App app) {
+        this.getAppSet().remove(app);
+    }
+
     public synchronized void removeAppAndUpdatePositions(App app, HibernateQuery hibernateQuery) {
         int position = app.getPosition();
         this.getAppSet().stream().filter(app1 -> !app.equals(app1) && app1.getPosition() >= position).forEach(app1 -> {

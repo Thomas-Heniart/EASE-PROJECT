@@ -5,10 +5,9 @@ import com.Ease.Catalog.Category;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.NewDashboard.AnyApp;
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.JSONArray;
@@ -20,6 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @WebServlet("/api/v1/admin/EditWebsite")
@@ -85,6 +86,7 @@ public class ServletEditWebsite extends HttpServlet {
                     sm.saveOrUpdate(teamWebsiteCard);
                 }
             });
+            Set<WebsiteApp> websiteAppToRemoveSet = new HashSet<>();
             website.getWebsiteAppSet().forEach(websiteApp -> {
                 if (websiteApp.getAppInformation().getName().equals(name)) {
                     websiteApp.getAppInformation().setName(name);
@@ -92,18 +94,23 @@ public class ServletEditWebsite extends HttpServlet {
                 }
                 if (websiteApp.isAnyApp() && website.getWebsiteAttributes().isIntegrated()) {
                     AnyApp anyApp = (AnyApp) websiteApp;
-                    App tmp_app = new ClassicApp(anyApp.getAppInformation(), website, anyApp.getAccount());
-                    tmp_app.setProfile(anyApp.getProfile());
+                    Profile profile = anyApp.getProfile();
+                    Account account = AccountFactory.getInstance().createAccountFromAccountCopy(anyApp.getAccount(), hibernateQuery);
+                    App tmp_app = new ClassicApp(new AppInformation(anyApp.getAppInformation().getName()), website, account);
+                    tmp_app.setProfile(profile);
                     tmp_app.setPosition(anyApp.getPosition());
                     sm.saveOrUpdate(tmp_app);
+                    profile.removeApp(anyApp);
+                    profile.addApp(tmp_app);
+                    TeamCardReceiver teamCardReceiver = anyApp.getTeamCardReceiver();
+                    if (teamCardReceiver != null)
+                        teamCardReceiver.setApp(tmp_app);
+                    sm.deleteObject(anyApp);
+                    websiteAppToRemoveSet.add(anyApp);
                     /* @TODO WebSocket message here */
                 }
             });
-            if (website.getWebsiteAttributes().isIntegrated()) {
-                hibernateQuery.queryString("DELETE FROM AnyApp a WHERE a.website.db_id = :id");
-                hibernateQuery.setParameter("id", website.getDb_id());
-                hibernateQuery.executeUpdate();
-            }
+            website.getWebsiteAppSet().removeAll(websiteAppToRemoveSet);
             sm.setSuccess("Catalog edited");
         } catch (Exception e) {
             sm.setError(e);

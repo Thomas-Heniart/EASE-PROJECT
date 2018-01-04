@@ -173,7 +173,7 @@
         <servlet-name>new_admin.jsp</servlet-name>
         <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
-    <!-- <servlet>
+    <servlet>
         <servlet-name>Jersey REST Service</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
@@ -189,7 +189,7 @@
     <servlet-mapping>
         <servlet-name>Jersey REST Service</servlet-name>
         <url-pattern>/rest/*</url-pattern>
-    </servlet-mapping> -->
+    </servlet-mapping>
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Viewpoint Secure URLs</web-resource-name>
