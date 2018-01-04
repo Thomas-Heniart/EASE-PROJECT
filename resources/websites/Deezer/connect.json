@@ -1,7 +1,7 @@
 {
 	"name":"deezer",
 	"lastLogin":"",
-	"home":"http://www.deezer.com/login/email",
+	"home":"https://www.deezer.com/login/email",
 	"connect":{
 		"todo":[
 			{"action":"fill", "what":"login", "search":"#login_mail"},

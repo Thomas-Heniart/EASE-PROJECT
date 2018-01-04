@@ -1,0 +1,30 @@
+{
+	"name":"Rentila",
+	"lastLogin":"",
+	"home":"https://www.rentila.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login-email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#login-password", "grave":true},
+			{"action":"trueClick", "search":"#login-form button[type=submit]", "grave":true}
+			]
+	},
+	"Facebook": {
+		"todo": [
+			{"action": "trueClick", "search": "#login-btn-facebook"}
+		]
+	},
+	"Google": {
+		"todo": [
+			{"action": "trueClick", "search": "#login-btn-google"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"a[href*='logout']", "grave":true},
+			]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#settings.dropdown-user"}
+	]
+}

@@ -40,10 +40,14 @@ class ClassicApp extends Component {
   };
   render(){
     const {app} = this.props;
+    let logo_url = !!app.logo ? app.logo : app.website.logo;
+
+    if (logo_url[0] === '/')
+      logo_url = `https://ease.space${logo_url}`;
     return (
         <ListItem style={{backgroundColor:'transparent', borderBottomWidth:0}} key={app.id} button onPress={this.showActions}>
           <View style={{marginRight:10}}>
-            <Image source={{uri: 'https://ease.space' + app.website.logo}} style={styles.websiteLogo}/>
+            <Image source={{uri: logo_url}} style={styles.websiteLogo}/>
           </View>
           <Content>
             <BoldText style={{fontWeight:'bold', fontSize:18}}>

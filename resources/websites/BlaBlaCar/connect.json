@@ -14,11 +14,11 @@
 	},
 	"logout":{
 		"todo":[
-			{"action":"goto", "url":"https://www.blablacar.fr/deconnexion"}
+			{"action":"goto", "url":"https://www.blablacar.fr/logout"}
 			]
 	},
 	"checkAlreadyLogged":[
-		{"search":"a[href='/deconnexion']"}
+		{"search":"a[href='/logout']"}
 	],
 	"checkChangeLogin":[
 		{"action":"click", "search":"#loginbutton"}

@@ -1,0 +1,20 @@
+{
+	"name":"AllBatteries",
+	"lastLogin":"",
+	"home":"https://www.all-batteries.fr/customer/account/login/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login-form #email"},
+			{"action":"fill", "what":"password", "search":"#login-form #pass"},
+			{"action":"click", "search":"#login-form #send2"}
+			]
+	},
+	"logout":{
+		"todo":[
+			{"action":"click", "search":"a[href*='logout']"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":".product-collateral"}
+	]
+}

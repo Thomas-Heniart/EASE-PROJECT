@@ -622,10 +622,10 @@ export function validateTutorial() {
 
 export function AppConnection({app_id, keep_focus}){
   return (dispatch, getState) => {
-    if (!document.querySelector('#new_ease_extension')){
+/*    if (!document.querySelector('#new_ease_extension')){
       dispatch(showExtensionDownloadModal({active: true}));
       return new Promise((resolve, reject) => {reject('Need extension.')});
-    }
+    }*/
     const app = getState().dashboard.apps[app_id];
     return api.dashboard.getAppConnectionInformation({
       app_id: app_id
@@ -639,10 +639,15 @@ export function AppConnection({app_id, keep_focus}){
           });
         return item;
       });
+      json.highlight = !keep_focus;
       json.detail.highlight = !keep_focus;
       if (app.new)
         dispatch(validateApp({app_id: app_id}));
       document.dispatchEvent(new CustomEvent('NewConnection', json));
+      chrome.runtime.sendMessage('hnacegpfmpknpdjmhdmpkmedplfcmdmp', {
+        type: 'website_connection',
+        data: json
+        });
       easeTracker.trackEvent("ClickOnApp", {
         type: app.type,
         appName: app.name,
