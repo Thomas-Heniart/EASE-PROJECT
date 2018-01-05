@@ -1,0 +1,21 @@
+{
+	"name":"Aurora",
+	"lastLogin":"",
+	"home":"https://www.auroravision.net/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#username"},
+			{"action":"fill", "what":"password", "search":"#password"},
+			{"action":"click", "search":"#loginButton"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"clickona", "search":"a[ng-click*='logout']"}
+		]
+	},
+	"checkAlreadyLogged":[
+	    {"action":"waitfor", "search":"#loginButton, "}
+		{"search":"#"}
+	]
+}

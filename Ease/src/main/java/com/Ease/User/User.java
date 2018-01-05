@@ -1,6 +1,7 @@
 package com.Ease.User;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Importation.ImportedAccount;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.SsoGroup;
@@ -76,6 +77,11 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Notification> notificationSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @MapKey(name = "id")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Map<Long, ImportedAccount> importedAccountMap = new ConcurrentHashMap<>();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private Administrator administrator;
@@ -202,6 +208,14 @@ public class User {
 
     public void setAdministrator(Administrator administrator) {
         this.administrator = administrator;
+    }
+
+    public Map<Long, ImportedAccount> getImportedAccountMap() {
+        return importedAccountMap;
+    }
+
+    public void setImportedAccountMap(Map<Long, ImportedAccount> importedAccountMap) {
+        this.importedAccountMap = importedAccountMap;
     }
 
     public boolean isAdmin() {
@@ -422,5 +436,17 @@ public class User {
 
     public void removeTeamUser(TeamUser teamUser) {
         this.getTeamUsers().remove(teamUser);
+    }
+
+    public void addImportedAccount(ImportedAccount importedAccount) {
+        this.getImportedAccountMap().put(importedAccount.getId(), importedAccount);
+    }
+
+    public void removeImportedAccount(ImportedAccount importedAccount) {
+        this.getImportedAccountMap().remove(importedAccount.getId());
+    }
+
+    public ImportedAccount getImportedAccount(Long id) {
+        return this.getImportedAccountMap().get(id);
     }
 }

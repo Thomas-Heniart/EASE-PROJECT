@@ -27,6 +27,9 @@ public class Software {
     @Column(name = "logo_url")
     private String logo_url;
 
+    @Column(name = "logo_version")
+    private Integer logo_version = 0;
+
     @OneToMany(mappedBy = "software")
     private Set<SoftwareConnectionInformation> softwareConnectionInformationSet = ConcurrentHashMap.newKeySet();
 
@@ -71,6 +74,14 @@ public class Software {
         this.logo_url = logo_url;
     }
 
+    public Integer getLogo_version() {
+        return logo_version;
+    }
+
+    public void setLogo_version(Integer logo_version) {
+        this.logo_version = logo_version;
+    }
+
     public Set<SoftwareConnectionInformation> getSoftwareConnectionInformationSet() {
         return softwareConnectionInformationSet;
     }
@@ -80,7 +91,7 @@ public class Software {
     }
 
     public String getLogo() {
-        return this.getLogo_url() == null ? ("/resources/software/" + this.getFolder() + "/logo.png") : this.getLogo_url();
+        return this.getLogo_url() == null ? ("/resources/software/" + this.getFolder() + "/logo.png?v=" + this.getLogo_version()) : this.getLogo_url();
     }
 
     @Override

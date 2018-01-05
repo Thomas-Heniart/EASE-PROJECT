@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/api/v1/plugin/ConnectionFail")
 public class ServletConnectionFail extends HttpServlet {
@@ -23,9 +22,8 @@ public class ServletConnectionFail extends HttpServlet {
             JSONObject websiteFailures = sm.getJsonParam("websiteFailures", false, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             for (Object object : websiteFailures.keySet()) {
-                Map.Entry<String, Long> entry = (Map.Entry<String, Long>) object;
-                String url = entry.getKey();
-                Long count = entry.getValue();
+                String url = (String) object;
+                Long count = websiteFailures.getLong(url);
                 hibernateQuery.queryString("SELECT w FROM WebsiteFailure w WHERE w.url = :url");
                 hibernateQuery.setParameter("url", url);
                 WebsiteFailure websiteFailure = (WebsiteFailure) hibernateQuery.getSingleResult();

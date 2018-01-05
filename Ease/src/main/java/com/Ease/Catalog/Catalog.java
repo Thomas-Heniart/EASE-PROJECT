@@ -25,6 +25,10 @@ public class Catalog {
         return website;
     }
 
+    public Website optWebsiteWithId(Integer id, HibernateQuery hibernateQuery) {
+        return (Website) hibernateQuery.get(Website.class, id);
+    }
+
     public Collection<Website> getWebsites(HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT w FROM Website w ORDER BY w.db_id DESC");
         return hibernateQuery.list();
@@ -100,6 +104,15 @@ public class Catalog {
 
     public Website getPublicWebsiteWithId(Integer id, HibernateQuery hibernateQuery, Set<Team> teams) throws HttpServletException {
         Website website = this.getWebsiteWithId(id, hibernateQuery);
+        if ((!website.getWebsiteAttributes().isPublic_website() && (website.getTeams().isEmpty() || website.getTeams().stream().noneMatch(teams::contains))) || !website.getWebsiteAttributes().isIntegrated())
+            throw new HttpServletException(HttpStatus.BadRequest, "This website is not public");
+        return website;
+    }
+
+    public Website optPublicWebsiteWithId(Integer id, HibernateQuery hibernateQuery, Set<Team> teams) throws HttpServletException {
+        Website website = this.optWebsiteWithId(id, hibernateQuery);
+        if (website == null)
+            return null;
         if ((!website.getWebsiteAttributes().isPublic_website() && (website.getTeams().isEmpty() || website.getTeams().stream().noneMatch(teams::contains))) || !website.getWebsiteAttributes().isIntegrated())
             throw new HttpServletException(HttpStatus.BadRequest, "This website is not public");
         return website;

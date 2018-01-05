@@ -98,6 +98,7 @@ public class ServletUploadWebsite extends HttpServlet {
                             if (storeFile.exists())
                                 storeFile.renameTo(new File(uploadPath + File.separator + "logo_old.png"));
                             website.getWebsiteAttributes().setLogo_url(null);
+                            website.setLogo_version(website.getLogo_version() + 1);
                             hibernateQuery.saveOrUpdateObject(website);
                             item.write(storeFile);
                         }

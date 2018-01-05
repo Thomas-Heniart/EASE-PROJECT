@@ -1,6 +1,7 @@
 package com.Ease.Importation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 
@@ -17,7 +18,7 @@ public class ImportedAccountInformation {
     @Column(name = "value")
     private String value;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "imported_account_id")
     private ImportedAccount importedAccount;
@@ -29,6 +30,12 @@ public class ImportedAccountInformation {
     public ImportedAccountInformation(String name, String value) {
         this.name = name;
         this.value = value;
+    }
+
+    public ImportedAccountInformation(String name, String value, ImportedAccount importedAccount) {
+        this.name = name;
+        this.value = value;
+        this.importedAccount = importedAccount;
     }
 
     public Long getId() {
@@ -61,5 +68,13 @@ public class ImportedAccountInformation {
 
     public void setImportedAccount(ImportedAccount importedAccount) {
         this.importedAccount = importedAccount;
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getId());
+        res.put("name", this.getName());
+        res.put("value", this.getValue());
+        return res;
     }
 }

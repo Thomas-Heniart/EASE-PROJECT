@@ -27,8 +27,12 @@
         <filter-name>ExpiresFilter</filter-name>
         <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
         <init-param>
-            <param-name>ExpiresByType image</param-name>
+            <param-name>ExpiresByType image/png</param-name>
             <param-value>access plus 31 days</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType image/jpeg</param-name>
+            <param-value>access plus 1 days</param-value>
         </init-param>
         <init-param>
             <param-name>ExpiresByType text/css</param-name>
@@ -173,23 +177,29 @@
         <servlet-name>new_admin.jsp</servlet-name>
         <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>Jersey REST Service</servlet-name>
-        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-        <init-param>
-            <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>com.Ease.API.JAX</param-value>
-        </init-param>
-        <init-param>
-            <param-name>jersey.api.json.POJOMappingFeature</param-name>
-            <param-value>true</param-value>
-        </init-param>
+    <!-- <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>
+            org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>Jersey REST Service</servlet-name>
+        <servlet-name>dispatcher</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener> -->
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Viewpoint Secure URLs</web-resource-name>

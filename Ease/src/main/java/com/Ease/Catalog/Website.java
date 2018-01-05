@@ -44,6 +44,9 @@ public class Website {
     @Column(name = "website_homepage")
     private String website_homepage;
 
+    @Column(name = "logo_version")
+    private Integer logo_version = 0;
+
     @OneToOne(cascade = CascadeType.ALL)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "website_attributes_id")
@@ -139,6 +142,14 @@ public class Website {
 
     public void setWebsite_homepage(String website_homepage) {
         this.website_homepage = website_homepage;
+    }
+
+    public Integer getLogo_version() {
+        return logo_version;
+    }
+
+    public void setLogo_version(Integer logo_version) {
+        this.logo_version = logo_version;
     }
 
     public WebsiteAttributes getWebsiteAttributes() {
@@ -270,7 +281,7 @@ public class Website {
     }
 
     public String getLogo() {
-        return this.getWebsiteAttributes().getLogo_url() == null ? ("/resources/websites/" + this.getFolder() + "/logo.png") : this.getWebsiteAttributes().getLogo_url();
+        return this.getWebsiteAttributes().getLogo_url() == null ? ("/resources/websites/" + this.getFolder() + "/logo.png?v=" + this.getLogo_version()) : this.getWebsiteAttributes().getLogo_url();
     }
 
     public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {

@@ -100,8 +100,10 @@ public class ServletEditWebsite extends HttpServlet {
                     tmp_app.setProfile(profile);
                     tmp_app.setPosition(anyApp.getPosition());
                     sm.saveOrUpdate(tmp_app);
-                    profile.removeApp(anyApp);
-                    profile.addApp(tmp_app);
+                    if (profile != null) {
+                        profile.removeApp(anyApp);
+                        profile.addApp(tmp_app);
+                    }
                     TeamCardReceiver teamCardReceiver = anyApp.getTeamCardReceiver();
                     if (teamCardReceiver != null)
                         teamCardReceiver.setApp(tmp_app);
