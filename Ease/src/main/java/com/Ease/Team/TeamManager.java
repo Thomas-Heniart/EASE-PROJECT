@@ -6,7 +6,6 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.DateComparator;
@@ -165,21 +164,21 @@ public class TeamManager {
         for (Team team : this.getTeams(hibernateQuery)) {
             for (TeamCard teamCard : team.getTeamCardSet()) {
                 if (teamCard.isTeamSingleCard()) {
-                    TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
-                    Account account = teamSingleCard.getAccount();
+                    Account account = teamCard.getAccount();
                     if (account == null)
                         continue;
                     if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
                         account.setPassword_must_be_updated(true);
                         hibernateQuery.saveOrUpdateObject(account);
-                        NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamSingleCard, this.getUserWebSocketManager(teamCard.getChannel().getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
+                        NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamCard, this.getUserWebSocketManager(teamCard.getChannel().getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
                     }
                 } else if (teamCard.isTeamEnterpriseCard()) {
                     for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                         if (teamCardReceiver.getTeamUser().getUser() == null)
                             continue;
                         App app = teamCardReceiver.getApp();
-                        if (app == null || app.getAccount() == null);
+                        if (app == null || app.getAccount() == null)
+                            continue;
                         Account account = app.getAccount();
                         if (account.mustUpdatePassword() && !account.isPassword_must_be_updated()) {
                             account.setPassword_must_be_updated(true);
