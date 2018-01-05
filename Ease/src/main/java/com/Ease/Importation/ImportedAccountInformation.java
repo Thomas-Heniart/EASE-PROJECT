@@ -1,5 +1,7 @@
 package com.Ease.Importation;
 
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.HttpServletException;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.json.JSONObject;
 
@@ -17,6 +19,9 @@ public class ImportedAccountInformation {
 
     @Column(name = "value")
     private String value;
+
+    @Transient
+    private String deciphered_value;
 
     @JsonBackReference
     @ManyToOne
@@ -62,6 +67,14 @@ public class ImportedAccountInformation {
         this.value = value;
     }
 
+    public String getDeciphered_value() {
+        return deciphered_value;
+    }
+
+    public void setDeciphered_value(String deciphered_value) {
+        this.deciphered_value = deciphered_value;
+    }
+
     public ImportedAccount getImportedAccount() {
         return importedAccount;
     }
@@ -74,7 +87,11 @@ public class ImportedAccountInformation {
         JSONObject res = new JSONObject();
         res.put("id", this.getId());
         res.put("name", this.getName());
-        res.put("value", this.getValue());
+        res.put("value", this.getDeciphered_value());
         return res;
+    }
+
+    public void decipher(String symmetric_key) throws HttpServletException {
+        this.setDeciphered_value(AES.decrypt(this.getValue(), symmetric_key));
     }
 }

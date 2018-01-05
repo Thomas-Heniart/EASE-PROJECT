@@ -6,6 +6,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Importation.ImportedAccount;
 import com.Ease.Importation.ImportedAccountInformation;
 import com.Ease.User.User;
+import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -37,17 +38,19 @@ public class ServletImportedAccount extends HttpServlet {
             Website website = null;
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             User user = sm.getUser();
-            if (website_id != null)
+            if (website_id != null && website_id > 0)
                 website = catalog.getPublicWebsiteWithId(website_id, hibernateQuery, user.getTeams());
             String name = sm.getStringParam("name", true, false);
             ImportedAccount importedAccount = new ImportedAccount(url, website, name, user);
+            String symmetric_key = sm.getKeyUser();
             for (Object object : account_information.keySet()) {
                 String information_name = (String) object;
                 JSONObject value = account_information.getJSONObject(information_name);
-                importedAccount.getImportedAccountInformationMap().put(information_name, new ImportedAccountInformation(information_name, value.getString("value"), importedAccount));
+                importedAccount.getImportedAccountInformationMap().put(information_name, new ImportedAccountInformation(information_name, AES.encrypt(value.getString("value"), symmetric_key), importedAccount));
             }
             sm.saveOrUpdate(importedAccount);
             user.addImportedAccount(importedAccount);
+            importedAccount.decipher(symmetric_key);
             sm.setSuccess(importedAccount.getJson());
         } catch (Exception e) {
             sm.setError(e);
@@ -69,6 +72,7 @@ public class ServletImportedAccount extends HttpServlet {
                 ImportedAccount importedAccount = user.getImportedAccount(Long.valueOf(id));
                 if (importedAccount == null)
                     throw new HttpServletException(HttpStatus.BadRequest, "No such imported account");
+                importedAccount.decipher(sm.getKeyUser());
                 sm.setSuccess(importedAccount.getJson());
             }
         } catch (Exception e) {
@@ -92,7 +96,7 @@ public class ServletImportedAccount extends HttpServlet {
             Website website = null;
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             User user = sm.getUser();
-            if (website_id != null)
+            if (website_id != null && website_id > 0)
                 website = catalog.getPublicWebsiteWithId(website_id, hibernateQuery, user.getTeams());
             String name = sm.getStringParam("name", true, false);
             ImportedAccount importedAccount = user.getImportedAccount(id);
@@ -101,14 +105,15 @@ public class ServletImportedAccount extends HttpServlet {
             importedAccount.setName(name);
             importedAccount.setUrl(url);
             importedAccount.setWebsite(website);
+            String symmetric_key = sm.getKeyUser();
             for (Object object : account_information.keySet()) {
                 String information_name = (String) object;
                 JSONObject value = account_information.getJSONObject(information_name);
                 ImportedAccountInformation importedAccountInformation = importedAccount.getImportedAccountInformation(information_name);
                 if (importedAccountInformation == null)
-                    importedAccount.addImportedAccountInformation(new ImportedAccountInformation(information_name, value.getString("value"), importedAccount));
+                    importedAccount.addImportedAccountInformation(new ImportedAccountInformation(information_name, AES.encrypt(value.getString("value"), symmetric_key), importedAccount));
                 else
-                    importedAccountInformation.setValue(value.getString("value"));
+                    importedAccountInformation.setValue(AES.encrypt(value.getString("value"), symmetric_key));
             }
             Set<String> keysToRemove = new HashSet<>();
             for (String key : importedAccount.getImportedAccountInformationMap().keySet()) {
@@ -118,6 +123,7 @@ public class ServletImportedAccount extends HttpServlet {
             keysToRemove.forEach(importedAccount::removeImportedAccountInformation);
             sm.saveOrUpdate(importedAccount);
             user.addImportedAccount(importedAccount);
+            importedAccount.decipher(sm.getKeyUser());
             sm.setSuccess(importedAccount.getJson());
         } catch (Exception e) {
             sm.setError(e);

@@ -2,6 +2,7 @@ package com.Ease.Importation;
 
 import com.Ease.Catalog.Website;
 import com.Ease.User.User;
+import com.Ease.Utils.HttpServletException;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.json.JSONObject;
@@ -135,5 +136,10 @@ public class ImportedAccount implements Serializable {
 
     public void addImportedAccountInformation(ImportedAccountInformation importedAccountInformation) {
         this.getImportedAccountInformationMap().put(importedAccountInformation.getName(), importedAccountInformation);
+    }
+
+    public void decipher(String symmetric_key) throws HttpServletException {
+        for (ImportedAccountInformation importedAccountInformation : this.getImportedAccountInformationMap().values())
+            importedAccountInformation.decipher(symmetric_key);
     }
 }
