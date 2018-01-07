@@ -1,0 +1,56 @@
+{
+  "name": "eToro",
+  "lastLogin": "",
+  "home": "https://www.etoro.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#username"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password"
+      },
+      {
+        "action": "trueClick",
+        "search": "form[name='loginForm'] .w-login-btn-wrapp button"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[ng-click*='logout']"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='login']"
+      },
+      {
+        "action": "aclick",
+        "search": "a[href*='login']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "form[name='loginForm'] button, a[ng-click*='logout']"
+    },
+    {
+      "search": "a[ng-click*='logout']"
+    }
+  ],
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.sign-up-button.facebook-button"
+      }
+    ]
+  }
+}
