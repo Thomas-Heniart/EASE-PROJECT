@@ -28,11 +28,6 @@ public class ServletGetAccountChartData extends HttpServlet {
             JSONObject data = new JSONObject();
             JSONArray labels = new JSONArray();
             JSONArray datasets = new JSONArray();
-            JSONObject rooms = new JSONObject();
-            rooms.put("label", "rooms");
-            rooms.put("borderColor", "rgba(236, 240, 241, 0.75)"); /*ECF0F1*/
-            //rooms.put("backgroundColor", "rgba(236, 240, 241, 0.75)");
-            rooms.put("data", new JSONArray());
             JSONObject cards = new JSONObject();
             cards.put("label", "Cards");
             cards.put("borderColor", "rgba(255, 195, 0, 0.75)"); /*FFC300*/
@@ -63,7 +58,6 @@ public class ServletGetAccountChartData extends HttpServlet {
             link_cards.put("borderColor", "rgba(55, 59, 96, 0.75)"); /*373B60*/
             //link_cards.put("backgroundColor", "rgba(55, 59, 96, 0.75)");
             link_cards.put("data", new JSONArray());
-            datasets.put(rooms);
             datasets.put(cards);
             datasets.put(cards_with_receiver);
             datasets.put(cards_with_password_policy);
@@ -78,10 +72,20 @@ public class ServletGetAccountChartData extends HttpServlet {
             int current_week = calendar.get(Calendar.WEEK_OF_YEAR);
             calendar.setTime(team.getSubscription_date());
             int i = 0;
-            while (calendar.get(Calendar.YEAR) <= current_year && calendar.get(Calendar.WEEK_OF_YEAR) <= current_week) {
+            while (calendar.get(Calendar.YEAR) < current_year) {
                 labels.put(i++);
                 TeamMetrics teamMetrics = TeamMetrics.getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
-                ((JSONArray) rooms.get("data")).put(teamMetrics.getRoom_number());
+                ((JSONArray) cards.get("data")).put(teamMetrics.getCards());
+                ((JSONArray) cards_with_receiver.get("data")).put(teamMetrics.getCards_with_receiver());
+                ((JSONArray) cards_with_password_policy.get("data")).put(teamMetrics.getCards_with_receiver_and_password_policy());
+                ((JSONArray) single_cards.get("data")).put(teamMetrics.getSingle_cards());
+                ((JSONArray) enterprise_cards.get("data")).put(teamMetrics.getEnterprise_cards());
+                ((JSONArray) link_cards.get("data")).put(teamMetrics.getLink_cards());
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+            while (calendar.get(Calendar.WEEK_OF_YEAR) <= current_week) {
+                labels.put(i++);
+                TeamMetrics teamMetrics = TeamMetrics.getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
                 ((JSONArray) cards.get("data")).put(teamMetrics.getCards());
                 ((JSONArray) cards_with_receiver.get("data")).put(teamMetrics.getCards_with_receiver());
                 ((JSONArray) cards_with_password_policy.get("data")).put(teamMetrics.getCards_with_receiver_and_password_policy());

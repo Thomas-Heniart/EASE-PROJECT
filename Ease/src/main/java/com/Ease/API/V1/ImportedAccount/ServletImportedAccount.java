@@ -64,15 +64,19 @@ public class ServletImportedAccount extends HttpServlet {
             sm.needToBeConnected();
             User user = sm.getUser();
             Integer id = sm.getIntParam("id", true, true);
+            String keyUser = sm.getKeyUser();
             if (id == null) {
                 JSONArray jsonArray = new JSONArray();
-                user.getImportedAccountMap().values().forEach(importedAccount -> jsonArray.put(importedAccount.getJson()));
+                for (ImportedAccount importedAccount : user.getImportedAccountMap().values()) {
+                    importedAccount.decipher(keyUser);
+                    jsonArray.put(importedAccount.getJson());
+                }
                 sm.setSuccess(jsonArray);
             } else {
                 ImportedAccount importedAccount = user.getImportedAccount(Long.valueOf(id));
                 if (importedAccount == null)
                     throw new HttpServletException(HttpStatus.BadRequest, "No such imported account");
-                importedAccount.decipher(sm.getKeyUser());
+                importedAccount.decipher(keyUser);
                 sm.setSuccess(importedAccount.getJson());
             }
         } catch (Exception e) {

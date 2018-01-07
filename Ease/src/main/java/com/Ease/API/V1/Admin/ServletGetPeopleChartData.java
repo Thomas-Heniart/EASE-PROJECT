@@ -78,7 +78,20 @@ public class ServletGetPeopleChartData extends HttpServlet {
             int current_week = calendar.get(Calendar.WEEK_OF_YEAR);
             calendar.setTime(team.getSubscription_date());
             int i = 0;
-            while (calendar.get(Calendar.YEAR) <= current_year && calendar.get(Calendar.WEEK_OF_YEAR) <= current_week) {
+            System.out.println("Current year: " + current_year + " year of sub: " + calendar.get(Calendar.YEAR));
+            while (calendar.get(Calendar.YEAR) < current_year) {
+                labels.put(i++);
+                TeamMetrics teamMetrics = TeamMetrics.getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
+                ((JSONArray) people_invited.get("data")).put(teamMetrics.getPeople_invited());
+                ((JSONArray) people_joined.get("data")).put(teamMetrics.getPeople_joined());
+                ((JSONArray) people_with_cards.get("data")).put(teamMetrics.getPeople_with_cards());
+                ((JSONArray) people_with_personal_apps.get("data")).put(teamMetrics.getPeople_with_personnal_apps());
+                ((JSONArray) people_click_on_app_once.get("data")).put(teamMetrics.getPeople_click_on_app_once());
+                ((JSONArray) people_click_on_app_three_times.get("data")).put(teamMetrics.getPeople_click_on_app_three_times());
+                ((JSONArray) people_click_on_app_five_times.get("data")).put(teamMetrics.getPeople_click_on_app_five_times());
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+            while (calendar.get(Calendar.WEEK_OF_YEAR) <= current_week) {
                 labels.put(i++);
                 TeamMetrics teamMetrics = TeamMetrics.getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
                 ((JSONArray) people_invited.get("data")).put(teamMetrics.getPeople_invited());
