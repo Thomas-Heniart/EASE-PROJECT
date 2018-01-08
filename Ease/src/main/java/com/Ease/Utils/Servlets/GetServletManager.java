@@ -55,8 +55,23 @@ public class GetServletManager extends ServletManager {
         String param = this.getParam(paramName, saveInLogs, canBeNull);
         if (param == null && canBeNull)
             return null;
+        if (param == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + paramName);
         try {
             return Integer.valueOf(param);
+        } catch (NumberFormatException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "Expected number for param " + paramName + ".");
+        }
+    }
+
+    public Long getLongParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
+        String param = this.getParam(paramName, saveInLogs, canBeNull);
+        if (param == null && canBeNull)
+            return null;
+        if (param == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + paramName);
+        try {
+            return Long.valueOf(param);
         } catch (NumberFormatException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Expected number for param " + paramName + ".");
         }

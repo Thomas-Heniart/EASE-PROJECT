@@ -131,7 +131,7 @@ public class ServletImportedAccount extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
