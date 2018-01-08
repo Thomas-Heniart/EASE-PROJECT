@@ -224,6 +224,7 @@ class StepCGU extends React.Component{
       this.setState({loading: false});
         easeTracker.trackEvent("RegistrationAcceptCGU");
         easeTracker.trackEvent("RegistrationDone");
+        easeTracker.setUserId(response.email);
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({loading: false});

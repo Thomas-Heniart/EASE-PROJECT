@@ -9,6 +9,8 @@ export function fetchMyInformation(){
   return function(dispatch){
     dispatch({type: 'FETCH_MY_INFORMATION_PENDING'});
     return api.common.fetchMyInformation().then(response => {
+      if (response.user !== undefined)
+        easeTracker.setUserId(response.user.email);
       dispatch({type: 'FETCH_MY_INFORMATION_FULFILLED', payload: response});
       return response;
     }).catch(err => {
@@ -36,6 +38,7 @@ export function processConnection({email, password}){
   return (dispatch) => {
     return post_api.common.connect(email, password).then(infos => {
       return dispatch(fetchCriticalParts()).then(response => {
+        easeTracker.setUserId(infos.email);
         dispatch({type: 'CONNECTION_FULFILLED', payload: {user:infos}});
         return infos;
       });

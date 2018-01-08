@@ -393,8 +393,10 @@ public class Website {
 
     public JSONObject getRequestJson() {
         JSONObject res = new JSONObject();
-        for (WebsiteRequest websiteRequest : this.getWebsiteRequests())
+        for (WebsiteRequest websiteRequest : this.getWebsiteRequests()) {
             res = websiteRequest.getJson();
+            res.put("credentials", !this.getWebsiteCredentials().isEmpty());
+        }
         return res;
     }
 

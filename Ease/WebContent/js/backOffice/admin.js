@@ -7,7 +7,7 @@ $(document).ready(function () {
     $("#website-requests-segment button").click(function () {
         var button = $(this);
         button.addClass("loading");
-        var requests = $("#website-requests-manager-body tr.positive .checkbox input:checked").map(function (i, elem) {
+        var requests = $("#website-requests-manager-body tr.positive .checkbox .send_email:checked").map(function (i, elem) {
             var jElem = $(elem).parent().parent().parent();
             return {
                 email: $(".email", jElem).text(),
@@ -89,7 +89,7 @@ $(document).ready(function () {
                     ajaxHandler.get("/api/v1/admin/GetWebsites", null, function () {
                     }, function (data) {
                         websites = data.sort(function (w1, w2) {
-                            return (w1.id <= w2.id) ? -1 : 1;
+                            return w2.id - w1.id;
                         });
                         websites.forEach(function (website) {
                             addWebsiteRow(website).appendTo($("#website-manager-body"));
@@ -132,7 +132,7 @@ $(document).ready(function () {
                     }, function (data) {
                         var requests = data.website_requests;
                         requests.sort(function (r1, r2) {
-                            r2.date - r1.date;
+                            return r2.date - r1.date;
                         });
                         requests.forEach(function (request) {
                             createRequestRow(request).appendTo($("#website-requests-manager-body"));
@@ -201,13 +201,18 @@ function createRequestRow(request) {
         "<td class='url'>" + request.url + "</td>" +
         "<td class='email'>" + request.email + "</td>" +
         "<td class='date'>" + new Date(request.date).toLocaleString() + "</a></td>" +
-        '<td><div class="ui checkbox"><input type="checkbox"/><label></label></div></td>' +
+        '<td><div class="ui read-only checkbox"><input class="credentials" type="checkbox" disabled/><label></label></div></td>' +
+        '<td><div class="ui checkbox"><input class="send_email" type="checkbox"/><label></label></div></td>' +
         "<td><a href='#' class='delete'><i class='fa fa-trash'></i></a></td>" +
         "</tr>");
     if (request.integrated)
         elem.addClass("positive");
     else
         elem.addClass("negative");
+    if (request.credentials) {
+        $(".read-only", elem).addClass("active");
+        $(".credentials", elem).prop("checked", true);
+    }
     $("a.delete", elem).click(function () {
         $("a.delete", elem).click(function () {
             var modal = $("#request-delete");
