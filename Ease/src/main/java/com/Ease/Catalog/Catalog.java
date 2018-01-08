@@ -156,4 +156,24 @@ public class Catalog {
         }
         return software;
     }
+
+    public Website getPublicWebsiteWithUrl(String url, Set<String> information_names, HibernateQuery hibernateQuery) {
+        hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
+        hibernateQuery.setParameter("url", url);
+        List<Website> websites = hibernateQuery.list();
+        for (Website website : websites) {
+            if (website.getWebsiteInformationList().size() == information_names.size()) {
+                boolean exist = true;
+                for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
+                    if (!information_names.contains(websiteInformation.getInformation_name())) {
+                        exist = false;
+                        break;
+                    }
+                }
+                if (exist)
+                    return website;
+            }
+        }
+        return null;
+    }
 }

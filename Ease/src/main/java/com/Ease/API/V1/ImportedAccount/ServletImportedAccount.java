@@ -30,16 +30,13 @@ public class ServletImportedAccount extends HttpServlet {
         try {
             sm.needToBeConnected();
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            String url = sm.getStringParam("url", true, true);
-            Integer website_id = sm.getIntParam("website_id", true, true);
-            if (url == null && website_id == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You must specify an url or a website id");
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = null;
+            String url = sm.getStringParam("url", true, false);
+            if (url.equals("") || url.length() > 2000)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter URL");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             User user = sm.getUser();
-            if (website_id != null && website_id > 0)
-                website = catalog.getPublicWebsiteWithId(website_id, hibernateQuery, user.getTeams());
+            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
+            Website website = catalog.getPublicWebsiteWithUrl(url, account_information.keySet(), hibernateQuery);
             String name = sm.getStringParam("name", true, false);
             ImportedAccount importedAccount = new ImportedAccount(url, website, name, user);
             String symmetric_key = sm.getKeyUser();
@@ -92,16 +89,13 @@ public class ServletImportedAccount extends HttpServlet {
             sm.needToBeConnected();
             Long id = sm.getLongParam("id", true, false);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            String url = sm.getStringParam("url", true, true);
-            Integer website_id = sm.getIntParam("website_id", true, true);
-            if (url == null && website_id == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You must specify an url or a website id");
+            String url = sm.getStringParam("url", true, false);
+            if (url.equals("") || url.length() > 2000)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter url");
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Website website = null;
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            Website website = catalog.getPublicWebsiteWithUrl(url, account_information.keySet(), hibernateQuery);
             User user = sm.getUser();
-            if (website_id != null && website_id > 0)
-                website = catalog.getPublicWebsiteWithId(website_id, hibernateQuery, user.getTeams());
             String name = sm.getStringParam("name", true, false);
             ImportedAccount importedAccount = user.getImportedAccount(id);
             if (importedAccount == null)
