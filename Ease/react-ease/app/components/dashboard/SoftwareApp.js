@@ -3,7 +3,7 @@ import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
 import {showSoftwareAppSettingsModal} from "../../actions/modalActions";
-import {validateApp} from '../../actions/dashboardActions';
+import {validateApp, clickOnAppMetric} from '../../actions/dashboardActions';
 import api from "../../utils/api";
 import {connect} from "react-redux";
 
@@ -26,6 +26,7 @@ class SoftwareApp extends Component {
       if (this.state.isOpen === false) {
         if (this.props.app.new)
           this.props.dispatch(validateApp({app_id: this.props.app.id}));
+        this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, CopyPasswordIcon} from "./utils";
-import {validateApp} from '../../actions/dashboardActions';
+import {clickOnAppMetric, validateApp} from '../../actions/dashboardActions';
 import {showAnyAppSettingsModal} from "../../actions/modalActions";
 import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"
 import api from "../../utils/api";
@@ -26,6 +26,7 @@ class AnyApp extends Component {
       if (this.state.isOpen === false) {
         if (this.props.app.new)
           this.props.dispatch(validateApp({app_id: this.props.app.id}));
+        this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {
