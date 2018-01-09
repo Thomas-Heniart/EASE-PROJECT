@@ -1,4 +1,6 @@
 var selected_teams = [];
+var account_graph;
+var people_graph;
 
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
@@ -167,6 +169,10 @@ $(document).ready(function () {
             }
         }
     });
+    $("#multiple_team_graph").click(function () {
+        if (selected_teams.length > 0)
+            openManyTeams();
+    })
 });
 
 function createWebsiteFailureRow(websiteFailure) {
@@ -634,7 +640,12 @@ function openManyTeams() {
         }, function (data) {
             team_settings_right.removeClass("loading");
             var ctx = document.getElementById("people_data_chart").getContext("2d");
-            var myChart = new Chart(ctx, data);
+            if (people_graph === undefined)
+                people_graph = new Chart(ctx, data);
+            else {
+                people_graph.data = data;
+                people_graph.update();
+            }
         });
         $("button", $("#people_data_history")).click(function () {
             people_data_history.hide();
@@ -653,7 +664,12 @@ function openManyTeams() {
         }, function (data) {
             team_settings_left.removeClass("loading");
             var ctx = $("#account_data_chart");
-            new Chart(ctx, data);
+            if (account_graph === undefined)
+                account_graph = new Chart(ctx, data);
+            else {
+                account_graph.data = data;
+                account_graph.update();
+            }
         });
         $("button", account_data_hisotry).click(function () {
             account_data_hisotry.hide();
@@ -788,7 +804,12 @@ function openTeamSettings(team, teamRow) {
             }, function (data) {
                 team_settings_left.removeClass("loading");
                 var ctx = $("#account_data_chart");
-                new Chart(ctx, data);
+                if (account_graph === undefined)
+                    account_graph = new Chart(ctx, data);
+                else {
+                    account_graph.data = data;
+                    account_graph.update();
+                }
             });
             $("button", account_data_hisotry).click(function () {
                 account_data_hisotry.hide();
@@ -855,7 +876,12 @@ function openTeamSettings(team, teamRow) {
             }, function (data) {
                 team_settings_left.removeClass("loading");
                 var canvas = $("canvas", click_average_graphic);
-                new Chart(canvas, data);
+                if (people_graph === undefined)
+                    people_graph = new Chart(canvas, data);
+                else {
+                    people_graph.data = data;
+                    people_graph.update();
+                }
                 $("body").css({
                     "overlfow-y": "auto"
                 });

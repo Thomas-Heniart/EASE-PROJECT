@@ -20,7 +20,7 @@
     </thead>
     <tbody id="team-manager-body"></tbody>
 </table>
-<button class="ui blue button">Show graph</button>
+<button id="multiple_team_graph" class="ui blue button">Show graph</button>
 <div class="ui united fullscreen modal" id="team-settings">
     <i class="close icon"></i>
     <div class="header">Team settings</div>
