@@ -5,7 +5,7 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Metrics.ClickOnApp;
-import com.Ease.NewDashboard.App;
+import com.Ease.Metrics.TeamMetrics;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.DateComparator;
 import com.Ease.Utils.HttpServletException;
@@ -510,22 +510,31 @@ public class Team {
     }
 
     public JSONArray getAverageOfClick(int year, int week_of_year, HibernateQuery hibernateQuery) {
-        System.out.println("Year: " + year);
-        System.out.println("Week: " + week_of_year);
         JSONArray res = new JSONArray();
-        int day_one = 0;
-        int day_two = 0;
-        int day_three = 0;
-        int day_four = 0;
-        int day_five = 0;
-        int day_six = 0;
-        int day_seven = 0;
-        int teamUsers_size = this.getTeamUsers().size();
-        for (TeamUser teamUser : this.getTeamUsers().values()) {
-            if (!teamUser.isVerified())
-                continue;
-            for (App app : teamUser.getUser().getApps()) {
-                ClickOnApp clickOnAppMetric = ClickOnApp.getMetricForApp(app.getDb_id(), year, week_of_year, hibernateQuery);
+        double day_one = 0.;
+        double day_two = 0.;
+        double day_three = 0.;
+        double day_four = 0.;
+        double day_five = 0.;
+        double day_six = 0.;
+        double day_seven = 0.;
+        TeamMetrics teamMetrics = TeamMetrics.getMetrics(this.getDb_id(), year, week_of_year, hibernateQuery);
+        int teamUsers_size = teamMetrics.getPeople_invited();
+        if (teamUsers_size == 0) {
+            res.put(0);
+            res.put(0);
+            res.put(0);
+            res.put(0);
+            res.put(0);
+            res.put(0);
+            res.put(0);
+        } else {
+            hibernateQuery.queryString("SELECT c FROM ClickOnApp c WHERE c.team_id = :team_id AND c.year = :year AND c.week_of_year = :week_of_year");
+            hibernateQuery.setParameter("team_id", this.getDb_id());
+            hibernateQuery.setParameter("year", year);
+            hibernateQuery.setParameter("week_of_year", week_of_year);
+            List<ClickOnApp> metrics = hibernateQuery.list();
+            for (ClickOnApp clickOnAppMetric : metrics) {
                 day_one += clickOnAppMetric.getDay_one();
                 day_two += clickOnAppMetric.getDay_two();
                 day_three += clickOnAppMetric.getDay_three();
@@ -534,23 +543,20 @@ public class Team {
                 day_six += clickOnAppMetric.getDay_six();
                 day_seven += clickOnAppMetric.getDay_seven();
             }
+            res.put(day_one / teamUsers_size);
+            res.put(day_two / teamUsers_size);
+            res.put(day_three / teamUsers_size);
+            res.put(day_four / teamUsers_size);
+            res.put(day_five / teamUsers_size);
+            res.put(day_six / teamUsers_size);
+            res.put(day_seven / teamUsers_size);
         }
-        res.put(day_one / teamUsers_size);
-        res.put(day_two / teamUsers_size);
-        res.put(day_three / teamUsers_size);
-        res.put(day_four / teamUsers_size);
-        res.put(day_five / teamUsers_size);
-        res.put(day_six / teamUsers_size);
-        res.put(day_seven / teamUsers_size);
         return res;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        System.out.println("Je suis là");
-        System.out.println("o is null: " + (o == null));
-        System.out.println("o class: " + o.getClass().toString() + " my class: " + getClass().toString());
         if (o == null || getClass() != o.getClass()) return false;
 
         Team team = (Team) o;

@@ -344,7 +344,6 @@ public abstract class ServletManager {
             request.setString(argsString.toString());
             request.setString(this.logResponse);
             request.set();
-            System.out.println(request.toString());
             this.getLogsDb().close();
         } catch (UnsupportedEncodingException e) {
             this.setInternError();

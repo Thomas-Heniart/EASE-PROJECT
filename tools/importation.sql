@@ -29,3 +29,5 @@ ALTER TABLE metricTeam ADD COLUMN cards_with_receiver_and_password_policy_names 
 ALTER TABLE metricTeam ADD COLUMN single_cards_names TEXT NOT NULL;
 ALTER TABLE metricTeam ADD COLUMN enterprise_cards_names TEXT NOT NULL;
 ALTER TABLE metricTeam ADD COLUMN link_cards_names TEXT NOT NULL;
+
+ALTER TABLE metricClickOnApp ADD COLUMN team_id INT(10) UNSIGNED;

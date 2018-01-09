@@ -63,7 +63,6 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
                 teamSingleSoftwareCard.setSoftware(software);
             }
             account_information = software.getPresentCredentialsFromJson(account_information);
-            System.out.println(account_information.toString());
             Account account = teamSingleSoftwareCard.getAccount();
             if (account == null) {
                 String teamKey = sm.getTeamKey(team);

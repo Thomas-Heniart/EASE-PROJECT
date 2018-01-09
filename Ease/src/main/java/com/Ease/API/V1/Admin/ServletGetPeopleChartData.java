@@ -71,7 +71,6 @@ public class ServletGetPeopleChartData extends HttpServlet {
             int current_week = calendar.get(Calendar.WEEK_OF_YEAR);
             calendar.setTime(team.getSubscription_date());
             int i = 0;
-            System.out.println("Current year: " + current_year + " year of sub: " + calendar.get(Calendar.YEAR));
             while (calendar.get(Calendar.YEAR) < current_year) {
                 labels.put(i++);
                 TeamMetrics teamMetrics = TeamMetrics.getMetrics(team_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());

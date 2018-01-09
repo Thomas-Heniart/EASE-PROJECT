@@ -87,11 +87,13 @@
                 </div>
             </div>
         </div>
-        <div class="ui segment" id="team_actions">
-            Current credit (TTC): <span id="current-credit"></span>
-            <div id="send-money" class="ui icon input">
-                <input name="love_money" placeholder="Add credit...">
-                <i class="inverted circular stripe link icon"></i>
+        <div class="ui segment">
+            <div id="credit" style="display: inline">
+                Current credit (TTC): <span id="current-credit"></span>
+                <div id="send-money" class="ui icon input">
+                    <input name="love_money" placeholder="Add credit...">
+                    <i class="inverted circular stripe link icon"></i>
+                </div>
             </div>
             <button id="show_graphic" class="ui button blue">Show graph</button>
             <button id="show_delete" class="ui button red">Delete</button>
