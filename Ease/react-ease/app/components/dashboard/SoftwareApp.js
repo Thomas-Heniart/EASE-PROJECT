@@ -3,6 +3,7 @@ import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
 import {showSoftwareAppSettingsModal} from "../../actions/modalActions";
+import {validateApp} from '../../actions/dashboardActions';
 import api from "../../utils/api";
 import {connect} from "react-redux";
 
@@ -22,12 +23,15 @@ class SoftwareApp extends Component {
   }
   handleOpenClose = () => {
     if (!this.props.active) {
-      if (this.state.isOpen === false)
+      if (this.state.isOpen === false) {
+        if (this.props.app.new)
+          this.props.dispatch(validateApp({app_id: this.props.app.id}));
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {
           this.password = response.password;
         });
+      }
       this.setState({isOpen: !this.state.isOpen});
     }
   };

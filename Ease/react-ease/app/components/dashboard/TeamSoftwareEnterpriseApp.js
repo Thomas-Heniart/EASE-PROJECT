@@ -6,6 +6,7 @@ import {
 import {showLockedTeamAppModal, showUpdateAppPasswordModal, showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
 import {Input, Label, Icon, Segment, Popup} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
+import {validateApp} from '../../actions/dashboardActions';
 import api from "../../utils/api";
 import {connect} from "react-redux";
 
@@ -27,12 +28,15 @@ class TeamSoftwareEnterpriseApp extends Component {
   }
   handleOpenClose = () => {
     if (!this.props.active && !this.props.team_apps[this.props.app.team_card_id].empty) {
-      if (this.state.isOpen === false)
+      if (this.state.isOpen === false) {
+        if (this.props.app.new)
+          this.props.dispatch(validateApp({app_id: this.props.app.id}));
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {
           this.password = response.password;
         });
+      }
       this.setState({isOpen: !this.state.isOpen});
     }
   };
