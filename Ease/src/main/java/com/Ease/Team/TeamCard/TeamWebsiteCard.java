@@ -63,6 +63,11 @@ public abstract class TeamWebsiteCard extends TeamCard {
     }
 
     @Override
+    public String getMetricName() {
+        return this.getWebsite().getName();
+    }
+
+    @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
         res.put("website", this.getWebsite().getCatalogJson());

@@ -5,7 +5,6 @@ import com.Ease.NewDashboard.App;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -24,6 +23,7 @@ public class MetricsSchedulerTask extends TimerTask {
     public void run() {
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
+            System.out.println("Metric team start");
             for (Team team : teamManager.getTeams(hibernateQuery)) {
                 TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), hibernateQuery);
                 int people_invited = 0;
@@ -45,6 +45,7 @@ public class MetricsSchedulerTask extends TimerTask {
                     }
                 }
                 int cards = 0;
+                StringBuilder cards_names = new StringBuilder();
                 int cards_with_receiver = 0;
                 int cards_with_receiver_and_password_policy = 0;
                 int single_cards = 0;
@@ -52,6 +53,7 @@ public class MetricsSchedulerTask extends TimerTask {
                 int link_cards = 0;
                 for (TeamCard teamCard : team.getTeamCardSet()) {
                     cards++;
+                    cards_names.append(teamCard.getMetricName()).append(";");
                     if (!teamCard.getTeamCardReceiverMap().isEmpty()) {
                         cards_with_receiver++;
                         if (teamCard.getPassword_reminder_interval() > 0)
@@ -136,6 +138,8 @@ public class MetricsSchedulerTask extends TimerTask {
                     people_click_on_app_three_times_emails.deleteCharAt(people_click_on_app_three_times_emails.length() - 1);
                 if (people_click_on_app_five_times_emails.length() > 0)
                     people_click_on_app_five_times_emails.deleteCharAt(people_click_on_app_five_times_emails.length() - 1);
+                if (cards_names.length() > 0)
+                    cards_names.deleteCharAt(cards_names.length() - 1);
                 teamMetrics.setPeople_invited(people_invited);
                 teamMetrics.setPeople_invited_emails(people_invited_emails.toString());
                 teamMetrics.setPeople_joined(people_joined);
@@ -145,6 +149,7 @@ public class MetricsSchedulerTask extends TimerTask {
                 teamMetrics.setPeople_with_personnal_apps(people_with_personnal_apps);
                 teamMetrics.setPeople_with_personnal_apps_emails(people_with_personnal_apps_emails.toString());
                 teamMetrics.setCards(cards);
+                teamMetrics.setCards_names(cards_names.toString());
                 teamMetrics.setCards_with_receiver(cards_with_receiver);
                 teamMetrics.setCards_with_receiver_and_password_policy(cards_with_receiver_and_password_policy);
                 teamMetrics.setSingle_cards(single_cards);
@@ -160,6 +165,7 @@ public class MetricsSchedulerTask extends TimerTask {
                 teamMetrics.setPeople_click_on_app_five_times_emails(people_click_on_app_five_times_emails.toString());
                 hibernateQuery.saveOrUpdateObject(teamMetrics);
             }
+            System.out.println("Metric team stop");
             hibernateQuery.commit();
         } catch (Exception e) {
             hibernateQuery.rollback();

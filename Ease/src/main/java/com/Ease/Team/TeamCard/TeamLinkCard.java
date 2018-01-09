@@ -70,6 +70,11 @@ public class TeamLinkCard extends TeamCard {
     }
 
     @Override
+    public String getMetricName() {
+        return this.getUrl();
+    }
+
+    @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
         res.put("url", this.getUrl());

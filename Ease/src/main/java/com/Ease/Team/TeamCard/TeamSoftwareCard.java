@@ -73,6 +73,11 @@ public abstract class TeamSoftwareCard extends TeamCard {
     }
 
     @Override
+    public String getMetricName() {
+        return this.getSoftware().getName();
+    }
+
+    @Override
     public String getSubtype() {
         return "software";
     }

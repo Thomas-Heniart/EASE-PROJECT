@@ -210,7 +210,7 @@ public class User {
         this.administrator = administrator;
     }
 
-    public Map<Long, ImportedAccount> getImportedAccountMap() {
+    public synchronized Map<Long, ImportedAccount> getImportedAccountMap() {
         return importedAccountMap;
     }
 

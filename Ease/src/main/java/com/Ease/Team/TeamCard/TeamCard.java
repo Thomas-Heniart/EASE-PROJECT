@@ -261,4 +261,6 @@ public abstract class TeamCard {
     public int hashCode() {
         return db_id.hashCode();
     }
+
+    public abstract String getMetricName();
 }

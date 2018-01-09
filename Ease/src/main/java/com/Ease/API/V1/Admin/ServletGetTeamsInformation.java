@@ -74,6 +74,8 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), year, week_of_year, sm.getHibernateQuery());
                 tmp.put("people_joined", teamMetrics.getPeople_joined());
                 tmp.put("people_joined_with_cards", teamMetrics.getPeople_with_cards());
+                tmp.put("cards_with_tags", teamMetrics.getCards_with_receiver());
+                tmp.put("people_click_on_app_once", teamMetrics.getPeople_click_on_app_once());
                 tmp.put("people_click_on_app_three_times", teamMetrics.getPeople_click_on_app_three_times());
                 res.put(tmp);
             }

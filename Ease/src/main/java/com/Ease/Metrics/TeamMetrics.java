@@ -92,20 +92,38 @@ public class TeamMetrics {
     @Column(name = "cards")
     private int cards = 0;
 
+    @Column(name = "cards_names")
+    private String cards_names = "";
+
     @Column(name = "cards_with_receiver")
     private int cards_with_receiver = 0;
+
+    @Column(name = "cards_with_receiver_names")
+    private String cards_with_receiver_names = "";
 
     @Column(name = "cards_with_receiver_and_password_policy")
     private int cards_with_receiver_and_password_policy = 0;
 
+    @Column(name = "cards_with_receiver_and_password_policy_names")
+    private String cards_with_receiver_and_password_policy_names = "";
+
     @Column(name = "single_cards")
-    private int single_cards;
+    private int single_cards = 0;
+
+    @Column(name = "single_cards_names")
+    private String single_cards_names = "";
 
     @Column(name = "enterprise_cards")
-    private int enterprise_cards;
+    private int enterprise_cards = 0;
+
+    @Column(name = "enterprise_cards_names")
+    private String enterprise_cards_names = "";
 
     @Column(name = "link_cards")
-    private int link_cards;
+    private int link_cards = 0;
+
+    @Column(name = "link_cards_names")
+    private String link_cards_names = "";
 
     public TeamMetrics() {
 
@@ -325,6 +343,54 @@ public class TeamMetrics {
         this.link_cards = link_cards;
     }
 
+    public String getCards_names() {
+        return cards_names;
+    }
+
+    public void setCards_names(String cards_names) {
+        this.cards_names = cards_names;
+    }
+
+    public String getCards_with_receiver_names() {
+        return cards_with_receiver_names;
+    }
+
+    public void setCards_with_receiver_names(String cards_with_receiver_names) {
+        this.cards_with_receiver_names = cards_with_receiver_names;
+    }
+
+    public String getCards_with_receiver_and_password_policy_names() {
+        return cards_with_receiver_and_password_policy_names;
+    }
+
+    public void setCards_with_receiver_and_password_policy_names(String cards_with_receiver_and_password_policy_names) {
+        this.cards_with_receiver_and_password_policy_names = cards_with_receiver_and_password_policy_names;
+    }
+
+    public String getSingle_cards_names() {
+        return single_cards_names;
+    }
+
+    public void setSingle_cards_names(String single_cards_names) {
+        this.single_cards_names = single_cards_names;
+    }
+
+    public String getEnterprise_cards_names() {
+        return enterprise_cards_names;
+    }
+
+    public void setEnterprise_cards_names(String enterprise_cards_names) {
+        this.enterprise_cards_names = enterprise_cards_names;
+    }
+
+    public String getLink_cards_names() {
+        return link_cards_names;
+    }
+
+    public void setLink_cards_names(String link_cards_names) {
+        this.link_cards_names = link_cards_names;
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("people_invited", this.getPeople_invited());
@@ -344,11 +410,18 @@ public class TeamMetrics {
         res.put("rooms", this.getRoom_number());
         res.put("room_names", this.getRoom_names());
         res.put("cards", this.getCards());
+        System.out.println(this.getCards_names());
+        res.put("cards_names", this.getCards_names());
         res.put("cards_with_receiver", this.getCards_with_receiver());
+        res.put("cards_with_receiver_names", this.getCards_with_receiver_names());
         res.put("cards_with_receiver_and_password_policy", this.getCards_with_receiver_and_password_policy());
+        res.put("cards_with_receiver_and_password_policy_names", this.getCards_with_receiver_and_password_policy_names());
         res.put("single_cards", this.getSingle_cards());
+        res.put("single_cards_names", this.getSingle_cards_names());
         res.put("enterprise_cards", this.getEnterprise_cards());
+        res.put("enterprise_cards_names", this.getEnterprise_cards_names());
         res.put("link_cards", this.getLink_cards());
+        res.put("link_cards_names", this.getLink_cards_names());
         return res;
     }
 }

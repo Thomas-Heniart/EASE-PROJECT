@@ -1,8 +1,20 @@
+var selected_teams = [];
+
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
     $(".united.modal").modal({
         allowMultiple: true
+    });
+    $("#select-all-team").change(function () {
+        var checked = $(this).is(":checked");
+        if (!checked)
+            $(".select-team:checked").click();
+        else
+            $(".select-team").each(function (i, e) {
+                if (!$(e).is(":checked"))
+                    $(e).click()
+            })
     });
     $("#website-requests-segment button").click(function () {
         var button = $(this);
@@ -282,17 +294,27 @@ function addCategoryRow(category) {
 function addTeamRow(team, index) {
     var elem = $("<tr>" +
         "<td>" + (index + 1) + "</td>" +
+        '<td><div class="ui checkbox"><input class="select-team" type="checkbox"/><label></label></div></td>' +
         "<td>" + team.name + "</td>" +
         "<td>" + team.admin_first_name + " " + team.admin_last_name + "</td>" +
         "<td>" + team.admin_email + "</td>" +
-        "<td>" + team.phone_number + "</td>" +
         "<td>" + team.week_of_subscription + "</td>" +
         "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
         "<td>" + team.card_entered + "</td>" +
         "<td>" + team.people_joined + "</td>" +
+        "<td>" + team.cards_with_tags + "</td>" +
         "<td>" + team.people_joined_with_cards + "</td>" +
+        "<td>" + team.people_click_on_app_once + "</td>" +
         "<td>" + team.people_click_on_app_three_times + "</td>" +
         "</tr>");
+    $(".select-team", elem).click(function (e) {
+        e.stopPropagation();
+        if ($(this).is(":checked"))
+            selected_teams.push(team.id);
+        else
+            selected_teams.splice(selected_teams.indexOf(team.id), 1);
+        console.log(selected_teams);
+    });
     elem.click(function () {
         openTeamSettings(team, elem);
     });
@@ -526,12 +548,144 @@ function addResult(website) {
     return elem;
 }
 
+function openManyTeams() {
+    var modal = $("#team-settings");
+    var people_data = $("#people_data");
+    var account_data = $("#account_data");
+    var data_emails = $("#people_data_emails");
+    var account_names = $("#account_data_names");
+    var people_data_history = $("#people_data_history");
+    var account_data_hisotry = $("#account_data_history");
+    var team_settings_right = $("#team_settings_right");
+    var team_settings_left = $("#team_settings_left");
+    var click_average_graphic = $("#click_average_graphic");
+    var show_graphic = $("#show_graphic");
+    $(".header", modal).text("");
+    $("#team_actions").hide();
+    var teams_data = undefined;
+    selected_teams.forEach(function (team_id) {
+        ajaxHandler.get("/api/v1/admin/GetTeam", {
+            team_id: team_id
+        }, function () {
+        }, function (data) {
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    if (teams_data === undefined)
+                        teams_data = data;
+                    else
+                        teams_data[key] += data[key];
+                }
+            }
+        })
+    });
+    console.log(teams_data);
+    modal
+        .modal({
+            onHide: function () {
+                $(".segment", modal).addClass("loading");
+                $("button", people_data).off("click");
+                $("button", account_data).off("click");
+                show_graphic.off("click");
+                data_emails.hide();
+                account_names.hide();
+                people_data_history.hide();
+                account_data_hisotry.hide();
+                click_average_graphic.hide();
+                team_settings_left.show();
+                team_settings_right.show();
+                account_data.show();
+                people_data.show();
+                $("#team_actions").show();
+            }
+        })
+        .modal("show");
+    $(".segment", modal).removeClass("loading");
+    people_data.find("span").each(function (index, element) {
+        $(element).text(teams_data[element.id]);
+        var anchor = $(element).next();
+        anchor.click(function (e) {
+            e.preventDefault();
+            account_data.hide();
+            var list = $("ul", data_emails);
+            $("li", list).remove();
+            teams_data[anchor.attr("id")].split(";").forEach(function (email) {
+                $("<li>" + email + "</li>").appendTo(list);
+            });
+            data_emails.show();
+            $("button", data_emails).click(function () {
+                data_emails.hide();
+                $("li", list).remove();
+                $(this).off("click");
+                account_data.show();
+            })
+        });
+    });
+    people_data.find("button").click(function () {
+        account_data.hide();
+        team_settings_right.addClass("loading");
+        people_data_history.show();
+        ajaxHandler.get("/api/v1/admin/GetPeopleChartData", {
+            team_id: team.id
+        }, function () {
+        }, function (data) {
+            team_settings_right.removeClass("loading");
+            var ctx = document.getElementById("people_data_chart").getContext("2d");
+            var myChart = new Chart(ctx, data);
+        });
+        $("button", $("#people_data_history")).click(function () {
+            people_data_history.hide();
+            $(this).off("click");
+            $("#account_data").show();
+        })
+    });
+    account_data.find("button").click(function () {
+        people_data.hide();
+        click_average_graphic.hide();
+        team_settings_left.addClass("loading");
+        account_data_hisotry.show();
+        ajaxHandler.get("/api/v1/admin/GetAccountChartData", {
+            team_id: team.id
+        }, function () {
+        }, function (data) {
+            team_settings_left.removeClass("loading");
+            var ctx = $("#account_data_chart");
+            new Chart(ctx, data);
+        });
+        $("button", account_data_hisotry).click(function () {
+            account_data_hisotry.hide();
+            $(this).off("click");
+            people_data.show();
+        })
+    });
+    account_data.find("span").each(function (index, element) {
+        $(element).text(teams_data[element.id]);
+        var anchor = $(element).next();
+        anchor.click(function (e) {
+            e.preventDefault();
+            people_data.hide();
+            var list = $("ul", account_names);
+            $("li", list).remove();
+            teams_data[anchor.attr("id")].split(";").forEach(function (email) {
+                $("<li>" + email + "</li>").appendTo(list);
+            });
+            account_names.show();
+            $("button", account_names).click(function () {
+                account_names.hide();
+                $("li", list).remove();
+                $(this).off("click");
+                people_data.show();
+            })
+        });
+    });
+}
+
 function openTeamSettings(team, teamRow) {
     var modal = $("#team-settings");
     var send_money = $("#send-money", modal);
     var people_data = $("#people_data");
     var account_data = $("#account_data");
     var data_emails = $("#people_data_emails");
+    var account_names = $("#account_data_names");
     var people_data_history = $("#people_data_history");
     var account_data_hisotry = $("#account_data_history");
     var team_settings_right = $("#team_settings_right");
@@ -541,11 +695,9 @@ function openTeamSettings(team, teamRow) {
     var delete_button = $("#show_delete");
     var delete_modal = $("#team_delete");
     var delete_modal_button = $("div.button.red", delete_modal);
-    console.log(delete_modal_button);
     delete_modal_button.off("click");
     delete_modal_button.click(function () {
         $(this).addClass("loading");
-        console.log("lala");
         ajaxHandler.post("/api/v1/admin/DeleteTeam", {
             team_id: team.id
         }, function () {
@@ -567,6 +719,7 @@ function openTeamSettings(team, teamRow) {
                 delete_button.off("click");
                 show_graphic.off("click");
                 data_emails.hide();
+                account_names.hide();
                 people_data_history.hide();
                 account_data_hisotry.hide();
                 click_average_graphic.hide();
@@ -639,8 +792,25 @@ function openTeamSettings(team, teamRow) {
                 people_data.show();
             })
         });
-        $("#account_data").find("span").each(function (index, element) {
+        account_data.find("span").each(function (index, element) {
             $(element).text(data[element.id]);
+            var anchor = $(element).next();
+            anchor.click(function (e) {
+                e.preventDefault();
+                people_data.hide();
+                var list = $("ul", account_names);
+                $("li", list).remove();
+                data[anchor.attr("id")].split(";").forEach(function (email) {
+                    $("<li>" + email + "</li>").appendTo(list);
+                });
+                account_names.show();
+                $("button", account_names).click(function () {
+                    account_names.hide();
+                    $("li", list).remove();
+                    $(this).off("click");
+                    people_data.show();
+                })
+            });
         });
         $("#current-credit", modal).text(team.credit);
         $("i", send_money).click(function () {
@@ -696,24 +866,5 @@ function openTeamSettings(team, teamRow) {
         delete_button.click(function () {
             delete_modal.modal("show");
         });
-        /*
-        $("#card-number span", modal).text(data.cards);
-        $("#link-number span", modal).text(data.link_card_number);
-        $("#single-number span", modal).text(data.single_card_number);
-        $("#enterprise-number span", modal).text(data.enterprise_card_number);
-        $("#card-with-password-reminder span", modal).text(data.card_with_receiver_and_password_reminder_number);
-        $("button.negative", modal).click(function () {
-            var button = $(this);
-            button.addClass("loading");
-            ajaxHandler.post("/api/v1/admin/DeleteTeam", {
-                team_id: team.id
-            }, function () {
-
-            }, function () {
-                button.removeClass("loading");
-                teamRow.remove();
-                modal.modal("hide");
-            })
-        }); */
     });
 }

@@ -2,36 +2,31 @@
     <thead>
     <tr>
         <th>count</th>
+        <th>
+            <div class="ui checkbox"><input id="select-all-team" type="checkbox"/><label></label></div>
+        </th>
         <th>Name</th>
         <th>Admin name</th>
         <th>Admin email</th>
-        <th>Phone number</th>
         <th>Week of sub</th>
         <th>Plan</th>
         <th>CC</th>
         <th>P. joined</th>
+        <th>App w. tags</th>
         <th>P. w. apps</th>
+        <th>P. click 1</th>
         <th>P. click 3</th>
     </tr>
-    <!--
-        <th>Name</th>
-        <th>Admin name</th>
-        <th>Admin email</th>
-        <th>Phone number</th>
-        <th>Week of sub</th>
-        <th>Week now</th>
-        <th>Plan</th>
-        <th>CC</th>
-    -->
     </thead>
     <tbody id="team-manager-body"></tbody>
 </table>
+<button class="ui blue button">Show graph</button>
 <div class="ui united fullscreen modal" id="team-settings">
     <i class="close icon"></i>
     <div class="header">Team settings</div>
     <div class="content">
         <div class="ui horizontal segments">
-            <div id="team_settings_left" class="ui segment loading">
+            <div id="team_settings_left" class="ui segment loading" style="width: 50%;">
                 <div id="people_data" class="data_part">
                     <h2>People data</h2>
                     <p>People invited: <span id="people_invited"></span> <a href="#" id="people_invited_emails">(see
@@ -64,12 +59,16 @@
                     <canvas id="account_data_chart"></canvas>
                     <button class="ui blue button">back</button>
                 </div>
+                <div id="account_data_names" style="display: none">
+                    <ul></ul>
+                    <button class="ui blue button">back</button>
+                </div>
             </div>
-            <div id="team_settings_right" class="ui segment loading">
+            <div id="team_settings_right" class="ui segment loading" style="width: 50%;">
                 <div id="account_data" class="data_part">
                     <h2>Account data</h2>
                     <p>Rooms: <span id="rooms"></span> <span id="room_names"></span></p>
-                    <p>Total apps: <span id="cards"></span></p>
+                    <p>Total apps: <span id="cards"></span> <a href="#" id="cards_names">(names)</a></p>
                     <p>Total apps with tags: <span id="cards_with_receiver"></span></p>
                     <p>Total apps with tags + PWP: <span id="cards_with_receiver_and_password_policy"></span></p>
                     <p>Single apps: <span id="single_cards"></span></p>
@@ -88,7 +87,7 @@
                 </div>
             </div>
         </div>
-        <div class="ui segment">
+        <div class="ui segment" id="team_actions">
             Current credit (TTC): <span id="current-credit"></span>
             <div id="send-money" class="ui icon input">
                 <input name="love_money" placeholder="Add credit...">
