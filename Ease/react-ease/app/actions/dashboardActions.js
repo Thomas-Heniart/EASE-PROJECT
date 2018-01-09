@@ -646,6 +646,16 @@ export function editAppName({app_id, name}) {
   }
 }
 
+export function clickOnAppMetric({app_id}) {
+  return (dispatch, getState) => {
+    return post_api.dashboard.clickOnAppMetric({
+      app_id: app_id
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function validateTutorial() {
   return (dispatch, getState) => {
     return post_api.dashboard.validateTutorial().then(response => {

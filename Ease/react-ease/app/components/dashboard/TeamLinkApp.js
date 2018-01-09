@@ -4,7 +4,7 @@ import {showTeamLinkAppSettingsModal, showLockedTeamAppModal} from "../../action
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed} from "../../utils/utils";
 import {connect} from "react-redux";
-import {validateApp} from "../../actions/dashboardActions";
+import {validateApp,clickOnAppMetric} from "../../actions/dashboardActions";
 
 @connect(store => ({
   teams: store.teams,
@@ -17,9 +17,11 @@ class TeamLinkApp extends Component {
   process = () => {
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
-    this.props.dispatch(validateApp({
-      app_id: this.props.app.id
-    }));
+    if (app.new)
+      this.props.dispatch(validateApp({
+        app_id: this.props.app.id
+      }));
+    this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
     window.open(team_app.url, '_blank');
   };
   render(){

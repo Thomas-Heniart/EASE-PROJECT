@@ -14,6 +14,11 @@ const basic_post = (url, params) => {
 
 module.exports = {
   dashboard: {
+    clickOnAppMetric: ({app_id}) => {
+      return basic_post('/api/v1/metrics/ClickOnAppMetric', {
+        app_id: app_id
+      });
+    },
     validateTutorial : () => {
       return basic_post('/api/v1/common/TutoDone');
     },
@@ -250,6 +255,46 @@ module.exports = {
         connection_information: connection_information,
         ws_id: ws_id
       });
+    },
+    importAccount: ({name, url, account_information, ws_id}) => {
+      // Object.keys(account_information).map(item => {
+      //   account_information[item] = cipher(account_information[item]);
+      // });
+      return basic_post('/api/v1/importedAccounts', {
+        name: name,
+        url: url,
+        account_information: account_information,
+        ws_id: ws_id
+      });
+    },
+    modifyImportedAccount: ({id, name, url, website_id, account_information, ws_id}) => {
+      // Object.keys(account_information).map(item => {
+      //   account_information[item] = cipher(account_information[item]);
+      // });
+      return axios.put('/api/v1/importedAccounts', {
+        id: id,
+        name: name,
+        url: url,
+        website_id: website_id,
+        account_information: account_information,
+        ws_id: ws_id
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    deleteImportedAccount: ({id, ws_id}) => {
+      return axios.delete('/api/v1/importedAccounts', {
+        params: {
+          id: id,
+          ws_id: ws_id
+        }
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
     }
   },
   teamChannel: {
