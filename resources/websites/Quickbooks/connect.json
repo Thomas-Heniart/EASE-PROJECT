@@ -1,0 +1,22 @@
+{
+  "name":"Quickbooks",
+  "lastLogin":"",
+  "home":"https://uk.qbo.intuit.com/",
+  "connect":{
+    "todo":[
+      {"action":"waitfor", "search":"span.settings, #ius-sign-in-submit-btn"},
+      {"action":"fill", "what":"login", "search":"#ius-userid"},
+      {"action":"fill", "what":"password", "search":"#ius-password"},
+      {"action":"trueClick", "search":"#ius-sign-in-submit-btn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"goto", "url":"https://uk.qbo.intuit.com/c14/v1712.1280/976299206814351/login/logout"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"span.settings, #ius-sign-in-submit-btn"},
+    {"search":"span.settings"}
+  ]
+}
