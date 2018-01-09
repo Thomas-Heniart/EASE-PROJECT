@@ -69,11 +69,11 @@
                     <h2>Account data</h2>
                     <p>Rooms: <span id="rooms"></span> <span id="room_names"></span></p>
                     <p>Total apps: <span id="cards"></span> <a href="#" id="cards_names">(names)</a></p>
-                    <p>Total apps with tags: <span id="cards_with_receiver"></span></p>
-                    <p>Total apps with tags + PWP: <span id="cards_with_receiver_and_password_policy"></span></p>
-                    <p>Single apps: <span id="single_cards"></span></p>
-                    <p>Enterprise apps: <span id="enterprise_cards"></span></p>
-                    <p>Link apps: <span id="link_cards"></span></p>
+                    <p>Total apps with tags: <span id="cards_with_receiver"></span> <a href="#" id="cards_with_receiver_names">(names)</a></p>
+                    <p>Total apps with tags + PWP: <span id="cards_with_receiver_and_password_policy"></span> <a href="#" id="cards_with_receiver_and_password_policy_names">(names)</a></p>
+                    <p>Single apps: <span id="single_cards"></span> <a href="#" id="single_cards_names">(names)</a></p>
+                    <p>Enterprise apps: <span id="enterprise_cards"></span> <a href="#" id="enterprise_cards_names">(names)</a></p>
+                    <p>Link apps: <span id="link_cards"></span> <a href="#" id="link_cards_names">(names)</a></p>
                     <button class="ui blue button">Show history</button>
                 </div>
                 <div id="people_data_emails" class="view_part" style="display: none;">

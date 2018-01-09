@@ -1,7 +1,9 @@
 DROP TABLE IMPORTED_ACCOUNT_INFORMATION, IMPORTED_ACCOUNT;
 
-ALTER TABLE websites ADD COLUMN logo_version TINYINT UNSIGNED NOT NULL DEFAULT 0;
-ALTER TABLE software ADD COLUMN logo_version TINYINT UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE websites
+  ADD COLUMN logo_version TINYINT UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE software
+  ADD COLUMN logo_version TINYINT UNSIGNED NOT NULL DEFAULT 0;
 
 CREATE TABLE IMPORTED_ACCOUNT (
   id         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -23,11 +25,18 @@ CREATE TABLE IMPORTED_ACCOUNT_INFORMATION (
   FOREIGN KEY (imported_account_id) REFERENCES IMPORTED_ACCOUNT (id)
 );
 
-ALTER TABLE metricTeam ADD COLUMN cards_names TEXT NOT NULL;
-ALTER TABLE metricTeam ADD COLUMN cards_with_receiver_names TEXT;
-ALTER TABLE metricTeam ADD COLUMN cards_with_receiver_and_password_policy_names TEXT;
-ALTER TABLE metricTeam ADD COLUMN single_cards_names TEXT NOT NULL;
-ALTER TABLE metricTeam ADD COLUMN enterprise_cards_names TEXT NOT NULL;
-ALTER TABLE metricTeam ADD COLUMN link_cards_names TEXT NOT NULL;
+ALTER TABLE metricTeam
+  ADD COLUMN cards_names TEXT NOT NULL;
+ALTER TABLE metricTeam
+  ADD COLUMN cards_with_receiver_names TEXT NOT NULL;
+ALTER TABLE metricTeam
+  ADD COLUMN cards_with_receiver_and_password_policy_names TEXT NOT NULL;
+ALTER TABLE metricTeam
+  ADD COLUMN single_cards_names TEXT NOT NULL;
+ALTER TABLE metricTeam
+  ADD COLUMN enterprise_cards_names TEXT NOT NULL;
+ALTER TABLE metricTeam
+  ADD COLUMN link_cards_names TEXT NOT NULL;
 
-ALTER TABLE metricClickOnApp ADD COLUMN team_id INT(10) UNSIGNED;
+ALTER TABLE metricClickOnApp
+  ADD COLUMN team_id INT(10) UNSIGNED;

@@ -410,7 +410,6 @@ public class TeamMetrics {
         res.put("rooms", this.getRoom_number());
         res.put("room_names", this.getRoom_names());
         res.put("cards", this.getCards());
-        System.out.println(this.getCards_names());
         res.put("cards_names", this.getCards_names());
         res.put("cards_with_receiver", this.getCards_with_receiver());
         res.put("cards_with_receiver_names", this.getCards_with_receiver_names());

@@ -47,24 +47,36 @@ public class MetricsSchedulerTask extends TimerTask {
                 int cards = 0;
                 StringBuilder cards_names = new StringBuilder();
                 int cards_with_receiver = 0;
+                StringBuilder cards_with_receiver_names = new StringBuilder();
                 int cards_with_receiver_and_password_policy = 0;
+                StringBuilder cards_with_receiver_and_password_policy_names = new StringBuilder();
                 int single_cards = 0;
+                StringBuilder single_cards_names = new StringBuilder();
                 int enterprise_cards = 0;
+                StringBuilder enterprise_cards_names = new StringBuilder();
                 int link_cards = 0;
+                StringBuilder link_cards_names = new StringBuilder();
                 for (TeamCard teamCard : team.getTeamCardSet()) {
                     cards++;
                     cards_names.append(teamCard.getMetricName()).append(";");
                     if (!teamCard.getTeamCardReceiverMap().isEmpty()) {
                         cards_with_receiver++;
-                        if (teamCard.getPassword_reminder_interval() > 0)
+                        cards_with_receiver_names.append(teamCard.getMetricName()).append(";");
+                        if (teamCard.getPassword_reminder_interval() > 0) {
                             cards_with_receiver_and_password_policy++;
+                            cards_with_receiver_and_password_policy_names.append(teamCard.getMetricName()).append(";");
+                        }
                     }
-                    if (teamCard.isTeamSingleCard())
+                    if (teamCard.isTeamSingleCard()) {
                         single_cards++;
-                    else if (teamCard.isTeamEnterpriseCard())
+                        single_cards_names.append(teamCard.getMetricName()).append(";");
+                    } else if (teamCard.isTeamEnterpriseCard()) {
                         enterprise_cards++;
-                    else
+                        enterprise_cards_names.append(teamCard.getMetricName()).append(";");
+                    } else {
                         link_cards++;
+                        link_cards_names.append(teamCard.getMetricName()).append(";");
+                    }
                 }
                 int room_number = 0;
                 StringBuilder room_names = new StringBuilder("(");
@@ -140,6 +152,16 @@ public class MetricsSchedulerTask extends TimerTask {
                     people_click_on_app_five_times_emails.deleteCharAt(people_click_on_app_five_times_emails.length() - 1);
                 if (cards_names.length() > 0)
                     cards_names.deleteCharAt(cards_names.length() - 1);
+                if (cards_with_receiver_names.length() > 0)
+                    cards_with_receiver_names.deleteCharAt(cards_with_receiver_names.length() - 1);
+                if (cards_with_receiver_and_password_policy_names.length() > 0)
+                    cards_with_receiver_and_password_policy_names.deleteCharAt(cards_with_receiver_and_password_policy_names.length() - 1);
+                if (single_cards_names.length() > 0)
+                    single_cards_names.deleteCharAt(single_cards_names.length() - 1);
+                if (enterprise_cards_names.length() > 0)
+                    enterprise_cards_names.deleteCharAt(enterprise_cards_names.length() - 1);
+                if (link_cards_names.length() > 0)
+                    link_cards_names.deleteCharAt(link_cards_names.length() - 1);
                 teamMetrics.setPeople_invited(people_invited);
                 teamMetrics.setPeople_invited_emails(people_invited_emails.toString());
                 teamMetrics.setPeople_joined(people_joined);
@@ -151,10 +173,15 @@ public class MetricsSchedulerTask extends TimerTask {
                 teamMetrics.setCards(cards);
                 teamMetrics.setCards_names(cards_names.toString());
                 teamMetrics.setCards_with_receiver(cards_with_receiver);
+                teamMetrics.setCards_with_receiver_names(cards_with_receiver_names.toString());
                 teamMetrics.setCards_with_receiver_and_password_policy(cards_with_receiver_and_password_policy);
+                teamMetrics.setCards_with_receiver_and_password_policy_names(cards_with_receiver_and_password_policy_names.toString());
                 teamMetrics.setSingle_cards(single_cards);
+                teamMetrics.setSingle_cards_names(single_cards_names.toString());
                 teamMetrics.setEnterprise_cards(enterprise_cards);
+                teamMetrics.setEnterprise_cards_names(enterprise_cards_names.toString());
                 teamMetrics.setLink_cards(link_cards);
+                teamMetrics.setLink_cards_names(link_cards_names.toString());
                 teamMetrics.setRoom_number(room_number);
                 teamMetrics.setRoom_names(room_names.toString());
                 teamMetrics.setPeople_click_on_app_once(people_click_on_app_once);
