@@ -19,7 +19,7 @@
     <link rel="manifest" href="manifest.json">
     <script src="jsMinified.v00022/jquery-3.1.0.js"></script>
     <script src="jsMinified.v00022/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?0"></script>
+    <script src="js/backOffice/admin.js?1"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>

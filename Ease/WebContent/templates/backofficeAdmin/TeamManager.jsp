@@ -11,8 +11,8 @@
         <th>Week of sub</th>
         <th>Plan</th>
         <th>CC</th>
-        <th>P. joined</th>
         <th>App w. tags</th>
+        <th>P. joined</th>
         <th>P. w. apps</th>
         <th>P. click 1</th>
         <th>P. click 3</th>

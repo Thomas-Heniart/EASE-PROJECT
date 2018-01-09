@@ -308,8 +308,8 @@ function addTeamRow(team, index) {
         "<td>" + team.week_of_subscription + "</td>" +
         "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
         "<td>" + team.card_entered + "</td>" +
-        "<td>" + team.people_joined + "</td>" +
         "<td>" + team.cards_with_tags + "</td>" +
+        "<td>" + team.people_joined + "</td>" +
         "<td>" + team.people_joined_with_cards + "</td>" +
         "<td>" + team.people_click_on_app_once + "</td>" +
         "<td>" + team.people_click_on_app_three_times + "</td>" +
