@@ -76,12 +76,13 @@ public class ServletRetrieveTeamsPeopleChartData extends HttpServlet {
             TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             for (int i=0; i < team_ids.length(); i++)
                 teamSet.add(teamManager.getTeam(team_ids.getInt(i), sm.getHibernateQuery()));
-            Date start_date = new Date(teamSet.stream().mapToLong(team -> team.getSubscription_date().getTime()).max().getAsLong());
+            Date start_date = new Date(teamSet.stream().mapToLong(team -> team.getSubscription_date().getTime()).min().getAsLong());
             calendar.setTime(start_date);
             int i = 0;
             while (calendar.get(Calendar.YEAR) < current_year) {
                 labels.put(i++);
                 double people_invited_avg = 0.;
+                double people_joined_avg = 0.;
                 double people_with_cards_avg = 0.;
                 double people_with_personal_apps_avg = 0.;
                 double people_click_on_app_once_avg = 0.;
@@ -90,6 +91,7 @@ public class ServletRetrieveTeamsPeopleChartData extends HttpServlet {
                 for (Team team : teamSet) {
                     TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
                     people_invited_avg += teamMetrics.getPeople_invited();
+                    people_joined_avg += teamMetrics.getPeople_joined();
                     people_with_cards_avg += teamMetrics.getPeople_with_cards();
                     people_with_personal_apps_avg += teamMetrics.getPeople_with_personnal_apps();
                     people_click_on_app_once_avg += teamMetrics.getPeople_click_on_app_once();
@@ -97,6 +99,7 @@ public class ServletRetrieveTeamsPeopleChartData extends HttpServlet {
                     people_click_on_app_five_times_avg += teamMetrics.getPeople_click_on_app_five_times();
                 }
                 ((JSONArray) people_invited.get("data")).put(people_invited_avg / teamSet.size());
+                ((JSONArray) people_joined.get("data")).put(people_joined_avg / teamSet.size());
                 ((JSONArray) people_with_cards.get("data")).put(people_with_cards_avg / teamSet.size());
                 ((JSONArray) people_with_personal_apps.get("data")).put(people_with_personal_apps_avg / teamSet.size());
                 ((JSONArray) people_click_on_app_once.get("data")).put(people_click_on_app_once_avg / teamSet.size());
@@ -107,6 +110,7 @@ public class ServletRetrieveTeamsPeopleChartData extends HttpServlet {
             while (calendar.get(Calendar.WEEK_OF_YEAR) <= current_week) {
                 labels.put(i++);
                 double people_invited_avg = 0.;
+                double people_joined_avg = 0.;
                 double people_with_cards_avg = 0.;
                 double people_with_personal_apps_avg = 0.;
                 double people_click_on_app_once_avg = 0.;
@@ -115,6 +119,7 @@ public class ServletRetrieveTeamsPeopleChartData extends HttpServlet {
                 for (Team team : teamSet) {
                     TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
                     people_invited_avg += teamMetrics.getPeople_invited();
+                    people_joined_avg += teamMetrics.getPeople_joined();
                     people_with_cards_avg += teamMetrics.getPeople_with_cards();
                     people_with_personal_apps_avg += teamMetrics.getPeople_with_personnal_apps();
                     people_click_on_app_once_avg += teamMetrics.getPeople_click_on_app_once();
@@ -122,6 +127,7 @@ public class ServletRetrieveTeamsPeopleChartData extends HttpServlet {
                     people_click_on_app_five_times_avg += teamMetrics.getPeople_click_on_app_five_times();
                 }
                 ((JSONArray) people_invited.get("data")).put(people_invited_avg / teamSet.size());
+                ((JSONArray) people_joined.get("data")).put(people_joined_avg / teamSet.size());
                 ((JSONArray) people_with_cards.get("data")).put(people_with_cards_avg / teamSet.size());
                 ((JSONArray) people_with_personal_apps.get("data")).put(people_with_personal_apps_avg / teamSet.size());
                 ((JSONArray) people_click_on_app_once.get("data")).put(people_click_on_app_once_avg / teamSet.size());

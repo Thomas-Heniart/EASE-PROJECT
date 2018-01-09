@@ -560,7 +560,7 @@ function openManyTeams() {
     var team_settings_left = $("#team_settings_left");
     var click_average_graphic = $("#click_average_graphic");
     var show_graphic = $("#show_graphic");
-    $(".header", modal).text("");
+    $(".header", modal).text("Many teams selected");
     $("#team_actions").hide();
     var teams_data = undefined;
     selected_teams.forEach(function (team_id) {
@@ -568,17 +568,21 @@ function openManyTeams() {
             team_id: team_id
         }, function () {
         }, function (data) {
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    if (teams_data === undefined)
-                        teams_data = data;
-                    else
-                        teams_data[key] += data[key];
+            if (teams_data === undefined)
+                teams_data = data;
+            else {
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        if (typeof data[key] === "string")
+                            teams_data[key] += (";" + data[key]);
+                        else
+                            teams_data[key] += data[key];
+                    }
                 }
             }
-        })
+        }, function () {
+        }, false)
     });
-    console.log(teams_data);
     modal
         .modal({
             onHide: function () {
@@ -624,8 +628,8 @@ function openManyTeams() {
         account_data.hide();
         team_settings_right.addClass("loading");
         people_data_history.show();
-        ajaxHandler.get("/api/v1/admin/GetPeopleChartData", {
-            team_id: team.id
+        ajaxHandler.post("/api/v1/admin/RetrieveTeamsPeopleChartData", {
+            team_ids: selected_teams
         }, function () {
         }, function (data) {
             team_settings_right.removeClass("loading");
@@ -643,8 +647,8 @@ function openManyTeams() {
         click_average_graphic.hide();
         team_settings_left.addClass("loading");
         account_data_hisotry.show();
-        ajaxHandler.get("/api/v1/admin/GetAccountChartData", {
-            team_id: team.id
+        ajaxHandler.post("/api/v1/admin/RetrieveTeamsAccountChartData", {
+            team_ids: selected_teams
         }, function () {
         }, function (data) {
             team_settings_left.removeClass("loading");

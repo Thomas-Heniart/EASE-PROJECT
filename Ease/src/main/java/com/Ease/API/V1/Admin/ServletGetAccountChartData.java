@@ -31,32 +31,26 @@ public class ServletGetAccountChartData extends HttpServlet {
             JSONObject cards = new JSONObject();
             cards.put("label", "Cards");
             cards.put("borderColor", "rgba(255, 195, 0, 0.75)"); /*FFC300*/
-            //cards.put("backgroundColor", "rgba(255, 195, 0, 0.75)");
             cards.put("data", new JSONArray());
             JSONObject cards_with_receiver = new JSONObject();
             cards_with_receiver.put("label", "Cards with tags");
             cards_with_receiver.put("borderColor", "rgba(255, 87, 51, 0.75)"); /*FF5733*/
-            //cards_with_receiver.put("backgroundColor", "rgba(255, 87, 51, 0.75)");
             cards_with_receiver.put("data", new JSONArray());
             JSONObject cards_with_password_policy = new JSONObject();
             cards_with_password_policy.put("label", "Cards + PWP");
             cards_with_password_policy.put("borderColor", "rgba(199, 0, 57, 0.75)"); /*C70039*/
-            //cards_with_password_policy.put("backgroundColor", "rgba(199, 0, 57, 0.75)");
             cards_with_password_policy.put("data", new JSONArray());
             JSONObject single_cards = new JSONObject();
             single_cards.put("label", "Single cards");
             single_cards.put("borderColor", "rgba(144, 12, 63, 0.75)"); /*900C3F*/
-            //single_cards.put("backgroundColor", "rgba(144, 12, 63, 0.75)");
             single_cards.put("data", new JSONArray());
             JSONObject enterprise_cards = new JSONObject();
             enterprise_cards.put("label", "Enterprise cards");
             enterprise_cards.put("borderColor", "rgba(88, 24, 69, 0.75)");
-            //enterprise_cards.put("backgroundColor", "rgba(88, 24, 69, 0.75)");
             enterprise_cards.put("data", new JSONArray());
             JSONObject link_cards = new JSONObject();
             link_cards.put("label", "Link cards");
             link_cards.put("borderColor", "rgba(55, 59, 96, 0.75)"); /*373B60*/
-            //link_cards.put("backgroundColor", "rgba(55, 59, 96, 0.75)");
             link_cards.put("data", new JSONArray());
             datasets.put(cards);
             datasets.put(cards_with_receiver);
