@@ -7,8 +7,10 @@ import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -36,13 +38,20 @@ public class ServletDeleteWebsite extends HttpServlet {
                     ((LogWithApp) app).setLoginWith_app(null);
                     hibernateQuery.saveOrUpdateObject(app);
                 }
+                TeamCardReceiver teamCardReceiver = app.getTeamCardReceiver();
+                if (teamCardReceiver != null) {
+                    TeamCard teamCard = teamCardReceiver.getTeamCard();
+                    TeamUser teamUser = teamCardReceiver.getTeamUser();
+                    teamCard.removeTeamCardReceiver(teamCardReceiver);
+                    teamUser.removeTeamCardReceiver(teamCardReceiver);
+                }
+                Profile profile = app.getProfile();
+                if (profile != null)
+                    profile.removeAppAndUpdatePositions(app, hibernateQuery);
             }
             for (TeamWebsiteCard teamWebsiteCard : website.getTeamWebsiteCardSet()) {
-                for (TeamCardReceiver teamCardReceiver : teamWebsiteCard.getTeamCardReceiverMap().values()) {
-                    Profile profile = teamCardReceiver.getApp().getProfile();
-                    if (profile != null)
-                        profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), hibernateQuery);
-                }
+                Team team = teamWebsiteCard.getTeam();
+                team.removeTeamCard(teamWebsiteCard);
             }
             sm.deleteObject(website);
             sm.setSuccess("Done");

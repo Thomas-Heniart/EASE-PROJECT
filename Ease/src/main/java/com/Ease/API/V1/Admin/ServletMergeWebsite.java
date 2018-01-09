@@ -38,13 +38,17 @@ public class ServletMergeWebsite extends HttpServlet {
                     /* @TODO WebSocket message here */
                 } else {
                     websiteApp.setWebsite(website);
+                    website.addWebsiteApp(websiteApp);
                     sm.saveOrUpdate(websiteApp);
                 }
             });
             for (TeamWebsiteCard teamWebsiteCard : website_to_merge.getTeamWebsiteCardSet()) {
                 teamWebsiteCard.setWebsite(website);
+                website.addTeamWebsiteCard(teamWebsiteCard);
                 sm.saveOrUpdate(teamWebsiteCard);
             }
+            website_to_merge.getWebsiteAppSet().clear();
+            website_to_merge.getTeamWebsiteCardSet().clear();
             sm.deleteObject(website_to_merge);
             sm.setSuccess("Websites merged");
         } catch (Exception e) {

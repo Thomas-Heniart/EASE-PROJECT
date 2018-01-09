@@ -85,10 +85,10 @@ public class Website {
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WebsiteCredentials> websiteCredentials = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
     private Set<WebsiteApp> websiteAppSet = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
     private Set<TeamWebsiteCard> teamWebsiteCardSet = ConcurrentHashMap.newKeySet();
 
 
@@ -413,5 +413,9 @@ public class Website {
     @Override
     public int hashCode() {
         return db_id.hashCode();
+    }
+
+    public void addTeamWebsiteCard(TeamWebsiteCard teamWebsiteCard) {
+        this.getTeamWebsiteCardSet().add(teamWebsiteCard);
     }
 }
