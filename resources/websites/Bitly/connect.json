@@ -5,27 +5,26 @@
     "connect":{
         "todo":[
         	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
-            {"action":"val", "what":"login", "search":"input[name='username']"},
-            {"action":"val", "what":"password", "search":"input[name='password']"},
-            {"action":"click", "search":"form#sign-in input[type='submit'].button.button-primary.sign-up-in"}
+            {"action":"fill", "what":"login", "search":"#sign-in input[name='username']"},
+            {"action":"fill", "what":"password", "search":"#sign-in input[name='password']"},
+            {"action":"trueClick", "search":"form#sign-in input[type='submit'].button.button-primary.sign-up-in"}
         ]
     },
     "logout":{
         "todo":[
-        	{"action":"goto", "url":"https://bitly.com/a/sign_out"},
-            {"action":"goto", "url":"https://bitly.com/a/sign_in"}
+        	{"action":"goto", "url":"https://bitly.com/a/sign_out"}
             ]
     },
     "Facebook":{
         "todo":[
         	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
-            {"action":"clickona", "search":"a.facebook-social-btn"}
+            {"action":"trueClick", "search":"a.facebook-social-btn"}
         ]
     },
     "Twitter":{
         "todo":[
         	{"action":"goto", "url":"https://bitly.com/a/sign_in"},
-            {"action":"clickona", "search":"a.twitter-social-btn"}
+            {"action":"trueClick", "search":"a.twitter-social-btn"}
         ]
     },
     "checkAlreadyLogged":[
