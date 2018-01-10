@@ -175,23 +175,31 @@ $(document).ready(function () {
         if (selected_teams.length > 0)
             openManyTeams();
     });
+    $("input", $("#background-upload")).change(() => {
+        if ($("input", $("#background-upload")).filter((i, elem) => elem.value === "").length < 7)
+            $("button", $("#background-upload")).removeClass("disabled");
+        else
+            $("button", $("#background-upload")).addClass("disabled");
+    });
     $("#background-upload").submit(function (e) {
         e.preventDefault();
-        let backgrounds = [];
-        let files = $("input", $("#background-upload"))
-            .map((i, elem) => {
-                return new Promise((resolve) => resolve(getBase64(elem.files[0]).then((b64) => backgrounds.push(b64))))
-            }).toArray();
-        console.log(files);
+        let backgrounds = {};
+        var self = $(this);
+        var submit_button = $("button", self);
+        submit_button.addClass("loading");
+        submit_button.addClass("disabled");
+        let files = $("input", self)
+            .filter((i, elem) => elem.value !== "")
+            .map((i, elem) => new Promise((resolve) => resolve(getBase64(elem.files[0]).then((b64) => backgrounds[elem.getAttribute("name")] = b64)))).toArray();
         Promise.all(files).then(() => {
-            console.log(backgrounds);
             ajaxHandler.post("/api/v1/admin/UploadBackground", {
                 backgrounds: backgrounds
             }, function () {
+                submit_button.removeClass("loading");
+            }, function () {
+                $("input", self).val("");
             }, function (data) {
-
-            }, function (data) {
-                console.log(data)
+                alert(data)
             })
         }).catch((error) => console.log(error))
     })

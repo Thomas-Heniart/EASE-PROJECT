@@ -1,11 +1,9 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Context.Variables;
-import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.apache.commons.codec.binary.Base64;
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,12 +20,14 @@ public class ServletUploadBackground extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            JSONArray backgrounds = sm.getArrayParam("backgrounds", false, false);
-            if (backgrounds.length() != 7)
-                throw new HttpServletException(HttpStatus.BadRequest, "You must give 7 pictures");
-            for (int i=0; i<backgrounds.length(); i++) {
-                String base64_string = backgrounds.getString(i);
-                FileOutputStream file = new FileOutputStream(Variables.BACKGROUND_PATH + "background_" + i + ".jpeg");
+            JSONObject backgrounds = sm.getJsonParam("backgrounds", false, false);
+            for (Object key : backgrounds.keySet()) {
+                String index = (String) key;
+                Integer value_index = Integer.valueOf(index);
+                if (value_index < 0 || value_index > 6)
+                    continue;
+                String base64_string = backgrounds.getString(index);
+                FileOutputStream file = new FileOutputStream(Variables.BACKGROUND_PATH + "background_" + index + ".jpeg");
                 file.write(Base64.decodeBase64(base64_string));
                 file.close();
             }
