@@ -1,0 +1,22 @@
+{
+  "name":"GitLab Nexylan",
+  "lastLogin":"",
+  "home":"https://git.nexylan.net/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#user_login"},
+      {"action":"fill", "what":"password", "search":"#user_password"},
+      {"action":"click", "search":"#new_user input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='sign_out']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='sign_out'], #new_user input[type='submit']"},
+    {"search":"a[href*='sign_out']"}
+  ]
+}

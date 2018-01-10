@@ -15,6 +15,7 @@ import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.mailjet.client.resource.ContactslistManageContact;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -127,6 +128,8 @@ public class ServletRegistration extends HttpServlet {
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
             cookie.setPath("/");
             cookie.setMaxAge(Math.toIntExact(calendar.getTimeInMillis() - new Date().getTime()) / 1000);
             response.addCookie(cookie);
@@ -138,7 +141,9 @@ public class ServletRegistration extends HttpServlet {
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
-            sm.setSuccess(newUser.getJson());
+            JSONObject res = newUser.getJson();
+            res.put("JWT", jwt);
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
