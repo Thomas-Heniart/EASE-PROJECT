@@ -1,6 +1,7 @@
 var selected_teams = [];
 var account_graph;
 var people_graph;
+var click_graph;
 
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
@@ -307,8 +308,8 @@ function addTeamRow(team, index) {
         "<td>" + team.week_of_subscription + "</td>" +
         "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
         "<td>" + team.card_entered + "</td>" +
-        "<td>" + team.people_joined + "</td>" +
         "<td>" + team.cards_with_tags + "</td>" +
+        "<td>" + team.people_joined + "</td>" +
         "<td>" + team.people_joined_with_cards + "</td>" +
         "<td>" + team.people_click_on_app_once + "</td>" +
         "<td>" + team.people_click_on_app_three_times + "</td>" +
@@ -319,7 +320,6 @@ function addTeamRow(team, index) {
             selected_teams.push(team.id);
         else
             selected_teams.splice(selected_teams.indexOf(team.id), 1);
-        console.log(selected_teams);
     });
     elem.click(function () {
         openTeamSettings(team, elem);
@@ -566,8 +566,9 @@ function openManyTeams() {
     var team_settings_left = $("#team_settings_left");
     var click_average_graphic = $("#click_average_graphic");
     var show_graphic = $("#show_graphic");
+    $("#credit").hide();
+    $("#show_delete").hide();
     $(".header", modal).text("Many teams selected");
-    $("#team_actions").hide();
     var teams_data = undefined;
     selected_teams.forEach(function (team_id) {
         ajaxHandler.get("/api/v1/admin/GetTeam", {
@@ -605,7 +606,9 @@ function openManyTeams() {
                 team_settings_right.show();
                 account_data.show();
                 people_data.show();
-                $("#team_actions").show();
+                $("#credit").css("display", "inline");
+                $("#show_delete").show();
+                show_graphic.off("click");
             }
         })
         .modal("show");
@@ -643,8 +646,8 @@ function openManyTeams() {
             if (people_graph === undefined)
                 people_graph = new Chart(ctx, data);
             else {
-                people_graph.data = data;
-                people_graph.update();
+                people_graph.destroy();
+                people_graph = new Chart(ctx, data);
             }
         });
         $("button", $("#people_data_history")).click(function () {
@@ -667,8 +670,8 @@ function openManyTeams() {
             if (account_graph === undefined)
                 account_graph = new Chart(ctx, data);
             else {
-                account_graph.data = data;
-                account_graph.update();
+                account_graph.destroy();
+                account_graph = new Chart(ctx, data);
             }
         });
         $("button", account_data_hisotry).click(function () {
@@ -697,6 +700,32 @@ function openManyTeams() {
             })
         });
     });
+    show_graphic.click(function () {
+        team_settings_right.hide();
+        team_settings_left.show();
+        team_settings_left.addClass("loading");
+        people_data.hide();
+        click_average_graphic.show();
+        ajaxHandler.post("/api/v1/admin/RetrieveTeamsClickChartData", {
+            team_ids: selected_teams
+        }, function () {
+        }, function (data) {
+            team_settings_left.removeClass("loading");
+            var canvas = $("#click_average_canvas");
+            if (click_graph === undefined)
+                click_graph = new Chart(canvas, data);
+            else {
+                click_graph.destroy();
+                click_graph = new Chart(canvas, data);
+            }
+        });
+        $("button", click_average_graphic).click(function () {
+            team_settings_right.show();
+            people_data.show();
+            click_average_graphic.hide();
+            $(this).off("click");
+        });
+    })
 }
 
 function openTeamSettings(team, teamRow) {
@@ -785,7 +814,12 @@ function openTeamSettings(team, teamRow) {
             }, function (data) {
                 team_settings_right.removeClass("loading");
                 var ctx = document.getElementById("people_data_chart").getContext("2d");
-                var myChart = new Chart(ctx, data);
+                if (people_graph === undefined)
+                    people_graph = new Chart(ctx, data);
+                else {
+                    people_graph.destroy();
+                    people_graph = new Chart(ctx, data);
+                }
             });
             $("button", $("#people_data_history")).click(function () {
                 people_data_history.hide();
@@ -807,8 +841,8 @@ function openTeamSettings(team, teamRow) {
                 if (account_graph === undefined)
                     account_graph = new Chart(ctx, data);
                 else {
-                    account_graph.data = data;
-                    account_graph.update();
+                    account_graph.destroy();
+                    account_graph = new Chart(ctx, data);
                 }
             });
             $("button", account_data_hisotry).click(function () {
@@ -875,12 +909,12 @@ function openTeamSettings(team, teamRow) {
             }, function () {
             }, function (data) {
                 team_settings_left.removeClass("loading");
-                var canvas = $("canvas", click_average_graphic);
-                if (people_graph === undefined)
-                    people_graph = new Chart(canvas, data);
+                var canvas = $("#click_average_canvas");
+                if (click_graph === undefined)
+                    click_graph = new Chart(canvas, data);
                 else {
-                    people_graph.data = data;
-                    people_graph.update();
+                    click_graph.destroy();
+                    click_graph = new Chart(canvas, data);
                 }
                 $("body").css({
                     "overlfow-y": "auto"

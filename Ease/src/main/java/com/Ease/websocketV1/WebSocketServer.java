@@ -87,7 +87,6 @@ public class WebSocketServer {
                     teamProperties.putIfAbsent("webSocketManager", teamWebSocketManager);
                 }
                 teamWebSocketManager.addWebSocketSession(webSocketSession);
-                System.out.println("TeamWebSocketSessions size: " + teamWebSocketManager.getWebSocketSessions().size());
             }
             System.out.println("webSocketSession registered for user : " + user.getEmail());
         } catch (Exception e) {

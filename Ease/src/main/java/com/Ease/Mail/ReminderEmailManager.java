@@ -38,14 +38,10 @@ public class ReminderEmailManager {
         try {
             hibernateQuery.querySQLString("SELECT firstName, email FROM (SELECT firstName, email, count(websiteApps.id) AS appCount FROM users JOIN profiles ON (profiles.user_id = users.id) LEFT JOIN profileAndAppMap ON (profiles.id = profileAndAppMap.profile_id) LEFT JOIN apps ON (apps.id = profileAndAppMap.app_id) LEFT JOIN websiteApps ON (apps.id = websiteApps.app_id AND websiteApps.type <> 'websiteApp') WHERE DATE(registration_date) = DATE_SUB(CURDATE(), INTERVAL 6 DAY) GROUP BY firstName, email) AS t WHERE appCount <= 3;");
             List<Object> rs = hibernateQuery.list();
-            System.out.println("reminderSixDaysLessThanFourApps to " + rs.size() + " people");
             for (Object object : rs) {
                 Object[] firstNameAndEmail = (Object[]) object;
                 String firstName = (String) firstNameAndEmail[0];
                 String email = (String) firstNameAndEmail[1];
-                System.out.println("reminderSixDaysLessThanFourApps to " + firstName + " " + email);
-                /* SendGridMail sendGridMail = new SendGridMail("Agathe @Ease", "contact@ease.space");
-                sendGridMail.sendReminderSixDaysLessThanFourAppsEmail(firstName, email); */
             }
             hibernateQuery.commit();
             System.out.println("reminderSixDaysLessThanFourApps end...");

@@ -14,8 +14,14 @@ public class ClickOnApp {
         hibernateQuery.setParameter("week", week_of_year);
         hibernateQuery.setParameter("app_id", app_id);
         ClickOnApp metric = (ClickOnApp) hibernateQuery.getSingleResult();
-        if (metric == null)
+        if (metric == null) {
             metric = new ClickOnApp(app_id, year, week_of_year);
+            hibernateQuery.querySQLString("SELECT team_id FROM teamCards JOIN teamCardReceivers ON teamCardReceivers.teamCard_id = teamCards.id WHERE teamCardReceivers.app_id = :id");
+            hibernateQuery.setParameter("id", app_id);
+            Integer team_id = (Integer) hibernateQuery.getSingleResult();
+            if (team_id != null)
+                metric.setTeam_id(team_id);
+        }
         return metric;
     }
 
@@ -59,6 +65,9 @@ public class ClickOnApp {
 
     @Column(name = "day_6")
     private Integer day_seven = 0;
+
+    @Column(name = "team_id")
+    private Integer team_id;
 
     @Transient
     private Integer[] days;
@@ -159,6 +168,14 @@ public class ClickOnApp {
 
     public void setDay_seven(Integer day_seven) {
         this.day_seven = day_seven;
+    }
+
+    public Integer getTeam_id() {
+        return team_id;
+    }
+
+    public void setTeam_id(Integer team_id) {
+        this.team_id = team_id;
     }
 
     public Integer[] getDays() {

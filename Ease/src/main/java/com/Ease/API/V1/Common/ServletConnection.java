@@ -74,6 +74,8 @@ public class ServletConnection extends HttpServlet {
             removeIpFromDataBase(client_ip, db);
             String jwt = user.getJsonWebToken().getJwt(keyUser);
             Cookie cookie = new Cookie("JWT", jwt);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, 1);
             calendar.set(Calendar.HOUR_OF_DAY, 4);

@@ -41,7 +41,23 @@ public class ServletGetTeamClickChartData extends HttpServlet {
             Calendar current = Calendar.getInstance();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(team.getSubscription_date());
-            if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
+            while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {
+                JSONArray tmp = team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
+                for (int i=0; i < tmp.length(); i++)
+                    ((JSONArray) click_average.get("data")).put(tmp.opt(i));
+                for (int i = 1; i <= 7; i++)
+                    labels.put(++days);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+            while (calendar.get(Calendar.WEEK_OF_YEAR) <= current.get(Calendar.WEEK_OF_YEAR)) {
+                JSONArray tmp = team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
+                for (int i=0; i < tmp.length(); i++)
+                    ((JSONArray) click_average.get("data")).put(tmp.opt(i));
+                for (int i = 1; i <= 7; i++)
+                    labels.put(++days);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+            /* if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
                 do {
                     ((JSONArray) click_average.get("data")).put(team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery()));
                     for (int i = 1; i <= 7; i++)
@@ -54,7 +70,7 @@ public class ServletGetTeamClickChartData extends HttpServlet {
                 for (int i = 1; i <= 7; i++)
                     labels.put(++days);
                 calendar.add(Calendar.WEEK_OF_YEAR, 1);
-            } while (calendar.get(Calendar.WEEK_OF_YEAR) <= Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
+            } while (calendar.get(Calendar.WEEK_OF_YEAR) <= Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)); */
             data.put("labels", labels);
             data.put("datasets", datasets);
             res.put("data", data);

@@ -367,7 +367,6 @@ public class User {
     }
 
     public TeamUser getTeamUser(Team team) throws HttpServletException {
-        System.out.println("Team ids: " + this.getTeamUsers().stream().findFirst().get().getTeam().equals(team));
         TeamUser teamUser = this.getTeamUsers().stream().filter(teamUser1 -> teamUser1.getTeam().equals(team)).findAny().orElse(null);
         if (teamUser == null)
             throw new HttpServletException(HttpStatus.BadRequest, "You are not part of this team");
@@ -411,6 +410,10 @@ public class User {
         Cookie cookie1 = new Cookie("fname", Base64.encodeBase64String(this.getUsername().getBytes(Charset.forName("utf8"))));
         cookie.setMaxAge(Integer.MAX_VALUE);
         cookie1.setMaxAge(Integer.MAX_VALUE);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie1.setHttpOnly(true);
+        cookie1.setSecure(true);
         cookie.setPath("/");
         cookie1.setPath("/");
         cookies.add(cookie);
