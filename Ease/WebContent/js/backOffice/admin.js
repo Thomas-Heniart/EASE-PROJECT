@@ -166,6 +166,7 @@ $(document).ready(function () {
                     });
                     break;
                 default:
+                    target.removeClass("loading");
                     break;
             }
         }
@@ -173,6 +174,26 @@ $(document).ready(function () {
     $("#multiple_team_graph").click(function () {
         if (selected_teams.length > 0)
             openManyTeams();
+    });
+    $("#background-upload").submit(function (e) {
+        e.preventDefault();
+        let backgrounds = [];
+        let files = $("input", $("#background-upload"))
+            .map((i, elem) => {
+                return new Promise((resolve) => resolve(getBase64(elem.files[0]).then((b64) => backgrounds.push(b64))))
+            }).toArray();
+        console.log(files);
+        Promise.all(files).then(() => {
+            console.log(backgrounds);
+            ajaxHandler.post("/api/v1/admin/UploadBackground", {
+                backgrounds: backgrounds
+            }, function () {
+            }, function (data) {
+
+            }, function (data) {
+                console.log(data)
+            })
+        }).catch((error) => console.log(error))
     })
 });
 
@@ -426,6 +447,7 @@ function openCategoryEdit(category, elem) {
 function openWebsiteIntegration(website, websiteElem) {
     var modal = $("#website-integration");
     var edit_website = $("#website-edition", modal);
+    var website_upload = $("#website-upload", modal);
     var name = $("input[name='name']", edit_website);
     var login_url = $("input[name='login_url']", edit_website);
     var landing_url = $("input[name='landing_url']", edit_website);
@@ -510,10 +532,14 @@ function openWebsiteIntegration(website, websiteElem) {
         edit_website.off("submit");
         modal.modal("hide");
     });
+    /* website_upload.submit(function(e) {
+        e.preventDefault();
+    }); */
     modal
         .modal({
             onHide: function () {
                 edit_website.off("submit");
+                //website_upload.off("submit");
                 $("input[name='team_id']", modal).val("");
                 $("input[name='connectWith_id']", modal).val("");
                 $("a.ui.label.transition", modal).remove();
@@ -930,5 +956,14 @@ function openTeamSettings(team, teamRow) {
         delete_button.click(function () {
             delete_modal.modal("show");
         });
+    });
+}
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.slice(reader.result.indexOf(",") + 1));
+        reader.onerror = (error) => reject(error);
     });
 }

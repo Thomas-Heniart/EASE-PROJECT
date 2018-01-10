@@ -37,6 +37,8 @@ public class ServletImportedAccount extends HttpServlet {
             User user = sm.getUser();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getPublicWebsiteWithUrl(url, account_information.keySet(), hibernateQuery);
+            if (!website.getWebsiteAttributes().isIntegrated())
+                website = null;
             String name = sm.getStringParam("name", true, false);
             ImportedAccount importedAccount = new ImportedAccount(url, website, name, user);
             String symmetric_key = sm.getKeyUser();
@@ -95,6 +97,8 @@ public class ServletImportedAccount extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Website website = catalog.getPublicWebsiteWithUrl(url, account_information.keySet(), hibernateQuery);
+            if (!website.getWebsiteAttributes().isIntegrated())
+                website = null;
             User user = sm.getUser();
             String name = sm.getStringParam("name", true, false);
             ImportedAccount importedAccount = user.getImportedAccount(id);
