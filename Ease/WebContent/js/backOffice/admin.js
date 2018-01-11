@@ -30,7 +30,6 @@ $(document).ready(function () {
             }
         });
         var all_requests = {};
-        console.log(requests.toArray());
         requests.toArray().forEach(function (request) {
             var existing_request = all_requests[request.email];
             if (existing_request === undefined)
@@ -44,9 +43,33 @@ $(document).ready(function () {
 
         }, function () {
             button.removeClass("loading");
-            $("#website-requests-manager-body tr.positive .checkbox input:checked").parent().parent().parent().remove();
+            $("#website-requests-manager-body tr.positive .checkbox .send_email:checked").parent().parent().parent().remove();
+        });
+        var password_needed_requests = $("#website-requests-manager-body tr.negative .checkbox .send_email:checked").map(function (i, elem) {
+            var jElem = $(elem).parent().parent().parent();
+            return {
+                email: $(".email", jElem).text(),
+                id: parseInt(jElem.attr("website-id"))
+            }
+        });
+        var all_password_needed_requests = {};
+        password_needed_requests.toArray().forEach((request) => {
+            var existing_request = all_password_needed_requests[request.email];
+            if (existing_request === undefined)
+                existing_request = [];
+            existing_request.push(request.id);
+            all_password_needed_requests[request.email] = existing_request;
+        });
+        ajaxHandler.post("/api/v1/admin/SendPasswordNeededEmails", {
+            emailAndWebsiteIds: all_password_needed_requests
+        }, function () {
+
+        }, function () {
+            button.removeClass("loading");
+            $("#website-requests-manager-body tr.negative .checkbox .send_email:checked").prop("checked", false)
         });
     });
+
     $("#category-segment #add-category").submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -204,7 +227,8 @@ $(document).ready(function () {
             })
         }).catch((error) => console.log(error))
     })
-});
+})
+;
 
 function createWebsiteFailureRow(websiteFailure) {
     var elem = $("<tr>" +
