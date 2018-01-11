@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -33,6 +34,11 @@ public class ServletEditPassword extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Password must be at least 8 characters, one uppercase and one digit.");
             user.getUserKeys().changePassword(new_password, sm.getKeyUser());
             sm.saveOrUpdate(user);
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setTemplateId(286062);
+            mailJetBuilder.addTo(user.getEmail());
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.sendEmail();
             sm.setSuccess("Password edited");
         } catch (Exception e) {
             sm.setError(e);

@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
@@ -41,8 +42,14 @@ public class ServletConnection extends HttpServlet {
             String client_ip = IpUtils.getIpAddr(request);
             DataBaseConnection db = sm.getDB();
             addIpInDataBase(client_ip, db);
-            if (!canConnect(client_ip, db))
+            if (!canConnect(client_ip, db)) {
+                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(286063);
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
+                mailJetBuilder.addTo(email);
+                mailJetBuilder.sendEmail();
                 throw new HttpServletException(HttpStatus.Forbidden, "Too much attempts to connect. Please retry in 5 minutes.");
+            }
             if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
             password = sm.decipher(password);
@@ -114,17 +121,21 @@ public class ServletConnection extends HttpServlet {
     }
 
     public void addIpInDataBase(String client_ip, DataBaseConnection db) throws HttpServletException {
+        int transaction = db.startTransaction();
         DatabaseRequest request = db.prepareRequest("SELECT * FROM askingIps WHERE ip= ?;");
         request.setString(client_ip);
         DatabaseResult rs = request.get();
-        if (rs.next())
-            return;
-        int transaction = db.startTransaction();
-        request = db.prepareRequest("INSERT INTO askingIps values (NULL, ?, 0, ?, ?);");
-        request.setString(client_ip);
-        request.setString(getCurrentTime());
-        request.setString(getExpirationTime());
-        request.set();
+        if (rs.next()) {
+            request = db.prepareRequest("UPDATE askingIps SET attempts = attempts + 1 WHERE ip = ?");
+            request.setString(client_ip);
+            request.set();
+        } else {
+            request = db.prepareRequest("INSERT INTO askingIps values (NULL, ?, 1, ?, ?);");
+            request.setString(client_ip);
+            request.setString(getCurrentTime());
+            request.setString(getExpirationTime());
+            request.set();
+        }
         db.commitTransaction(transaction);
     }
 
@@ -154,10 +165,15 @@ public class ServletConnection extends HttpServlet {
             int attempts = 0;
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date expirationDate = new Date();
-
             if (rs.next()) {
-                attempts = Integer.parseInt(rs.getString(1));
+                attempts = rs.getInt(1);
                 expirationDate = dateFormat.parse(rs.getString(2));
+            }
+            System.out.println(attempts);
+            if (attempts >= max_attempts && expirationDate.getTime() > new Date().getTime()) {
+                this.removeIpFromDataBase(client_ip, db);
+                this.addIpInDataBase(client_ip, db);
+                attempts = 1;
             }
             return attempts < max_attempts || expirationDate.compareTo(new Date()) <= 0;
         } catch (Exception e) {

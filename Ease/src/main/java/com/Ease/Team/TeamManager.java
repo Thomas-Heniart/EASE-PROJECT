@@ -189,6 +189,13 @@ public class TeamManager {
                             hibernateQuery.saveOrUpdateObject(account);
                             Channel channel = teamCard.getChannel();
                             NotificationFactory.getInstance().createPasswordNotUpToDateNotificationOneWeek(teamCardReceiver, this.getUserWebSocketManager(channel.getRoom_manager().getUser().getDb_id(), servletContext), hibernateQuery);
+                            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                            mailJetBuilder.setTemplateId(286064);
+                            mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
+                            mailJetBuilder.addVariable("app_name", teamCard.getName());
+                            mailJetBuilder.addVariable("username", teamCardReceiver.getTeamUser().getEmail());
+                            mailJetBuilder.addTo(channel.getRoom_manager().getEmail());
+                            mailJetBuilder.sendEmail();
                         }
                     }
                 }

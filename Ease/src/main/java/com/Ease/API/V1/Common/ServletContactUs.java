@@ -72,6 +72,12 @@ public class ServletContactUs extends HttpServlet {
             mailJetBuilder.addVariable("name", StringEscapeUtils.unescapeHtml4(name));
             mailJetBuilder.addVariable("email", email);
             mailJetBuilder.sendEmail();
+            mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setTemplateId(288271);
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
+            mailJetBuilder.addTo(email);
+            mailJetBuilder.addVariable("username", name);
+            mailJetBuilder.sendEmail();
             sm.setSuccess("Email sent");
         } catch (Exception e) {
             sm.setError(e);

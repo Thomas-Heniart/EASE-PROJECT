@@ -66,6 +66,12 @@ public class ServletPricingContact extends HttpServlet {
             mailJetBuilder.addVariable("name", StringEscapeUtils.unescapeHtml4(name));
             mailJetBuilder.addVariable("email", email);
             mailJetBuilder.sendEmail();
+            mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setTemplateId(288278);
+            mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
+            mailJetBuilder.addTo(email);
+            mailJetBuilder.addVariable("username", name);
+            mailJetBuilder.sendEmail();
             sm.setSuccess("Email sent");
         } catch (Exception e) {
             sm.setError(e);
