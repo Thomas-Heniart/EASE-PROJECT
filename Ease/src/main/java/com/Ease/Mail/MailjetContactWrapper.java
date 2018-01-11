@@ -1,6 +1,7 @@
 package com.Ease.Mail;
 
 import com.Ease.Context.Variables;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
@@ -36,14 +37,47 @@ public class MailjetContactWrapper {
         lists.put(new JSONObject()
                 .put("ListId", "31729")
                 .put("Action", "addnoforce"));
+        if (!user.getTeamUsers().isEmpty()) {
+            lists.put(new JSONObject()
+                    .put("ListId", "33212")
+                    .put("Action", "remove"));
+            boolean must_add_owner_list = false;
+            boolean must_add_team_list = false;
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                if (teamUser.isTeamOwner())
+                    must_add_owner_list = true;
+                else
+                    must_add_team_list = true;
+            }
+            lists.put(new JSONObject()
+                    .put("ListId", "33211")
+                    .put("Action", must_add_team_list ? "addnoforce" : "remove"));
+            lists.put(new JSONObject()
+                    .put("ListId", "33213")
+                    .put("Action", must_add_owner_list ? "addnoforce" : "remove"));
+        } else {
+            lists.put(new JSONObject()
+                    .put("ListId", "33211")
+                    .put("Action", "remove"));
+            lists.put(new JSONObject()
+                    .put("ListId", "33213")
+                    .put("Action", "remove"));
+            lists.put(new JSONObject()
+                    .put("ListId", "33212")
+                    .put("Action", "addnoforce"));
+        }
         mailjetResponse = mailjetClient.post(new MailjetRequest(ContactManagecontactslists.resource, user.getEmail())
                 .property(ContactManagecontactslists.CONTACTSLISTS, lists));
     }
 
     public void updateUserEmail(String old_email, User user) throws MailjetSocketTimeoutException, MailjetException {
-        mailjetClient.delete(new MailjetRequest(Contactdata.resource, old_email));
+        this.deleteUserEmail(old_email);
         mailjetClient.post(new MailjetRequest(Contact.resource, user.getEmail()));
         this.updateUserData(user);
         this.updateUserContactLists(user);
+    }
+
+    public void deleteUserEmail(String email) throws MailjetSocketTimeoutException, MailjetException {
+        mailjetClient.delete(new MailjetRequest(Contactdata.resource, email));
     }
 }

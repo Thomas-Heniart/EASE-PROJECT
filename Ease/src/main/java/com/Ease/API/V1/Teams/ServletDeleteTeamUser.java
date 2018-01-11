@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -121,8 +122,11 @@ public class ServletDeleteTeamUser extends HttpServlet {
             });
             team.removeTeamUser(teamUser_to_delete);
             User user = teamUser_to_delete.getUser();
-            if (user != null)
+            if (user != null) {
                 user.removeTeamUser(teamUser_to_delete);
+                MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
+                mailjetContactWrapper.updateUserContactLists(user);
+            }
             sm.deleteObject(teamUser_to_delete);
             JSONObject ws_obj = new JSONObject();
             ws_obj.put("team_id", team_id);

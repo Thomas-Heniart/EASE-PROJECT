@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.NewDashboard.*;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
@@ -49,6 +50,8 @@ public class ServletDeleteAccount extends HttpServlet {
             user.getProfileSet().forEach(sm::deleteObject);
             user.getProfileSet().clear();
             user.getSsoGroupSet().clear();
+            MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
+            mailjetContactWrapper.deleteUserEmail(user.getEmail());
             sm.deleteObject(user);
             sm.getSession().invalidate();
             sm.setSuccess("Account deleted");

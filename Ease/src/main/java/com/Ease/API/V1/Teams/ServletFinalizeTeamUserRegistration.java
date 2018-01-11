@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
@@ -103,6 +104,8 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.getPendingNotificationSet().clear();
             sm.getUser().addTeamUser(teamUser);
             sm.setTeam(team);
+            MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
+            mailjetContactWrapper.updateUserContactLists(user);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {

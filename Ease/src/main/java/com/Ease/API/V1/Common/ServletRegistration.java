@@ -144,6 +144,7 @@ public class ServletRegistration extends HttpServlet {
             }
             MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
             mailjetContactWrapper.updateUserData(newUser);
+            mailjetContactWrapper.updateUserContactLists(user);
             JSONObject res = newUser.getJson();
             res.put("JWT", jwt);
             sm.setSuccess(res);
