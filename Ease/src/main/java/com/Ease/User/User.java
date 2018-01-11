@@ -2,6 +2,7 @@ package com.Ease.User;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Importation.ImportedAccount;
+import com.Ease.Metrics.ConnectionMetric;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.SsoGroup;
@@ -85,6 +86,10 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private Administrator administrator;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_registration_emails_id")
+    private UserPostRegistrationEmails userPostRegistrationEmails = new UserPostRegistrationEmails();
 
     public User() {
 
@@ -216,6 +221,14 @@ public class User {
 
     public void setImportedAccountMap(Map<Long, ImportedAccount> importedAccountMap) {
         this.importedAccountMap = importedAccountMap;
+    }
+
+    public UserPostRegistrationEmails getUserPostRegistrationEmails() {
+        return userPostRegistrationEmails;
+    }
+
+    public void setUserPostRegistrationEmails(UserPostRegistrationEmails userPostRegistrationEmails) {
+        this.userPostRegistrationEmails = userPostRegistrationEmails;
     }
 
     public boolean isAdmin() {
@@ -447,5 +460,24 @@ public class User {
 
     public ImportedAccount getImportedAccount(Long id) {
         return this.getImportedAccountMap().get(id);
+    }
+
+    public void trackConnection(HibernateQuery hibernateQuery) {
+        Calendar calendar = Calendar.getInstance();
+        ConnectionMetric connectionMetric = ConnectionMetric.getMetric(this.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.DAY_OF_YEAR), hibernateQuery);
+        connectionMetric.setConnected(true);
+        hibernateQuery.saveOrUpdateObject(connectionMetric);
+    }
+
+    public boolean wasConnected(int days_connected, int days_range, HibernateQuery hibernateQuery) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -days_range);
+        int was_connected = 0;
+        for (int i = 0; i < days_range; i++) {
+            if (ConnectionMetric.getMetric(this.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.DAY_OF_YEAR), hibernateQuery).isConnected())
+                was_connected++;
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return was_connected >= days_connected;
     }
 }

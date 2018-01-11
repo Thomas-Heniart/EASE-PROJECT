@@ -1,11 +1,13 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.User.UserEmail;
+import com.Ease.User.UserPostRegistrationEmails;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -154,6 +156,17 @@ public class ServletCreateTeam extends HttpServlet {
             sm.saveOrUpdate(userEmail);
             sm.initializeTeamWithContext(team);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CREATED, team.getWebSockeetJson()));
+            UserPostRegistrationEmails userPostRegistrationEmails = user.getUserPostRegistrationEmails();
+            if (!userPostRegistrationEmails.isEmail_team_creation_sent()) {
+                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(287210);
+                mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
+                mailJetBuilder.addTo(user.getEmail());
+                mailJetBuilder.activateTemplateLanguage();
+                mailJetBuilder.sendEmail();
+                userPostRegistrationEmails.setEmail_team_creation_sent(true);
+                sm.saveOrUpdate(userPostRegistrationEmails);
+            }
             JSONObject tmp = team.getJson();
             tmp.put("my_team_user_id", owner.getDb_id());
             sm.setSuccess(tmp);

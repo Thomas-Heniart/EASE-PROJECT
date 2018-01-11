@@ -3,6 +3,7 @@ package com.Ease.API.V1.Common;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
+import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
@@ -144,11 +145,18 @@ public class ServletRegistration extends HttpServlet {
             }
             MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
             mailjetContactWrapper.updateUserData(newUser);
-            mailjetContactWrapper.updateUserContactLists(user);
+            mailjetContactWrapper.updateUserContactLists(newUser);
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setTemplateId(287036);
+            mailJetBuilder.addVariable("url", Variables.URL_PATH);
+            mailJetBuilder.addTo(newUser.getEmail());
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
+            mailJetBuilder.sendEmail();
             JSONObject res = newUser.getJson();
             res.put("JWT", jwt);
             sm.setSuccess(res);
         } catch (Exception e) {
+            e.printStackTrace();
             sm.setError(e);
         }
         sm.sendResponse();

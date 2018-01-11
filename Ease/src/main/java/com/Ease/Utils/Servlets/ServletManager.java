@@ -9,8 +9,8 @@ import com.Ease.User.User;
 import com.Ease.User.UserFactory;
 import com.Ease.User.UserKeys;
 import com.Ease.Utils.Crypto.AES;
-import com.Ease.Utils.*;
 import com.Ease.Utils.Crypto.RSA;
+import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -199,6 +199,7 @@ public abstract class ServletManager {
             userProperties.put("privateKey", private_key);
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
+            user.trackConnection(this.getHibernateQuery());
         }
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
         for (TeamUser teamUser : user.getTeamUsers()) {

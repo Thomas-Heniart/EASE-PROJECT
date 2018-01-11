@@ -96,6 +96,7 @@ public class ServletConnection extends HttpServlet {
                 userWebSocketManager.addWebSocketSession(webSocketSession);
                 teamWebSocketManagerList.forEach(webSocketManager1 -> webSocketManager1.addWebSocketSession(webSocketSession));
             });
+            user.trackConnection(hibernateQuery);
             sm.getSession().setAttribute("webSocketManager", null);
             sm.setSuccess(res);
         } catch (HttpServletException e) {

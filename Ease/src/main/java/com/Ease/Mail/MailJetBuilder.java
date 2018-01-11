@@ -91,6 +91,10 @@ public class MailJetBuilder {
         this.recipients.put(jsonObject);
     }
 
+    public void activateTemplateLanguage() {
+        request.property(Email.MJTEMPLATELANGUAGE, true);
+    }
+
     public void addVariable(String key, Object value) {
         if (this.vars == null)
             this.vars = new JSONObject();
