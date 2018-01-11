@@ -19,7 +19,7 @@ public class ServletUpdateMailjetContacts extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
-            //sm.needToBeEaseAdmin();
+            sm.needToBeEaseAdmin();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.queryString("SELECT u FROM User u");
             List<User> users = hibernateQuery.list();

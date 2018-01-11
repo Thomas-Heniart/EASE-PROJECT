@@ -7,6 +7,7 @@ public class Variables {
 
     public static final String WEBSITES_FOLDER_PATH = System.getenv("EASE_RESOURCES_FOLDER") + "websites/";
     public static final String SOFTWARE_FOLDER_PATH = System.getenv("EASE_RESOURCES_FOLDER") + "software/";
+    public static final String BACKGROUND_PATH = System.getenv("BACKGROUND_PATH");
 
     //Prod
     /*
@@ -19,6 +20,7 @@ public class Variables {
     public static final String STRIPE_API_KEY = "sk_live_P9qlj7iut6cpNkb8hfY4S43M";
     public static final String WEBSITES_FOLDER_PATH = "/var/lib/tomcat8/resources/websites/";
     public static final String SOFTWARE_FOLDER_PATH = "/var/lib/tomcat8/resources/software/";
+    public static final String BACKGROUND_PATH = "/var/lib/tomcat8/webapps/backgrounds";
     */
 
     //Prod
@@ -50,6 +52,7 @@ public class Variables {
     public static final String URL_PATH = "https://turfu.ease.space:8443/";
     public static final String DATABASE_IP = "127.0.0.1";
     public static final String STRIPE_API_KEY ="sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
+    public static final String BACKGROUND_PATH = "/opt/tomcat/resources/backgrounds";
     */
 
     //Fifi
