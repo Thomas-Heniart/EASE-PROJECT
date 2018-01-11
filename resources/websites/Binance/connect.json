@@ -1,0 +1,25 @@
+{
+  "name":"Binance",
+  "lastLogin":"",
+  "home":"https://www.binance.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href$='login.html']"},
+      {"action":"waitfor", "search":".geetest_panel"},
+      {"action":"fill", "what":"login", "search":"#email"},
+      {"action":"fill", "what":"password", "search":"#pwd"},
+      {"action":"trueClick", "search":"#login-btn"}
+    ]
+  },
+
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":"a[ng-click*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href$='login.html'], a[ng-click*='logout']"},
+    {"search":"a[ng-click*='logout']"}
+  ]
+}
