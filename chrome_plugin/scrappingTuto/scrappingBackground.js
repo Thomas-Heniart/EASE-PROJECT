@@ -207,14 +207,13 @@ function startScrapChrome(login, password, finalCallback) {
                                                         extension.tabs.onMessage(tab, "scrapReloaded", function (event, sendResponse1) {
                                                             extension.tabs.onMessageRemoveListener(tab);
                                                             extension.tabs.sendMessage(tab, "scrapChrome", {}, function (response) {
-                                                                encryptAllPasswords(response, function (finalRes) {
-                                                                    extension.tabs.onClosedRemoveListener(tab);
-                                                                    extension.tabs.onUpdatedRemoveListener(tab);
-                                                                    setTimeout(function () {
-                                                                        extension.tabs.close(tab);
-                                                                    }, 500);
-                                                                    finalCallback(true, finalRes);
-                                                                });
+                                                                console.log(response);
+                                                                extension.tabs.onClosedRemoveListener(tab);
+                                                                extension.tabs.onUpdatedRemoveListener(tab);
+                                                                setTimeout(function () {
+                                                                    extension.tabs.close(tab);
+                                                                }, 500);
+                                                                finalCallback(true, response);
                                                             });
                                                         });
                                                     });

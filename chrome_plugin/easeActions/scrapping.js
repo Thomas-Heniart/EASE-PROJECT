@@ -1,5 +1,4 @@
 document.addEventListener("ScrapFacebook", function(event){
-    console.log("recieved");
     extension.runtime.sendMessage("ScrapFacebook",event.detail,function(res){
         document.dispatchEvent(new CustomEvent("ScrapFacebookResult", {"detail":res}));
     });
