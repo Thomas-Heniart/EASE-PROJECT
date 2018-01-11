@@ -68,6 +68,14 @@ public class LogWithApp extends WebsiteApp {
     }
 
     @Override
+    public JSONObject getRestJson() {
+        JSONObject res = super.getRestJson();
+        res.put("logWithApp_id", this.getLoginWith_app() == null ? -1 : this.getLoginWith_app().getDb_id());
+        res.put("logWith_website", this.getLogWith_website().getCatalogJson());
+        return res;
+    }
+
+    @Override
     public JSONArray getConnectionJson(String public_key) throws HttpServletException {
         if (this.getLoginWith_app() == null)
             throw new HttpServletException(HttpStatus.BadRequest, "You cannot connect to en empty app");
