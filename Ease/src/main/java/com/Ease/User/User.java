@@ -410,10 +410,6 @@ public class User {
         Cookie cookie1 = new Cookie("fname", Base64.encodeBase64String(this.getUsername().getBytes(Charset.forName("utf8"))));
         cookie.setMaxAge(Integer.MAX_VALUE);
         cookie1.setMaxAge(Integer.MAX_VALUE);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie1.setHttpOnly(true);
-        cookie1.setSecure(true);
         cookie.setPath("/");
         cookie1.setPath("/");
         cookies.add(cookie);

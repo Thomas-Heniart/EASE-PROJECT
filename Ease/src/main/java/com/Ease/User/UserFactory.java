@@ -8,6 +8,7 @@ import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 
 import java.security.Key;
 import java.util.Map;
@@ -31,7 +32,12 @@ public class UserFactory {
     }
 
     public User loadUserFromJwt(String jwt, Key secretKey, HibernateQuery hibernateQuery) throws HttpServletException {
-        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+        Claims claims = null;
+        try {
+            claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
+        } catch (MalformedJwtException e) {
+            return null;
+        }
         String connection_token = (String) claims.get("tok");
         Long expiration_date = (Long) claims.get("exp");
         Integer user_id = (Integer) claims.get("id");

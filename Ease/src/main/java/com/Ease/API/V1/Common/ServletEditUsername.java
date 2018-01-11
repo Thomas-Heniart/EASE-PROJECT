@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -26,6 +27,8 @@ public class ServletEditUsername extends HttpServlet {
             sm.getUser().setUsername(username);
             sm.saveOrUpdate(sm.getUser());
             sm.getUser().getCookies().forEach(response::addCookie);
+            MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
+            mailjetContactWrapper.updateUserData(sm.getUser());
             sm.setSuccess("Username edited");
         } catch (Exception e) {
             sm.setError(e);

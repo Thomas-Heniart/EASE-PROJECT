@@ -5,6 +5,7 @@ import com.Ease.Catalog.Sso;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.NewDashboard.*;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
@@ -141,6 +142,8 @@ public class ServletRegistration extends HttpServlet {
                 mailJetBuilder.property(ContactslistManageContact.ACTION, "addnoforce");
                 mailJetBuilder.post();
             }
+            MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
+            mailjetContactWrapper.updateUserData(newUser);
             JSONObject res = newUser.getJson();
             res.put("JWT", jwt);
             sm.setSuccess(res);

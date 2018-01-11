@@ -81,6 +81,7 @@ $(document).ready(function () {
                         });
                         target.removeClass("loading");
                     });
+                    $("#teams_table").tablesort();
                     break;
 
                 case "website-segment":

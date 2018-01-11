@@ -1,4 +1,4 @@
-<table class="ui compact small selectable celled table">
+<table class="ui compact small selectable sortable celled table" id="teams_table">
     <thead>
     <tr>
         <th>count</th>

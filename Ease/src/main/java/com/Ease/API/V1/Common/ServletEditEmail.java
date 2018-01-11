@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.User.User;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
@@ -43,11 +44,14 @@ public class ServletEditEmail extends HttpServlet {
             hibernateQuery.setParameter("email", new_email);
             if (hibernateQuery.getSingleResult() != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This email is already used for another Ease.space account.");
+            String old_email = user.getEmail();
             user.setEmail(new_email);
             user.getUserStatus().setEmail_requested(null);
             user.getUserStatus().setEdit_email_code(null);
             sm.saveOrUpdate(user);
             sm.getUser().getCookies().forEach(response::addCookie);
+            MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
+            mailjetContactWrapper.updateUserEmail(old_email, user);
             sm.setSuccess("Email edited");
         } catch (Exception e) {
             sm.setError(e);
