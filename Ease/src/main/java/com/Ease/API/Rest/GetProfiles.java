@@ -36,8 +36,7 @@ public class GetProfiles extends HttpServlet {
                     if (app.isLogWithApp())
                         continue;
                     if (app.getAccount() != null) {
-                        if (app.isEmpty())
-                            continue;
+
                         String symmetric_key = null;
                         String team_key = null;
                         if (app.getTeamCardReceiver() != null) {
@@ -50,6 +49,8 @@ public class GetProfiles extends HttpServlet {
                         } else
                             symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
                         app.decipher(symmetric_key, team_key);
+                        if (app.isEmpty())
+                            continue;
                         apps.put(String.valueOf(app.getDb_id()), app.getRestJson());
                         app_ids.put(app.getDb_id());
                     }

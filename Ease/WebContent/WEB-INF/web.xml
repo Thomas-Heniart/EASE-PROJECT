@@ -32,7 +32,7 @@
         </init-param>
         <init-param>
             <param-name>ExpiresByType image/jpeg</param-name>
-            <param-value>access plus 1 days</param-value>
+            <param-value>access plus 12 hours</param-value>
         </init-param>
         <init-param>
             <param-name>ExpiresByType text/css</param-name>

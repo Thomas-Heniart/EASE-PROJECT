@@ -1,0 +1,24 @@
+{
+  "name":"Kucoin",
+  "lastLogin":"",
+  "home":"https://www.kucoin.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueCick", "search":"a[href*='login']"},
+      {"action":"waitfor", "search":".login-form"},
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":".login-form button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search": ".ak-site-access, #userlogin, a[href*='logout']"},
+    {"search":"a[href*='logout']"}
+  ]
+}
