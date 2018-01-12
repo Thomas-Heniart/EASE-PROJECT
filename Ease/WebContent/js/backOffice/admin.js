@@ -26,15 +26,17 @@ $(document).ready(function () {
             var jElem = $(elem).parent().parent().parent();
             return {
                 email: $(".email", jElem).text(),
-                id: parseInt(jElem.attr("website-id"))
+                id: parseInt(jElem.attr("website-id")),
+                request_id: parseInt($(".id", jElem).text())
             }
         });
         var all_requests = {};
         requests.toArray().forEach(function (request) {
             var existing_request = all_requests[request.email];
             if (existing_request === undefined)
-                existing_request = [];
-            existing_request.push(request.id);
+                existing_request = {website_ids: [], request_ids: []};
+            existing_request.website_ids.push(request.id);
+            existing_request.request_ids.push(request.request_id);
             all_requests[request.email] = existing_request;
         });
         ajaxHandler.post("/api/v1/admin/SendWebsitesIntegrated", {
@@ -104,7 +106,6 @@ $(document).ready(function () {
                         });
                         target.removeClass("loading");
                     });
-                    $("#teams_table").tablesort();
                     break;
 
                 case "website-segment":
@@ -226,7 +227,9 @@ $(document).ready(function () {
                 alert(data)
             })
         }).catch((error) => console.log(error))
-    })
+    });
+    $("#teams_table").tablesort();
+    $("#teams_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()))
 })
 ;
 

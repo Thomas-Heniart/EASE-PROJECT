@@ -11,11 +11,11 @@
         <th>Week of sub</th>
         <th>Plan</th>
         <th>CC</th>
-        <th>App w. tags</th>
-        <th>P. joined</th>
-        <th>P. w. apps</th>
-        <th>P. click 1</th>
-        <th>P. click 3</th>
+        <th class="number_data">App w. tags</th>
+        <th class="number_data">P. joined</th>
+        <th class="number_data">P. w. apps</th>
+        <th class="number_data">P. click 1</th>
+        <th class="number_data">P. click 3</th>
     </tr>
     </thead>
     <tbody id="team-manager-body"></tbody>

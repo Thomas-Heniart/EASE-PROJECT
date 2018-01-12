@@ -1,0 +1,33 @@
+{
+  "name":"CryptoCompare",
+  "lastLogin":"",
+  "home":"https://www.cryptocompare.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a[ng-click*='showLogin']"},
+      {"action":"waitfor", "search":".modal.fade.in #pane-login input[name='email']"},
+      {"action":"fill", "what":"login", "search":"#pane-login input[name='email']"},
+      {"action":"fill", "what":"password", "search":"#pane-login input[name='password']"},
+      {"action":"trueClick", "search":"#pane-login button[type='submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"trueClick", "search":"a[ng-click*='showLogin']"},
+      {"action":"waitfor", "search":"a[ng-click*='loginFacebook']"},
+      {"action":"trueClick", "search":"a[ng-click*='loginFacebook']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[ng-click*='logout']"},
+      {"action":"waitfor", "search":".ng-hide[ng-show='userManager.isLoggedIn()']"},
+      {"action":"goto", "url":"https://www.cryptocompare.com/"}
+
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".navbar-profile[ng-show='userManager.isLoggedIn()'], li[ng-show='!userManager.isLoggedIn()']"},
+    {"search":".ng-hide[ng-show='!userManager.isLoggedIn()'"}
+  ]
+}
