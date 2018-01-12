@@ -129,7 +129,7 @@ public class Catalog {
     }
 
     public Website getWebsiteWithUrl(String url, JSONObject connection_information, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%') ORDER BY w.db_id ASC");
+        hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet AS url WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%') OR url.url LIKE CONCAT(:url, '%') ORDER BY w.db_id ASC");
         hibernateQuery.setParameter("url", url);
         Website website = (Website) hibernateQuery.getSingleResult();
         if (website == null || website.getFolder().equals("undefined") || website.getWebsiteInformationList().size() != connection_information.length())
@@ -158,7 +158,7 @@ public class Catalog {
     }
 
     public Website getPublicWebsiteWithUrl(String url, Set<String> information_names, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%') ORDER BY w.db_id ASC");
+        hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet AS url WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%') OR url.url LIKE CONCAT(:url, '%') ORDER BY w.db_id ASC");
         hibernateQuery.setParameter("url", url);
         List<Website> websites = hibernateQuery.list();
         for (Website website : websites) {
