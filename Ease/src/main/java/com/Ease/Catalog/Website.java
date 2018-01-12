@@ -93,6 +93,7 @@ public class Website {
     private Set<TeamWebsiteCard> teamWebsiteCardSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<WebsiteAlternativeUrl> websiteAlternativeUrlSet = ConcurrentHashMap.newKeySet();
 
 

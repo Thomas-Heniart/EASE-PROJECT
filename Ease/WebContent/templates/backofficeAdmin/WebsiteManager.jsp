@@ -93,15 +93,18 @@
                     <label>Integrate</label>
                 </div>
             </div>
-            <button class="ui button">Edit</button>
-            <h4 class="ui diving header">Alternative urls</h4>
-            <div class="ui accordion" id="alternative_urls">
+            <div class="ui accordion one field" id="alternative_urls">
                 <div class="title">
                     <i class="dropdown icon"></i>
-                    Show urls (<span id="alternative_urls_number"></span>)
+                    <strong>Alternative urls (<span id="alternative_urls_number"></span>)</strong>
                 </div>
-                <div class="content"></div>
+                <div class="content">
+                    <div class="inputs"></div>
+                    <button class="ui button blue">Add field</button>
+                </div>
             </div>
+
+            <button class="ui button">Edit</button>
         </form>
         <form id="website-upload" class="ui form" method="POST" action="/api/v1/admin/UploadWebsite"
               enctype="multipart/form-data">

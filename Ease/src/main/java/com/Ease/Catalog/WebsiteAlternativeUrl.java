@@ -1,10 +1,13 @@
 package com.Ease.Catalog;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "WEBSITE_ALTERNATIVE_URL")
 public class WebsiteAlternativeUrl {
     @Id

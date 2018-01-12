@@ -6,6 +6,7 @@ var click_graph;
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
+    $(".ui.accordion").accordion();
     $(".united.modal").modal({
         allowMultiple: true
     });
@@ -399,8 +400,10 @@ function addWebsiteRow(website) {
         + "<td class='password'>" + (website.website_credentials === undefined ? "" : website.website_credentials.password) + "</td>"
         + "<td class='publicKey'>" + (website.website_credentials === undefined ? "" : website.website_credentials.publicKey) + "</td>"
         + '</tr>');
-    if (!website.integrated)
+    if (!website.integrated) {
+        elem.removeClass("positive");
         elem.addClass("negative");
+    }
     if (!website.public) {
         $(".public", elem).addClass("checked");
         $(".public input", elem).prop("checked", true);
@@ -489,6 +492,7 @@ function openWebsiteIntegration(website, websiteElem) {
     var landing_url = $("input[name='landing_url']", edit_website);
     var folder = $("input[name='folder']", edit_website);
     var integrated = $("#integration input[name='integrate']", edit_website);
+    var alternative_urls = $("#alternative_urls", edit_website);
     $("#website-upload input[name='website_id']", modal).val(website.id);
     name.val(website.name);
     login_url.val(website.login_url);
@@ -508,6 +512,30 @@ function openWebsiteIntegration(website, websiteElem) {
     website.connectWith.forEach(function (connectWith_id) {
         $(".connectWith .item[data-value='" + connectWith_id + "']", modal).click();
     });
+    var alternative_urls_content = $(".content .inputs", alternative_urls);
+    website.alternative_urls.forEach((alternative_url) => {
+        var elem = $("<div class='ui field'>" +
+            "<div class='ui icon input'>" +
+            "<input type='url' value='" + alternative_url.url + "' alternative_url_id='" + alternative_url.id + "' />" +
+            "<i class='inverted circular close link icon'></i>" +
+            "</div>" +
+            "</div>");
+        alternative_urls_content.prepend(elem);
+        $(".close", elem).click(() => elem.remove());
+    });
+    var add_alternative_url = $("button", alternative_urls);
+    add_alternative_url.click((e) => {
+        e.preventDefault();
+        var elem = $("<div class='ui field'>" +
+            "<div class='ui icon input'>" +
+            "<input type='url' />" +
+            "<i class='inverted circular close link icon'></i>" +
+            "</div>" +
+            "</div>");
+        alternative_urls_content.append(elem);
+        $(".close", elem).click(() => elem.remove());
+    });
+    $("#alternative_urls_number", alternative_urls).text(website.alternative_urls.length);
     edit_website.submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -525,6 +553,15 @@ function openWebsiteIntegration(website, websiteElem) {
         }
         var sso_id = $("input[name='sso_id']", modal).val();
         var category_id = parseInt($("input[name='category_id']", modal).val());
+        var new_alternative_urls = [];
+        $("input", alternative_urls_content).each((i, elem) => {
+           var jElem = $(elem);
+           new_alternative_urls.push(jElem.val());
+           /* new_alternative_urls.push({
+               id: jElem.getAttribute("alternative_url_id"),
+               url: jElem.val()
+           }) */
+        });
         ajaxHandler.post(action, {
             id: website.id,
             name: name.val(),
@@ -535,7 +572,8 @@ function openWebsiteIntegration(website, websiteElem) {
             teams: teams,
             sso_id: sso_id,
             category_id: category_id,
-            connectWith: connectWith
+            connectWith: connectWith,
+            alternative_urls: new_alternative_urls
         }, function () {
 
         }, function () {
@@ -558,13 +596,20 @@ function openWebsiteIntegration(website, websiteElem) {
             website.category_id = category_id;
             website.teams = teams;
             website.connectWith = connectWith;
-            if (!website.integrated)
+            if (!website.integrated) {
+                websiteElem.removeClass("positive");
                 websiteElem.addClass("negative");
+            } else {
+                websiteElem.removeClass("negative");
+                websiteElem.addClass("positive");
+            }
             $(".name", websiteElem).text(website.name);
             $(".landing_url", websiteElem).text(website.landing_url);
             $(".login_url", websiteElem).text(website.login_url);
             $(".logo img", websiteElem).attr("src", "/resources/websites/" + website.folder + "/logo.png");
+            integrated.prop("checked", false);
         });
+        add_alternative_url.off("click");
         edit_website.off("submit");
         modal.modal("hide");
     });

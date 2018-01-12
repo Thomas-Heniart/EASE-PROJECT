@@ -56,6 +56,7 @@ public class ServletGetWebsites extends HttpServlet {
                     tmp.put("website_credentials", website_credentials);
                 JSONArray alternative_urls = new JSONArray();
                 website.getWebsiteAlternativeUrlSet().forEach(websiteAlternativeUrl -> alternative_urls.put(websiteAlternativeUrl.getJson()));
+                tmp.put("alternative_urls", alternative_urls);
                 res.put(tmp);
             }
             sm.setSuccess(res);

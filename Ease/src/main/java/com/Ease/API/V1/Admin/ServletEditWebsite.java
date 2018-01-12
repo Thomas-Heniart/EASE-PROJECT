@@ -1,9 +1,6 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Category;
-import com.Ease.Catalog.Sso;
-import com.Ease.Catalog.Website;
+import com.Ease.Catalog.*;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
@@ -39,6 +36,7 @@ public class ServletEditWebsite extends HttpServlet {
             Integer sso_id = Integer.valueOf(sm.getStringParam("sso_id", true, false));
             Integer category_id = sm.getIntParam("category_id", true, false);
             Boolean integrated = sm.getBooleanParam("integrated", true, false);
+            JSONArray alternative_urls = sm.getArrayParam("alternative_urls", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Website website = catalog.getWebsiteWithId(id, hibernateQuery);
@@ -77,6 +75,15 @@ public class ServletEditWebsite extends HttpServlet {
                 website.addConnectWith_website(connectWith);
                 connectWith.addSignIn_website(website);
                 sm.saveOrUpdate(connectWith);
+            }
+            website.getWebsiteAlternativeUrlSet().clear();
+            for (int i = 0; i < alternative_urls.length(); i++) {
+                String url = alternative_urls.optString(i);
+                if (url.equals("") || url.length() > 2000)
+                    continue;
+                WebsiteAlternativeUrl websiteAlternativeUrl = new WebsiteAlternativeUrl(website, url);
+                sm.saveOrUpdate(websiteAlternativeUrl);
+                website.addWebsiteAlternativeUrl(websiteAlternativeUrl);
             }
             sm.saveOrUpdate(website.getWebsiteAttributes());
             sm.saveOrUpdate(website);
