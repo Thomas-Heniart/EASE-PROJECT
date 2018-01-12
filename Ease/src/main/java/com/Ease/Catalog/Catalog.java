@@ -130,7 +130,7 @@ public class Catalog {
     }
 
     public Website getWebsiteWithUrl(String url, JSONObject connection_information, HibernateQuery hibernateQuery) {
-        List<Website> websites = this.getWebsites(hibernateQuery).stream().filter(website -> website.getLogin_url().startsWith(url) || website.getWebsiteAlternativeUrl(url) != null).collect(Collectors.toList());
+        List<Website> websites = this.getWebsites(hibernateQuery).stream().filter(website -> website.getWebsite_homepage().startsWith(url) || website.getLogin_url().startsWith(url) || website.getWebsiteAlternativeUrl(url) != null).collect(Collectors.toList());
         for (Website website : websites) {
             if (website.getFolder().equals("undefined") || website.getWebsiteInformationList().size() != connection_information.length())
                 continue;
@@ -162,7 +162,7 @@ public class Catalog {
     public Website getPublicWebsiteWithUrl(String url, Set<String> information_names, HibernateQuery hibernateQuery) {
         //hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
         //hibernateQuery.setParameter("url", url);
-        List<Website> websites = this.getWebsites(hibernateQuery).stream().filter(website -> website.getLogin_url().startsWith(url) || website.getWebsiteAlternativeUrl(url) != null).collect(Collectors.toList());
+        List<Website> websites = this.getWebsites(hibernateQuery).stream().filter(website -> website.getWebsite_homepage().startsWith(url) || website.getLogin_url().startsWith(url) || website.getWebsiteAlternativeUrl(url) != null).collect(Collectors.toList());
         for (Website website : websites) {
             //if (website.getWebsiteInformationList().size() == information_names.size()) {
                 boolean exist = true;
