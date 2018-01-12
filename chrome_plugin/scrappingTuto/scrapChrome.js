@@ -16,7 +16,6 @@ extension.runtime.onMessage("connectToChrome", function (msg, sendResponse) {
     $("#identifierNext").click();
 
     function waitForPass() {
-        console.log($("div#password input[name='password']"));
         if ($("#identifierId[aria-invalid='true']").length > 0) {
             sendResponse(false);
         } else if ($("div#password input[name='password']").length != 0) {
