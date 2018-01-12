@@ -162,7 +162,7 @@ public class Catalog {
         hibernateQuery.setParameter("url", url);
         List<Website> websites = hibernateQuery.list();
         for (Website website : websites) {
-            if (website.getWebsiteInformationList().size() == information_names.size()) {
+            //if (website.getWebsiteInformationList().size() == information_names.size()) {
                 boolean exist = true;
                 for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
                     if (!information_names.contains(websiteInformation.getInformation_name())) {
@@ -172,7 +172,7 @@ public class Catalog {
                 }
                 if (exist)
                     return website;
-            }
+            //}
         }
         return null;
     }
