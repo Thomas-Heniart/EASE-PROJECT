@@ -5,6 +5,7 @@ import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "IMPORTED_ACCOUNT")
 public class ImportedAccount implements Serializable {
 
@@ -33,6 +36,7 @@ public class ImportedAccount implements Serializable {
     @JsonManagedReference
     @JsonProperty("account_information")
     @OneToMany(mappedBy = "importedAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "name")
     private Map<String, ImportedAccountInformation> importedAccountInformationMap = new ConcurrentHashMap<>();
 
