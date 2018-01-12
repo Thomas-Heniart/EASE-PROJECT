@@ -43,6 +43,7 @@
         <mapping class="com.Ease.Catalog.WebsiteRequest"/>
         <mapping class="com.Ease.Catalog.WebsiteCredentials"/>
         <mapping class="com.Ease.Catalog.ServerPublicKey"/>
+        <mapping class="com.Ease.Catalog.WebsiteAlternativeUrl"/>
         <mapping class="com.Ease.Team.TeamUserStatus"/>
         <mapping class="com.Ease.NewDashboard.Profile"/>
         <mapping class="com.Ease.NewDashboard.ProfileInformation"/>

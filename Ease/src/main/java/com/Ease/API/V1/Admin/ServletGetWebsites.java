@@ -1,9 +1,6 @@
 package com.Ease.API.V1.Admin;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Sso;
-import com.Ease.Catalog.Website;
-import com.Ease.Catalog.WebsiteCredentials;
+import com.Ease.Catalog.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -48,15 +45,17 @@ public class ServletGetWebsites extends HttpServlet {
                 Sso sso = website.getSso();
                 tmp.put("sso", (sso == null) ? -1 : sso.getDb_id());
                 tmp.put("category_id", website.getCategory() == null ? -1 : website.getCategory().getDb_id());
-                JSONArray connectWtih = new JSONArray();
+                JSONArray connectWith = new JSONArray();
                 for (Website website1 : website.getConnectWith_websites())
-                    connectWtih.put(website1.getDb_id());
-                tmp.put("connectWith", connectWtih);
+                    connectWith.put(website1.getDb_id());
+                tmp.put("connectWith", connectWith);
                 JSONObject website_credentials = null;
                 for (WebsiteCredentials websiteCredentials : website.getWebsiteCredentials())
                     website_credentials = websiteCredentials.getJson();
                 if (website_credentials != null)
                     tmp.put("website_credentials", website_credentials);
+                JSONArray alternative_urls = new JSONArray();
+                website.getWebsiteAlternativeUrlSet().forEach(websiteAlternativeUrl -> alternative_urls.put(websiteAlternativeUrl.getJson()));
                 res.put(tmp);
             }
             sm.setSuccess(res);

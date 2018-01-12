@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by thomas on 24/04/2017.
@@ -129,17 +130,18 @@ public class Catalog {
     }
 
     public Website getWebsiteWithUrl(String url, JSONObject connection_information, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
-        hibernateQuery.setParameter("url", url);
-        Website website = (Website) hibernateQuery.getSingleResult();
-        if (website == null || website.getFolder().equals("undefined") || website.getWebsiteInformationList().size() != connection_information.length())
-            return null;
-        for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
-            JSONObject tmp = connection_information.getJSONObject(websiteInformation.getInformation_name());
-            if (tmp == null)
-                return null;
+        List<Website> websites = this.getWebsites(hibernateQuery).stream().filter(website -> website.getLogin_url().startsWith(url) || website.getWebsiteAlternativeUrl(url) != null).collect(Collectors.toList());
+        for (Website website : websites) {
+            if (website.getFolder().equals("undefined") || website.getWebsiteInformationList().size() != connection_information.length())
+                continue;
+            for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
+                JSONObject tmp = connection_information.getJSONObject(websiteInformation.getInformation_name());
+                if (tmp == null)
+                    return null;
+            }
+            return website;
         }
-        return website;
+        return null;
     }
 
     public Software getSoftwareWithFolderOrName(String name, String folder, JSONObject connection_information, HibernateQuery hibernateQuery) {
@@ -158,11 +160,11 @@ public class Catalog {
     }
 
     public Website getPublicWebsiteWithUrl(String url, Set<String> information_names, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
-        hibernateQuery.setParameter("url", url);
-        List<Website> websites = hibernateQuery.list();
+        //hibernateQuery.queryString("SELECT w FROM Website w WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%')");
+        //hibernateQuery.setParameter("url", url);
+        List<Website> websites = this.getWebsites(hibernateQuery).stream().filter(website -> website.getLogin_url().startsWith(url) || website.getWebsiteAlternativeUrl(url) != null).collect(Collectors.toList());
         for (Website website : websites) {
-            if (website.getWebsiteInformationList().size() == information_names.size()) {
+            //if (website.getWebsiteInformationList().size() == information_names.size()) {
                 boolean exist = true;
                 for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
                     if (!information_names.contains(websiteInformation.getInformation_name())) {
@@ -172,7 +174,7 @@ public class Catalog {
                 }
                 if (exist)
                     return website;
-            }
+            //}
         }
         return null;
     }

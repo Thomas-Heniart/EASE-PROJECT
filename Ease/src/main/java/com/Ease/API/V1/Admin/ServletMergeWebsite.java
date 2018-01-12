@@ -49,6 +49,7 @@ public class ServletMergeWebsite extends HttpServlet {
             }
             website_to_merge.getWebsiteAppSet().clear();
             website_to_merge.getTeamWebsiteCardSet().clear();
+            website.addWebsiteAlternativeUrl(website_to_merge.getLogin_url(), sm.getHibernateQuery());
             sm.deleteObject(website_to_merge);
             sm.setSuccess("Websites merged");
         } catch (Exception e) {

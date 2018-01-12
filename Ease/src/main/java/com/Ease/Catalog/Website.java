@@ -1,6 +1,7 @@
 package com.Ease.Catalog;
 
 import com.Ease.Context.Variables;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamWebsiteCard;
@@ -90,6 +91,9 @@ public class Website {
 
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL)
     private Set<TeamWebsiteCard> teamWebsiteCardSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WebsiteAlternativeUrl> websiteAlternativeUrlSet = ConcurrentHashMap.newKeySet();
 
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
@@ -240,6 +244,14 @@ public class Website {
         this.teamWebsiteCardSet = teamWebsiteCardSet;
     }
 
+    public Set<WebsiteAlternativeUrl> getWebsiteAlternativeUrlSet() {
+        return websiteAlternativeUrlSet;
+    }
+
+    public void setWebsiteAlternativeUrlSet(Set<WebsiteAlternativeUrl> websiteAlternativeUrlSet) {
+        this.websiteAlternativeUrlSet = websiteAlternativeUrlSet;
+    }
+
     public void addConnectWith_website(Website website) {
         this.getConnectWith_websites().add(website);
     }
@@ -278,6 +290,18 @@ public class Website {
 
     public void removeWebsiteApp(WebsiteApp websiteApp) {
         this.getWebsiteAppSet().remove(websiteApp);
+    }
+
+    public void addWebsiteAlternativeUrl(WebsiteAlternativeUrl websiteAlternativeUrl) {
+        this.getWebsiteAlternativeUrlSet().add(websiteAlternativeUrl);
+    }
+
+    public void removeWebsiteAlternativeUrl(WebsiteAlternativeUrl websiteAlternativeUrl) {
+        this.getWebsiteAlternativeUrlSet().remove(websiteAlternativeUrl);
+    }
+
+    public WebsiteAlternativeUrl getWebsiteAlternativeUrl(String url) {
+        return this.getWebsiteAlternativeUrlSet().stream().filter(websiteAlternativeUrl -> websiteAlternativeUrl.getUrl().startsWith(url)).findFirst().orElse(null);
     }
 
     public String getLogo() {
@@ -417,5 +441,11 @@ public class Website {
 
     public void addTeamWebsiteCard(TeamWebsiteCard teamWebsiteCard) {
         this.getTeamWebsiteCardSet().add(teamWebsiteCard);
+    }
+
+    public void addWebsiteAlternativeUrl(String login_url, HibernateQuery hibernateQuery) {
+        WebsiteAlternativeUrl websiteAlternativeUrl = new WebsiteAlternativeUrl(this, login_url);
+        hibernateQuery.saveOrUpdateObject(websiteAlternativeUrl);
+        this.addWebsiteAlternativeUrl(websiteAlternativeUrl);
     }
 }
