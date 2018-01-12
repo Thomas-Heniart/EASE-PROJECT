@@ -20,7 +20,7 @@ public class Variables {
     public static final String STRIPE_API_KEY = "sk_live_P9qlj7iut6cpNkb8hfY4S43M";
     public static final String WEBSITES_FOLDER_PATH = "/var/lib/tomcat8/resources/websites/";
     public static final String SOFTWARE_FOLDER_PATH = "/var/lib/tomcat8/resources/software/";
-    public static final String BACKGROUND_PATH = "/var/lib/tomcat8/webapps/backgrounds";
+    public static final String BACKGROUND_PATH = "/var/lib/tomcat8/webapps/backgrounds/";
     */
 
     //Prod
