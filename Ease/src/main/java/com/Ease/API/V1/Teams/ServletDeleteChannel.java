@@ -74,8 +74,9 @@ public class ServletDeleteChannel extends HttpServlet {
                         profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 }
             }
+            channel.getTeamUsers().forEach(teamUser1 -> teamUser1.getChannels().remove(channel));
             channel.getTeamCardSet().clear();
-            channel.getPending_teamUsers().clear();
+            channel.getPending_teamUsers().forEach(teamUser1 -> teamUser1.getPending_channels().remove(channel));
             team.removeChannel(channel);
             sm.deleteObject(channel);
             sm.saveOrUpdate(team);
