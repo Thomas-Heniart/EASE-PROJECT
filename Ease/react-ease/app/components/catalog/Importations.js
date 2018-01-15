@@ -937,17 +937,17 @@ class Importations extends React.Component {
          calls.push(this.props.dispatch(importAccount({
           id: idx,
           name: '',
-          url: item.website,
+          url:  item.website.startsWith("http") === false && item.website !== '' ? "https://" + item.website : item.website,
           website_id: -1,
           account_information: {
-            login: item.login,
-            password: item.pass
+            login: {name:"login", value: item.login},
+            password: {name:"password", value: item.pass}
           }
          })));
          return ({
            id: idx,
            name: '',
-           url: item.website,
+           url: item.website.startsWith("http") === false && item.website !== '' ? "https://" + item.website : item.website,
            website_id: -1,
            login: item.login,
            password: item.pass
@@ -957,6 +957,7 @@ class Importations extends React.Component {
         this.setState({
           importedAccounts: accounts,
           view: 4,
+          error: '',
           fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'}
           });
       }).catch(err => {
@@ -1277,7 +1278,6 @@ class Importations extends React.Component {
       calls = this.importAccountsNewProfile();
     else if (this.state.selectedRoom === 0)
       calls = this.importAccountsNewRoom();
-    else {
       let teams = {};
       Object.keys(this.props.teams).map(item => {
         const team = this.props.teams[item];
@@ -1313,7 +1313,6 @@ class Importations extends React.Component {
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
-    }
   };
   importAccountsNewProfile = () => {
     let calls = [];
