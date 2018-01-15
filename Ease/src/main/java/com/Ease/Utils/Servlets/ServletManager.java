@@ -171,8 +171,17 @@ public abstract class ServletManager {
         } else if (user_id != null) {
             this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
             String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
-            if (keyUser == null)
-                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            if (keyUser == null) {
+                if (jwt == null)
+                    throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+                Key secret = (Key) this.getContextAttr("secret");
+                this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
+                if (this.user == null)
+                    throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+                keyUser = this.user.getJsonWebToken().getKeyUser(jwt, secret);
+                Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
+                userProperties.put("keyUser", keyUser);
+            }
             String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
             if (private_key == null) {
                 UserKeys userKeys = user.getUserKeys();
