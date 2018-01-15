@@ -25,14 +25,14 @@ class NewFeatureModal extends React.Component {
           </Header>
           <div className='popup_content'>
             <p className='no_margin no_inline'>Many of you helped us understand how painfull it was to type all your personal or team'passwords one by one on Ease.space.</p>
-            <p className='no_margin no_inline'><Icon name='rocket'/> <strong>We made password importation... powerfull.</strong></p>
+            <p className='no_margin no_inline' style={}><Icon name='rocket'/> <strong>We made password importation... powerfull.</strong></p>
             <p>1.
               <img src='/resources/images/add_new_app.png'/>
               <span>Go through the <strong>Add new App</strong> button</span>
             </p>
             <p>2.
               <img src='/resources/images/import_tab.png'/>
-              <span>Click the <strong>&lt;&lt;<Icon name="cloud upload"/>Import&gt;&gt; tab.</strong> Choose your way to import your passwords. From Excel, to 8 different password managers, including Chrome SmartLock, you can integrate your apps all at once!</span>
+              <span>Click the <strong>"<Icon name="cloud upload"/>Import" tab.</strong> Choose your way to import your passwords. From Excel, to 8 different password managers, you can integrate your apps all at once!</span>
             </p>
             <p>3.
               <img src='/resources/images/plane_launch.png'/>
