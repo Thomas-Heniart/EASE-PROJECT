@@ -1277,7 +1277,6 @@ class Importations extends React.Component {
       calls = this.importAccountsNewProfile();
     else if (this.state.selectedRoom === 0)
       calls = this.importAccountsNewRoom();
-    else {
       let teams = {};
       Object.keys(this.props.teams).map(item => {
         const team = this.props.teams[item];
@@ -1313,7 +1312,6 @@ class Importations extends React.Component {
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
-    }
   };
   importAccountsNewProfile = () => {
     let calls = [];
