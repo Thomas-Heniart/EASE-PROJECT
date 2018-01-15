@@ -24,7 +24,7 @@
 				</div>
 				<div class="right-menu ui row menu-column">
 					<div class="links">
-						<a href="equipe">
+						<a href="team">
 							<fmt:message key="landing.header.team-link"/>
 						</a>
 						<a href="contact">
