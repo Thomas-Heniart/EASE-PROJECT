@@ -25,7 +25,7 @@ class NewFeatureModal extends React.Component {
           </Header>
           <div className='popup_content'>
             <p className='no_margin no_inline'>Many of you helped us understand how painfull it was to type all your personal or team'passwords one by one on Ease.space.</p>
-            <p className='no_margin no_inline' style={}><Icon name='rocket'/> <strong>We made password importation... powerfull.</strong></p>
+            <p className='no_margin no_inline'><Icon name='rocket'/> <strong>We made password importation... powerfull.</strong></p>
             <p>1.
               <img src='/resources/images/add_new_app.png'/>
               <span>Go through the <strong>Add new App</strong> button</span>

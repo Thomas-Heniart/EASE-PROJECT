@@ -152,8 +152,8 @@ class ChoosePasswordManager extends React.Component {
         <Segment.Group>
           <Segment onClick={e => choosePasswordManager(1)} className={passwordManager === 1 ? 'selected' : null}>
             <img src="/resources/other/Excel.png"/>Excel or Google sheet</Segment>
-          <Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>
-            <img src="/resources/other/Chrome.png"/>Chrome</Segment>
+          {/*<Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>*/}
+            {/*<img src="/resources/other/Chrome.png"/>Chrome</Segment>*/}
           <Segment onClick={e => choosePasswordManager(3)} className={passwordManager === 3 ? 'selected' : null}>
             <img src="/resources/other/Dashlane.png"/>Dashlane</Segment>
           <Segment onClick={e => choosePasswordManager(4)} className={passwordManager === 4 ? 'selected' : null}>
@@ -934,7 +934,7 @@ class Importations extends React.Component {
   eventListener = event => {
     if (event.detail.success === true) {
       let calls = [];
-      const accounts = event.detail.msg.map((item, idx) => {
+      event.detail.msg.map((item, idx) => {
          calls.push(this.props.dispatch(importAccount({
           id: idx,
           name: '',
@@ -945,22 +945,34 @@ class Importations extends React.Component {
             password: {name:"password", value: item.pass}
           }
          })));
-         return ({
-           id: idx,
-           name: '',
-           url: item.website.startsWith("http") === false && item.website !== '' ? "https://" + item.website : item.website,
-           website_id: -1,
-           login: item.login,
-           password: item.pass
-         });
       });
       Promise.all(calls.map(reflect)).then(response => {
-        this.setState({
-          importedAccounts: accounts,
-          view: 4,
-          error: '',
-          fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'}
+        const json = response.filter(item => {
+          if (item.error === false)
+            return item;
+        }).map(item => {
+          return item.data;
+        });
+        if (json.length) {
+          const acc = json.map(item => {
+            return {
+              id: item.id,
+              url: item.url,
+              name: item.name,
+              login: item.account_information.login.value,
+              password: item.account_information.password.value,
+              website_id: item.website_id,
+            }
+          }).sort((a, b) => {
+            return a.url.localeCompare(b.url);
           });
+          this.setState({
+            importedAccounts: acc,
+            view: 4,
+            error: '',
+            fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'}
+          });
+        }
       }).catch(err => {
       });
     }
