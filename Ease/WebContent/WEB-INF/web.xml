@@ -103,7 +103,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>equipe.jsp</servlet-name>
-        <url-pattern>/equipe/*</url-pattern>
+        <url-pattern>/team/*</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>landing</servlet-name>

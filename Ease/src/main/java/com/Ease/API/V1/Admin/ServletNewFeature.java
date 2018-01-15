@@ -1,7 +1,7 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,8 +13,8 @@ import java.io.IOException;
 
 @WebServlet("/api/v1/admin/NewFeature")
 public class ServletNewFeature extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
@@ -27,7 +27,7 @@ public class ServletNewFeature extends HttpServlet {
         sm.sendResponse();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
     }

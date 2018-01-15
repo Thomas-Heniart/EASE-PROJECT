@@ -21,26 +21,32 @@ class NewFeatureModal extends React.Component {
         <div className="popover_mask"/>
         <div className="ease_popup ease_new_feature_popup">
           <Header as="h3" attached="top">
-            <p>🎄☃️Christmas features!🎁🎅</p>
+            <p>⛷✨Smooth password importation tool🌬🔐</p>
           </Header>
           <div className='popup_content'>
-            <p className='no_margin no_inline'>Lately we worked on making any websites and softwares’ passwords storable on Ease.space.</p>
-            <p className='no_margin no_inline'><Icon name='heart'/> <strong>Here is what we’ve built for you</strong></p>
+            <p className='no_margin no_inline'>Many of you helped us understand how painfull it was to type all your personal or team'passwords one by one on Ease.space.</p>
+            <p className='no_margin no_inline'><Icon name='rocket'/> <strong>We made password importation... powerfull.</strong></p>
             <p>1.
-              <img src='/resources/images/new_catalog.png'/>
-              <span>The <strong>Apps Catalogue</strong> gets 2 main new features:<br/>- store passwords of <strong>any website</strong> you want! The connection won’t be automatic at first but, if needed you can instantly ask us to make it work<Icon name='rocket'/><br/>- store passwords of <strong>softwares</strong>!<Icon name='gift'/></span>
+              <img src='/resources/images/add_new_app.png'/>
+              <span>Go through the <strong>Add new App</strong> button</span>
             </p>
             <p>2.
-              <img src='/resources/images/popup_any_app.png'/>
-              <span><strong>To access</strong> any website and softwares’ passwords, just click on the app as usual, then a <strong>little popup</strong> will appear and help you easily copy your login and password <Icon name='copy'/></span></p>
+              <img src='/resources/images/import_tab.png'/>
+              <span>Click the <strong>&lt;&lt;<Icon name="cloud upload"/>Import&gt;&gt; tab.</strong> Choose your way to import your passwords. From Excel, to 8 different password managers, including Chrome SmartLock, you can integrate your apps all at once!</span>
+            </p>
             <p>3.
-              <img src='/resources/images/team_star_wars.png'/>
-              <span>Of course any websites and softwares’ passwords are also <strong>shareable</strong> to your team! If you don’t have one yet, hit the <strong>Teams</strong> <Icon name='users'/>button!</span>
+              <img src='/resources/images/plane_launch.png'/>
+              <span>You will <strong>take the control</strong> of all your personal and team passwords smoothly.</span>
             </p>
-            <p className='no_margin'>
-              <span><strong>The whole Ease.space team really loves receiving your <a href='mailto:victor@ease.space' target="_top" style={{color: 'black'}}><u>feedback</u></a>, this is the only way to make this tool becomes the one you really need!</strong></span>
-              <Button style={{width: '300px', padding: '0'}} positive content='Okay cheers!' onClick={this.close}/>
-            </p>
+            <div style={{display: 'flex', position: 'relative'}}>
+              <p className='no_margin'>
+              <span>
+                <strong>If you wanna try and give us your <a href='mailto:victor@ease.space' target="_top" style={{color: 'black'}}><u>feedbacks</u></a>, it helps us a lot <Icon name="heart"/></strong><br/>
+                <strong>If you love Ease.space, share it with us on <a href='https://twitter.com/intent/tweet?text=%40ease_space%20%23thiseaselove' target="_blank" style={{color: 'black'}}><u>Twitter</u></a> <Icon name="heart"/></strong>
+              </span>
+              </p>
+              <Button style={{width: '240px', padding: '0', position: 'absolute', height: '48px', right: '0', bottom: '5px'}} positive content='Okay cheers!' onClick={this.close}/>
+            </div>
           </div>
         </div>
       </div>
