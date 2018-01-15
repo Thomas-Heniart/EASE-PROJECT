@@ -31,6 +31,18 @@ export function fetchCatalog(){
   }
 }
 
+export function getImportedAccounts() {
+  return (dispatch, getState) => {
+    return api.catalog.getImportation()
+      .then(response => {
+        dispatch({type: 'FETCH_IMPORTED_ACCOUNTS', payload: response});
+        return response;
+      }).catch(err => {
+        throw err;
+    })
+  }
+}
+
 export function testCredentials({account_information, website_id}) {
   return (dispatch, getState) => {
     api.getWebsiteConnection({account_information, website_id})
@@ -257,6 +269,54 @@ export function catalogRequestWebsite({url, account_information}){
     }).catch(err => {
       throw err;
     });
+  }
+}
+
+export function importAccount({name, url, account_information}){
+  return (dispatch, getState) => {
+    return post_api.catalog.importAccount({
+      name: name,
+      url: url,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'CATALOG_IMPORT_ACCOUNT', payload: response});
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function modifyImportedAccount({id, name, url, website_id, account_information}){
+  return (dispatch, getState) => {
+    return post_api.catalog.modifyImportedAccount({
+      id: id,
+      name: name,
+      url: url,
+      website_id: website_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'CATALOG_MODIFY_IMPORTED_ACCOUNT', payload: response});
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function deleteImportedAccount({id}){
+  return (dispatch, getState) => {
+    return post_api.catalog.deleteImportedAccount({
+      id: id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'CATALOG_DELETE_IMPORTED_ACCOUNT', payload: response});
+      return response;
+    }).catch(err => {
+      throw err;
+    })
   }
 }
 

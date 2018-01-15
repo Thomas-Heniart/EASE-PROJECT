@@ -23,7 +23,10 @@ module.exports = {
       return basic_get('/api/v1/catalog/GetSsoList');
     },
     getRequestsNumber: () => {
-      return basic_get('/api/v1/catalog/GetRequestNumber')
+      return basic_get('/api/v1/catalog/GetRequestNumber');
+    },
+    getImportation: function() {
+      return basic_get('/api/v1/importedAccounts');
     }
   },
   getClearbitLogo : function (url) {

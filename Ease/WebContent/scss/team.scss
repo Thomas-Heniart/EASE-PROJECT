@@ -535,16 +535,302 @@ button.only-text-button {
   }
   #importations {
     color: #949eb7;
-    text-align: center;
-    margin-top: 30px;
+    font-size: 16px;
+    //text-align: center;
+    margin-top: 20px;
+    height: 100%;
+    &.step4 {
+      position: fixed;
+      width: 100%;
+      left: 0;
+      //margin-left: -31.5%;
+    }
+    .no_margin {
+      margin-top: 1em;
+      margin-bottom: 0;
+    }
+    ul {
+      list-style: none;
+      margin: 0;
+      li:before {
+        content: "-";
+        margin-right: 5px;
+      }
+    }
     .title {
+      font-size: 20px;
       font-weight: bold;
+      margin-bottom: 20px;
+      img {
+        width: 24px;
+        height: 24px;
+        margin-right: 5px;
+      }
+    }
+    .center {
+      text-align: center;
+    }
+    .menu_fields {
+      font-size: 0;
+    }
+    .chromeForm {
+      position: inherit;
+    }
+    #chromeSteps {
+      height: 380px;
+      width: 430px;
+      padding: 20px;
+      transform: translateX(-50%);
+      left: 50%;
+      label {
+        font-size: 16px;
+        font-weight: 300;
+        color: #424242;
+      }
+      p.title {
+        font-size: 20px;
+        font-weight: bold;
+        img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
+      }
+      div.inline {
+        display: inline-flex;
+        img {
+          width: 130px;
+          height: 55px;
+        }
+      }
+    }
+    #step3 {
+      p {
+        font-size: 14px;
+        &.question {
+          font-weight: bold;
+        }
+        &.title {
+          font-size: 16px;
+          font-weight: bold;
+        }
+      }
+    }
+    #div_separator {
+      display: inline-flex;
+      p {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        line-height: 1;
+      }
+      .dropdown {
+        margin-left: 15px;
+        line-height: 1;
+      }
+    }
+    .dropdown {
+      font-size: 14px;
+      width: 16.7%;
+      color: #949eb7 !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      line-height: 0;
+      .item {
+        font-size: 14px;
+        color: #949eb7 !important;
+        padding-top: 7px !important;
+        padding-bottom: 7px !important;
+      }
+    }
+    .segments {
+      border-color: #949eb7;
+      max-width: 250px;
+      transform: translateX(-50%);
+      left: 50%;
+      .segment {
+        cursor: pointer;
+        text-align: left;
+        font-size: 14px;
+        border-color: #949eb7;
+        &.selected {
+          background-color: #e8ecf1;
+        }
+        img {
+          margin-right: 8px;
+          width: 17px;
+          height: 17px;
+        }
+      }
     }
     .text {
       text-align: left;
       line-height: 1.67;
       a {
         color: #949eb7;
+      }
+    }
+    .button {
+      font-size: 14px;
+      width: 130px;
+      &.right {
+        position: absolute;
+        top: 67%;
+        left: 83%;
+      }
+      &.left {
+        position: absolute;
+        top: 67%;
+        right: 83%;
+      }
+    }
+    #accounts {
+      overflow-y: scroll;
+      height: 70%;
+      .dropdown_fields {
+        display: flex;
+        margin: 7px 0 7px 70px;
+        div.dropdown {
+          margin-right: 10px;
+          width: 130px;
+        }
+        p.import {
+          width: 38px;
+          margin-right: 10px;
+          font-size: 14px;
+          margin-bottom: 0;
+          padding-top: 10px;
+        }
+      }
+      .account {
+        display: inline-flex;
+        margin: 7px 0 7px 42px;
+        .input {
+          font-size: 11px;
+          i {
+            margin-top: 0;
+            display: none;
+          }
+        }
+        &:hover {
+          .input {
+            i {
+              display: inline-block;
+            }
+          }
+        }
+        .disabled {
+          input {
+            background-color: #E8ECF1;
+          }
+        }
+      }
+      .segment_pending {
+        height: 65%;
+        width: 32%;
+        margin-right: 30px;
+        position: fixed;
+        p {
+          display: inline-flex;
+        }
+        div.dropdown {
+          border: 1px solid rgba(34,36,38,.15);
+          border-radius: .28571429rem;
+          width: 40%;
+          margin-left: 6px;
+          //min-width: 14em;
+          //min-height: 2.71428571em;
+          word-wrap: break-word;
+          line-height: 1em;
+          white-space: normal;
+          outline: 0;
+          padding-left: 10px;
+          &.error {
+            border-color: #e0b4b4;
+          }
+          .menu {
+            overflow: auto;
+            height: 840%;
+          }
+          i {
+            //float: right;
+          }
+        }
+        .div_accounts {
+          overflow-y: auto;
+          height: 75%;
+          overflow-x: hidden;
+          .div_account {
+            display: flex;
+            margin: 7px 0 7px 10px;
+            width: 100%;
+            img {
+              width: 30px;
+              height: 30px;
+            }
+            p {
+              white-space: nowrap;
+              width: 30px;
+              text-align: center;
+            }
+          }
+        }
+      }
+      .logo_letter {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+        margin-right: 10px;
+        border: solid 1px #dededf;
+        border-radius: 5px;
+        background-size: 86px 86px;
+        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
+        display: flex;
+        background-color: #373b60;
+        color: white;
+        &.pending {
+          margin-right: 8px;
+          width: 30px;
+          height: 30px;
+          p {
+            margin: auto;
+            width: auto !important;
+          }
+        }
+      }
+      input {
+        margin-right: 10px;
+        color: #949eb7 !important;
+      }
+      img {
+        width: 38px;
+        height: 38px;
+        margin-right: 10px;
+        border-radius: 5px;
+        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
+      }
+      i {
+        cursor: pointer;
+        margin-right: 10px;
+        margin-top: 5px;
+        &.remove {
+          color: #e8ecf1;
+          margin-top: 10px;
+        }
+      }
+      button {
+        //position: absolute;
+        //left: 20px;
+        //width: 88%;
+        //bottom: 20px;
+        margin-top: 10px;
+        width: 100%;
+      }
+    }
+    textarea {
+      font-size: 14px;
+      height: 25%;
+      &.alone {
+        height: 55%;
       }
     }
   }

@@ -1104,15 +1104,225 @@ button.only-text-button {
         margin-right: 0; }
   #catalog #importations {
     color: #949eb7;
-    text-align: center;
-    margin-top: 30px; }
+    font-size: 16px;
+    margin-top: 20px;
+    height: 100%; }
+    #catalog #importations.step4 {
+      position: fixed;
+      width: 100%;
+      left: 0; }
+    #catalog #importations .no_margin {
+      margin-top: 1em;
+      margin-bottom: 0; }
+    #catalog #importations ul {
+      list-style: none;
+      margin: 0; }
+      #catalog #importations ul li:before {
+        content: "-";
+        margin-right: 5px; }
     #catalog #importations .title {
-      font-weight: bold; }
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px; }
+      #catalog #importations .title img {
+        width: 24px;
+        height: 24px;
+        margin-right: 5px; }
+    #catalog #importations .center {
+      text-align: center; }
+    #catalog #importations .menu_fields {
+      font-size: 0; }
+    #catalog #importations .chromeForm {
+      position: inherit; }
+    #catalog #importations #chromeSteps {
+      height: 380px;
+      width: 430px;
+      padding: 20px;
+      transform: translateX(-50%);
+      left: 50%; }
+      #catalog #importations #chromeSteps label {
+        font-size: 16px;
+        font-weight: 300;
+        color: #424242; }
+      #catalog #importations #chromeSteps p.title {
+        font-size: 20px;
+        font-weight: bold; }
+        #catalog #importations #chromeSteps p.title img {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px; }
+      #catalog #importations #chromeSteps div.inline {
+        display: inline-flex; }
+        #catalog #importations #chromeSteps div.inline img {
+          width: 130px;
+          height: 55px; }
+    #catalog #importations #step3 p {
+      font-size: 14px; }
+      #catalog #importations #step3 p.question {
+        font-weight: bold; }
+      #catalog #importations #step3 p.title {
+        font-size: 16px;
+        font-weight: bold; }
+    #catalog #importations #div_separator {
+      display: inline-flex; }
+      #catalog #importations #div_separator p {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        line-height: 1; }
+      #catalog #importations #div_separator .dropdown {
+        margin-left: 15px;
+        line-height: 1; }
+    #catalog #importations .dropdown {
+      font-size: 14px;
+      width: 16.7%;
+      color: #949eb7 !important;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      line-height: 0; }
+      #catalog #importations .dropdown .item {
+        font-size: 14px;
+        color: #949eb7 !important;
+        padding-top: 7px !important;
+        padding-bottom: 7px !important; }
+    #catalog #importations .segments {
+      border-color: #949eb7;
+      max-width: 250px;
+      transform: translateX(-50%);
+      left: 50%; }
+      #catalog #importations .segments .segment {
+        cursor: pointer;
+        text-align: left;
+        font-size: 14px;
+        border-color: #949eb7; }
+        #catalog #importations .segments .segment.selected {
+          background-color: #e8ecf1; }
+        #catalog #importations .segments .segment img {
+          margin-right: 8px;
+          width: 17px;
+          height: 17px; }
     #catalog #importations .text {
       text-align: left;
       line-height: 1.67; }
       #catalog #importations .text a {
         color: #949eb7; }
+    #catalog #importations .button {
+      font-size: 14px;
+      width: 130px; }
+      #catalog #importations .button.right {
+        position: absolute;
+        top: 67%;
+        left: 83%; }
+      #catalog #importations .button.left {
+        position: absolute;
+        top: 67%;
+        right: 83%; }
+    #catalog #importations #accounts {
+      overflow-y: scroll;
+      height: 70%; }
+      #catalog #importations #accounts .dropdown_fields {
+        display: flex;
+        margin: 7px 0 7px 70px; }
+        #catalog #importations #accounts .dropdown_fields div.dropdown {
+          margin-right: 10px;
+          width: 130px; }
+        #catalog #importations #accounts .dropdown_fields p.import {
+          width: 38px;
+          margin-right: 10px;
+          font-size: 14px;
+          margin-bottom: 0;
+          padding-top: 10px; }
+      #catalog #importations #accounts .account {
+        display: inline-flex;
+        margin: 7px 0 7px 42px; }
+        #catalog #importations #accounts .account .input {
+          font-size: 11px; }
+          #catalog #importations #accounts .account .input i {
+            margin-top: 0;
+            display: none; }
+        #catalog #importations #accounts .account:hover .input i {
+          display: inline-block; }
+        #catalog #importations #accounts .account .disabled input {
+          background-color: #E8ECF1; }
+      #catalog #importations #accounts .segment_pending {
+        height: 65%;
+        width: 32%;
+        margin-right: 30px;
+        position: fixed; }
+        #catalog #importations #accounts .segment_pending p {
+          display: inline-flex; }
+        #catalog #importations #accounts .segment_pending div.dropdown {
+          border: 1px solid rgba(34, 36, 38, 0.15);
+          border-radius: .28571429rem;
+          width: 40%;
+          margin-left: 6px;
+          word-wrap: break-word;
+          line-height: 1em;
+          white-space: normal;
+          outline: 0;
+          padding-left: 10px; }
+          #catalog #importations #accounts .segment_pending div.dropdown.error {
+            border-color: #e0b4b4; }
+          #catalog #importations #accounts .segment_pending div.dropdown .menu {
+            overflow: auto;
+            height: 840%; }
+        #catalog #importations #accounts .segment_pending .div_accounts {
+          overflow-y: auto;
+          height: 75%;
+          overflow-x: hidden; }
+          #catalog #importations #accounts .segment_pending .div_accounts .div_account {
+            display: flex;
+            margin: 7px 0 7px 10px;
+            width: 100%; }
+            #catalog #importations #accounts .segment_pending .div_accounts .div_account img {
+              width: 30px;
+              height: 30px; }
+            #catalog #importations #accounts .segment_pending .div_accounts .div_account p {
+              white-space: nowrap;
+              width: 30px;
+              text-align: center; }
+      #catalog #importations #accounts .logo_letter {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+        margin-right: 10px;
+        border: solid 1px #dededf;
+        border-radius: 5px;
+        background-size: 86px 86px;
+        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
+        display: flex;
+        background-color: #373b60;
+        color: white; }
+        #catalog #importations #accounts .logo_letter.pending {
+          margin-right: 8px;
+          width: 30px;
+          height: 30px; }
+          #catalog #importations #accounts .logo_letter.pending p {
+            margin: auto;
+            width: auto !important; }
+      #catalog #importations #accounts input {
+        margin-right: 10px;
+        color: #949eb7 !important; }
+      #catalog #importations #accounts img {
+        width: 38px;
+        height: 38px;
+        margin-right: 10px;
+        border-radius: 5px;
+        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15); }
+      #catalog #importations #accounts i {
+        cursor: pointer;
+        margin-right: 10px;
+        margin-top: 5px; }
+        #catalog #importations #accounts i.remove {
+          color: #e8ecf1;
+          margin-top: 10px; }
+      #catalog #importations #accounts button {
+        margin-top: 10px;
+        width: 100%; }
+    #catalog #importations textarea {
+      font-size: 14px;
+      height: 25%; }
+      #catalog #importations textarea.alone {
+        height: 55%; }
 
 .modalApp {
   width: 450px !important;
