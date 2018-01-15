@@ -538,8 +538,9 @@ button.only-text-button {
     font-size: 16px;
     //text-align: center;
     margin-top: 20px;
-    height: 100%;
+    height: 80%;
     &.step4 {
+      height: 100%;
       position: fixed;
       width: 100%;
       left: 0;
@@ -674,12 +675,12 @@ button.only-text-button {
       width: 130px;
       &.right {
         position: absolute;
-        top: 67%;
+        top: 87%;
         left: 83%;
       }
       &.left {
         position: absolute;
-        top: 67%;
+        top: 87%;
         right: 83%;
       }
     }
@@ -750,6 +751,9 @@ button.only-text-button {
           .menu {
             overflow: auto;
             height: 840%;
+          }
+          .text {
+            width: 65%;
           }
           i {
             //float: right;
@@ -828,7 +832,7 @@ button.only-text-button {
     }
     textarea {
       font-size: 14px;
-      height: 25%;
+      height: 20%;
       &.alone {
         height: 55%;
       }

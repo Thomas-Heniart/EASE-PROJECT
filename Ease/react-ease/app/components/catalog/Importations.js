@@ -33,11 +33,16 @@ function json(fields, separator, csv, dispatch) {
   for (let i = 0; i < array.length; i++) {
     let separatorCounter = 0;
     const object = Object.keys(fields);
+    let url = false;
+    object.map(item => {
+      if (fields[item] === 'url')
+        url = true;
+    });
     for (let j = 0; j < array[i].length; j++) {
       if (array[i][j] === separator)
         separatorCounter++;
     }
-    if (separatorCounter >= 3) {
+    if (separatorCounter >= 3 && url === true) {
       let item = {};
       const field = array[i].split(separator);
       let l = 0;
@@ -50,11 +55,11 @@ function json(fields, separator, csv, dispatch) {
         item.url = "https://" + item.url;
       if (item.url !== '' && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
         calls.push(dispatch(importAccount({
-          name: item.name,
+          name: item.name ? item.name : '',
           url: item.url,
           account_information: {
-            login: {name: "login", value: item.login},
-            password: {name: "password", value: item.password}
+            login: {name: "login", value: item.login ? item.login : ''},
+            password: {name: "password", value: item.password ? item.password : ''}
           }
         })))
       }
@@ -343,7 +348,8 @@ class PasteStep extends React.Component {
       {text: 'User ID', value: 'login'},
       {text: 'Password', value: 'password'},
       {text: 'Note', value: 'note'},
-      {text: 'Tag', value: 'tag'}];
+      {text: 'Tag', value: 'tag'},
+      {text: '-', value: '-'}];
     return (
       <React.Fragment>
         <Form id='step3' error={this.props.error !== ''}>
@@ -365,7 +371,7 @@ class PasteStep extends React.Component {
               <p className='question'>2. How is the data separated in your file?</p>
               <Dropdown selection name='separator' defaultValue={','} options={separator} onChange={onChange}/>
             </div>
-            <p>Ex: if your first row is "Website URL", "Login", "Password"; then choose Brakets + comma (, "")</p>
+            <p>Ex: if your first row is "Website URL", "Login", "Password"; then choose Comma (,)</p>
           </React.Fragment>}
           <Message error content={this.props.error}/>
         </Form>
@@ -436,6 +442,7 @@ class DisplayAccounts extends React.Component {
     const {
       onChange,
       onChangeRoomName,
+      roomName,
       toPending,
       cancelPending,
       onChangeField,
@@ -498,6 +505,7 @@ class DisplayAccounts extends React.Component {
                 name="roomName"
                 required
                 transparent
+                value={roomName[team.id]}
                 onChange={e => onChangeRoomName(e, team.id)}
                 class="create_profile_input"
                 icon={<Icon name="plus square" link onClick={e => createRoom(team.id)}/>}
@@ -520,6 +528,7 @@ class DisplayAccounts extends React.Component {
                  key={fields[field]}
                  size='mini'
                  name={fields[field]}
+                 error={this.props.fieldProblem.id === item.id && this.props.fieldProblem.name === fields[field]}
                  value={item[fields[field]]}
                  onChange={this.props.handleAppInfo}
                  disabled={fields[field] === 'url' && item.website_id !== -1}
@@ -712,6 +721,7 @@ class Importations extends React.Component {
       roomAdded: false,
       selectedTeam: -1,
       selectedRoom: -1,
+      fieldProblem: {name: '', id: -1}
     };
   }
   componentWillMount() {
@@ -787,10 +797,13 @@ class Importations extends React.Component {
   };
   handleInput = handleSemanticInput.bind(this);
   handleRoomName = (e, team_id) => {
-    if (e.target.value.match(/[a-z0-9_\-]/gi) && e.target.value.length <= 21) {
+    if (e.target.value.match(/[a-zA-Z0-9\s_\-]/g) !== null && e.target.value.length <= 21) {
       const roomName = Object.assign({}, this.state.roomName);
-      roomName[team_id] = e.target.value.toLowerCase();
+      roomName[team_id] = e.target.value.replace(" ", "_").toLowerCase();
       this.setState({roomName: roomName});
+    }
+    else {
+      this.setState({error: 'Room names can’t contain uppercases, spaces, periods or most punctuation and must be shorter than 21 characters.'})
     }
   };
   handleAppInfo = (e, {name, value, idapp}) => {
@@ -868,11 +881,11 @@ class Importations extends React.Component {
         }
         else if (item.id === id && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null && item.name === '') {
           importedAccounts.push(item);
-          this.setState({error: 'An App need a name'});
+          this.setState({error: 'Please name the account before importing it.', fieldProblem: {name: 'name', id: item.id}});
         }
         else {
           importedAccounts.push(item);
-          this.setState({error: 'It is not an URL'});
+          this.setState({error: 'It is not an URL', fieldProblem: {name: 'url', id: item.id}});
         }
       });
       this.setState({importedAccounts: importedAccounts, accountsPending: accountsPending});
@@ -897,10 +910,12 @@ class Importations extends React.Component {
   };
   changeOrderField = (e, {name, value}) => {
     let fields = this.state.fields;
-    Object.keys(fields).map(item => {
-      if (fields[item] === value)
-        fields[item] = fields[name];
-    });
+    if (value !== '-') {
+      Object.keys(fields).map(item => {
+        if (fields[item] === value)
+          fields[item] = fields[name];
+      });
+    }
     Object.keys(fields).map(item => {
       if (item === name)
         fields[item] = value;
@@ -969,7 +984,7 @@ class Importations extends React.Component {
   changeView = () => {
     this.setState({loading: true});
     if (this.state.view === 1 && this.state.passwordManager === 1)
-      this.setState({view: 3, loading: false});
+      this.setState({view: 3, loading: false, error: ''});
     else if (this.state.view === 2 && this.state.passwordManager === 2) {
       this.setState({view: 3, loading: false});
       document.dispatchEvent(new CustomEvent("ScrapChrome", {detail:{login:this.state.chromeLogin,password:this.state.chromePassword}}));
@@ -1003,6 +1018,7 @@ class Importations extends React.Component {
             this.setState({
               importedAccounts: accounts,
               view: 4,
+              error: '',
               fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'},
               loading: false
             });
@@ -1012,7 +1028,7 @@ class Importations extends React.Component {
       }
     }
     else
-      this.setState({view: this.state.view + 1, loading: false});
+      this.setState({view: this.state.view + 1, error: '', loading: false});
   };
   deleteAccount = (id) => {
     if (!this.state.loadingDelete) {
@@ -1025,7 +1041,16 @@ class Importations extends React.Component {
           });
           this.setState({importedAccounts: accounts, loadingDelete: false});
           if (accounts.length < 1 && this.state.accountsPending.length < 1)
-            this.setState({passwordManager: 0, view: 1});
+            this.setState({
+              passwordManager: 0,
+              view: 1,
+              error: '',
+              location: '',
+              selectedTeam: -1,
+              selectedRoom: -1,
+              selectedProfile: -1,
+              separator: ','
+            });
         });
     }
   };
@@ -1039,13 +1064,22 @@ class Importations extends React.Component {
           });
           this.setState({errorAccounts: accounts});
           if (accounts.length < 1)
-            this.setState({passwordManager: 0, view: 1});
+            this.setState({
+              passwordManager: 0,
+              view: 1,
+              error: '',
+              selectedTeam: -1,
+              selectedRoom: -1,
+              selectedProfile: -1,
+              location: '',
+              separator: ','
+            });
         });
     }
   };
   back = () => {
     if (this.state.passwordManager === 1)
-      this.setState({view: 1, error: ''});
+      this.setState({view: 1, error: '', separator: ',',});
     else
       this.setState({view: this.state.view - 1, error: ''});
   };
@@ -1102,6 +1136,8 @@ class Importations extends React.Component {
           field2: 'url',
           field3: 'login',
           field4: 'password',
+          field5: '-',
+          field6: '-'
         }
       });
   };
@@ -1161,7 +1197,7 @@ class Importations extends React.Component {
       })));
     });
     Promise.all(calls.map(reflect)).then(response => {
-      this.setState({errorAccounts: [], view: 1});
+      this.setState({errorAccounts: [], view: 1, separator: ',',});
     }).catch(err => {
       this.setState({error: err});
     });
@@ -1305,11 +1341,14 @@ class Importations extends React.Component {
           loadingSending: false,
           roomAdded: roomAdded,
           profileName: '',
+          error: '',
           roomName: roomName,
           location: '',
           profiles: Object.assign({}, this.props.profiles),
           teamsInState: teams
-        })
+        });
+        if (this.state.importedAccounts.length < 1)
+          this.setState({view: 1, separator: ',',})
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -1390,11 +1429,14 @@ class Importations extends React.Component {
           loadingSending: false,
           roomAdded: roomAdded,
           profileName: '',
+          error: '',
           roomName: roomName,
           location: '',
           profiles: Object.assign({}, this.props.profiles),
           teamsInState: newTeams
-        })
+        });
+        if (this.state.importedAccounts.length < 1)
+          this.setState({view: 1, separator: ',',});
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -1488,11 +1530,14 @@ class Importations extends React.Component {
               loadingSending: false,
               roomAdded: roomAdded,
               profileName: '',
+              error: '',
               roomName: roomName,
               location: '',
               profiles: Object.assign({}, this.props.profiles),
               teamsInState: newTeams
-            })
+            });
+            if (this.state.importedAccounts.length < 1)
+              this.setState({view: 1, separator: ',',})
           }).catch(err => {
             this.setState({error: err});
           });
@@ -1545,6 +1590,7 @@ class Importations extends React.Component {
             onChangeRoomName={this.handleRoomName}
             handleAppInfo={this.handleAppInfo}
             toPending={this.toPending}
+            roomName={this.state.roomName}
             profilesInState={this.state.profiles}
             selectProfile={this.selectProfile}
             createProfile={this.createProfile}
@@ -1560,6 +1606,7 @@ class Importations extends React.Component {
             loadingSending={this.state.loadingSending}
             error={this.state.error}
             fields={this.state.fields}
+            fieldProblem={this.state.fieldProblem}
             location={this.state.location}
             importedAccounts={this.state.importedAccounts}
             accountsPending={this.state.accountsPending}
