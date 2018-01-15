@@ -1106,8 +1106,9 @@ button.only-text-button {
     color: #949eb7;
     font-size: 16px;
     margin-top: 20px;
-    height: 100%; }
+    height: 80%; }
     #catalog #importations.step4 {
+      height: 100%;
       position: fixed;
       width: 100%;
       left: 0; }
@@ -1210,11 +1211,11 @@ button.only-text-button {
       width: 130px; }
       #catalog #importations .button.right {
         position: absolute;
-        top: 67%;
+        top: 87%;
         left: 83%; }
       #catalog #importations .button.left {
         position: absolute;
-        top: 67%;
+        top: 87%;
         right: 83%; }
     #catalog #importations #accounts {
       overflow-y: scroll;
@@ -1265,6 +1266,8 @@ button.only-text-button {
           #catalog #importations #accounts .segment_pending div.dropdown .menu {
             overflow: auto;
             height: 840%; }
+          #catalog #importations #accounts .segment_pending div.dropdown .text {
+            width: 65%; }
         #catalog #importations #accounts .segment_pending .div_accounts {
           overflow-y: auto;
           height: 75%;
@@ -1320,7 +1323,7 @@ button.only-text-button {
         width: 100%; }
     #catalog #importations textarea {
       font-size: 14px;
-      height: 25%; }
+      height: 20%; }
       #catalog #importations textarea.alone {
         height: 55%; }
 
