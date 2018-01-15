@@ -32,18 +32,20 @@ extension.runtime.onMessage("connectToChrome", function (msg, sendResponse) {
 
 extension.runtime.onMessage("scrapChrome", function (msg, sendResponse) {
     function waitload(callback) {
-        if ($("div[jscontroller='VXdfxd']").length !== 0) {
-            console.log("start scrap");
-            callback();
-        } else if ($(".gga").length !== 0) {
-            console.log("no pass");
-            sendResponse([]);
-        } else {
-            console.log("wait pass");
-            setTimeout(function () {
-                waitload(callback);
-            }, 100);
-        }
+        $(document).ready(function () {
+            if ($("div[jscontroller='VXdfxd']").length !== 0) {
+                console.log("start scrap");
+                callback();
+            } else if ($(".gga").length !== 0) {
+                console.log("no pass");
+                sendResponse([]);
+            } else {
+                console.log("wait pass");
+                setTimeout(function () {
+                    waitload(callback);
+                }, 100);
+            }
+        });
     }
 
     waitload(function () {
