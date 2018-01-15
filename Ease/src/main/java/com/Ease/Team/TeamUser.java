@@ -593,6 +593,31 @@ public class TeamUser {
         }
     }
 
+    public void createTeamProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+        if (!this.isVerified())
+            return;
+        Profile profile;
+        if (!this.getTeamUserStatus().isProfile_created()) {
+            int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
+            profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
+            hibernateQuery.saveOrUpdateObject(profile);
+            this.getUser().addProfile(profile);
+            this.getUser().moveProfile(profile.getDb_id(), 2, 0, hibernateQuery);
+            this.setProfile(profile);
+            this.getTeamUserStatus().setProfile_created(true);
+            hibernateQuery.saveOrUpdateObject(this);
+        } else {
+            if (this.getUser().getProfileSet().isEmpty()) {
+                profile = new Profile(this.getUser(), 2, 0, new ProfileInformation(this.getTeam().getName()));
+                hibernateQuery.saveOrUpdateObject(profile);
+                this.getUser().addProfile(profile);
+                this.setProfile(profile);
+                hibernateQuery.saveOrUpdateObject(this);
+            }
+        }
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
