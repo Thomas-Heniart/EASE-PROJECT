@@ -72,7 +72,7 @@ public class TeamUserStatus {
         this.invitation_sent = invitation_sent;
     }
 
-    public synchronized boolean isProfile_created() {
+    public boolean isProfile_created() {
         return profile_created;
     }
 
