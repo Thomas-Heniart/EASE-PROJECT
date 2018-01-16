@@ -41,7 +41,7 @@
     <script type="text/javascript">
       (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
       ;r.type="text/javascript";r.async=true
-      ;r.src="/js/thirdParty/new_amplitude_analytics.js?0"
+      ;r.src="https://cdn.amplitude.com/libs/amplitude-4.0.0-min.gz.js"
       ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
         e.amplitude.runQueuedFunctions()}else{
         console.log("[Amplitude] Error: could not load SDK")}}

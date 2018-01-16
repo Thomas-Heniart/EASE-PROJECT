@@ -7,7 +7,7 @@ import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showUpdateAppPasswordModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
+import {AppConnection, editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 import {copyTextToClipboard} from "../../utils/utils";
 
@@ -21,12 +21,22 @@ class UpdateAppPasswordModal extends Component {
     this.state = {
       loading: true,
       copyButtonText: 'Copy current password',
-      errorMessage: ''
+      errorMessage: '',
+      connectionLoading:false
     };
     this.password = '';
   }
   process = (e) => {
     e.preventDefault();
+    this.setState({connectionLoading: true});
+    this.props.dispatch(AppConnection({
+      app_id: this.props.app.id,
+      keep_focus: false
+    })).then(response => {
+      this.setState({connectionLoading: false});
+    }).catch(err => {
+      this.setState({connectionLoading: false});
+    });
   };
   close = () => {
     this.props.dispatch(showUpdateAppPasswordModal({active: false}));
@@ -79,6 +89,7 @@ class UpdateAppPasswordModal extends Component {
             <Button
                 type="submit"
                 positive
+                loading={this.state.connectionLoading}
                 className="modal-button"
                 content="GO UPDATE MY PASSWORD"/>
           </Form>
