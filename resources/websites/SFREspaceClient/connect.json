@@ -1,0 +1,24 @@
+{
+  "name":"SFR",
+  "lastLogin":"",
+  "home":"https://www.sfr.fr/mon-espace-client/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#username", "grave":true},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":"#identifier"}
+    ]
+  },
+
+  "logout":{
+    "todo":[
+      {"action":"trueClick","search":"a[href*='logout']"},
+      {"action":"waitload"},
+      {"action":"aclick", "search":"a[href*='mon-espace-client']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#loginForm, #E a[href*='logout']"},
+    {"search":"#E a[href*='logout']"}
+  ]
+}
