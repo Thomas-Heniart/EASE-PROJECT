@@ -1,25 +1,59 @@
 {
-  "name":"Kiwi",
-  "lastlogin":"",
-  "home":"https://mobile.kiwi.ki/",
+  "name": "Kiwi",
+  "lastlogin": "",
+  "home": "https://mobile.kiwi.ki/",
   "connect": {
     "todo": [
-      {"action":"trueClick", "search":"a[href*='#login']"},
-      {"action":"fill", "what":"login","search":"#username", "grave":"true"},
-      {"action":"fill", "what":"password","search":"#password", "grave":"true"},
-      {"action":"trueClick", "search":"#btnLogin", "grave":"true"}
+      {
+        "action": "trueClick",
+        "search": "a[href*='#login']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#username",
+        "grave": "true"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password",
+        "grave": "true"
+      },
+      {
+        "action": "trueClick",
+        "search": "#btnLogin",
+        "grave": "true"
+      }
     ]
   },
   "logout": {
     "todo": [
-      {"action":"goto", "url":"https://mobile.kiwi.ki/#my-account"},
-      {"action":"trueClick", "search":"#btnLogout"},
-      {"action":"waitfor", "search":"#home.ui-page-active"},
-      {"action":"goto", "url":"https://mobile.kiwi.ki/"}
+      {
+        "action": "goto",
+        "url": "https://mobile.kiwi.ki/#my-account"
+      },
+      {
+        "action": "trueClick",
+        "search": "#btnLogout"
+      },
+      {
+        "action": "waitfor",
+        "search": "#home.ui-page-active"
+      },
+      {
+        "action": "goto",
+        "url": "https://mobile.kiwi.ki/"
+      }
     ]
   },
   "checkAlreadyLogged": [
-    {"action":"waitfor", "search":"#door.ui-page-active, #home.ui-page-active"},
-    {"search":"#door.ui-page-active"}
+    {
+      "action": "waitfor",
+      "search": "#door.ui-page-active, #home.ui-page-active"
+    },
+    {
+      "search": "#door.ui-page-active"
+    }
   ]
 }
