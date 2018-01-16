@@ -31,6 +31,12 @@ class TeamEnterpriseApp extends Component {
       this.setState({loading: false});
     });
   };
+  connectWithPasswordUpdate = (e) => {
+    this.props.dispatch(showUpdateAppPasswordModal({
+      active: true,
+      app: this.props.app
+    }));
+  };
   render(){
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -56,7 +62,7 @@ class TeamEnterpriseApp extends Component {
             {!me.disabled && meReceiver.empty &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">
-              <img class="logo" src={team_app.logo} onClick={this.connect}/>
+              <img class="logo" src={team_app.logo} onClick={password_update ? this.connectWithPasswordUpdate : this.connect}/>
               <button class="settings_button" onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}>
                 Settings
               </button>
