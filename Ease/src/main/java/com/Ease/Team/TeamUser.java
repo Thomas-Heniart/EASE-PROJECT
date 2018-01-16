@@ -366,8 +366,6 @@ public class TeamUser {
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
-        res.put("first_name", this.firstName);
-        res.put("last_name", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
         res.put("disabled", this.disabled);

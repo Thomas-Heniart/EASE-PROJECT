@@ -102,8 +102,8 @@ public class ServletResetPassword extends HttpServlet {
                     mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                     mailJetBuilder.setTemplateId(211068);
                     mailJetBuilder.addTo("benjamin@ease.space");
-                    mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
-                    mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+                    mailJetBuilder.addVariable("first_name", teamUser.getUser().getPersonalInformation().getFirst_name());
+                    mailJetBuilder.addVariable("last_name", teamUser.getUser().getPersonalInformation().getLast_name());
                     mailJetBuilder.addVariable("team_name", team.getName());
                     mailJetBuilder.addVariable("team_email", teamUser.getEmail());
                     mailJetBuilder.addVariable("email", email);
@@ -115,8 +115,8 @@ public class ServletResetPassword extends HttpServlet {
                     mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                     mailJetBuilder.addTo(admin.getEmail());
                     mailJetBuilder.setTemplateId(211034);
-                    mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
-                    mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+                    mailJetBuilder.addVariable("first_name", teamUser.getUser().getPersonalInformation().getFirst_name());
+                    mailJetBuilder.addVariable("last_name", teamUser.getUser().getPersonalInformation().getLast_name());
                     mailJetBuilder.addVariable("team_name", team.getName());
                     mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teams/" + team.getDb_id() + "/@" + teamUser.getDb_id());
                     mailJetBuilder.sendEmail();

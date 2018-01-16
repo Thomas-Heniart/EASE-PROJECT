@@ -63,19 +63,11 @@ public class ServletCreateTeam extends HttpServlet {
             User user = sm.getUser();
             String digits = sm.getStringParam("digits", false, true);
             String teamName = sm.getStringParam("team_name", true, false);
-            String firstName = sm.getStringParam("first_name", true, false);
-            String lastName = sm.getStringParam("last_name", true, false);
             String email = sm.getStringParam("email", true, false);
             String username = sm.getStringParam("username", true, false);
-            Integer job_index = sm.getIntParam("job_index", true, false);
-            //Boolean free_plan = sm.getBooleanParam("free_plan", true, false);
             Integer plan_id = sm.getIntParam("plan_id", true, false);
             if (teamName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
-            if (firstName.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "firstName is needed.");
-            if (lastName.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "email is needed.");
             checkUsernameIntegrity(username);
@@ -97,14 +89,8 @@ public class ServletCreateTeam extends HttpServlet {
             Team team = new Team(teamName);
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             Date arrivalDate = new Date(sm.getLongParam("timestamp", true, false));
-            TeamUser owner = TeamUser.createOwner(firstName, lastName, email, username, arrivalDate, AES.encrypt(teamKey, keyUser), team);
+            TeamUser owner = TeamUser.createOwner(email, username, arrivalDate, AES.encrypt(teamKey, keyUser), team);
             owner.getTeamUserStatus().setInvitation_sent(true);
-            String jobTitle;
-            if (job_index < jobRoles.length - 1)
-                jobTitle = jobRoles[job_index];
-            else
-                jobTitle = sm.getStringParam("job_details", true, false);
-            owner.setJobTitle(jobTitle);
             owner.setUser(user);
             sm.saveOrUpdate(team);
             sm.getTeamProperties(team.getDb_id()).put("teamKey", teamKey);

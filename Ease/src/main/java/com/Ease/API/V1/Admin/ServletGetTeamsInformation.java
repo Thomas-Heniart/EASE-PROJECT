@@ -41,8 +41,8 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("id", team.getDb_id());
                 tmp.put("name", team.getName());
                 TeamUser owner = team.getTeamUserOwner();
-                tmp.put("admin_first_name", owner.getFirstName());
-                tmp.put("admin_last_name", owner.getLastName());
+                tmp.put("admin_first_name", owner.getUser().getPersonalInformation().getFirst_name());
+                tmp.put("admin_last_name", owner.getUser().getPersonalInformation().getLast_name());
                 tmp.put("admin_email", owner.getEmail());
                 tmp.put("plan_id", team.isActive() ? team.getPlan_id() : -1);
                 tmp.put("card_entered", team.isCard_entered());

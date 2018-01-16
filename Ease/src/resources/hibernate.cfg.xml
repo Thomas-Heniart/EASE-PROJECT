@@ -85,6 +85,7 @@
         <mapping class="com.Ease.User.JsonWebToken"/>
         <mapping class="com.Ease.User.PasswordLost"/>
         <mapping class="com.Ease.User.UserPostRegistrationEmails"/>
+        <mapping class="com.Ease.User.PersonalInformation"/>
         <mapping class="com.Ease.Metrics.ClickOnApp"/>
         <mapping class="com.Ease.Metrics.TeamMetrics"/>
         <mapping class="com.Ease.Metrics.ConnectionMetric"/>
