@@ -4,17 +4,18 @@
     "home":"https://app.payfit.com/login/", 
     "connect":{ 
         "todo":[ 
-            {"action":"fill", "what":"login", "search":"input[name='emailAddress']"}, 
-            {"action":"fill", "what":"password", "search":"input[name='password']"}, 
-            {"action":"click", "search":"button[type='submit']"} 
+            {"action":"fill", "what":"login", "search":"#email"},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action":"trueClick", "search":"button[type='submit']"}
         ] 
     }, 
     "logout":{ 
         "todo":[ 
-          {"action":"aclick", "search":"a[href*='logout']"} 
+            {"action":"trueClick", "search":"._yljwae div[aria-describedby*='tippy-tooltip-2'] div"},
+            {"action":"trueClick", "search":"#tippy-tooltip-2 .tippy-tooltip-content ._1d4d0pd"}
         ] 
     }, 
-    "checkAlreadyLogged":[ 
-        {"search":"a[href*='logout']"} 
+    "checkAlreadyLogged":[
+        {"search":"._yljwae"}
     ] 
 }
