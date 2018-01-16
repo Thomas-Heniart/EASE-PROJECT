@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {Loader, Input, Label,Icon} from 'semantic-ui-react';
-import {validateApp} from "../../actions/dashboardActions";
+import {validateApp, clickOnAppMetric} from "../../actions/dashboardActions";
 
 class LinkApp extends Component {
   constructor(props){
@@ -12,6 +12,7 @@ class LinkApp extends Component {
     const {app} = this.props;
     if (app.new)
       this.props.dispatch(validateApp({app_id: app.id}));
+    this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
     window.open(app.url, '_blank');
   };
   render(){

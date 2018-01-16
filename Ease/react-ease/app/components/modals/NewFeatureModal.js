@@ -21,34 +21,32 @@ class NewFeatureModal extends React.Component {
         <div className="popover_mask"/>
         <div className="ease_popup ease_new_feature_popup">
           <Header as="h3" attached="top">
-            <p>Happy to see you here!</p>
+            <p>⛷✨Smooth password importation tool🌬🔐</p>
           </Header>
           <div className='popup_content'>
-            <p className='no_margin no_inline'>In the past few weeks we have been working to improve our product. 🙂</p>
-            <p className='no_margin no_inline'><Icon name='heart'/> <strong>For your eyes only:</strong></p>
+            <p className='no_margin no_inline'>Many of you helped us understand how painfull it was to type all your personal or team'passwords one by one on Ease.space.</p>
+            <p className='no_margin no_inline'><Icon name='rocket'/> <strong>We made password importation... powerfull.</strong></p>
             <p>1.
-              <img src='/resources/images/personal_space.png'/>
-              <span>We changed the <strong>Personal Space</strong> to enhance a modern design for your daily usage.</span>
+              <img src='/resources/images/add_new_app.png'/>
+              <span>Go through the <strong>Add new App</strong> button</span>
             </p>
             <p>2.
-              <img src='/resources/images/catalog.png'/>
-              <span>A fullscreen display of the <strong>Apps Catalog</strong> is available since a few weeks if you haven’t noticed it yet <Icon name='gift'/> </span></p>
+              <img src='/resources/images/import_tab.png'/>
+              <span>Click the <strong>"<Icon name="cloud upload"/>Import" tab.</strong> Choose your way to import your passwords. From Excel, to 8 different password managers, you can integrate your apps all at once!</span>
+            </p>
             <p>3.
-              <img className='phone' src='/resources/images/grey_phone.png'/>
-              <span> Access your passwords from anywhere is now possible with our <strong>mobile app</strong> available on <strong>Androïd and iOS</strong>! Search Ease.space to download it on your smartphone.</span>
+              <img src='/resources/images/plane_launch.png'/>
+              <span>You will <strong>take the control</strong> of all your personal and team passwords smoothly.</span>
             </p>
-            <p>4.
-              <span>New settings are available, through the Top bar <Icon name='dropdown'/> to help you easily activate or deactivate your Daily <strong>background picture</strong>, Ease.space as <strong>homepage</strong>, and some other specificities.</span>
-            </p>
-            <p className='no_margin'><Icon name='users'/> <strong>For your team:</strong></p>
-            <p>1. <span>To <strong>send Apps</strong> easily to your team, it works now from your Apps Catalog, just click on it!</span></p>
-            <p>2. <span>Create your users in advance and <strong>send them invitations later</strong> once your platform is fully setup! Also you can <strong>re-send invitations</strong> when they forgot to join! It happens in user settings.</span></p>
-            <p>3. <span><strong>Inviting new users</strong> is now easier! Send your invitation, then the user accepts and its done <Icon name='rocket'/></span></p>
-            <p>4. <img style={{width: '60px', height: '65px', margin: '0 12px 0 0'}} src='/resources/images/new_app.png'/> <span><strong>Receiving apps</strong> is now more fluid. If a teammate sent you an app you will directly receive it in your Personal Space.</span></p>
-            <p className='no_margin'>
-              <span><strong>The whole Ease.space team really loves receiving your <a href='mailto:victor@ease.space' target="_top" style={{color: 'black'}}><u>feedbacks</u></a>, this is the only way to make this tool becomes the one you really need!</strong></span>
-              <Button style={{width: '300px', padding: '0'}} positive content='Okay cheers!' onClick={this.close}/>
-            </p>
+            <div style={{display: 'flex', position: 'relative'}}>
+              <p className='no_margin'>
+              <span>
+                <strong>If you wanna try and give us your <a href='mailto:victor@ease.space' target="_top" style={{color: 'black'}}><u>feedbacks</u></a>, it helps us a lot <Icon name="heart"/></strong><br/>
+                <strong>If you love Ease.space, share it with us on <a href='https://twitter.com/intent/tweet?text=%40ease_space%20%23thiseaselove' target="_blank" style={{color: 'black'}}><u>Twitter</u></a> <Icon name="heart"/></strong>
+              </span>
+              </p>
+              <Button style={{width: '240px', padding: '0', position: 'absolute', height: '48px', right: '0', bottom: '5px'}} positive content='Okay cheers!' onClick={this.close}/>
+            </div>
           </div>
         </div>
       </div>

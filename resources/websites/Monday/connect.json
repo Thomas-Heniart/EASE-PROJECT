@@ -1,0 +1,22 @@
+{
+  "name":"Monday",
+  "lastLogin":"",
+  "home":{"http":"https://", "subdomain":"team", "domain":"monday.com"},
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#user_email"},
+      {"action":"fill", "what":"password", "search":"#user_password"},
+      {"action":"click", "search":".submit_button"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":".logout_btn"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#user_email, .logout_btn"},
+    {"search":".logout_btn"}
+  ]
+}

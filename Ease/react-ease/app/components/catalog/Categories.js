@@ -17,12 +17,12 @@ class Categories extends Component {
     return (
         <List link className="listCategory">
           {this.props.categories.length > 0 &&
-          <List.Item as={NavLink} exact to={`/main/catalog`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog` && resetQuery()}}>
+          <List.Item as={NavLink} exact to={`/main/catalog/website`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/website` && resetQuery()}}>
             All Apps
           </List.Item>}
           {this.props.categories.length > 0 && this.props.categories.map(item => {
             return (
-                <List.Item key={item.id} as={NavLink} to={`/main/catalog/${item.id}`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/${item.id}` && resetQuery()}}>
+                <List.Item key={item.id} as={NavLink} to={`/main/catalog/website/${item.id}`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/website/${item.id}` && resetQuery()}}>
                   {item.name}
                 </List.Item>
             )

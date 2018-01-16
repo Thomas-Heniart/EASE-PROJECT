@@ -1,9 +1,10 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
+require("babel-polyfill");
 
 config = {
-    entry : './app/index.js',
+    entry : ['babel-polyfill', './app/index.js'],
     output: {
         path: path.resolve(__dirname, '../WebContent'),
         filename: 'teams_bundle.js',

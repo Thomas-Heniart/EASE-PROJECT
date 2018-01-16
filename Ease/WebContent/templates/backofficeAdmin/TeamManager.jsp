@@ -1,37 +1,32 @@
-<table class="ui compact small selectable celled table">
+<table class="ui compact small selectable sortable celled table" id="teams_table">
     <thead>
     <tr>
         <th>count</th>
+        <th>
+            <div class="ui checkbox"><input id="select-all-team" type="checkbox"/><label></label></div>
+        </th>
         <th>Name</th>
         <th>Admin name</th>
         <th>Admin email</th>
-        <th>Phone number</th>
         <th>Week of sub</th>
         <th>Plan</th>
         <th>CC</th>
-        <th>P. joined</th>
-        <th>P. w. apps</th>
-        <th>P. click 3</th>
+        <th class="number_data">App w. tags</th>
+        <th class="number_data">P. joined</th>
+        <th class="number_data">P. w. apps</th>
+        <th class="number_data">P. click 1</th>
+        <th class="number_data">P. click 3</th>
     </tr>
-    <!--
-        <th>Name</th>
-        <th>Admin name</th>
-        <th>Admin email</th>
-        <th>Phone number</th>
-        <th>Week of sub</th>
-        <th>Week now</th>
-        <th>Plan</th>
-        <th>CC</th>
-    -->
     </thead>
     <tbody id="team-manager-body"></tbody>
 </table>
+<button id="multiple_team_graph" class="ui blue button">Show graph</button>
 <div class="ui united fullscreen modal" id="team-settings">
     <i class="close icon"></i>
     <div class="header">Team settings</div>
     <div class="content">
         <div class="ui horizontal segments">
-            <div id="team_settings_left" class="ui segment loading">
+            <div id="team_settings_left" class="ui segment loading" style="width: 50%;">
                 <div id="people_data" class="data_part">
                     <h2>People data</h2>
                     <p>People invited: <span id="people_invited"></span> <a href="#" id="people_invited_emails">(see
@@ -64,17 +59,21 @@
                     <canvas id="account_data_chart"></canvas>
                     <button class="ui blue button">back</button>
                 </div>
+                <div id="account_data_names" style="display: none">
+                    <ul></ul>
+                    <button class="ui blue button">back</button>
+                </div>
             </div>
-            <div id="team_settings_right" class="ui segment loading">
+            <div id="team_settings_right" class="ui segment loading" style="width: 50%;">
                 <div id="account_data" class="data_part">
                     <h2>Account data</h2>
                     <p>Rooms: <span id="rooms"></span> <span id="room_names"></span></p>
-                    <p>Total apps: <span id="cards"></span></p>
-                    <p>Total apps with tags: <span id="cards_with_receiver"></span></p>
-                    <p>Total apps with tags + PWP: <span id="cards_with_receiver_and_password_policy"></span></p>
-                    <p>Single apps: <span id="single_cards"></span></p>
-                    <p>Enterprise apps: <span id="enterprise_cards"></span></p>
-                    <p>Link apps: <span id="link_cards"></span></p>
+                    <p>Total apps: <span id="cards"></span> <a href="#" id="cards_names">(names)</a></p>
+                    <p>Total apps with tags: <span id="cards_with_receiver"></span> <a href="#" id="cards_with_receiver_names">(names)</a></p>
+                    <p>Total apps with tags + PWP: <span id="cards_with_receiver_and_password_policy"></span> <a href="#" id="cards_with_receiver_and_password_policy_names">(names)</a></p>
+                    <p>Single apps: <span id="single_cards"></span> <a href="#" id="single_cards_names">(names)</a></p>
+                    <p>Enterprise apps: <span id="enterprise_cards"></span> <a href="#" id="enterprise_cards_names">(names)</a></p>
+                    <p>Link apps: <span id="link_cards"></span> <a href="#" id="link_cards_names">(names)</a></p>
                     <button class="ui blue button">Show history</button>
                 </div>
                 <div id="people_data_emails" class="view_part" style="display: none;">
@@ -89,10 +88,12 @@
             </div>
         </div>
         <div class="ui segment">
-            Current credit (TTC): <span id="current-credit"></span>
-            <div id="send-money" class="ui icon input">
-                <input name="love_money" placeholder="Add credit...">
-                <i class="inverted circular stripe link icon"></i>
+            <div id="credit" style="display: inline">
+                Current credit (TTC): <span id="current-credit"></span>
+                <div id="send-money" class="ui icon input">
+                    <input name="love_money" placeholder="Add credit...">
+                    <i class="inverted circular stripe link icon"></i>
+                </div>
             </div>
             <button id="show_graphic" class="ui button blue">Show graph</button>
             <button id="show_delete" class="ui button red">Delete</button>

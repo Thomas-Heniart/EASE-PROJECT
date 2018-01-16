@@ -31,6 +31,18 @@ export function fetchCatalog(){
   }
 }
 
+export function getImportedAccounts() {
+  return (dispatch, getState) => {
+    return api.catalog.getImportation()
+      .then(response => {
+        dispatch({type: 'FETCH_IMPORTED_ACCOUNTS', payload: response});
+        return response;
+      }).catch(err => {
+        throw err;
+    })
+  }
+}
+
 export function testCredentials({account_information, website_id}) {
   return (dispatch, getState) => {
     api.getWebsiteConnection({account_information, website_id})
@@ -38,6 +50,62 @@ export function testCredentials({account_information, website_id}) {
         dispatch({type: 'TEST_CREDENTIALS'});
       }).catch(err => {
         console.log(err);
+    });
+  }
+}
+
+export function catalogAddAnyApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided}){
+  return (dispatch, getState) => {
+    return post_api.catalog.addAnyApp({
+      name: name,
+      url: url,
+      img_url: img_url,
+      profile_id: profile_id,
+      account_information: account_information,
+      connection_information: connection_information,
+      credentials_provided: credentials_provided,
+      ws_id: getState().common.ws_id
+    }).then(app => {
+      dispatch({
+        type: 'DASHBOARD_APP_CREATED',
+        payload: {
+          app: app
+        }
+      });
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully sent to ${profile.name}!`
+      }));
+      return app;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function catalogAddSoftwareApp({name, logo_url, profile_id, account_information, connection_information}){
+  return (dispatch, getState) => {
+    return post_api.catalog.addSoftwareApp({
+      name: name,
+      logo_url: logo_url,
+      profile_id: profile_id,
+      account_information: account_information,
+      connection_information: connection_information,
+      ws_id: getState().common.ws_id
+    }).then(app => {
+      dispatch({
+        type: 'DASHBOARD_APP_CREATED',
+        payload: {
+          app: app
+        }
+      });
+      const profile = getState().dashboard.profiles[profile_id];
+      dispatch(addNotification({
+        text: `${app.name} successfully sent to ${profile.name}!`
+      }));
+      return app;
+    }).catch(err => {
+      throw err;
     });
   }
 }
@@ -204,7 +272,55 @@ export function catalogRequestWebsite({url, account_information}){
   }
 }
 
-export function catalogAddBookmarkModal({name, url, img_url}){
+export function importAccount({name, url, account_information}){
+  return (dispatch, getState) => {
+    return post_api.catalog.importAccount({
+      name: name,
+      url: url,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'CATALOG_IMPORT_ACCOUNT', payload: response});
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function modifyImportedAccount({id, name, url, website_id, account_information}){
+  return (dispatch, getState) => {
+    return post_api.catalog.modifyImportedAccount({
+      id: id,
+      name: name,
+      url: url,
+      website_id: website_id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'CATALOG_MODIFY_IMPORTED_ACCOUNT', payload: response});
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function deleteImportedAccount({id}){
+  return (dispatch, getState) => {
+    return post_api.catalog.deleteImportedAccount({
+      id: id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'CATALOG_DELETE_IMPORTED_ACCOUNT', payload: response});
+      return response;
+    }).catch(err => {
+      throw err;
+    })
+  }
+}
+
+export function catalogAddBookmarkModal({name, url, img_url, logoLetter}){
   return (dispatch, getState) => {
     return new Promise((resolve, reject) => {
       dispatch({
@@ -252,6 +368,72 @@ export function showCatalogAddSSOAppModal({active, website}){
     payload: {
       active: active,
       website: website
+    }
+  }
+}
+
+export function catalogAddAnyAppModal({name, url, img_url, logoLetter}){
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'SHOW_CATALOG_ADD_ANY_APP_MODAL',
+        payload: {
+          active: true,
+          name: name,
+          url: url,
+          img_url: img_url,
+          logoLetter: logoLetter,
+          resolve: resolve,
+          reject: reject
+        }
+      })
+    })
+  }
+}
+
+export function showCatalogAddAnyAppModal({active, name, url, img_url, logoLetter, resolve, reject}){
+  return {
+    type: 'SHOW_CATALOG_ADD_ANY_APP_MODAL',
+    payload: {
+      active: active,
+      name: name,
+      url: url,
+      img_url: img_url,
+      logoLetter: logoLetter,
+      resolve: resolve,
+      reject: reject
+    }
+  }
+}
+
+export function catalogAddSoftwareAppModal({name, img_url, logoLetter}){
+  return (dispatch, getState) => {
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'SHOW_CATALOG_ADD_SOFTWARE_APP_MODAL',
+        payload: {
+          active: true,
+          name: name,
+          img_url: img_url,
+          logoLetter: logoLetter,
+          resolve: resolve,
+          reject: reject
+        }
+      })
+    })
+  }
+}
+
+export function showCatalogAddSoftwareAppModal({active, name, img_url, logoLetter, resolve, reject}){
+  return {
+    type: 'SHOW_CATALOG_ADD_SOFTWARE_APP_MODAL',
+    payload: {
+      active: active,
+      name: name,
+      img_url: img_url,
+      logoLetter: logoLetter,
+      resolve: resolve,
+      reject: reject
     }
   }
 }

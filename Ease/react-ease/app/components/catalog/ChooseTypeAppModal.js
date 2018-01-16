@@ -14,9 +14,11 @@ class ChooseTypeAppModal extends React.Component {
     super(props);
     this.state = {
       website: this.props.website,
-      value: 'Simple'
+      value: 'Simple',
+      subtype: this.props.subtype
     }
   }
+  handleChange = (e, {value}) => this.setState({value});
   catalogToTeamSpace = (e, team_id, room_id) => {
     e.preventDefault();
     this.props.close();
@@ -24,25 +26,32 @@ class ChooseTypeAppModal extends React.Component {
       team_id,
       channel_id: room_id,
       website: this.state.website,
-      type: this.state.value
+      type: this.state.value,
+      name: this.state.website.name ? this.state.website.name : this.props.appName,
+      url: this.props.url,
+      subtype: this.state.subtype
     });
     this.props.history.push(`/teams/${team_id}/${room_id}`);
   };
-  handleChange = (e, {value}) => this.setState({value});
   render() {
     const {
       website,
       appName,
       team_id,
-      room_id
-    } = this.props;
-
+      room_id} = this.props;
     return (
       <Form class="container" id="add_bookmark_form" onSubmit={e => this.catalogToTeamSpace(e, team_id, room_id)}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
+            {website.logo ?
               <div className="squared_image_handler">
-                  <img src={website.logo} alt="Website logo"/>
+                <img src={website.logo} alt="Website logo"/>
               </div>
+              :
+              <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
+                <div style={{margin:'auto'}}>
+                  <p style={{margin:'auto'}}>{this.props.logoLetter}</p>
+                </div>
+              </div>}
               <div className='show_team'>
                   <p className='app'><span className="app_name">{appName}</span></p>
                   <p className='team'><span><Icon name='users'/>{this.props.teams[team_id].name}</span></p>

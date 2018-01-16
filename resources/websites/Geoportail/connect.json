@@ -1,0 +1,52 @@
+{
+  "name": "Geoportail",
+  "lastLogin": "",
+  "home": "https://www.geoportail.gouv.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#header-tool-myMaps"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#connexion-mail"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#connexion-password"
+      },
+      {
+        "action": "trueClick",
+        "search": "#connexion-submit"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#connexion-disconnect-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "#connexion-mail"
+      },
+      {
+        "action":"goto",
+        "url":"https://www.geoportail.gouv.fr/"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#connexion-mail, #connexion-disconnect-button"
+    },
+    {
+      "search": "#connexion-disconnect-button"
+    }
+  ]
+}

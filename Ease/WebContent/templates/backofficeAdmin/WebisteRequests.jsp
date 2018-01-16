@@ -5,6 +5,7 @@
         <th>URL</th>
         <th>Email</th>
         <th>Date</th>
+        <th>Cred.</th>
         <th><i class="fa fa-share"/></th>
         <th><i class="fa fa-trash-o"/></th>
     </tr>

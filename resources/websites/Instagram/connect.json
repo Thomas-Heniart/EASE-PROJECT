@@ -1,82 +1,110 @@
 {
-    "name":"Instagram",
-    "lastLogin":"",
-    "home":"https://www.instagram.com",
-    "connect":{
-      "todo": [
-        {
-          "action": "waitfor",
-          "search": "._8vrqg, ._b93kq"
-        },
-        {
-          "action": "trueClick",
-          "search": "._8vrqg"
-        },
-        {
-          "action": "waitfor",
-          "search": "._b93kq"
-        },
-        {
-          "action": "trueClick",
-          "search": "._b93kq"
-        },
-        {
-          "action": "waitfor",
-          "search": "._3jvtb input[name='username']"
-        },
-        {
-          "action": "waitfor",
-          "search": "._3jvtb input[name='password']"
-        },
-        {
-          "action": "waitfor",
-          "search": "._3jvtb input[name='username']"
-        },
-        {
-          "action": "fill",
-          "what": "login",
-          "search": "._3jvtb input[name='username']",
-          "grave": true
-        },
-        {
-          "action": "fill",
-          "what": "password",
-          "search": "._3jvtb input[name='password']",
-          "grave": true
-        },
-        {
-          "action": "click",
-          "search": "form._3jvtb button"
-        }
-      ]
-    },
-    "Facebook":{
-      "todo": [
-        {
-          "action": "waitfor",
-          "search": "button._qv64e._njrw0"
-        },
-        {
-          "action": "click",
-          "search": "button._qv64e._njrw0"
-        }
-      ]
-    },
-    "logout":{
-      "todo": [
-        {
-          "action": "goto",
-          "url": "https://www.instagram.com/accounts/logout/"
-        }
-      ]
-    },
-    "checkAlreadyLogged":[
+  "name": "Instagram",
+  "lastLogin": "",
+  "home": "https://www.instagram.com",
+  "connect": {
+    "todo": [
       {
         "action": "waitfor",
-        "search": "._b93kq, .coreSpriteDesktopNavProfile, ._8vrqg"
+        "search": "div > span > a, a[href*='password/reset']"
       },
       {
-        "search": ".coreSpriteDesktopNavProfile"
+        "action": "trueClick",
+        "search": "div > span > a"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='password/reset']"
+      },
+      {
+        "action": "waitfor",
+        "search": "input[name='username']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "input[name='username']",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "input[name='password']",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "form span:nth-child(3) button"
       }
     ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "waitfor",
+        "search": "div > span > a, a[href*='password/reset']"
+      },
+      {
+        "action": "trueClick",
+        "search": "div > span > a"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='password/reset']"
+      },
+      {
+        "action": "waitfor",
+        "search": "form span:nth-child(5) button"
+      },
+      {
+        "action": "trueClick",
+        "search": "form span:nth-child(5) button"
+      },
+      {
+        "action": "trueClick",
+        "search": "div > span > a"
+      },
+      {
+        "action": "waitfor",
+        "search": ".coreSpriteLoggedOutWordmark + div img + span button"
+      },
+      {
+        "action": "trueClick",
+        "search": "div > span > a"
+      },
+      {
+        "action": "trueClick",
+        "search": "div > span > a"
+      },
+      {
+        "action": "trueClick",
+        "search": ".coreSpriteLoggedOutWordmark + div img + span button"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "goto",
+        "url": "https://www.instagram.com/accounts/logout/"
+      },
+      {
+        "action": "waitfor",
+        "search": ".coreSpriteLoggedOutWordmark"
+      },
+      {
+        "action": "goto",
+        "url": "https://www.instagram.com"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".coreSpriteLoggedOutWordmark, .coreSpriteDesktopNavProfile"
+    },
+    {
+      "search": ".coreSpriteDesktopNavProfile"
+    }
+  ]
 }

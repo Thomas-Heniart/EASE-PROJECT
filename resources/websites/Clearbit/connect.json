@@ -1,0 +1,22 @@
+{
+  "name":"Clearbit",
+  "lastLogin":"",
+  "home":"https://dashboard.clearbit.com/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"form[action*='login'] input[name='email']"},
+      {"action":"fill", "what":"password", "search":"form[action*='login'] input[name='password']"},
+      {"action":"click", "search":"form[action*='login'] button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], form[action*='login']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

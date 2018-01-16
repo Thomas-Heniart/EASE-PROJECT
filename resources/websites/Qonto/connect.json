@@ -1,0 +1,23 @@
+{
+  "name":"Qonto",
+  "lastLogin":"",
+  "home":"https://app.qonto.eu/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"input[name*='username']"},
+      {"action":"fill", "what":"password", "search":"input[name*='current-password']"},
+      {"action":"trueClick", "search":"button[type*='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"div.ember-basic-dropdown-trigger div[role*='button'] button"},
+      {"action":"trueClick", "search":".user-container + div div div .option:last-child()"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".l-app-header__profile, input[name*='username']"},
+    {"search":".l-app-header__profile"}
+  ]
+}

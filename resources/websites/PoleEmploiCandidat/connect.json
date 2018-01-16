@@ -1,0 +1,22 @@
+{
+  "name":"Pole emploi",
+  "lastLogin":"",
+  "home":"https://authentification-candidat.pole-emploi.fr/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#identifiant"},
+      {"action":"trueClick", "search":"#submit"},
+      {"action":"fill", "what":"password", "search":"#login_password"},
+      {"action":"click", "search":"form[name='loginform'] input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"clickona", "search":"li.logout a"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"li.logout"}
+  ]
+}

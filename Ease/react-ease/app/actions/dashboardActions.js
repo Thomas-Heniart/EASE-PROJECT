@@ -17,6 +17,8 @@ export function fetchDashboard(){
       const sso_groups = response[2];
       const team_app_calls = [];
 
+      easeTracker.setUserProperty("AppCount", Object.keys(apps).length);
+
       apps.map(app => {
         if (!!app.team_id)
           team_app_calls.push(dispatch(fetchTeamApp({
@@ -540,6 +542,41 @@ export function editLinkApp({app_id, name, url, img_url}) {
   }
 }
 
+export function editAnyApp({app_id, name, url, img_url, account_information, connection_information}) {
+  return (dispatch, getState) => {
+    return post_api.dashboard.editAnyApp({
+      app_id: app_id,
+      name: name,
+      url: url,
+      img_url: img_url,
+      account_information: account_information,
+      connection_information: connection_information,
+      ws_id: getState().common.ws_id
+    }).then(response=> {
+      dispatch({type: 'DASHBOARD_APP_CHANGED', payload: {app: response}});
+      return response;
+    }).catch(err =>  {
+      throw err;
+    })
+  }
+}
+
+export function editSoftwareApp({app_id, name, account_information}) {
+  return (dispatch, getState) => {
+    return post_api.dashboard.editSoftwareApp({
+      app_id: app_id,
+      name: name,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response=> {
+      dispatch({type: 'DASHBOARD_APP_CHANGED', payload: {app: response}});
+      return response;
+    }).catch(err =>  {
+      throw err;
+    })
+  }
+}
+
 export function editSsoGroup({sso_group_id, account_information}) {
   return (dispatch, getState) => {
     return post_api.dashboard.editSsoGroup({
@@ -559,6 +596,7 @@ export function editSsoGroup({sso_group_id, account_information}) {
     });
   }
 }
+
 
 export function deleteSsoGroupAction({sso_group_id}){
   return {
@@ -602,6 +640,16 @@ export function editAppName({app_id, name}) {
           app: app
         }
       });
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function clickOnAppMetric({app_id}) {
+  return (dispatch, getState) => {
+    return post_api.dashboard.clickOnAppMetric({
+      app_id: app_id
     }).catch(err => {
       throw err;
     });

@@ -16,7 +16,6 @@ extension.runtime.onMessage("connectToChrome", function (msg, sendResponse) {
     $("#identifierNext").click();
 
     function waitForPass() {
-        console.log($("div#password input[name='password']"));
         if ($("#identifierId[aria-invalid='true']").length > 0) {
             sendResponse(false);
         } else if ($("div#password input[name='password']").length != 0) {
@@ -33,45 +32,25 @@ extension.runtime.onMessage("connectToChrome", function (msg, sendResponse) {
 
 extension.runtime.onMessage("scrapChrome", function (msg, sendResponse) {
     function waitload(callback) {
-        if ($("div[jscontroller='VXdfxd']").length != 0) {
-            console.log("start scrap");
-            callback();
-        } else if ($(".gga").length != 0) {
-            console.log("no pass");
-            sendResponse([]);
-        } else {
-            console.log("wait pass");
-            setTimeout(function () {
-                waitload(callback);
-            }, 100);
-        }
+        $(document).ready(function () {
+            if ($("div[jscontroller='VXdfxd']").length !== 0) {
+                console.log("start scrap");
+                callback();
+            } else if ($(".gga").length !== 0) {
+                console.log("no pass");
+                sendResponse([]);
+            } else {
+                console.log("wait pass");
+                setTimeout(function () {
+                    waitload(callback);
+                }, 100);
+            }
+        });
     }
-
-    /* it works */
-    /* @TODO Handle loadingString */
-    /* function clickAndGetPassword(index) {
-        var eyeElem = $(passwordEyes[index]);
-        eyeElem.click();
-        var eyeElemParent = eyeElem.parent().parent();
-        var field = $("input", eyeElemParent);
-        var entireRow = eyeElemParent.parent().parent().parent().parent();
-        var website = $("div[role='rowheader'] div", entireRow).text();
-        var login = $("div[role='gridcell']:nth-child(2) div", entireRow).text();
-        setTimeout(function () {
-            console.log("Password: " + field.val());
-            console.log("login: " + login);
-            console.log("website: " + website);
-        }, 200);
-        if (index < passwordEyes.length) {
-            setTimeout(function () {
-                clickAndGetPassword(index + 1);
-            }, 1000);
-        }
-    } */
 
     waitload(function () {
         var loadingString = "";
-        var waitingTime = 5;
+        var waitingTime = 20;
         var passwordEyes = $(".mUbCce.fKz7Od.cXmCRb[role='button'][jsaction*='click:cOuCgd']");
         var nbOfPass = passwordEyes.length;
         var results = [];
@@ -83,44 +62,32 @@ extension.runtime.onMessage("scrapChrome", function (msg, sendResponse) {
             var entireRow = eyeElemParent.parent().parent().parent().parent();
             var website = $("div[role='rowheader'] div", entireRow).text();
             var login = $("div[role='gridcell']:nth-child(2) div", entireRow).text();
-
-            //var field = $(element).find(".bba.EW.a-Fa");
-            function waitPass() {
-                console.log(entireRow);
-                console.log(loadingString + " and field: " + field.val() + " and login: " + login + " and website: " + website + " and index: " + index);
-                if (field.val() != "••••••••" && field.val() != loadingString) {
-                    if (waitingTime == 5) {//Get the string "Chargement en cours" whatever language
+            var total_time = 0;
+            var interval = setInterval(function () {
+                if (field.val() !== "••••••••" && field.val() !== loadingString) {
+                    if (waitingTime === 20) {
                         loadingString = field.val();
                         waitingTime = 50;
-                        setTimeout(waitPass, waitingTime);
+                        total_time += waitingTime;
                     } else {
-                        if (login != "")
+                        if (login !== "")
                             results.push({website: website, login: login, pass: field.val()});
-                        console.log(results);
-                        console.log(index);
+                        clearInterval(interval);
                         if (index + 1 < nbOfPass)
                             getPass(index + 1);
                         else
                             sendResponse(results);
                     }
                 } else {
-                    if (field.val() == "••••••••")
-                        eyeElem.click();
-                    setTimeout(waitPass, waitingTime);
+                    if (field.val() === "••••••••")
+                        eyeElem[0].click();
+                    total_time += waitingTime;
+                    if (total_time > 1000) {
+                        clearInterval(interval);
+                        sendResponse(results);
+                    }
                 }
-            }
-            console.log(eyeElem);
-            eyeElem.click();
-            waitPass();
-            /* } else {
-                if (index + 1 < nbOfPass)
-                    getPass(index + 1);
-                else {
-                    $(element).find(".Vaa.AW.aga").click();
-                    sendResponse(results);
-                }
-            } */
-
+            }, waitingTime);
         }
 
         getPass(0);

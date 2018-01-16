@@ -7,8 +7,8 @@ import {basicDateFormat} from "../../utils/utils";
 import {connect} from "react-redux";
 
 @connect(store => ({
-  team: store.teams[store.teamModals.reactivateTeamUserModal.team_id],
-  team_user_id: store.teamModals.reactivateTeamUserModal.team_user_id
+  team: store.teams[store.teamModals.departureDateEndModal.team_id],
+  team_user_id: store.teamModals.departureDateEndModal.team_user_id
 }))
 class DepartureDateEndModal extends Component {
   constructor(props) {

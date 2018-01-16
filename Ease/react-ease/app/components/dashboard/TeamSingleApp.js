@@ -52,6 +52,7 @@ class TeamSingleApp extends Component {
     const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
 
     return (
+<<<<<<< HEAD
         <div class='app'>
           <div class="logo_area">
             {this.state.loading &&
@@ -74,9 +75,33 @@ class TeamSingleApp extends Component {
                 Settings
               </button>
             </div>
+=======
+      <div class='app'>
+        <div class="logo_area">
+          {this.state.loading &&
+          <LoadingAppIndicator/>}
+          {app.new &&
+          <NewAppLabel/>}
+          {password_update &&
+          <UpdatePasswordLabel/>}
+          {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
+          <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
+          {me.disabled &&
+          <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
+          {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id &&
+          <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}/>}
+          {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id &&
+          <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}/>}
+          <div class="logo_handler">
+            <img class="logo" src={team_app.logo} onClick={this.connect}/>
+            <button class="settings_button" onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}>
+              Settings
+            </button>
+>>>>>>> dashboard
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
         </div>
+        <span class="app_name overflow-ellipsis">{app.name}</span>
+      </div>
     )
   }
 }

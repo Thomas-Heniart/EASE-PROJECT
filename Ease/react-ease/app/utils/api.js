@@ -23,7 +23,10 @@ module.exports = {
       return basic_get('/api/v1/catalog/GetSsoList');
     },
     getRequestsNumber: () => {
-      return basic_get('/api/v1/catalog/GetRequestNumber')
+      return basic_get('/api/v1/catalog/GetRequestNumber');
+    },
+    getImportation: function() {
+      return basic_get('/api/v1/importedAccounts');
     }
   },
   getClearbitLogo : function (url) {
@@ -32,8 +35,15 @@ module.exports = {
     const img_url = "https://logo.clearbit.com/" + l.hostname;
     return axios.get("https://logo.clearbit.com/" + l.hostname).then(response => {
       if (img_url.endsWith(window.location.hostname) && url.indexOf(window.location.hostname) === -1)
-        return '/resources/icons/link_app.png';
+        return '';
       return img_url;
+    }).catch(err => {
+      throw err;
+    })
+  },
+  getClearbitLogoAutoComplete : function (name) {
+    return axios.get("https://autocomplete.clearbit.com/v1/companies/suggest?query=" + name).then(response => {
+      return response.data[0].logo;
     }).catch(err => {
       throw err;
     })

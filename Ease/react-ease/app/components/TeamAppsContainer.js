@@ -1,7 +1,11 @@
 var React = require('react');
 import SimpleTeamApp from "./teamAppAdders/SimpleTeamApp";
+import SimpleTeamSoftwareApp from "./teamAppAdders/SimpleTeamSoftwareApp";
+import SimpleTeamAnyApp from "./teamAppAdders/SimpleTeamAnyApp";
 import TeamLinkApp from "./teamAppAdders/LinkTeamApp";
 import EnterpriseTeamApp from "./teamAppAdders/EnterpriseTeamApp";
+import EnterpriseTeamAnyApp from "./teamAppAdders/EnterpriseTeamAnyApp";
+import EnterpriseTeamSoftwareApp from "./teamAppAdders/EnterpriseTeamSoftwareApp";
 import queryString from "query-string";
 import {fetchTeamAppList} from "../actions/teamActions";
 import {connect} from "react-redux";
@@ -198,18 +202,44 @@ class TeamAppsContainer extends React.Component{
             </div>}
             {!this.state.loading ?
                 team_cards.map(item => {
-                  if (item.type === 'teamSingleCard')
-                    return (
+                  if (item.type === 'teamSingleCard') {
+                    if (item.sub_type === 'software')
+                      return (
+                      <SimpleTeamSoftwareApp
+                        app={item}
+                        users={users}
+                        channels={channels}
+                        me={me}
+                        key={item.id}
+                        plan_id={plan_id}
+                        team_id={team.id}
+                        dispatch={this.props.dispatch}/>
+                      );
+                    else if (item.sub_type === 'any')
+                      return (
+                        <SimpleTeamAnyApp
+                          app={item}
+                          users={users}
+                          channels={channels}
+                          me={me}
+                          key={item.id}
+                          plan_id={plan_id}
+                          team_id={team.id}
+                          dispatch={this.props.dispatch}/>
+                      );
+                    else
+                      return (
                         <SimpleTeamApp
-                            app={item}
-                            users={users}
-                            channels={channels}
-                            me={me}
-                            key={item.id}
-                            plan_id={plan_id}
-                            team_id={team.id}
-                            dispatch={this.props.dispatch}/>
-                    );
+                          app={item}
+                          users={users}
+                          channels={channels}
+                          me={me}
+                          key={item.id}
+                          plan_id={plan_id}
+                          team_id={team.id}
+                          dispatch={this.props.dispatch}/>
+                      );
+                  }
                   if (item.type === 'teamLinkCard')
                     return (
                         <TeamLinkApp
@@ -221,18 +251,44 @@ class TeamAppsContainer extends React.Component{
                             team_id={team.id}
                             dispatch={this.props.dispatch}/>
                     );
-                  if (item.type === 'teamEnterpriseCard')
-                    return (
+                  if (item.type === 'teamEnterpriseCard') {
+                    if (item.sub_type === 'software')
+                      return (
+                        <EnterpriseTeamSoftwareApp
+                          app={item}
+                          users={users}
+                          channels={channels}
+                          me={me}
+                          key={item.id}
+                          plan_id={plan_id}
+                          team_id={team.id}
+                          dispatch={this.props.dispatch}/>
+                      );
+                    else if (item.sub_type === 'any')
+                      return (
+                        <EnterpriseTeamAnyApp
+                          app={item}
+                          users={users}
+                          channels={channels}
+                          me={me}
+                          key={item.id}
+                          plan_id={plan_id}
+                          team_id={team.id}
+                          dispatch={this.props.dispatch}/>
+                      );
+                    else
+                      return (
                         <EnterpriseTeamApp
-                            app={item}
-                            users={users}
-                            channels={channels}
-                            me={me}
-                            key={item.id}
-                            plan_id={plan_id}
-                            team_id={team.id}
-                            dispatch={this.props.dispatch}/>
-                    );
+                          app={item}
+                          users={users}
+                          channels={channels}
+                          me={me}
+                          key={item.id}
+                          plan_id={plan_id}
+                          team_id={team.id}
+                          dispatch={this.props.dispatch}/>
+                      );
+                  }
                 }) :
                 <Loader active />
             }

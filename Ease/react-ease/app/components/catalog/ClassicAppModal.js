@@ -14,107 +14,6 @@ import {connect} from "react-redux";
 import {testCredentials} from "../../actions/catalogActions";
 import {createProfile} from "../../actions/dashboardActions";
 
-class ProfileChooseStep extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      profileName: '',
-      addingProfile: false
-    }
-  }
-  handleInput = handleSemanticInput.bind(this);
-  createProfile = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (this.state.profileName.length === 0)
-      return;
-    this.setState({addingProfile: true});
-    dashboard.createProfile({name: this.state.profileName}).then(response => {
-      this.props.addProfile(response);
-      this.setState({profileName: '', addingProfile: false});
-    }).catch(err => {
-      this.setState({addingProfile: false});
-    });
-  };
-  render(){
-    const {
-      website,
-      appName,
-      handleInput,
-      selectedProfile,
-      confirm,
-      selectProfile} = this.props;
-    const profiles = this.props.profiles.map(profile => {
-      return (
-          <List.Item as="a"
-                     key={profile.id}
-                     class="display_flex"
-                     active={selectedProfile === profile.id}
-                     onClick={e => selectProfile(profile.id)}>
-            <strong>{profile.name}</strong>
-            &nbsp;&nbsp;
-            <em class="overflow-ellipsis">
-              {
-                profile.apps.map(function(app, idx){
-                  var ret = app.name;
-                  ret += (idx === profile.apps.length - 1) ? '' : ', ';
-                  return (ret)
-                }, this)
-              }
-            </em>
-          </List.Item>
-      )
-    });
-    return (
-        <Form class="container" id="add_bookmark_form" onSubmit={confirm}>
-          <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-            <div class="squared_image_handler">
-              <img src={website.logo} alt="Website logo"/>
-            </div>
-            <span class="app_name"><Input size="mini" type="text" placeholder="App name..."
-                                          name="name"
-                                          class="input_unstyle modal_input name_input"
-                                          autoFocus={true}
-                                          value={appName}
-                                          onChange={handleInput}/></span>
-          </Form.Field>
-          <Form.Field>
-            <div style={{marginBottom: '10px'}}>App location (you can always change it later)</div>
-            <Container class="profiles">
-              <List link>
-                {this.props.loading ?
-                    <Loader inline={'centered'} active size="tiny"/>:
-                    profiles}
-              </List>
-              {!this.props.loading &&
-              <form style={{marginBottom: 0}} onSubmit={this.createProfile}>
-                <Input
-                    loading={this.state.addingProfile}
-                    value={this.state.profileName}
-                    style={{fontSize:'14px'}}
-                    name="profileName"
-                    required
-                    transparent
-                    onChange={this.handleInput}
-                    class="create_profile_input"
-                    icon={<Icon name="plus square" link onClick={this.createProfile}/>}
-                    placeholder='Create new group' />
-              </form>}
-            </Container>
-          </Form.Field>
-          <Button
-              attached='bottom'
-              type="submit"
-              positive
-              disabled={selectedProfile === -1 || appName.length === 0}
-              onClick={confirm}
-              className="modal-button"
-              content="NEXT"/>
-        </Form>
-    )
-  }
-}
-
 const CredentialInput = ({item, onChange}) => {
   return (
       <Form.Field>
@@ -499,7 +398,7 @@ class ClassicAppModal extends React.Component {
       profiles.map(item => {
         item.app_ids.map(id => {
           const app = dashboard_apps[id];
-          if (app.type !== 'teamLinkApp' && app.type !== 'linkApp') {
+          if (app.type !== 'teamLinkApp' && app.type !== 'linkApp' && app.type !== 'softwareApp' && app.sub_type !== 'software') {
             if (app.website.id === website.id)
               apps.push(app);
           }
@@ -631,6 +530,7 @@ class ClassicAppModal extends React.Component {
               appName={this.state.name}
               team_id={this.state.selectedTeam}
               room_id={this.state.selectedRoom}
+              subtype={'classic'}
               close={this.close} />}
         </SimpleModalTemplate>
     )

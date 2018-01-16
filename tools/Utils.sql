@@ -69,10 +69,13 @@ CHARACTER SET utf8
 COLLATE utf8_unicode_ci;
 
 CREATE TABLE `logs` (
-  `servlet_name` varchar(255) NOT NULL,
-  `code` int(10) unsigned NOT NULL,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `args` text NOT NULL,
-  `retMsg` text NOT NULL,
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `servlet_name` VARCHAR(255)     NOT NULL,
+  `code`         INT(10) UNSIGNED NOT NULL,
+  `user_id`      INT(10) UNSIGNED          DEFAULT NULL,
+  `args`         TEXT             NOT NULL,
+  `retMsg`       TEXT             NOT NULL,
+  `date`         DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+UPDATE status
+SET new_feature_seen = 0;

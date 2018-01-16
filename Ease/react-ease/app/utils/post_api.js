@@ -14,6 +14,11 @@ const basic_post = (url, params) => {
 
 module.exports = {
   dashboard: {
+    clickOnAppMetric: ({app_id}) => {
+      return basic_post('/api/v1/metrics/ClickOnAppMetric', {
+        app_id: app_id
+      });
+    },
     validateTutorial : () => {
       return basic_post('/api/v1/common/TutoDone');
     },
@@ -92,6 +97,31 @@ module.exports = {
         img_url: img_url,
         ws_id:ws_id
       })
+    },
+    editAnyApp: ({app_id, name, url, img_url, account_information, connection_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/dashboard/EditAnyApp', {
+        app_id: app_id,
+        name: name,
+        url: url,
+        img_url: img_url,
+        account_information: account_information,
+        connection_information: connection_information,
+        ws_id: ws_id
+      });
+    },
+    editSoftwareApp: ({app_id, name, account_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/dashboard/EditSoftwareApp', {
+        app_id: app_id,
+        name: name,
+        account_information: account_information,
+        ws_id: ws_id
+      });
     },
     editAppName: ({app_id, name,ws_id}) => {
       return basic_post('/api/v1/dashboard/EditAppName', {
@@ -197,6 +227,74 @@ module.exports = {
         account_information: account_information,
         ws_id: ws_id
       });
+    },
+    addAnyApp: ({name, url, img_url, profile_id, account_information, connection_information, credentials_provided, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/catalog/AddAnyApp', {
+        name: name,
+        url: url,
+        img_url: img_url,
+        profile_id: profile_id,
+        account_information: account_information,
+        connection_information: connection_information,
+        credentials_provided: credentials_provided,
+        ws_id: ws_id
+      });
+    },
+    addSoftwareApp: ({name, logo_url, profile_id, account_information, connection_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/catalog/AddSoftwareApp', {
+        name: name,
+        logo_url: logo_url,
+        profile_id: profile_id,
+        account_information: account_information,
+        connection_information: connection_information,
+        ws_id: ws_id
+      });
+    },
+    importAccount: ({name, url, account_information, ws_id}) => {
+      // Object.keys(account_information).map(item => {
+      //   account_information[item] = cipher(account_information[item]);
+      // });
+      return basic_post('/api/v1/importedAccounts', {
+        name: name,
+        url: url,
+        account_information: account_information,
+        ws_id: ws_id
+      });
+    },
+    modifyImportedAccount: ({id, name, url, website_id, account_information, ws_id}) => {
+      // Object.keys(account_information).map(item => {
+      //   account_information[item] = cipher(account_information[item]);
+      // });
+      return axios.put('/api/v1/importedAccounts', {
+        id: id,
+        name: name,
+        url: url,
+        website_id: website_id,
+        account_information: account_information,
+        ws_id: ws_id
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    deleteImportedAccount: ({id, ws_id}) => {
+      return axios.delete('/api/v1/importedAccounts', {
+        params: {
+          id: id,
+          ws_id: ws_id
+        }
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
     }
   },
   teamChannel: {
@@ -496,6 +594,43 @@ module.exports = {
         throw err.response.data;
       });
     },
+    createTeamAnySingleCard: ({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/teams/CreateTeamAnySingleCard', {
+        team_id: team_id,
+        channel_id: channel_id,
+        name: name,
+        description: description,
+        password_reminder_interval: password_reminder_interval,
+        url: url,
+        img_url: img_url,
+        connection_information: connection_information,
+        account_information: account_information,
+        team_user_filler_id: team_user_filler_id,
+        receivers: receivers,
+        ws_id: ws_id
+      });
+    },
+    createTeamSoftwareSingleCard: ({team_id, channel_id, name, description, password_reminder_interval, logo_url, team_user_filler_id, connection_information, account_information, receivers, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/teams/CreateTeamSoftwareSingleCard', {
+        team_id: team_id,
+        channel_id: channel_id,
+        name: name,
+        description: description,
+        password_reminder_interval: password_reminder_interval,
+        logo_url: logo_url,
+        team_user_filler_id: team_user_filler_id,
+        connection_information: connection_information,
+        account_information: account_information,
+        receivers: receivers,
+        ws_id: ws_id
+      });
+    },
     sendSingleCardFillerReminder: ({team_card_id}) => {
       return basic_post('/api/v1/teams/SendFillerReminder', {
         team_card_id: team_card_id
@@ -541,6 +676,36 @@ module.exports = {
         throw err.response.data;
       });
     },
+    editAnySingleCard: ({team_card_id, description, connection_information, account_information, password_reminder_interval, url, img_url, name, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/teams/EditTeamAnySingleCard', {
+        team_card_id: team_card_id,
+        name: name,
+        description: description,
+        password_reminder_interval: password_reminder_interval,
+        url: url,
+        img_url: img_url,
+        connection_information: connection_information,
+        account_information: account_information,
+        ws_id: ws_id
+      });
+    },
+    editSoftwareSingleCard: ({team_card_id, description, account_information, connection_information, password_reminder_interval, name, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      return basic_post('/api/v1/teams/EditTeamSoftwareSingleCard', {
+        team_card_id: team_card_id,
+        name: name,
+        description: description,
+        account_information: account_information,
+        connection_information: connection_information,
+        password_reminder_interval: password_reminder_interval,
+        ws_id: ws_id
+      });
+    },
     editSingleCardReceiver: ({team_id, team_card_id, team_card_receiver_id, allowed_to_see_password, ws_id}) => {
       return axios.post('/api/v1/teams/EditTeamSingleCardReceiver', {
         team_id: team_id,
@@ -572,9 +737,69 @@ module.exports = {
         ws_id: ws_id
       });
     },
+    createAnyEnterpriseCard: ({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, receivers, ws_id}) => {
+      Object.keys(receivers).map(receiver => {
+        Object.keys(receivers[receiver].account_information).map(item => {
+          receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
+        });
+        return receivers[receiver];
+      });
+      return basic_post('/api/v1/teams/CreateTeamAnyEnterpriseCard', {
+        team_id: team_id,
+        channel_id: channel_id,
+        name: name,
+        description: description,
+        password_reminder_interval: password_reminder_interval,
+        url: url,
+        img_url: img_url,
+        connection_information: connection_information,
+        receivers: receivers,
+        ws_id: ws_id
+      });
+    },
+    createSoftwareEnterpriseCard: ({team_id, channel_id, name, description, password_reminder_interval, logo_url, connection_information, receivers, ws_id}) => {
+      Object.keys(receivers).map(receiver => {
+        Object.keys(receivers[receiver].account_information).map(item => {
+          receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
+        });
+        return receivers[receiver];
+      });
+      return basic_post('/api/v1/teams/CreateTeamSoftwareEnterpriseCard', {
+        team_id: team_id,
+        channel_id: channel_id,
+        name: name,
+        description: description,
+        password_reminder_interval: password_reminder_interval,
+        logo_url: logo_url,
+        receivers: receivers,
+        connection_information: connection_information,
+        ws_id: ws_id
+      });
+    },
     editEnterpriseCard: ({team_id, team_card_id, name, description, password_reminder_interval, ws_id}) => {
       return basic_post('/api/v1/teams/EditTeamEnterpriseCard', {
         team_id: team_id,
+        team_card_id: team_card_id,
+        name: name,
+        description: description,
+        password_reminder_interval: password_reminder_interval,
+        ws_id: ws_id
+      });
+    },
+    editAnyEnterpriseCard: ({team_card_id, name, description, password_reminder_interval, url, img_url, connection_information, ws_id}) => {
+      return basic_post('/api/v1/teams/EditTeamAnyEnterpriseCard', {
+        team_card_id: team_card_id,
+        name: name,
+        description: description,
+        password_reminder_interval: password_reminder_interval,
+        url: url,
+        img_url: img_url,
+        connection_information: connection_information,
+        ws_id: ws_id
+      });
+    },
+    editSoftwareEnterpriseCard: ({team_card_id, name, description, password_reminder_interval, ws_id}) => {
+      return basic_post('/api/v1/teams/EditTeamSoftwareEnterpriseCard', {
         team_card_id: team_card_id,
         name: name,
         description: description,
