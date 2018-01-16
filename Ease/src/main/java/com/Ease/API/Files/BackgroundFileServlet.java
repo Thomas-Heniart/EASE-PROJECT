@@ -18,6 +18,8 @@ import java.util.Calendar;
 public class BackgroundFileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("Upload background");
+        System.out.println(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
         String filename = "background_" + Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + ".jpeg";
         File file = new File(Variables.BACKGROUND_PATH, filename);
         response.setHeader("Content-Type", getServletContext().getMimeType(filename));
@@ -26,6 +28,8 @@ public class BackgroundFileServlet extends HttpServlet {
         try {
             Files.copy(file.toPath(), response.getOutputStream());
         } catch (NoSuchFileException e) {
+            e.printStackTrace();
+            System.out.println("File not found: " + Variables.BACKGROUND_PATH + filename);
             filename = "background.jpeg";
             file = new File(Variables.BACKGROUND_PATH, filename);
             response.setHeader("Content-Type", getServletContext().getMimeType(filename));
