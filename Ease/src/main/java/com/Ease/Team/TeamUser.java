@@ -47,12 +47,6 @@ public class TeamUser {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "firstName")
-    private String firstName;
-
-    @Column(name = "lastName")
-    private String lastName;
-
     @Column(name = "email")
     private String email;
 
@@ -84,9 +78,6 @@ public class TeamUser {
     @Column(name = "departureDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date departureDate;
-
-    @Column(name = "jobTitle")
-    private String jobTitle;
 
     @Column(name = "disabled")
     private boolean disabled;
@@ -142,9 +133,7 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<PendingNotification> pendingNotificationSet = ConcurrentHashMap.newKeySet();
 
-    public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public TeamUser(String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
         this.email = email;
         this.username = username;
         this.teamKey = teamKey;
@@ -173,22 +162,6 @@ public class TeamUser {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -229,14 +202,6 @@ public class TeamUser {
 
     public void setDepartureDate(Date departureDate) {
         this.departureDate = departureDate;
-    }
-
-    public String getJobTitle() {
-        return jobTitle;
-    }
-
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
     }
 
     public Team getTeam() {
@@ -391,9 +356,9 @@ public class TeamUser {
         this.getPending_channels().remove(channel);
     }
 
-    public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws HttpServletException {
+    public static TeamUser createOwner(String email, String username, Date arrivalDate, String teamKey, Team team) throws HttpServletException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
-        TeamUser owner = new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, team, teamUserRole);
+        TeamUser owner = new TeamUser(email, username, arrivalDate, teamKey, team, teamUserRole);
         owner.setState(2);
         return owner;
     }
@@ -430,13 +395,7 @@ public class TeamUser {
     }
 
     public void edit(JSONObject editJson) {
-        String firstName = (String) editJson.get("firstName");
-        String lastName = (String) editJson.get("lastName");
         String username = (String) editJson.get("username");
-        if (lastName != null)
-            this.lastName = lastName;
-        if (firstName != null)
-            this.firstName = firstName;
         if (username != null)
             this.username = username;
     }
@@ -499,18 +458,6 @@ public class TeamUser {
 
     public void setState(Integer state) {
         this.state = state;
-    }
-
-    public void editFirstName(String firstName) {
-        if (firstName.equals(this.getFirstName()))
-            return;
-        this.firstName = firstName;
-    }
-
-    public void editLastName(String lastName) {
-        if (lastName.equals(this.getLastName()))
-            return;
-        this.lastName = lastName;
     }
 
     public void editUsername(String username) {
