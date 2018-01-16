@@ -68,11 +68,7 @@
 <BODY>
 <div id="app">
 </div>
-<<<<<<< HEAD
-<script src="teams_bundle.js?v=33"></script>
-=======
 <script src="teams_bundle.js?v=42"></script>
->>>>>>> dashboard
 <script type="text/javascript">
   !function(a,b){var c=window;c.SessionStack=a,c[a]=c[a]||function(){
     c[a].q=c[a].q||[],c[a].q.push(arguments)},c[a].t=b;var d=document.createElement("script");
