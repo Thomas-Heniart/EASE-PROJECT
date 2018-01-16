@@ -1,9 +1,10 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
+require("babel-polyfill");
 
 config = {
-    entry : './app/index.js',
+    entry : ['babel-polyfill', './app/index.js'],
     output: {
         path: path.resolve(__dirname, '../WebContent'),
         filename: 'teams_bundle.js',
@@ -16,7 +17,7 @@ config = {
                 exclude: /(node_modules|bower_components)/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['react', 'es2015', 'stage-0'],
+                    presets: ['react', 'env', 'stage-0'],
                     plugins: ['react-html-attrs', 'transform-class-properties', 'transform-decorators-legacy']
                 }
             },
@@ -36,7 +37,8 @@ if (process.env.NODE_ENV === 'production') {
             'NODE_ENV' : JSON.stringify(process.env.NODE_ENV)
         }
         }),
-        new webpack.optimize.UglifyJsPlugin()
+        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin()
     )
 }
 

@@ -24,7 +24,7 @@
 				</div>
 				<div class="right-menu ui row menu-column">
 					<div class="links">
-						<a href="equipe">
+						<a href="team">
 							<fmt:message key="landing.header.team-link"/>
 						</a>
 						<a href="contact">
@@ -42,7 +42,7 @@
 			</div>
 			<div class="ui row easeExplore right">
 				<div class="logo">
-					<img class="ui small image" src="resources/icons/Ease_logo_blue.svg"/>
+					<img class="ui small image" src="resources/images/ease_logo_blue.svg"/>
 				</div>
 				<div class="social_links">
 					<div class="link">

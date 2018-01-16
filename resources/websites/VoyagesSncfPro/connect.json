@@ -1,0 +1,48 @@
+{
+  "name": "V-PRO Entreprises",
+  "lastLogin": "",
+  "home": "https://www.voyages-sncf.com/vpro-entreprises/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": ".authentication-form #email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": ".authentication-form #password"
+      },
+      {
+        "action": "trueClick",
+        "search": ".authentication-form button[type='submit']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='mon-compte/authentifier']"
+      },
+      {
+        "action": "waitfor",
+        "search": ".authentication-form"
+      },
+      {
+        "action": "aclick",
+        "search": "a[href*='mon-compte/authentifier']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".header-util-profile-desktop, .authentication-form"
+    },
+    {
+      "search": ".header-util-profile-desktop"
+    }
+  ]
+}

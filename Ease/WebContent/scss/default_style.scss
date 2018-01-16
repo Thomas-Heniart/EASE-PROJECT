@@ -24,6 +24,7 @@
 @import 'page500';
 @import 'buttons';
 @import 'Extension';
+@import 'dashboard';
 @import 'UIElements/Tips';
 @import 'UIElements/EasePopups';
 @import 'LanguageChooser';
@@ -43,6 +44,31 @@
   transition-duration: 0.3s;
   -webkit-transition-property: transform;
   transition-property: transform;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .basic_scrollbar {
@@ -71,11 +97,39 @@
   }
 }
 
+.lite_scrollbar {
+  ::-webkit-scrollbar {
+    position: absolute !important;
+    -webkit-appearance: none !important;
+    width: 12px !important;
+  }
+  ::-webkit-scrollbar-corner {
+    background: #fff !important;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d9d9de !important;
+    box-shadow: none !important;
+    min-height: 36px !important;
+    background-clip: padding-box!important;
+    color: #fff !important;
+    border:3px solid transparent !important;
+    border-radius: 6px !important;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f3f3f3 !important;
+    box-shadow: none !important;
+    background-clip: padding-box!important;
+    color: #fff !important;
+    border:3px solid transparent !important;
+    border-radius: 6px !important;
+  }
+}
+
 .bordered_scrollbar {
   ::-webkit-scrollbar {
     position: absolute !important;
     -webkit-appearance: none !important;
-    width: 10px !important;
+    width: 12px !important;
   }
   ::-webkit-scrollbar-corner {
     background: #fff !important;
@@ -86,8 +140,8 @@
     min-height: 36px !important;
     background-clip: padding-box!important;
     color: #fff !important;
-    border-left: 2px solid #fff !important;
-    border-right: 2px solid #fff !important;
+    border-left: 3px solid transparent !important;
+    border-right: 3px solid transparent !important;
     border-radius: 6px/4px !important;
   }
   ::-webkit-scrollbar-track {
@@ -95,8 +149,8 @@
     box-shadow: inset 0 -4px 0 0, inset 0 4px 0 0 !important;
     background-clip: padding-box!important;
     color: #fff !important;
-    border-left: 2px solid #fff !important;
-    border-right: 2px solid #fff !important;
+    border-left: 3px solid transparent !important;
+    border-right: 3px solid transparent !important;
     border-radius: 6px/4px !important;
   }
 }
@@ -104,6 +158,82 @@
 .hvr-grow:hover, .hvr-grow:focus, .hvr-grow:active {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.row, .container {
+  &:before {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+    display: table;
+    content: " ";
+  }
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.ease-background {
+  &:before {
+    content: '';
+    z-index: -1;
+    top: 0;
+    bottom:0;
+    left:0;
+    right:0;
+    position: fixed;
+    background-image: url(../backgrounds/background.jpeg);
+    background-position: 50% 50%;
+    background-size: cover;
+    -webkit-transition: opacity 1000ms linear;
+    -moz-transition: opacity 1000ms linear;
+    -o-transition: opacity 1000ms linear;
+    -ms-transition: opacity 1000ms linear;
+    transition: opacity 1000ms linear;
+  }
+}
+
+#dashboard + #ease_header {
+  border-bottom: none;
+  &:before {
+    content: '';
+    transition: height .3s ease;
+    top:0;
+    background-color: white;
+    height: 0;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+  }
+}
+
+#dashboard.scrolling + #ease_header {
+  &:before {
+    transition: height .3s ease;
+    height: 100%;
+    border-bottom: 1px solid #E1E1E1;
+  }
 }
 
 input[type=number]::-webkit-inner-spin-button {
@@ -125,12 +255,28 @@ input[type=number]::-webkit-inner-spin-button {
   position: inherit;
 }
 
+.ui.disabled.input, .ui.input:not(.disabled) input[disabled] {
+  opacity: inherit;
+}
+
 .max-border-radius {
   border-radius: 100%;
 }
 
 .fw-normal {
   font-weight: normal !important;
+}
+
+.full_screen_view {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10vh 2rem 2rem;
+  color: $themeDarkGrayTextColor;
 }
 
 .ui.search.inverted {
@@ -162,12 +308,20 @@ i.icon.hide {
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 .ui.input.max-border-radius input {
   border-radius: 500px;
 }
 
 .ui.fluid.search > .input {
   width: 100%;
+}
+
+.ui.button.loading, button.ui.button.loading {
+  pointer-events: none !important;
 }
 
 .ui.checkbox.mini {
@@ -182,6 +336,10 @@ i.icon.hide {
   cursor: pointer;
   text-decoration: underline;
   color: inherit;
+  &:hover {
+    color: inherit;
+    text-decoration: underline;
+  }
 }
 
 button.inline-text-button {
@@ -214,11 +372,20 @@ html {
 }
 
 #single_ease_logo_handler {
-  position: absolute;
+  position: fixed;
   top:0;
   left: 0;
-  height: 43px;
+  height: 50px;
   z-index: 1;
+}
+@media screen and (max-width: 768px) {
+  #single_ease_logo_handler {
+    position: absolute;
+    top:0;
+    left: 0;
+    height: 50px;
+    z-index: 1;
+  }
 }
 
 #main_navbar {
@@ -544,19 +711,19 @@ input.modal_input, select.modal_input {
 }
 
 .mrgnBottom5 {
-  margin-bottom: 5px;
+  margin-bottom: 5px !important;
 }
 .mrgnTop5 {
-  margin-top: 5px;
+  margin-top: 5px !important;
 }
 .mrgnLeft5 {
-  margin-left: 5px;
+  margin-left: 5px !important;
 }
 i.icon.mrgnLeft5 {
-  margin-left: 5px;
+  margin-left: 5px !important;
 }
 .mrgnRight5 {
-  margin-right: 5px;
+  margin-right: 5px !important;
 }
 
 .text-muted {
@@ -1197,11 +1364,13 @@ body {
 
 
 .logoImg{
-	height: 125%;
-	width: auto;
-	margin: 0px;
-	margin-top: -4px;
-	float: left;
+  height: 100%;
+  //height: 125%;
+  width: auto;
+  margin: 5px 10px 0 10px;
+  //margin: 0;
+  // margin-top: -4px;
+  float: left;
 }
 
 .alertDiv {

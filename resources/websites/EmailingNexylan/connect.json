@@ -1,0 +1,22 @@
+{
+  "name":"Emailing Nexylan",
+  "lastlogin":"",
+  "home":"http://emailing.nexylan.com/",
+  "connect": {
+    "todo": [
+      {"action":"waitfor", "search":"form[action*='login'] button[type='submit']"},
+      {"action":"fill", "what":"login", "search":"#email"},
+      {"action":"fill", "what":"password", "search":"input[type='password']"},
+      {"action":"click", "search":"button[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[href*='logout'], form[action*='login']"},
+    {"search":"a[href*='logout']"}
+  ]
+}

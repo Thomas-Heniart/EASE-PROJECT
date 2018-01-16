@@ -1,6 +1,7 @@
 import React from 'react';
 import {editTeamName} from '../../actions/teamActions';
 import { Header, Container, Menu, Segment, Comment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import {StripeProvider} from 'react-stripe-elements';
 import {connect} from "react-redux";
 import {fetchTeamPaymentInformation, teamInviteFriends, teamUpdateBillingInformation, unsubscribe} from "../../actions/teamActions";
 import countryValues from "../../utils/countrySelectList";
@@ -8,7 +9,7 @@ import {withRouter, Switch, Route, NavLink} from "react-router-dom";
 var MyStoreCheckout = require('../stripe/MyStoreCheckout');
 
 @connect(store => ({
-  teamName: store.team.name
+  teams:store.teams
 }))
 class TeamInformations extends React.Component {
   constructor(props){
@@ -18,28 +19,31 @@ class TeamInformations extends React.Component {
       teamName: '',
       loading: false
     };
-    this.setModifying = this.setModifying.bind(this);
-    this.handleInput = this.handleInput.bind(this);
-    this.submit = this.submit.bind(this);
   }
-  handleInput(e, {name, value}){
+  handleInput = (e, {name, value}) => {
     this.setState({[name]: value});
-  }
-  setModifying(state){
-    this.setState({modifying: state, teamName: this.props.teamName});
-  }
-  submit(){
+  };
+  setModifying = (state) => {
+    const team = this.props.teams[this.props.match.params.teamId];
+    this.setState({modifying: state, teamName: team.name});
+  };
+  submit = () => {
+    const team = this.props.teams[this.props.match.params.teamId];
     this.setState({loading: true});
-    this.props.dispatch(editTeamName(this.state.teamName)).then(() => {
+    this.props.dispatch(editTeamName({
+      team_id: team.id,
+      name:this.state.teamName
+    })).then(() => {
       this.setState({loading: false});
       this.setModifying(false);
     });
-  }
+  };
   render(){
+    const team = this.props.teams[this.props.match.params.teamId];
     return (
         <div class="team_settings_section">
           <Header as="h3">
-            {this.props.teamName}
+            {team.name}
           </Header>
           <Segment>
             <Header as="h4">
@@ -49,7 +53,7 @@ class TeamInformations extends React.Component {
               <Form.Group>
                 <Form.Input
                     disabled={!this.state.modifying}
-                    value={!this.state.modifying ? this.props.teamName : this.state.teamName}
+                    value={!this.state.modifying ? team.name : this.state.teamName}
                     onChange={this.handleInput}
                     autoFocus
                     name="teamName"
@@ -79,42 +83,40 @@ class TeamInformations extends React.Component {
 
 function CreditCardPreview({card}){
   return (
-        <div class="credit-card-preview display-flex">
-          <div class="icon">
-            <Icon name="credit card alternative"/>
-          </div>
-          <div class="info display-flex flex_direction_column">
-            <span class="name">{card.name}</span>
-            <span class="number">••••••••••••{card.last4}&nbsp;&nbsp;&nbsp;{card.exp_month}/{card.exp_year}</span>
-          </div>
+      <div class="credit-card-preview display-flex">
+        <div class="icon">
+          <Icon name="credit card alternative"/>
         </div>
+        <div class="info display-flex flex_direction_column">
+          <span class="name">{card.name}</span>
+          <span class="number">••••••••••••{card.last4}&nbsp;&nbsp;&nbsp;{card.exp_month}/{card.exp_year}</span>
+        </div>
+      </div>
   )
 }
 
-@connect((store)=>{
-  return {
-    payment : store.team.payment
-  }})
+@connect((store)=>({
+  payment : store.team_payments
+}))
 class PaymentMethod extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       modifying: false
     };
-    this.setModifying = this.setModifying.bind(this);
-    this.cardTokenCallback = this.cardTokenCallback.bind(this);
   }
-  setModifying(state){
+  setModifying = (state) => {
     this.setState({modifying: state});
-  }
-  cardTokenCallback(token){
+  };
+  cardTokenCallback = (token) => {
     //do stuff with token;
     //console.log(token);
     this.setModifying(false);
-  }
+  };
   render(){
     const payment = this.props.payment;
     const card = payment.data.card;
+    const team_id = Number(this.props.match.params.teamId);
 
     return (
         <div class="team_settings_section">
@@ -131,24 +133,26 @@ class PaymentMethod extends React.Component {
               {card !== null ? 'Credit card information' : 'There is no credit card set up yet'}
             </Header>
             {card !== null && !this.state.modifying &&
-              <CreditCardPreview card={card}/>}
+            <CreditCardPreview card={card}/>}
             {!this.state.modifying &&
             <div class="overflow-hidden">
               <Button primary size="mini" content={card !== null ? 'Replace this card' : 'Add credit card'} floated="right" onClick={this.setModifying.bind(null, true)}/>
             </div>}
             {this.state.modifying &&
-            <MyStoreCheckout cancel={this.setModifying.bind(null, false)} validate={this.cardTokenCallback}/>}
+            <MyStoreCheckout
+                team_id={team_id}
+                cancel={this.setModifying.bind(null, false)}
+                validate={this.cardTokenCallback}/>}
           </Segment>
-          <FriendInvitations/>
+          {<FriendInvitations team_id={team_id}/>}
         </div>
     )
   }
 }
 
-@connect((store)=>{
-  return {
-    payment : store.team.payment
-  }})
+@connect((store)=>({
+  payment : store.team_payments
+}))
 class FriendInvitations extends React.Component {
   constructor(props){
     super(props);
@@ -170,7 +174,12 @@ class FriendInvitations extends React.Component {
   sendInvitations = (e) => {
     e.preventDefault();
     this.setState({loading: true, errorMessage:''});
-    this.props.dispatch(teamInviteFriends(this.state.email1, this.state.email2, this.state.email3)).then(response => {
+    this.props.dispatch(teamInviteFriends({
+      team_id: this.props.team_id,
+      email1: this.state.email1,
+      email2: this.state.email2,
+      email3: this.state.email3
+    })).then(response => {
       this.setState({loading: false});
       this.setModifying(false);
     }).catch(err => {
@@ -181,8 +190,8 @@ class FriendInvitations extends React.Component {
     const payment = this.props.payment;
     return (
         <Segment size="mini" loading={payment.loading}>
-          <Header>
-            You now have {payment.data.credit} euros in credits
+          <Header style={{color: '#2185d0'}}>
+            Credits : {payment.data.credit} €
           </Header>
           <p>You can obtain credits by inviting friends. As soon as you have credits your payments will be withdrawn from it until you reach 0€.</p>
           {!this.state.modifying &&
@@ -231,7 +240,7 @@ class FriendInvitations extends React.Component {
 }
 
 @connect((store) => ({
-  payment : store.team.payment
+  payments : store.team_payments
 }))
 class BillingInformation extends React.Component {
   constructor(props){
@@ -256,9 +265,11 @@ class BillingInformation extends React.Component {
     this.setState({modifying: false});
   };
   submit = (e) =>{
+    const teamId = Number(this.props.match.params.teamId);
     e.preventDefault();
     this.setState({errorMessage: '', loading: true});
     this.props.dispatch(teamUpdateBillingInformation({
+      team_id: teamId,
       address_country: this.state.address_country,
       address_city: this.state.address_city,
       address_line1: this.state.address_line1,
@@ -279,8 +290,9 @@ class BillingInformation extends React.Component {
       this.setState({[e.target.name]: e.target.value});
   };
   componentWillReceiveProps(nextProps){
-    if (this.props !== nextProps && !nextProps.payment.loading && nextProps.payment.data.card !== null){
-      const card = nextProps.payment.data.card;
+    const team_payment = nextProps.payments;
+    if (this.props !== nextProps && !team_payment.loading && team_payment.data.card !== null){
+      const card = team_payment.data.card;
       this.setState({
         address_country: card.address_country !== null ? card.address_country : '',
         address_city: card.address_city !== null ? card.address_city : '',
@@ -288,13 +300,15 @@ class BillingInformation extends React.Component {
         address_line2: card.address_line2 !== null ? card.address_line2 : '',
         address_state: card.address_state !== null ? card.address_state : '',
         address_zip: card.address_zip !== null ? card.address_zip : '',
-        business_vat_id: nextProps.payment.data.business_vat_id
+        business_vat_id: team_payment.data.business_vat_id
       });
     }
   }
   componentDidMount(){
-    if (!this.props.payment.loading && this.props.payment.data.card !== null){
-      const card = this.props.payment.data.card;
+    const team_payment = this.props.payments;
+
+    if (!team_payment.loading && team_payment.data.card !== null){
+      const card = team_payment.data.card;
       this.setState({
         address_country: card.address_country !== null ? card.address_country : '',
         address_city: card.address_city !== null ? card.address_city : '',
@@ -302,12 +316,12 @@ class BillingInformation extends React.Component {
         address_line2: card.address_line2 !== null ? card.address_line2 : '',
         address_state: card.address_state !== null ? card.address_state : '',
         address_zip: card.address_zip !== null ? card.address_zip : '',
-        business_vat_id: this.props.payment.data.business_vat_id
+        business_vat_id: team_payment.data.business_vat_id
       });
     }
   }
   render(){
-    const payment = this.props.payment;
+    const payment = this.props.payments;
     const card = payment.data.card;
     return (
         <div class="team_settings_section">
@@ -322,11 +336,11 @@ class BillingInformation extends React.Component {
               All information filled will be displayed on your monthly bill.
             </p>
             {!payment.loading && card === null &&
-              <Message color="red">
+            <Message color="red">
               Before adding your billing information, you need to set up your credit card in the&nbsp;
-                <NavLink to={`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/settings/payment`}>
-                  Payment section.
-                </NavLink>
+              <NavLink to={`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/settings/payment`}>
+                Payment section.
+              </NavLink>
             </Message>}
             <Form size="mini" onChange={this.handleInput} onSubmit={this.submit} error={this.state.errorMessage.length > 0}>
               <Form.Select
@@ -382,19 +396,19 @@ class BillingInformation extends React.Component {
                   placeholder="VAT ID"/>
               <Message error content={this.state.errorMessage}/>
               {!this.state.modifying &&
-                <Form.Button primary disabled={card === null} type="button" onClick={this.setModifying} className="overflow-hidden" content="Modify" floated="right" size="mini"/>}
+              <Form.Button primary disabled={card === null} type="button" onClick={this.setModifying} className="overflow-hidden" content="Modify" floated="right" size="mini"/>}
               {this.state.modifying &&
-                <Form.Field className="overflow-hidden">
-                  <Button type="submit" primary size="mini" floated="right" content="Save" loading={this.state.loading}/>
-                  <Button type="button" size="mini" floated="right" content="Cancel" onClick={this.unsetModifying}/>
-                </Form.Field>}
+              <Form.Field className="overflow-hidden">
+                <Button type="submit" primary size="mini" floated="right" content="Save" loading={this.state.loading}/>
+                <Button type="button" size="mini" floated="right" content="Cancel" onClick={this.unsetModifying}/>
+              </Form.Field>}
             </Form>
           </Segment>
         </div>
     )
   }
 }
-const BillingInformationWithRouter  = withRouter(BillingInformation);
+const BillingInformationWithRouter = withRouter(BillingInformation);
 
 @connect()
 class TeamAccount extends React.Component {
@@ -407,29 +421,28 @@ class TeamAccount extends React.Component {
       loading: false,
       errorMessage: ''
     };
-    this.setModifying = this.setModifying.bind(this);
-    this.handleInput = this.handleInput.bind(this);
-    this.submit = this.submit.bind(this);
-    this.check = this.check.bind(this);
   }
-  handleInput(e, {name, value}){
+  handleInput = (e, {name, value}) => {
     this.setState({[name]: value});
-  }
-  check(){
+  };
+  check = () => {
     this.setState({checked: !this.state.checked});
-  }
-  setModifying(state){
+  };
+  setModifying = (state) => {
     this.setState({modifying: state, password:'', checked: false});
-  }
-  submit(e){
+  };
+  submit = (e) => {
     e.preventDefault();
+    const team_id = Number(this.props.match.params.teamId);
     this.setState({errorMessage: '', loading: true});
-    this.props.dispatch(unsubscribe(this.state.password)).then(response => {
-      window.location.href = "/";
+    this.props.dispatch(unsubscribe({
+      team_id: team_id,
+      password:this.state.password
+    })).then(response => {
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
     });
-  }
+  };
   render(){
     return (
         <div class="team_settings_section">
@@ -522,26 +535,26 @@ function SettingsMenu(props){
   )
 }
 
-@connect((store)=>{
-  return {
-    team : store.team
-  };
-})
+const stripe_api_key = window.location.hostname === 'ease.space' ? 'pk_live_lPfbuzvll7siv1CM3ncJ22Bu' : 'pk_test_95DsYIUHWlEgZa5YWglIJHXd';
+
+@connect((store)=>({
+  teams : store.teams
+}))
 class TeamSettings extends React.Component {
   constructor(props) {
     super(props);
-    this.close = this.close.bind(this);
   }
-  close(){
+  close = () => {
     this.props.history.replace(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/`);
-  }
+  };
   componentDidMount(){
-    this.props.dispatch(fetchTeamPaymentInformation());
+    this.props.dispatch(fetchTeamPaymentInformation({team_id: this.props.match.params.teamId}));
     if (this.props.match.isExact)
       this.props.history.replace(`${this.props.match.url}/information`);
   }
   render() {
     return (
+        <StripeProvider apiKey={stripe_api_key}>
         <div className="ease_modal" id="team_settings_modal">
           <div className="modal-background"/>
           <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={this.close}>
@@ -556,15 +569,15 @@ class TeamSettings extends React.Component {
               <Grid>
                 <Grid.Row>
                   <Grid.Column width={5}>
-                    <SettingsMenu teamName={this.props.team.name} match={this.props.match}/>
+                    <SettingsMenu teamName={this.props.teams[this.props.match.params.teamId].name} match={this.props.match}/>
                   </Grid.Column>
                   <Grid.Column width={11}>
                     <Switch>
-                      <Route exact path={`${this.props.match.url}/`} component={TeamInformations}/>
-                      <Route path={`${this.props.match.url}/information`} component={TeamInformations}/>
-                      <Route path={`${this.props.match.url}/payment`} component={PaymentMethod}/>
+                      <Route exact path={`${this.props.match.path}/`} component={TeamInformations}/>
+                      <Route path={`${this.props.match.path}/information`} component={TeamInformations}/>
+                      <Route path={`${this.props.match.path}/payment`} component={PaymentMethod}/>
                       <Route path={`${this.props.match.path}/billing`} component={BillingInformationWithRouter}/>
-                      <Route path={`${this.props.match.url}/activation`} component={TeamAccount}/>
+                      <Route path={`${this.props.match.path}/activation`} component={TeamAccount}/>
                     </Switch>
                   </Grid.Column>
                 </Grid.Row>
@@ -572,6 +585,7 @@ class TeamSettings extends React.Component {
             </div>
           </div>
         </div>
+        </StripeProvider>
     )
   }
 }

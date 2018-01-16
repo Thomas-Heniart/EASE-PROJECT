@@ -1,0 +1,25 @@
+{
+  "name":"Humble Bundle",
+  "lastLogin":"",
+  "home":"https://www.humblebundle.com",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":".account-login.logged-out", "grave":true},
+      {"action":"waitfor", "search":"#account-login-form .js-submit"},
+      {"action":"fill", "what":"login", "search":"#account-login-form #account-login-username-modal", "grave":true},
+      {"action":"fill", "what":"password", "search":"#account-login-form #account-login-password-modal", "grave":true},
+      {"action":"trueClick", "search":"#account-login-form .js-submit", "grave":true}
+
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#navbar-logout-form button[type='submit']", "grave":true},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".user-navbar-item.logged-in, .account-login.logged-out"},
+    {"search":".user-navbar-item.logged-in"}
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Equidem Conseil",
+  "lastLogin": "",
+  "home": "https://clients.equidem-conseil.fr/ISuiteExpert/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#acdCode"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#acdPass"
+      },
+      {
+        "action": "trueClick",
+        "search": "#cnx"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "li.logout a, #acdCode"
+    },
+    {
+      "search": "li.logout a"
+    }
+  ],
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "li.logout a"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  }
+}

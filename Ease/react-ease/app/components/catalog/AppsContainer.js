@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import AddAnyApp from './AddAnyApp';
 import { Grid, Image, Icon, Header, Input, Container, Loader } from 'semantic-ui-react';
 
 const AppsContainer  = ({websites, title, openModal}) => {
@@ -16,6 +17,7 @@ const AppsContainer  = ({websites, title, openModal}) => {
               </Grid.Column>
           )}
         </Grid>
+        <AddAnyApp query={""} focus={false}/>
       </Container>
   )
 };

@@ -1,0 +1,22 @@
+{
+  "name":"Intra 42",
+  "lastlogin":"",
+  "home":"https://profile.intra.42.fr/",
+  "connect": {
+    "todo": [
+      {"action":"fill", "what":"login","search":"#user_login", "grave":true},
+      {"action":"fill", "what":"password","search":"#user_password", "grave":true},
+      {"action":"trueClick", "search":".form-actions input[type*='submit']", "grave":true}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='sign_out']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[href*='sign_out'], #user_login"},
+    {"search":"a[href*='sign_out']"}
+  ]
+}

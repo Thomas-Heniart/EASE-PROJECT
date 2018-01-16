@@ -78,7 +78,6 @@ class Deactivation extends React.Component {
                                         required />
                             <Message error content={this.state.errorMessage} />
                         </Form.Field>
-                        <p className='deactivationMessage'>As long as you belong to a team your account can’t be deleted. Please ask your Team Owner(s) to be deleted from your team(s) before deactivating your account.</p>
                         <Form.Field>
                             <Button type='submit'
                                     content='Deactivate account'

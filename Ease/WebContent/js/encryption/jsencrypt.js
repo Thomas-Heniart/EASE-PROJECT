@@ -4674,5 +4674,4 @@ window.addEventListener("load", function () {
         });
         setServerPrivateKey(private_key);
     }
-
 });

@@ -52,11 +52,76 @@ export function connection({email, password}) {
       password: password
     }).then(response => {
       AsyncStorage.setItem('JWTToken', response.JWT);
-      AsyncStorage.setItem('LastEmail', email);
-      const information = parseJwt(response.JWT);
       axios.defaults.headers.common['Authorization'] = response.JWT;
-      dispatch({type: 'CONNECTION', payload: {user_info: information}});
-      return information;
+      dispatch({
+        type: 'CONNECTION',
+        payload: {
+          username: response.first_name,
+          email: response.email
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function setUserInformation({username, email}) {
+  return {
+    type: 'SET_USER_INFORMATION',
+    payload: {
+      username: username,
+      email: email
+    }
+  }
+}
+
+export function fetchMyInformation() {
+  return (dispatch, getState) => {
+    return api.get.fetchMyInformation().then(response => {
+      const user = response.user;
+      AsyncStorage.setItem('LastEmail', user.email);
+      dispatch(setUserInformation({
+        username: user.first_name,
+        email: user.email
+      }));
+      return response;
+    }).catch(err => {
+      throw err;
+    })
+  }
+}
+
+export function fetchPersonalSpace() {
+  return (dispatch, getState) => {
+    return api.get.fetchPersonalSpace().then(response => {
+      const store = getState();
+      const selectedItem = store.selectedItem.itemId;
+      const profiles = response.profiles;
+      dispatch({
+        type: 'FETCH_PERSONAL_SPACE',
+        payload: response
+      });
+      if (!profiles[selectedItem])
+        dispatch(selectItem({
+          itemId: Object.keys(profiles)[0]
+        }));
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function fetchCriticalInformation(){
+  return (dispatch, getState) => {
+    const calls = [
+      dispatch(fetchMyInformation()),
+      dispatch(fetchPersonalSpace())
+    ];
+    return Promise.all(calls).then((response) => {
+      return response;
     }).catch(err => {
       throw err;
     });
@@ -134,13 +199,11 @@ export function selectItemAndFetchApps({itemId, subItemId, name}){
   }
 }
 
-export function selectItem({itemId, subItemId, name}) {
+export function selectItem({itemId}) {
   return {
     type: 'SELECT_ITEM',
     payload: {
-      itemId: itemId,
-      subItemId: subItemId,
-      name: name
+      itemId: itemId
     }
   }
 }

@@ -9,7 +9,6 @@ export const setUserDropdownText = (user) => {
 };
 
 export const renderSimpleAppUserLabel = (label, index, props) => {
-    console.log(label);
     const {username, can_see_information, receiver} = label;
     return (
         <Popup size="mini"
@@ -43,7 +42,6 @@ export const renderSimpleAppUserLabel = (label, index, props) => {
 };
 
 export const renderSimpleAppEditUserLabel = (label, index, props) => {
-    console.log(label);
     const {username, can_see_information, receiver} = label;
     return (
         <Popup size="mini"
@@ -52,7 +50,7 @@ export const renderSimpleAppEditUserLabel = (label, index, props) => {
                flowing
                hideOnScroll={true}
                trigger={
-                   <Label class={classnames("user-label static", (receiver !== null && receiver.accepted) ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
+                   <Label class={classnames("user-label static accepted", (receiver !== null && receiver.accepted) ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
                        {username}
                        <Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
                        {can_see_information &&
@@ -108,7 +106,34 @@ export const renderSimpleAppAddUserLabel = (label, index, props) => {
     )
 };
 
-export const PasswordChangeDropdown = ({value, onChange, disabled}) => {
+export const renderLinkAppAddUserLabel = (label, index, props) => {
+  const {username, can_see_information} = label;
+  return (
+    <Popup size="mini"
+           position="bottom center"
+           inverted
+           flowing
+           hideOnScroll={true}
+           trigger={
+             <Label class={"user-label static pinned can_see_information"}>
+               {username}
+               {can_see_information &&
+               <Icon name='mobile'/>}
+               <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
+             </Label>
+           }
+           content={
+             <div>
+               {can_see_information &&
+               <span>Mobile access: on</span>}
+               {!can_see_information &&
+               <span>Mobile access: off</span>}
+               <br/>
+             </div>}/>
+  )
+};
+
+export const PasswordChangeDropdown = ({value, onChange, disabled, roomManager}) => {
   return (
       <Popup size="mini"
              position="top center"
@@ -119,12 +144,32 @@ export const PasswordChangeDropdown = ({value, onChange, disabled}) => {
                          value={value}
                          onChange={onChange}
                          button
-                         name="password_change_interval"
+                         name="password_reminder_interval"
                          icon="refresh"
                          labeled
                          options={passwordChangeOptions}/>
              }
-             content='Password update reminder'/>
+             content={value > 0 ? `The Room Manager (${roomManager}) will be in charge of updating the password` : `The room manager (${roomManager}) can be in charge of updating the password`}/>
+  )
+};
+
+export const PasswordChangeDropdownEnterprise = ({value, onChange, disabled, roomManager}) => {
+  return (
+    <Popup size="mini"
+           position="top center"
+           inverted
+           trigger={
+             <Dropdown class="mini icon"
+                       disabled={disabled}
+                       value={value}
+                       onChange={onChange}
+                       button
+                       name="password_reminder_interval"
+                       icon="refresh"
+                       labeled
+                       options={passwordChangeOptions}/>
+           }
+           content={value > 0 ? `Frequency at which members will update their password for this app.` : `You can choose at which frequency your members will update their password for this app.`}/>
   )
 };
 
@@ -185,7 +230,7 @@ export const TeamAppActionButton = ({onClick, icon, text, disabled}) => {
   )
 };
 
-export const PasswordChangeHolder = ({value}) => {
+export const PasswordChangeHolder = ({value, roomManager}) => {
   return (
       <Popup size="mini"
              position="top center"
@@ -193,7 +238,19 @@ export const PasswordChangeHolder = ({value}) => {
              trigger={
                <Button as='div' icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
              }
-             content='Password update reminder'/>
+             content={value > 0 ? `The Room Manager (${roomManager}) will be in charge of updating the password` : `There isn’t password update policy setup.`}/>
+  )
+};
+
+export const PasswordChangeHolderEnterprise = ({value, roomManager}) => {
+  return (
+    <Popup size="mini"
+           position="top center"
+           inverted
+           trigger={
+             <Button as='div' icon="refresh" size="mini" labelPosition='left' content={passwordChangeValues[value]}/>
+           }
+           content={value > 0 ? `Frequency at which members will update their password for this app.` : `There isn’t password update policy setup.`}/>
   )
 };
 
@@ -241,7 +298,7 @@ export class CopyPasswordButton extends Component {
       {this.state.state === 0 &&
       'Copy password'}
       {this.state.state === 1 &&
-      <Icon name="asterisk" loading/>}
+      <div><Icon name="asterisk" loading/> decrypting password locally</div>}
       {this.state.state === 2 &&
       <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
       {this.state.state === 3 &&
@@ -281,7 +338,7 @@ export class SingleAppCopyPasswordButton extends Component {
   };
   fetchPassword = () => {
     this.setState({state: 1, open: true});
-    api.teamApps.getSingleAppPassword({team_id: this.props.team_id, app_id: this.props.app_id}).then(pwd => {
+    api.teamApps.getSingleAppPassword({team_card_id: this.props.team_card_id}).then(pwd => {
       this.setState({pwd: pwd, state: 2, open: true});
     }).catch(err => {
       this.setState({state: 4, open: true});
@@ -295,7 +352,7 @@ export class SingleAppCopyPasswordButton extends Component {
       {this.state.state === 0 &&
       'Copy password'}
       {this.state.state === 1 &&
-      <Icon name="asterisk" loading/>}
+      <div><Icon name="asterisk" loading/> decrypting password locally</div>}
       {this.state.state === 2 &&
       <Button size="mini" positive onClick={this.copyPassword} content={'Click to copy'}/>}
       {this.state.state === 3 &&

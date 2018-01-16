@@ -1,0 +1,32 @@
+{
+  "name":"Brainsfeed",
+  "lastLogin":"",
+  "home":"https://www.brainsfeed.com/#/home",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":".button.green.standard"},
+      {"action":"fill", "what":"login", "search":".login-panel input[type='email']"},
+      {"action":"fill", "what":"password", "search":".login-panel input[type='password']"},
+      {"action":"trueClick", "search":".login-panel .text-center button[type='button']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":".desktop-app-bar div:last-child() div:last-child() button"},
+      {"action":"waitfor", "search":".fa-sign-out"},
+      {"action":"trueClick", "search":".fa-sign-out"},
+      {"action":"waitfor", "search":".login-panel"},
+      {"action":"goto", "url":"https://www.brainsfeed.com/"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":".desktop-app-bar, .login-panel"},
+    {"search":".desktop-app-bar"}
+  ],
+  "Facebook":{
+    "todo":[
+      {"action":"trueClick", "search":".button.green.standard"},
+      {"action":"trueClick", "search":".fb-login-button"}
+    ]
+  }
+}

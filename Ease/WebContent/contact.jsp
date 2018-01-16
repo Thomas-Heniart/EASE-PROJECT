@@ -7,7 +7,7 @@
        value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
        scope="session"/>
 <fmt:setLocale value="${language}"/>
-<fmt:setBundle basename="com.Ease.Languages.text"/>
+<fmt:setBundle basename="languages/text"/>
 <html lang="${language}">
 <head>
 
@@ -33,11 +33,11 @@
     <script src="/jsMinified.v00022/tracker.js"></script>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00020/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {
@@ -50,7 +50,7 @@
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
-        ;r.src="/js/thirdParty/new_amplitude_analytics.js?0"
+        ;r.src="https://cdn.amplitude.com/libs/amplitude-4.0.0-min.gz.js"
         ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
             e.amplitude.runQueuedFunctions()}else{
             console.log("[Amplitude] Error: could not load SDK")}}

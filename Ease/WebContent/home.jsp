@@ -2,48 +2,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib tagdir="/WEB-INF/tags/dashboard" prefix="dashboard" %>
-<%@ page import="com.Ease.Dashboard.User.SessionSave" %>
-<%@ page import="com.Ease.Dashboard.User.User" %>
 <%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Base64" %>
 <%@ page import="java.util.Date" %>
 
-<% User user = (User) (session.getAttribute("user"));%>
-<%
-    if (user == null) {
-%>
 <c:redirect url="/"/>
-<%}%>
-<%
-    SessionSave sessionSave = user.getSessionSave();
-    Cookie sessionId = new Cookie("sId", sessionSave.getSessionId());
-    Cookie sessionToken = new Cookie("sTk", sessionSave.getToken());
-    Cookie skipLanding = new Cookie("skipLanding", "true");
-    DateFormat dateFormat = new SimpleDateFormat("HH");
-    Date date = new Date();
-    int duration = 29 - Integer.parseInt(dateFormat.format(date));
-    if (duration > 24) duration = duration - 24;
-    duration = (duration * 60 - 30) * 60;
-    sessionId.setMaxAge(duration);
-    sessionToken.setMaxAge(duration);
-    skipLanding.setMaxAge(60 * 60 * 24 * 14);
-    response.addCookie(skipLanding);
-    response.addCookie(sessionId);
-    response.addCookie(sessionToken);
-%>
-<%
-    Cookie fname = new Cookie("fname",
-            Base64.getEncoder().encodeToString(user.getFirstName().getBytes(StandardCharsets.UTF_8)));
-    Cookie email = new Cookie("email", user.getEmail());
-
-    fname.setMaxAge(60 * 60 * 24 * 31);
-    email.setMaxAge(60 * 60 * 24 * 31);
-    response.addCookie(fname);
-    response.addCookie(email);
-%>
 <c:set var="session" scope="session" value="${pageContext.getSession()}"/>
 <c:set var="servletContext" scope="session" value="${session.getServletContext()}"/>
 <c:set var="user" scope="session" value='${session.getAttribute("user")}'/>
@@ -87,20 +52,20 @@
     <link rel="chrome-webstore-item"
           href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00020/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00034/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00020/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/bootstrap.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00022/moment.js"></script>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
-        ;r.src="/js/thirdParty/new_amplitude_analytics.js?0"
+        ;r.src="https://cdn.amplitude.com/libs/amplitude-4.0.0-min.gz.js"
         ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
             e.amplitude.runQueuedFunctions()}else{
             console.log("[Amplitude] Error: could not load SDK")}}
@@ -161,7 +126,7 @@
     <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">
-    <link rel="stylesheet" href="/cssMinified.v00020/lib/niftyPopupWindow/component.css">
+    <link rel="stylesheet" href="/cssMinified.v00034/lib/niftyPopupWindow/component.css">
 </noscript>
 <script src="/jsMinified.v00022/jquery1.12.4.js"></script>
 <script src="/jsMinified.v00022/jquery-ui-1.12.0.js" defer></script>

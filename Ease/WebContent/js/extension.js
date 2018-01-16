@@ -1,15 +1,3 @@
-var waitForExtension = true;
-$(document).ready(function () {
-    setTimeout(function () {
-        waitForExtension = false;
-        showExtensionPopup();
-        if (!showExtensionPopup())
-            $("#tutorial").addClass("myshow");
-    }, 800);
-
-
-});
-
 function showExtensionPopup() {
     var ease_extension = $("#ease_extension");
     var new_ease_extension = $("#new_ease_extension");

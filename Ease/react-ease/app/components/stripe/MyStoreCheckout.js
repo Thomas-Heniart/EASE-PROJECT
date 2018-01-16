@@ -30,7 +30,10 @@ class CheckoutForm extends React.Component {
         this.setState({errorMessage: error.message, loading: false});
         return;
       }
-      this.props.dispatch(teamAddCreditCard({cardToken: token.id})).then(response => {
+      this.props.dispatch(teamAddCreditCard({
+        team_id: this.props.team_id,
+        cardToken: token.id
+      })).then(response => {
         this.setState({loading: false});
         this.props.validate(token);
       }).catch(err => {
@@ -73,7 +76,7 @@ class MyStoreCheckout extends React.Component {
   render() {
     return (
         <Elements>
-          <StripeInjectedForm cancel={this.props.cancel} validate={this.props.validate}/>
+          <StripeInjectedForm team_id={this.props.team_id} cancel={this.props.cancel} validate={this.props.validate}/>
         </Elements>
     );
   }

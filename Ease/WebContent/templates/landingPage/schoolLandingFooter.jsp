@@ -24,7 +24,7 @@
                         <fmt:message key="landing.footer.section-product.company"/>
                     </h3>
                     <div class="links">
-                        <a href="equipe">
+                        <a href="team">
                             <fmt:message key="landing.header.team-link"/>
                         </a>
                         <a href="privacy" target="_blank">

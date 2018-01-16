@@ -1,3 +1,4 @@
+import update from 'immutability-helper';
 
 const initialState = {
   user : null,
@@ -14,7 +15,7 @@ export default function reducer(state=initialState, action) {
       return {
           ...state,
           user : action.payload.user,
-          authenticated : action.payload.user !== null
+          authenticated : !!action.payload.user
       }
     }
     case 'CONNECTION_FULFILLED': {
@@ -55,50 +56,28 @@ export default function reducer(state=initialState, action) {
         ws_id: action.payload.ws_id
       }
     }
-    case 'TEAM_ADDED': {
-      if (!state.user)
-        break;
-      let user = state.user;
-      user.teams.push(action.payload.team);
-      return {
-        ...state,
-        user: user
-      }
-    }
-    case 'TEAM_REMOVED': {
-      if (!state.user)
-        break;
-      let user = state.user;
-      for (let i = 0; i < user.teams.length; i++){
-        if (user.teams[i].id === action.payload.team.id){
-          user.teams.splice(i, 1);
-          return {
-            ...state,
-            user: user
-          }
+    case 'SET_BACKGROUND_FULFILLED': {
+      const {background_picture} = action.payload;
+      return update(state, {
+        user: {
+          background_picture: {$set: background_picture}
         }
-      }
-      break;
-    }
-    case 'TEAM_CHANGED': {
-      if (!state.user)
-        break;
-      let user = state.user;
-      user.teams = user.teams.map(item => {
-        if (item.id === action.payload.team.id)
-          return action.payload.team;
-        return item;
-      });
-      return {
-          ...state,
-        user: user
-      }
+      })
     }
     case 'SET_HOMEPAGE': {
       return {
         ...state,
         homepage: action.payload.homepage
       }
+    }
+    case 'DASHBOARD_TUTORIAL_DONE': {
+      return update(state, {
+        user: {
+          status: {
+            tuto_done: {$set: true}
+          }
+        }
+      })
     }
   }
   return state;

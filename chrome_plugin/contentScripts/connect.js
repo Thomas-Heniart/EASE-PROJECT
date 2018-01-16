@@ -155,4 +155,45 @@ if (window.top === window) {
             }
         }
     });
+
+    extension.runtime.onMessage("test_connection", function (msg, sendResponse) {
+        console.log("test_connection");
+        if (msg.todo == "checkAlreadyConnected") {
+            checkConnectionOverlay(msg);
+            checkIsConnected(msg, function () {
+                msg.waitreload = true;
+                msg.todo = "logout";
+                doThings(msg, sendResponse);
+                logoutOverlay(msg);
+            }, function () {
+                msg.waitreload = true;
+                if (typeof msg.detail[msg.bigStep].logWith === "undefined") {
+                    msg.todo = "connect";
+                } else {
+                    msg.todo = msg.detail[msg.bigStep].logWith;
+                }
+                doThings(msg, sendResponse);
+                if (msg.todo == "logout") {
+                    logoutOverlay(msg);
+                } else if (msg.todo == "connect") {
+                    loginOverlay(msg);
+                }
+            }, 0);
+        } else if (msg.todo == "end") {
+            endOverlay();
+            msg.type = "completed";
+            sendResponse(msg);
+        } else if (msg.todo == "nextBigStep") {
+            msg.type = "completed";
+            sendResponse(msg);
+        }
+        else {
+            doThings(msg, sendResponse);
+            if (msg.todo == "logout") {
+                logoutOverlay(msg);
+            } else if (msg.todo == "connect") {
+                loginOverlay(msg);
+            }
+        }
+    })
 }

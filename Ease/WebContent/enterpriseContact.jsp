@@ -9,7 +9,7 @@
     <c:set var="language" value="fr_FR" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}"/>
-<fmt:setBundle basename="com.Ease.Languages.text"/>
+<fmt:setBundle basename="languages/text"/>
 <html lang="${language}">
 <head>
     <title> Ease.space | Enterprise</title>
@@ -43,16 +43,16 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00020/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00020/enterpriseContact.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00034/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00034/enterpriseContact.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
-        ;r.src="/js/thirdParty/new_amplitude_analytics.js?0"
+        ;r.src="https://cdn.amplitude.com/libs/amplitude-4.0.0-min.gz.js"
         ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
             e.amplitude.runQueuedFunctions()}else{
             console.log("[Amplitude] Error: could not load SDK")}}

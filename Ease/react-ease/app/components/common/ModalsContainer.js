@@ -25,11 +25,33 @@ import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
 import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 import ClassicAppModal from "../catalog/ClassicAppModal";
 import SsoAppModal from "../catalog/SsoAppModal";
-
+import ClassicAppSettingsModal from "../modals/ClassicAppSettingsModal";
+import ExtensionDownloadModal from "../modals/ExtensionDownloadModal";
+import LinkAppSettingsModal from "../modals/LinkAppSettingsModal";
+import AnyAppSettingsModal from "../modals/AnyAppSettingsModal";
+import SoftwareAppSettingsModal from "../modals/SoftwareAppSettingsModal";
+import TeamSingleAppSettingsModal from "../modals/TeamSingleAppSettingsModal";
+import TeamAnySingleAppSettingsModal from "../modals/TeamAnySingleAppSettingsModal";
+import TeamSoftwareSingleAppSettingsModal from "../modals/TeamSoftwareSingleAppSettingsModal";
+import TeamEnterpriseAppSettingsModal from "../modals/TeamEnterpriseAppSettingsModal";
+import TeamAnyEnterpriseAppSettingsModal from "../modals/TeamAnyEnterpriseAppSettingsModal";
+import TeamSoftwareEnterpriseAppSettingsModal from "../modals/TeamSoftwareEnterpriseAppSettingsModal";
+import TeamLinkAppSettingsModal from "../modals/TeamLinkAppSettingsModal";
+import PasswordLostInformationModal from "../modals/PasswordLostInformationModal";
+import LockedTeamAppModal from "../modals/LockedTeamAppModal";
+import LogWithAppSettings from "../modals/LogWithAppSettings";
+import SsoAppSettingsModal from "../modals/SsoAppSettingsModal";
+import ChooseAppCredentialsModal from "../teamAppAdders/ChooseAppCredentialsModal";
+import ChooseAnyAppCredentialsModal from "../teamAppAdders/ChooseAnyAppCredentialsModal";
+import ChooseSoftwareAppCredentialsModal from "../teamAppAdders/ChooseSoftwareAppCredentialsModal";
+import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
+import NewFeatureModal from "../modals/NewFeatureModal";
+import AddAnyAppModal from "../catalog/AddAnyAppModal";
+import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal";
 
 @connect(store => ({
-  addUserModalActive: store.teamModals.addUserModalActive,
-  addChannelModalActive: store.teamModals.addChannelModalActive,
+  addUserModal: store.teamModals.addUserModal,
+  addChannelModal: store.teamModals.addChannelModal,
   teamDeleteUserModal: store.teamModals.teamDeleteUserModal,
   teamDeleteChannelModal: store.teamModals.teamDeleteChannelModal,
   teamDeleteUserFromChannelModal: store.teamModals.teamDeleteUserFromChannelModal,
@@ -39,7 +61,7 @@ import SsoAppModal from "../catalog/SsoAppModal";
   teamEditEnterpriseAppModal: store.teamModals.teamEditEnterpriseAppModal,
   teamManageAppRequestModal: store.teamModals.teamManageAppRequestModal,
   teamAcceptMultiAppModal: store.teamModals.teamAcceptMultiAppModal,
-  teamJoinMultiAppModal: store.teamModals.teamJoinMultiAppModal,
+  teamJoinEnterpriseAppModal: store.teamModals.teamJoinEnterpriseAppModal,
   teamAskJoinEnterpriseAppModal: store.teamModals.teamAskJoinEnterpriseAppModal,
   teamSettingsModalActive: store.teamModals.teamSettingsModalActive,
   verifyTeamUserModal: store.teamModals.verifyTeamUserModal,
@@ -53,7 +75,10 @@ import SsoAppModal from "../catalog/SsoAppModal";
   departureDateEndModal: store.teamModals.departureDateEndModal,
   catalogAddBookmarkModal: store.teamModals.catalogAddBookmarkModal,
   catalogAddAppModal: store.teamModals.catalogAddAppModal,
-  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal
+  catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal,
+  catalogAddAnyAppModal: store.teamModals.catalogAddAnyAppModal,
+  catalogAddSoftwareAppModal: store.teamModals.catalogAddSoftwareAppModal,
+  modals: store.modals
 }))
 class ModalsContainer extends Component{
   constructor(props){
@@ -62,9 +87,9 @@ class ModalsContainer extends Component{
   render() {
     return (
         <div>
-          {this.props.addUserModalActive &&
-          <TeamAddUserModal key="1"/>}
-          {this.props.addChannelModalActive &&
+          {this.props.addUserModal.active &&
+          <TeamAddUserModal/>}
+          {this.props.addChannelModal.active &&
           <TeamAddChannelModal/>}
           {this.props.teamDeleteUserModal.active &&
           <TeamDeleteUserModal/>}
@@ -84,7 +109,7 @@ class ModalsContainer extends Component{
           <TeamManageAppRequestModal/>}
           {this.props.teamAcceptMultiAppModal.active &&
           <AcceptEnterpriseAppModal/>}
-          {this.props.teamJoinMultiAppModal.active &&
+          {this.props.teamJoinEnterpriseAppModal.active &&
           <JoinEnterpriseAppModal/>}
           {this.props.teamAskJoinEnterpriseAppModal.active &&
           <AskJoinEnterpriseAppModal/>}
@@ -114,6 +139,52 @@ class ModalsContainer extends Component{
           <ClassicAppModal/>}
           {this.props.catalogAddSSOAppModal.active &&
           <SsoAppModal/>}
+          {this.props.modals.classicAppSettings.active &&
+          <ClassicAppSettingsModal/>}
+          {this.props.modals.extensionDownload.active &&
+          <ExtensionDownloadModal/>}
+          {this.props.modals.linkAppSettings.active &&
+          <LinkAppSettingsModal/>}
+          {this.props.modals.passwordLostInformation.active &&
+          <PasswordLostInformationModal/>}
+          {this.props.modals.lockedTeamApp.active &&
+          <LockedTeamAppModal/>}
+          {this.props.modals.logWithAppSettings.active &&
+          <LogWithAppSettings/>}
+          {this.props.modals.chooseAppCredentials.active &&
+          <ChooseAppCredentialsModal/>}
+          {this.props.modals.chooseAnyAppCredentials.active &&
+          <ChooseAnyAppCredentialsModal/>}
+          {this.props.modals.chooseSoftwareAppCredentials.active &&
+          <ChooseSoftwareAppCredentialsModal/>}
+          {this.props.modals.teamSingleAppSettings.active &&
+          <TeamSingleAppSettingsModal/>}
+          {this.props.modals.teamAnySingleAppSettings.active &&
+          <TeamAnySingleAppSettingsModal/>}
+          {this.props.modals.teamSoftwareSingleAppSettings.active &&
+          <TeamSoftwareSingleAppSettingsModal/>}
+          {this.props.modals.teamEnterpriseAppSettings.active &&
+          <TeamEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamAnyEnterpriseAppSettings.active &&
+          <TeamAnyEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamSoftwareEnterpriseAppSettings.active &&
+          <TeamSoftwareEnterpriseAppSettingsModal/>}
+          {this.props.modals.teamLinkAppSettings.active &&
+          <TeamLinkAppSettingsModal/>}
+          {this.props.modals.updateAppPassword.active &&
+          <UpdateAppPasswordModal/>}
+          {this.props.modals.ssoAppSettings.active &&
+          <SsoAppSettingsModal/>}
+          {this.props.modals.anyAppSettings.active &&
+          <AnyAppSettingsModal/>}
+          {this.props.modals.softwareAppSettings.active &&
+          <SoftwareAppSettingsModal/>}
+          {this.props.modals.newFeature.active &&
+          <NewFeatureModal/>}
+          {this.props.catalogAddAnyAppModal.active &&
+          <AddAnyAppModal/>}
+          {this.props.catalogAddSoftwareAppModal.active &&
+          <AddSoftwareCredentialsModal/>}
         </div>
     )
   }

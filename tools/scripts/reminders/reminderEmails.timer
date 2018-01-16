@@ -1,8 +1,0 @@
-[Unit]
-Description= Run reminderEmails.service every morning
-
-[Timer]
-OnCalendar=*-*-* 09:00:00
-
-[Install]
-WantedBy=multi-user.target

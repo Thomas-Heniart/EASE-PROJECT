@@ -1,10 +1,9 @@
 import React from 'react';
-import { Container, Segment, Button, Input, Image, Icon, Label } from 'semantic-ui-react';
+import { Container, Segment, Button, Input, Icon } from 'semantic-ui-react';
 import { getClearbitLogo } from "../../utils/api";
-import {handleSemanticInput, isUrl} from "../../utils/utils";
+import {handleSemanticInput} from "../../utils/utils";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
-import { NavLink } from 'react-router-dom';
 
 @connect(store => ({
 }), reduxActionBinder)
@@ -19,9 +18,14 @@ class AddBookmark extends React.Component {
   }
   handleInput = handleSemanticInput.bind(this);
   getLogo = () => {
-      getClearbitLogo(this.state.url).then(response => {
+    getClearbitLogo(this.state.url).then(response => {
+      if (response !== "")
         this.setState({img_url: response});
-      });
+      else
+        this.setState({img_url: '/resources/icons/link_app.png'});
+    }).catch(err => {
+      this.setState({img_url: '/resources/icons/link_app.png'});
+    });
   };
   changeUrl = (e, {value}) => {
     this.setState({url: value}, this.getLogo);
@@ -31,59 +35,57 @@ class AddBookmark extends React.Component {
     this.props.catalogAddBookmarkModal({
       name: this.state.name,
       url: this.state.url,
-      img_url: this.state.img_url
+      img_url: this.state.img_url,
     }).then(app => {
-        this.setState({name: '', url: '', img_url:'/resources/icons/link_app.png'});
-        this.props.history.push('/main/catalog');
+      this.setState({name: '', url: '', img_url:'/resources/icons/link_app.png'});
     }).catch(() => {
 
     });
   };
   render(){
     return (
-        <Container fluid class="mrgn0" as="form" onSubmit={this.send}>
-            <h3>Add a Bookmark</h3>
-            <Segment clearing className="addBookmark">
-              <NavLink to={`/main/catalog`}>
-                <Icon name="close" link class="closeButton"/>
-              </NavLink>
-                <div className="display_flex">
-                    <div className="logo">
-                        <img src={this.state.img_url} alt="website logo"/>
-                    </div>
-                    <div className="main_column width100">
-                        <div className="display-inline-flex width100">
-                            <Input placeholder="Paste website URL"
-                                   className="width100"
-                                   autoComplete="off"
-                                   type="url"
-                                   name="url"
-                                   value={this.state.url}
-                                   onChange={this.changeUrl}
-                                   size="mini"
-                                   fluid
-                                   required />
-                        </div>
-                        <div className="width100">
-                            <Input  className="width50"
-                                    placeholder="Name your Bookmark"
-                                    name="name"
-                                    value={this.state.name}
-                                    autoComplete="off"
-                                    onChange={this.handleInput}
-                                    size="mini"
-                                    required />
-                        </div>
-                    </div>
-                </div>
-                <Button positive
+      <Container fluid class="mrgn0" as="form" onSubmit={this.send}>
+        <p style={{fontSize:'18px',fontWeight:'bold',color:'#949eb7',marginTop:'20px'}}>Add a Shortcut link</p>
+        <Segment clearing className="addBookmark">
+          <div className="display_flex">
+            <div className="logo">
+              <img src={this.state.img_url} alt='bookmark_logo'/>
+            </div>
+            <div className="main_column width100">
+              <div className="display-inline-flex width100">
+                <Input placeholder="Paste website URL"
+                       className="width100"
+                       autoComplete="off"
+                       type="url"
+                       name="url"
+                       value={this.state.url}
+                       onChange={this.changeUrl}
+                       size="mini"
+                       fluid
+                       autoFocus
+                       required />
+              </div>
+              <div className="display-inline-flex width100">
+                <Input  className="width100"
+                        placeholder="Name your Bookmark"
+                        name="name"
+                        fluid
+                        value={this.state.name}
+                        autoComplete="off"
+                        onChange={this.handleInput}
                         size="mini"
-                        floated="right">
-                    Pin
-                    <Icon name="pin" />
-                </Button>
-            </Segment>
-        </Container>
+                        required />
+              </div>
+            </div>
+          </div>
+          <Button positive
+                  size="mini"
+                  floated="right">
+            <Icon name="arrow right" />
+            Next
+          </Button>
+        </Segment>
+      </Container>
     )
   }
 }

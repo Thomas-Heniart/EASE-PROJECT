@@ -1,8 +1,10 @@
 import {bindActionCreators} from "redux";
 import * as catalogActions from "./catalogActions";
+import * as teamCardActions from "./teamCardActions";
 
 export const ActionCreators = Object.assign({},
-    catalogActions
+    catalogActions,
+    teamCardActions
 );
 
 export function reduxActionBinder(dispatch) {

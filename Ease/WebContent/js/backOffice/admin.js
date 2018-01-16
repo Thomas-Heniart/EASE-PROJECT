@@ -1,23 +1,43 @@
+var selected_teams = [];
+var account_graph;
+var people_graph;
+var click_graph;
+
 $(document).ready(function () {
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
+    $(".ui.accordion").accordion();
+    $(".united.modal").modal({
+        allowMultiple: true
+    });
+    $("#select-all-team").change(function () {
+        var checked = $(this).is(":checked");
+        if (!checked)
+            $(".select-team:checked").click();
+        else
+            $(".select-team").each(function (i, e) {
+                if (!$(e).is(":checked"))
+                    $(e).click()
+            })
+    });
     $("#website-requests-segment button").click(function () {
         var button = $(this);
         button.addClass("loading");
-        var requests = $("#website-requests-manager-body tr.positive .checkbox input:checked").map(function (i, elem) {
+        var requests = $("#website-requests-manager-body tr.positive .checkbox .send_email:checked").map(function (i, elem) {
             var jElem = $(elem).parent().parent().parent();
             return {
                 email: $(".email", jElem).text(),
-                id: parseInt(jElem.attr("website-id"))
+                id: parseInt(jElem.attr("website-id")),
+                request_id: parseInt($(".id", jElem).text())
             }
         });
         var all_requests = {};
-        console.log(requests.toArray());
         requests.toArray().forEach(function (request) {
             var existing_request = all_requests[request.email];
             if (existing_request === undefined)
-                existing_request = [];
-            existing_request.push(request.id);
+                existing_request = {website_ids: [], request_ids: []};
+            existing_request.website_ids.push(request.id);
+            existing_request.request_ids.push(request.request_id);
             all_requests[request.email] = existing_request;
         });
         ajaxHandler.post("/api/v1/admin/SendWebsitesIntegrated", {
@@ -26,9 +46,33 @@ $(document).ready(function () {
 
         }, function () {
             button.removeClass("loading");
-            $("#website-requests-manager-body tr.positive .checkbox input:checked").parent().parent().parent().remove();
+            $("#website-requests-manager-body tr.positive .checkbox .send_email:checked").parent().parent().parent().remove();
+        });
+        var password_needed_requests = $("#website-requests-manager-body tr.negative .checkbox .send_email:checked").map(function (i, elem) {
+            var jElem = $(elem).parent().parent().parent();
+            return {
+                email: $(".email", jElem).text(),
+                id: parseInt(jElem.attr("website-id"))
+            }
+        });
+        var all_password_needed_requests = {};
+        password_needed_requests.toArray().forEach((request) => {
+            var existing_request = all_password_needed_requests[request.email];
+            if (existing_request === undefined)
+                existing_request = [];
+            existing_request.push(request.id);
+            all_password_needed_requests[request.email] = existing_request;
+        });
+        ajaxHandler.post("/api/v1/admin/SendPasswordNeededEmails", {
+            emailAndWebsiteIds: all_password_needed_requests
+        }, function () {
+
+        }, function () {
+            button.removeClass("loading");
+            $("#website-requests-manager-body tr.negative .checkbox .send_email:checked").prop("checked", false)
         });
     });
+
     $("#category-segment #add-category").submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -49,9 +93,9 @@ $(document).ready(function () {
             .addClass("active")
             .siblings().removeClass("active");
         var target = $($(this).attr("data-target"));
-        $(".segment").hide();
-        $(".segment").addClass("loading");
-        $(".segment table tbody tr").remove();
+        $(".backOffice_part").hide();
+        $(".backOffice_part").addClass("loading");
+        $(".backOffice_part table tbody tr").remove();
         target.show();
         if (target.hasClass("loading")) {
             switch (target.attr("id")) {
@@ -61,8 +105,8 @@ $(document).ready(function () {
                         data.forEach(function (team, index) {
                             addTeamRow(team, index).appendTo($("#team-manager-body"));
                         });
+                        target.removeClass("loading");
                     });
-                    target.removeClass("loading");
                     break;
 
                 case "website-segment":
@@ -85,7 +129,9 @@ $(document).ready(function () {
                     });
                     ajaxHandler.get("/api/v1/admin/GetWebsites", null, function () {
                     }, function (data) {
-                        websites = data;
+                        websites = data.sort(function (w1, w2) {
+                            return w2.id - w1.id;
+                        });
                         websites.forEach(function (website) {
                             addWebsiteRow(website).appendTo($("#website-manager-body"));
                             addResult(website).appendTo($("#website-merging .menu"));
@@ -127,7 +173,7 @@ $(document).ready(function () {
                     }, function (data) {
                         var requests = data.website_requests;
                         requests.sort(function (r1, r2) {
-                            r2.date - r1.date;
+                            return r2.date - r1.date;
                         });
                         requests.forEach(function (request) {
                             createRequestRow(request).appendTo($("#website-requests-manager-body"));
@@ -136,21 +182,57 @@ $(document).ready(function () {
                     });
                     break;
                 case "website-failures-segment":
-                    ajaxHandler.get("/api/v1/admin/GetWebsiteFailures", null, function() {
+                    ajaxHandler.get("/api/v1/admin/GetWebsiteFailures", null, function () {
 
                     }, function (websiteFailures) {
-                        websiteFailures.forEach(function(websiteFailure) {
+                        websiteFailures.forEach(function (websiteFailure) {
                             createWebsiteFailureRow(websiteFailure).appendTo($("#website-failures-body"));
                         });
                         target.removeClass("loading");
                     });
                     break;
                 default:
+                    target.removeClass("loading");
                     break;
             }
         }
     });
-});
+    $("#multiple_team_graph").click(function () {
+        if (selected_teams.length > 0)
+            openManyTeams();
+    });
+    $("input", $("#background-upload")).change(() => {
+        if ($("input", $("#background-upload")).filter((i, elem) => elem.value === "").length < 7)
+            $("button", $("#background-upload")).removeClass("disabled");
+        else
+            $("button", $("#background-upload")).addClass("disabled");
+    });
+    $("#background-upload").submit(function (e) {
+        e.preventDefault();
+        let backgrounds = {};
+        var self = $(this);
+        var submit_button = $("button", self);
+        submit_button.addClass("loading");
+        submit_button.addClass("disabled");
+        let files = $("input", self)
+            .filter((i, elem) => elem.value !== "")
+            .map((i, elem) => new Promise((resolve) => resolve(getBase64(elem.files[0]).then((b64) => backgrounds[elem.getAttribute("name")] = b64)))).toArray();
+        Promise.all(files).then(() => {
+            ajaxHandler.post("/api/v1/admin/UploadBackground", {
+                backgrounds: backgrounds
+            }, function () {
+                submit_button.removeClass("loading");
+            }, function () {
+                $("input", self).val("");
+            }, function (data) {
+                alert(data)
+            })
+        }).catch((error) => console.log(error))
+    });
+    $("#teams_table").tablesort();
+    $("#teams_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()))
+})
+;
 
 function createWebsiteFailureRow(websiteFailure) {
     var elem = $("<tr>" +
@@ -196,13 +278,18 @@ function createRequestRow(request) {
         "<td class='url'>" + request.url + "</td>" +
         "<td class='email'>" + request.email + "</td>" +
         "<td class='date'>" + new Date(request.date).toLocaleString() + "</a></td>" +
-        '<td><div class="ui checkbox"><input type="checkbox"/><label></label></div></td>' +
+        '<td><div class="ui read-only checkbox"><input class="credentials" type="checkbox" disabled/><label></label></div></td>' +
+        '<td><div class="ui checkbox"><input class="send_email" type="checkbox"/><label></label></div></td>' +
         "<td><a href='#' class='delete'><i class='fa fa-trash'></i></a></td>" +
         "</tr>");
     if (request.integrated)
         elem.addClass("positive");
     else
         elem.addClass("negative");
+    if (request.credentials) {
+        $(".read-only", elem).addClass("active");
+        $(".credentials", elem).prop("checked", true);
+    }
     $("a.delete", elem).click(function () {
         $("a.delete", elem).click(function () {
             var modal = $("#request-delete");
@@ -272,19 +359,27 @@ function addCategoryRow(category) {
 function addTeamRow(team, index) {
     var elem = $("<tr>" +
         "<td>" + (index + 1) + "</td>" +
-        "<td>" + team.id + "</td>" +
+        '<td><div class="ui checkbox"><input class="select-team" type="checkbox"/><label></label></div></td>' +
         "<td>" + team.name + "</td>" +
-        "<td>" + team.admin_first_name + "</td>" +
-        "<td>" + team.admin_last_name + "</td>" +
+        "<td>" + team.admin_first_name + " " + team.admin_last_name + "</td>" +
         "<td>" + team.admin_email + "</td>" +
-        "<td>" + team.team_users_size + "</td>" +
-        "<td>" + team.active_team_users + "</td>" +
-        "<td>" + team.phone_number + "</td>" +
-        "<td><a href='#'><i class='fa fa-cog'></i></a></td>" +
+        "<td>" + team.week_of_subscription + "</td>" +
+        "<td>" + ((team.plan_id === 0) ? "Free" : "Pro") + "</td>" +
+        "<td>" + team.card_entered + "</td>" +
+        "<td>" + team.cards_with_tags + "</td>" +
+        "<td>" + team.people_joined + "</td>" +
+        "<td>" + team.people_joined_with_cards + "</td>" +
+        "<td>" + team.people_click_on_app_once + "</td>" +
+        "<td>" + team.people_click_on_app_three_times + "</td>" +
         "</tr>");
-    if (!team.is_active)
-        elem.addClass("negative");
-    $("a", elem).click(function () {
+    $(".select-team", elem).click(function (e) {
+        e.stopPropagation();
+        if ($(this).is(":checked"))
+            selected_teams.push(team.id);
+        else
+            selected_teams.splice(selected_teams.indexOf(team.id), 1);
+    });
+    elem.click(function () {
         openTeamSettings(team, elem);
     });
     return elem;
@@ -305,8 +400,10 @@ function addWebsiteRow(website) {
         + "<td class='password'>" + (website.website_credentials === undefined ? "" : website.website_credentials.password) + "</td>"
         + "<td class='publicKey'>" + (website.website_credentials === undefined ? "" : website.website_credentials.publicKey) + "</td>"
         + '</tr>');
-    if (!website.integrated)
+    if (!website.integrated) {
+        elem.removeClass("positive");
         elem.addClass("negative");
+    }
     if (!website.public) {
         $(".public", elem).addClass("checked");
         $(".public input", elem).prop("checked", true);
@@ -389,11 +486,13 @@ function openCategoryEdit(category, elem) {
 function openWebsiteIntegration(website, websiteElem) {
     var modal = $("#website-integration");
     var edit_website = $("#website-edition", modal);
+    var website_upload = $("#website-upload", modal);
     var name = $("input[name='name']", edit_website);
     var login_url = $("input[name='login_url']", edit_website);
     var landing_url = $("input[name='landing_url']", edit_website);
     var folder = $("input[name='folder']", edit_website);
     var integrated = $("#integration input[name='integrate']", edit_website);
+    var alternative_urls = $("#alternative_urls", edit_website);
     $("#website-upload input[name='website_id']", modal).val(website.id);
     name.val(website.name);
     login_url.val(website.login_url);
@@ -413,6 +512,30 @@ function openWebsiteIntegration(website, websiteElem) {
     website.connectWith.forEach(function (connectWith_id) {
         $(".connectWith .item[data-value='" + connectWith_id + "']", modal).click();
     });
+    var alternative_urls_content = $(".content .inputs", alternative_urls);
+    website.alternative_urls.forEach((alternative_url) => {
+        var elem = $("<div class='ui field'>" +
+            "<div class='ui icon input'>" +
+            "<input type='url' value='" + alternative_url.url + "' alternative_url_id='" + alternative_url.id + "' />" +
+            "<i class='inverted circular close link icon'></i>" +
+            "</div>" +
+            "</div>");
+        alternative_urls_content.prepend(elem);
+        $(".close", elem).click(() => elem.remove());
+    });
+    var add_alternative_url = $("button", alternative_urls);
+    add_alternative_url.click((e) => {
+        e.preventDefault();
+        var elem = $("<div class='ui field'>" +
+            "<div class='ui icon input'>" +
+            "<input type='url' />" +
+            "<i class='inverted circular close link icon'></i>" +
+            "</div>" +
+            "</div>");
+        alternative_urls_content.append(elem);
+        $(".close", elem).click(() => elem.remove());
+    });
+    $("#alternative_urls_number", alternative_urls).text(website.alternative_urls.length);
     edit_website.submit(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -430,6 +553,15 @@ function openWebsiteIntegration(website, websiteElem) {
         }
         var sso_id = $("input[name='sso_id']", modal).val();
         var category_id = parseInt($("input[name='category_id']", modal).val());
+        var new_alternative_urls = [];
+        $("input", alternative_urls_content).each((i, elem) => {
+           var jElem = $(elem);
+           new_alternative_urls.push(jElem.val());
+           /* new_alternative_urls.push({
+               id: jElem.getAttribute("alternative_url_id"),
+               url: jElem.val()
+           }) */
+        });
         ajaxHandler.post(action, {
             id: website.id,
             name: name.val(),
@@ -440,7 +572,8 @@ function openWebsiteIntegration(website, websiteElem) {
             teams: teams,
             sso_id: sso_id,
             category_id: category_id,
-            connectWith: connectWith
+            connectWith: connectWith,
+            alternative_urls: new_alternative_urls
         }, function () {
 
         }, function () {
@@ -463,20 +596,31 @@ function openWebsiteIntegration(website, websiteElem) {
             website.category_id = category_id;
             website.teams = teams;
             website.connectWith = connectWith;
-            if (!website.integrated)
+            if (!website.integrated) {
+                websiteElem.removeClass("positive");
                 websiteElem.addClass("negative");
+            } else {
+                websiteElem.removeClass("negative");
+                websiteElem.addClass("positive");
+            }
             $(".name", websiteElem).text(website.name);
             $(".landing_url", websiteElem).text(website.landing_url);
             $(".login_url", websiteElem).text(website.login_url);
             $(".logo img", websiteElem).attr("src", "/resources/websites/" + website.folder + "/logo.png");
+            integrated.prop("checked", false);
         });
+        add_alternative_url.off("click");
         edit_website.off("submit");
         modal.modal("hide");
     });
+    /* website_upload.submit(function(e) {
+        e.preventDefault();
+    }); */
     modal
         .modal({
             onHide: function () {
                 edit_website.off("submit");
+                //website_upload.off("submit");
                 $("input[name='team_id']", modal).val("");
                 $("input[name='connectWith_id']", modal).val("");
                 $("a.ui.label.transition", modal).remove();
@@ -517,60 +661,390 @@ function addResult(website) {
     return elem;
 }
 
-function openTeamSettings(team, teamRow) {
+function openManyTeams() {
     var modal = $("#team-settings");
-    var input = $("#send-money", modal);
-    $("#current-credit", modal).text(team.credit);
-    $("#card-number span", modal).text(team.card_number);
-    $("#link-number span", modal).text(team.link_number);
-    $("#single-number span", modal).text(team.single_number);
-    $("#enterprise-number span", modal).text(team.enterprise_number);
-    $("#card-with-password-reminder span", modal).text(team.card_with_password_reminder);
-    $("i", input).click(function (e) {
-        if (input.hasClass("loading"))
-            return;
-        var credit = $("input", input).val();
-        if (credit.indexOf(".") === -1) {
-            credit = parseInt(credit) * 100;
-        } else {
-            var entirePart = credit.split(".")[0];
-            var decimalPart = credit.split(".")[1];
-            if (decimalPart.length === 1)
-                decimalPart += "0";
-            credit = parseInt(entirePart) * 100 + parseInt(decimalPart);
-        }
-        input.addClass("loading");
-        input.addClass("disabled");
-        ajaxHandler.post("/api/v1/admin/SendLoveMoney", {
-            team_id: team.id,
-            credit: credit
+    var people_data = $("#people_data");
+    var account_data = $("#account_data");
+    var data_emails = $("#people_data_emails");
+    var account_names = $("#account_data_names");
+    var people_data_history = $("#people_data_history");
+    var account_data_hisotry = $("#account_data_history");
+    var team_settings_right = $("#team_settings_right");
+    var team_settings_left = $("#team_settings_left");
+    var click_average_graphic = $("#click_average_graphic");
+    var show_graphic = $("#show_graphic");
+    $("#credit").hide();
+    $("#show_delete").hide();
+    $(".header", modal).text("Many teams selected");
+    var teams_data = undefined;
+    selected_teams.forEach(function (team_id) {
+        ajaxHandler.get("/api/v1/admin/GetTeam", {
+            team_id: team_id
         }, function () {
         }, function (data) {
-            $("#current-credit", modal).text(data.credit);
-            $("input", input).val("");
-            input.removeClass("loading");
-            input.removeClass("disabled");
-        });
+            if (teams_data === undefined)
+                teams_data = data;
+            else {
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        if (typeof data[key] === "string")
+                            teams_data[key] += (";" + data[key]);
+                        else
+                            teams_data[key] += data[key];
+                    }
+                }
+            }
+        }, function () {
+        }, false)
     });
-    $("button.negative", modal).click(function () {
-        var button = $(this);
-        button.addClass("loading");
-        ajaxHandler.post("/api/v1/admin/DeleteTeam", {
-            team_id: team.id
-        }, function() {
-
-        }, function() {
-            button.removeClass("loading");
-            teamRow.remove();
-            modal.modal("hide");
-        })
-    })
     modal
         .modal({
             onHide: function () {
-                $("i", input).off("click");
-                $("input", input).val("");
+                $(".segment", modal).addClass("loading");
+                $("button", people_data).off("click");
+                $("button", account_data).off("click");
+                show_graphic.off("click");
+                data_emails.hide();
+                account_names.hide();
+                people_data_history.hide();
+                account_data_hisotry.hide();
+                click_average_graphic.hide();
+                team_settings_left.show();
+                team_settings_right.show();
+                account_data.show();
+                people_data.show();
+                $("#credit").css("display", "inline");
+                $("#show_delete").show();
+                show_graphic.off("click");
             }
         })
         .modal("show");
+    $(".segment", modal).removeClass("loading");
+    people_data.find("span").each(function (index, element) {
+        $(element).text(teams_data[element.id]);
+        var anchor = $(element).next();
+        anchor.click(function (e) {
+            e.preventDefault();
+            account_data.hide();
+            var list = $("ul", data_emails);
+            $("li", list).remove();
+            teams_data[anchor.attr("id")].split(";").forEach(function (email) {
+                $("<li>" + email + "</li>").appendTo(list);
+            });
+            data_emails.show();
+            $("button", data_emails).click(function () {
+                data_emails.hide();
+                $("li", list).remove();
+                $(this).off("click");
+                account_data.show();
+            })
+        });
+    });
+    people_data.find("button").click(function () {
+        account_data.hide();
+        team_settings_right.addClass("loading");
+        people_data_history.show();
+        ajaxHandler.post("/api/v1/admin/RetrieveTeamsPeopleChartData", {
+            team_ids: selected_teams
+        }, function () {
+        }, function (data) {
+            team_settings_right.removeClass("loading");
+            var ctx = document.getElementById("people_data_chart").getContext("2d");
+            if (people_graph === undefined)
+                people_graph = new Chart(ctx, data);
+            else {
+                people_graph.destroy();
+                people_graph = new Chart(ctx, data);
+            }
+        });
+        $("button", $("#people_data_history")).click(function () {
+            people_data_history.hide();
+            $(this).off("click");
+            $("#account_data").show();
+        })
+    });
+    account_data.find("button").click(function () {
+        people_data.hide();
+        click_average_graphic.hide();
+        team_settings_left.addClass("loading");
+        account_data_hisotry.show();
+        ajaxHandler.post("/api/v1/admin/RetrieveTeamsAccountChartData", {
+            team_ids: selected_teams
+        }, function () {
+        }, function (data) {
+            team_settings_left.removeClass("loading");
+            var ctx = $("#account_data_chart");
+            if (account_graph === undefined)
+                account_graph = new Chart(ctx, data);
+            else {
+                account_graph.destroy();
+                account_graph = new Chart(ctx, data);
+            }
+        });
+        $("button", account_data_hisotry).click(function () {
+            account_data_hisotry.hide();
+            $(this).off("click");
+            people_data.show();
+        })
+    });
+    account_data.find("span").each(function (index, element) {
+        $(element).text(teams_data[element.id]);
+        var anchor = $(element).next();
+        anchor.click(function (e) {
+            e.preventDefault();
+            people_data.hide();
+            var list = $("ul", account_names);
+            $("li", list).remove();
+            teams_data[anchor.attr("id")].split(";").forEach(function (email) {
+                $("<li>" + email + "</li>").appendTo(list);
+            });
+            account_names.show();
+            $("button", account_names).click(function () {
+                account_names.hide();
+                $("li", list).remove();
+                $(this).off("click");
+                people_data.show();
+            })
+        });
+    });
+    show_graphic.click(function () {
+        team_settings_right.hide();
+        team_settings_left.show();
+        team_settings_left.addClass("loading");
+        people_data.hide();
+        click_average_graphic.show();
+        ajaxHandler.post("/api/v1/admin/RetrieveTeamsClickChartData", {
+            team_ids: selected_teams
+        }, function () {
+        }, function (data) {
+            team_settings_left.removeClass("loading");
+            var canvas = $("#click_average_canvas");
+            if (click_graph === undefined)
+                click_graph = new Chart(canvas, data);
+            else {
+                click_graph.destroy();
+                click_graph = new Chart(canvas, data);
+            }
+        });
+        $("button", click_average_graphic).click(function () {
+            team_settings_right.show();
+            people_data.show();
+            click_average_graphic.hide();
+            $(this).off("click");
+        });
+    })
+}
+
+function openTeamSettings(team, teamRow) {
+    var modal = $("#team-settings");
+    var send_money = $("#send-money", modal);
+    var people_data = $("#people_data");
+    var account_data = $("#account_data");
+    var data_emails = $("#people_data_emails");
+    var account_names = $("#account_data_names");
+    var people_data_history = $("#people_data_history");
+    var account_data_hisotry = $("#account_data_history");
+    var team_settings_right = $("#team_settings_right");
+    var team_settings_left = $("#team_settings_left");
+    var click_average_graphic = $("#click_average_graphic");
+    var show_graphic = $("#show_graphic");
+    var delete_button = $("#show_delete");
+    var delete_modal = $("#team_delete");
+    var delete_modal_button = $("div.button.red", delete_modal);
+    delete_modal_button.off("click");
+    delete_modal_button.click(function () {
+        $(this).addClass("loading");
+        ajaxHandler.post("/api/v1/admin/DeleteTeam", {
+            team_id: team.id
+        }, function () {
+        }, function () {
+            delete_modal_button.removeClass("loading");
+            delete_modal.modal("hide");
+            teamRow.remove();
+        })
+    });
+    $(".header", modal).text(team.name + " | " + team.admin_email + " " + team.phone_number + " | week of subscription: " + team.week_of_subscription + " | current week: " + team.week_now + " | " + ((team.plan_id === 0) ? "Free" : "Pro") + " | " + (team.card_entered ? "Card entered" : "No card"));
+    modal
+        .modal({
+            onHide: function () {
+                $(".segment", modal).addClass("loading");
+                $("i", send_money).off("click");
+                $("input", send_money).val("");
+                $("button", people_data).off("click");
+                $("button", account_data).off("click");
+                delete_button.off("click");
+                show_graphic.off("click");
+                data_emails.hide();
+                account_names.hide();
+                people_data_history.hide();
+                account_data_hisotry.hide();
+                click_average_graphic.hide();
+                team_settings_left.show();
+                team_settings_right.show();
+                account_data.show();
+                people_data.show();
+            }
+        })
+        .modal("show");
+    ajaxHandler.get("/api/v1/admin/GetTeam", {
+        team_id: team.id
+    }, function () {
+    }, function (data) {
+        $(".segment", modal).removeClass("loading");
+        people_data.find("span").each(function (index, element) {
+            $(element).text(data[element.id]);
+            var anchor = $(element).next();
+            anchor.click(function (e) {
+                e.preventDefault();
+                account_data.hide();
+                var list = $("ul", data_emails);
+                $("li", list).remove();
+                data[anchor.attr("id")].split(";").forEach(function (email) {
+                    $("<li>" + email + "</li>").appendTo(list);
+                });
+                data_emails.show();
+                $("button", data_emails).click(function () {
+                    data_emails.hide();
+                    $("li", list).remove();
+                    $(this).off("click");
+                    $("#account_data").show();
+                })
+            });
+        });
+        people_data.find("button").click(function () {
+            account_data.hide();
+            team_settings_right.addClass("loading");
+            people_data_history.show();
+            ajaxHandler.get("/api/v1/admin/GetPeopleChartData", {
+                team_id: team.id
+            }, function () {
+            }, function (data) {
+                team_settings_right.removeClass("loading");
+                var ctx = document.getElementById("people_data_chart").getContext("2d");
+                if (people_graph === undefined)
+                    people_graph = new Chart(ctx, data);
+                else {
+                    people_graph.destroy();
+                    people_graph = new Chart(ctx, data);
+                }
+            });
+            $("button", $("#people_data_history")).click(function () {
+                people_data_history.hide();
+                $(this).off("click");
+                $("#account_data").show();
+            })
+        });
+        account_data.find("button").click(function () {
+            people_data.hide();
+            click_average_graphic.hide();
+            team_settings_left.addClass("loading");
+            account_data_hisotry.show();
+            ajaxHandler.get("/api/v1/admin/GetAccountChartData", {
+                team_id: team.id
+            }, function () {
+            }, function (data) {
+                team_settings_left.removeClass("loading");
+                var ctx = $("#account_data_chart");
+                if (account_graph === undefined)
+                    account_graph = new Chart(ctx, data);
+                else {
+                    account_graph.destroy();
+                    account_graph = new Chart(ctx, data);
+                }
+            });
+            $("button", account_data_hisotry).click(function () {
+                account_data_hisotry.hide();
+                $(this).off("click");
+                people_data.show();
+            })
+        });
+        account_data.find("span").each(function (index, element) {
+            $(element).text(data[element.id]);
+            var anchor = $(element).next();
+            anchor.click(function (e) {
+                e.preventDefault();
+                people_data.hide();
+                var list = $("ul", account_names);
+                $("li", list).remove();
+                data[anchor.attr("id")].split(";").forEach(function (email) {
+                    $("<li>" + email + "</li>").appendTo(list);
+                });
+                account_names.show();
+                $("button", account_names).click(function () {
+                    account_names.hide();
+                    $("li", list).remove();
+                    $(this).off("click");
+                    people_data.show();
+                })
+            });
+        });
+        $("#current-credit", modal).text(team.credit);
+        $("i", send_money).click(function () {
+            if (send_money.hasClass("loading"))
+                return;
+            var credit = $("input", send_money).val();
+            if (credit.indexOf(".") === -1) {
+                credit = parseInt(credit) * 100;
+            } else {
+                var entirePart = credit.split(".")[0];
+                var decimalPart = credit.split(".")[1];
+                if (decimalPart.length === 1)
+                    decimalPart += "0";
+                credit = parseInt(entirePart) * 100 + parseInt(decimalPart);
+            }
+            send_money.addClass("loading");
+            send_money.addClass("disabled");
+            ajaxHandler.post("/api/v1/admin/SendLoveMoney", {
+                team_id: team.id,
+                credit: credit
+            }, function () {
+            }, function (data) {
+                $("#current-credit", modal).text(data.credit);
+                $("input", send_money).val("");
+                send_money.removeClass("loading");
+                send_money.removeClass("disabled");
+            });
+        });
+        show_graphic.click(function () {
+            team_settings_right.hide();
+            team_settings_left.show();
+            team_settings_left.addClass("loading");
+            people_data.hide();
+            click_average_graphic.show();
+            ajaxHandler.get("/api/v1/teams/GetTeamClickChartData", {
+                team_id: team.id
+            }, function () {
+            }, function (data) {
+                team_settings_left.removeClass("loading");
+                var canvas = $("#click_average_canvas");
+                if (click_graph === undefined)
+                    click_graph = new Chart(canvas, data);
+                else {
+                    click_graph.destroy();
+                    click_graph = new Chart(canvas, data);
+                }
+                $("body").css({
+                    "overlfow-y": "auto"
+                });
+            });
+            $("button", click_average_graphic).click(function () {
+                team_settings_right.show();
+                people_data.show();
+                click_average_graphic.hide();
+                $(this).off("click");
+            });
+        });
+        delete_button.click(function () {
+            delete_modal.modal("show");
+        });
+    });
+}
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.slice(reader.result.indexOf(",") + 1));
+        reader.onerror = (error) => reject(error);
+    });
 }

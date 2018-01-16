@@ -1,0 +1,32 @@
+{
+  "name":"My Little Box",
+  "lastlogin":"",
+  "home":"https://www.mylittlebox.fr/",
+  "connect": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='account/informations']"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login","search":"#email", "grave":"true"},
+      {"action":"fill", "what":"password","search":"#password", "grave":"true"},
+      {"action":"trueClick", "search":"form.signin input[type='submit']", "grave":"true"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='account/informations']"},
+    {"search":"a[href*='logout']"}
+  ],
+  "Facebook": {
+    "todo": [
+      {"action":"trueClick", "search":"a[href*='account/informations']"},
+      {"action":"waitload"},
+      {"action":"trueClick", "search":"a[onclick*='fb_login()']"}
+    ]
+  }
+}

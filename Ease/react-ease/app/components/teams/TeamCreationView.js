@@ -7,7 +7,7 @@ import queryString from "query-string";
 import InvitePeopleStep from "./InvitePeopleStep";
 import {checkTeamUsernameErrors, jobRoles, passwordRegexp} from "../../utils/utils";
 import {withRouter} from "react-router-dom";
-import {setLoginRedirectUrl} from "../../actions/commonActions";
+import {setLoginRedirectUrl, processConnection} from "../../actions/commonActions";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import SingleEaseLogo from "../common/SingleEaseLogo";
 import {connect} from "react-redux";
@@ -279,7 +279,13 @@ class StepCGU extends React.Component{
             "plan_id": this.props.plan_id
         });
         easeTracker.trackEvent("RegistrationAcceptCGU");
-      this.props.onStepValidated();
+        this.props.dispatch(processConnection({
+          email:this.props.email,
+          password:this.props.password
+        })).then(response => {
+          this.props.dispatch(setLoginRedirectUrl('/main/simpleTeamCreation'));
+          this.props.onStepValidated();
+        });
     }).catch(err => {
       this.setState({loading: false});
     });
@@ -521,6 +527,7 @@ class TeamCreationView extends React.Component {
     this.setState({newsletter: !this.state.newsletter});
   }
   submitStep8(){
+    window.location.reload();
     window.location.href = '/';
   }
   handleInput(e, {value , name}){
@@ -571,6 +578,7 @@ class TeamCreationView extends React.Component {
                       handleUsernameInput={this.handleUsernameInput}
                       key="4"/>);
     steps.push(<StepCGU key="cgu"
+                        {...this.props}
                         plan_id={this.state.plan_id}
                         email={this.state.email}
                         password={this.state.password}
@@ -600,6 +608,7 @@ class TeamCreationView extends React.Component {
     steps.push(<InvitePeopleStep
         key="7"
         ws_id={this.props.ws_id}
+        dispatch={this.props.dispatch}
         team_id={this.state.teamId}
         onStepValidated={this.submitStep8}/>);
     return (

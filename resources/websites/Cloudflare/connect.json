@@ -1,0 +1,22 @@
+{
+  "name":"Cloudflare",
+  "lastLogin":"",
+  "home":"https://www.cloudflare.com/a/login",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"div.controls input[name*='email']", "grave":true},
+      {"action":"fill", "what":"password", "search":"div.controls input[name*='password']", "grave":true},
+      {"action":"trueClick", "search":"div.form-actions button[type*='submit']", "grave":true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#logout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#logout, input[name*='email']"},
+    {"search":"#logout"}
+  ]
+}

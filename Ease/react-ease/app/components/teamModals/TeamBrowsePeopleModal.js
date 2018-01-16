@@ -19,7 +19,10 @@ class UserListItem extends Component {
             <Header as="h4">
               {item.first_name} {item.last_name}
             </Header>
-            <p><Icon name="user"/>{item.username} ({teamUserRoles[item.role]})</p>
+            {item.state !== 0 ?
+              <p><Icon name="user"/>{item.username} ({teamUserRoles[item.role]})</p> :
+              <p><Icon name="user outline"/>{item.username} ({teamUserRoles[item.role]})</p>
+            }
             <p><Icon name="mail outline"/>{item.email}</p>
           </List.Content>
         </List.Item>
@@ -27,10 +30,9 @@ class UserListItem extends Component {
   }
 }
 
-@connect((store) =>
-    ({
-      users: store.users.users
-    }))
+@connect((store) => ({
+  teams: store.teams
+}))
 class TeamBrowsePeopleModal extends Component {
   constructor(props){
     super(props);
@@ -38,16 +40,23 @@ class TeamBrowsePeopleModal extends Component {
       results : [],
       value: ''
     };
-    this.state.results = this.props.users.slice();
+    const team = this.props.teams[this.props.match.params.teamId];
+    this.state.results = Object.keys(team.team_users).map(id => {
+      return team.team_users[id];
+    });
   }
   handleSearchInput = (e, {value}) => {
     this.setState({value: value});
-    const results = this.props.users.filter(item => {
-      return (item.username.toLowerCase().match(value.toLowerCase()) !== null ||
-          item.first_name.toLowerCase().match(value.toLowerCase()) !== null ||
-          item.last_name.toLowerCase().match(value.toLowerCase()) !== null ||
-          item.email.toLowerCase().match(value.toLowerCase()) !== null);
-    });
+    const team = this.props.teams[this.props.match.params.teamId];
+    const results = Object.keys(team.team_users)
+        .map(id => {
+          return team.team_users[id];})
+        .filter(item => {
+          return (item.username.toLowerCase().match(value.toLowerCase()) !== null ||
+              item.first_name.toLowerCase().match(value.toLowerCase()) !== null ||
+              item.last_name.toLowerCase().match(value.toLowerCase()) !== null ||
+              item.email.toLowerCase().match(value.toLowerCase()) !== null);
+        });
     this.setState({results: results});
   };
   render(){

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import WhiteModalTemplate from "../common/WhiteModalTemplate";
 import classnames from 'classnames';
-import {handleSemanticInput} from "../../utils/utils";
+import {handleSemanticInput, objectToList} from "../../utils/utils";
 import {showTeamBrowseChannelsModal} from '../../actions/teamModalActions';
 import {isUserInChannel, isAdmin} from "../../utils/helperFunctions";
 import {askJoinChannel, addTeamUserToChannel} from "../../actions/channelActions";
@@ -18,21 +18,28 @@ class RoomListItem extends Component {
   }
   addTeamUserToChannel = () => {
     this.setState({loading: true});
-    this.props.dispatch(addTeamUserToChannel(this.props.item.id, this.props.me.id)).then(response => {
+    this.props.dispatch(addTeamUserToChannel({
+      team_id: this.props.team_id,
+      channel_id: this.props.item.id,
+      team_user_id: this.props.me.id
+    })).then(response => {
       this.setState({loading: false});
     });
   };
   askJoin = () => {
     this.setState({loading: true});
-    this.props.dispatch(askJoinChannel(this.props.item.id)).then(response => {
+    this.props.dispatch(askJoinChannel({
+      team_id: this.props.team_id,
+      room_id: this.props.item.id
+    })).then(response => {
       this.setState({loading: false});
     });
   };
   render(){
     const item = this.props.item;
     const me = this.props.me;
-    const inChannel = isUserInChannel(item, this.props.me);
-    const isAsked = item.join_requests.indexOf(this.props.me.id) !== -1;
+    const inChannel = item.team_user_ids.indexOf(me.id) !== -1;
+    const isAsked = item.join_requests.indexOf(me.id) !== -1;
 
     return (
         <List.Item>
@@ -42,7 +49,7 @@ class RoomListItem extends Component {
                   <Icon name="hashtag"/>{item.name}
                 </span>
               <Icon name="user outline"/>
-              {item.userIds.length}
+              {item.team_user_ids.length}
             </div>
             <div class="display-flex room-purpose">
                 <span class="full_flex">
@@ -65,11 +72,9 @@ class RoomListItem extends Component {
   }
 }
 
-@connect((store) =>
-    ({
-      channels: store.channels.channels,
-      me: store.users.me
-    }))
+@connect((store) => ({
+  teams: store.teams
+}))
 class TeamBrowseRoomsModal extends Component {
   constructor(props){
     super(props);
@@ -77,19 +82,28 @@ class TeamBrowseRoomsModal extends Component {
       results : [],
       value: ''
     };
-    this.state.results = this.props.channels.slice();
+    const team = this.props.teams[this.props.match.params.teamId];
+    this.state.results = objectToList(team.rooms);
   }
   handleSearchInput = (e, {value}) => {
     this.setState({value: value});
-    const results = this.props.channels.filter(item => {
+    const team = this.props.teams[this.props.match.params.teamId];
+    const results = objectToList(team.rooms).filter(item => {
       return (item.name.toLowerCase().match(value.toLowerCase()) !== null ||
           item.purpose.toLowerCase().match(value.toLowerCase()) !== null);
     });
     this.setState({results: results});
   };
   render(){
+    const team = this.props.teams[this.props.match.params.teamId];
+    const me = team.team_users[team.my_team_user_id];
     const items = this.state.results.map(item => {
-      return <RoomListItem dispatch={this.props.dispatch} key={item.id} item={item} me={this.props.me}/>
+      return <RoomListItem
+          dispatch={this.props.dispatch}
+          key={item.id}
+          team_id={team.id}
+          item={team.rooms[item.id]}
+          me={me}/>
     });
     return (
         <WhiteModalTemplate onClose={e => {this.props.history.replace(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}`)}}>
@@ -116,9 +130,8 @@ class TeamBrowseRoomsModal extends Component {
               {items.length > 0 ?
                   items :
                   <List.Item key="-1" style={{padding:'10px'}}>
-                      No rooms...
-                  </List.Item>
-              }
+                    No rooms...
+                  </List.Item>}
             </ReactCSSTransitionGroup>
           </Container>
         </WhiteModalTemplate>
