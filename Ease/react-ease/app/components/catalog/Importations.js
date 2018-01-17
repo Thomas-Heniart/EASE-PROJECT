@@ -36,7 +36,7 @@ function json(fields, separator, csv, dispatch) {
           k++;
         item[fields[object[l++]]] = field[k].replace(/^["]+|["]+$/g, '');
       }
-      if (item.url.startsWith("http") === false && item.url !== '')
+      if (!item.url.startsWith('http://') && !item.url.startsWith('https://') && item.url !== '')
         item.url = "https://" + item.url;
       if (item.url !== '' && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
         calls.push(dispatch(importAccount({
