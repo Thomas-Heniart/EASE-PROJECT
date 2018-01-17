@@ -26,6 +26,8 @@ public class BackgroundFileServlet extends HttpServlet {
         try {
             Files.copy(file.toPath(), response.getOutputStream());
         } catch (NoSuchFileException e) {
+            System.out.println(Variables.BACKGROUND_PATH + filename + " not found for: " + Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            e.printStackTrace();
             filename = "background.jpeg";
             file = new File(Variables.BACKGROUND_PATH, filename);
             response.setHeader("Content-Type", getServletContext().getMimeType(filename));

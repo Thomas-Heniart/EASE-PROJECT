@@ -13,11 +13,12 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -448,5 +449,53 @@ public class Website {
         WebsiteAlternativeUrl websiteAlternativeUrl = new WebsiteAlternativeUrl(this, login_url);
         hibernateQuery.saveOrUpdateObject(websiteAlternativeUrl);
         this.addWebsiteAlternativeUrl(websiteAlternativeUrl);
+    }
+
+    public int matchUrl(String subdomain, String domain, String path) throws MalformedURLException {
+        try {
+            Set<URL> urls = new HashSet<>();
+            urls.add(new URL(this.getLogin_url()));
+            for (WebsiteAlternativeUrl websiteAlternativeUrl : this.getWebsiteAlternativeUrlSet())
+                urls.add(new URL(websiteAlternativeUrl.getUrl()));
+            int max_val = 0;
+            for (URL aLoginUrl : urls) {
+                String login_url_host = aLoginUrl.getHost();
+                String login_domain = "";
+                String login_path = aLoginUrl.getPath();
+                String login_subdomain = "";
+                if (login_path.equals("/"))
+                    login_path = "";
+                String[] login_url_parsed = login_url_host.split("\\.");
+                if (login_url_parsed.length == 2) {
+                    login_domain += login_url_parsed[0] + "." + login_url_parsed[1];
+                } else {
+                    login_domain += login_url_parsed[login_url_parsed.length - 2] + "." + login_url_parsed[login_url_parsed.length - 1];
+                    for (int i = 0; i < login_url_parsed.length - 2; i++)
+                        login_subdomain += login_url_parsed[i];
+                    if (login_subdomain.equals("www"))
+                        login_subdomain = "";
+                }
+                if (login_domain.equals(domain)) {
+                    if (login_subdomain.equals(subdomain)) {
+                        if (login_path.equals(path))
+                            return 3;
+                        max_val = 2;
+                    }
+                }
+            }
+            return max_val;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    public boolean matchInformationSet(Set<String> informationSet) {
+        if (this.getWebsiteInformationList().size() != informationSet.size())
+            return false;
+        for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
+            if (!informationSet.contains(websiteInformation.getInformation_name()))
+                return false;
+        }
+        return true;
     }
 }

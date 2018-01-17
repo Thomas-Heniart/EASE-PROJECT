@@ -7,6 +7,8 @@ import com.Ease.Utils.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -157,23 +159,39 @@ public class Catalog {
         return software;
     }
 
-    public Website getPublicWebsiteWithUrl(String url, Set<String> information_names, HibernateQuery hibernateQuery) {
-        hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet AS url WHERE w.website_homepage LIKE CONCAT(:url, '%') OR w.login_url LIKE CONCAT(:url, '%') OR url.url LIKE CONCAT(:url, '%') ORDER BY w.db_id ASC");
-        hibernateQuery.setParameter("url", url);
+    public Website getPublicWebsiteWithUrl(String url, Set<String> information_names, HibernateQuery hibernateQuery) throws MalformedURLException {
+        URL aUrl = new URL(url);
+        String[] url_parsed = aUrl.getHost().split("\\.");
+        String subdomain = "";
+        String domain = "";
+        String path = aUrl.getPath();
+        if (path.equals("/"))
+            path = "";
+        if (url_parsed.length == 2)
+            domain += url_parsed[0] + "." + url_parsed[1];
+        else {
+            domain += url_parsed[url_parsed.length - 2] + "." + url_parsed[url_parsed.length - 1];
+            for (int i = 0; i < url_parsed.length - 2; i++)
+                subdomain += url_parsed[i];
+            if (subdomain.equals("www"))
+                subdomain = "";
+        }
+        hibernateQuery.queryString("SELECT w FROM Website w ORDER BY w.db_id ASC");
         List<Website> websites = hibernateQuery.list();
+        int last_value = 0;
+        Website last_website = null;
         for (Website website : websites) {
-            if (website.getWebsiteInformationList().size() == information_names.size()) {
-                boolean exist = true;
-                for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
-                    if (!information_names.contains(websiteInformation.getInformation_name())) {
-                        exist = false;
-                        break;
-                    }
-                }
-                if (exist)
+            int match_value = website.matchUrl(subdomain, domain, path);
+            if (match_value == 3) {
+                if (website.matchInformationSet(information_names))
                     return website;
+            } else if (match_value > 0 && match_value > last_value) {
+                if (website.matchInformationSet(information_names)) {
+                    last_value = match_value;
+                    last_website = website;
+                }
             }
         }
-        return null;
+        return last_website;
     }
 }
