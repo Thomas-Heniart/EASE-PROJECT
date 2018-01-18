@@ -16,14 +16,15 @@
     },
     "logout": {
     	"todo": [
-    		{"action":"waitfor", "search":".topbar-settingsMenuButton"},
-    		{"action":"clickona", "search":".topbar-settingsMenuButton"},
+    		{"action":"trueClick", "search":".Topbar-settingsMenuButton"},
     		{"action":"waitfor", "search":".topbarSettingsMenu-logout"},
-    		{"action":"clickona", "search":".topbarSettingsMenu-logout"}
+    		{"action":"trueClick", "search":".topbarSettingsMenu-logout"},
+			{"action":"waitload"}
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"#defaultSplash-phrases"}
+		{"action":"waitfor", "search":".Topbar-settingsMenuButton, #email_input"},
+    	{"search":".Topbar-settingsMenuButton"}
     ]
     
 }

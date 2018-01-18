@@ -66,8 +66,11 @@ public class ServletCreateTeam extends HttpServlet {
             String email = sm.getStringParam("email", true, false);
             String username = sm.getStringParam("username", true, false);
             Integer plan_id = sm.getIntParam("plan_id", true, false);
+            Integer company_size = sm.getIntParam("company_size", true, false);
             if (teamName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
+            if (company_size < 1)
+                throw new HttpServletException(HttpStatus.BadRequest, "Company size must be greater than 0");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "email is needed.");
             checkUsernameIntegrity(username);
@@ -86,7 +89,7 @@ public class ServletCreateTeam extends HttpServlet {
                 query.executeUpdate();
             }
             String teamKey = AES.keyGenerator();
-            Team team = new Team(teamName);
+            Team team = new Team(teamName, company_size);
             String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
             Date arrivalDate = new Date(sm.getLongParam("timestamp", true, false));
             TeamUser owner = TeamUser.createOwner(email, username, arrivalDate, AES.encrypt(teamKey, keyUser), team);

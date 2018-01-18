@@ -90,9 +90,6 @@ public class TeamUser {
     @JoinColumn(name = "status_id")
     private TeamUserStatus teamUserStatus;
 
-    @Column(name = "phone_number")
-    private String phone_number;
-
     @Column(name = "disabled_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date disabledDate;
@@ -268,14 +265,6 @@ public class TeamUser {
         this.teamUserStatus = teamUserStatus;
     }
 
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
     public String getInvitation_code() {
         return invitation_code;
     }
@@ -375,7 +364,6 @@ public class TeamUser {
         res.putOpt("departure_date", departureDate == null ? JSONObject.NULL : departureDate.getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("state", this.state);
-        res.putOpt("phone_number", this.getPhone_number() == null ? JSONObject.NULL : this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getChannels())
             channel_ids.put(channel.getDb_id());

@@ -46,6 +46,9 @@ public class ServletRegistration extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             String digits = sm.getStringParam("digits", false, true);
             String code = sm.getStringParam("code", false, true);
+            String phone_number = sm.getStringParam("phone_number", true, false);
+            String first_name = sm.getStringParam("first_name", true, false);
+            String last_name = sm.getStringParam("last_name", true, false);
             Long registration_date = sm.getLongParam("registration_date", true, false);
             Boolean send_news = sm.getBooleanParam("newsletter", true, false);
             checkUsernameIntegrity(username);
@@ -59,6 +62,12 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
             if (send_news == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Newsletter cannot be null");
+            if (first_name.isEmpty() || first_name.length() > 255 || !Regex.isValidName(first_name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid first name");
+            if (last_name.isEmpty() || last_name.length() > 255 || !Regex.isValidName(last_name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid last name");
+            if (phone_number.isEmpty() || phone_number.length() > 255 || !Regex.isPhoneNumber(phone_number))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
                 hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = ? AND invitation_code LIKE ?");
@@ -76,7 +85,7 @@ public class ServletRegistration extends HttpServlet {
                 if (!db_digits.equals(digits))
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             }
-            User newUser = UserFactory.getInstance().createUser(email, username, password);
+            User newUser = UserFactory.getInstance().createUser(email, username, password, first_name, last_name, phone_number);
             sm.saveOrUpdate(newUser);
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);

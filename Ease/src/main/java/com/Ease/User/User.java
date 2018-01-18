@@ -253,6 +253,7 @@ public class User {
         res.put("username", this.getUsername());
         res.put("first_name", this.getPersonalInformation().getFirst_name());
         res.put("last_name", this.getPersonalInformation().getLast_name());
+        res.put("phone_number", this.getPersonalInformation().getPhone_number());
         JSONArray teams = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers()) {
             Team team = teamUser.getTeam();
