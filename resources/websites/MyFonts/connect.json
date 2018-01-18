@@ -1,0 +1,64 @@
+{
+  "name": "MyFonts",
+  "lastLogin": "",
+  "home": "https://www.myfonts.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#headerLoginLink"
+      },
+      {
+        "action": "waitfor",
+        "search": ".dropdownLoginFrame"
+      },
+      {
+        "action": "enterFrame",
+        "search": ".dropdownLoginFrame"
+      },
+      {
+        "action": "waitfor",
+        "search": "#username"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#username",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "input[name='password']",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "input[type='submit']"
+      },
+      {
+        "action": "exitFrame"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#signOut"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#headerLoginLink[href*='login'], #headerLoginLink[href*='overview']"
+    },
+    {
+      "search": "#headerLoginLink[href*='overview']"
+    }
+  ]
+}
