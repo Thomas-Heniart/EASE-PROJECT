@@ -16,11 +16,14 @@ public class PersonalInformation {
     @Column(name = "last_name")
     private String last_name = "";
 
+    @Column(name = "phone_number")
+    private String phone_number = "";
+
     public PersonalInformation() {
 
     }
 
-    public PersonalInformation(String first_name, String last_name) {
+    public PersonalInformation(String first_name, String last_name, String phone_number) {
         this.first_name = first_name;
         this.last_name = last_name;
     }
@@ -47,5 +50,13 @@ public class PersonalInformation {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 }

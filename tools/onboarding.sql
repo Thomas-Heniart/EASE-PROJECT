@@ -1,12 +1,14 @@
 CREATE TABLE USER_PERSONAL_INFORMATION (
-  id         INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  first_name VARCHAR(255)     NOT NULL DEFAULT '',
-  last_name  VARCHAR(255)     NOT NULL DEFAULT '',
+  id           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  first_name   VARCHAR(255)     NOT NULL DEFAULT '',
+  last_name    VARCHAR(255)     NOT NULL DEFAULT '',
+  phone_number VARCHAR(255)     NOT NULL DEFAULT '',
   PRIMARY KEY (id)
 );
 
 INSERT INTO USER_PERSONAL_INFORMATION SELECT
                                         id,
+                                        '',
                                         '',
                                         ''
                                       FROM users;
@@ -21,6 +23,12 @@ UPDATE USER_PERSONAL_INFORMATION upi
   JOIN teamUsers tU ON u.id = tU.user_id
 SET upi.first_name = tU.firstName, upi.last_name = tU.lastName;
 
+UPDATE USER_PERSONAL_INFORMATION upi
+  JOIN users u ON u.personal_information_id = upi.id
+  JOIN teamUsers tU ON u.id = tU.user_id
+SET upi.phone_number = tU.phone_number
+WHERE tU.phone_number IS NOT NULL;
+
 SET FOREIGN_KEY_CHECKS = 0;
 ALTER TABLE users
   ADD FOREIGN KEY (personal_information_id) REFERENCES USER_PERSONAL_INFORMATION (id);
@@ -32,5 +40,52 @@ ALTER TABLE teamUsers
   DROP COLUMN lastName;
 ALTER TABLE teamUsers
   DROP COLUMN jobTitle;
+ALTER TABLE teamUsers
+  DROP COLUMN phone_number;
 
-ALTER TABLE users CHANGE COLUMN firstName username VARCHAR(255) NOT NULL DEFAULT '';
+ALTER TABLE teams
+  ADD COLUMN company_size INT(10) UNSIGNED NOT NULL;
+UPDATE teams t
+SET company_size = (SELECT COUNT(*)
+                    FROM teamUsers
+                    WHERE team_id = t.id);
+
+CREATE TABLE TEAM_ONBOARDING_STATUS (
+  id   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  step TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (id)
+);
+
+ALTER TABLE teams
+  ADD COLUMN onboarding_status_id INT(10) UNSIGNED NOT NULL;
+
+INSERT INTO TEAM_ONBOARDING_STATUS SELECT
+                                     id,
+                                     0
+                                   FROM teams;
+UPDATE teams
+SET onboarding_status_id = id;
+
+SET FOREIGN_KEY_CHECKS = 0;
+ALTER TABLE teams
+  ADD FOREIGN KEY (onboarding_status_id) REFERENCES TEAM_ONBOARDING_STATUS (id);
+SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE ONBOARDING_ROOM (
+  id   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255)     NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE ONBOARDING_ROOM_WEBSITE (
+  id                 INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  onboarding_room_id INT(10) UNSIGNED NOT NULL,
+  website_id         INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (onboarding_room_id) REFERENCES ONBOARDING_ROOM (id),
+  FOREIGN KEY (website_id) REFERENCES websites (id),
+  UNIQUE (onboarding_room_id, website_id)
+);
+
+ALTER TABLE users
+  CHANGE COLUMN firstName username VARCHAR(255) NOT NULL;

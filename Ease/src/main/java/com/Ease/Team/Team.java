@@ -67,6 +67,13 @@ public class Team {
     @Column(name = "active")
     private boolean active = true;
 
+    @Column(name = "company_size")
+    private Integer company_size;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "onboarding_status_id")
+    private OnboardingStatus onboardingStatus = new OnboardingStatus();
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
@@ -94,8 +101,9 @@ public class Team {
     @Transient
     private Channel default_channel;
 
-    public Team(String name) {
+    public Team(String name, Integer company_size) {
         this.name = name;
+        this.company_size = company_size;
     }
 
     public Team() {
@@ -165,6 +173,14 @@ public class Team {
         this.active = active;
     }
 
+    public Integer getCompany_size() {
+        return company_size;
+    }
+
+    public void setCompany_size(Integer company_size) {
+        this.company_size = company_size;
+    }
+
     public synchronized Set<TeamCard> getTeamCardSet() {
         return teamCardSet;
     }
@@ -187,6 +203,14 @@ public class Team {
 
     public void setSubscription(Subscription subscription) {
         this.subscription = subscription;
+    }
+
+    public OnboardingStatus getOnboardingStatus() {
+        return onboardingStatus;
+    }
+
+    public void setOnboardingStatus(OnboardingStatus onboardingStatus) {
+        this.onboardingStatus = onboardingStatus;
     }
 
     public TeamCard getTeamCard(Integer id) throws HttpServletException {
@@ -321,10 +345,12 @@ public class Team {
 
     public JSONObject getSimpleJson() throws HttpServletException {
         JSONObject res = new JSONObject();
-        res.put("id", this.db_id);
-        res.put("name", this.name);
+        res.put("id", this.getDb_id());
+        res.put("name", this.getName());
+        res.put("company_size", this.getCompany_size());
         Integer plan_id = this.getPlan_id();
         res.put("plan_id", plan_id);
+        res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
         return res;
     }

@@ -1,22 +1,59 @@
 {
-    "name":"Eventbrite",
-    "lastLogin":"",
-    "home":"https://www.eventbrite.fr/",
-    "connect":{
-        "todo":[
-          {"action":"clickona", "search":"a[href*='login']"},
-          {"action":"waitfor", "search":"#login-email"},
-          {"action":"fill", "what":"login", "search":"#login-email"},
-          {"action":"fill", "what":"password", "search":"#login-password"},
-          {"action":"click", "search":"#authentication-container form input[type='submit']"}
-        ]
-    },
-    "logout":{
-        "todo":[
-            {"action":"aclick", "search":"a[href*='logout']"}
-          ]
-    },
-    "checkAlreadyLogged":[
-        {"search":"a[href*='logout']"}
+  "name": "Eventbrite",
+  "lastLogin": "",
+  "home": "https://www.eventbrite.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='login']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#signin-email"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#signin-email"
+      },
+      {
+        "action": "trueClick",
+        "search": "form button[type='submit']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#password"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password"
+      },
+      {
+        "action": "trueClick",
+        "search": "form button[type='submit']"
+      }
     ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='login'], a[href*='logout']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
 }

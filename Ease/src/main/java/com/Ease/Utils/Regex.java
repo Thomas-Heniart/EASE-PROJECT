@@ -18,6 +18,7 @@ public class Regex {
     private static final Pattern VALID_SIMPLE_STRING = Pattern.compile("^[a-zA-Z0-9]{4,20}$");
     private static final Pattern VALID_ROOM_NAME = Pattern.compile("^[a-z0-9_\\-]{1,21}$");
     private static final Pattern SIMPLE_URL = Pattern.compile("^(https?://)");
+    private static final Pattern VALID_NAME = Pattern.compile("/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u");
 
     public static boolean isEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
@@ -61,6 +62,11 @@ public class Regex {
 
     public static boolean isSimpleUrl(String url) {
         Matcher matcher = SIMPLE_URL.matcher(url);
+        return matcher.find();
+    }
+
+    public static boolean isValidName(String name) {
+        Matcher matcher = VALID_NAME.matcher(name);
         return matcher.find();
     }
 }

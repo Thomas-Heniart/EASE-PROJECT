@@ -107,7 +107,7 @@ public class ServletResetPassword extends HttpServlet {
                     mailJetBuilder.addVariable("team_name", team.getName());
                     mailJetBuilder.addVariable("team_email", teamUser.getEmail());
                     mailJetBuilder.addVariable("email", email);
-                    mailJetBuilder.addVariable("phone_number", teamUser.getPhone_number());
+                    mailJetBuilder.addVariable("phone_number", teamUser.getUser().getPersonalInformation().getPhone_number());
                     mailJetBuilder.sendEmail();
                 } else {
                     TeamUser admin = team.getTeamUserWithId(teamUser.getAdmin_id());

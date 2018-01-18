@@ -46,7 +46,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("admin_email", owner.getEmail());
                 tmp.put("plan_id", team.isActive() ? team.getPlan_id() : -1);
                 tmp.put("card_entered", team.isCard_entered());
-                String phoneNumber = owner.getPhone_number();
+                String phoneNumber = owner.getUser().getPersonalInformation().getPhone_number();
                 if (phoneNumber == null)
                     phoneNumber = "";
                 tmp.put("phone_number", phoneNumber);
