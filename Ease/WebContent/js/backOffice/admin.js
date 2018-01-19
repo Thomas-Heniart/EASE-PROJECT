@@ -9,7 +9,11 @@ $(document).ready(function () {
     ajaxHandler.get("/api/v1/admin/GetPublicWebsites", null, () => {
     }, (res) => {
         website_arr = res;
-        website_arr.forEach((website) => website_obj[website.id] = website)
+        website_arr.forEach((website) => {
+            website_obj[website.id] = website;
+            $("<div class='item' data-value='" + website.id + "'>" +
+                "<img class='ui avatar image' src='" + website.logo + "' />" + website.name + "</div>").appendTo($("#onboarding_rooms_add_website .menu"));
+        })
     });
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
@@ -213,17 +217,25 @@ $(document).ready(function () {
                             menu_elem.appendTo($("#onboarding_rooms_menu"))
                             let tab_elem = $('<div class="tab" data-id="' + onboarding_room.id + '" style="display: none"></div>');
                             let plus_elem = $("<div class='ui tiny spaced image'>" +
-                                "<img class='ui spaced image' src='/resources/images/plus.png'/>" +
+                                "<img class='ui spaced image' src='/resources/icons/plus.png'/>" +
                                 "</div>");
                             plus_elem.appendTo(tab_elem);
-                            plus_elem.click(() => {
-
-                            })
+                            plus_elem.click(() => openAddOnboardingRoomModal(onboarding_room, $(".label", menu_elem), tab_elem));
                             onboarding_room.website_ids.forEach((website_id) => {
                                 let website = website_obj[website_id];
                                 let elem = $('<div class="ui tiny spaced image">' +
-                                    '<img class="ui spaced image" src="' + website.logo + '"/>' +
+                                    '<img class="visible content" src="' + website.logo + '"/>' +
                                     '</div>');
+                                elem.hover(() => $("img", elem).attr("src", "/resources/icons/delete.png"), () => $("img", elem).attr("src", website.logo));
+                                elem.click(() => {
+                                    onboarding_room.website_ids.splice(onboarding_room.website_ids.indexOf(website.id), 1);
+                                    ajaxHandler.put("/api/v1/admin/OnboardingRooms", onboarding_room, () => {
+                                    }, () => {
+                                        elem.remove();
+                                        let count = parseInt($(".label", menu_elem).text()) - 1;
+                                        $(".label", menu_elem).text(count)
+                                    })
+                                });
                                 elem.appendTo(tab_elem);
                             });
                             tab_elem.appendTo($("#onboarding_rooms_tabs"))
@@ -683,6 +695,44 @@ function openWebsiteIntegration(website, websiteElem) {
         .modal("show");
 }
 
+function openAddOnboardingRoomModal(onboarding_room, onboarding_room_menu_item, onboarding_room_tab) {
+    let modal = $("#onboarding_rooms_add_website");
+    $(".form button", modal).click(() => {
+        let website_id = $("input[name='website_id']", modal).val();
+        if (onboarding_room.website_ids.indexOf(website_id) !== -1)
+            return;
+        onboarding_room.website_ids.push(website_id);
+        ajaxHandler.put("/api/v1/admin/OnboardingRooms", onboarding_room, () => {
+        }, () => {
+            let website = website_obj[website_id];
+            let elem = $('<div class="ui tiny spaced image">' +
+                '<img class="visible content" src="' + website.logo + '"/>' +
+                '</div>');
+            elem.hover(() => $("img", elem).attr("src", "/resources/icons/delete.png"), () => $("img", elem).attr("src", website.logo));
+            elem.click(() => {
+                onboarding_room.website_ids.splice(onboarding_room.website_ids.indexOf(website.id), 1);
+                ajaxHandler.put("/api/v1/admin/OnboardingRooms", onboarding_room, () => {
+                }, () => {
+                    elem.remove();
+                    let count = parseInt($(".label", menu_elem).text()) - 1;
+                    $(".label", menu_elem).text(count)
+                })
+            });
+            elem.appendTo(onboarding_room_tab);
+            let count = parseInt(onboarding_room_menu_item.text()) + 1;
+            onboarding_room_menu_item.text(count);
+            modal.modal("hide");
+        });
+    });
+    modal
+        .modal({
+            onHide: function () {
+                $(".form button", modal).off("click");
+            }
+        })
+        .modal("show");
+}
+
 function openWebsiteMerging(website, websiteElem) {
     var modal = $("#website-merging");
     $(".form button", modal).click(function () {
@@ -1097,11 +1147,4 @@ function getBase64(file) {
         reader.onload = () => resolve(reader.result.slice(reader.result.indexOf(",") + 1));
         reader.onerror = (error) => reject(error);
     });
-}
-
-function addWebsiteToOnboardingRoom() {
-    return new Promise((resolve, reject) => {
-        /* open popup */
-        resolve()
-    })
 }
