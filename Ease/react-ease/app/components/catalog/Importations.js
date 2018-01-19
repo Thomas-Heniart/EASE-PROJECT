@@ -992,12 +992,13 @@ class Importations extends React.Component {
          });
       });
       this.props.dispatch(importAccounts({imported_accounts: calls})).then(response => {
-        const json = response.filter(item => {
-          if (item.error === false)
-            return item;
-        }).map(item => {
-          return item.data;
-        });
+        // const json = response.filter(item => {
+        //   if (item.error === false)
+        //     return item;
+        // }).map(item => {
+        //   return item.data;
+        // });
+        const json = response;
         if (json.length) {
           const acc = json.map(item => {
             return {
@@ -1039,12 +1040,13 @@ class Importations extends React.Component {
         this.setState({error: 'Darn, that didn’t work! Make sure the text pasted contains logins and passwords properly separated.', loading: false});
       else {
         this.props.dispatch(importAccounts({imported_accounts: calls})).then(response => {
-          const json = response.filter(item => {
-            if (item.error === false)
-              return item;
-          }).map(item => {
-            return item.data;
-          });
+          // const json = response.filter(item => {
+          //   if (item.error === false)
+          //     return item;
+          // }).map(item => {
+          //   return item.data;
+          // });
+          const json = response;
           if (json.length) {
             const accounts = json.map(item => {
               return {
