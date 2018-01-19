@@ -50,6 +50,7 @@
             <a class="item" data-target="#website-requests-segment">Requests</a>
             <a class="item" data-target="#website-failures-segment">Website failures</a>
             <a class="item" data-target="#background-upload-segment">Background upload</a>
+            <a class="item" data-target="#onboarding-rooms-segment">Onboarding rooms</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -70,6 +71,9 @@
         </div>
         <div id="background-upload-segment" class="ui segment loading backOffice_part" style="display: none">
             <%@include file="templates/backofficeAdmin/BackgorundUpload.jsp" %>
+        </div>
+        <div id="onboarding-rooms-segment" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/OnboardingRooms.jsp" %>
         </div>
     </div>
 </div>
