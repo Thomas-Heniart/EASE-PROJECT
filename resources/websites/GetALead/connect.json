@@ -1,0 +1,31 @@
+{
+  "name":"Get a Lead",
+  "lastLogin":"",
+  "home":"https://app.getalead.io/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"#btn-user-create-session-navbar"},
+      {"action":"waitload"},
+      {"action":"fill", "what":"login", "search":"#user_email"},
+      {"action":"fill", "what":"password", "search":"#user_password"},
+      {"action":"trueClick", "search":"#btn-user-login"}
+    ]
+  },
+  "LinkedIn":{
+    "todo":[
+      {"action":"trueClick", "search":"#btn-user-create-session-navbar"},
+      {"action":"waitload"},
+      {"action":"trueClick", "search":"#btn-user-linkedin-connect-login"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#btn-user-destroy-session-navbar"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#btn-user-destroy-session-navbar, #btn-user-create-session-navbar"},
+    {"search":"#btn-user-destroy-session-navbar"}
+  ]
+}
