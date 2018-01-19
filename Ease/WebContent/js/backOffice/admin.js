@@ -212,6 +212,13 @@ $(document).ready(function () {
                                 '</a>');
                             menu_elem.appendTo($("#onboarding_rooms_menu"))
                             let tab_elem = $('<div class="tab" data-id="' + onboarding_room.id + '" style="display: none"></div>');
+                            let plus_elem = $("<div class='ui tiny spaced image'>" +
+                                "<img class='ui spaced image' src='/resources/images/plus.png'/>" +
+                                "</div>");
+                            plus_elem.appendTo(tab_elem);
+                            plus_elem.click(() => {
+
+                            })
                             onboarding_room.website_ids.forEach((website_id) => {
                                 let website = website_obj[website_id];
                                 let elem = $('<div class="ui tiny spaced image">' +
@@ -275,8 +282,7 @@ $(document).ready(function () {
     });
     $("#teams_table").tablesort();
     $("#teams_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()));
-})
-;
+});
 
 function createWebsiteFailureRow(websiteFailure) {
     var elem = $("<tr>" +
@@ -1091,4 +1097,11 @@ function getBase64(file) {
         reader.onload = () => resolve(reader.result.slice(reader.result.indexOf(",") + 1));
         reader.onerror = (error) => reject(error);
     });
+}
+
+function addWebsiteToOnboardingRoom() {
+    return new Promise((resolve, reject) => {
+        /* open popup */
+        resolve()
+    })
 }
