@@ -29,34 +29,28 @@ public class ServletImportedAccount extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            JSONArray importedAccounts = sm.getArrayParam("imported_accounts", false, false);
+            JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            String url = sm.getStringParam("url", true, false);
+            if (url.equals("") || url.length() > 2000)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter URL");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             User user = sm.getUser();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            JSONArray res = new JSONArray();
-            for (int i=0; i < importedAccounts.length(); i++) {
-                JSONObject importedAccount_obj = importedAccounts.getJSONObject(i);
-                JSONObject account_information = importedAccount_obj.getJSONObject("account_information");
-                String url = importedAccount_obj.getString("url");
-                if (url.equals("") || url.length() > 2000)
-                    throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter URL");
-                Website website = catalog.getPublicWebsiteWithUrl(url, account_information.keySet(), hibernateQuery);
-                if (website != null && !website.getWebsiteAttributes().isIntegrated())
-                    website = null;
-                String name = importedAccount_obj.getString("name");
-                ImportedAccount importedAccount = new ImportedAccount(url, website, name, user);
-                String symmetric_key = sm.getKeyUser();
-                for (Object object : account_information.keySet()) {
-                    String information_name = (String) object;
-                    JSONObject value = account_information.getJSONObject(information_name);
-                    importedAccount.getImportedAccountInformationMap().put(information_name, new ImportedAccountInformation(information_name, AES.encrypt(value.getString("value"), symmetric_key), importedAccount));
-                }
-                sm.saveOrUpdate(importedAccount);
-                user.addImportedAccount(importedAccount);
-                importedAccount.decipher(symmetric_key);
-                res.put(importedAccount.getJson());
+            Website website = catalog.getPublicWebsiteWithUrl(url, account_information.keySet(), hibernateQuery);
+            if (website != null && !website.getWebsiteAttributes().isIntegrated())
+                website = null;
+            String name = sm.getStringParam("name", true, false);
+            ImportedAccount importedAccount = new ImportedAccount(url, website, name, user);
+            String symmetric_key = sm.getKeyUser();
+            for (Object object : account_information.keySet()) {
+                String information_name = (String) object;
+                JSONObject value = account_information.getJSONObject(information_name);
+                importedAccount.getImportedAccountInformationMap().put(information_name, new ImportedAccountInformation(information_name, AES.encrypt(value.getString("value"), symmetric_key), importedAccount));
             }
-            sm.setSuccess(res);
+            sm.saveOrUpdate(importedAccount);
+            user.addImportedAccount(importedAccount);
+            importedAccount.decipher(symmetric_key);
+            sm.setSuccess(importedAccount.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

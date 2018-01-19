@@ -29,6 +29,10 @@ public class HibernateQuery {
         this.query = this.session.createQuery(query);
     }
 
+    public void cacheQuery() {
+        this.query.setCacheable(true);
+    }
+
     public void querySQLString(String query) {
         this.query = this.session.createNativeQuery(query);
     }

@@ -33,6 +33,7 @@ public class Catalog {
 
     public Collection<Website> getWebsites(HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT w FROM Website w ORDER BY w.db_id DESC");
+        hibernateQuery.cacheQuery();
         return hibernateQuery.list();
     }
 
@@ -177,11 +178,14 @@ public class Catalog {
                 if (subdomain.equals("www"))
                     subdomain = "";
             }
-            hibernateQuery.queryString("SELECT w FROM Website w ORDER BY w.db_id ASC");
+            hibernateQuery.queryString("SELECT w FROM Website w WHERE w.login_url LIKE :domain ORDER BY w.db_id ASC");
+            hibernateQuery.setParameter("domain", "%" + domain + "%");
+            hibernateQuery.cacheQuery();
             List<Website> websites = hibernateQuery.list();
             int last_value = 0;
             Website last_website = null;
             for (Website website : websites) {
+                System.out.println(website.getDb_id());
                 int match_value = website.matchUrl(subdomain, domain, path);
                 if (match_value == 3) {
                     if (website.matchInformationSet(information_names))

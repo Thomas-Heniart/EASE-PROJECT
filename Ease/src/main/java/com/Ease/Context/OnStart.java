@@ -58,6 +58,8 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("publicKey", publicAndPrivateKey.getKey());
                 context.setAttribute("privateKey", publicAndPrivateKey.getValue());
 
+
+
                 context.setAttribute("metrics", new Metrics(db));
 
                 Map<Integer, Map<String, Object>> userIdMap = new ConcurrentHashMap<>();
