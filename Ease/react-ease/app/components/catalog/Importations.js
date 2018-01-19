@@ -152,8 +152,8 @@ class ChoosePasswordManager extends React.Component {
         <Segment.Group>
           <Segment onClick={e => choosePasswordManager(1)} className={passwordManager === 1 ? 'selected' : null}>
             <img src="/resources/other/Excel.png"/>Excel or Google sheet</Segment>
-          {/*<Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>*/}
-            {/*<img src="/resources/other/Chrome.png"/>Chrome</Segment>*/}
+          <Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>
+            <img src="/resources/other/Chrome.png"/>Chrome</Segment>
           <Segment onClick={e => choosePasswordManager(3)} className={passwordManager === 3 ? 'selected' : null}>
             <img src="/resources/other/Dashlane.png"/>Dashlane</Segment>
           <Segment onClick={e => choosePasswordManager(4)} className={passwordManager === 4 ? 'selected' : null}>
