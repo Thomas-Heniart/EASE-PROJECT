@@ -256,14 +256,12 @@ module.exports = {
         ws_id: ws_id
       });
     },
-    importAccount: ({name, url, account_information, ws_id}) => {
+    importAccounts: ({imported_accounts, ws_id}) => {
       // Object.keys(account_information).map(item => {
       //   account_information[item] = cipher(account_information[item]);
       // });
       return basic_post('/api/v1/importedAccounts', {
-        name: name,
-        url: url,
-        account_information: account_information,
+        imported_accounts: imported_accounts,
         ws_id: ws_id
       });
     },
