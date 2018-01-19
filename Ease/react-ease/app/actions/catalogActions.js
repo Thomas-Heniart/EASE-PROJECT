@@ -272,13 +272,15 @@ export function catalogRequestWebsite({url, account_information}){
   }
 }
 
-export function importAccounts({imported_accounts}){
+export function importAccount({name, url, account_information}){
   return (dispatch, getState) => {
-    return post_api.catalog.importAccounts({
-      imported_accounts: imported_accounts,
+    return post_api.catalog.importAccount({
+      name: name,
+      url: url,
+      account_information: account_information,
       ws_id: getState().common.ws_id
     }).then(response => {
-      dispatch({type: 'CATALOG_IMPORT_ACCOUNTS', payload: response});
+      dispatch({type: 'CATALOG_IMPORT_ACCOUNT', payload: response});
       return response;
     }).catch(err => {
       throw err;

@@ -4,7 +4,7 @@ import {
   catalogAddAnyApp, catalogAddBookmark, catalogAddClassicApp,
   getImportedAccounts
 } from "../../actions/catalogActions";
-import {importAccounts, modifyImportedAccount, deleteImportedAccount} from "../../actions/catalogActions";
+import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../actions/catalogActions";
 import {handleSemanticInput, isEmail, reflect, lala, credentialIconType} from "../../utils/utils";
 import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "../../actions/appsActions";
 import {createProfile} from "../../actions/dashboardActions";
@@ -47,52 +47,6 @@ function json(fields, separator, csv, dispatch) {
             password: {name: "password", value: item.password ? item.password : ''}
           }
         })))
-      }
-    }
-  }
-  if (calls.length)
-    return calls;
-  else if (separator === ',')
-    return json(fields, '\t', csv, dispatch);
-  else
-    return null;
-}
-
-function jsonv2(fields, separator, csv, dispatch) {
-  const array = csv.split('\n');
-  let calls = [];
-  for (let i = 0; i < array.length; i++) {
-    let separatorCounter = 0;
-    const object = Object.keys(fields);
-    let url = false;
-    object.map(item => {
-      if (fields[item] === 'url')
-        url = true;
-    });
-    for (let j = 0; j < array[i].length; j++) {
-      if (array[i][j] === separator)
-        separatorCounter++;
-    }
-    if (separatorCounter >= 3 && url === true) {
-      let item = {};
-      const field = array[i].split(separator);
-      let l = 0;
-      for (let k = 0; k < field.length; k++) {
-        if (fields[object[k]] === 'login' && field[k + 1] && isEmail(field[k + 1].replace(/^["]+|["]+$/g, '')))
-          k++;
-        item[fields[object[l++]]] = field[k].replace(/^["]+|["]+$/g, '');
-      }
-      if (!item.url.startsWith('http://') && !item.url.startsWith('https://') && item.url !== '')
-        item.url = "https://" + item.url;
-      if (item.url !== '' && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
-        calls.push({
-          name: item.name ? item.name : '',
-          url: item.url,
-          account_information: {
-            login: {name: "login", value: item.login ? item.login : ''},
-            password: {name: "password", value: item.password ? item.password : ''}
-          }
-        })
       }
     }
   }
@@ -980,7 +934,7 @@ class Importations extends React.Component {
     if (event.detail.success === true) {
       let calls = [];
       event.detail.msg.map((item, idx) => {
-         calls.push({
+         calls.push(this.props.dispatch(importAccount({
           id: idx,
           name: '',
           url:  item.website.startsWith("http") === false && item.website !== '' ? "https://" + item.website : item.website,
@@ -989,16 +943,15 @@ class Importations extends React.Component {
             login: {name:"login", value: item.login},
             password: {name:"password", value: item.pass}
           }
-         });
+         })));
       });
-      this.props.dispatch(importAccounts({imported_accounts: calls})).then(response => {
-        // const json = response.filter(item => {
-        //   if (item.error === false)
-        //     return item;
-        // }).map(item => {
-        //   return item.data;
-        // });
-        const json = response;
+      Promise.all(calls.map(reflect)).then(response => {
+        const json = response.filter(item => {
+          if (item.error === false)
+            return item;
+        }).map(item => {
+          return item.data;
+        });
         if (json.length) {
           const acc = json.map(item => {
             return {
@@ -1035,18 +988,17 @@ class Importations extends React.Component {
       document.addEventListener("ScrapChromeResult", (event) => this.eventListener(event));
     }
     else if (this.state.view === 3 && this.state.paste !== '') {
-      const calls = jsonv2(this.state.fields, this.state.separator, this.state.paste, this.props.dispatch);
+      const calls = json(this.state.fields, this.state.separator, this.state.paste, this.props.dispatch);
       if (calls === null)
         this.setState({error: 'Darn, that didn’t work! Make sure the text pasted contains logins and passwords properly separated.', loading: false});
       else {
-        this.props.dispatch(importAccounts({imported_accounts: calls})).then(response => {
-          // const json = response.filter(item => {
-          //   if (item.error === false)
-          //     return item;
-          // }).map(item => {
-          //   return item.data;
-          // });
-          const json = response;
+        Promise.all(calls.map(reflect)).then(response => {
+          const json = response.filter(item => {
+            if (item.error === false)
+              return item;
+          }).map(item => {
+            return item.data;
+          });
           if (json.length) {
             const accounts = json.map(item => {
               return {
