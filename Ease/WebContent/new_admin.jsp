@@ -42,12 +42,17 @@
         #onboarding_rooms_tabs div.image {
             margin-bottom: 0.5em;
         }
+
+        #onboarding_rooms_menu {
+            max-width: 100%;
+            width: auto;
+        }
     </style>
 </head>
 <body role="document" class="mainBody">
 <div class="ui grid">
     <div class="four wide column">
-        <div class="ui vertical fluid tabular menu">
+        <div id="admin_menu" class="ui vertical fluid tabular menu">
             <a class="item" data-target="#team-segment">Teams</a>
             <a class="item" data-target="#website-segment">Websites</a>
             <a class="item" data-target="#category-segment">Categories</a>

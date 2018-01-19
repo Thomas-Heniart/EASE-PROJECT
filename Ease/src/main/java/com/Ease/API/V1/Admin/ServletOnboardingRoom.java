@@ -31,6 +31,9 @@ public class ServletOnboardingRoom extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (!Regex.isValidRoomName(name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
+            String example = sm.getStringParam("example", true, false);
+            if (example.isEmpty() || example.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter example");
             JSONArray website_ids = sm.getArrayParam("website_ids", true, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Set<Website> websiteSet = ConcurrentHashMap.newKeySet();
@@ -39,7 +42,7 @@ public class ServletOnboardingRoom extends HttpServlet {
                 Website website = catalog.getPublicWebsiteWithId(website_id, sm.getHibernateQuery(), new HashSet<>());
                 websiteSet.add(website);
             }
-            OnboardingRoom onboardingRoom = new OnboardingRoom(name, websiteSet);
+            OnboardingRoom onboardingRoom = new OnboardingRoom(name, example, websiteSet);
             sm.saveOrUpdate(onboardingRoom);
             sm.setSuccess(onboardingRoom.getJson());
         } catch (Exception e) {
@@ -76,6 +79,9 @@ public class ServletOnboardingRoom extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (!Regex.isValidRoomName(name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid room name");
+            String example = sm.getStringParam("example", true, false);
+            if (example.isEmpty() || example.length() > 255)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter example");
             JSONArray website_ids = sm.getArrayParam("website_ids", true, false);
             Set<Website> websiteSet = ConcurrentHashMap.newKeySet();
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
@@ -84,6 +90,7 @@ public class ServletOnboardingRoom extends HttpServlet {
                 websiteSet.add(website);
             }
             onboardingRoom.setName(name);
+            onboardingRoom.setExample(example);
             onboardingRoom.setWebsiteSet(websiteSet);
             sm.saveOrUpdate(onboardingRoom);
             sm.setSuccess(onboardingRoom.getJson());

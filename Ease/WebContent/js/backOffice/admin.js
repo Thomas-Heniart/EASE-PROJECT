@@ -4,6 +4,7 @@ var people_graph;
 var click_graph;
 let website_obj = {};
 let website_arr = [];
+let onboarding_rooms_obj = {};
 
 $(document).ready(function () {
     ajaxHandler.get("/api/v1/admin/GetPublicWebsites", null, () => {
@@ -99,7 +100,7 @@ $(document).ready(function () {
             input.val("");
         });
     });
-    $(".ui.menu a.item").on("click", function () {
+    $("#admin_menu a.item").on("click", function () {
         $(this)
             .addClass("active")
             .siblings().removeClass("active");
@@ -203,15 +204,17 @@ $(document).ready(function () {
                     });
                     break;
                 case "onboarding-rooms-segment":
-                    $("#onboarding_rooms_menu .item").remove();
+                    $("#onboarding_rooms_menu .room_item").remove();
                     $("#onboarding_rooms_tabs .tab").remove();
                     ajaxHandler.get("/api/v1/admin/OnboardingRooms", null, () => {
                     }, (onboarding_rooms) => {
-                        let onboarding_rooms_obj = {};
+                        onboarding_rooms_obj = {};
                         onboarding_rooms.forEach((onboarding_room) => {
                             onboarding_rooms_obj[onboarding_room.id] = onboarding_room;
-                            let menu_elem = $('<a class="item" data-id="' + onboarding_room.id + '">' +
-                                onboarding_room.name +
+                            let menu_elem = $('<a class="item room_item" data-id="' + onboarding_room.id + '">' +
+                                '<i class="edit icon"></i> ' +
+                                '<i class="trash icon"></i>' +
+                                '<span>' + onboarding_room.name + '</span>' +
                                 '<div class="ui label">' + onboarding_room.website_ids.length + '</div>' +
                                 '</a>');
                             menu_elem.appendTo($("#onboarding_rooms_menu"))
@@ -239,17 +242,6 @@ $(document).ready(function () {
                                 elem.appendTo(tab_elem);
                             });
                             tab_elem.appendTo($("#onboarding_rooms_tabs"))
-                        });
-                        $("#onboarding_rooms_menu .item").click(function (e) {
-                            let self = $(e.target);
-                            let onboarding_room = onboarding_rooms_obj[self.attr('data-id')];
-                            $("#onboarding_rooms_tabs .tab").hide();
-                            $("#onboarding_rooms_menu .item").removeClass("teal");
-                            $("#onboarding_rooms_menu .item").removeClass("active");
-                            self.addClass("teal");
-                            self.addClass("active");
-                            let tab = $("#onboarding_rooms_tabs .tab[data-id='" + onboarding_room.id + "']");
-                            tab.show();
                         });
                         target.removeClass("loading");
                     });
@@ -294,6 +286,139 @@ $(document).ready(function () {
     });
     $("#teams_table").tablesort();
     $("#teams_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()));
+    $("#add_onboarding_room").click((e) => {
+        e.stopPropagation();
+        let modal = $("#onboarding_rooms_edit");
+        $("form", modal).submit((e) => {
+            e.preventDefault();
+            let name = $("form input[name='name']", modal).val();
+            let example = $("form input[name='example']", modal).val();
+            let onboarding_room = {
+                name: name,
+                example: example,
+                website_ids: []
+            };
+            ajaxHandler.post("/api/v1/admin/OnboardingRooms", onboarding_room, () => {
+            }, (data) => {
+                onboarding_room = data;
+                onboarding_rooms_obj[onboarding_room.id] = onboarding_room;
+                let menu_elem = $('<a class="item room_item" data-id="' + onboarding_room.id + '">' +
+                    '<i class="edit icon"></i> ' +
+                    '<i class="trash icon"></i>' +
+                    '<span>' + onboarding_room.name + '</span>' +
+                    '<div class="ui label">' + onboarding_room.website_ids.length + '</div>' +
+                    '</a>');
+                menu_elem.appendTo($("#onboarding_rooms_menu"));
+                let tab_elem = $('<div class="tab" data-id="' + onboarding_room.id + '" style="display: none"></div>');
+                let plus_elem = $("<div class='ui tiny spaced image'>" +
+                    "<img class='ui spaced image' src='/resources/icons/plus.png'/>" +
+                    "</div>");
+                plus_elem.appendTo(tab_elem);
+                plus_elem.click(() => openAddOnboardingRoomModal(onboarding_room, $(".label", menu_elem), tab_elem));
+                onboarding_room.website_ids.forEach((website_id) => {
+                    let website = website_obj[website_id];
+                    let elem = $('<div class="ui tiny spaced image">' +
+                        '<img class="visible content" src="' + website.logo + '"/>' +
+                        '</div>');
+                    elem.hover(() => $("img", elem).attr("src", "/resources/icons/delete.png"), () => $("img", elem).attr("src", website.logo));
+                    elem.click(() => {
+                        onboarding_room.website_ids.splice(onboarding_room.website_ids.indexOf(website.id), 1);
+                        ajaxHandler.put("/api/v1/admin/OnboardingRooms", onboarding_room, () => {
+                        }, () => {
+                            elem.remove();
+                            let count = parseInt($(".label", menu_elem).text()) - 1;
+                            $(".label", menu_elem).text(count)
+                        })
+                    });
+                    elem.appendTo(tab_elem);
+                });
+                tab_elem.appendTo($("#onboarding_rooms_tabs"));
+                menu_elem.click();
+                modal.modal("hide")
+            })
+        });
+        modal
+            .modal({
+                onHide: function () {
+                    $("form", modal).off("submit");
+                }
+            })
+            .modal("show");
+    });
+    $("#onboarding_rooms_menu").on('click', '.room_item .trash.icon', (e) => {
+        e.stopPropagation();
+        let modal = $("#onboarding_rooms_delete");
+        let self = $(e.target);
+        let id = self.parent().attr('data-id');
+        $(".ok", modal).click(() => {
+            $(".ok", modal).addClass("loading");
+            $(".ok", modal).addClass("disabled");
+            ajaxHandler.delete("/api/v1/admin/OnboardingRooms?id=" + id, null, () => {}, () => {
+                $("#onboarding_rooms_tabs .tab[data-id='" + id + "']").remove();
+                $("#onboarding_rooms_menu .room_item[data-id='" + id + "']").remove();
+                modal.modal("hide");
+            })
+        });
+        modal
+            .modal({
+                onHide: function () {
+                    $(".ok", modal).removeClass("loading");
+                    $(".ok", modal).removeClass("disabled");
+                    $(".ok", modal).off("click");
+                }
+            })
+            .modal("show");
+    });
+    $("#onboarding_rooms_menu").on('click', '.room_item .edit.icon', (e) => {
+        e.stopPropagation();
+        let modal = $("#onboarding_rooms_edit");
+        let self = $(e.target);
+        let onboarding_room = onboarding_rooms_obj[self.parent().attr('data-id')];
+        $("form input[name='name']", modal).val(onboarding_room.name);
+        $("form input[name='example']", modal).val(onboarding_room.example);
+        $("form", modal).submit((e) => {
+            e.preventDefault();
+            let name = $("form input[name='name']", modal).val();
+            let example = $("form input[name='example']", modal).val();
+            onboarding_room.name = name;
+            onboarding_room.example = example;
+            ajaxHandler.put("/api/v1/admin/OnboardingRooms", onboarding_room, () => {
+            }, () => {
+                $("span", self.parent()).text(name);
+                modal.modal("hide")
+            })
+        });
+        modal
+            .modal({
+                onHide: function () {
+                    $("form", modal).off("submit");
+                }
+            })
+            .modal("show");
+    });
+    $("#onboarding_rooms_menu").on('click', '.room_item span', (e) => {
+        e.stopPropagation();
+        let self = $(e.target).parent();
+        let onboarding_room = onboarding_rooms_obj[self.attr('data-id')];
+        $("#onboarding_rooms_tabs .tab").hide();
+        $("#onboarding_rooms_menu .item").removeClass("teal");
+        $("#onboarding_rooms_menu .item").removeClass("active");
+        self.addClass("teal");
+        self.addClass("active");
+        let tab = $("#onboarding_rooms_tabs .tab[data-id='" + onboarding_room.id + "']");
+        tab.show();
+    });
+    $("#onboarding_rooms_menu").on('click', '.room_item', (e) => {
+        let self = $(e.target);
+        let onboarding_room = onboarding_rooms_obj[self.attr('data-id')];
+        $("#onboarding_rooms_tabs .tab").hide();
+        $("#onboarding_rooms_menu .item").removeClass("teal");
+        $("#onboarding_rooms_menu .item").removeClass("active");
+        self.addClass("teal");
+        self.addClass("active");
+        let tab = $("#onboarding_rooms_tabs .tab[data-id='" + onboarding_room.id + "']");
+        tab.show();
+    });
 });
 
 function createWebsiteFailureRow(websiteFailure) {

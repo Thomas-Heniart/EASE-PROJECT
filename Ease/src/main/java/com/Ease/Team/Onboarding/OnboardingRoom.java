@@ -25,6 +25,9 @@ public class OnboardingRoom {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "example")
+    private String example;
+
     @ManyToMany
     @JoinTable(name = "ONBOARDING_ROOM_WEBSITE", joinColumns = @JoinColumn(name = "onboarding_room_id"), inverseJoinColumns = @JoinColumn(name = "website_id"))
     private Set<Website> websiteSet = ConcurrentHashMap.newKeySet();
@@ -33,9 +36,10 @@ public class OnboardingRoom {
 
     }
 
-    public OnboardingRoom(String name, Set<Website> websiteSet) {
+    public OnboardingRoom(String name, String example, Set<Website> websiteSet) {
         this.name = name;
         this.websiteSet = websiteSet;
+        this.example = example;
     }
 
     public Long getId() {
@@ -52,6 +56,14 @@ public class OnboardingRoom {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getExample() {
+        return example;
+    }
+
+    public void setExample(String example) {
+        this.example = example;
     }
 
     public Set<Website> getWebsiteSet() {
@@ -74,6 +86,7 @@ public class OnboardingRoom {
         JSONObject res = new JSONObject();
         res.put("id", this.getId());
         res.put("name", this.getName());
+        res.put("example", this.getExample());
         JSONArray website_ids = new JSONArray();
         this.getWebsiteSet().forEach(website -> website_ids.put(website.getDb_id()));
         res.put("website_ids", website_ids);
