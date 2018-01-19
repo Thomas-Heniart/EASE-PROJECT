@@ -305,6 +305,7 @@ button.only-text-button {
       padding: 30px;
       //transform: translateY(-20%);
       position: absolute;
+      width: 690px;
       top: 46px;
       label {
         display: flex;
@@ -376,6 +377,27 @@ button.only-text-button {
       .password_verified {
         i {
           color: #45c997;
+        }
+      }
+      .roomsSegment {
+        display: grid;
+        width: 187px;
+        height: 58px;
+        padding: 10px;
+        margin: 0 20px 20px 0;
+        border: solid 1px #d2dae4;
+        border-radius: 5px;
+        color: #949eb7;
+        font-size: 16px;
+        font-weight: bold;
+        &.selected {
+          border-color: #373b60;
+          color: #373b60;
+        }
+        span {
+          font-size: 12px;
+          font-weight: 300;
+          color: #d2dae4;
         }
       }
     }
