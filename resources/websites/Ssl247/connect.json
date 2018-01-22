@@ -1,0 +1,20 @@
+{
+	"name":"Ssl247",
+	"lastLogin":"",
+	"home":"https://www.ssl247.fr/myssl/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#UserEmail", "grave":true},
+			{"action":"fill", "what":"password", "search":"#UserPassword", "grave":true},
+			{"action":"trueClick", "search":"#UserMysslLoginForm button[type=submit]", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://www.ssl247.fr/myssl/logout"}
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":".myssl-connected"}
+	]
+}

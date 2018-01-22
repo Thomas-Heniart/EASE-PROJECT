@@ -1,0 +1,20 @@
+{
+	"name":"Bepub",
+	"lastLogin":"",
+	"home":"http://www.bepub.com/identification",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#form-login #auth_username", "grave":true},
+			{"action":"fill", "what":"password", "search":"#form-login #auth_password", "grave":true},
+			{"action":"trueClick", "search":"#form-login #submit", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":".h-pb0"},
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":"body[data-user-signed-in=true]"}
+	]
+}

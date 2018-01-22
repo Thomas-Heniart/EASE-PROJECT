@@ -1,0 +1,20 @@
+{
+	"name":"123prestaPrestataire",
+	"lastLogin":"",
+	"home":"https://pro.123presta.com/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":".login-box input[name=email]", "grave":true},
+			{"action":"fill", "what":"password", "search":".login-box input[name=password]", "grave":true},
+			{"action":"trueClick", "search":".login-box .login-button", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"goto", "url":"https://pro.123presta.com/logout"},
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":".navbar"}
+	]
+}
