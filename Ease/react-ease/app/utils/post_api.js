@@ -594,7 +594,7 @@ module.exports = {
         throw err.response.data;
       });
     },
-    createTeamAnySingleCard: ({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers, credentials_provided, ws_id}) => {
+    createTeamAnySingleCard: ({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -610,7 +610,6 @@ module.exports = {
         account_information: account_information,
         team_user_filler_id: team_user_filler_id,
         receivers: receivers,
-        credentials_provided: credentials_provided,
         ws_id: ws_id
       });
     },

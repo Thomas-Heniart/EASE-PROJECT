@@ -254,7 +254,8 @@ class SimpleTeamAnyApp extends Component {
         value: item,
         id: item,
         username: user.username,
-        user: user
+        user: user,
+        toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
       }
     }).sort((a, b) => {
       if (a.id === this.props.me.id)
@@ -264,7 +265,7 @@ class SimpleTeamAnyApp extends Component {
       return a.username.localeCompare(b.username);
     }).map(item => {
       const receiver = getReceiverInList(this.props.app.receivers, item.id);
-      const can_see_information = true;
+      const can_see_information = !!receiver ? receiver.allowed_to_see_password : !!isAdmin(item.user.role);
       if (!!receiver)
         selected_users.push(item.id);
       return {

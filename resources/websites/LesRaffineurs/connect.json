@@ -1,0 +1,50 @@
+{
+  "name": "Les Raffineurs",
+  "lastLogin": "",
+  "home": "https://www.lesraffineurs.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".my_account_header a[href*='mon-compte']"
+      },
+      {
+        "action": "waitload"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#passwd"
+      },
+      {
+        "action": "trueClick",
+        "search": "#SubmitLogin"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".my_account_header, a[href*='logout']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
+}
