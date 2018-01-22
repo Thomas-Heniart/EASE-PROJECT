@@ -130,13 +130,13 @@ class PaymentMethod extends React.Component {
             <p>You can suscribe or unsubscribe whenever you want. Pay as you go, without commitment.</p>
             <p>Only active users are billed each month at the rate of 3,99€ before VAT. Other users are not billed.</p>
             <Header as="h4">
-              {card !== null ? 'Credit card information' : 'There is no credit card set up yet'}
+              {!!card ? 'Credit card information' : 'There is no credit card set up yet'}
             </Header>
-            {card !== null && !this.state.modifying &&
+            {!!card && !this.state.modifying &&
             <CreditCardPreview card={card}/>}
             {!this.state.modifying &&
             <div class="overflow-hidden">
-              <Button primary size="mini" content={card !== null ? 'Replace this card' : 'Add credit card'} floated="right" onClick={this.setModifying.bind(null, true)}/>
+              <Button primary size="mini" content={!!card ? 'Replace this card' : 'Add credit card'} floated="right" onClick={this.setModifying.bind(null, true)}/>
             </div>}
             {this.state.modifying &&
             <MyStoreCheckout
