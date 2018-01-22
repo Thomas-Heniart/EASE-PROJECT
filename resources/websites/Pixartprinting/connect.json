@@ -1,0 +1,51 @@
+{
+  "name": "Pixartprinting",
+  "lastlogin": "",
+  "home": "https://www.pixartprinting.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#login_toggle"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-usr"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-usr"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login-pwd"
+      },
+      {
+        "action": "trueClick",
+        "search": "#login-button"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#top_logout"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#top_logout, #login_toggle"
+    },
+    {
+      "search": "#top_logout"
+    }
+  ]
+}
