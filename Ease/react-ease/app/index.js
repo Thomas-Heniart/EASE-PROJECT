@@ -16,7 +16,7 @@ import RenewPassword from "./components/common/RenewPassword";
 import Registration from './components/common/Registration';
 import HomeTemporaryHeader from './components/common/HomeTemporaryHeader';
 import {requireAuthentication} from "./components/common/requireAuthentication";
-import NewTeamCreationView from "./components/teams/NewTeamCreationView";
+import NewTeamCreationView from "./components/onBoarding/NewTeamCreationView";
 
 const stripe_api_key = window.location.hostname === 'ease.space' ? 'pk_live_lPfbuzvll7siv1CM3ncJ22Bu' : 'pk_test_95DsYIUHWlEgZa5YWglIJHXd';
 class App extends React.Component {

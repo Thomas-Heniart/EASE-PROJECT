@@ -916,6 +916,7 @@ button.only-text-button {
   #new_team_creation #center #content {
     padding: 30px;
     position: absolute;
+    width: 690px;
     top: 46px; }
     #new_team_creation #center #content label {
       display: flex;
@@ -970,6 +971,24 @@ button.only-text-button {
       margin-top: 30px; }
     #new_team_creation #center #content .password_verified i {
       color: #45c997; }
+    #new_team_creation #center #content .roomsSegment {
+      display: grid;
+      width: 187px;
+      height: 58px;
+      padding: 10px;
+      margin: 0 20px 20px 0;
+      border: solid 1px #d2dae4;
+      border-radius: 5px;
+      color: #949eb7;
+      font-size: 16px;
+      font-weight: bold; }
+      #new_team_creation #center #content .roomsSegment.selected {
+        border-color: #373b60;
+        color: #373b60; }
+      #new_team_creation #center #content .roomsSegment span {
+        font-size: 12px;
+        font-weight: 300;
+        color: #d2dae4; }
   #new_team_creation #center #bottom_bar {
     position: absolute;
     width: 100%;
