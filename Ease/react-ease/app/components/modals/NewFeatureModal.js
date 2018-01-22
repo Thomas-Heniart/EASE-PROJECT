@@ -87,10 +87,10 @@ const CarouselContent = createReactClass({
     }
     ];
     return (
-        <Carousel decorators={decorators}>
-          <img src="/resources/images/chrome_import.png" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
-          <img src="/resources/images/extension_popup.png"/>
-          <img src="/resources/images/google_accounts.png"/>
+        <Carousel decorators={decorators} autoplay={true} autoplayInterval={10000}>
+          <img src="/resources/images/chrome_import.jpg" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
+          <img src="/resources/images/extension_popup.jpg"/>
+          <img src="/resources/images/google_accounts.jpg"/>
         </Carousel>
     )
   }
@@ -109,12 +109,12 @@ class NewFeatureModal extends React.Component {
         <div className="popupHandler myshow">
           <div className="popover_mask"/>
           <div className="ease_popup ease_new_feature_popup">
-            <Header as="h3" attached="top" style={{padding: '30px'}}>
+            <Header as="h3" attached="top" style={{padding: '20px'}}>
               <p>⛷✨🎉Want to check the last features we made for you?🏄‍</p>
             </Header>
             <div className='popup_content'>
               <CarouselContent/>
-              <div style={{display: 'flex', position: 'relative',padding: '30px', justifyContent:'space-between'}} class="align_items_center">
+              <div style={{display: 'flex', position: 'relative',padding: '20px', justifyContent:'space-between'}} class="align_items_center">
                 <p className='no_margin'>
               <span>
                 {/*<strong>If you wanna try and give us your <a href='mailto:victor@ease.space' target="_top" style={{color: 'black'}}><u>feedbacks</u></a>, it helps us a lot <Icon name="heart"/></strong><br/>*/}
