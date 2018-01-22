@@ -37,25 +37,6 @@ import java.util.Map;
  */
 @WebServlet("/api/v1/teams/CreateTeam")
 public class ServletCreateTeam extends HttpServlet {
-    private static final String[] jobRoles = {
-            "Adminisrative/Facilities",
-            "Accounting/Finance",
-            "Business Development",
-            "Business Owner",
-            "Customer Support",
-            "Data/Analytics/Business Intelligence",
-            "Design",
-            "Engineering (Software)",
-            "Marketing",
-            "Media/Communications",
-            "Operations",
-            "Product Management",
-            "Program/Project Management",
-            "Research",
-            "Sales",
-            "Other"
-    };
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -172,8 +153,6 @@ public class ServletCreateTeam extends HttpServlet {
             throw new HttpServletException(HttpStatus.BadRequest, "Usernames can't be empty!");
         if (username.length() < 3 || username.length() >= 22)
             throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must be greater than 2 characters and fewer than 22 characters.");
-        /* if (username.length() >= 22)
-            throw new HttpServletException(HttpStatus.BadRequest, "Sorry, that's a bit too long! Usernames must be fewer than 22 characters."); */
         if (!username.equals(username.toLowerCase()) || !Regex.isValidUsername(username))
             throw new HttpServletException(HttpStatus.BadRequest, "Sorry, usernames must contain only lowercase characters.");
     }
