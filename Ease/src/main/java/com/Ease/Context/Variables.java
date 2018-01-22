@@ -4,6 +4,7 @@ public class Variables {
 
     public static final String MJ_APIKEY_PUBLIC = "c6b4097b55dc8d93c46f44c621efeca6";
     public static final String MJ_APIKEY_PRIVATE = "c3e6e3b927fdbefd4b3f5d2b25a31ce2";
+    public static final String CLEARBIT_API_KEY = "sk_47e89000451f9b52bb4af58d21e11346";
 
     public static final String WEBSITES_FOLDER_PATH = System.getenv("EASE_RESOURCES_FOLDER") + "websites/";
     public static final String SOFTWARE_FOLDER_PATH = System.getenv("EASE_RESOURCES_FOLDER") + "software/";

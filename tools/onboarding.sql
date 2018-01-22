@@ -93,3 +93,6 @@ ALTER TABLE users
 
 ALTER TABLE status ADD COLUMN onboarding_step TINYINT UNSIGNED NOT NULL;
 UPDATE status SET onboarding_step = 2;
+
+ALTER TABLE userPendingRegistrations ADD COLUMN newsletter TINYINT(1) UNSIGNED NOT NULL DEFAULT 1;
+UPDATE userPendingRegistrations SET newsletter = 1;

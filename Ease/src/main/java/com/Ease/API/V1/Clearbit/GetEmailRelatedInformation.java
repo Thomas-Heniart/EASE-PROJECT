@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Clearbit;
 
-import com.Ease.Context.Variables;
-import com.Ease.Utils.Clearbit.EnrichmentAPI;
+import com.Ease.Utils.Clearbit.EaseEnrichmentAPI;
 import com.Ease.Utils.Servlets.GetServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -19,8 +18,7 @@ public class GetEmailRelatedInformation extends HttpServlet {
         try {
             sm.needToBeConnected();
             String email = sm.getParam("email", true, false);
-            EnrichmentAPI enrichmentAPI = new EnrichmentAPI(Variables.CLEARBIT_KEY);
-            sm.setSuccess(enrichmentAPI.emailLookup(email));
+            sm.setSuccess(new EaseEnrichmentAPI().emailLookup(email));
         } catch (Exception e) {
             sm.setError(e);
         }
