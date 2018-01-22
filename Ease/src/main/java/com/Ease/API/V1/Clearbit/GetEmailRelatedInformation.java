@@ -16,7 +16,6 @@ public class GetEmailRelatedInformation extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
-            sm.needToBeConnected();
             String email = sm.getParam("email", true, false);
             sm.setSuccess(new EaseEnrichmentAPI().emailLookup(email));
         } catch (Exception e) {
