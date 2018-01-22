@@ -134,10 +134,6 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.10"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.free.features.11"/></span>
                         </div>
                     </div>
@@ -165,10 +161,6 @@
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
                             <span class="info"><fmt:message key="pricing.pro.features.title"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>

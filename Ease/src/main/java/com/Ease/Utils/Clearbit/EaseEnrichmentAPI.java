@@ -16,9 +16,9 @@ public class EaseEnrichmentAPI extends EnrichmentAPI {
             return lookup;
         JSONObject res = new JSONObject();
         JSONObject name = lookup.getJSONObject("name");
-        res.put("first_name", name.getString("givenName"));
-        res.put("last_name", name.getString("familyName"));
-        res.put("company_name", lookup.getJSONObject("employment").getString("name"));
+        res.put("first_name", name.optString("givenName"));
+        res.put("last_name", name.optString("familyName"));
+        res.put("company_name", lookup.getJSONObject("employment").optString("name"));
         return res;
     }
 }

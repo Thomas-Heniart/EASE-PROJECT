@@ -68,12 +68,6 @@ function TeamBasicPlan(props) {
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Up to 4 <TeamPlanPopup
-                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
-                trigger={<span class="text-underlined">rooms</span>}/></span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
             <span>Password modification policy</span>
           </div>
           <div class="feature">
@@ -117,12 +111,6 @@ function TeamProPlan(props){
         <span class="tip" style={{margin: '5px 0 13px 0'}}>No credit card required</span>
         <span class="info">ALL FEATURES FROM STARTER PLAN, AND:</span>
         <div class="display-flex flex_direction_column full_flex">
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited <TeamPlanPopup
-                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
-                trigger={<span class="text-underlined">rooms</span>}/></span>
-          </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
             <span>Unlimited team members</span>
