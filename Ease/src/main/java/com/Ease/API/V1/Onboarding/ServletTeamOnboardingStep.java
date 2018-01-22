@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Onboarding;
 
+import com.Ease.Team.Onboarding.OnboardingSteps;
 import com.Ease.Team.OnboardingStatus;
 import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
@@ -25,8 +26,8 @@ public class ServletTeamOnboardingStep extends HttpServlet {
             sm.needToBeOwnerOfTeam(team);
             OnboardingStatus onboardingStatus = team.getOnboardingStatus();
             Integer step = sm.getIntParam("step", true, false);
-            if (step < onboardingStatus.getStep())
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot downgrade a step");
+            if (step < onboardingStatus.getStep() || step > OnboardingSteps.TEAM_CARDS_CREATED.ordinal())
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter step");
             onboardingStatus.setStep(step);
             sm.saveOrUpdate(onboardingStatus);
             sm.setSuccess("Done.");

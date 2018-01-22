@@ -47,6 +47,9 @@ public class UserStatus {
     @Column(name = "new_feature_seen")
     private boolean new_feature_seen = false;
 
+    @Column(name = "onboarding_step")
+    private Integer onboarding_step = 0;
+
     public UserStatus() {
 
     }
@@ -147,6 +150,14 @@ public class UserStatus {
         this.new_feature_seen = new_feature_seen;
     }
 
+    public Integer getOnboarding_step() {
+        return onboarding_step;
+    }
+
+    public void setOnboarding_step(Integer onboarding_step) {
+        this.onboarding_step = onboarding_step;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -167,6 +178,7 @@ public class UserStatus {
         res.put("tuto_done", this.isTuto_done());
         res.put("team_tuto_done", this.isTeam_tuto_done());
         res.put("terms_reviewed", this.isTerms_reviewed());
+        res.put("onboarding_step", this.getOnboarding_step());
         return res;
     }
 }

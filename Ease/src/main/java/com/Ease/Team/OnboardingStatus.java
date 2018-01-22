@@ -1,5 +1,7 @@
 package com.Ease.Team;
 
+import com.Ease.Team.Onboarding.OnboardingSteps;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,7 +13,7 @@ public class OnboardingStatus {
     private Long id;
 
     @Column(name = "step")
-    private int step;
+    private int step = OnboardingSteps.TEAM_CREATED.ordinal();
 
     public OnboardingStatus() {
 
