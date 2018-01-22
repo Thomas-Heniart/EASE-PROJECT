@@ -16,9 +16,11 @@ import {showExtensionDownloadModal} from "../../actions/modalActions";
 @connect()
 class MainView extends Component {
   componentDidMount(){
-    if (!document.querySelector('#new_ease_extension')){
-      this.props.dispatch(showExtensionDownloadModal({active: true}));
-    }
+    setTimeout(() => {
+      if (!document.querySelector('#new_ease_extension')){
+        this.props.dispatch(showExtensionDownloadModal({active: true}));
+      }
+    }, 500);
   }
   render() {
     return (
