@@ -13,8 +13,7 @@ import {getLogo} from "../../utils/api"
 import { Segment, Button, Icon, TextArea, Dropdown, Form, Menu, Message, Input, Loader, Grid, Label} from 'semantic-ui-react';
 
 function json(fields, separator, csv, dispatch) {
-  const csvClean = csv.replace(/"/g, '');
-  const array = csvClean.split('\n');
+  const array = csv.split('\n');
   let calls = [];
   for (let i = 0; i < array.length; i++) {
     let separatorCounter = 0;
@@ -33,11 +32,11 @@ function json(fields, separator, csv, dispatch) {
       const field = array[i].split(separator);
       let l = 0;
       for (let k = 0; k < field.length; k++) {
-        if (fields[object[k]] === 'login' && field[k + 1] && isEmail(field[k + 1]))
+        if (fields[object[k]] === 'login' && field[k + 1] && isEmail(field[k + 1].replace(/^["]+|["]+$/g, '')))
           k++;
-        item[fields[object[l++]]] = field[k];
+        item[fields[object[l++]]] = field[k].replace(/^["]+|["]+$/g, '');
       }
-      if (item.url.startsWith("http") === false && item.url !== '')
+      if (!item.url.startsWith('http://') && !item.url.startsWith('https://') && item.url !== '')
         item.url = "https://" + item.url;
       if (item.url !== '' && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
         calls.push(dispatch(importAccount({
@@ -152,8 +151,8 @@ class ChoosePasswordManager extends React.Component {
         <Segment.Group>
           <Segment onClick={e => choosePasswordManager(1)} className={passwordManager === 1 ? 'selected' : null}>
             <img src="/resources/other/Excel.png"/>Excel or Google sheet</Segment>
-          <Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>
-            <img src="/resources/other/Chrome.png"/>Chrome</Segment>
+          {/*<Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>*/}
+            {/*<img src="/resources/other/Chrome.png"/>Chrome</Segment>*/}
           <Segment onClick={e => choosePasswordManager(3)} className={passwordManager === 3 ? 'selected' : null}>
             <img src="/resources/other/Dashlane.png"/>Dashlane</Segment>
           <Segment onClick={e => choosePasswordManager(4)} className={passwordManager === 4 ? 'selected' : null}>
