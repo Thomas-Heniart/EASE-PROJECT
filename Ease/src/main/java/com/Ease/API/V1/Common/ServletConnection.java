@@ -2,9 +2,11 @@ package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketManager;
@@ -62,10 +64,33 @@ public class ServletConnection extends HttpServlet {
             String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
             sm.getUserProperties(user.getDb_id()).put("keyUser", keyUser);
             for (TeamUser teamUser : user.getTeamUsers()) {
+                Team team = teamUser.getTeam();
                 sm.initializeTeamWithContext(teamUser.getTeam());
                 if (teamUser.isVerified() && !teamUser.isDisabled()) {
                     String teamKey = teamUser.getDecipheredTeamKey(keyUser);
                     sm.getTeamProperties(teamUser.getTeam().getDb_id()).put("teamKey", teamKey);
+                    if (!team.isActive())
+                        continue;
+                    for (TeamUser teamUser1 : team.getTeamUsers().values()) {
+                        if (teamUser1.getUser() == null) {
+                            teamUser1.setTeamKey(null);
+                            sm.saveOrUpdate(teamUser1);
+                        } else if (!teamUser1.isVerified() && !teamUser1.isDisabled()) {
+                            teamUser1.setTeamKey(RSA.Encrypt(teamKey, teamUser1.getUser().getUserKeys().getPublicKey()));
+                            sm.saveOrUpdate(teamUser1);
+                        }
+                    }
+                } else if (!teamUser.isVerified() && !teamUser.isDisabled()) {
+                    TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                    String teamKey = sm.getTeamKey(team);
+                    if (teamKey != null) {
+                        teamUser.lastRegistrationStep(keyUser, teamKey, sm.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), sm.getHibernateQuery());
+                    } else {
+                        if (teamUser.getTeamKey() != null) {
+                            teamUser.finalizeRegistration(keyUser, user.getUserKeys().getDecipheredPrivateKey(keyUser), sm.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), sm.getHibernateQuery());
+                            sm.getTeamProperties(team.getDb_id()).put("teamKey", teamUser.getDecipheredTeamKey(keyUser));
+                        }
+                    }
                 }
             }
             Key secret = (Key) sm.getContextAttr("secret");

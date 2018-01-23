@@ -157,6 +157,8 @@ public class Account {
      * @throws HttpServletException if a decryption error occurred
      */
     public void decipher(String symmetric_key) throws HttpServletException {
+        if (symmetric_key == null)
+            return;
         this.setDeciphered_private_key(AES.decrypt(this.getPrivate_key(), symmetric_key));
         for (AccountInformation accountInformation : this.getAccountInformationSet())
             accountInformation.decipher(this.getDeciphered_private_key());
