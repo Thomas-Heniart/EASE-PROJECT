@@ -1,0 +1,24 @@
+{
+  "name":"Lindy",
+  "lastLogin":"",
+  "home":"http://www.lindy.fr/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a[title='<b>ESPACE CLIENT PRO</b>']"},
+      {"action":"waitfor", "search":"#content_container"},
+      {"action":"fill", "what":"login", "search":"#content_container form:first-child #input_login_email", "grave":true},
+      {"action":"fill", "what":"password", "search":".loginstart_box #input_login_pw", "grave":true},
+      {"action":"trueClick", "search":"input[type='submit']", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[title='Se déconnecter'], a[title='<b>ESPACE CLIENT PRO</b>']"},
+    {"search":"a[title='Se déconnecter']"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[title='Se déconnecter']"},
+      {"action":"waitload"}
+    ]
+  }
+}

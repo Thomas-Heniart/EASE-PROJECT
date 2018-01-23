@@ -1,0 +1,23 @@
+{
+  "name":"RapidFlyer",
+  "lastLogin":"",
+  "home":"https://www.rapid-flyer.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"#login-dropdown"},
+      {"action":"waitfor", "search":"#email"},
+      {"action":"fill", "what":"login", "search":"#email", "grave":true},
+      {"action":"fill", "what":"password", "search":"#passwd", "grave":true},
+      {"action":"trueClick", "search":"#SubmitLogin", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='create']"},
+    {"search":"a[href*='logout']"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  }
+}
