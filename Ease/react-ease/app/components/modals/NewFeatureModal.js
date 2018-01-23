@@ -110,7 +110,7 @@ class NewFeatureModal extends React.Component {
           <div className="popover_mask"/>
           <div className="ease_popup ease_new_feature_popup">
             <Header as="h3" attached="top" style={{padding: '20px'}}>
-              <p>⛷✨🎉Want to check the last features we made for you?🏄‍</p>
+              <p>Want to check the last features we made for you?</p>
             </Header>
             <div className='popup_content'>
               <CarouselContent/>

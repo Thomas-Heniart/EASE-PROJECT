@@ -8,7 +8,6 @@ import com.Ease.User.NotificationManager;
 import com.Ease.User.User;
 import com.Ease.User.UserFactory;
 import com.Ease.User.UserKeys;
-import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
@@ -216,15 +215,32 @@ public abstract class ServletManager {
             if (!team.isActive())
                 continue;
             this.initializeTeamWithContext(teamUser.getTeam());
-            if (!teamUser.isVerified() || teamUser.isDisabled())
+            if (teamUser.isDisabled())
                 continue;
             Map<String, Object> teamProperties = this.getTeamProperties(team.getDb_id());
             String teamKey = (String) teamProperties.get("teamKey");
-            if (teamUser.getTeamKey() == null && !teamUser.isDisabled() && teamKey != null) {
+            if (teamUser.getUser() != null && !teamUser.isVerified()) {
                 TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
-                teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
-            } else if (teamUser.getTeamKey() != null)
-                teamProperties.put("teamKey", AES.decrypt(teamUser.getTeamKey(), keyUser));
+                if (teamKey != null) {
+                    teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
+                } else {
+                    if (teamUser.getTeamKey() != null) {
+                        teamUser.finalizeRegistration(keyUser, user.getUserKeys().getDecipheredPrivateKey(keyUser), this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
+                        teamProperties.put("teamKey", teamUser.getDecipheredTeamKey(keyUser));
+                    }
+                }
+            }
+            if (teamKey != null) {
+                for (TeamUser teamUser1 : team.getTeamUsers().values()) {
+                    if (teamUser1.getUser() == null) {
+                        teamUser1.setTeamKey(null);
+                        this.saveOrUpdate(teamUser1);
+                    } else if (!teamUser1.isVerified() && !teamUser1.isDisabled()) {
+                        teamUser1.setTeamKey(RSA.Encrypt(teamKey, teamUser1.getUser().getUserKeys().getPublicKey()));
+                        this.saveOrUpdate(teamUser1);
+                    }
+                }
+            }
         }
         user.getCookies().forEach(cookie -> response.addCookie(cookie));
     }
