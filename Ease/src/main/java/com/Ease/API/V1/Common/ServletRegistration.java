@@ -47,32 +47,23 @@ public class ServletRegistration extends HttpServlet {
             String digits = sm.getStringParam("digits", false, true);
             String code = sm.getStringParam("code", false, true);
             String phone_number = sm.getStringParam("phone_number", true, false);
-            String first_name = sm.getStringParam("first_name", true, false);
-            String last_name = sm.getStringParam("last_name", true, false);
-            Long registration_date = sm.getLongParam("registration_date", true, false);
             Boolean send_news = sm.getBooleanParam("newsletter", true, false);
             checkUsernameIntegrity(username);
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             if (password == null || !Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
-            if (registration_date == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
             if ((digits == null || digits.length() != 6) && (code == null || code.equals("")))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
             if (send_news == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "Newsletter cannot be null");
-            if (first_name.isEmpty() || first_name.length() > 255 || !Regex.isValidName(first_name))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid first name");
-            if (last_name.isEmpty() || last_name.length() > 255 || !Regex.isValidName(last_name))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid last name");
             if (phone_number.isEmpty() || phone_number.length() > 255 || !Regex.isPhoneNumber(phone_number))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
-                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = ? AND invitation_code LIKE ?");
-                hibernateQuery.setParameter(1, email);
-                hibernateQuery.setParameter(2, code);
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = :email AND invitation_code LIKE :code");
+                hibernateQuery.setParameter("email", email);
+                hibernateQuery.setParameter("code", code);
                 String valid_code = (String) hibernateQuery.getSingleResult();
                 if (valid_code == null)
                     throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
@@ -85,7 +76,8 @@ public class ServletRegistration extends HttpServlet {
                 if (!db_digits.equals(digits))
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             }
-            User newUser = UserFactory.getInstance().createUser(email, username, password, first_name, last_name, phone_number);
+            User newUser = UserFactory.getInstance().createUser(email, username, password, "", "", phone_number);
+            newUser.getUserStatus().setOnboarding_step(1);
             sm.saveOrUpdate(newUser);
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);

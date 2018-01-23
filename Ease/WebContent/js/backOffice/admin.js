@@ -2,15 +2,8 @@ var selected_teams = [];
 var account_graph;
 var people_graph;
 var click_graph;
-let website_obj = {};
-let website_arr = [];
 
 $(document).ready(function () {
-    ajaxHandler.get("/api/v1/admin/GetPublicWebsites", null, () => {
-    }, (res) => {
-        website_arr = res;
-        website_arr.forEach((website) => website_obj[website.id] = website)
-    });
     $(".ui.checkbox").checkbox();
     $(".ui.dropdown").dropdown();
     $(".ui.accordion").accordion();
@@ -198,43 +191,6 @@ $(document).ready(function () {
                         target.removeClass("loading");
                     });
                     break;
-                case "onboarding-rooms-segment":
-                    $("#onboarding_rooms_menu .item").remove();
-                    $("#onboarding_rooms_tabs .tab").remove();
-                    ajaxHandler.get("/api/v1/admin/OnboardingRooms", null, () => {
-                    }, (onboarding_rooms) => {
-                        let onboarding_rooms_obj = {};
-                        onboarding_rooms.forEach((onboarding_room) => {
-                            onboarding_rooms_obj[onboarding_room.id] = onboarding_room;
-                            let menu_elem = $('<a class="item" data-id="' + onboarding_room.id + '">' +
-                                onboarding_room.name +
-                                '<div class="ui label">' + onboarding_room.website_ids.length + '</div>' +
-                                '</a>');
-                            menu_elem.appendTo($("#onboarding_rooms_menu"))
-                            let tab_elem = $('<div class="tab" data-id="' + onboarding_room.id + '" style="display: none"></div>');
-                            onboarding_room.website_ids.forEach((website_id) => {
-                                let website = website_obj[website_id];
-                                let elem = $('<div class="ui tiny spaced image">' +
-                                    '<img class="ui spaced image" src="' + website.logo + '"/>' +
-                                    '</div>');
-                                elem.appendTo(tab_elem);
-                            });
-                            tab_elem.appendTo($("#onboarding_rooms_tabs"))
-                        });
-                        $("#onboarding_rooms_menu .item").click(function (e) {
-                            let self = $(e.target);
-                            let onboarding_room = onboarding_rooms_obj[self.attr('data-id')];
-                            $("#onboarding_rooms_tabs .tab").hide();
-                            $("#onboarding_rooms_menu .item").removeClass("teal");
-                            $("#onboarding_rooms_menu .item").removeClass("active");
-                            self.addClass("teal");
-                            self.addClass("active");
-                            let tab = $("#onboarding_rooms_tabs .tab[data-id='" + onboarding_room.id + "']");
-                            tab.show();
-                        });
-                        target.removeClass("loading");
-                    });
-                    break;
                 default:
                     target.removeClass("loading");
                     break;
@@ -274,7 +230,7 @@ $(document).ready(function () {
         }).catch((error) => console.log(error))
     });
     $("#teams_table").tablesort();
-    $("#teams_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()));
+    $("#teams_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()))
 })
 ;
 
@@ -599,12 +555,12 @@ function openWebsiteIntegration(website, websiteElem) {
         var category_id = parseInt($("input[name='category_id']", modal).val());
         var new_alternative_urls = [];
         $("input", alternative_urls_content).each((i, elem) => {
-            var jElem = $(elem);
-            new_alternative_urls.push(jElem.val());
-            /* new_alternative_urls.push({
-                id: jElem.getAttribute("alternative_url_id"),
-                url: jElem.val()
-            }) */
+           var jElem = $(elem);
+           new_alternative_urls.push(jElem.val());
+           /* new_alternative_urls.push({
+               id: jElem.getAttribute("alternative_url_id"),
+               url: jElem.val()
+           }) */
         });
         ajaxHandler.post(action, {
             id: website.id,

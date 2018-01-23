@@ -22,6 +22,7 @@ class Password extends React.Component {
             passwordMatch: true,
         }
     }
+
     accessModification = () => {
         this.setState({ loading: true, errorMessage: '' });
         this.props.dispatch(checkPassword({
