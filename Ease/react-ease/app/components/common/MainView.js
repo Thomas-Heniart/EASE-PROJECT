@@ -50,11 +50,11 @@ class MainView extends Component {
   }
 
   addTooltip(data) {
-    this.joyride.addTooltip(data);
+    this.refs.joyride.addTooltip(data);
   }
 
   next() {
-    this.joyride.next();
+    this.refs.joyride.next();
   }
 
   callback(data) {
@@ -86,7 +86,7 @@ class MainView extends Component {
     return (
       <div class="display-flex flex_direction_column full_flex" style={{flexFlow: 'column-reverse'}}>
         <Joyride
-          ref={c => {this.joyride = c;}}
+          ref="joyride"
           callback={this.callback}
           debug={false}
           disableOverlay={false}
