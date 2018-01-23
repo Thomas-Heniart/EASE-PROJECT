@@ -218,7 +218,9 @@ public abstract class ServletManager {
             if (teamUser.isDisabled())
                 continue;
             Map<String, Object> teamProperties = this.getTeamProperties(team.getDb_id());
-            String teamKey = (String) teamProperties.get("teamKey");
+            String teamKey = this.getTeamKey(team);
+            if (teamKey == null && teamUser.isVerified() && !teamUser.isDisabled())
+                teamProperties.put("teamKey", teamUser.getDecipheredTeamKey(keyUser));
             if (teamUser.getUser() != null && !teamUser.isVerified()) {
                 TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
                 if (teamKey != null) {
