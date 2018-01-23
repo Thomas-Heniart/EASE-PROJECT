@@ -11,10 +11,8 @@ public class EaseEnrichmentAPI extends EnrichmentAPI {
     @Override
     public JSONObject emailLookup(String email) {
         JSONObject lookup = super.emailLookup(email);
-        JSONObject error = lookup.optJSONObject("error");
-        if (error != null)
-            return lookup;
         JSONObject res = new JSONObject();
+        res.put("success", !lookup.has("error"));
         JSONObject name = lookup.getJSONObject("name");
         res.put("first_name", name.optString("givenName"));
         res.put("last_name", name.optString("familyName"));
