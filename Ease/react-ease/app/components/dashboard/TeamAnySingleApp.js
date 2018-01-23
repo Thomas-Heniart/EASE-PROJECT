@@ -140,9 +140,9 @@ class TeamAnySingleApp extends Component {
               <WaitingTeamApproveIndicator onClick={e => {
                 dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
               }}/>}
-              {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id &&
+              {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
               <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
-              {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id &&
+              {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
               <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}/>}
               <div className="logo_handler">
                 <img className="logo" src={team_app.logo}/>

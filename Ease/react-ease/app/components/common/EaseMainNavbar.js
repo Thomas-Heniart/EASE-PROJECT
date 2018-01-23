@@ -28,7 +28,7 @@ class TeamsList extends React.Component {
             {Object.keys(this.props.teams).map(id => {
               const team = this.props.teams[id];
               const me = team.team_users[team.my_team_user_id];
-              if (me.disabled || teamUserDepartureDatePassed(me.departure_date))
+              if (me.disabled || teamUserDepartureDatePassed(me.departure_date) || me.state === 1)
                 return (
                     <Popup key={team.id}
                            size="mini"

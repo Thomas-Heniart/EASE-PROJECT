@@ -135,11 +135,11 @@ class TeamSoftwareEnterpriseApp extends Component {
               <UpdatePasswordLabel/>}
               {teamUserDepartureDatePassed(me.departure_date) &&
               <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
-              {me.disabled &&
+              {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
               <WaitingTeamApproveIndicator onClick={e => {
                 dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
               }}/>}
-              {!me.disabled && meReceiver.empty &&
+              {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
               <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
               <div className="logo_handler">
                 <img className="logo" src={team_app.logo}/>
