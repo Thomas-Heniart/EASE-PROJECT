@@ -82,7 +82,7 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnl
         <Label class="receiver-label"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
         {
           receiver.credentials.map(item => {
-            if (item.name !== 'login' && item.name !== 'password' && !item.placeholderIcon)
+            if (item.name !== 'login' && item.name !== 'password')
               return <OtherInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item} removeField={removeField} first={first}/>;
             else
               return <CredentialInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item} removeField={removeField} first={first}/>;

@@ -311,8 +311,7 @@ class ChooseAnyAppCredentialsModal extends React.Component {
             login: {placeholder: "Login", priority: 0, type: "text", value:""},
             password: {placeholder:"Password", priority:1, type:"password", value:""}
           },
-          receivers: newReceivers,
-          credentials_provided: this.state.check
+          receivers: newReceivers
         })).then(response => {
           this.setState({loading: false});
           this.close();
@@ -342,8 +341,7 @@ class ChooseAnyAppCredentialsModal extends React.Component {
         img_url: this.props.settingsCard.img_url,
         connection_information: connection_information,
         account_information: transformCredentialsListIntoObject(this.state.credentials),
-        receivers: newReceivers,
-        credentials_provided: this.state.check
+        receivers: newReceivers
       })).then(response => {
         this.setState({loading: false});
         this.close();
