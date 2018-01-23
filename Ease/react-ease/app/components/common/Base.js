@@ -60,7 +60,7 @@ class Base extends React.Component {
     document.addEventListener("GetSettingsDone", this.eventListener);
     setTimeout(() => {
       document.dispatchEvent(new CustomEvent("GetSettings", {bubbles: true}))
-    }, 5);
+    }, 1000);
   }
   componentWillUnmount() {
     document.removeEventListener("GetSettingsDone", this.eventListener);

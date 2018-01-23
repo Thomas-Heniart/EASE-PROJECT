@@ -1,0 +1,99 @@
+{
+	"name":"googledatastudio",
+	"lastLogin":"",
+	"sso":"Google",
+	"home":"https://datastudio.google.com",
+	"connect":{
+      "todo":[
+        {
+          "action": "trueClick",
+          "search": "a.go-to-drive"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #profileIdentifier + div div[role='button'], #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#profileIdentifier + div div[role='button']"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierLink"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId, #identifierLink"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierLink"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierId"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "fill",
+          "what": "login",
+          "search": "#identifierId",
+          "grave": "true"
+        },
+        {
+          "action": "waitfor",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "trueClick",
+          "search": "#identifierNext"
+        },
+        {
+          "action": "waitfor",
+          "search": "#password input"
+        },
+        {
+          "action": "waitfor",
+          "search": "#passwordNext"
+        },
+        {
+          "action": "fill",
+          "what": "password",
+          "search": "#password input",
+          "grave": "true"
+        },
+        {
+          "action": "waitfor",
+          "search": "#passwordNext"
+        },
+        {
+          "action": "click",
+          "search": "#passwordNext"
+        }
+      ]
+	},
+	"logout":{
+      "todo":[
+        {
+          "action": "trueClick",
+          "search": "a[href*='https://accounts.google.com/Logout?']"
+        },
+        {
+          "action": "waitload"
+        }
+      ]
+	},
+	"checkAlreadyLogged":[
+      {"action":"waitfor", "search":"a[href*='Logout'], #identifierLink, #identifierId, div[aria-label='Google'], #profileIdentifier + div div[role='button'], a.go-to-drive"},
+      {
+        "search": "a[href*='Logout']"
+      }
+	]
+}

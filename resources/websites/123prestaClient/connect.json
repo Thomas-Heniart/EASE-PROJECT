@@ -1,0 +1,20 @@
+{
+	"name":"123prestaClient",
+	"lastLogin":"",
+	"home":"https://do.123presta.com/do_accueil.php",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#identifiant", "grave":true},
+			{"action":"fill", "what":"password", "search":"#mdp", "grave":true},
+			{"action":"trueClick", "search":"input[name=envoi]", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":".nav_gris_c a"},
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":".nav_gris_c"}
+	]
+}
