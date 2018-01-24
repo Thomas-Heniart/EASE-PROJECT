@@ -4,23 +4,20 @@
   "home":"https://developer.vuforia.com/",
   "connect":{
     "todo":[
-      {"action":"goto", "url":"https://developer.vuforia.com/user/login"},
+      {"action":"trueClick", "search":"#vuforiaLogin"},
       {"action":"waitfor", "search":"input[type='email']"},
       {"action":"fill", "what":"login", "search":"input[type='email']"},
-      {"action":"waitfor", "search":"input[type='password']"},
-      {"action":"fill", "what":"password", "search":"input[type='password']"},
-      {"action":"waitfor", "search":"#Login"},
-      {"action":"click", "search":"#Login"}
+      {"action":"fill", "what":"password", "search":"#Password"},
+      {"action":"trueClick", "search":"#Login"}
     ]
   },
   "logout":{
     "todo":[
-      {"action":"clickona", "search":"#accountLogOut"},
+      {"action":"trueClick", "search":"#accountLogOut"},
       {"action":"waitload"}
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"search", "search":"#loggedInLogoutDiv[style*='block']"},
     {"action":"waitfor", "search":"#loggedInLogoutDiv[style*='block'], #loginRegisterDiv[style*='block']"},
     {"search":"#loggedInLogoutDiv[style*='block']"}
   ]

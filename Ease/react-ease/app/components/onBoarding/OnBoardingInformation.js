@@ -24,6 +24,7 @@ class InformationEmail extends React.Component {
           checked={check}
           name='checkEmail'
           onChange={onChange}
+          className='checkbox_email'
           label='It’s okay to send me very occasional emails about Ease.space.'/>
       </React.Fragment>
     )
@@ -138,6 +139,7 @@ class InformationPassword extends React.Component {
 class InformationCompany extends React.Component {
   render() {
     const {
+      check,
       onChange,
       companyName,
       companySize,
@@ -192,6 +194,17 @@ class InformationCompany extends React.Component {
               onChange={onChange}/>
           </div>
         </div>
+        <div style={{display:'inline-flex'}}>
+          <Checkbox
+            name='checkCGU'
+            checked={check}
+            onChange={onChange}
+            label='By ticking here you agree and understand our'/>
+          <span>
+            <a target='_blank' href='/resources/CGU_Ease.pdf'> General Terms</a> and
+            <a target='_blank' href='/resources/Privacy_Policy.pdf'> Privacy Policy</a>.
+          </span>
+        </div>
       </React.Fragment>
     )
   }
@@ -214,7 +227,8 @@ class OnBoardingInformations extends React.Component {
       companyName,
       companySize,
       firstName,
-      lastName
+      lastName,
+      checkCGU
     } = this.props;
     return (
       <React.Fragment>
@@ -231,17 +245,18 @@ class OnBoardingInformations extends React.Component {
           <InformationPassword
             phone={phone}
             password={password}
-            verificationPassword={verificationPassword}
             onChange={handleInput}
+            passwordError={passwordError}
             onChangePassword={handlePasswordInput}
-            passwordError={passwordError}/>}
+            verificationPassword={verificationPassword}/>}
         {view === 4 &&
           <InformationCompany
-            onChange={handleInput}
             companyName={companyName}
             companySize={companySize}
+            onChange={handleInput}
             firstName={firstName}
-            lastName={lastName}/>}
+            lastName={lastName}
+            check={checkCGU}/>}
       </React.Fragment>
     )
   }
