@@ -1,0 +1,74 @@
+import api from "../utils/api";
+import post_api from "../utils/post_api";
+import {addNotification} from "./notificationBoxActions";
+
+export function fetchOnBoardingRooms() {
+  return (dispatch, getState) => {
+    return api.fetchOnBoardingRooms()
+      .then(response => {
+        dispatch({type: 'FETCH_ON_BOARDING_ROOMS', payload: response});
+        return response;
+      }).catch(err => {
+        throw err;
+      })
+  }
+}
+
+export function askRegistration({email, newsletter}) {
+  return (dispatch, getState) => {
+    return post_api.common.askRegistration({
+      email: email,
+      newsletter: newsletter
+    }).then(response => {
+      return response
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function onBoardingChangeStep({team_id, step}) {
+  return (dispatch, getState) => {
+    return post_api.onBoarding.onBoardingChangeStep({
+      team_id: team_id,
+      step: step,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      return response
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function newRegistration({email, username, password, digits, code, phone_number, newsletter, first_name, last_name}) {
+  return (dispatch, getState) => {
+    return post_api.onBoarding.newRegistration({
+      username: username,
+      email: email,
+      password: password,
+      digits: digits,
+      code: code,
+      phone_number: phone_number,
+      newsletter: newsletter,
+      first_name: first_name,
+      last_name: last_name
+    }).then(response => {
+      return response
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function getInfoClearbit({email}) {
+  return (dispatch, getState) => {
+    return post_api.clearbit.getInfoClearbit({
+      email: email
+    }).then(response => {
+      return response
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
