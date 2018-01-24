@@ -73,7 +73,15 @@ class Dashboard extends Component {
   }
   render(){
     const {columns} = this.props.dashboard;
-
+    const {
+      isReady,
+      isRunning,
+      joyrideOverlay,
+      joyrideType,
+      selector,
+      stepIndex,
+      steps,
+    } = this.state;
     return (
         <div id="dashboard" class={classnames(this.props.background_picture ? 'ease-background' : null, this.state.scrolling ? 'scrolling': null, 'lite_scrollbar')}>
           <ScrollingComponent onScroll={this.onScroll} class="ui container fluid full_flex display_flex">

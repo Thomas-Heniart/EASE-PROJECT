@@ -71,8 +71,8 @@ public class ServletCreateTeam extends HttpServlet {
             }
             String teamKey = AES.keyGenerator();
             Team team = new Team(teamName, company_size);
-            String keyUser = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
-            Date arrivalDate = new Date(sm.getLongParam("timestamp", true, false));
+            String keyUser = sm.getKeyUser();
+            Date arrivalDate = new Date();
             TeamUser owner = TeamUser.createOwner(email, username, arrivalDate, AES.encrypt(teamKey, keyUser), team);
             owner.getTeamUserStatus().setInvitation_sent(true);
             owner.setUser(user);
