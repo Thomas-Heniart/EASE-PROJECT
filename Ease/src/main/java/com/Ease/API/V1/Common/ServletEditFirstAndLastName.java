@@ -24,7 +24,7 @@ public class ServletEditFirstAndLastName extends HttpServlet {
             String last_name = sm.getStringParam("last_name", true, false);
             if (!Regex.isValidName(first_name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid first name");
-            if (!Regex.isValidUsername(last_name))
+            if (!Regex.isValidName(last_name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid last name");
             PersonalInformation personalInformation = sm.getUser().getPersonalInformation();
             personalInformation.setFirst_name(first_name);
