@@ -25,3 +25,5 @@ Ease/WebContent/safariExtension/\.DS_Store
 extension/*
 
 Ease/react-ease/node_modules/*
+./Ease/react-ease/node_modules
+./Ease/target/*
