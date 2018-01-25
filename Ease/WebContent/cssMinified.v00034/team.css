@@ -918,6 +918,8 @@ button.only-text-button {
     position: absolute;
     width: 690px;
     top: 46px; }
+    #new_team_creation #center #content.stepUsers {
+      width: 810px; }
     #new_team_creation #center #content label {
       display: flex;
       margin-bottom: 10px; }
@@ -966,7 +968,7 @@ button.only-text-button {
             animation: 1s blink steps(5, start) infinite; }
     #new_team_creation #center #content form {
       margin: 0; }
-    #new_team_creation #center #content .checkbox {
+    #new_team_creation #center #content .checkbox_email {
       display: flex;
       margin-top: 30px; }
     #new_team_creation #center #content .password_verified i {
@@ -981,10 +983,32 @@ button.only-text-button {
       border-radius: 5px;
       color: #949eb7;
       font-size: 16px;
-      font-weight: bold; }
+      font-weight: bold;
+      cursor: pointer; }
+      #new_team_creation #center #content .roomsSegment.password_manager_segment {
+        position: relative; }
+        #new_team_creation #center #content .roomsSegment.password_manager_segment .password_manager {
+          position: absolute;
+          display: inline-flex;
+          justify-content: center;
+          padding: 6px;
+          top: 50%;
+          left: 50%;
+          width: 100%;
+          transform: translateY(-50%) translateX(-50%); }
+          #new_team_creation #center #content .roomsSegment.password_manager_segment .password_manager img {
+            width: auto;
+            height: 17px;
+            margin-right: 10px; }
+          #new_team_creation #center #content .roomsSegment.password_manager_segment .password_manager span {
+            font-weight: bold;
+            color: #949eb7;
+            font-size: 16px; }
       #new_team_creation #center #content .roomsSegment.selected {
         border-color: #373b60;
         color: #373b60; }
+        #new_team_creation #center #content .roomsSegment.selected .password_manager span {
+          color: #373b60; }
       #new_team_creation #center #content .roomsSegment span {
         font-size: 12px;
         font-weight: 300;
