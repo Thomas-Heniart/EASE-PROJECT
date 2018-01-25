@@ -157,12 +157,12 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/enterpriseContact.js" defer></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/languageChooser.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/enterpriseContact.js" defer></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/languageChooser.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
 
 <script type="text/javascript">
     window.addEventListener('load', function () {

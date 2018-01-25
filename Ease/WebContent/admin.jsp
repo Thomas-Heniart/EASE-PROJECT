@@ -26,7 +26,7 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     <link rel="manifest" href="manifest.json">
 
-    <script src="jsMinified.v00022/jquery-3.1.0.js"></script>
+    <script src="jsMinified.v00023/jquery-3.1.0.js"></script>
     <script src="js/postHandler.js"></script>
     <script src="js/admin.js?0"></script>
 </head>
