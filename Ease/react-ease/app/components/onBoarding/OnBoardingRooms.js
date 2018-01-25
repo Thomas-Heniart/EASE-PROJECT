@@ -10,7 +10,7 @@ class OnBoardingRooms extends React.Component {
         onClick={e => selectRoom(item.id)}
         className={roomsSelected.filter(id => {return id === item.id}).length > 0 ? 'selected roomsSegment' : 'roomsSegment'}>
         #{item.name}
-        <span>{item.description}</span>
+        <span>{item.example}</span>
       </div>
     ));
     return (

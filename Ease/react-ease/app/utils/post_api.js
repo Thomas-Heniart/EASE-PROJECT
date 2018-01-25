@@ -1106,19 +1106,15 @@ module.exports = {
         throw err.response.data;
       })
     },
-    createTeam: function({name, email, first_name, last_name, username, jobRole, jobDetails, digits,plan_id, ws_id}){
+    createTeam: function({name, email, username, company_size, digits ,plan_id, ws_id}){
       return axios.post('/api/v1/teams/CreateTeam', {
         team_name: name,
         email: email,
-        first_name: first_name,
-        last_name: last_name,
         username: username,
-        job_index: jobRole,
-        job_details: jobDetails,
         digits: digits,
         plan_id: plan_id,
-        ws_id:ws_id,
-        timestamp: new Date().getTime()
+        company_size: company_size,
+        ws_id: ws_id,
       }).then(response => {
         return response.data;
       }).catch(err => {
@@ -1360,9 +1356,10 @@ module.exports = {
         throw err.response.data;
       })
     },
-    askRegistration: function(email){
+    askRegistration: ({email, newsletter}) => {
       return axios.post('/api/v1/common/AskRegistration', {
-        email: email
+        email: email,
+        newsletter: newsletter
       }).then (response => {
         return response.data;
       }).catch(err => {
@@ -1423,5 +1420,48 @@ module.exports = {
             throw err;
           })
     }
+  },
+  onBoarding: {
+    onBoardingChangeStep: ({team_id, step, ws_id}) => {
+      return axios.put('/api/v1/TeamOnboardingStep', {
+        team_id: team_id,
+        step: step,
+        ws_id: ws_id
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    newRegistration: ({email, username, password, digits, code, phone_number, newsletter, first_name, last_name}) => {
+      return axios.post('/api/v1/common/Registration', {
+        username: username,
+        email: email,
+        password: password,
+        digits: digits,
+        code: code,
+        phone_number: phone_number,
+        newsletter: newsletter,
+        first_name: first_name,
+        last_name: last_name
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    editFirstAndLastName: ({first_name, last_name}) => {
+      return axios.post('/api/v1/common/EditFirstAndLastName', {
+        first_name: first_name,
+        last_name: last_name
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err;
+      })
+    }
+  },
+  clearbit: {
+
   }
 };

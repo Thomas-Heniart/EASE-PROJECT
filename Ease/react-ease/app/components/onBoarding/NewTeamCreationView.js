@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from "react-redux";
 import OnBoardingRooms from "./OnBoardingRooms";
 import OnBoardingUsers from "./OnBoardingUsers";
 import OnBoardingGroups from "./OnBoardingGroups";
@@ -7,11 +8,19 @@ import OnBoardingInformations from "./OnBoardingInformation";
 import {handleSemanticInput, isEmail} from "../../utils/utils";
 import {withRouter, Switch, Route, NavLink} from "react-router-dom";
 import { Menu, Form, Icon, Button } from 'semantic-ui-react';
+import {
+  askRegistration, checkAskRegistration, editFirstNameAndLastName, fetchOnBoardingRooms, getInfoClearbit,
+  newRegistration
+} from "../../actions/onBoardingActions";
+import * as post_api from '../../utils/post_api'
 
+@connect()
 class NewTeamCreationView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
+      error: '',
       activeItem: 1,
       view: 1,
       viewInfo: 1,
@@ -27,17 +36,7 @@ class NewTeamCreationView extends React.Component {
       firstName: '',
       lastName: '',
       checkCGU: false,
-      rooms: [
-        {id: 1, name: 'marketing', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 2, name: 'admin', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 3, name: 'bite', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 4, name: 'putain', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 5, name: 'ca', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 6, name: 'fonctionne', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 7, name: 'sa_mere', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 8, name: 'la', description: 'Ex: Fujihoma, Tasoeur, ...'},
-        {id: 9, name: 'puteeeeeu', description: 'Ex: Fujihoma, Tasoeur, ...'},
-      ],
+      rooms: [],
       roomsSelected: [],
       emails: [],
       users: [
@@ -45,12 +44,17 @@ class NewTeamCreationView extends React.Component {
         {value: 2, username: 'fillou', text: 'fillou' + ' - ' + 'sfdbni' + ' ' + 'cfndkj'},
         {value: 3, username: 'rototo', text: 'rototo' + ' - ' + 'dfbfjd' + ' ' + 'fdbjhf'}
       ],
-      viewAccounts: 1
+      viewAccounts: 1,
+      currentRoom: 1,
+      passwordManagerSelected: 0
     };
   }
   componentWillMount() {
     // get step if not let view 1
     // get Rooms
+    this.props.dispatch(fetchOnBoardingRooms()).then(response => {
+      this.setState({rooms: response})
+    });
   }
   componentDidMount() {
     if (this.state.view === 1)
@@ -83,6 +87,9 @@ class NewTeamCreationView extends React.Component {
       roomsSelected.push(id);
     this.setState({roomsSelected: roomsSelected});
   };
+  selectPasswordManager = (id) => {
+    this.setState({passwordManagerSelected: id});
+  };
   editField = (idx, {name, value}) => {
     let emails = this.state.emails.slice();
     emails[idx][name] = value;
@@ -102,7 +109,7 @@ class NewTeamCreationView extends React.Component {
         return <p>Confirm your email. You will receive a verification code.</p>;
       else if (this.state.viewInfo === 2)
         return <p>We’ve sent a code to <strong>{this.state.email}</strong>, it will expire shortly.<br/><br/>
-          Haven’t received our email?<br/>Try our spam folder or <br/><u>Resend email</u></p>;
+          Haven’t received our email?<br/>Try our spam folder or <br/><u style={{cursor:'pointer'}} onClick={this.resendEmail}>Resend email</u></p>;
       else if (this.state.viewInfo === 3)
         return <p>Enter a <strong>strong password</strong><br/>without names, dates or info<br/>related to
           you.<br/><br/>
@@ -132,37 +139,106 @@ class NewTeamCreationView extends React.Component {
         return <p>If someone else knows a password, ask him or her to fill it for everybody. Also, when you are not 1000% sure about a password, you can test it in one click. </p>;
     }
   };
+  resendEmail = () => {
+    this.props.dispatch(askRegistration({
+      email: this.state.email,
+      newsletter: this.state.checkEmail
+    })).then(response => {
+      if (response.success)
+        this.setState({firstName: response.first_name, lastName: response.last_name, companyName: response.company_name});
+    });
+  };
   nextInformation = () => {
     if (this.state.viewInfo === 1) {
-      // request send email w/ clearbit
-      this.setState({viewInfo: 2});
+      this.props.dispatch(askRegistration({
+        email: this.state.email,
+        newsletter: this.state.checkEmail
+      })).then(response => {
+        if (response.success)
+          this.setState({firstName: response.first_name, lastName: response.last_name, companyName: response.company_name});
+        this.setState({viewInfo: 2, loading: false, error: ''});
+      }).catch(err => {
+        this.setState({error: err, loading: false});
+      });
     }
     else if (this.state.viewInfo === 2) {
-      // request check if is the good confirmation code
-      this.setState({viewInfo: 3});
+      this.props.dispatch(checkAskRegistration({
+        email: this.state.email,
+        digits: this.state.confirmationCode
+      })).then(response => {
+        if (response.valid_digits)
+          this.setState({viewInfo: 3, error: ''});
+        else
+          this.setState({error:'Is not the good confirmation code'});
+      });
     }
     else if (this.state.viewInfo === 3) {
-      // get Info
-      this.setState({viewInfo: 4});
+      // get Info and create user
+      const username = this.state.email.split('@')[0];
+      this.props.dispatch(newRegistration({
+        username: username,
+        email: this.state.email,
+        password: this.state.password,
+        digits: this.state.confirmationCode,
+        code: '',
+        phone_number: this.state.phone,
+        newsletter: this.state.checkEmail,
+        first_name: this.state.firstName,
+        last_name: this.state.lastName
+      })).then(response => {
+        this.props.dispatch(getInfoClearbit({email: this.state.email})).then(response => {
+          if (response.success)
+            this.setState({firstName: response.first_name, lastName: response.last_name, companyName: response.company_name});
+          this.setState({viewInfo: 4});
+        });
+      });
     }
     else if (this.state.viewInfo === 4) {
-      // request Info
-      this.props.history.replace('/newTeamCreation/rooms');
-      this.setState({activeItem: 2, view: 2});
+      // request Info and create team
+      const username = this.state.email.split('@')[0];
+      post_api.teams.createTeam({
+        name: this.state.companyName,
+        email: this.state.email,
+        username: username,
+        digits: this.state.confirmationCode,
+        plan_id: this.state.plan_id,
+        company_size: this.state.companySize,
+        ws_id: this.props.ws_id
+      }).then(response => {
+        easeTracker.trackEvent("TeamCreationFinished", {
+          "plan_id": this.props.plan_id
+        });
+      }).catch(err => {
+        this.setState({errorMessage: err, loading: false});
+      });
+      this.props.dispatch(editFirstNameAndLastName({
+        first_name: this.state.firstName,
+        last_name: this.state.lastName
+      })).then(response => {
+        this.props.history.replace('/newTeamCreation/rooms');
+        this.setState({activeItem: 2, view: 2});
+      });
     }
   };
   nextAccounts = () => {
     if (this.state.viewAccounts === 1) {
       // Choose PM or mano
-      this.setState({viewAccounts: 2});
+      if (this.state.passwordManagerSelected === -1)
+        this.props.history.replace('/main/catalog/onBoardingImportation');
+      //send to reducer PM etc...
+      else
+        this.setState({viewAccounts: 2});
     }
     else if (this.state.viewAccounts === 2) {
       // Choose apps for #openspace
-      this.setState({viewAccounts: 3});
+      if (this.state.currentRoom === 1)
+        this.setState({currentRoom: 2});
+      else
+        this.setState({viewAccounts: 3});
     }
     else if (this.state.viewAccounts === 3) {
       // Choose apps for every #rooms
-      this.setState({viewAccounts: 4});
+      this.setState({viewAccounts: 2, currentRoom: this.state.currentRoom + 1});
     }
     else if (this.state.viewAccounts === 4) {
       // Choose if single or enterprise
@@ -220,13 +296,15 @@ class NewTeamCreationView extends React.Component {
             <Menu.Item name='Groups' active={this.state.activeItem === 4}/>
             <Menu.Item name='Accounts' active={this.state.activeItem === 5}/>
           </Menu>
-          <div id='content' className={this.state.view === 3 || (this.state.view === 1 && this.state.viewInfo === 4) ? 'stepUsers' : null}>
-            <Form onSubmit={this.state.view > 1 ? this.next : this.nextInformation}>
+          <div id='content' className={this.state.view === 3 || (this.state.view === 1 && this.state.viewInfo === 4) || this.state.view === 5 ? 'stepUsers' : null}>
+            <Form onSubmit={this.state.view === 1 ? this.nextInformation : this.state.view === 5 ? this.nextAccounts : this.next} error={this.state.error !== ''}>
               <Switch>
                 {this.state.view === 1 &&
                 <Route path={`${this.props.match.path}/informations`}
                        render={(props) =>
                          <OnBoardingInformations
+                            error={this.state.error}
+                            loading={this.state.loading}
                             view={this.state.viewInfo}
                             email={this.state.email}
                             checkEmail={this.state.checkEmail}
@@ -268,8 +346,12 @@ class NewTeamCreationView extends React.Component {
                 <Route path={`${this.props.match.path}/accounts`}
                        render={(props) =>
                          <OnBoardingAccounts
-                            view={this.state.viewAccounts}/>}
-                            next={this.nextAccounts}/>}
+                           passwordManagerSelected={this.state.passwordManagerSelected}
+                           selectPasswordManager={this.selectPasswordManager}
+                           currentRoom={this.state.currentRoom}
+                           view={this.state.viewAccounts}
+                           next={this.nextAccounts}
+                           {...this.props}/>}/>}
               </Switch>
             </Form>
           </div>
@@ -277,7 +359,7 @@ class NewTeamCreationView extends React.Component {
             <Button positive
                     size='tiny'
                     type='submit'
-                    onClick={this.state.view > 1 ? this.next : this.nextInformation}
+                    onClick={this.state.view === 1 ? this.nextInformation : this.state.view === 5 ? this.nextAccounts : this.next}
                     disabled={(this.state.view === 1 && !isEmail(this.state.email))
                     || (this.state.viewInfo === 2 && this.state.confirmationCode.length < 6)
                     || (this.state.viewInfo === 3 && !this.checkPassword())
