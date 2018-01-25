@@ -120,9 +120,9 @@ class TeamAnyEnterpriseApp extends Component {
         className='dashboard_popup_soft_and_any'
         position="top center"
         on='click'
-        open={this.props.active ? false : this.state.isOpen}
+        open={this.props.active || teamUserDepartureDatePassed(me.departure_date) ? false : this.state.isOpen}
         onClose={this.handleOpenClose}
-        onOpen={this.handleOpenClose}
+        onOpen={!teamUserDepartureDatePassed(me.departure_date) ? this.handleOpenClose : null}
         hideOnScroll
         trigger={
           <div className='app'>
@@ -135,11 +135,11 @@ class TeamAnyEnterpriseApp extends Component {
               <UpdatePasswordLabel/>}
               {teamUserDepartureDatePassed(me.departure_date) &&
               <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
-              {me.disabled &&
+              {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
               <WaitingTeamApproveIndicator onClick={e => {
                 dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
               }}/>}
-              {!me.disabled && meReceiver.empty &&
+              {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
               <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
               <div className="logo_handler">
                 <img className="logo" src={team_app.logo}/>

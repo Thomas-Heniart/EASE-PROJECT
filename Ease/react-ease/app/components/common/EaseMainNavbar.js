@@ -1,6 +1,7 @@
 import React from 'react';
 import {fetchNotifications, validateNotification} from "../../actions/notificationsActions";
 import {checkForNewNotifications} from "../../utils/helperFunctions";
+import {teamUserDepartureDatePassed} from "../../utils/utils";
 import {NavLink, withRouter} from "react-router-dom";
 import {processLogout} from "../../actions/commonActions";
 import {connect} from "react-redux";
@@ -27,7 +28,7 @@ class TeamsList extends React.Component {
             {Object.keys(this.props.teams).map(id => {
               const team = this.props.teams[id];
               const me = team.team_users[team.my_team_user_id];
-              if (me.disabled)
+              if (me.disabled || teamUserDepartureDatePassed(me.departure_date) || me.state === 1)
                 return (
                     <Popup key={team.id}
                            size="mini"

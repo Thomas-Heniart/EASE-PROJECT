@@ -1422,6 +1422,7 @@ class Importations extends React.Component {
               login: {type: "text", priority: 0, placeholder: "Login"},
               password: {type: "password", priority: 1, placeholder: "Password"}
             },
+            credentials_provided: false,
             receivers: receiversAnyApp
           }));
         }
@@ -1519,6 +1520,7 @@ class Importations extends React.Component {
               login: {type: "text", priority: 0, placeholder: "Login"},
               password: {type: "password", priority: 1, placeholder: "Password"}
             },
+            credentials_provided: false,
             receivers: receivers
           }));
         }
@@ -1615,6 +1617,7 @@ class Importations extends React.Component {
                 login: {type: "text", priority: 0, placeholder: "Login"},
                 password: {type: "password", priority: 1, placeholder: "Password"}
               },
+              credentials_provided: false,
               receivers: receivers
             })));
           }

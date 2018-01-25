@@ -121,9 +121,9 @@ class TeamAnySingleApp extends Component {
         className='dashboard_popup_soft_and_any'
         position="top center"
         on='click'
-        open={this.props.active ? false : this.state.isOpen}
+        open={this.props.active || teamUserDepartureDatePassed(me.departure_date) ? false : this.state.isOpen}
         onClose={this.handleOpenClose}
-        onOpen={this.handleOpenClose}
+        onOpen={!teamUserDepartureDatePassed(me.departure_date) ? this.handleOpenClose : null}
         hideOnScroll
         trigger={
           <div className='app'>
@@ -140,9 +140,9 @@ class TeamAnySingleApp extends Component {
               <WaitingTeamApproveIndicator onClick={e => {
                 dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
               }}/>}
-              {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id &&
+              {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
               <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
-              {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id &&
+              {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
               <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}/>}
               <div className="logo_handler">
                 <img className="logo" src={team_app.logo}/>

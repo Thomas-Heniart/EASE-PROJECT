@@ -169,6 +169,8 @@ public class Catalog {
             String path = aUrl.getPath();
             if (path.equals("/"))
                 path = "";
+            if (url_parsed.length < 2)
+                return null;
             if (url_parsed.length == 2)
                 domain += url_parsed[0] + "." + url_parsed[1];
             else {
