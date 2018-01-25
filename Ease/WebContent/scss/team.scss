@@ -307,6 +307,9 @@ button.only-text-button {
       position: absolute;
       width: 690px;
       top: 46px;
+      &.stepUsers {
+        width: 810px;
+      }
       label {
         display: flex;
         margin-bottom: 10px;
@@ -370,7 +373,7 @@ button.only-text-button {
       form {
         margin: 0;
       }
-      .checkbox {
+      .checkbox_email {
         display: flex;
         margin-top: 30px;
       }
@@ -390,9 +393,38 @@ button.only-text-button {
         color: #949eb7;
         font-size: 16px;
         font-weight: bold;
+        cursor: pointer;
+        &.password_manager_segment {
+          position: relative;
+          .password_manager {
+            position: absolute;
+            display: inline-flex;
+            justify-content: center;
+            padding: 6px;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            transform: translateY(-50%) translateX(-50%);
+            img {
+              width: auto;
+              height: 17px;
+              margin-right: 10px;
+            }
+            span {
+              font-weight: bold;
+              color: #949eb7;
+              font-size: 16px;
+            }
+          }
+        }
         &.selected {
           border-color: #373b60;
           color: #373b60;
+          .password_manager {
+            span {
+              color: #373b60;
+            }
+          }
         }
         span {
           font-size: 12px;

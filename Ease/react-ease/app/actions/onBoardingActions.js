@@ -27,6 +27,17 @@ export function askRegistration({email, newsletter}) {
   }
 }
 
+export function checkAskRegistration({email, digits}) {
+  return (dispatch, getState) => {
+    return post_api.common.checkRegistrationDigits(email, digits)
+      .then(response => {
+        return response;
+      }).catch(err => {
+        throw err;
+      })
+  }
+}
+
 export function onBoardingChangeStep({team_id, step}) {
   return (dispatch, getState) => {
     return post_api.onBoarding.onBoardingChangeStep({
@@ -61,9 +72,22 @@ export function newRegistration({email, username, password, digits, code, phone_
   }
 }
 
+export function editFirstNameAndLastName({first_name, last_name}) {
+  return (dispatch, getState) => {
+    return post_api.onBoarding.editFirstAndLastName({
+      first_name: first_name,
+      last_name: last_name
+    }).then(response => {
+      return response
+    }).catch(err => {
+      throw err;
+    })
+  }
+}
+
 export function getInfoClearbit({email}) {
   return (dispatch, getState) => {
-    return post_api.clearbit.getInfoClearbit({
+    return api.getInfoClearbit({
       email: email
     }).then(response => {
       return response

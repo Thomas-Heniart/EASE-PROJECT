@@ -1,9 +1,11 @@
 import React from 'react';
-import { Header, Checkbox, Input } from 'semantic-ui-react';
+import { Header, Checkbox, Input, Message } from 'semantic-ui-react';
 
 class InformationEmail extends React.Component {
   render() {
     const {
+      error,
+      loading,
       email,
       check,
       onChange
@@ -17,6 +19,7 @@ class InformationEmail extends React.Component {
           autoFocus
           id='email'
           name='email'
+          type='email'
           value={email}
           onChange={onChange}
           placeholder='elon@spacex.com'/>
@@ -26,6 +29,7 @@ class InformationEmail extends React.Component {
           onChange={onChange}
           className='checkbox_email'
           label='It’s okay to send me very occasional emails about Ease.space.'/>
+        <Message error content={error}/>
       </React.Fragment>
     )
   }
@@ -44,6 +48,8 @@ class InformationConfirmationCode extends React.Component {
   };
   render() {
     const {
+      error,
+      loading,
       onChange,
       confirmationCode
     } = this.props;
@@ -56,6 +62,7 @@ class InformationConfirmationCode extends React.Component {
           required
           autoFocus
           ref="code"
+          autoComplete='off'
           onChange={onChange}
           id='confirmationCode'
           name='confirmationCode'
@@ -194,7 +201,7 @@ class InformationCompany extends React.Component {
               onChange={onChange}/>
           </div>
         </div>
-        <div style={{display:'inline-flex'}}>
+        <div>
           <Checkbox
             name='checkCGU'
             checked={check}
@@ -214,6 +221,8 @@ class OnBoardingInformations extends React.Component {
   render() {
     const {
       view,
+      error,
+      loading,
       email,
       checkEmail,
       handleInput,
@@ -234,11 +243,15 @@ class OnBoardingInformations extends React.Component {
       <React.Fragment>
         {view === 1 &&
           <InformationEmail
+            error={error}
             email={email}
+            loading={loading}
             check={checkEmail}
             onChange={handleInput}/>}
         {view === 2 &&
           <InformationConfirmationCode
+            error={error}
+            loading={loading}
             onChange={handleConfirmationCode}
             confirmationCode={confirmationCode}/>}
         {view === 3 &&
