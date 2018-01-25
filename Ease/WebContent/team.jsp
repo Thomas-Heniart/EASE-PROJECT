@@ -35,8 +35,8 @@
     <link rel="stylesheet" href="/cssMinified.v00035/lib/fonts/untitled-font-4/styles.css"/>
     <link rel="stylesheet" href="/cssMinified.v00035/team.css"/>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="/jsMinified.v00022/jsencrypt.js"></script>
-    <script src="/jsMinified.v00022/moment.js"></script>
+    <script src="/jsMinified.v00023/jsencrypt.js"></script>
+    <script src="/jsMinified.v00023/moment.js"></script>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
@@ -62,7 +62,7 @@
             ;e.amplitude=n})(window,document);
         amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
     </script>
-    <script src="/jsMinified.v00022/tracker.js"></script>
+    <script src="/jsMinified.v00023/tracker.js"></script>
 </head>
 <BODY>
 <div id="app">

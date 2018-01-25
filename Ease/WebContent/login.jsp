@@ -272,15 +272,15 @@
 <div id="onMobile" style="display:none;">
     <%@ include file="templates/Mobile.html" %>
 </div>
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/postHandler.js" async></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/isMobile.js" async></script>
-<script src="/jsMinified.v00022/connection.js" async></script>
-<script src="/jsMinified.v00022/generalLogout.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/jsencrypt.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/postHandler.js" async></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/isMobile.js" async></script>
+<script src="/jsMinified.v00023/connection.js" async></script>
+<script src="/jsMinified.v00023/generalLogout.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/jsencrypt.js" async></script>
 <script>
   window.addEventListener('load', function () {
     $.ajaxSetup({cache: true});

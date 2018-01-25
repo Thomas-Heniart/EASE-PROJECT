@@ -249,14 +249,14 @@
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
 <%@ include file="templates/landingPage/registrationPopup.jsp" %>
 
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/jquery.complexify.js"></script>
-<script src="/jsMinified.v00022/bootstrap.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/registrationPopup.js" async></script>
-<script src="/jsMinified.v00022/languageChooser.js" async></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/jquery.complexify.js"></script>
+<script src="/jsMinified.v00023/bootstrap.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/registrationPopup.js" async></script>
+<script src="/jsMinified.v00023/languageChooser.js" async></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
 <script type="text/javascript">
     window.addEventListener('load',function(){
         $('.signUpButton').click(function(){
@@ -282,7 +282,7 @@
     window.addEventListener('load',function(){
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00022/amplitude-analytics.js";
+            r.src = "/jsMinified.v00023/amplitude-analytics.js";
             r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
             i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
                 return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];
