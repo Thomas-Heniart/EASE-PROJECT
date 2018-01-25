@@ -653,4 +653,12 @@ public class TeamUser {
     public void addTeamCardReceiver(TeamCardReceiver teamCardReceiver) {
         this.getTeamCardReceivers().add(teamCardReceiver);
     }
+
+    public void removeTeamSingleCardToFill(TeamSingleCard teamSingleCard) {
+        this.getTeamSingleCardToFillSet().remove(teamSingleCard);
+    }
+
+    public void removeTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
+        this.getTeamSingleSoftwareCardSet().remove(teamSingleSoftwareCard);
+    }
 }
