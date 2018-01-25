@@ -35,7 +35,6 @@
     <link rel="stylesheet" href="/cssMinified.v00035/lib/fonts/untitled-font-4/styles.css"/>
     <link rel="stylesheet" href="/cssMinified.v00035/team.css"/>
     <link rel="stylesheet" href="/css/lib/loading.min.css"/>
-    <link rel="stylesheet" href="/css/lib/react-joyride-compiled.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00023/jsencrypt.js"></script>
     <script src="/jsMinified.v00023/moment.js"></script>

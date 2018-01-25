@@ -1,4 +1,5 @@
-var React = require('react');
+import React, {Component, Fragment} from "react";
+import classnames from "classnames";
 import {connect} from "react-redux";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {showTeamMenu} from "../actions/teamActions";
@@ -7,8 +8,9 @@ import * as userActions from "../actions/userActions";
 import * as teamModalsActions from "../actions/teamModalActions";
 import {isAdmin} from "../utils/helperFunctions";
 import { NavLink,withRouter} from 'react-router-dom';
-import ReactTooltip from 'react-tooltip';
 import {findDOMNode} from 'react-dom';
+import {Popup} from 'semantic-ui-react';
+
 
 function ChannelList(props){
   const {team, me} = props;
@@ -25,25 +27,37 @@ function ChannelList(props){
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_channels">
         {isAdmin(props.me.role) &&
-        <button className="heading-button button-unstyle"
-                ref={(ref) => {window.refs.roomAdd = ref}}
-                data-tip="Create Rooms"
-                data-place="top"
-                id="new_channel_button"
-                onClick={e => {props.dispatch(teamModalsActions.showAddTeamChannelModal({active: true, team_id: team.id}))}}>
-          <i className="fa fa-plus-circle"/>
-        </button>}
+        <Popup size="mini"
+               position="right center"
+               inverted
+               trigger={
+                 <button className="heading-button button-unstyle"
+                         id="new_channel_button"
+                         onClick={e => {props.dispatch(teamModalsActions.showAddTeamChannelModal({active: true, team_id: team.id}))}}>
+                   <i className="fa fa-plus-circle"/>
+                 </button>
+               }
+               content={'Create Rooms'}/>
+        }
         <NavLink to={`/teams/${props.match.params.teamId}/${props.match.params.itemId}/rooms`} className="section-header">
-          <span class="inline-tooltipped" data-tip="Browse all Rooms" data-place="right">
-            Rooms&nbsp;
-          </span>
-          <span className="inline-tooltipped header-count" data-tip="Browse all Rooms"  data-place="right" ref={(ref) => {window.refs.rooms = ref}}> ({Object.keys(rooms).length})</span>
+          <Popup size="mini"
+                 position="right center"
+                 inverted
+                 trigger={
+                   <span class="display-inline-block">
+                      <span class="inline-tooltipped">
+                        Rooms&nbsp;
+                      </span>
+                      <span className="inline-tooltipped header-count">({Object.keys(rooms).length})</span>
+                    </span>
+                 }
+                 content={'Browse all Rooms'}/>
         </NavLink>
         <div className="section-list">
           {
             myRooms.map(room => {
               return (
-                  <NavLink to={`/teams/${team.id}/${room.id}`} className="section-list-item channel" key={room.id}>
+                  <NavLink to={`/teams/${team.id}/${room.id}`} class={classnames('section-list-item channel', room.default ? 'default' : null)} key={room.id}>
                     <div className="primary_action channel_name">
                       <i className="fa fa-hashtag prefix"/>
                       <span className="overflow-ellipsis full_flex">{room.name}</span>
@@ -62,20 +76,33 @@ function UserList(props){
     return team.team_users[user_id];
   });
   return (
-      <div className="section-holder display-flex flex_direction_column" id="team_channels">
+      <div className="section-holder display-flex flex_direction_column" id="team_users">
         {isAdmin(me.role) &&
-        <button className="heading-button button-unstyle"
-                data-tip="Invite new user"
-                data-place="top"
-                id="new_member_button"
-                onClick={e => {props.dispatch(teamModalsActions.showAddTeamUserModal({active: true, team_id: team.id}))}}>
-          <i className="ease-icon fa fa-plus-circle"/>
-        </button>}
+        <Popup size="mini"
+               position="right center"
+               inverted
+               trigger={
+                 <button className="heading-button button-unstyle"
+                         id="new_member_button"
+                         onClick={e => {props.dispatch(teamModalsActions.showAddTeamUserModal({active: true, team_id: team.id}))}}>
+                   <i className="ease-icon fa fa-plus-circle"/>
+                 </button>
+               }
+               content={'Invite new user'}/>
+        }
         <NavLink to={`/teams/${props.match.params.teamId}/${props.match.params.itemId}/members`} className="section-header">
-          <span class="inline-tooltipped" data-tip="Open a Desk" data-place="right">
-            Users
-          </span>
-          <span className="header-count"> ({user_list.length})</span>
+          <Popup size="mini"
+                 position="right center"
+                 inverted
+                 trigger={
+                   <span class="display-inline-block">
+                      <span class="inline-tooltipped">
+                        Users
+                    </span>
+                    <span className="header-count"> ({user_list.length})</span>
+                    </span>
+                 }
+                 content={'Open a Desk'}/>
         </NavLink>
         <div className="section-list">
           {
@@ -83,15 +110,15 @@ function UserList(props){
               return (
                   <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
                     {user.state >= 1 ?
-                      <div className="primary_action channel_name">
-                        <i className="fa fa-user prefix"/>
-                        <span className="overflow-ellipsis">{user.username}</span>
-                      </div>
-                    :
-                      <div className="primary_action channel_name">
-                        <i className="fa fa-user-o prefix"/>
-                        <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
-                      </div>}
+                        <div className="primary_action channel_name">
+                          <i className="fa fa-user prefix"/>
+                          <span className="overflow-ellipsis">{user.username}</span>
+                        </div>
+                        :
+                        <div className="primary_action channel_name">
+                          <i className="fa fa-user-o prefix"/>
+                          <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
+                        </div>}
                   </NavLink>
               )
             }, this)
@@ -105,9 +132,6 @@ function UserList(props){
 class TeamSideBar extends React.Component{
   constructor(props){
     super(props);
-  }
-  componentDidMount(){
-    ReactTooltip.rebuild();
   }
   render() {
     const team = this.props.team;

@@ -2,6 +2,7 @@ var React = require('react');
 var classnames = require('classnames');
 var EaseMainNavbar = require('./common/EaseMainNavbar');
 import {NavLink, withRouter} from "react-router-dom";
+import Joyride from "react-joyride";
 
 const FlexPanelButton = ({location, match}) => {
     const isActive = location.pathname === `${match.url}/flexPanel`;
@@ -16,6 +17,7 @@ const FlexPanelButton = ({location, match}) => {
 const FlexPanelButtonWithRouter = withRouter(FlexPanelButton);
 
 function TeamHeader(props){
+  const {item} = props;
   return (
       <header id="client_header">
         <div className="channel_header">
@@ -45,6 +47,38 @@ function TeamHeader(props){
               </div>
             </div>
           </div>
+          {!!item.team_user_ids && !item.default && !localStorage.getItem('team_room_settings_tip') &&
+          <Joyride
+              steps={[{
+                title: 'Edit rooms here to add or remove people.',
+                isFixed: true,
+                selector:"#open_card_button",
+                position: 'bottom'
+              }]}
+              locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
+              disableOverlay={true}
+              run={true}
+              callback={(action) => {
+                  if (action.type === 'finished')
+                    localStorage.setItem('team_room_settings_tip', true);
+              }}
+          />}
+          {!!item.room_ids && !localStorage.getItem('team_user_settings_tip') &&
+          <Joyride
+              steps={[{
+                title: <span>Setup personal settings of a user here <span class="fw-normal">(ex: departure date).</span></span>,
+                isFixed: true,
+                selector:"#open_card_button",
+                position: 'bottom'
+              }]}
+              locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
+              disableOverlay={true}
+              run={true}
+              callback={(action) => {
+                if (action.type === 'finished')
+                  localStorage.setItem('team_user_settings_tip', true);
+              }}
+          />}
           <EaseMainNavbar/>
         </div>
       </header>

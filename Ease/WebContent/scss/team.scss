@@ -9,6 +9,10 @@ button.only-text-button {
   }
 }
 
+#team_view > .joyride .joyride-tooltip {
+  margin-top: -25px;
+}
+
 .next_button {
   i {
     margin-left: 0 !important;
@@ -2558,7 +2562,7 @@ button.action_text_button {
       color: #E8E8E8;
       #team_menu {
         position: relative;
-        @include flex-basis(60px);
+        height: 60px;
         @include flex-shrink(0);
         padding: 0 1em;
         &:hover {
@@ -2599,10 +2603,8 @@ button.action_text_button {
           overflow-y: hidden;
           padding-bottom: 5em;
           border-right: 0.25em solid transparent;
-          #team_channels {
-            margin: 5px 0 2em;
-          }
           .section-holder {
+            margin: 5px 0 2em;
             position: relative;
             width: 205px;
             .heading-button {

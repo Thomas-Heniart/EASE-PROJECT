@@ -12,22 +12,7 @@ import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "./CustomDragLayer";
 import { DropTarget, DragSource } from 'react-dnd';
 import withScrolling from 'react-dnd-scrollzone';
-import Joyride from "react-joyride";
 const ScrollingComponent = withScrolling('div');
-
-const tutorial_steps = [{
-  title: 'Just click on an App to login or access account info.',
-  isFixed: true,
-  position: 'right'
-},{
-  title: 'Just click on an App to login or access account info.',
-  isFixed: true,
-  position: 'right'
-},{
-  title: 'Just click on an App to login or access account info.',
-  isFixed: true,
-  position: 'right'
-}];
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -96,12 +81,6 @@ class Dashboard extends Component {
                   <DashboardColumn idx={idx} key={idx} profile_ids={column}/>
               )
             })}
-            <Joyride
-                ref="joyride"
-                steps={tutorial_steps}
-                run={true}
-                debug={true}
-            />
             {!this.props.tutorial_done &&
             <Tutorial/>}
           </ScrollingComponent>
