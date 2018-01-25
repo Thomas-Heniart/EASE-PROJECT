@@ -191,6 +191,7 @@ class NewTeamCreationView extends React.Component {
             this.setState({firstName: response.first_name, lastName: response.last_name, companyName: response.company_name});
           this.setState({viewInfo: 4});
         });
+        easeTracker.trackEvent("EaseOnboardingRegistration");
       });
     }
     else if (this.state.viewInfo === 4) {
@@ -205,7 +206,7 @@ class NewTeamCreationView extends React.Component {
         company_size: this.state.companySize,
         ws_id: this.props.ws_id
       }).then(response => {
-        easeTracker.trackEvent("TeamCreationFinished", {
+        easeTracker.trackEvent("EaseOnboardingInformationFilled", {
           "plan_id": this.props.plan_id
         });
       }).catch(err => {
