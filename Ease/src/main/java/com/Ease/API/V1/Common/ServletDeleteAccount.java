@@ -3,6 +3,8 @@ package com.Ease.API.V1.Common;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.NewDashboard.*;
+import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -29,8 +31,17 @@ public class ServletDeleteAccount extends HttpServlet {
             User user = sm.getUser();
             if (!user.getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password does not match.");
-            if (!user.getTeamUsers().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "It is not possible to delete your account as long as you are part of a team. Please delete your team (or ask your admin to be deleted of your team) before deleting your personal Ease.space account.");
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                Team team = teamUser.getTeam();
+                if (team.isActive())
+                    throw new HttpServletException(HttpStatus.BadRequest, "It is not possible to delete your account as long as you are part of a team. Please delete your team (or ask your admin to be deleted of your team) before deleting your personal Ease.space account.");
+            }
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                teamUser.setUser(null);
+                teamUser.setTeamKey(null);
+                teamUser.setState(0);
+                sm.saveOrUpdate(teamUser);
+            }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
             hibernateQuery.setParameter("id", user.getDb_id());

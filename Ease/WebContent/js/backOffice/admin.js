@@ -191,6 +191,14 @@ $(document).ready(function () {
             target.removeClass("loading");
           });
           break;
+        case "teams-deleted-segment":
+          ajaxHandler.get("/api/v1/admin/TeamsDeleted", null, () => {
+
+          }, (data) => {
+            populateTeamsDeleted(data);
+            target.removeClass("loading");
+          }, (error) => alert(error));
+          break;
         default:
           target.removeClass("loading");
           break;
@@ -1048,3 +1056,16 @@ function getBase64(file) {
     reader.onerror = (error) => reject(error);
   });
 }
+
+populateTeamsDeleted = (data) => {
+  let tableBody = $("#teams-deleted-body");
+  data.forEach((elem, index) => {
+    let jElem = $("<tr>" +
+      "<td>" + (index + 1) + "</td>" +
+      "<td>" + elem.name + "</td>" +
+      "<td>" + elem.email + "</td>" +
+      "<td>" + elem.phone_number + "</td>" +
+      "</tr>");
+    jElem.appendTo(tableBody);
+  });
+};

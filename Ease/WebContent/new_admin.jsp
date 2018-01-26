@@ -19,7 +19,7 @@
     <link rel="manifest" href="manifest.json">
     <script src="jsMinified.v00023/jquery-3.1.0.js"></script>
     <script src="jsMinified.v00023/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?4"></script>
+    <script src="js/backOffice/admin.js?5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>
@@ -50,6 +50,7 @@
             <a class="item" data-target="#website-requests-segment">Requests</a>
             <a class="item" data-target="#website-failures-segment">Website failures</a>
             <a class="item" data-target="#background-upload-segment">Background upload</a>
+            <a class="item" data-target="#teams-deleted-segment">Teams deleted</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -70,6 +71,9 @@
         </div>
         <div id="background-upload-segment" class="ui segment loading backOffice_part" style="display: none">
             <%@include file="templates/backofficeAdmin/BackgorundUpload.jsp" %>
+        </div>
+        <div id="teams-deleted-segment" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/TeamsDeleted.jsp" %>
         </div>
     </div>
 </div>

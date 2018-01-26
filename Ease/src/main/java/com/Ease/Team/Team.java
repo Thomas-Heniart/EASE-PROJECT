@@ -509,6 +509,10 @@ public class Team {
         return this.getTeamUsers().values().stream().anyMatch(teamUser -> teamUser.getUsername().equals(username));
     }
 
+    public boolean hasTeamUserWithEmail(String email) {
+        return this.getTeamUsers().values().stream().anyMatch(teamUser -> teamUser.getEmail().equals(email));
+    }
+
     public JSONArray getAverageOfClick(int year, int week_of_year, HibernateQuery hibernateQuery) {
         JSONArray res = new JSONArray();
         double day_one = 0.;
