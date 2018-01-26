@@ -212,3 +212,21 @@ export function newFeatureSeen() {
     });
   }
 }
+
+export function setTipSeen({name}) {
+  return (dispatch) => {
+    return post_api.common.tipDone({
+      name: name
+    }).then(response => {
+      dispatch({
+        type: 'SET_TIP_SEEN',
+        payload: {
+          name: name
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}

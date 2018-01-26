@@ -79,6 +79,16 @@ export default function reducer(state=initialState, action) {
         }
       })
     }
+    case 'SET_TIP_SEEN': {
+      const {name} = action.payload;
+      return update(state, {
+        user: {
+          status: {
+            [name]: {$set: true}
+          }
+        }
+      });
+    }
   }
   return state;
 }

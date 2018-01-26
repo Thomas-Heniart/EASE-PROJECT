@@ -37,7 +37,7 @@ class TeamsTutorial extends React.Component {
     steps.push({
       title: 'Click on a name to see all accesses of a person.',
       isFixed: true,
-      selector:"#team_users .section-header > span",
+      selector:"#team_users > .section-list",
       position: 'right'
     });
     if (document.querySelector('#new_member_button'))

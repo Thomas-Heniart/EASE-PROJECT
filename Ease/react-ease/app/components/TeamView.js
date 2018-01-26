@@ -160,6 +160,7 @@ class TeamView extends React.Component {
   };
   render(){
     const team = this.props.teams[this.props.match.params.teamId];
+    const user = this.props.common.user;
     const selectedItem = this.getSelectedItem();
     const me = !!team ? team.team_users[team.my_team_user_id] : null;
     return (
@@ -170,7 +171,7 @@ class TeamView extends React.Component {
             <FreeTrialEndModal team_id={team.id}/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
-            {(me.role < 3 || me.role === 3 && !!me.phone_number) && !this.props.common.user.status.team_tuto_done &&
+            {(me.role < 3 || me.role === 3 && !!me.phone_number) && !user.status.team_tuto_done &&
             <TeamsTutorial/>}
             {this.state.teamMenuActive &&
             <TeamMenu
@@ -182,6 +183,7 @@ class TeamView extends React.Component {
             <div className="client_main_container">
               <TeamHeader
                   item={selectedItem}
+                  user={user}
                   setAddAppView={this.setAddAppView}
                   match={this.props.match}
                   dispatch={this.props.dispatch}/>

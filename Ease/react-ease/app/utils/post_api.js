@@ -1422,6 +1422,11 @@ module.exports = {
           }).catch(err => {
             throw err;
           })
+    },
+    tipDone: ({name}) => {
+      return basic_post('/api/v1/common/TipDone', {
+        name: name
+      })
     }
   }
 };
