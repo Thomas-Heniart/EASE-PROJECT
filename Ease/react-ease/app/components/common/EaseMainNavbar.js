@@ -3,8 +3,9 @@ import {fetchNotifications, validateNotification} from "../../actions/notificati
 import {checkForNewNotifications} from "../../utils/helperFunctions";
 import {teamUserDepartureDatePassed} from "../../utils/utils";
 import {NavLink, withRouter} from "react-router-dom";
-import {processLogout} from "../../actions/commonActions";
+import {processLogout, setGeneralLogoutModal} from "../../actions/commonActions";
 import {connect} from "react-redux";
+import extension from "../../utils/extension_api";
 import {Dropdown, Icon, Menu, Popup} from 'semantic-ui-react';
 
 const TeamsDropdownButton = (
@@ -128,9 +129,11 @@ class EaseMainNavbar extends React.Component {
     })
   };
   logoutFromAllApps = () => {
+    this.props.dispatch(setGeneralLogoutModal({
+      active: true
+    }));
     this.props.dispatch(processLogout()).then(response => {
-      let event = new CustomEvent("Logout");
-      document.dispatchEvent(event);
+      extension.general_logout();
       this.props.history.push('/login');
     });
   };
@@ -146,7 +149,13 @@ class EaseMainNavbar extends React.Component {
             <Dropdown.Menu>
               <Dropdown.Item as={NavLink} to={`/main/settings`} text="Settings" icon="setting"/>
               <Dropdown.Item icon="log out" text="Ease.space Logout" onClick={this.processLogout}/>
-              <Dropdown.Item icon="power" text="General Logout" onClick={this.logoutFromAllApps}/>
+              <Popup size="mini"
+                     inverted
+                     position="bottom center"
+                     trigger={
+                       <Dropdown.Item icon="power" text="General Logout" onClick={this.logoutFromAllApps}/>
+                     }
+                     content='It will logout accounts you connected to, using Ease.space.'/>
             </Dropdown.Menu>
           </Dropdown>
           <NotificationList history={this.props.history}/>

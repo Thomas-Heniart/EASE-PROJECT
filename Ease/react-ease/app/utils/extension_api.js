@@ -18,9 +18,9 @@ const extension_api = {
             if (!response && !!browser.runtime.lastError)
               reject(browser.runtime.lastError.message);
             else if (response.error)
-              reject(response.data);
+              reject(response.response);
             else
-              resolve(response.data);
+              resolve(response.response);
           });
     });
   },
@@ -40,9 +40,68 @@ const extension_api = {
             if (!response && !!browser.runtime.lastError)
               reject(browser.runtime.lastError.message);
             else if (response.error)
-              reject(response.data);
+              reject(response.response);
             else
-              resolve(response.data);
+              resolve(response.response);
+          }
+      )
+    });
+  },
+  general_logout: () => {
+    return new Promise((resolve, reject) => {
+      browser.runtime.sendMessage(
+          extensionId,
+          {
+            type: 'generalLogout'
+          },
+          {},
+          (response) => {
+            if (!response && !!browser.runtime.lastError)
+              reject(browser.runtime.lastError.message);
+            else if (response.error)
+              reject(response.response);
+            else
+              resolve(response.response);
+          }
+      )
+    });
+  },
+  set_homepage: ({state}) => {
+    return new Promise((resolve, reject) => {
+      browser.runtime.sendMessage(
+          extensionId,
+          {
+            type: 'setHomePage',
+            data: state
+          },
+          {},
+          (response) => {
+            if (!response && !!browser.runtime.lastError)
+              reject(browser.runtime.lastError.message);
+            else if (response.error)
+              reject(response.response);
+            else
+              resolve(response.response);
+          }
+      )
+    });
+  },
+  get_homepage: () => {
+    return new Promise((resolve, reject) => {
+      browser.runtime.sendMessage(
+          extensionId,
+          {
+            type: 'getHomePage'
+          },
+          {},
+          (response) => {
+            console.log('response batard', response);
+            if (!response && !!browser.runtime.lastError)
+              reject(browser.runtime.lastError.message);
+            else if (response.error)
+              reject(response.response);
+            else
+              resolve(response.response);
           }
       )
     });

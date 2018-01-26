@@ -14,7 +14,7 @@ class Root extends Component{
       this.props.history.replace('/main/dashboard');
       return;
     }
-    const skip = this.props.cookies.get('skipLanding');
+    const skip = localStorage.getItem('skipLanding');
     if (!!skip)
       this.props.history.replace('/login');
     else
@@ -25,4 +25,4 @@ class Root extends Component{
   }
 }
 
-export default withCookies(Root);
+export default Root;

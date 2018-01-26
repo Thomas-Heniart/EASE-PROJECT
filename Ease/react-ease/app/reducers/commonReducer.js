@@ -6,7 +6,8 @@ const initialState = {
   authenticated : false,
   loginRedirectUrl: '',
   teamsTutorial: false,
-  homepage: false
+  homepage: false,
+  generalLogoutModal: false
 };
 
 export default function reducer(state=initialState, action) {
@@ -39,7 +40,8 @@ export default function reducer(state=initialState, action) {
     }
     case 'LOGOUT_FULFILLED': {
       return {
-          ...initialState
+          ...initialState,
+        generalLogoutModal: state.generalLogoutModal
       }
     }
     case 'SET_TEAMS_TUTORIAL': {
@@ -88,6 +90,12 @@ export default function reducer(state=initialState, action) {
           }
         }
       });
+    }
+    case 'SET_GENERAL_LOGOUT_MODAL_ACTIVE': {
+      const {active} = action.payload;
+      return update(state, {
+        generalLogoutModal: {$set: active}
+      })
     }
   }
   return state;

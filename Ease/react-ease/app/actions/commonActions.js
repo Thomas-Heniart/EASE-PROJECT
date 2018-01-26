@@ -230,3 +230,12 @@ export function setTipSeen({name}) {
     });
   }
 }
+
+export function setGeneralLogoutModal({active}) {
+  return {
+    type: 'SET_GENERAL_LOGOUT_MODAL_ACTIVE',
+    payload: {
+      active: active
+    }
+  }
+}
