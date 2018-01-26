@@ -324,6 +324,7 @@ class NewTeamCreationView extends React.Component {
         for (let i = 1; 15 > i; i++)
           emails.push({email: '', error: ''});
       Promise.all(calls.map(reflect)).then(response => {
+        easeTracker.trackEvent("EaseOnboardingRoomsCreated");
         response.map(item => {
           this.state.rooms.map(room => {
             if (room.name === item.data.name) {
