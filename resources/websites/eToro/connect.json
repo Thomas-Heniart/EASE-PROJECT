@@ -5,6 +5,10 @@
   "connect": {
     "todo": [
       {
+        "action": "goto",
+        "url": "https://www.etoro.com/login"
+      },
+      {
         "action": "fill",
         "what": "login",
         "search": "#username"
@@ -39,7 +43,7 @@
   "checkAlreadyLogged": [
     {
       "action": "waitfor",
-      "search": "form[name='loginForm'] button, a[ng-click*='logout']"
+      "search": "a[href$='login'], form[name='loginForm'] button, a[ng-click*='logout']"
     },
     {
       "search": "a[ng-click*='logout']"
