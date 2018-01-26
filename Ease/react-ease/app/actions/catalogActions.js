@@ -1,6 +1,7 @@
 import api from "../utils/api";
 import post_api from "../utils/post_api";
 import {addNotification} from "./notificationBoxActions";
+import extension from "../utils/extension_api";
 
 export function fetchCatalog(){
   return (dispatch,getState) => {
@@ -45,6 +46,10 @@ export function getImportedAccounts() {
 
 export function testCredentials({account_information, website_id}) {
   return (dispatch, getState) => {
+    extension.test_website_connection({
+      website_id: website_id,
+      account_information: account_information
+    });
     api.getWebsiteConnection({account_information, website_id})
       .then(response => {
         dispatch({type: 'TEST_CREDENTIALS'});

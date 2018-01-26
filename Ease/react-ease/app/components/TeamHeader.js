@@ -3,6 +3,7 @@ var classnames = require('classnames');
 var EaseMainNavbar = require('./common/EaseMainNavbar');
 import {NavLink, withRouter} from "react-router-dom";
 import Joyride from "react-joyride";
+import {setTipSeen} from "../actions/commonActions";
 
 const FlexPanelButton = ({location, match}) => {
     const isActive = location.pathname === `${match.url}/flexPanel`;
@@ -17,7 +18,7 @@ const FlexPanelButton = ({location, match}) => {
 const FlexPanelButtonWithRouter = withRouter(FlexPanelButton);
 
 function TeamHeader(props){
-  const {item} = props;
+  const {item, user, dispatch} = props;
   return (
       <header id="client_header">
         <div className="channel_header">
@@ -47,7 +48,7 @@ function TeamHeader(props){
               </div>
             </div>
           </div>
-          {!!item.team_user_ids && !item.default && !localStorage.getItem('team_room_settings_tip') &&
+          {!!item.team_user_ids && !item.default && !user.status.tip_team_channel_settings_seen &&
           <Joyride
               steps={[{
                 title: 'Edit rooms here to add or remove people.',
@@ -59,11 +60,13 @@ function TeamHeader(props){
               disableOverlay={true}
               run={true}
               callback={(action) => {
-                  if (action.type === 'finished')
-                    localStorage.setItem('team_room_settings_tip', true);
+                if (action.type === 'finished')
+                  dispatch(setTipSeen({
+                    name: 'tip_team_channel_settings_seen'
+                  }));
               }}
           />}
-          {!!item.room_ids && !localStorage.getItem('team_user_settings_tip') &&
+          {!!item.room_ids && !user.status.tip_team_user_settings_seen &&
           <Joyride
               steps={[{
                 title: <span>Setup personal settings of a user here <span class="fw-normal">(ex: departure date).</span></span>,
@@ -76,7 +79,9 @@ function TeamHeader(props){
               run={true}
               callback={(action) => {
                 if (action.type === 'finished')
-                  localStorage.setItem('team_user_settings_tip', true);
+                  dispatch(setTipSeen({
+                    name: 'tip_team_user_settings_seen'
+                  }));
               }}
           />}
           <EaseMainNavbar/>
