@@ -5,7 +5,6 @@ class InformationEmail extends React.Component {
   render() {
     const {
       error,
-      loading,
       email,
       check,
       onChange
@@ -49,7 +48,6 @@ class InformationConfirmationCode extends React.Component {
   render() {
     const {
       error,
-      loading,
       onChange,
       confirmationCode
     } = this.props;
@@ -90,6 +88,7 @@ class InformationConfirmationCode extends React.Component {
           </div>
         </div>
         <p>Keep this window open while getting your code</p>
+        <Message error content={error}/>
       </React.Fragment>
     )
   }
@@ -147,7 +146,9 @@ class InformationCompany extends React.Component {
   render() {
     const {
       check,
+      error,
       onChange,
+      onChangeSize,
       companyName,
       companySize,
       firstName,
@@ -176,7 +177,7 @@ class InformationCompany extends React.Component {
               placeholder='65'
               name='companySize'
               value={companySize}
-              onChange={onChange}/>
+              onChange={onChangeSize}/>
           </div>
         </div>
         <div style={{display:'inline-flex'}}>
@@ -212,6 +213,7 @@ class InformationCompany extends React.Component {
             <a target='_blank' href='/resources/Privacy_Policy.pdf'> Privacy Policy</a>.
           </span>
         </div>
+        <Message error content={error}/>
       </React.Fragment>
     )
   }
@@ -222,10 +224,10 @@ class OnBoardingInformations extends React.Component {
     const {
       view,
       error,
-      loading,
       email,
       checkEmail,
       handleInput,
+      onChangeSize,
       handleConfirmationCode,
       confirmationCode,
       phone,
@@ -245,13 +247,11 @@ class OnBoardingInformations extends React.Component {
           <InformationEmail
             error={error}
             email={email}
-            loading={loading}
             check={checkEmail}
             onChange={handleInput}/>}
         {view === 2 &&
           <InformationConfirmationCode
             error={error}
-            loading={loading}
             onChange={handleConfirmationCode}
             confirmationCode={confirmationCode}/>}
         {view === 3 &&
@@ -264,12 +264,14 @@ class OnBoardingInformations extends React.Component {
             verificationPassword={verificationPassword}/>}
         {view === 4 &&
           <InformationCompany
+            onChangeSize={onChangeSize}
             companyName={companyName}
             companySize={companySize}
             onChange={handleInput}
             firstName={firstName}
             lastName={lastName}
-            check={checkCGU}/>}
+            check={checkCGU}
+            error={error}/>}
       </React.Fragment>
     )
   }

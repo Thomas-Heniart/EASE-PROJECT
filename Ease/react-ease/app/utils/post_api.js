@@ -1460,8 +1460,5 @@ module.exports = {
         throw err;
       })
     }
-  },
-  clearbit: {
-
   }
 };

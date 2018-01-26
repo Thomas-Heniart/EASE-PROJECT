@@ -96,3 +96,22 @@ export function getInfoClearbit({email}) {
     });
   }
 }
+
+export function createTeam({name, email, username, company_size, digits ,plan_id}) {
+  return (dispatch, getState) => {
+    return post_api.teams.createTeam({
+      name: name,
+      email: email,
+      username: username,
+      company_size: company_size,
+      digits: digits,
+      plan_id: plan_id,
+      ws_id: getState().common.ws_id})
+      .then(response => {
+        dispatch({type: 'TEAM_CREATED', payload: {team: response}});
+        return response;
+      }).catch(err => {
+        throw err;
+      })
+  }
+}

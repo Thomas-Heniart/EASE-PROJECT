@@ -16,7 +16,9 @@ class OnBoardingGroups extends React.Component {
   };
   render() {
     const {rooms, roomsSelected, users} = this.props;
-    const roomsList = rooms.map(item => (
+    const roomsToShow = rooms.filter(item => {
+      return item.id && item.name !== 'openspace' && roomsSelected.filter(room_id => {return item.id === room_id}).length > 0;});
+    const roomsList = roomsToShow.map(item => (
       <div key={item.id} style={{marginBottom:'25px'}}>
         <p style={{fontWeight:'bold'}}>Who uses #{item.name} passwords?</p>
         <Dropdown

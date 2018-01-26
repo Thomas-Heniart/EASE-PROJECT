@@ -67,21 +67,30 @@ class ChoosePasswordManager extends React.Component {
 
 class ChooseApps extends React.Component {
   render() {
-    const {passwordManagerSelected, websites, currentRoom, roomsSelected} = this.props;
+    const {passwordManagerSelected, appsSelected, websites, currentRoom, rooms, selectApp} = this.props;
+    const room = rooms.filter((item, idx) => {
+      if (currentRoom === idx)
+        return item;
+    })[0];
     return (
       <React.Fragment>
         {currentRoom === 1 &&
         <Header as='h1'>Select tools everybody uses in your team</Header>}
         {currentRoom > 1 &&
-        <Header as='h1'>Select accounts used in #{roomsSelected[currentRoom]}</Header>}
+        <Header as='h1'>Select accounts used in #{room.name}</Header>}
         <Grid columns={4} className="logoCatalog">
-          {websites.map((item) =>
-            <Grid.Column key={item.id} as='a' className="showSegment" onClick={e => console.log('chooose')}>
-              <Image src={item.logo}/>
-              <p>{item.name}</p>
-              <Icon name="add square"/>
-            </Grid.Column>
-          )}
+          {room.website_ids.map(id => (
+            <Grid.Column key={id}
+                         as='a'
+                         className={appsSelected.filter(appId => {return appId === id}).length > 0 ? "active showSegment" : "showSegment"}
+                         onClick={e => selectApp(id)}>
+              <div className='appLogo'>
+                <Image src={websites[id].logo}/>
+                <Icon className='iconCheck' name="check"/>
+              </div>
+                <p>{websites[id].name}</p>
+              </Grid.Column>
+          ))}
         </Grid>
       </React.Fragment>
     )
@@ -95,9 +104,13 @@ class OnBoardingAccounts extends React.Component {
   render() {
     const {
       view,
+      rooms,
       nextRoom,
+      selectApp,
       currentRoom,
+      appsSelected,
       roomsSelected,
+      roomsWebsites,
       selectPasswordManager,
       passwordManagerSelected} = this.props;
     return (
@@ -108,9 +121,12 @@ class OnBoardingAccounts extends React.Component {
             passwordManagerSelected={passwordManagerSelected}/>}
         {view === 2 &&
           <ChooseApps
+            rooms={rooms}
+            selectApp={selectApp}
+            appsSelected={appsSelected}
             currentRoom={currentRoom}
             roomsSelected={roomsSelected}
-            websites={this.props.websites}
+            websites={roomsWebsites}
             passwordManagerSelected={passwordManagerSelected}/>}
       </React.Fragment>
     )

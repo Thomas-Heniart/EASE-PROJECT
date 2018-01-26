@@ -4,7 +4,8 @@ import { Header } from 'semantic-ui-react';
 class OnBoardingRooms extends React.Component {
   render() {
     const {rooms, roomsSelected, selectRoom} = this.props;
-    const roomsList = rooms.map(item => (
+    const roomsWithoutOpenSpace = rooms.filter(item => {return item.name !== 'openspace'});
+    const roomsList = roomsWithoutOpenSpace.map(item => (
       <div
         key={item.id}
         onClick={e => selectRoom(item.id)}
