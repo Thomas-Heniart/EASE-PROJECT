@@ -230,4 +230,8 @@ public class ClickOnApp {
             days_clicked++;
         return days_clicked >= number_of_days;
     }
+
+    public int getTotalClicks() {
+        return this.getDay_one() + this.getDay_two() + this.getDay_three() + this.getDay_four() + this.getDay_five() + this.getDay_six() + this.getDay_seven();
+    }
 }

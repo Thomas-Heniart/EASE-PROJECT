@@ -191,6 +191,14 @@ $(document).ready(function () {
             target.removeClass("loading");
           });
           break;
+        case "teams-deleted-segment":
+          ajaxHandler.get("/api/v1/admin/TeamsDeleted", null, () => {
+
+          }, (data) => {
+            populateTeamsDeleted(data);
+            target.removeClass("loading");
+          }, (error) => alert(error));
+          break;
         default:
           target.removeClass("loading");
           break;
@@ -557,10 +565,6 @@ function openWebsiteIntegration(website, websiteElem) {
     $("input", alternative_urls_content).each((i, elem) => {
       var jElem = $(elem);
       new_alternative_urls.push(jElem.val());
-      /* new_alternative_urls.push({
-          id: jElem.getAttribute("alternative_url_id"),
-          url: jElem.val()
-      }) */
     });
     ajaxHandler.post(action, {
       id: website.id,
@@ -628,6 +632,7 @@ function openWebsiteIntegration(website, websiteElem) {
           .removeClass("active")
           .removeClass("filtered");
         $("input.search").val("");
+        $(".field", alternative_urls_content).remove();
       }
     })
     .modal("show");
@@ -1048,3 +1053,16 @@ function getBase64(file) {
     reader.onerror = (error) => reject(error);
   });
 }
+
+populateTeamsDeleted = (data) => {
+  let tableBody = $("#teams-deleted-body");
+  data.forEach((elem, index) => {
+    let jElem = $("<tr>" +
+      "<td>" + (index + 1) + "</td>" +
+      "<td>" + elem.name + "</td>" +
+      "<td>" + elem.email + "</td>" +
+      "<td>" + elem.phone_number + "</td>" +
+      "</tr>");
+    jElem.appendTo(tableBody);
+  });
+};

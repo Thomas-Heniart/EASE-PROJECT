@@ -47,6 +47,12 @@ public class UserStatus {
     @Column(name = "new_feature_seen")
     private boolean new_feature_seen = false;
 
+    @Column(name = "tip_team_user_settings_seen")
+    private boolean tip_team_user_settings_seen = false;
+
+    @Column(name = "tip_team_channel_settings_seen")
+    private boolean tip_team_channel_settings_seen = false;
+
     public UserStatus() {
 
     }
@@ -147,6 +153,22 @@ public class UserStatus {
         this.new_feature_seen = new_feature_seen;
     }
 
+    public boolean isTip_team_user_settings_seen() {
+        return tip_team_user_settings_seen;
+    }
+
+    public void setTip_team_user_settings_seen(boolean tip_team_user_settings_seen) {
+        this.tip_team_user_settings_seen = tip_team_user_settings_seen;
+    }
+
+    public boolean isTip_team_channel_settings_seen() {
+        return tip_team_channel_settings_seen;
+    }
+
+    public void setTip_team_channel_settings_seen(boolean tip_team_channel_settings_seen) {
+        this.tip_team_channel_settings_seen = tip_team_channel_settings_seen;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -167,6 +189,21 @@ public class UserStatus {
         res.put("tuto_done", this.isTuto_done());
         res.put("team_tuto_done", this.isTeam_tuto_done());
         res.put("terms_reviewed", this.isTerms_reviewed());
+        res.put("tip_team_user_settings_seen", this.isTip_team_user_settings_seen());
+        res.put("tip_team_channel_settings_seen", this.isTip_team_channel_settings_seen());
         return res;
+    }
+
+    public void setTip(String name, boolean value) {
+        switch (name) {
+            case "tip_team_user_settings_seen":
+                this.setTip_team_user_settings_seen(value);
+                break;
+            case "tip_team_channel_settings_seen":
+                this.setTip_team_channel_settings_seen(value);
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -84,6 +84,8 @@ public class OnStart implements ServletContextListener {
                 time.schedule(metricsSchedulerTask, 0, 12 * 60 * 60 * 1000);
                 PostRegistrationEmailScheduledTask postRegistrationEmailScheduledTask = new PostRegistrationEmailScheduledTask();
                 time.schedule(postRegistrationEmailScheduledTask, next_clock, 24 * 60 * 60 * 1000);
+                StatsScheduledTask statsScheduledTask = new StatsScheduledTask();
+                time.schedule(statsScheduledTask, next_clock, 24 * 60 * 60 * 1000);
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
