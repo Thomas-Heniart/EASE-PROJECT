@@ -5,5 +5,6 @@ public enum OnboardingSteps {
     ROOMS_CREATED,
     TEAM_USERS_CREATED,
     TEAM_USERS_ADDED_TO_ROOMS,
+    IMPORTATION,
     TEAM_CARDS_CREATED
 }
