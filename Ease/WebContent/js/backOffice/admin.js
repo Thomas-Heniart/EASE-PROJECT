@@ -565,10 +565,6 @@ function openWebsiteIntegration(website, websiteElem) {
     $("input", alternative_urls_content).each((i, elem) => {
       var jElem = $(elem);
       new_alternative_urls.push(jElem.val());
-      /* new_alternative_urls.push({
-          id: jElem.getAttribute("alternative_url_id"),
-          url: jElem.val()
-      }) */
     });
     ajaxHandler.post(action, {
       id: website.id,
@@ -636,6 +632,7 @@ function openWebsiteIntegration(website, websiteElem) {
           .removeClass("active")
           .removeClass("filtered");
         $("input.search").val("");
+        $(".field", alternative_urls_content).remove();
       }
     })
     .modal("show");
