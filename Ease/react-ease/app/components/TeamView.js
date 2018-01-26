@@ -94,7 +94,7 @@ class TeamView extends React.Component {
       this.autoSelectItem();
     }
     const me = team.team_users[team.my_team_user_id];
-    if (me.phone_number === null && me.role === 3){
+    if (!me.phone_number && me.role === 3){
       this.props.dispatch(modalActions.showTeamPhoneNumberModal({
         active: true,
         team_id: team.id,
@@ -170,6 +170,8 @@ class TeamView extends React.Component {
             <FreeTrialEndModal team_id={team.id}/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
+            {(me.role < 3 || me.role === 3 && !!me.phone_number) && !this.props.common.user.status.team_tuto_done &&
+            <TeamsTutorial/>}
             {this.state.teamMenuActive &&
             <TeamMenu
                 closeMenu={this.setTeamMenu.bind(null, false)}
@@ -184,10 +186,6 @@ class TeamView extends React.Component {
                   match={this.props.match}
                   dispatch={this.props.dispatch}/>
               <div className="team_client_body bordered_scrollbar">
-                <OpacityTransition appear={true}>
-                  {!!this.props.common.user && !this.props.common.user.status.team_tuto_done &&
-                  <TeamsTutorial team_id={team.id}/>}
-                </OpacityTransition>
                 <div id="col_main">
                   {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
                   <TeamAppAddingUi

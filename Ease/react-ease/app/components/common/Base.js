@@ -9,15 +9,13 @@ import {fetchDashboard} from "../../actions/dashboardActions";
 import {fetchTeams} from "../../actions/teamActions";
 import {fetchMyInformation, setHomepage, fetchCriticalParts} from "../../actions/commonActions";
 import api from "../../utils/api";
-import ReactTooltip from 'react-tooltip';
 import WebsocketClient from './WebsocketClient';
 import ModalsContainer from "./ModalsContainer";
 import {showNewFeatureModal} from "../../actions/modalActions";
 
 @connect((store)=>{
   return {
-    common: store.common,
-    listener: store.listener
+    common: store.common
   };
 })
 class Base extends React.Component {
@@ -76,20 +74,6 @@ class Base extends React.Component {
     else
       return (
           <div id="app-root">
-            <ReactTooltip place="bottom"
-                          type="dark"
-                          globalEventOff="click"
-                          effect="solid"
-                          class="ease_tooltip"
-                          multiline={true}
-                          delayShow={300}/>
-            <ReactTooltip effect="solid"
-                          class="teams_tutorial_tooltip"
-                          type="warning"
-                          multiline={true}
-                          place="bottom"
-                          event="dblclick"
-                          eventOff="dblclick"/>
             <WebsocketClient/>
             {this.props.children}
             <ModalsContainer/>
