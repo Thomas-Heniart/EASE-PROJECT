@@ -2,7 +2,7 @@ const extensionId = 'hnacegpfmpknpdjmhdmpkmedplfcmdmp';
 const browser = window.msBrowser || window.chrome || window.browser;
 
 const extension_api = {
-  app_connection: ({app_id, active_tab}) => {
+  app_connection: ({app_id, active_tab, website}) => {
     return new Promise((resolve, reject) => {
       browser.runtime.sendMessage(
           extensionId,
@@ -10,7 +10,8 @@ const extension_api = {
             type: 'app_connection',
             data: {
               app_id: app_id,
-              active_tab: active_tab
+              active_tab: active_tab,
+              website: website
             }
           },
           {},
