@@ -156,17 +156,17 @@ class CredentialsSingleApps extends React.Component {
         <Input size='mini'
                name='name'
                type='text'
-               onChange={e => handleAppInfo(id)}
+               onChange={(e, name, value) => {handleAppInfo(id, name, value)}}
                value={credentialsSingleApps[id].name}/>
         <Input size='mini'
                type='text'
                name='login'
-               onChange={e => handleAppInfo(id)}
+               onChange={(e, name, value) => {handleAppInfo(id, name, value)}}
                value={credentialsSingleApps[id].login}
                disabled={this.state.fourthField[id] === 1}/>
         <Input size='mini'
                name='password'
-               onChange={e => handleAppInfo(id)}
+               onChange={(e, name, value) => {handleAppInfo(id, name, value)}}
                value={credentialsSingleApps[id].password}
                disabled={this.state.fourthField[id] === 1}
                icon={<Icon name='eye' link onClick={e => this.seePassword(id)}/>}
@@ -211,7 +211,6 @@ class OnBoardingAccounts extends React.Component {
       view,
       rooms,
       users,
-      nextRoom,
       selectApp,
       singleApps,
       currentRoom,

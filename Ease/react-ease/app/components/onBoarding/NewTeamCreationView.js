@@ -54,7 +54,8 @@ class NewTeamCreationView extends React.Component {
       roomsWebsites: {},
       appsSelected: [],
       value: {},
-      singleApps: {}
+      singleApps: {},
+      credentialsSingleApps: {}
     };
   }
   componentWillMount() {
@@ -89,6 +90,10 @@ class NewTeamCreationView extends React.Component {
       this.setState({[name]: value, error: ''});
     else
       this.setState({error: 'We’ve never seen companies with less than 1 person in it! Are you sure about your company size?'});
+  };
+  handleAppInfo = (id, {name, value}) => {
+    this.state.credentialsSingleApps[id][name] = value;
+    this.setState({credentialsSingleApps: this.state.credentialsSingleApps});
   };
   selectRoom = (id) => {
     const roomsSelected = this.state.roomsSelected.filter(item => {
@@ -341,7 +346,7 @@ class NewTeamCreationView extends React.Component {
     }
     else if (this.state.viewAccounts === 3) {
       // Choose if single or enterprise / create enterpriseCard
-      if (this.state.rooms.length - 1 > this.state.currentRoom) {
+      if (this.state.roomsSelected.length - 1 > this.state.currentRoom) {
         let calls = [];
         const enterpriseApp = this.state.appsSelected.filter(app_id => {
           return this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(single_id => {
@@ -536,6 +541,7 @@ class NewTeamCreationView extends React.Component {
                        render={(props) =>
                          <OnBoardingAccounts
                            passwordManagerSelected={this.state.passwordManagerSelected}
+                           credentialsSingleApps={this.state.credentialsSingleApps}
                            selectPasswordManager={this.selectPasswordManager}
                            roomsWebsites={this.state.roomsWebsites}
                            roomsSelected={this.state.roomsSelected}
