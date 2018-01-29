@@ -59,8 +59,8 @@ public class CreateTeamSoftwareEnterpriseCard extends HttpServlet {
                 software = SoftwareFactory.getInstance().createSoftwareAndLogo(name, folder, logo_url, connection_information, hibernateQuery);
             }
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             TeamEnterpriseSoftwareCard teamEnterpriseSoftwareCard = new TeamEnterpriseSoftwareCard(name, team, channel, description, software, password_reminder_interval);
             sm.saveOrUpdate(teamEnterpriseSoftwareCard);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);

@@ -59,8 +59,8 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
                 website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
             }
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval cannot be under 0");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             TeamCard teamCard = new TeamEnterpriseCard(name, team, channel, description, website, password_reminder_interval);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);

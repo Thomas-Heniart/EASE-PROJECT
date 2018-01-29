@@ -42,8 +42,8 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must be part of the room.");
             Integer website_id = sm.getIntParam("website_id", true, false);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             String name = sm.getStringParam("name", true, false);

@@ -61,8 +61,8 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
             sm.decipher(account_information);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             TeamSingleSoftwareCard teamSingleSoftwareCard = new TeamSingleSoftwareCard(name, team, channel, description, software);
             Account account = null;
             String teamKey = sm.getTeamKey(team);
