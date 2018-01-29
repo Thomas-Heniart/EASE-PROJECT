@@ -1,0 +1,59 @@
+{
+  "name": "Tin Squash",
+  "lastlogin": "",
+  "home": "http://www.tinsquash.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".loginBtn"
+      },
+      {
+        "action": "waitfor",
+        "search": "form[action*='login']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "form[action*='login'] input[name='email']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "form[action*='login'] input[name='pass']"
+      },
+      {
+        "action": "trueClick",
+        "search": "form[action*='login'] input[type='submit']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".loggedBtn"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".loggedBtn, .loginBtn"
+    },
+    {
+      "search": ".loggedBtn"
+    }
+  ]
+}

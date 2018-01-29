@@ -96,3 +96,13 @@ UPDATE status SET onboarding_step = 2;
 
 ALTER TABLE userPendingRegistrations ADD COLUMN newsletter TINYINT(1) UNSIGNED NOT NULL DEFAULT 1;
 UPDATE userPendingRegistrations SET newsletter = 1;
+
+ALTER TABLE teams
+  ADD COLUMN invitations_sent TINYINT(1) NOT NULL DEFAULT 0;
+UPDATE teams
+SET invitations_sent = 0;
+UPDATE teams
+SET invitations_sent = 1
+WHERE id IN (SELECT DISTINCT team_id
+             FROM teamUsers
+             WHERE state > 0);

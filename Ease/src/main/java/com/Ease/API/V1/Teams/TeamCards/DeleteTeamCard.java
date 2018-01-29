@@ -6,6 +6,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
@@ -68,6 +70,19 @@ public class DeleteTeamCard extends HttpServlet {
                 if (!teamUser.equals(sm.getTeamUser(team)))
                     NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_admin, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());
                 teamUser.removeTeamCardReceiver(teamCardReceiver);
+            }
+            if (teamCard.isTeamSingleCard()) {
+                if (teamCard.isTeamSoftwareCard()) {
+                    TeamSingleSoftwareCard teamSingleSoftwareCard = (TeamSingleSoftwareCard) teamCard;
+                    TeamUser teamUser = teamSingleSoftwareCard.getTeamUser_filler_test();
+                    if (teamUser != null)
+                        teamUser.removeTeamSingleSoftwareCardToFill(teamSingleSoftwareCard);
+                } else {
+                    TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                    TeamUser teamUser = teamSingleCard.getTeamUser_filler();
+                    if (teamUser != null)
+                        teamUser.removeTeamSingleCardToFill(teamSingleCard);
+                }
             }
             team.removeTeamCard(teamCard);
             channel.removeTeamCard(teamCard);

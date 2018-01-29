@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +42,28 @@ public class ServletImportedAccount extends HttpServlet {
             if (website != null && !website.getWebsiteAttributes().isIntegrated())
                 website = null;
             String name = sm.getStringParam("name", true, false);
+            if (name.isEmpty() || name.length() > 255) {
+                if (website != null)
+                    name = website.getName();
+                else {
+                    URL aUrl;
+                    try {
+                        aUrl = new URL(url);
+                    } catch (MalformedURLException e) {
+                        throw new HttpServletException(HttpStatus.BadRequest, "Malformated url");
+                    }
+                    String[] host_parsed = aUrl.getHost().split("\\.");
+                    if (host_parsed.length == 2)
+                        name = host_parsed[0];
+                    else if (host_parsed.length > 2) {
+                        if (host_parsed[0].equals("www"))
+                            name = host_parsed[1] + " " + host_parsed[2];
+                        else
+                            name = host_parsed[0] + " " + host_parsed[1];
+                    } else
+                        throw new HttpServletException(HttpStatus.BadRequest, "Malformated url");
+                }
+            }
             ImportedAccount importedAccount = new ImportedAccount(url, website, name, user);
             String symmetric_key = sm.getKeyUser();
             for (Object object : account_information.keySet()) {

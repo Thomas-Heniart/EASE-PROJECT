@@ -209,7 +209,7 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
   }
 }
 
-export function teamCreateAnySingleCard({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers}) {
+export function teamCreateAnySingleCard({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers, credentials_provided}) {
   return (dispatch, getState) => {
     return post_api.teamApps.createTeamAnySingleCard({
       team_id: team_id,
@@ -223,6 +223,7 @@ export function teamCreateAnySingleCard({team_id, channel_id, name, description,
       team_user_filler_id: team_user_filler_id,
       account_information: account_information,
       receivers: receivers,
+      credentials_provided: credentials_provided,
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch(teamCardCreatedAction({team_card: team_card}));

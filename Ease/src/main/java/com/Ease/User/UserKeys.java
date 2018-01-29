@@ -110,6 +110,8 @@ public class UserKeys {
     }
 
     public String getDecipheredPrivateKey(String keyUser) throws HttpServletException {
+        if (this.getPrivateKey() == null || this.getPrivateKey().equals(""))
+            return null;
         return AES.decrypt(this.getPrivateKey(), keyUser);
     }
 

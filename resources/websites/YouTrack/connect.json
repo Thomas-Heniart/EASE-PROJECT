@@ -1,0 +1,24 @@
+{
+  "name":"YouTrack",
+  "lastLogin":"",
+  "home":{"http":"https://", "subdomain":"team", "domain":"myjetbrains.com/"},
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":"form button[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"div[data-test='header-user-menu']"},
+      {"action":"waitfor", "search":"a[href*='youtrack/users/me'] + a"},
+      {"action":"trueClick", "search":"a[href*='youtrack/users/me'] + a"},
+      {"action":"waitfor", "search":"#username"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#username, div[data-test='header-user-menu']"},
+    {"search":"div[data-test='header-user-menu']"}
+  ]
+}

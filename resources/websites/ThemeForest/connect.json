@@ -1,0 +1,22 @@
+{
+	"name":"ThemeForest",
+	"lastLogin":"",
+	"home":"https://themeforest.net/",
+	"connect":{
+		"todo":[
+			{"action": "trueClick", "search": ".h-pl1"},
+			{"action": "waitfor", "search": "#sso_sign_in_form_username"},
+			{"action":"fill", "what":"login", "search":"#sso_sign_in_form_username", "grave":true},
+			{"action":"fill", "what":"password", "search":"#sso_sign_in_form_password", "grave":true},
+			{"action":"trueClick", "search":"#sign-in-form input[name=commit]", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":".h-pb0"},
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":"body[data-user-signed-in=true]"}
+	]
+}

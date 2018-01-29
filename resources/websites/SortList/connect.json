@@ -1,0 +1,44 @@
+{
+	"name":"SortList",
+	"lastLogin":"",
+	"home":"https://client.sortlist.com",
+	"connect":{
+		"todo":[
+			{"action": "waitfor", "search": ".auth0-lock-form input[name=email]"},
+			{"action": "waitfor", "search": ".auth0-lock-form input[name=password]"},
+			{"action": "waitfor", "search": ".auth0-lock-submit"},
+			{"action":"fill", "what":"login", "search":".auth0-lock-form input[name=email]", "grave":true},
+			{"action":"fill", "what":"password", "search":".auth0-lock-form input[name=password]", "grave":true},
+			{"action":"trueClick", "search":".auth0-lock-submit", "grave":true}
+		]
+	},
+	"Facebook": {
+		"todo": [
+			{"action": "waitfor", "search": ".auth0-lock-social-button[data-provider=facebook]"},
+			{"action": "trueClick", "search": ".auth0-lock-social-button[data-provider=facebook]"}
+		]
+	},
+	"LinkedIn": {
+		"todo": [
+			{"action": "waitfor", "search": ".auth0-lock-social-button[data-provider=linkedin]"},
+			{"action": "trueClick", "search": ".auth0-lock-social-button[data-provider=linkedin]"}
+		]
+	},
+	"Google": {
+		"todo": [
+			{"action": "waitfor", "search": ".auth0-lock-social-button[data-provider=google-oauth2]"},
+			{"action": "trueClick", "search": ".auth0-lock-social-button[data-provider=google-oauth2]"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"trueClick", "search":"button[ng-click*=Logout]"},
+			{"action": "waitload"}
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"action": "waitfor", "search": "#sl-user, .auth0-lock-form"},
+		{"search":"#sl-user"}
+		
+	]
+}

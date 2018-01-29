@@ -12,7 +12,6 @@ import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "./CustomDragLayer";
 import { DropTarget, DragSource } from 'react-dnd';
 import withScrolling from 'react-dnd-scrollzone';
-
 const ScrollingComponent = withScrolling('div');
 
 @connect(store => ({

@@ -7,7 +7,9 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import javax.persistence.NoResultException;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +31,10 @@ public class HibernateQuery {
         this.query = this.session.createQuery(query);
     }
 
+    public void cacheQuery() {
+        this.query.setCacheable(true);
+    }
+
     public void querySQLString(String query) {
         this.query = this.session.createNativeQuery(query);
     }
@@ -43,6 +49,10 @@ public class HibernateQuery {
 
     public void setParameter(int i, Object value) {
         this.query.setParameter(i, value);
+    }
+
+    public void setDate(String name, Date date) {
+        this.query.setParameter(name, date, TemporalType.TIMESTAMP);
     }
 
     public List list() {

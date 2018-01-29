@@ -19,25 +19,25 @@ pageEncoding="UTF-8"%>
 	content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00034/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00036/lib/fonts/museo-font.css"/>
 
 
 
 	<link rel="manifest" href="manifest.json">
 
-    <script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-    <script src="/jsMinified.v00022/bootstrap.js"></script>
-    <script src="/jsMinified.v00022/basic-utils.js"></script>
-    <script src="/jsMinified.v00022/tracker.js"></script>
-    <script src="/jsMinified.v00022/postHandler.js"></script>
-    <script src="/jsMinified.v00022/languageChooser.js"></script>
+    <script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00023/bootstrap.js"></script>
+    <script src="/jsMinified.v00023/basic-utils.js"></script>
+    <script src="/jsMinified.v00023/tracker.js"></script>
+    <script src="/jsMinified.v00023/postHandler.js"></script>
+    <script src="/jsMinified.v00023/languageChooser.js"></script>
 
 	<link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00034/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00034/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00034/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00034/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00034/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {
@@ -50,7 +50,7 @@ pageEncoding="UTF-8"%>
 	<script type="text/javascript">
 		(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script");r.type="text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00022/amplitude-analytics.js";
+            r.src = "/jsMinified.v00023/amplitude-analytics.js";
 			r.onload=function(){e.amplitude.runQueuedFunctions()};var i=t.getElementsByTagName("script")[0];
 			i.parentNode.insertBefore(r,i);function s(e,t){e.prototype[t]=function(){this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));
 				return this}}var o=function(){this._q=[];return this};var a=["add","append","clearAll","prepend","set","setOnce","unset"];

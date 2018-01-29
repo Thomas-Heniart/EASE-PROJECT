@@ -1,0 +1,25 @@
+{
+	"name":"Made",
+	"lastLogin":"",
+	"home":"https://www.made.com/customer/account/login",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#login-form #email", "grave":true},
+			{"action":"fill", "what":"password", "search":"#login-form #pass", "grave":true},
+			{"action":"trueClick", "search":"#login-form #send2", "grave":true}
+		]
+	},
+	"Facebook": {
+		"todo": [
+			{"action": "aclick", "search": ".inchoo-socialconnect-login-lower-facebook a"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"#my_account_links a[href*=logout]"},
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#my_account_links a[href*=logout]"}
+	]
+}

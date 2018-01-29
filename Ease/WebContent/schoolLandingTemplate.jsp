@@ -41,12 +41,12 @@
     <link rel="manifest" href="manifest.json">
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00034/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00034/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00034/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00034/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00036/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00036/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00034/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00036/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
 </head>
 
 <body id="landingBody" class="school">
@@ -229,15 +229,15 @@
 <%@ include file="templates/landingPage/schoolLandingFooter.jsp" %>
 <%@ include file="templates/landingPage/registrationPopup.jsp" %>
 </body>
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/jquery.complexify.js"></script>
-<script src="/jsMinified.v00022/bootstrap.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/registrationPopup.js" async></script>
-<script src="/jsMinified.v00022/landingPage.js" async></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/languageChooser.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/jquery.complexify.js"></script>
+<script src="/jsMinified.v00023/bootstrap.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/registrationPopup.js" async></script>
+<script src="/jsMinified.v00023/landingPage.js" async></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/languageChooser.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
 <script type="text/javascript">
     window.addEventListener('load', function () {
         $crisp = [];
@@ -258,7 +258,7 @@
             var r = t.createElement("script");
             r.type = "text/javascript";
             r.async = true;
-            r.src = "/jsMinified.v00022/amplitude-analytics.js";
+            r.src = "/jsMinified.v00023/amplitude-analytics.js";
             r.onload = function () {
                 e.amplitude.runQueuedFunctions()
             };
