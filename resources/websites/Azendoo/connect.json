@@ -5,15 +5,15 @@
 	"connect":{
 		"todo":[
 			{"action":"fill", "what":"login", "search":"#email"},
+			{"action":"trueClick", "search":"button[type='submit']"},
+			{"action":"waitfor", "search":"form div[class='form-group form-group--auth-app'] #password"},
 			{"action":"fill", "what":"password", "search":"#password"},
-			{"action":"click", "search":"button[type='submit']"}
+			{"action":"trueClick", "search":"button[type='submit']"}
 		]
 	},
 	"logout":{
 		"todo":[
-			{"action":"clickona", "search":"#topmenu-user-menu"},
-			{"action":"waitfor", "search":"a[href='/logout']"},
-			{"action":"clickona", "search":"a[href='/logout']"}
+			{"action":"trueClick", "search":".dropdown-menu.dropdown-menu-right li:last-child() a"}
 		]
 	},
 	"checkAlreadyLogged":[

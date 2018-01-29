@@ -39,7 +39,7 @@ class TeamLinkApp extends Component {
             <NewAppLabel/>}
             {teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
-            {me.disabled &&
+            {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.process}/>

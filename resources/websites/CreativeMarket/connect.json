@@ -1,0 +1,69 @@
+{
+  "name": "Creative Market",
+  "lastLogin": "",
+  "home": "https://creativemarket.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.sign-in"
+      },
+      {
+        "action": "waitfor",
+        "search": "#username-sign-in"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#username-sign-in",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password-sign-in",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "form[action*='sign-in'] button[type='submit']"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.sign-in"
+      },
+      {
+        "action": "waitfor",
+        "search": "a.facebook-login"
+      },
+      {
+        "action": "trueClick",
+        "search": "a.facebook-login"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.sign-out"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a.sign-in, a.sign-out"
+    },
+    {
+      "search": "a.sign-out"
+    }
+  ]
+}

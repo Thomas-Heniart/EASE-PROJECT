@@ -30,6 +30,7 @@ class MainView extends Component {
                                                                                 onClick={this.props.showInfo}>Why is the
             extension necessary.</a>
           </Form.Field>
+          <Message size="mini" style={{fontSize: '.78571429em'}} content={"Maybe you already have our extension but it’s disabled. Hit the button bellow, then click on « Enable this item » on top of the screen :)"}/>
           <Button
               positive
               className="modal-button"

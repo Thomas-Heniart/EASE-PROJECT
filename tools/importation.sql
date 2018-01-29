@@ -82,3 +82,16 @@ CREATE TABLE WEBSITE_ALTERNATIVE_URL (
   PRIMARY KEY (id),
   FOREIGN KEY (website_id) REFERENCES websites(id)
 );
+
+SET FOREIGN_KEY_CHECKS = 0;
+ALTER TABLE teamUsers ADD UNIQUE (team_id, username);
+SET FOREIGN_KEY_CHECKS = 1;
+
+SELECT DISTINCT *
+FROM teamUsers t1
+WHERE EXISTS (
+    SELECT *
+    FROM teamUsers t2
+    WHERE t1.ID <> t2.ID
+          AND t1.team_id = t2.team_id
+          AND   t1.username = t2.username)

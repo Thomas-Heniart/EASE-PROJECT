@@ -405,11 +405,24 @@ public class TeamUser {
     }
 
     public void finalizeRegistration(String userKey, String userPrivateKey, HibernateQuery hibernateQuery) throws HttpServletException {
-
         String teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
         this.setTeamKey(AES.encrypt(teamKey, userKey));
         this.setState(2);
         hibernateQuery.saveOrUpdateObject(this);
+    }
+
+    public void finalizeRegistration(String userKey, String userPrivateKey, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
+        this.finalizeRegistration(userKey, userPrivateKey, hibernateQuery);
+        NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
+        if (this.getTeamCardReceivers().isEmpty())
+            return;
+        Profile profile = this.getOrCreateProfile(userWebSocketManager, hibernateQuery);
+        this.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
+            app.setProfile(profile);
+            app.setPosition(profile.getSize());
+            hibernateQuery.saveOrUpdateObject(app);
+            profile.addApp(app);
+        });
     }
 
     public void lastRegistrationStep(String keyUser, String teamKey, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
@@ -572,5 +585,13 @@ public class TeamUser {
 
     public void addTeamCardReceiver(TeamCardReceiver teamCardReceiver) {
         this.getTeamCardReceivers().add(teamCardReceiver);
+    }
+
+    public void removeTeamSingleCardToFill(TeamSingleCard teamSingleCard) {
+        this.getTeamSingleCardToFillSet().remove(teamSingleCard);
+    }
+
+    public void removeTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
+        this.getTeamSingleSoftwareCardSet().remove(teamSingleSoftwareCard);
     }
 }

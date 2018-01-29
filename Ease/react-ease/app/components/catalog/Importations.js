@@ -13,8 +13,7 @@ import {getLogo} from "../../utils/api"
 import { Segment, Button, Icon, TextArea, Dropdown, Form, Menu, Message, Input, Loader, Grid, Label} from 'semantic-ui-react';
 
 function json(fields, separator, csv, dispatch) {
-  const csvClean = csv.replace(/"/g, '');
-  const array = csvClean.split('\n');
+  const array = csv.split('\n');
   let calls = [];
   for (let i = 0; i < array.length; i++) {
     let separatorCounter = 0;
@@ -33,11 +32,11 @@ function json(fields, separator, csv, dispatch) {
       const field = array[i].split(separator);
       let l = 0;
       for (let k = 0; k < field.length; k++) {
-        if (fields[object[k]] === 'login' && field[k + 1] && isEmail(field[k + 1]))
+        if (fields[object[k]] === 'login' && field[k + 1] && isEmail(field[k + 1].replace(/^["]+|["]+$/g, '')))
           k++;
-        item[fields[object[l++]]] = field[k];
+        item[fields[object[l++]]] = field[k].replace(/^["]+|["]+$/g, '');
       }
-      if (item.url.startsWith("http") === false && item.url !== '')
+      if (!item.url.startsWith('http://') && !item.url.startsWith('https://') && item.url !== '')
         item.url = "https://" + item.url;
       if (item.url !== '' && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
         calls.push(dispatch(importAccount({
@@ -1425,6 +1424,7 @@ class Importations extends React.Component {
               login: {type: "text", priority: 0, placeholder: "Login"},
               password: {type: "password", priority: 1, placeholder: "Password"}
             },
+            credentials_provided: false,
             receivers: receiversAnyApp
           }));
         }
@@ -1522,6 +1522,7 @@ class Importations extends React.Component {
               login: {type: "text", priority: 0, placeholder: "Login"},
               password: {type: "password", priority: 1, placeholder: "Password"}
             },
+            credentials_provided: false,
             receivers: receivers
           }));
         }
@@ -1618,6 +1619,7 @@ class Importations extends React.Component {
                 login: {type: "text", priority: 0, placeholder: "Login"},
                 password: {type: "password", priority: 1, placeholder: "Password"}
               },
+              credentials_provided: false,
               receivers: receivers
             })));
           }

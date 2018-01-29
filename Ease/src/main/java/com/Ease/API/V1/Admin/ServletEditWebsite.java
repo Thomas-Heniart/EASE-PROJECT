@@ -102,7 +102,9 @@ public class ServletEditWebsite extends HttpServlet {
                 if (websiteApp.isAnyApp() && website.getWebsiteAttributes().isIntegrated()) {
                     AnyApp anyApp = (AnyApp) websiteApp;
                     Profile profile = anyApp.getProfile();
-                    Account account = AccountFactory.getInstance().createAccountFromAccountCopy(anyApp.getAccount(), hibernateQuery);
+                    Account account = null;
+                    if (anyApp.getAccount() != null)
+                        account = AccountFactory.getInstance().createAccountFromAccountCopy(anyApp.getAccount(), hibernateQuery);
                     App tmp_app = new ClassicApp(new AppInformation(anyApp.getAppInformation().getName()), website, account);
                     tmp_app.setProfile(profile);
                     tmp_app.setPosition(anyApp.getPosition());

@@ -57,9 +57,9 @@ class TeamEnterpriseApp extends Component {
             <UpdatePasswordLabel/>}
             {teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
-            {me.disabled &&
+            {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
-            {!me.disabled && meReceiver.empty &&
+            {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={password_update ? this.connectWithPasswordUpdate : this.connect}/>

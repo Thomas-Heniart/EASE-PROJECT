@@ -1,5 +1,6 @@
 import api from "../utils/api";
 import post_api from "../utils/post_api";
+import extension from "../utils/extension_api";
 import {fetchTeamApp} from "./teamActions";
 import {showExtensionDownloadModal} from "./modalActions";
 
@@ -675,6 +676,11 @@ export function AppConnection({app_id, keep_focus}){
       return new Promise((resolve, reject) => {reject('Need extension.')});
     }
     const app = getState().dashboard.apps[app_id];
+    extension.app_connection({
+      app_id:app_id,
+      active_tab: !keep_focus,
+      website: app.website
+    });
     return api.dashboard.getAppConnectionInformation({
       app_id: app_id
     }).then(response => {

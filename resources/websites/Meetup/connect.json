@@ -16,7 +16,7 @@
     	]
     },
     "checkAlreadyLogged": [
-    	{"search":"a[title='Profil']"}
+    	{"search":"#profileNav"}
     ],
     "Facebook": {
     	"todo": [

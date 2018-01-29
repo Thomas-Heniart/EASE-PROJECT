@@ -1,8 +1,7 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Website;
-import com.Ease.Catalog.WebsiteFactory;
+import com.Ease.Catalog.*;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -12,6 +11,7 @@ import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -70,6 +70,15 @@ public class CreateTeamAnySingleCard extends HttpServlet {
             if (account_information_obj.length() != 0) {
                 sm.decipher(account_information_obj);
                 account_information = website.getInformationNeeded(account_information_obj);
+                Boolean credentials_provided = sm.getBooleanParam("credentials_provided", true, false);
+                if (credentials_provided) {
+                    HibernateQuery hibernateQuery = sm.getHibernateQuery();
+                    hibernateQuery.queryString("SELECT key FROM ServerPublicKey key");
+                    ServerPublicKey serverPublicKey = (ServerPublicKey) hibernateQuery.getSingleResult();
+                    WebsiteCredentials websiteCredentials = new WebsiteCredentials(RSA.Encrypt(account_information.get("login"), serverPublicKey.getPublicKey()), RSA.Encrypt(account_information.get("password"), serverPublicKey.getPublicKey()), website, serverPublicKey);
+                    sm.saveOrUpdate(websiteCredentials);
+                    website.addWebsiteCredentials(websiteCredentials);
+                }
             }
             if (teamUser_filler_id != null && teamUser_filler_id != -1)
                 teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);

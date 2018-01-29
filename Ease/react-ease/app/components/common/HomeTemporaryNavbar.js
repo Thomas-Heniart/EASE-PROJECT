@@ -1,6 +1,5 @@
 var React = require('react');
 var classnames = require('classnames');
-import ReactTooltip from 'react-tooltip';
 import {fetchNotifications, validateNotification} from "../../actions/notificationsActions";
 import {checkForNewNotifications} from "../../utils/helperFunctions";
 import {withRouter} from "react-router-dom";
@@ -136,7 +135,6 @@ class HomeTemporaryNavbar extends React.Component {
       window.location.href = "/teams#/main/settings";
   }
   componentDidMount(){
-    ReactTooltip.rebuild();
   }
   render(){
     const user = this.props.user;

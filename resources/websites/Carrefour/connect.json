@@ -1,0 +1,20 @@
+{
+	"name":"Carrefour",
+	"lastLogin":"",
+	"home":"https://www.carrefour.fr/personal-space",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#user-login #edit-name", "grave":true},
+			{"action":"fill", "what":"password", "search":"#user-login #edit-pass", "grave":true},
+			{"action":"trueClick", "search":"#user-login #edit-submit", "grave":true}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action":"aclick", "search":"#remote a[href*=logout]"},
+        ]
+	},
+	"checkAlreadyLogged":[
+		{"search":".k4-userinfos_account.is-connected"}
+	]
+}

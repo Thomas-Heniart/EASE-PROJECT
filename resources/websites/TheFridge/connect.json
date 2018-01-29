@@ -1,0 +1,22 @@
+{
+  "name": "The Fridge",
+  "lastLogin": "",
+  "home": "https://fridge.thefamily.co/",
+  "connect": {
+    "todo": [
+      {"action": "fill", "what": "login", "search": "input[type='email']"},
+      {"action": "fill", "what": "password", "search": ".password-group input[type='password']"},
+      {"action": "trueClick", "search": "button.mu-raised-button-secondary"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action": "trueClick", "search": "ul.pull-right > li:nth-child(2) > button"},
+      {"action": "waitfor", "search": "input[type='email']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action": "waitfor", "search": "input[type='email'], ul.pull-right"},
+    {"search": "ul.pull-right"}
+  ]
+}

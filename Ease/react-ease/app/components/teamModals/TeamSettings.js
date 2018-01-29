@@ -3,6 +3,7 @@ import {editTeamName} from '../../actions/teamActions';
 import { Header, Container, Menu, Segment, Comment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 import {StripeProvider} from 'react-stripe-elements';
 import {connect} from "react-redux";
+import {isOwner} from "../../utils/helperFunctions";
 import {fetchTeamPaymentInformation, teamInviteFriends, teamUpdateBillingInformation, unsubscribe} from "../../actions/teamActions";
 import countryValues from "../../utils/countrySelectList";
 import {withRouter, Switch, Route, NavLink} from "react-router-dom";
@@ -130,13 +131,13 @@ class PaymentMethod extends React.Component {
             <p>You can suscribe or unsubscribe whenever you want. Pay as you go, without commitment.</p>
             <p>Only active users are billed each month at the rate of 3,99€ before VAT. Other users are not billed.</p>
             <Header as="h4">
-              {card !== null ? 'Credit card information' : 'There is no credit card set up yet'}
+              {!!card ? 'Credit card information' : 'There is no credit card set up yet'}
             </Header>
-            {card !== null && !this.state.modifying &&
+            {!!card && !this.state.modifying &&
             <CreditCardPreview card={card}/>}
             {!this.state.modifying &&
             <div class="overflow-hidden">
-              <Button primary size="mini" content={card !== null ? 'Replace this card' : 'Add credit card'} floated="right" onClick={this.setModifying.bind(null, true)}/>
+              <Button primary size="mini" content={!!card ? 'Replace this card' : 'Add credit card'} floated="right" onClick={this.setModifying.bind(null, true)}/>
             </div>}
             {this.state.modifying &&
             <MyStoreCheckout
@@ -547,44 +548,51 @@ class TeamSettings extends React.Component {
   close = () => {
     this.props.history.replace(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/`);
   };
+  componentWillMount = () => {
+    const team_id = this.props.match.params.teamId;
+    const team = this.props.teams[team_id];
+
+    if (!isOwner(team.team_users[team.my_team_user_id].role))
+      this.close();
+  };
   componentDidMount(){
     this.props.dispatch(fetchTeamPaymentInformation({team_id: this.props.match.params.teamId}));
     if (this.props.match.isExact)
       this.props.history.replace(`${this.props.match.url}/information`);
-  }
+  };
   render() {
     return (
         <StripeProvider apiKey={stripe_api_key}>
-        <div className="ease_modal" id="team_settings_modal">
-          <div className="modal-background"/>
-          <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={this.close}>
-            <i className="ease_icon fa fa-times"/>
-            <span className="key_label">close</span>
-          </a>
-          <div className="modal_contents_container">
-            <div class="contents">
-              <div class="content_row justify_content_center">
-                <h1>Team settings</h1>
+          <div className="ease_modal" id="team_settings_modal">
+            <div className="modal-background"/>
+            <a id="ease_modal_close_btn" className="ease_modal_btn" onClick={this.close}>
+              <i className="ease_icon fa fa-times"/>
+              <span className="key_label">close</span>
+            </a>
+            <div className="modal_contents_container">
+              <div class="contents">
+                <div class="content_row justify_content_center">
+                  <h1>Team settings</h1>
+                </div>
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={5}>
+                      <SettingsMenu teamName={this.props.teams[this.props.match.params.teamId].name} match={this.props.match}/>
+                    </Grid.Column>
+                    <Grid.Column width={11}>
+                      <Switch>
+                        <Route exact path={`${this.props.match.path}/`} component={TeamInformations}/>
+                        <Route path={`${this.props.match.path}/information`} component={TeamInformations}/>
+                        <Route path={`${this.props.match.path}/payment`} component={PaymentMethod}/>
+                        <Route path={`${this.props.match.path}/billing`} component={BillingInformationWithRouter}/>
+                        <Route path={`${this.props.match.path}/activation`} component={TeamAccount}/>
+                      </Switch>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
               </div>
-              <Grid>
-                <Grid.Row>
-                  <Grid.Column width={5}>
-                    <SettingsMenu teamName={this.props.teams[this.props.match.params.teamId].name} match={this.props.match}/>
-                  </Grid.Column>
-                  <Grid.Column width={11}>
-                    <Switch>
-                      <Route exact path={`${this.props.match.path}/`} component={TeamInformations}/>
-                      <Route path={`${this.props.match.path}/information`} component={TeamInformations}/>
-                      <Route path={`${this.props.match.path}/payment`} component={PaymentMethod}/>
-                      <Route path={`${this.props.match.path}/billing`} component={BillingInformationWithRouter}/>
-                      <Route path={`${this.props.match.path}/activation`} component={TeamAccount}/>
-                    </Switch>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
             </div>
           </div>
-        </div>
         </StripeProvider>
     )
   }
