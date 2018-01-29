@@ -434,6 +434,7 @@ class NewTeamCreationView extends React.Component {
         const users = response.map(item => {
           return item.data;
         });
+        easeTracker.trackEvent("EaseOnboardingPeopleCreated");
         this.props.history.replace('/newTeamCreation/groups');
         this.setState({activeItem: 4, view: 4, users: users});
       });
@@ -456,6 +457,7 @@ class NewTeamCreationView extends React.Component {
       Promise.all(calls.map(reflect)).then(response => {
         this.state.value[this.state.roomsSelected[0]] = this.state.users.map(user => {return user.id});
         this.state.value[this.state.roomsSelected[0]].push(this.props.teams[this.state.team_id].my_team_user_id);
+        easeTracker.trackEvent("EaseOnboardingPeopleAddedInRooms");
         this.props.history.replace('/newTeamCreation/accounts');
         this.setState({activeItem: 5, view: 5, singleApps: singleApps});
       });
