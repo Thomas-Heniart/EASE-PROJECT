@@ -16,21 +16,25 @@ import java.io.IOException;
 @WebServlet("/api/v1/teams/CreateTeamProfiles")
 public class ServletCreateTeamProfiles extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            sm.needToBeTeamUserOfTeam(team);
-            JSONArray teamUser_ids = sm.getArrayParam("team_user_ids", true, false);
-            for (int i=0; i<teamUser_ids.length(); i++) {
-                Integer teamUser_id = (Integer) teamUser_ids.get(i);
-                TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-                teamUser.createTeamProfile(sm.getHibernateQuery());
+            PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
+            try {
+                Integer team_id = sm.getIntParam("team_id", true, false);
+                Team team = sm.getTeam(team_id);
+                sm.needToBeTeamUserOfTeam(team);
+                JSONArray teamUser_ids = sm.getArrayParam("team_user_ids", true, false);
+                for (int i = 0; i < teamUser_ids.length(); i++) {
+                    Integer teamUser_id = teamUser_ids.getInt(i);
+                    TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+                    teamUser.createTeamProfile(sm.getHibernateQuery());
+                }
+            } catch (Exception e) {
+                sm.setError(e);
             }
-        } catch (Exception e) {
-            sm.setError(e);
+            sm.sendResponse();
+        } catch (Error e) {
+            e.printStackTrace();
         }
-        sm.sendResponse();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

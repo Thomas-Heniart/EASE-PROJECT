@@ -1466,6 +1466,16 @@ module.exports = {
       }).catch(err => {
         throw err;
       })
+    },
+    createTeamProfile: ({team_id, team_user_ids}) => {
+      return axios.post('/api/v1/teams/CreateTeamProfiles', {
+        team_id: team_id,
+        team_user_ids: team_user_ids
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err;
+      })
     }
   }
 };

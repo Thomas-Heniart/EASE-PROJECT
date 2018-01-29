@@ -210,14 +210,18 @@ class OnBoardingAccounts extends React.Component {
     const {
       view,
       rooms,
+      users,
       nextRoom,
       selectApp,
       singleApps,
       currentRoom,
       appsSelected,
+      handleAppInfo,
+      deleteAccount,
       roomsSelected,
       roomsWebsites,
       selectSingleApp,
+      credentialsSingleApps,
       selectPasswordManager,
       passwordManagerSelected} = this.props;
     return (
@@ -232,8 +236,7 @@ class OnBoardingAccounts extends React.Component {
             selectApp={selectApp}
             websites={roomsWebsites}
             currentRoom={currentRoom}
-            appsSelected={appsSelected}
-            roomsSelected={roomsSelected}/>}
+            appsSelected={appsSelected}/>}
         {view === 3 &&
           <ChooseSingleApps
             rooms={rooms}
@@ -241,17 +244,15 @@ class OnBoardingAccounts extends React.Component {
             websites={roomsWebsites}
             currentRoom={currentRoom}
             appsSelected={appsSelected}
-            roomsSelected={roomsSelected}
             selectSingleApp={selectSingleApp}/>}
         {view === 4 &&
           <CredentialsSingleApps
-            rooms={rooms}
+            users={users}
             singleApps={singleApps}
             websites={roomsWebsites}
-            currentRoom={currentRoom}
-            appsSelected={appsSelected}
-            roomsSelected={roomsSelected}
-            selectSingleApp={selectSingleApp}/>}
+            handleAppInfo={handleAppInfo}
+            deleteAccount={deleteAccount}
+            credentialsSingleApps={credentialsSingleApps}/>}
       </React.Fragment>
     )
   }

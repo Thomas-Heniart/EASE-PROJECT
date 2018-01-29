@@ -106,12 +106,25 @@ export function createTeam({name, email, username, company_size, digits ,plan_id
       company_size: company_size,
       digits: digits,
       plan_id: plan_id,
-      ws_id: getState().common.ws_id})
-      .then(response => {
-        dispatch({type: 'TEAM_CREATED', payload: {team: response}});
-        return response;
-      }).catch(err => {
-        throw err;
-      })
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'TEAM_CREATED', payload: {team: response}});
+      return response;
+    }).catch(err => {
+      throw err;
+    })
+  }
+}
+
+export function createTeamProfile({team_id, team_user_ids}) {
+  return (dispatch, getState) => {
+    return post_api.onBoarding.createTeamProfile({
+      team_id: team_id,
+      team_user_ids: team_user_ids
+    }).then(response => {
+      return response;
+    }).catch(err => {
+      throw err;
+    })
   }
 }

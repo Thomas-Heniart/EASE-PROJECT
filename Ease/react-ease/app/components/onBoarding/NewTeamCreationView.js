@@ -9,7 +9,8 @@ import { Menu, Form, Icon, Button } from 'semantic-ui-react';
 import {handleSemanticInput, isEmail, reflect} from "../../utils/utils";
 import {withRouter, Switch, Route, NavLink} from "react-router-dom";
 import {
-  askRegistration, checkAskRegistration, createTeam, editFirstNameAndLastName, fetchOnBoardingRooms, getInfoClearbit,
+  askRegistration, checkAskRegistration, createTeam, createTeamProfile, editFirstNameAndLastName, fetchOnBoardingRooms,
+  getInfoClearbit,
   newRegistration
 } from "../../actions/onBoardingActions";
 import {addTeamUserToChannel, createTeamChannel} from "../../actions/channelActions";
@@ -315,19 +316,24 @@ class NewTeamCreationView extends React.Component {
         this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
           users[user_id] = {account_information: null};
         });
-        enterpriseApp.map(app_id => {
-          calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-            team_id: this.state.team_id,
-            channel_id: this.state.rooms[this.state.currentRoom].id,
-            website_id: app_id,
-            name: this.state.roomsWebsites[app_id].name,
-            description: '',
-            password_reminder_interval: 0,
-            receivers: users
-          })));
-        });
-        Promise.all(calls.map(reflect)).then(response => {
-          this.setState({currentRoom: 1, loading: false, appsSelected: []});
+        this.props.dispatch(createTeamProfile({
+          team_id: this.state.team_id,
+          team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+        })).then(res => {
+          enterpriseApp.map(app_id => {
+            calls.push(this.props.dispatch(teamCreateEnterpriseCard({
+              team_id: this.state.team_id,
+              channel_id: this.state.rooms[this.state.currentRoom].id,
+              website_id: app_id,
+              name: this.state.roomsWebsites[app_id].name,
+              description: '',
+              password_reminder_interval: 0,
+              receivers: users
+            })));
+          });
+          Promise.all(calls.map(reflect)).then(response => {
+            this.setState({currentRoom: 1, loading: false, appsSelected: []});
+          });
         });
       }
       else
