@@ -11,16 +11,23 @@
     },
     "Facebook":{
     	"todo":[
-    		{"action":"goto", "url":"http://www.airbnb.com/oauth_connect?from=facebook_login&service=facebook"}
+            {"action": "click", "search": ".signup-login-form__btn-xl.btn-facebook"}
     	]
+    },
+    "Google":{
+        "todo":[
+            {"action": "click", "search": ".signup-login-form__btn-xl.btn-google"}
+        ]
     },
     "logout":{
         "todo":[
-            {"action":"goto", "url":"https://www.airbnb.com/logout"},
-            {"action":"goto", "url":"https://www.airbnb.com/Login"}
-            ]
+            {"action": "click", "search": "#headerNavUserButton"},
+            {"action": "waitfor", "search": "form[action*=logout] button[type=submit]"},
+            {"action": "click", "search": "form[action*=logout] button[type=submit]"},
+            {"action": "waitload"}
+        ]
     },
     "checkAlreadyLogged":[
-        {"search":"div.logged_in"}
+        {"search":"#headerNavUserButton"}
     ]
 }
