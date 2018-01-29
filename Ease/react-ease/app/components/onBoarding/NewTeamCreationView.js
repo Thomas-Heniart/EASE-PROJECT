@@ -254,6 +254,7 @@ class NewTeamCreationView extends React.Component {
         plan_id: 1,
         company_size: this.state.companySize,
       })).then(response => {
+        easeTracker.setUserId(this.state.email);
         easeTracker.trackEvent("EaseOnboardingInformationFilled", {
           "plan_id": this.props.plan_id
         });
