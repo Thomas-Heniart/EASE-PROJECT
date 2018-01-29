@@ -6,16 +6,23 @@ class OnBoardingGroups extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: [1]
-    }
+      options: []
+    };
+    this.state.options = this.props.users.map(item => {
+      return {
+        key: item.id,
+        text: item.username + ' - ' + item.email,
+        username: item.username,
+        value: item.id
+      }
+    });
+    this.props.rooms.map(item => {
+      if (item.name !== 'openspace')
+        this.props.value[item.id] = [this.props.team.my_team_user_id];
+    });
   }
-  dropdownChange = (e, {value}) => {
-    if (value.indexOf(this.props.team.my_team_user_id) === -1)
-      return;
-    this.setState({value: value});
-  };
   render() {
-    const {rooms, roomsSelected, users} = this.props;
+    const {rooms, roomsSelected, users, dropdownChange, value} = this.props;
     const roomsToShow = rooms.filter(item => {
       return item.id && item.name !== 'openspace' && roomsSelected.filter(room_id => {return item.id === room_id}).length > 0;});
     const roomsList = roomsToShow.map(item => (
@@ -26,11 +33,12 @@ class OnBoardingGroups extends React.Component {
           search
           multiple
           selection
-          options={users}
-          value={this.state.value}
+          id={item.id}
+          value={value[item.id]}
           placeholder="Select people"
+          options={this.state.options}
           renderLabel={renderUserLabel}
-          onChange={this.dropdownChange}/>
+          onChange={dropdownChange}/>
       </div>
     ));
     return (

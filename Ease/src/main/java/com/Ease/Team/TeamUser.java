@@ -361,6 +361,8 @@ public class TeamUser {
         res.put("role", this.teamUserRole.getRoleValue());
         res.put("invitation_sent", this.getTeamUserStatus().isInvitation_sent());
         res.put("arrival_date", arrivalDate.getTime());
+        res.put("first_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getFirst_name());
+        res.put("last_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getLast_name());
         res.putOpt("departure_date", departureDate == null ? JSONObject.NULL : departureDate.getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("state", this.state);

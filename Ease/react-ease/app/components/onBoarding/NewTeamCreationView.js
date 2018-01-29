@@ -12,12 +12,15 @@ import {
   askRegistration, checkAskRegistration, createTeam, editFirstNameAndLastName, fetchOnBoardingRooms, getInfoClearbit,
   newRegistration
 } from "../../actions/onBoardingActions";
+import {addTeamUserToChannel, createTeamChannel} from "../../actions/channelActions";
+import {teamCreateEnterpriseCard} from "../../actions/appsActions";
 import {processConnection} from "../../actions/commonActions";
-import {createTeamChannel} from "../../actions/channelActions";
-import * as post_api from '../../utils/post_api';
+import {createTeamUser} from "../../actions/userActions";
 import * as api from '../../utils/api';
 
-@connect()
+@connect(store => ({
+  teams: store.teams
+}))
 class NewTeamCreationView extends React.Component {
   constructor(props) {
     super(props);
@@ -43,16 +46,14 @@ class NewTeamCreationView extends React.Component {
       rooms: [],
       roomsSelected: [],
       emails: [],
-      users: [
-        {value: 1, username: 'pute', text: 'pute' + ' - ' + 'victor' + ' ' + 'pprpopor'},
-        {value: 2, username: 'fillou', text: 'fillou' + ' - ' + 'sfdbni' + ' ' + 'cfndkj'},
-        {value: 3, username: 'rototo', text: 'rototo' + ' - ' + 'dfbfjd' + ' ' + 'fdbjhf'}
-      ],
+      users: [],
       viewAccounts: 1,
       currentRoom: 0,
       passwordManagerSelected: 0,
       roomsWebsites: {},
-      appsSelected: []
+      appsSelected: [],
+      value: {},
+      singleApps: {}
     };
   }
   componentWillMount() {
@@ -109,6 +110,23 @@ class NewTeamCreationView extends React.Component {
       appsSelected.push(id);
     this.setState({appsSelected: appsSelected});
   };
+  selectSingleApp = (id, room_id) => {
+    let singleApps = Object.assign({}, this.state.singleApps);
+    singleApps[room_id] = this.state.singleApps[room_id].filter(item => {
+      if (item !== id)
+        return item;
+    });
+    if (singleApps[room_id].length === this.state.singleApps[room_id].length)
+      singleApps[room_id].push(id);
+    this.setState({singleApps: singleApps});
+  };
+  dropdownChange = (e, {id, value}) => {
+    if (value.indexOf(this.props.teams[this.state.team_id].my_team_user_id) === -1)
+      return;
+    const newValue = Object.assign({}, this.state.value);
+    newValue[id] = value;
+    this.setState({value: newValue});
+  };
   editField = (idx, {name, value}) => {
     let emails = this.state.emails.slice();
     emails[idx][name] = value;
@@ -148,13 +166,13 @@ class NewTeamCreationView extends React.Component {
     else if (this.state.view === 5) {
       if (this.state.viewAccounts === 1)
         return <p>We have done our best to make your account importation seamless.<br/>Choose a tool to import or justmanage manually</p>;
-      else if (this.state.viewAccounts === 2)
+      else if (this.state.viewAccounts === 2 && this.state.currentRoom === 0)
         return <p>There is a special Room for accounts everybody uses, it’s the #openspace. Also, if you have more than one account on a website, you’ll be able to add it later.</p>;
-      else if (this.state.viewAccounts === 3)
+      else if (this.state.viewAccounts === 2 && this.state.currentRoom > 0)
         return <p>This is a short list of tools to get started, you’ll be able to add more accounts later.</p>;
-      else if (this.state.viewAccounts === 4)
+      else if (this.state.viewAccounts === 3)
         return <p>On the company’s Twitter for example, people share the same login and password to access the account.</p>;
-      else if (this.state.viewAccounts === 5)
+      else if (this.state.viewAccounts === 4)
         return <p>If someone else knows a password, ask him or her to fill it for everybody. Also, when you are not 1000% sure about a password, you can test it in one click. </p>;
     }
   };
@@ -286,15 +304,63 @@ class NewTeamCreationView extends React.Component {
     }
     else if (this.state.viewAccounts === 2) {
       // Choose apps for #openspace and #rooms
-      if (this.state.rooms[this.state.currentRoom].name === 'openspace')
-        this.setState({currentRoom: 1, loading: false});
+      if (this.state.rooms[this.state.currentRoom].name === 'openspace') {
+        let calls = [];
+        const enterpriseApp = this.state.appsSelected.filter(app_id => {
+          return this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(single_id => {
+            return app_id === single_id
+          }).length === 0
+        });
+        const users = {};
+        this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
+          users[user_id] = {account_information: null};
+        });
+        enterpriseApp.map(app_id => {
+          calls.push(this.props.dispatch(teamCreateEnterpriseCard({
+            team_id: this.state.team_id,
+            channel_id: this.state.rooms[this.state.currentRoom].id,
+            website_id: app_id,
+            name: this.state.roomsWebsites[app_id].name,
+            description: '',
+            password_reminder_interval: 0,
+            receivers: users
+          })));
+        });
+        Promise.all(calls.map(reflect)).then(response => {
+          this.setState({currentRoom: 1, loading: false, appsSelected: []});
+        });
+      }
       else
         this.setState({viewAccounts: 3, loading: false});
     }
     else if (this.state.viewAccounts === 3) {
       // Choose if single or enterprise / create enterpriseCard
-      if (this.state.rooms.length - 1 > this.state.currentRoom)
-        this.setState({currentRoom: this.state.currentRoom + 1, viewAccounts: 2, loading: false});
+      if (this.state.rooms.length - 1 > this.state.currentRoom) {
+        let calls = [];
+        const enterpriseApp = this.state.appsSelected.filter(app_id => {
+          return this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(single_id => {
+            return app_id === single_id
+          }).length === 0
+        });
+        const users = {};
+        this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
+          users[user_id] = {account_information: null};
+        });
+        enterpriseApp.map(app_id => {
+          calls.push(this.props.dispatch(teamCreateEnterpriseCard({
+            team_id: this.state.team_id,
+            channel_id: this.state.rooms[this.state.currentRoom].id,
+            website_id: app_id,
+            name: this.state.roomsWebsites[app_id].name,
+            description: '',
+            password_reminder_interval: 0,
+            receivers: users
+          })));
+        });
+        Promise.all(calls.map(reflect)).then(response => {
+          this.setState({currentRoom: this.state.currentRoom + 1, viewAccounts: 2, loading: false, appsSelected: []});
+        });
+      }
       else
         this.setState({viewAccounts: 4, loading: false});
     }
@@ -324,24 +390,64 @@ class NewTeamCreationView extends React.Component {
         for (let i = 1; 15 > i; i++)
           emails.push({email: '', error: ''});
       Promise.all(calls.map(reflect)).then(response => {
+        let roomsSelected = [this.state.roomsSelected[0]];
         response.map(item => {
           this.state.rooms.map(room => {
             if (room.name === item.data.name) {
+              roomsSelected.push(item.data.id);
               room.id = item.data.id;
             }
           });
         });
         this.props.history.replace('/newTeamCreation/users');
-        this.setState({activeItem: 3, view: 3, emails: emails, rooms: this.state.rooms});
+        this.setState({activeItem: 3, view: 3, emails: emails, rooms: this.state.rooms, roomsSelected: roomsSelected});
       });
     }
     else if (this.state.view === 3) {
-      this.props.history.replace('/newTeamCreation/groups');
-      this.setState({activeItem: 4, view: 4});
+      // create users
+      const emails = this.state.emails.filter(item => {
+        return isEmail(item.email);
+      });
+      let calls = emails.map(item => {
+        return this.props.dispatch(createTeamUser({
+          team_id: this.state.team_id,
+          first_name: '',
+          last_name: '',
+          email: item.email,
+          username: '',
+          departure_date: null,
+          role: 1
+        }));
+      });
+      Promise.all(calls.map(reflect)).then(response => {
+        const users = response.map(item => {
+          return item.data;
+        });
+        this.props.history.replace('/newTeamCreation/groups');
+        this.setState({activeItem: 4, view: 4, users: users});
+      });
     }
     else if (this.state.view === 4) {
-      this.props.history.replace('/newTeamCreation/accounts');
-      this.setState({activeItem: 5, view: 5});
+      let calls = [];
+      let singleApps = {};
+      this.state.roomsSelected.map((room_id, idx) => {
+        singleApps[room_id] = [];
+        if (idx !== 0) {
+          this.state.value[room_id].map(user_id => {
+            calls.push(this.props.dispatch(addTeamUserToChannel({
+              team_id: this.state.team_id,
+              channel_id: room_id,
+              team_user_id: user_id
+            })))
+          });
+        }
+      });
+      Promise.all(calls.map(reflect)).then(response => {
+        this.state.value[this.state.roomsSelected[0]] = this.state.users.map(user => {return user.id});
+        this.state.value[this.state.roomsSelected[0]].push(this.props.teams[this.state.team_id].my_team_user_id);
+        this.props.history.replace('/newTeamCreation/accounts');
+        this.setState({activeItem: 5, view: 5, singleApps: singleApps});
+      });
     }
   };
   render() {
@@ -413,8 +519,11 @@ class NewTeamCreationView extends React.Component {
                 <Route path={`${this.props.match.path}/groups`}
                        render={(props) =>
                           <OnBoardingGroups
+                            value={this.state.value}
                             users={this.state.users}
                             rooms={this.state.rooms}
+                            dropdownChange={this.dropdownChange}
+                            team={this.props.teams[this.state.team_id]}
                             roomsSelected={this.state.roomsSelected}/>}/>}
                 {this.state.view === 5 &&
                 <Route path={`${this.props.match.path}/accounts`}
@@ -424,8 +533,10 @@ class NewTeamCreationView extends React.Component {
                            selectPasswordManager={this.selectPasswordManager}
                            roomsWebsites={this.state.roomsWebsites}
                            roomsSelected={this.state.roomsSelected}
+                           selectSingleApp={this.selectSingleApp}
                            appsSelected={this.state.appsSelected}
                            currentRoom={this.state.currentRoom}
+                           singleApps={this.state.singleApps}
                            view={this.state.viewAccounts}
                            selectApp={this.selectApp}
                            rooms={this.state.rooms}
