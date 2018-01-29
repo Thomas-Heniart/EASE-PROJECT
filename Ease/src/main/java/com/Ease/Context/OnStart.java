@@ -87,7 +87,7 @@ public class OnStart implements ServletContextListener {
                 StatsScheduledTask statsScheduledTask = new StatsScheduledTask();
                 time.schedule(statsScheduledTask, next_clock, 24 * 60 * 60 * 1000);
 
-                Calendar delay_six_pm = Calendar.getInstance();
+                /* Calendar delay_six_pm = Calendar.getInstance();
                 hour = delay_six_pm.get(Calendar.HOUR_OF_DAY);
                 minutes = delay_six_pm.get(Calendar.MINUTE);
                 if (hour > 18 || (hour == 18 && minutes > 30))
@@ -96,7 +96,7 @@ public class OnStart implements ServletContextListener {
                 delay_six_pm.set(Calendar.MINUTE, 30);
                 next_clock = delay_six_pm.getTimeInMillis() - new Date().getTime();
                 AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask();
-                time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000);
+                time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000); */
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
