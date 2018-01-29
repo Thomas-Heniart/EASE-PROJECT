@@ -41,6 +41,10 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
                 sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             } else
                 mailJetBuilder.setTemplateId(259569);
+            if (!team.isInvitations_sent()) {
+                team.setInvitations_sent(true);
+                sm.saveOrUpdate(team);
+            }
             mailJetBuilder.addTo(teamUser.getEmail());
             mailJetBuilder.addVariable("team_name", team.getName());
             mailJetBuilder.addVariable("first_name", teamUser_admin.getUser().getPersonalInformation().getFirst_name());

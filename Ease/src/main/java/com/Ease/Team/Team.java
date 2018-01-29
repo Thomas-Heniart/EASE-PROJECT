@@ -70,6 +70,9 @@ public class Team {
     @Column(name = "company_size")
     private Integer company_size;
 
+    @Column(name = "invitations_sent")
+    private boolean invitations_sent = false;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "onboarding_status_id")
     private OnboardingStatus onboardingStatus = new OnboardingStatus();
@@ -179,6 +182,14 @@ public class Team {
 
     public void setCompany_size(Integer company_size) {
         this.company_size = company_size;
+    }
+
+    public boolean isInvitations_sent() {
+        return invitations_sent;
+    }
+
+    public void setInvitations_sent(boolean invitations_sent) {
+        this.invitations_sent = invitations_sent;
     }
 
     public synchronized Set<TeamCard> getTeamCardSet() {
@@ -352,6 +363,7 @@ public class Team {
         res.put("plan_id", plan_id);
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
+        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamUsers().size() >= 8);
         return res;
     }
 
