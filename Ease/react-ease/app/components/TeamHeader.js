@@ -4,6 +4,7 @@ var EaseMainNavbar = require('./common/EaseMainNavbar');
 import {NavLink, withRouter} from "react-router-dom";
 import Joyride from "react-joyride";
 import {setTipSeen} from "../actions/commonActions";
+import {isAdmin} from "../utils/helperFunctions";
 
 const FlexPanelButton = ({location, match}) => {
     const isActive = location.pathname === `${match.url}/flexPanel`;
@@ -18,7 +19,7 @@ const FlexPanelButton = ({location, match}) => {
 const FlexPanelButtonWithRouter = withRouter(FlexPanelButton);
 
 function TeamHeader(props){
-  const {item, user, dispatch} = props;
+  const {item, user, me, dispatch} = props;
   return (
       <header id="client_header">
         <div className="channel_header">
@@ -48,7 +49,7 @@ function TeamHeader(props){
               </div>
             </div>
           </div>
-          {!!item.team_user_ids && !item.default && !user.status.tip_team_channel_settings_seen &&
+          {isAdmin(me.role) && !!item.team_user_ids && !item.default && !user.status.tip_team_channel_settings_seen &&
           <Joyride
               steps={[{
                 title: 'Edit rooms here to add or remove people.',
@@ -66,7 +67,7 @@ function TeamHeader(props){
                   }));
               }}
           />}
-          {!!item.room_ids && !user.status.tip_team_user_settings_seen &&
+          {isAdmin(me.role) && !!item.room_ids && !user.status.tip_team_user_settings_seen &&
           <Joyride
               steps={[{
                 title: <span>Setup personal settings of a user here <span class="fw-normal">(ex: departure date).</span></span>,
