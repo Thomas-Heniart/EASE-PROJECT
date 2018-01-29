@@ -47,6 +47,9 @@ public class UserStatus {
     @Column(name = "new_feature_seen")
     private boolean new_feature_seen = false;
 
+    @Column(name = "onboarding_step")
+    private Integer onboarding_step = 0;
+
     @Column(name = "tip_team_user_settings_seen")
     private boolean tip_team_user_settings_seen = false;
 
@@ -153,6 +156,14 @@ public class UserStatus {
         this.new_feature_seen = new_feature_seen;
     }
 
+    public Integer getOnboarding_step() {
+        return onboarding_step;
+    }
+
+    public void setOnboarding_step(Integer onboarding_step) {
+        this.onboarding_step = onboarding_step;
+    }
+
     public boolean isTip_team_user_settings_seen() {
         return tip_team_user_settings_seen;
     }
@@ -189,6 +200,7 @@ public class UserStatus {
         res.put("tuto_done", this.isTuto_done());
         res.put("team_tuto_done", this.isTeam_tuto_done());
         res.put("terms_reviewed", this.isTerms_reviewed());
+        res.put("onboarding_step", this.getOnboarding_step());
         res.put("tip_team_user_settings_seen", this.isTip_team_user_settings_seen());
         res.put("tip_team_channel_settings_seen", this.isTip_team_channel_settings_seen());
         return res;

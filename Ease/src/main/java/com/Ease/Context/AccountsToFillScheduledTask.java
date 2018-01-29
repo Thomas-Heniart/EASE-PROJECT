@@ -50,6 +50,7 @@ public class AccountsToFillScheduledTask extends TimerTask {
                 mailJetBuilder.addVariable("number_of_apps", appArr.length());
                 mailJetBuilder.addVariable("link", teamUser.isVerified() ? Variables.URL_PATH : (Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code()));
                 mailJetBuilder.addVariable("link_name", teamUser.isVerified() ? "Check your new apps" : "Activate account & check new apps");
+                mailJetBuilder.setTemplateErrorReporting();
                 mailJetBuilder.sendEmail();
             }
             hibernateQuery.commit();
