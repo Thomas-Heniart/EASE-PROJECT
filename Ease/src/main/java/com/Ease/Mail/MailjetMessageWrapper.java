@@ -1,6 +1,7 @@
 package com.Ease.Mail;
 
 import com.Ease.Context.Variables;
+import com.Ease.Team.TeamUser;
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
@@ -91,7 +92,7 @@ public class MailjetMessageWrapper {
         }
     }
 
-    public static void test() throws MailjetSocketTimeoutException, MailjetException {
+    public static void newAccountsMail(TeamUser teamUser, JSONArray apps, Integer number_of_apps) throws MailjetSocketTimeoutException, MailjetException {
         MailjetClient client;
         MailjetRequest request;
         MailjetResponse response;
@@ -101,19 +102,17 @@ public class MailjetMessageWrapper {
                         .put(new JSONObject()
                                 .put(Emailv31.Message.FROM, new JSONObject()
                                         .put("Email", "contact@ease.space")
-                                        .put("Name", "Ease.space"))
+                                        .put("Name", "Ease.Space"))
                                 .put(Emailv31.Message.TO, new JSONArray()
                                         .put(new JSONObject()
-                                                .put("Email", "thomas@ease.space")
-                                                .put("Name", "Thomas")))
+                                                .put("Email", teamUser.getEmail())
+                                                .put("Name", teamUser.getUsername())))
                                 .put(Emailv31.Message.TEMPLATEID, 301785)
                                 .put(Emailv31.Message.VARIABLES, new JSONObject()
-                                        .put("apps", new JSONArray()
-                                                .put(new JSONObject()
-                                                        .put("name", "test")))
-                                        .put("number_of_apps", 1)
-                                        .put("link", "https://ease.space/")
-                                        .put("link_name", "test"))
+                                        .put("apps", apps)
+                                        .put("number_of_apps", number_of_apps)
+                                        .put("link", teamUser.isVerified() ? Variables.URL_PATH : (Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code()))
+                                        .put("link_name", teamUser.isVerified() ? "Check your new apps" : "Activate account & check new apps"))
                                 .put(Emailv31.Message.TEMPLATELANGUAGE, true)
                                 .put(Emailv31.Message.TEMPLATEERROR_DELIVERY, true)
                                 .put(Emailv31.Message.TEMPLATEERROR_REPORTING, new JSONObject()

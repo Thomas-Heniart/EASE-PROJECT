@@ -41,17 +41,7 @@ public class AccountsToFillScheduledTask extends TimerTask {
                     appObj.put("name", app.getAppInformation().getName());
                     appArr.put(appObj);
                 });
-                /* MailjetMessageWrapper mailjetMessageWrapper = new MailjetMessageWrapper();
-                mailjetMessageWrapper.setTemplateId(301785);
-                mailjetMessageWrapper.setFrom("contact@ease.space", "Ease.Space");
-                mailjetMessageWrapper.addTo(teamUser.getEmail());
-                mailjetMessageWrapper.setVariable("apps", appArr);
-                mailjetMessageWrapper.setVariable("number_of_apps", appArr.length());
-                mailjetMessageWrapper.setVariable("link", teamUser.isVerified() ? Variables.URL_PATH : (Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code()));
-                mailjetMessageWrapper.setVariable("link_name", teamUser.isVerified() ? "Check your new apps" : "Activate account & check new apps");
-                mailjetMessageWrapper.setErrorReporting();
-                mailjetMessageWrapper.send(); */
-                MailjetMessageWrapper.test();
+                MailjetMessageWrapper.newAccountsMail(teamUser, appArr, appArr.length());
             }
             hibernateQuery.commit();
         } catch (Exception e) {
