@@ -678,7 +678,8 @@ export function AppConnection({app_id, keep_focus}){
     const app = getState().dashboard.apps[app_id];
     extension.app_connection({
       app_id:app_id,
-      highlight: !keep_focus
+      active_tab: !keep_focus,
+      website: app.website
     });
     return api.dashboard.getAppConnectionInformation({
       app_id: app_id
