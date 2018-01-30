@@ -1,8 +1,8 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
+import com.Ease.Mail.MailjetMessageWrapper;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -148,18 +148,8 @@ public class ServletDeleteTeamUser extends HttpServlet {
             team.removeTeamUser(teamUser_to_delete);
             User user = teamUser_to_delete.getUser();
             if (user != null) {
-                if (teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
-                    MailJetBuilder mailJetBuilder = new MailJetBuilder();
-                    mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-                    mailJetBuilder.setTemplateId(180165);
-                    mailJetBuilder.addTo(teamUser_connected.getEmail());
-                    mailJetBuilder.addVariable("first_name", teamUser_to_delete.getUser().getPersonalInformation().getFirst_name());
-                    mailJetBuilder.addVariable("last_name", teamUser_to_delete.getUser().getPersonalInformation().getLast_name());
-                    mailJetBuilder.addVariable("team_name", team.getName());
-                    mailJetBuilder.addVariable("single_cards", singleCards);
-                    mailJetBuilder.addVariable("enterprise_cards", enterpriseCards);
-                    mailJetBuilder.sendEmail();
-                }
+                if (teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0)
+                    MailjetMessageWrapper.deleteTeamUserMail(teamUser_connected.getEmail(), teamUser_to_delete.getUser().getPersonalInformation().getFirst_name(), teamUser_to_delete.getUser().getPersonalInformation().getLast_name(), team.getName(), singleCards, enterpriseCards);
                 user.removeTeamUser(teamUser_to_delete);
                 MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
                 mailjetContactWrapper.updateUserContactLists(user);

@@ -123,4 +123,35 @@ public class MailjetMessageWrapper {
         System.out.println(response.getData());
     }
 
+    public static void deleteTeamUserMail(String email, String first_name, String last_name, String team_name, JSONArray singleCards, JSONArray enterpriseCards) throws MailjetSocketTimeoutException, MailjetException {
+        MailjetClient client;
+        MailjetRequest request;
+        MailjetResponse response;
+        client = new MailjetClient(Variables.MJ_APIKEY_PUBLIC, Variables.MJ_APIKEY_PRIVATE, new ClientOptions("v3.1"));
+        request = new MailjetRequest(Emailv31.resource)
+                .property(Emailv31.MESSAGES, new JSONArray()
+                        .put(new JSONObject()
+                                .put(Emailv31.Message.FROM, new JSONObject()
+                                        .put("Email", "contact@ease.space")
+                                        .put("Name", "Ease.Space"))
+                                .put(Emailv31.Message.TO, new JSONArray()
+                                        .put(new JSONObject()
+                                                .put("Email", email)))
+                                .put(Emailv31.Message.TEMPLATEID, 180165)
+                                .put(Emailv31.Message.VARIABLES, new JSONObject()
+                                        .put("single_cards", singleCards)
+                                        .put("enterprise_cards", enterpriseCards)
+                                        .put("first_name", first_name)
+                                        .put("last_name", last_name)
+                                        .put("team_name", team_name))
+                                .put(Emailv31.Message.TEMPLATELANGUAGE, true)
+                                .put(Emailv31.Message.TEMPLATEERROR_DELIVERY, true)
+                                .put(Emailv31.Message.TEMPLATEERROR_REPORTING, new JSONObject()
+                                        .put("Email", "thomas@ease.space")
+                                        .put("Name", "Thomas"))));
+        response = client.post(request);
+        System.out.println(response.getStatus());
+        System.out.println(response.getData());
+    }
+
 }

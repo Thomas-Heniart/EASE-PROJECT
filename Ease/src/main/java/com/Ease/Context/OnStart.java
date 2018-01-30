@@ -87,7 +87,7 @@ public class OnStart implements ServletContextListener {
                 StatsScheduledTask statsScheduledTask = new StatsScheduledTask();
                 time.schedule(statsScheduledTask, next_clock, 24 * 60 * 60 * 1000);
 
-                /* Calendar delay_six_pm = Calendar.getInstance();
+                Calendar delay_six_pm = Calendar.getInstance();
                 hour = delay_six_pm.get(Calendar.HOUR_OF_DAY);
                 minutes = delay_six_pm.get(Calendar.MINUTE);
                 if (hour > 18 || (hour == 18 && minutes >= 30))
@@ -97,25 +97,6 @@ public class OnStart implements ServletContextListener {
                 next_clock = delay_six_pm.getTimeInMillis() - new Date().getTime();
                 AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask();
                 time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000);
-
-                MailJetBuilder mailJetBuilder = new MailJetBuilder();
-                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-                mailJetBuilder.setTemplateId(180165);
-                mailJetBuilder.addTo("thomas@ease.space");
-                mailJetBuilder.addVariable("first_name", "Thomas");
-                mailJetBuilder.addVariable("last_name", "Heniart");
-                mailJetBuilder.addVariable("team_name", "Test");
-                JSONArray singleCards = new JSONArray()
-                        .put(new JSONObject()
-                                .put("name", "Google")
-                                .put("account", "(easetester1@gmail.com)"));
-                JSONArray enterpriseCards = new JSONArray()
-                        .put(new JSONObject()
-                                .put("name", "Facebook")
-                                .put("account", "(easetester2@gmail.com)"));
-                mailJetBuilder.addVariable("single_cards", singleCards);
-                mailJetBuilder.addVariable("enterprise_cards", enterpriseCards);
-                mailJetBuilder.sendEmail(); */
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
