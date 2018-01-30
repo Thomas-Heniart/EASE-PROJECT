@@ -1476,6 +1476,16 @@ module.exports = {
       }).catch(err => {
         throw err;
       })
+    },
+    changeStep: ({team_id, step}) => {
+      return axios.put('/api/v1/TeamOnboardingStep', {
+        team_id: team_id,
+        step: step
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err;
+      });
     }
   }
 };

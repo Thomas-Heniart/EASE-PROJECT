@@ -1,3 +1,5 @@
+import {goToOnBoarding} from "../actions/onBoardingActions";
+
 var React = require('react');
 var classnames = require('classnames');
 var ReactRouter = require('react-router-dom');
@@ -125,7 +127,14 @@ class TeamView extends React.Component {
     const defaultRoom = Object.keys(rooms).map(id => {
       return rooms[id];
     }).find(item => (item.default));
-    this.props.history.replace(`/teams/${teamId}/${defaultRoom.id}`);
+    if (this.props.teams[teamId].onboarding_step !== 5 && this.props.teams[teamId].team_users[this.props.teams[teamId].my_team_user_id].role === 3) {
+      this.props.dispatch(goToOnBoarding({
+        team_id: teamId
+      }));
+      this.props.history.replace(`/main/simpleTeamCreation`);
+    }
+    else
+      this.props.history.replace(`/teams/${teamId}/${defaultRoom.id}`);
   };
   getSelectedItem = () => {
     const team = this.props.teams[this.props.match.params.teamId];

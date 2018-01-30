@@ -5,6 +5,7 @@ import AddBookmark from './AddBookmark';
 import AddAnyApp from './AddAnyApp'
 import AddSoftwareCredentials from './AddSoftwareCredentials';
 import Importations from './Importations'
+import OnBoardingImportation from './OnBoardingImportation';
 import {handleSemanticInput} from "../../utils/utils";
 import { Grid, Menu, Input, Icon } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
@@ -81,6 +82,7 @@ class Catalog extends Component {
                   {this.state.mounted &&
                     <Switch>
                       <Route path={`${this.props.match.path}/importations`} component={Importations}/>
+                      <Route path={`${this.props.match.path}/onBoardingImportation`} component={OnBoardingImportation}/>
                       <Route path={`${this.props.match.path}/softwareCredentials`} component={AddSoftwareCredentials}/>
                       <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
                       <Route exact path={`${this.props.match.path}/website/addWebsite`}

@@ -27,14 +27,13 @@ class App extends React.Component {
       <HashRouter>
         <Base>
           <Route exact path={"/"} component={Root}/>
-          <Route path="/teamCreation" component={TeamCreationView}/>
+          <Route path="/teamCreation" component={NewTeamCreationView}/>
           <Route path="/main" component={requireAuthentication(MainView)}/>
           <Route path="/teamJoin/:code" component={TeamJoinView}/>
           <Route path="/teams/:teamId/:itemId?" component={requireAuthentication(TeamView)}/>
           <Route path="/login" component={Login}/>
           <Route path="/registration" component={Registration}/>
           <Route path="/recover/:email/:code" component={RenewPassword}/>
-          <Route path="/newTeamCreation" component={NewTeamCreationView}/>
         </Base>
       </HashRouter>
     )

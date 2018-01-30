@@ -20,43 +20,43 @@ class ChoosePasswordManager extends React.Component {
             <div className='password_manager'><img src="/resources/other/Chrome.png"/><span>Chrome</span></div>
           </div>
           <div
+            onClick={e => selectPasswordManager(10)}
+            className={passwordManagerSelected === 10 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
+            <div className='password_manager'><img src="/resources/other/hand.png"/><span>I'll enter my accounts manually</span></div>
+          </div>
+          <div
             onClick={e => selectPasswordManager(3)}
             className={passwordManagerSelected === 3 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img src="/resources/other/hand.png"/><span>I'll enter my accounts manually</span></div>
+            <div className='password_manager'><img src="/resources/other/Dashlane.png"/><span>Dashlane</span></div>
           </div>
           <div
             onClick={e => selectPasswordManager(4)}
             className={passwordManagerSelected === 4 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img src="/resources/other/Dashlane.png"/><span>Dashlane</span></div>
+            <div className='password_manager'><img src="/resources/other/Lastpass.png"/><span>LastPass</span></div>
           </div>
           <div
             onClick={e => selectPasswordManager(5)}
             className={passwordManagerSelected === 5 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img src="/resources/other/Lastpass.png"/><span>LastPass</span></div>
+            <div className='password_manager'><img src="/resources/other/1password.png"/><span>1Password</span></div>
           </div>
           <div
             onClick={e => selectPasswordManager(6)}
             className={passwordManagerSelected === 6 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img src="/resources/other/1password.png"/><span>1Password</span></div>
+            <div className='password_manager'><img src="/resources/other/Keepass.png"/><span>Keepass</span></div>
           </div>
           <div
             onClick={e => selectPasswordManager(7)}
             className={passwordManagerSelected === 7 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img src="/resources/other/Keepass.png"/><span>Keepass</span></div>
+            <div className='password_manager'><img src="/resources/other/roboform.png"/><span>Roboform</span></div>
           </div>
           <div
             onClick={e => selectPasswordManager(8)}
             className={passwordManagerSelected === 8 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img src="/resources/other/roboform.png"/><span>Roboform</span></div>
+            <div className='password_manager'><img src="/resources/other/Zohovault.png"/><span>Zoho Vault</span></div>
           </div>
           <div
             onClick={e => selectPasswordManager(9)}
             className={passwordManagerSelected === 9 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img src="/resources/other/Zohovault.png"/><span>Zoho Vault</span></div>
-          </div>
-          <div
-            onClick={e => selectPasswordManager(10)}
-            className={passwordManagerSelected === 10 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
             <div className='password_manager'><img src="/resources/other/passpack.png"/><span>Passpack</span></div>
           </div>
         </div>
@@ -134,9 +134,11 @@ class CredentialsSingleApps extends React.Component {
       fourthField: {},
       seePassword: {}
     };
-    this.props.singleApps.map(id => {
-      this.state.fourthField[id] = 0;
-      this.state.seePassword[id] = false
+    Object.keys(this.props.singleApps).map(room_id => {
+      this.props.singleApps[room_id].map(id => {
+        this.state.fourthField[id] = 0;
+        this.state.seePassword[id] = false
+      });
     });
   }
   changeFourthField = (id, int) => {
@@ -148,42 +150,72 @@ class CredentialsSingleApps extends React.Component {
     this.setState({seePassword: this.state.seePassword});
   };
   render() {
-    const {singleApps, websites, credentialsSingleApps, users, handleAppInfo, deleteAccount} = this.props;
-    const accounts = singleApps.map(id => (
+    const {
+      users,
+      websites,
+      singleApps,
+      testPassword,
+      handleAppInfo,
+      deleteSingleApp,
+      credentialsSingleApps
+    } = this.props;
+    const filler = users.map(item => {
+      return {
+        text: item.username,
+        value: item.id
+      }
+    });
+    const accounts = Object.keys(singleApps).map(room_id => {
+      return singleApps[room_id].map(id => (
       <div key={id} className='account'>
-        <Icon name='remove circle' onClick={e => deleteAccount(id)}/>
-        <img src={website[id].logo}/>
+        <Icon name='remove circle' onClick={e => deleteSingleApp(room_id, id)}/>
+        <img src={websites[id].logo}/>
         <Input size='mini'
                name='name'
                type='text'
-               onChange={(e, name, value) => {handleAppInfo(id, name, value)}}
+               onChange={(e, name, value) => {
+                 handleAppInfo(id, name, value)
+               }}
                value={credentialsSingleApps[id].name}/>
         <Input size='mini'
                type='text'
                name='login'
-               onChange={(e, name, value) => {handleAppInfo(id, name, value)}}
+               onChange={(e, name, value) => {
+                 handleAppInfo(id, name, value)
+               }}
                value={credentialsSingleApps[id].login}
                disabled={this.state.fourthField[id] === 1}/>
         <Input size='mini'
                name='password'
-               onChange={(e, name, value) => {handleAppInfo(id, name, value)}}
+               onChange={(e, name, value) => {
+                 handleAppInfo(id, name, value)
+               }}
                value={credentialsSingleApps[id].password}
                disabled={this.state.fourthField[id] === 1}
                icon={<Icon name='eye' link onClick={e => this.seePassword(id)}/>}
-               type={this.state.seePassword[id] === false ? 'password' : 'text'} />
+               type={this.state.seePassword[id] === false ? 'password' : 'text'}/>
         {(credentialsSingleApps[id].login === '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0) &&
-          <p onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Ask connection info to...</p>}
+        <p onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Ask password to...</p>}
         {(credentialsSingleApps[id].login !== '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0) &&
-          <p onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Don't know the password?</p>}
+        <p onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Unknown password?</p>}
         {this.state.fourthField[id] === 1 &&
-          <React.Fragment>
-            <Icon onClick={e => this.changeFourthField(id, 0)} name='remove circle' style={{cursor:'pointer',position:'relative',top:'14',left:'206',zIndex:'1',color:'#e0e1e2',margin:'0'}} />
-            <Dropdown selection/>
-          </React.Fragment>}
+        <div style={{position:'relative',marginLeft:'5px'}}>
+          <Icon size='large' name='circle' style={{position:'absolute',bottom:'47',left:'183',zIndex:'1',color:'white',margin:'0'}} />
+          <Icon onClick={e => this.changeFourthField(id, 0)} name='remove circle' style={{
+            cursor: 'pointer',
+            position: 'absolute',
+            bottom: '47',
+            left: '183',
+            zIndex: '1',
+            color: '#e0e1e2',
+            margin: '0'
+          }}/>
+          <Dropdown selection options={filler}/>
+        </div>}
         {(credentialsSingleApps[id].login !== '' && credentialsSingleApps[id].password !== '') &&
-          <p><Icon name='magic'/>Test this password</p>}
-      </div>
-    ));
+        <p onClick={e => testPassword(id)}><Icon name='magic'/>Test this password</p>}
+      </div>))
+    });
     return (
       <React.Fragment>
         <Header as='h1'>Enter shared accounts information</Header>
@@ -215,11 +247,12 @@ class OnBoardingAccounts extends React.Component {
       singleApps,
       currentRoom,
       appsSelected,
+      testPassword,
       handleAppInfo,
-      deleteAccount,
       roomsSelected,
       roomsWebsites,
       selectSingleApp,
+      deleteSingleApp,
       credentialsSingleApps,
       selectPasswordManager,
       passwordManagerSelected} = this.props;
@@ -249,8 +282,9 @@ class OnBoardingAccounts extends React.Component {
             users={users}
             singleApps={singleApps}
             websites={roomsWebsites}
+            testPassword={testPassword}
             handleAppInfo={handleAppInfo}
-            deleteAccount={deleteAccount}
+            deleteSingleApp={deleteSingleApp}
             credentialsSingleApps={credentialsSingleApps}/>}
       </React.Fragment>
     )
