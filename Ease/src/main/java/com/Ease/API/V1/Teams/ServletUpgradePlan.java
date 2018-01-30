@@ -40,12 +40,16 @@ public class ServletUpgradePlan extends HttpServlet {
                     item.put("plan", Team.plansMap.get(plan_id));
                     params.put("trial_period_days", 30);
                     params.put("tax_percent", 20.0);
+                    item.put("quantity", qte);
                     break;
-
+                case 2:
+                    item.put("plan", Team.plansMap.get(plan_id));
+                    params.put("trial_period_days", 30);
+                    params.put("tax_percent", 20.0);
+                    item.put("quantity", 1);
                 default:
                     throw new HttpServletException(HttpStatus.BadRequest, "No such plan for the moment");
             }
-            item.put("quantity", qte);
             Map<String, Object> items = new HashMap<>();
             items.put("0", item);
             params.put("customer", team.getCustomer_id());

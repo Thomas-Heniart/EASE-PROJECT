@@ -47,8 +47,8 @@ public class CreateTeamSingleCard extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             Integer reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval cannot be under 0");
+            if (reminder_interval < 0 || !team.isValidFreemium())
+                reminder_interval = 0;
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");

@@ -39,6 +39,8 @@ public class Team {
         inverse_plansMap.put("FreePlan", 0);
         plansMap.put(1, "EaseFreemium");
         inverse_plansMap.put("EaseFreemium", 1);
+        plansMap.put(2, "Pro");
+        inverse_plansMap.put("Pro", 2);
     }
 
     @Id
@@ -205,7 +207,7 @@ public class Team {
     }
 
     public boolean isFreemium() throws HttpServletException {
-        return this.getSubscription().getPlan().getId().equals("EaseFreemium");
+        return this.getSubscription().getPlan().getId().equals("EaseFreemium") || this.getSubscription().getPlan().getId().equals("Pro");
     }
 
     public boolean isValidFreemium() throws HttpServletException {
@@ -324,6 +326,9 @@ public class Team {
         res.put("id", this.db_id);
         res.put("name", this.name);
         Integer plan_id = this.getPlan_id();
+        /* Hack for sergii frontend */
+        if (plan_id == 2)
+            plan_id = 1;
         res.put("plan_id", plan_id);
         res.put("payment_required", this.isBlocked());
         return res;
@@ -377,9 +382,11 @@ public class Team {
         try {
             if (this.subscription_id == null || this.subscription_id.equals(""))
                 return;
+            this.initializeStripe(teamProperties);
+            if (this.getPlan_id() == 2)
+                return;
             int activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
             System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
-            this.initializeStripe(teamProperties);
             if (this.getSubscription().getQuantity() <= activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);
