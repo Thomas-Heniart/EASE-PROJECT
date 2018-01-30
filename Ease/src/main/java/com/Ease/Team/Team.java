@@ -69,6 +69,9 @@ public class Team {
     @Column(name = "active")
     private boolean active = true;
 
+    @Column(name = "extra_members")
+    private Integer extra_members;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "db_id")
@@ -165,6 +168,14 @@ public class Team {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Integer getExtra_members() {
+        return extra_members;
+    }
+
+    public void setExtra_members(Integer extra_members) {
+        this.extra_members = extra_members;
     }
 
     public synchronized Set<TeamCard> getTeamCardSet() {
@@ -331,6 +342,7 @@ public class Team {
             plan_id = 1;
         res.put("plan_id", plan_id);
         res.put("payment_required", this.isBlocked());
+        res.put("extra_members", this.getExtra_members());
         return res;
     }
 

@@ -33,6 +33,8 @@ public class ServletEditTeamUserArrivalDate extends HttpServlet {
             Long arrival_date = sm.getLongParam("arrival_date", true, true);
             if (arrival_date < new Date().getTime())
                 throw new HttpServletException(HttpStatus.BadRequest, "Arrival date cannot be past");
+            if (teamUser.getDepartureDate() != null && arrival_date > teamUser.getDepartureDate().getTime())
+                throw new HttpServletException(HttpStatus.BadRequest, "Arrival date cannot be after departure date");
             teamUser.setArrival_date(new Date(arrival_date));
             sm.saveOrUpdate(teamUser);
             sm.setSuccess(teamUser.getJson());
