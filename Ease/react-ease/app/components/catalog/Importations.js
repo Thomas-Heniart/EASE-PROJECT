@@ -553,34 +553,36 @@ class DisplayAccounts extends React.Component {
           </Grid.Column>
           <Grid.Column width={6}>
             <Segment className='segment_pending'>
-              <p className='import'>Import selection to:</p>
-              <Dropdown open={this.state.dropdownOpened}
-                        floating item name='location'
-                        onOpen={this.openDropdown}
-                        onClose={this.openDropdown}
-                        onBlur={this.closeOnBlur}
-                        text={this.props.location}
-                        error={error !== ''}>
-                <Dropdown.Menu>
-                  <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
-                  {profiles}
-                  {profileAdded === false &&
-                  <Dropdown.Item>
-                    <form style={{marginBottom: 0}} onSubmit={createProfile}>
-                      <Input
-                        style={{fontSize: '14px'}}
-                        name="profileName"
-                        required
-                        transparent
-                        onChange={onChange}
-                        class="create_profile_input"
-                        icon={<Icon name="plus square" link onClick={createProfile}/>}
-                        placeholder='New group' />
-                    </form>
-                  </Dropdown.Item>}
-                  {teamsList}
-                </Dropdown.Menu>
-              </Dropdown>
+              <div class="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
+                <p className='import'>Import selection to:</p>
+                <Dropdown open={this.state.dropdownOpened}
+                          floating item name='location'
+                          onOpen={this.openDropdown}
+                          onClose={this.openDropdown}
+                          onBlur={this.closeOnBlur}
+                          text={this.props.location}
+                          error={error !== ''}>
+                  <Dropdown.Menu>
+                    <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
+                    {profiles}
+                    {profileAdded === false &&
+                    <Dropdown.Item>
+                      <form style={{marginBottom: 0}} onSubmit={createProfile}>
+                        <Input
+                          style={{fontSize: '14px'}}
+                          name="profileName"
+                          required
+                          transparent
+                          onChange={onChange}
+                          class="create_profile_input"
+                          icon={<Icon name="plus square" link onClick={createProfile}/>}
+                          placeholder='New group' />
+                      </form>
+                    </Dropdown.Item>}
+                    {teamsList}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
               <div className='div_accounts'>
                 <Message error hidden={error === ''} content={error} size='mini'/>
                 {listPending}
