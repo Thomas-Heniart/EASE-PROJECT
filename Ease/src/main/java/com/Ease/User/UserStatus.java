@@ -56,6 +56,9 @@ public class UserStatus {
     @Column(name = "tip_team_channel_settings_seen")
     private boolean tip_team_channel_settings_seen = false;
 
+    @Column(name = "tip_importation_seen")
+    private boolean tip_importation_seen = false;
+
     public UserStatus() {
 
     }
@@ -180,6 +183,14 @@ public class UserStatus {
         this.tip_team_channel_settings_seen = tip_team_channel_settings_seen;
     }
 
+    public boolean isTip_importation_seen() {
+        return tip_importation_seen;
+    }
+
+    public void setTip_importation_seen(boolean tip_importation_seen) {
+        this.tip_importation_seen = tip_importation_seen;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -203,6 +214,7 @@ public class UserStatus {
         res.put("onboarding_step", this.getOnboarding_step());
         res.put("tip_team_user_settings_seen", this.isTip_team_user_settings_seen());
         res.put("tip_team_channel_settings_seen", this.isTip_team_channel_settings_seen());
+        res.put("tip_importation_seen", this.isTip_importation_seen());
         return res;
     }
 
@@ -214,6 +226,8 @@ public class UserStatus {
             case "tip_team_channel_settings_seen":
                 this.setTip_team_channel_settings_seen(value);
                 break;
+            case "tip_importation_seen":
+                this.setTip_importation_seen(value);
             default:
                 break;
         }

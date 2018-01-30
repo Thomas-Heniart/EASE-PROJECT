@@ -91,11 +91,15 @@ CREATE TABLE ONBOARDING_ROOM_WEBSITE (
 ALTER TABLE users
   CHANGE COLUMN firstName username VARCHAR(255) NOT NULL;
 
-ALTER TABLE status ADD COLUMN onboarding_step TINYINT UNSIGNED NOT NULL;
-UPDATE status SET onboarding_step = 2;
+ALTER TABLE status
+  ADD COLUMN onboarding_step TINYINT UNSIGNED NOT NULL;
+UPDATE status
+SET onboarding_step = 2;
 
-ALTER TABLE userPendingRegistrations ADD COLUMN newsletter TINYINT(1) UNSIGNED NOT NULL DEFAULT 1;
-UPDATE userPendingRegistrations SET newsletter = 1;
+ALTER TABLE userPendingRegistrations
+  ADD COLUMN newsletter TINYINT(1) UNSIGNED NOT NULL DEFAULT 1;
+UPDATE userPendingRegistrations
+SET newsletter = 1;
 
 ALTER TABLE teams
   ADD COLUMN invitations_sent TINYINT(1) NOT NULL DEFAULT 0;
@@ -106,3 +110,8 @@ SET invitations_sent = 1
 WHERE id IN (SELECT DISTINCT team_id
              FROM teamUsers
              WHERE state > 0);
+
+ALTER TABLE status
+  ADD COLUMN tip_importation_seen TINYINT(1) UNSIGNED NOT NULL DEFAULT 0;
+UPDATE status
+SET tip_importation_seen = 0;

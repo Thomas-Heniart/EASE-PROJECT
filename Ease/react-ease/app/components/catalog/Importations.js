@@ -11,6 +11,8 @@ import {createProfile} from "../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../actions/channelActions";
 import {getLogo} from "../../utils/api"
 import { Segment, Button, Icon, TextArea, Dropdown, Form, Menu, Message, Input, Loader, Grid, Label} from 'semantic-ui-react';
+import Joyride from "react-joyride";
+import {setTipSeen} from "../../actions/commonActions";
 
 function json(fields, separator, csv, dispatch) {
   const array = csv.split('\n');
@@ -553,39 +555,61 @@ class DisplayAccounts extends React.Component {
           </Grid.Column>
           <Grid.Column width={6}>
             <Segment className='segment_pending'>
-              <p className='import'>Import selection to:</p>
-              <Dropdown open={this.state.dropdownOpened}
-                        floating item name='location'
-                        onOpen={this.openDropdown}
-                        onClose={this.openDropdown}
-                        onBlur={this.closeOnBlur}
-                        text={this.props.location}
-                        error={error !== ''}>
-                <Dropdown.Menu>
-                  <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
-                  {profiles}
-                  {profileAdded === false &&
-                  <Dropdown.Item>
-                    <form style={{marginBottom: 0}} onSubmit={createProfile}>
-                      <Input
-                        style={{fontSize: '14px'}}
-                        name="profileName"
-                        required
-                        transparent
-                        onChange={onChange}
-                        class="create_profile_input"
-                        icon={<Icon name="plus square" link onClick={createProfile}/>}
-                        placeholder='New group' />
-                    </form>
-                  </Dropdown.Item>}
-                  {teamsList}
-                </Dropdown.Menu>
-              </Dropdown>
+              <div class="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
+                <p className='import'>Import selection to:</p>
+                <Dropdown open={this.state.dropdownOpened}
+                          floating item name='location'
+                          onOpen={this.openDropdown}
+                          onClose={this.openDropdown}
+                          onBlur={this.closeOnBlur}
+                          text={this.props.location}
+                          error={error !== ''}
+                          id="importation_dropdown">
+                  <Dropdown.Menu>
+                    <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
+                    {profiles}
+                    {profileAdded === false &&
+                    <Dropdown.Item>
+                      <form style={{marginBottom: 0}} onSubmit={createProfile}>
+                        <Input
+                          style={{fontSize: '14px'}}
+                          name="profileName"
+                          required
+                          transparent
+                          onChange={onChange}
+                          class="create_profile_input"
+                          icon={<Icon name="plus square" link onClick={createProfile}/>}
+                          placeholder='New group' />
+                      </form>
+                    </Dropdown.Item>}
+                    {teamsList}
+                  </Dropdown.Menu>
+                </Dropdown>
+                {!this.props.user.status.tip_importation_seen &&
+                <Joyride
+                  steps={[{
+                    title: 'Organize your apps by sending them where you want to!',
+                    isFixed: true,
+                    selector:"#importation_dropdown",
+                    position: 'bottom'
+                  }]}
+                  locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
+                  disableOverlay={true}
+                  run={true}
+                  callback={(action) => {
+                    if (action.type === 'finished')
+                      this.props.dispatch(setTipSeen({
+                        name: 'tip_importation_seen'
+                      }));
+                  }}
+                />}
+              </div>
               <div className='div_accounts'>
                 <Message error hidden={error === ''} content={error} size='mini'/>
                 {listPending}
               </div>
               <Button
+                id="import_button"
                 positive
                 loading={loadingSending}
                 disabled={accountsPending.length < 1 || (selectedProfile === -1 && selectedRoom === -1) || loadingSending}
@@ -676,7 +700,8 @@ class ErrorAccounts extends React.Component {
   websites: store.catalog.websites,
   dashboard: store.dashboard,
   profiles: store.dashboard.profiles,
-  teams: store.teams
+  teams: store.teams,
+  user: store.common.user
 }))
 class Importations extends React.Component {
   constructor(props) {

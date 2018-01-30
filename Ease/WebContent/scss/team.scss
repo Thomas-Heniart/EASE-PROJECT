@@ -844,10 +844,11 @@ button.only-text-button {
     }
   }
   #importations {
+    background-color: $themeWhiteColor2;
     color: #949eb7;
     font-size: 16px;
     //text-align: center;
-    margin-top: 20px;
+    padding-top: 20px;
     height: 80%;
     &.step4 {
       height: 100%;
@@ -1028,6 +1029,9 @@ button.only-text-button {
               display: inline-block;
             }
           }
+          i.arrow.circle.right.large.icon {
+            color: $SemanticGreen;
+          }
         }
         .disabled {
           input {
@@ -1041,7 +1045,10 @@ button.only-text-button {
         margin-right: 30px;
         position: fixed;
         p {
+          font-weight: 700;
           display: inline-flex;
+          margin-bottom: 0;
+          font-size: 1.2em;
         }
         div.dropdown {
           border: 1px solid rgba(34,36,38,.15);
@@ -1061,6 +1068,8 @@ button.only-text-button {
           .menu {
             overflow: auto;
             height: 840%;
+            right:0;
+            left: auto;
           }
           .text {
             width: 65%;
@@ -1131,7 +1140,7 @@ button.only-text-button {
           margin-top: 10px;
         }
       }
-      button {
+      #import_button {
         //position: absolute;
         //left: 20px;
         //width: 88%;

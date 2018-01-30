@@ -272,6 +272,7 @@ class NewTeamCreationView extends React.Component {
         plan_id: this.state.plan_id,
         company_size: this.state.companySize,
       })).then(response => {
+        easeTracker.setUserId(this.state.email);
         easeTracker.trackEvent("EaseOnboardingInformationFilled", {
           "plan_id": this.props.plan_id
         });
@@ -513,6 +514,7 @@ class NewTeamCreationView extends React.Component {
           const users = response.map(item => {
             return item.data;
           });
+          easeTracker.trackEvent("EaseOnboardingPeopleCreated");
           this.props.history.replace('/teamCreation/groups');
           this.setState({loading: false, activeItem: 4, view: 4, users: users});
         });
@@ -538,6 +540,7 @@ class NewTeamCreationView extends React.Component {
           team_id: this.state.team_id,
           step: 3
         })).then(res => {
+          easeTracker.trackEvent("EaseOnboardingPeopleAddedInRooms");
           this.state.value[this.state.roomsSelected[0]] = this.state.users.map(user => {
             return user.id
           });
