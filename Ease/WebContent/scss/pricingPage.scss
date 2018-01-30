@@ -26,26 +26,10 @@ body {
 	background-position-x: left;
 	background-position-y: top;
 	padding-bottom: 40px;
-	.price {
-		font-family: MuseoSans, sans-serif;
-		color: #414141;
-		font-weight: bold !important;
-	}
-	.tip {
-		font-size: 20px;
-	}
-	.button {
-		background-color: transparent;
-		color: #414141;
-		border: solid 1px #414141;
-	}
-	.button:hover {
-		font-weight: bold;
-	}
 }
 
 #teamsPreview {
-	padding-top: 85px;
+	padding-top: 60px;
 	.sub-title {
 		font-size: 22px;
 	}
@@ -68,43 +52,19 @@ body {
 }
 
 #pricing {
+	span {
+		font-weight: normal;
+	}
 	.content {
 		width: 100%;
 		.team_plan {
-			padding-left: 22px;
-			padding-right: 22px;
-			height: 1100px;
-			h1 {
-				font-size: 34px;
-				margin: calc(2rem - .14285714em) 0 1rem;
-			}
-			.tip {
-				font-size: 14px;
-			}
 			.feature .info i {
 				color: #3f9f56;
 				margin-left: 3px;
 			}
 		}
-		h1 {
-			color: #4f5267;
-			font-family: MuseoSans, sans-serif;
-			font-size: 54px;
-			font-weight: 300;
-		}
 		.greenText {
 			color: #3fa056 !important;
-		}
-		span {
-			font-size: 18px;
-			font-weight: 300;
-			line-height: 1.27;
-			margin-bottom: 7px;
-		}
-		.price {
-			margin-top: 0;
-			font-size: 36px;
-			font-weight: bold;
 		}
 		#starter_plan {
 			.info {
@@ -124,9 +84,6 @@ body {
 			}
 		}
 		#enterprise_team_plan {
-			h1 {
-				color: white;
-			}
 			.info {
 				margin: 19px 0 0 0;
 				font-size: 0.9rem;
@@ -140,11 +97,6 @@ body {
 
 section#pricing {
 	padding-bottom: 0;
-	h1 {
-		margin: 30px 0;
-		font-size: 50px;
-		color:#4a4a4a;
-	}
 	#prices {
 		background-color: white;
 		padding: 40px 80px;
