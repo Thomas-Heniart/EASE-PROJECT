@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.User.PersonalInformation;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -29,6 +30,9 @@ public class ServletEditFirstAndLastName extends HttpServlet {
             PersonalInformation personalInformation = sm.getUser().getPersonalInformation();
             personalInformation.setFirst_name(first_name);
             personalInformation.setLast_name(last_name);
+            sm.saveOrUpdate(personalInformation);
+            MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
+            mailjetContactWrapper.updateUserData(sm.getUser());
             sm.setSuccess(sm.getUser().getJson());
         } catch (Exception e) {
             sm.setError(e);

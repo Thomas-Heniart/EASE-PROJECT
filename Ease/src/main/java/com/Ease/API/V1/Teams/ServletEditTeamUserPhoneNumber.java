@@ -35,7 +35,7 @@ public class ServletEditTeamUserPhoneNumber extends HttpServlet {
             if (phone_number.equals("") || !Regex.isPhoneNumber(phone_number))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number.");
             teamUser.getUser().getPersonalInformation().setPhone_number(phone_number);
-            sm.saveOrUpdate(teamUser.getUser());
+            sm.saveOrUpdate(teamUser.getUser().getPersonalInformation());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             sm.setSuccess(teamUser.getJson());
         } catch (Exception e) {
