@@ -193,6 +193,7 @@ class TeamView extends React.Component {
               <TeamHeader
                   item={selectedItem}
                   user={user}
+                  me={me}
                   setAddAppView={this.setAddAppView}
                   match={this.props.match}
                   dispatch={this.props.dispatch}/>

@@ -1,10 +1,9 @@
 package com.Ease.Context;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Mail.MailjetMessageWrapper;
 import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamUser;
-import com.Ease.Utils.HttpServletException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -42,19 +41,10 @@ public class AccountsToFillScheduledTask extends TimerTask {
                     appObj.put("name", app.getAppInformation().getName());
                     appArr.put(appObj);
                 });
-                MailJetBuilder mailJetBuilder = new MailJetBuilder();
-                mailJetBuilder.setTemplateId(301785);
-                mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
-                mailJetBuilder.addTo(teamUser.getEmail());
-                mailJetBuilder.addVariable("apps", appArr);
-                mailJetBuilder.addVariable("number_of_apps", appArr.length());
-                mailJetBuilder.addVariable("link", teamUser.isVerified() ? Variables.URL_PATH : (Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code()));
-                mailJetBuilder.addVariable("link_name", teamUser.isVerified() ? "Check your new apps" : "Activate account & check new apps");
-                mailJetBuilder.setTemplateErrorReporting();
-                mailJetBuilder.sendEmail();
+                MailjetMessageWrapper.newAccountsMail(teamUser, appArr, appArr.length());
             }
             hibernateQuery.commit();
-        } catch (HttpServletException e) {
+        } catch (Exception e) {
             hibernateQuery.rollback();
             e.printStackTrace();
         }
