@@ -108,6 +108,8 @@ export function createTeam({name, email, username, company_size, digits ,plan_id
       plan_id: plan_id,
       ws_id: getState().common.ws_id
     }).then(response => {
+      response.team_users = {[response.my_team_user_id]: response.team_users[0]};
+      response.rooms = {[response.rooms[0].id]: response.rooms[0]};
       dispatch({type: 'TEAM_CREATED', payload: {team: response}});
       return response;
     }).catch(err => {
@@ -121,6 +123,43 @@ export function createTeamProfile({team_id, team_user_ids}) {
     return post_api.onBoarding.createTeamProfile({
       team_id: team_id,
       team_user_ids: team_user_ids
+    }).then(response => {
+      return response;
+    }).catch(err => {
+      throw err;
+    })
+  }
+}
+
+export function onBoardingImportation({passwordManager, team_id}) {
+  return (dispatch, getState) => {
+    dispatch({type: 'GO_TO_ON_BOARDING_IMPORTATION',
+      payload: {data: {passwordManager: passwordManager, team_id: team_id}}});
+  }
+}
+
+export function resetOnBoardingImportation() {
+  return (dispatch, getState) => {
+    dispatch({type: 'RESET_ON_BOARDING_PASSWORD_MANAGER'});
+  }
+}
+
+export function goToOnBoarding({passwordManager, team_id}) {
+  return (dispatch, getState) => {
+    dispatch({type: 'GO_TO_ON_BOARDING',
+      payload: {team_id: team_id}
+    });
+  }
+}
+
+export function changeStep({team_id, step}) {
+  return (dispatch, getState) => {
+    dispatch({type: 'CHANGE_STEP',
+      payload: {step: step}
+    });
+    return post_api.onBoarding.changeStep({
+      team_id: team_id,
+      step: step
     }).then(response => {
       return response;
     }).catch(err => {
