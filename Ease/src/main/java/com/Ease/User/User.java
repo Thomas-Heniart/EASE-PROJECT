@@ -71,7 +71,7 @@ public class User {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<SsoGroup> ssoGroupSet = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamUser> teamUsers = ConcurrentHashMap.newKeySet();
 

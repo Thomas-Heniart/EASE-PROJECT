@@ -36,12 +36,6 @@ public class ServletDeleteAccount extends HttpServlet {
                 if (team.isActive())
                     throw new HttpServletException(HttpStatus.BadRequest, "It is not possible to delete your account as long as you are part of a team. Please delete your team (or ask your admin to be deleted of your team) before deleting your personal Ease.space account.");
             }
-            for (TeamUser teamUser : user.getTeamUsers()) {
-                teamUser.setUser(null);
-                teamUser.setTeamKey(null);
-                teamUser.setState(0);
-                sm.saveOrUpdate(teamUser);
-            }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
             hibernateQuery.setParameter("id", user.getDb_id());
@@ -56,11 +50,22 @@ public class ServletDeleteAccount extends HttpServlet {
                     ssoGroup.removeSsoApp(ssoApp);
                 }
             });
+            System.out.println("Apps size: " + user.getApps().size());
+            user.getImportedAccountMap().forEach((aLong, importedAccount) -> sm.deleteObject(importedAccount));
+            user.getImportedAccountMap().clear();
             user.getApps().forEach(sm::deleteObject);
             user.getApps().clear();
             user.getProfileSet().forEach(sm::deleteObject);
             user.getProfileSet().clear();
             user.getSsoGroupSet().clear();
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                teamUser.setUser(null);
+                teamUser.setProfile(null);
+                teamUser.setTeamKey(null);
+                teamUser.setState(0);
+                sm.saveOrUpdate(teamUser);
+            }
+            user.getTeamUsers().clear();
             MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
             mailjetContactWrapper.deleteUserEmail(user.getEmail());
             sm.deleteObject(user);
