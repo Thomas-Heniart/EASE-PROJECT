@@ -326,6 +326,9 @@ public class Team {
         res.put("id", this.db_id);
         res.put("name", this.name);
         Integer plan_id = this.getPlan_id();
+        /* Hack for sergii frontend */
+        if (plan_id == 2)
+            plan_id = 1;
         res.put("plan_id", plan_id);
         res.put("payment_required", this.isBlocked());
         return res;
