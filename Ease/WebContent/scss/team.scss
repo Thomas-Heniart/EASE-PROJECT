@@ -1746,6 +1746,7 @@ button.action_text_button {
 
 .team_plan_wrapper {
   @include flex-basis(370px);
+  padding: 0 !important;
   .features {
     padding: 0 30px;
     margin-top: 50px;
@@ -1756,6 +1757,7 @@ button.action_text_button {
   .feature {
     @include display-flex();
     margin-bottom: 20px;
+    font-size: 1rem;
     &:last-child {
       margin-bottom: 0;
     }
@@ -1801,10 +1803,11 @@ button.action_text_button {
     text-align: center;
   }
   .price {
-    font-weight:bold;
+    font-weight:bold !important;
     font-size: 36px;
     .symbol {
       font-size: 0.8rem;
+      font-weight: normal;
     }
   }
   .button {
