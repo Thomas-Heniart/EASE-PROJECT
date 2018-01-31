@@ -1,0 +1,52 @@
+{
+  "name": "Sparklane",
+  "lastLogin": "",
+  "home": "https://predict.sparklane.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-user-input"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "input[name='password']"
+      },
+      {
+        "action": "trueClick",
+        "search": ".login-button-container button"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "li[popover-class='sidebar-profil-popover']"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[ng-click*='disconnect']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[ng-click*='disconnect']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-user-input"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "li[popover-class='sidebar-profil-popover'], #login-user-input"
+    },
+    {
+      "search": "li[popover-class='sidebar-profil-popover']"
+    }
+  ]
+}
