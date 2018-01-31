@@ -238,12 +238,13 @@ class NewTeamCreationView extends React.Component {
     }
   };
   resendEmail = () => {
+    this.setState({sending: true});
     this.props.dispatch(askRegistration({
       email: this.state.email,
       newsletter: this.state.checkEmail
     })).then(response => {
       if (response.success)
-        this.setState({sending: true, firstName: response.first_name, lastName: response.last_name, companyName: response.company_name});
+        this.setState({firstName: response.first_name, lastName: response.last_name, companyName: response.company_name});
         window.setTimeout(() => {this.setState({sending: false})}, 2000);
     });
   };
