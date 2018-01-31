@@ -844,7 +844,6 @@ button.only-text-button {
     }
   }
   #importations {
-    background-color: $themeWhiteColor2;
     color: #949eb7;
     font-size: 16px;
     //text-align: center;
@@ -855,6 +854,7 @@ button.only-text-button {
       position: fixed;
       width: 100%;
       left: 0;
+      background-color: $themeWhiteColor2;
       //margin-left: -31.5%;
     }
     .no_margin {
