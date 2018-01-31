@@ -65,7 +65,7 @@ class OnBoardingUsers extends React.Component {
           name='email'
           type='email'
           placeholder='Email'
-          autoComplete={false}
+          autoComplete='off'
           onChange={(e, values) => {onChange(idx, values)}}
           label={<Label><Icon style={{color:'white'}} name='user'/></Label>}/>
       )
