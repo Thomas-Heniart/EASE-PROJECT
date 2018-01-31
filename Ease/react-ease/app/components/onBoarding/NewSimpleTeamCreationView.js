@@ -676,13 +676,13 @@ class NewSimpleTeamCreationView extends React.Component {
     else if (this.state.view === 3) {
       // create users
       let emails = this.state.emails.filter((item, idx) => {
-        return (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 30)));
+        return (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29)));
       }).map(item => {
         return item.email;
       });
       if (emails.length < (this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 ))
         emails = this.state.pasteEmails.filter((item, idx) => {
-          return (isEmail(item) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 30)));
+          return (isEmail(item) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29)));
         });
       let calls = emails.map(item => {
         return this.props.dispatch(createTeamUser({
