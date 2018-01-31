@@ -679,6 +679,7 @@ class NewTeamCreationView extends React.Component {
     else if (this.state.view === 4) {
       let calls = [];
       let singleApps = {};
+      let users = this.state.users.slice();
       this.state.roomsSelected.map((room_id, idx) => {
         singleApps[room_id] = [];
         if (idx !== 0) {
@@ -687,7 +688,11 @@ class NewTeamCreationView extends React.Component {
               team_id: this.state.team_id,
               channel_id: room_id,
               team_user_id: user_id
-            })))
+            })));
+            users.map(item => {
+              if (user_id === item.id)
+                item.room_ids.push(room_id)
+            })
           });
         }
       });
@@ -702,7 +707,7 @@ class NewTeamCreationView extends React.Component {
           });
           this.state.value[this.state.roomsSelected[0]].push(this.props.teams[this.state.team_id].my_team_user_id);
           this.props.history.replace(`/teamCreation/accounts?team=${this.state.team_id}`);
-          this.setState({loading: false, activeItem: 5, view: 5, singleApps: singleApps});
+          this.setState({loading: false, activeItem: 5, view: 5, singleApps: singleApps, users: users});
         });
       });
     }
