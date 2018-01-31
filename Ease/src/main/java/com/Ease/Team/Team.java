@@ -90,6 +90,10 @@ public class Team {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCard> teamCardSet = ConcurrentHashMap.newKeySet();
 
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapKey(name = "email")
+    private Map<String, InvitedFriend> invitedFriendMap = new ConcurrentHashMap<>();
+
     @Transient
     private Customer customer;
 
@@ -253,6 +257,14 @@ public class Team {
         this.teamWebsites = teamWebsites;
     }
 
+    public Map<String, InvitedFriend> getInvitedFriendMap() {
+        return invitedFriendMap;
+    }
+
+    public void setInvitedFriendMap(Map<String, InvitedFriend> invitedFriendMap) {
+        this.invitedFriendMap = invitedFriendMap;
+    }
+
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
         Channel channel = this.getChannels().get(channel_id);
         if (channel == null)
@@ -310,6 +322,14 @@ public class Team {
 
     public void removeTeamWebsite(Website website) {
         this.getTeamWebsites().remove(website);
+    }
+
+    public InvitedFriend getInvitedFriend(String email) {
+        return this.getInvitedFriendMap().get(email);
+    }
+
+    public void addInvitedFriend(InvitedFriend invitedFriend) {
+        this.getInvitedFriendMap().put(invitedFriend.getEmail(), invitedFriend);
     }
 
     public void edit(JSONObject editJson) {
@@ -575,6 +595,10 @@ public class Team {
             res.put(day_seven / teamUsers_size);
         }
         return res;
+    }
+
+    public void increaseExtraMembers() {
+        this.extra_members++;
     }
 
     @Override

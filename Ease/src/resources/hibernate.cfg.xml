@@ -32,6 +32,7 @@
         <mapping class="com.Ease.Team.Channel"/>
         <mapping class="com.Ease.Team.TeamUser"/>
         <mapping class="com.Ease.Team.TeamUserRole"/>
+        <mapping class="com.Ease.Team.InvitedFriend"/>
         <mapping class="com.Ease.Catalog.Software"/>
         <mapping class="com.Ease.Catalog.SoftwareConnectionInformation"/>
         <mapping class="com.Ease.Catalog.Website"/>
