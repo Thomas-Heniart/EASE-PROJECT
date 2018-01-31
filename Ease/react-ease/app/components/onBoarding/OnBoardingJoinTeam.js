@@ -23,7 +23,9 @@ class PasswordAndPhone extends React.Component {
   render() {
     const {
       onChange,
+      onChangePhone,
       onChangePassword,
+      phoneError,
       phone,
       check,
       password,
@@ -42,7 +44,8 @@ class PasswordAndPhone extends React.Component {
           value={phone}
           placeholder='+33'
           icon='check circle'
-          onChange={onChange}/>
+          onChange={onChangePhone}
+          className={!phoneError ? 'password_verified' : null}/>
         <label className='for_input'>Password</label>
         <Input
           required
@@ -134,6 +137,7 @@ class OnBoardingJoinTeam extends React.Component {
     super(props);
     this.state = {
       loading: false,
+      phoneError: true,
       error: '',
       team_id: 0,
       activeItem: 1,
@@ -157,6 +161,12 @@ class OnBoardingJoinTeam extends React.Component {
       this.setState({[name]: value, passwordError: false});
     else
       this.setState({[name]: value, passwordError: true});
+  };
+  handleInputPhone = (e, {name, value}) => {
+    if (/^(\+|[0-9])(?:[0-9] ?){5,13}[0-9]$/.test(value))
+      this.setState({[name]: value, phoneError: false});
+    else
+      this.setState({[name]: value, phoneError: true});
   };
   login = () => {
     this.props.dispatch(setLoginRedirectUrl(this.props.match.url + '?skip'));
@@ -207,7 +217,7 @@ class OnBoardingJoinTeam extends React.Component {
     }
   }
   checkPassword = () => {
-    return (this.state.password !== '' && this.state.password === this.state.verificationPassword && this.state.phone.length > 9 && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
+    return (this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
   };
   submit = () => {
     this.setState({loading: true});
@@ -287,9 +297,11 @@ class OnBoardingJoinTeam extends React.Component {
                 {this.state.view === 2 &&
                   <PasswordAndPhone
                     onChange={this.handleInput}
+                    onChangePhone={this.handleInputPhone}
                     onChangePassword={this.handlePasswordInput}
                     phone={this.state.phone}
                     check={this.state.checkCGU}
+                    phoneError={this.state.phoneError}
                     passwordError={this.state.passwordError}
                     password={this.state.password}
                     verificationPassword={this.state.verificationPassword}/>}
