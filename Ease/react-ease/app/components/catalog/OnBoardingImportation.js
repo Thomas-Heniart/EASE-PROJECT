@@ -355,6 +355,8 @@ class DisplayAccounts extends React.Component {
     this.setState({accountsNumber: this.props.importedAccounts.length, seePassword: seePassword});
   }
   openDropdown = () => {
+    if (this.props.loadingSending)
+      return;
     if(!this.props.user.status.tip_importation_seen) {
       this.props.dispatch(setTipSeen({
         name: 'tip_importation_seen'
