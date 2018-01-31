@@ -100,6 +100,7 @@ class InformationPassword extends React.Component {
       onChange,
       onChangePassword,
       phone,
+      phoneError,
       password,
       verificationPassword,
       passwordError
@@ -116,7 +117,8 @@ class InformationPassword extends React.Component {
           value={phone}
           placeholder='+33'
           icon='check circle'
-          onChange={onChange}/>
+          onChange={onChange}
+          className={!phoneError ? 'password_verified' : null}/>
         <label className='for_input'>Password</label>
         <Input
           required
@@ -232,8 +234,10 @@ class OnBoardingInformations extends React.Component {
       confirmationCode,
       phone,
       password,
+      phoneError,
       verificationPassword,
       handlePasswordInput,
+      handleInputPhone,
       passwordError,
       companyName,
       companySize,
@@ -258,7 +262,8 @@ class OnBoardingInformations extends React.Component {
           <InformationPassword
             phone={phone}
             password={password}
-            onChange={handleInput}
+            onChange={handleInputPhone}
+            phoneError={phoneError}
             passwordError={passwordError}
             onChangePassword={handlePasswordInput}
             verificationPassword={verificationPassword}/>}

@@ -45,6 +45,7 @@ class NewTeamCreationView extends React.Component {
       password: '',
       verificationPassword: '',
       passwordError: true,
+      phoneError: true,
       companyName: '',
       companySize: '',
       firstName: '',
@@ -88,6 +89,12 @@ class NewTeamCreationView extends React.Component {
   handleConfirmationCode = (e, {name, value}) => {
     if (value.match(/^[0-9]{0,6}$/g))
       this.setState({[name]: value});
+  };
+  handleInputPhone = (e, {name, value}) => {
+    if (/^(\+|[0-9])(?:[0-9] ?){5,13}[0-9]$/.test(value))
+      this.setState({[name]: value, phoneError: false});
+    else
+      this.setState({[name]: value, phoneError: true});
   };
   handlePasswordInput = (e, {name, value}) => {
     if (/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(value))
@@ -729,6 +736,7 @@ class NewTeamCreationView extends React.Component {
                             email={this.state.email}
                             checkEmail={this.state.checkEmail}
                             handleInput={this.handleInput}
+                            handleInputPhone={this.handleInputPhone}
                             onChangeSize={this.handleCompanySize}
                             handleConfirmationCode={this.handleConfirmationCode}
                             confirmationCode={this.state.confirmationCode}
@@ -737,6 +745,7 @@ class NewTeamCreationView extends React.Component {
                             verificationPassword={this.state.verificationPassword}
                             handlePasswordInput={this.handlePasswordInput}
                             passwordError={this.state.passwordError}
+                            phoneError={this.state.phoneError}
                             companyName={this.state.companyName}
                             companySize={this.state.companySize}
                             firstName={this.state.firstName}

@@ -27,8 +27,10 @@ class InformationCompany extends React.Component {
       error,
       onChange,
       onChangeSize,
+      handleInputPhone,
       companyName,
       companySize,
+      phoneError,
       phone
     } = this.props;
     return (
@@ -66,7 +68,8 @@ class InformationCompany extends React.Component {
               name='phone'
               value={phone}
               placeholder='+33'
-              onChange={onChange}/>
+              onChange={handleInputPhone}
+              className={!phoneError ? 'password_verified' : null}/>
           </div>
         </div>
         <Message error content={error}/>
@@ -220,6 +223,12 @@ class NewSimpleTeamCreationView extends React.Component {
   handleConfirmationCode = (e, {name, value}) => {
     if (value.match(/^[0-9]{0,6}$/g))
       this.setState({[name]: value});
+  };
+  handleInputPhone = (e, {name, value}) => {
+    if (/^(\+|[0-9])(?:[0-9] ?){5,13}[0-9]$/.test(value))
+      this.setState({[name]: value, phoneError: false});
+    else
+      this.setState({[name]: value, phoneError: true});
   };
   handlePasswordInput = (e, {name, value}) => {
     if (/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(value))
@@ -774,7 +783,9 @@ class NewSimpleTeamCreationView extends React.Component {
                          render={(props) =>
                            <InformationCompany
                              error={this.state.error}
+                             phoneError={this.state.phoneError}
                              onChange={this.handleInput}
+                             handleInputPhone={this.handleInputPhone}
                              onChangeSize={this.handleCompanySize}
                              companyName={this.state.companyName}
                              companySize={this.state.companySize}
