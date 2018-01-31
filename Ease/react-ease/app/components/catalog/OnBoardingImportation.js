@@ -520,6 +520,7 @@ class DisplayAccounts extends React.Component {
           </Grid.Column>
           <Grid.Column width={6}>
             <Segment className='segment_pending'>
+              <div class="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
               <p className='import'>Import selection to:</p>
               <Dropdown open={this.state.dropdownOpened}
                         floating item name='location'
@@ -549,6 +550,7 @@ class DisplayAccounts extends React.Component {
                   </Dropdown.Item>}
                 </Dropdown.Menu>
               </Dropdown>
+              </div>
               {!this.props.user.status.tip_importation_seen &&
               <Joyride
                 steps={[{

@@ -156,6 +156,14 @@ class NewTeamCreationView extends React.Component {
         return item;
     });
     this.setState({singleApps: singleApps});
+    if (Object.keys(singleApps).filter(item => {return singleApps[item].length > 0}).length === 0) {
+      this.props.dispatch(changeStep({
+        team_id: this.state.team_id,
+        step: 5
+      })).then(res => {
+        window.location.href = "/";
+      });
+    }
   };
   deleteFillerId = (id) => {
     const credentialsSingleApps = Object.assign({}, this.state.credentialsSingleApps);
@@ -627,14 +635,14 @@ class NewTeamCreationView extends React.Component {
     }
     else if (this.state.view === 3) {
       // create users
-      let emails = this.state.emails.filter(item => {
-        return isEmail(item.email);
+      let emails = this.state.emails.filter((item, idx) => {
+        return (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 30)));
       }).map(item => {
         return item.email;
       });
       if (emails.length < (this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 ))
-        emails = this.state.pasteEmails.filter(item => {
-          return isEmail(item);
+        emails = this.state.pasteEmails.filter((item, idx) => {
+          return (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 30)));
         });
       let calls = emails.map(item => {
         return this.props.dispatch(createTeamUser({

@@ -210,6 +210,7 @@ class CredentialsSingleApps extends React.Component {
                type={this.state.seePassword[id] === false ? 'password' : 'text'}/>
         {(credentialsSingleApps[id].login === '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0) &&
         <Popup
+          inverted
           trigger={
             <p className='underline_hover' onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Ask password to...</p>}
           content='You can request logins and passwords from someone in your team.'/>}
