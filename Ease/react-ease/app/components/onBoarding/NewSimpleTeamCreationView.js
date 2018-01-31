@@ -307,8 +307,6 @@ class NewSimpleTeamCreationView extends React.Component {
     this.setState({credentialsSingleApps: credentialsSingleApps});
   };
   dropdownChange = (e, {id, value}) => {
-    if (value.indexOf(this.props.teams[this.state.team_id].my_team_user_id) === -1)
-      return;
     const newValue = Object.assign({}, this.state.value);
     newValue[id] = value;
     this.setState({value: newValue});
