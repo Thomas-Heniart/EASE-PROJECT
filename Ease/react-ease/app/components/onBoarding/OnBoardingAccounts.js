@@ -208,7 +208,7 @@ class CredentialsSingleApps extends React.Component {
                disabled={this.state.fourthField[id] === 1}
                icon={<Icon name='eye' link onClick={e => this.seePassword(id)}/>}
                type={this.state.seePassword[id] === false ? 'password' : 'text'}/>
-        {((credentialsSingleApps[id].login === '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0) || filler[room_id].length === 0) &&
+        {((credentialsSingleApps[id].login === '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0) || filler[room_id].length !== 0) &&
         <Popup
           inverted
           trigger={
