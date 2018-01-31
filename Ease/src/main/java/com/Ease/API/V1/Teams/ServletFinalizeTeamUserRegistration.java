@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by thomas on 02/05/2017.
@@ -83,6 +84,11 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             Integer teamUser_id = (Integer) idTeamAndTeamUser[0];
             Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+            Date now = new Date();
+            if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() < now.getTime())
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot register.");
+            if (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() > now.getTime())
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot register.");
             teamUser.setFirstName(firstName);
             teamUser.setLastName(lastName);
             teamUser.setUsername(username);
@@ -90,6 +96,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             teamUser.setUser(user);
             teamUser.setInvitation_code(null);
             teamUser.setState(1);
+            teamUser.setArrival_date(now);
             sm.saveOrUpdate(teamUser);
             if (teamUser.getAdmin_id() == null || teamUser.getAdmin_id() == 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "The user must be invited by an admin");

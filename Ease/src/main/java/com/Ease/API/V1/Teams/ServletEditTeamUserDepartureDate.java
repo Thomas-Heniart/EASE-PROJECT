@@ -42,6 +42,8 @@ public class ServletEditTeamUserDepartureDate extends HttpServlet {
             else {
                 if (departureDate <= sm.getTimestamp().getTime())
                     throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid departure date.");
+                if (teamUser_to_modify.getArrival_date() != null && teamUser_to_modify.getArrival_date().getTime() > departureDate)
+                    throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be before arrival date");
                 teamUser_to_modify.setDepartureDate(new Date(departureDate));
             }
             sm.saveOrUpdate(teamUser_to_modify);

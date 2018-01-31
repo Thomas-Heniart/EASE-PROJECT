@@ -71,7 +71,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
             }
             HibernateQuery query = sm.getHibernateQuery();
-            Date arrival_date = sm.getTimestamp();
             Long departure_date = sm.getLongParam("departure_date", true, true);
             if (!team.isValidFreemium() || departure_date == null)
                 departure_date = null;
@@ -79,7 +78,14 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 if (departure_date <= sm.getTimestamp().getTime())
                     throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");
             }
-            TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
+            Long arrival_date = sm.getLongParam("arrival_date", true, true);
+            if (!team.isValidFreemium())
+                arrival_date = null;
+            else if (arrival_date < sm.getTimestamp().getTime())
+                throw new HttpServletException(HttpStatus.BadRequest, "Arrival date cannot be past.");
+            if (arrival_date != null && departure_date != null && arrival_date > departure_date)
+                throw new HttpServletException(HttpStatus.BadRequest, "Arrival date must be before departure date");
+            TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date == null ? null : new Date(arrival_date), null, team, new TeamUserRole(role));
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date != null)
                 teamUser.setDepartureDate(new Date(departure_date));
