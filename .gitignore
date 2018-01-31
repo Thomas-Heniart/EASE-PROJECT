@@ -26,4 +26,5 @@ extension/*
 
 Ease/react-ease/node_modules/*
 ./Ease/react-ease/node_modules
-./Ease/target/*
+./Ease/target/
+ease-react-nativa-app/node_modules/**

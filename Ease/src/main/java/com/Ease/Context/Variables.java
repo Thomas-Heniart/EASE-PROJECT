@@ -48,13 +48,12 @@ public class Variables {
     /*
     public static final String ENVIRONNEMENT = "Préprod";
     public static final String KEYS_PATH = "/opt/tomcat/webapps/ROOT/WEB-INF/classes/com/Ease/Utils/Crypto/privateKeys.txt";
-    public static final String URL_PATH = "https://turfu.ease.space:8443/";
+    public static final String URL_PATH = "https://beta.ease.space/";
     public static final String DATABASE_IP = "127.0.0.1";
-    public static final String STRIPE_API_KEY ="sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
-    public static final String WEBSITES_FOLDER_PATH = "/opt/resources/websites/";
+    public static final String STRIPE_API_KEY ="sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T"; */
+    /* public static final String WEBSITES_FOLDER_PATH = "/opt/resources/websites/";
     public static final String SOFTWARE_FOLDER_PATH = "/opt/resources/software/";
-    public static final String BACKGROUND_PATH = "/opt/tomcat/resources/backgrounds/";
-    */
+    public static final String BACKGROUND_PATH = "/opt/resources/backgrounds/"; */
 
     //Fifi
     /*
@@ -67,9 +66,11 @@ public class Variables {
     public static final String STRIPE_API_KEY ="sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
     */
     //Toto
+    /*
     public static final String ENVIRONNEMENT = "PC de Toto";
     public static final String KEYS_PATH = "/Users/thomas/EASE-PROJECT/Ease/src/com/Ease/Utils/Crypto/privateKeys.txt";
     public static final String URL_PATH = "https://localhost:8443/";
     public static final String DATABASE_IP = "127.0.0.1";
     public static final String STRIPE_API_KEY = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
+    */
 }
