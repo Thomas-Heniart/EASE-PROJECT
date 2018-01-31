@@ -84,7 +84,7 @@
                         <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
                         <div class="text-center" style="margin-bottom:26px">
                             <button class="button-unstyle big-button button">
-                                <a href="/#/registration" class="link-unstyle" style="font-size: 18px;">
+                                <a href="/#/teamCreation?plan_id=0" class="link-unstyle" style="font-size: 18px;">
                                     <fmt:message key="pricing.free.button"/>
                                 </a>
                             </button>
@@ -139,7 +139,7 @@
                     </div>
                     <div class="text-center" style="margin: 60px 0 0 0">
                         <button class="button-unstyle big-button button signUpButton" style="font-size: 18px;">
-                            <a href="/#/registration" class="link-unstyle" style="font-size: 18px;">
+                            <a href="/#/teamCreation?plan_id=0" class="link-unstyle" style="font-size: 18px;">
                                 <fmt:message key="pricing.free.button"/>
                             </a>
                         </button>
