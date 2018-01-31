@@ -44,7 +44,7 @@ function TeamBasicPlan(props) {
           <button class="button-unstyle big-button button">
             <NavLink to={`/main/simpleTeamCreation?plan_id=0`} className="link-unstyle"
                      activeClassName="active">
-              CREATE A FREE TEAM
+              CREATE A TEAM FOR FREE
             </NavLink>
           </button>
         </div>
