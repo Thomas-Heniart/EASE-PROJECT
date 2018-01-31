@@ -68,6 +68,7 @@ class InformationCompany extends React.Component {
               name='phone'
               value={phone}
               placeholder='+33'
+              icon='check circle'
               onChange={handleInputPhone}
               className={!phoneError ? 'password_verified' : null}/>
           </div>
@@ -91,6 +92,7 @@ class NewSimpleTeamCreationView extends React.Component {
       email: '',
       plan_id: 0,
       firstLoading: false,
+      phoneError: true,
       loading: false,
       error: '',
       activeItem: 1,
@@ -305,8 +307,6 @@ class NewSimpleTeamCreationView extends React.Component {
     this.setState({credentialsSingleApps: credentialsSingleApps});
   };
   dropdownChange = (e, {id, value}) => {
-    if (value.indexOf(this.props.teams[this.state.team_id].my_team_user_id) === -1)
-      return;
     const newValue = Object.assign({}, this.state.value);
     newValue[id] = value;
     this.setState({value: newValue});
@@ -325,7 +325,7 @@ class NewSimpleTeamCreationView extends React.Component {
     this.setState({pasteEmails: emails});
   };
   checkPassword = () => {
-    return (this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
+    return (this.state.companyName !== '' && this.state.companySize !== '' && !this.state.phoneError);
   };
   checkNoDuplicateEmails = () => {
     return this.state.emails.filter((item, idx) => {
@@ -682,7 +682,7 @@ class NewSimpleTeamCreationView extends React.Component {
       });
       if (emails.length < (this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 ))
         emails = this.state.pasteEmails.filter((item, idx) => {
-          return (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 30)));
+          return (isEmail(item) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 30)));
         });
       let calls = emails.map(item => {
         return this.props.dispatch(createTeamUser({
@@ -718,6 +718,7 @@ class NewSimpleTeamCreationView extends React.Component {
     else if (this.state.view === 4) {
       let calls = [];
       let singleApps = {};
+      let users = this.state.users.slice();
       this.state.roomsSelected.map((room_id, idx) => {
         singleApps[room_id] = [];
         if (idx !== 0) {
@@ -726,7 +727,11 @@ class NewSimpleTeamCreationView extends React.Component {
               team_id: this.state.team_id,
               channel_id: room_id,
               team_user_id: user_id
-            })))
+            })));
+            users.map(item => {
+              if (user_id === item.id)
+                item.room_ids.push(room_id)
+            })
           });
         }
       });
@@ -740,7 +745,7 @@ class NewSimpleTeamCreationView extends React.Component {
           });
           this.state.value[this.state.roomsSelected[0]].push(this.props.teams[this.state.team_id].my_team_user_id);
           this.props.history.replace(`/main/simpleTeamCreation/accounts?team=${this.state.team_id}`);
-          this.setState({loading: false, activeItem: 5, view: 5, singleApps: singleApps});
+          this.setState({loading: false, activeItem: 5, view: 5, singleApps: singleApps, users: users});
         });
       });
     }
@@ -853,6 +858,7 @@ class NewSimpleTeamCreationView extends React.Component {
                       loading={this.state.loading}
                       onClick={this.state.view === 5 ? this.nextAccounts : this.next}
                       disabled={(this.state.loading)
+                      || (this.state.view === 1 && !this.checkPassword())
                       || (this.state.view === 2 && this.state.roomsSelected.length < 4)
                       || (this.state.view === 3 && (!this.invitationsReady() || this.checkNoDuplicateEmails()))
                       || (this.state.view === 5 && this.state.viewAccounts === 1 && this.state.passwordManagerSelected === 0)
