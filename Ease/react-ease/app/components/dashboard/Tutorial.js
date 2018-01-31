@@ -20,7 +20,7 @@ class Tutorial extends Component {
   };
   render(){
     let steps = [];
-    if (document.querySelector('.app_wrapper:not(.empty)'))
+     if (!!document.querySelector('.app_wrapper:not(.empty)'))
       steps.push({
         title: 'Just click on an App to login or access account info.',
         isFixed: true,

@@ -180,7 +180,7 @@ class TeamView extends React.Component {
             <FreeTrialEndModal team_id={team.id}/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
-            {(me.role < 3 || me.role === 3 && !!me.phone_number) && !user.status.team_tuto_done &&
+            {!user.status.team_tuto_done &&
             <TeamsTutorial/>}
             {this.state.teamMenuActive &&
             <TeamMenu

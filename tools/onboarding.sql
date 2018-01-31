@@ -1,4 +1,4 @@
-CREATE TABLE ONBOARDING_ROOM (
+/* CREATE TABLE ONBOARDING_ROOM (
   id      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   name    VARCHAR(255)     NOT NULL,
   example VARCHAR(255)     NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE ONBOARDING_ROOM_WEBSITE (
   FOREIGN KEY (onboarding_room_id) REFERENCES ONBOARDING_ROOM (id),
   FOREIGN KEY (website_id) REFERENCES websites (id),
   UNIQUE (onboarding_room_id, website_id)
-);
+); */
 
 SET FOREIGN_KEY_CHECKS = 0;
 

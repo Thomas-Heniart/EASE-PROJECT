@@ -23,7 +23,8 @@ class Dashboard extends Component {
   constructor(props){
     super(props);
     this.state = {
-      scrolling: false
+      scrolling: false,
+      tutorial: false
     }
   }
   onScroll = (e) => {
@@ -66,6 +67,8 @@ class Dashboard extends Component {
         }, 3000);
       }
     }
+    if (!this.props.tutorial_done)
+      this.setState({tutorial: true});
   }
   componentWillMount() {
     document.title = "Ease.space";
@@ -89,7 +92,7 @@ class Dashboard extends Component {
                   <DashboardColumn idx={idx} key={idx} profile_ids={column}/>
               )
             })}
-            {!this.props.tutorial_done &&
+            {this.state.tutorial &&
             <Tutorial/>}
           </ScrollingComponent>
         </div>
