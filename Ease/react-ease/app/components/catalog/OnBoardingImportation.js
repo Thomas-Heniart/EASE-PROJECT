@@ -555,17 +555,24 @@ class DisplayAccounts extends React.Component {
                   title: 'Organize your apps by sending them where you want to!',
                   isFixed: true,
                   selector:"#importation_dropdown",
-                  position: 'bottom'
+                  position: 'bottom',
+                  style: {
+                    beacon: {
+                      inner: '#45C997',
+                      outer: '#45C997'
+                    }
+                  }
                 }]}
                 locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
                 disableOverlay={true}
                 run={true}
+                allowClicksThruHole={true}
                 callback={(action) => {
                   if (action.type === 'finished')
                     this.props.dispatch(setTipSeen({
                       name: 'tip_importation_seen'
                     }));
-                  }}/>}
+                }}/>}
               <div className='div_accounts'>
                 <Message error hidden={error === ''} content={error} size='mini'/>
                 {listPending}
