@@ -230,7 +230,7 @@ class OnBoardingJoinTeam extends React.Component {
       });
     }
     else if (this.state.view === 1 && !this.state.account_exists) {
-      this.setState({view: 2});
+      this.setState({view: 2, loading: false});
     }
     else if (this.state.view === 2) {
       this.props.dispatch(newRegistration({
