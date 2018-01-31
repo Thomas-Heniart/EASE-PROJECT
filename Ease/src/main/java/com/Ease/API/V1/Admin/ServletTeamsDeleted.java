@@ -28,7 +28,7 @@ public class ServletTeamsDeleted extends HttpServlet {
             for (Team team : teams) {
                 JSONObject tmp = new JSONObject();
                 tmp.put("name", team.getName());
-                tmp.put("phone_number", team.getTeamUserOwner().getPhone_number());
+                tmp.put("phone_number", team.getTeamUserOwner().getUser().getPersonalInformation().getPhone_number());
                 tmp.put("email", team.getTeamUserOwner().getEmail());
                 res.put(tmp);
             }

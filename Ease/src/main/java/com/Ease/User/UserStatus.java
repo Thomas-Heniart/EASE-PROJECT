@@ -47,11 +47,17 @@ public class UserStatus {
     @Column(name = "new_feature_seen")
     private boolean new_feature_seen = false;
 
+    @Column(name = "onboarding_step")
+    private Integer onboarding_step = 0;
+
     @Column(name = "tip_team_user_settings_seen")
     private boolean tip_team_user_settings_seen = false;
 
     @Column(name = "tip_team_channel_settings_seen")
     private boolean tip_team_channel_settings_seen = false;
+
+    @Column(name = "tip_importation_seen")
+    private boolean tip_importation_seen = false;
 
     public UserStatus() {
 
@@ -153,6 +159,14 @@ public class UserStatus {
         this.new_feature_seen = new_feature_seen;
     }
 
+    public Integer getOnboarding_step() {
+        return onboarding_step;
+    }
+
+    public void setOnboarding_step(Integer onboarding_step) {
+        this.onboarding_step = onboarding_step;
+    }
+
     public boolean isTip_team_user_settings_seen() {
         return tip_team_user_settings_seen;
     }
@@ -167,6 +181,14 @@ public class UserStatus {
 
     public void setTip_team_channel_settings_seen(boolean tip_team_channel_settings_seen) {
         this.tip_team_channel_settings_seen = tip_team_channel_settings_seen;
+    }
+
+    public boolean isTip_importation_seen() {
+        return tip_importation_seen;
+    }
+
+    public void setTip_importation_seen(boolean tip_importation_seen) {
+        this.tip_importation_seen = tip_importation_seen;
     }
 
     @Override
@@ -189,8 +211,10 @@ public class UserStatus {
         res.put("tuto_done", this.isTuto_done());
         res.put("team_tuto_done", this.isTeam_tuto_done());
         res.put("terms_reviewed", this.isTerms_reviewed());
+        res.put("onboarding_step", this.getOnboarding_step());
         res.put("tip_team_user_settings_seen", this.isTip_team_user_settings_seen());
         res.put("tip_team_channel_settings_seen", this.isTip_team_channel_settings_seen());
+        res.put("tip_importation_seen", this.isTip_importation_seen());
         return res;
     }
 
@@ -202,6 +226,8 @@ public class UserStatus {
             case "tip_team_channel_settings_seen":
                 this.setTip_team_channel_settings_seen(value);
                 break;
+            case "tip_importation_seen":
+                this.setTip_importation_seen(value);
             default:
                 break;
         }

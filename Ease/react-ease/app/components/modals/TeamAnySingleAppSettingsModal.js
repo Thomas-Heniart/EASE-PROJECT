@@ -278,7 +278,7 @@ class TeamAnySingleAppSettingsModal extends Component{
             </Form.Field>}
             {this.state.isEmpty && me.id === team_app.team_user_filler_id &&
             <Form.Field>
-              <Icon name="wrench" style={{color: '#ff9a00'}}/> your admin asked you to enter the credentials.
+              <Icon name="wrench" style={{color: '#ff9a00'}}/> Your admin asked you to enter the connection information.
             </Form.Field>}
             {!isAdmin(me.role) && me.id !== team_app.team_user_filler_id &&
             <Message content={'This app is shared with your team, you’re not allowed to modify it.'}/>}

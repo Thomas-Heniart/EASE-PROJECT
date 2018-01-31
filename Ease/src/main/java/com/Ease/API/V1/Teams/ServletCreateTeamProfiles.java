@@ -22,11 +22,12 @@ public class ServletCreateTeamProfiles extends HttpServlet {
             Team team = sm.getTeam(team_id);
             sm.needToBeTeamUserOfTeam(team);
             JSONArray teamUser_ids = sm.getArrayParam("team_user_ids", true, false);
-            for (int i=0; i<teamUser_ids.length(); i++) {
-                Integer teamUser_id = (Integer) teamUser_ids.get(i);
+            for (int i = 0; i < teamUser_ids.length(); i++) {
+                Integer teamUser_id = teamUser_ids.getInt(i);
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 teamUser.createTeamProfile(sm.getHibernateQuery());
             }
+            sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);
         }

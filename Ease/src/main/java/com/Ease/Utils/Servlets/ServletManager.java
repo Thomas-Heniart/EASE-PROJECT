@@ -169,6 +169,8 @@ public abstract class ServletManager {
             throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
         } else if (user_id != null) {
             this.user = UserFactory.getInstance().loadUser(user_id, this.getHibernateQuery());
+            if (this.user == null)
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
             String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
             if (keyUser == null) {
                 if (jwt == null)

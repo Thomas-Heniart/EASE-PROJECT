@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Channel;
+import com.Ease.Team.Onboarding.OnboardingSteps;
+import com.Ease.Team.OnboardingStatus;
 import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -29,8 +31,6 @@ public class ServletCreateChannel extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
-            if (team.getChannels().size() >= 4 && !team.isValidFreemium())
-                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 4 rooms.");
             String name = sm.getStringParam("name", true, false);
             String purpose = sm.getStringParam("purpose", true, true);
             if (name == null || name.equals("") || !Regex.isValidRoomName(name))
@@ -43,6 +43,11 @@ public class ServletCreateChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, name + " is already used for another room");
             Channel channel = new Channel(team, name, purpose, sm.getTeamUser(team_id));
             sm.saveOrUpdate(channel);
+            OnboardingStatus onboardingStatus = team.getOnboardingStatus();
+            if (onboardingStatus.getStep() < OnboardingSteps.ROOMS_CREATED.ordinal()) {
+                onboardingStatus.setStep(OnboardingSteps.ROOMS_CREATED.ordinal());
+                sm.saveOrUpdate(onboardingStatus);
+            }
             team.addChannel(channel);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_ROOM, WebSocketMessageAction.CREATED, channel.getWebSocketJson()));
             sm.setSuccess(channel.getJson());

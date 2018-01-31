@@ -30,11 +30,10 @@ public class ServletPopulateAlternativeUrls extends HttpServlet {
                 String url = protocol_and_url[1];
                 String[] domain = url.split("\\.");
                 if (domain.length == 2) {
-                    if (protocol.endsWith("s")) {
+                    if (protocol.endsWith("s:")) {
                         website.addWebsiteAlternativeUrl("http://" + url, sm.getHibernateQuery());
                         website.addWebsiteAlternativeUrl("http://www." + url, sm.getHibernateQuery());
                     }
-                    website.addWebsiteAlternativeUrl("https://www." + url, sm.getHibernateQuery());
                     sm.saveOrUpdate(website);
                 }
             }

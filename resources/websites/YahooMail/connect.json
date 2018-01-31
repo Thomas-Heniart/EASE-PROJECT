@@ -4,14 +4,15 @@
     "home":"https://mail.yahoo.com/",
     "connect":{
       "todo":[
+        {"action":"goto", "url":"https://login.yahoo.com/?authMechanism=primary&done=https%3A%2F%2Fmail.yahoo.com%2F&eid=100&add=1"},
+        {"action":"waitfor", "search":"input#login-username"},
         {"action":"fill", "what":"login", "search":"input#login-username"},
-        {"action":"click", "search":"#login-signin"},
+        {"action":"trueClick", "search":"#login-signin"},
         {"action":"waitfor", "search":"input#login-passwd"},
         {"action":"fill", "what":"password", "search":"input#login-passwd"},
-        {"action":"submit", "search":"#mbr-login-form"}
+        {"action":"trueClick", "search":"#login-signin"}
       ]
     },
-    
     "logout":{
       "todo":[
         {"action":"aclick","search":"#yucs-signout"},
@@ -20,7 +21,7 @@
       ]
     },
     "checkAlreadyLogged":[
-      {"action":"waitfor", "search":"input#login-username, #yucs-signout"},
+      {"action":"waitfor", "search":"input#login-username, #yucs-signout, #manage-account-form"},
       {"search":"#yucs-signout"}
     ]
 }

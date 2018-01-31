@@ -25,7 +25,7 @@ module.exports = {
     getRequestsNumber: () => {
       return basic_get('/api/v1/catalog/GetRequestNumber');
     },
-    getImportation: function() {
+    getImportation: () => {
       return basic_get('/api/v1/importedAccounts');
     }
   },
@@ -57,6 +57,12 @@ module.exports = {
         return '/resources/icons/link_app.png';
       return img_url;
     });
+  },
+  fetchOnBoardingRooms: () => {
+    return basic_get('/api/v1/OnboardingRooms');
+  },
+  getInfoClearbit: ({email}) => {
+    return basic_get('/api/v1/clearbit/GetEmailRelatedInformation', {email: email});
   },
   fetchTeams : function(){
     return axios.get('/api/v1/teams/GetTeams',{

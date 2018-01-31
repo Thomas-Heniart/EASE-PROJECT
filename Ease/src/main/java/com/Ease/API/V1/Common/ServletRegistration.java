@@ -1,13 +1,9 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Sso;
-import com.Ease.Catalog.Website;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
-import com.Ease.NewDashboard.*;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
 import com.Ease.User.UserEmail;
@@ -46,73 +42,47 @@ public class ServletRegistration extends HttpServlet {
             String password = sm.getStringParam("password", false, false);
             String digits = sm.getStringParam("digits", false, true);
             String code = sm.getStringParam("code", false, true);
-            Long registration_date = sm.getLongParam("registration_date", true, false);
-            Boolean send_news = sm.getBooleanParam("newsletter", true, false);
+            String phone_number = sm.getStringParam("phone_number", true, false);
+            Boolean send_news = sm.getBooleanParam("newsletter", true, true);
+            if (send_news == null)
+                send_news = false;
             checkUsernameIntegrity(username);
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             if (password == null || !Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
-            if (registration_date == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid registration date");
             if ((digits == null || digits.length() != 6) && (code == null || code.equals("")))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
-            if (send_news == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "Newsletter cannot be null");
+            if (phone_number.isEmpty() || phone_number.length() > 255 || !Regex.isPhoneNumber(phone_number))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
-                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = ? AND invitation_code LIKE ?");
-                hibernateQuery.setParameter(1, email);
-                hibernateQuery.setParameter(2, code);
+                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = :email AND invitation_code LIKE :code");
+                hibernateQuery.setParameter("email", email);
+                hibernateQuery.setParameter("code", code);
                 String valid_code = (String) hibernateQuery.getSingleResult();
                 if (valid_code == null)
                     throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
             } else {
-                hibernateQuery.querySQLString("SELECT digits FROM userPendingRegistrations WHERE email = ?");
-                hibernateQuery.setParameter(1, email);
-                String db_digits = (String) hibernateQuery.getSingleResult();
+                hibernateQuery.querySQLString("SELECT digits, newsletter FROM userPendingRegistrations WHERE email = :email");
+                hibernateQuery.setParameter("email", email);
+                Object[] objects = (Object[]) hibernateQuery.getSingleResult();
+                if (objects == null)
+                    throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
+                String db_digits = (String) objects[0];
                 if (db_digits == null || db_digits.equals(""))
                     throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
                 if (!db_digits.equals(digits))
                     throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
+                send_news = (Boolean) objects[1];
+
             }
-            User newUser = UserFactory.getInstance().createUser(email, username, password);
+            User newUser = UserFactory.getInstance().createUser(email, username, password, "", "", phone_number);
+            newUser.getUserStatus().setOnboarding_step(1);
             sm.saveOrUpdate(newUser);
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);
             newUser.addUserEmail(userEmail);
-            Catalog catalog = (Catalog) sm.getContextAttr("catalog");
-            Profile profile_perso = new Profile(newUser, 0, 0, new ProfileInformation("Me"));
-            sm.saveOrUpdate(profile_perso);
-            newUser.addProfile(profile_perso);
-            Website linkedin = catalog.getWebsiteWithName("LinkedIn", hibernateQuery);
-            Website gmail = catalog.getWebsiteWithName("Gmail", hibernateQuery);
-            Website twitter = catalog.getWebsiteWithName("Twitter", hibernateQuery);
-            Website dropbox = catalog.getWebsiteWithName("Dropbox", hibernateQuery);
-            ClassicApp linkedinApp = new ClassicApp(new AppInformation(linkedin.getName()), linkedin);
-            linkedinApp.setProfile(profile_perso);
-            linkedinApp.setPosition(0);
-            sm.saveOrUpdate(linkedinApp);
-            profile_perso.addApp(linkedinApp);
-            Sso sso = catalog.getSsoWithId(1, hibernateQuery);
-            SsoGroup ssoGroup = new SsoGroup(newUser, sso, null);
-            sm.saveOrUpdate(ssoGroup);
-            SsoApp gmailApp = new SsoApp(new AppInformation(gmail.getName()), gmail, ssoGroup);
-            gmailApp.setProfile(profile_perso);
-            gmailApp.setPosition(1);
-            sm.saveOrUpdate(gmailApp);
-            profile_perso.addApp(gmailApp);
-            ssoGroup.addSsoApp(gmailApp);
-            ClassicApp twitterApp = new ClassicApp(new AppInformation(twitter.getName()), twitter);
-            twitterApp.setProfile(profile_perso);
-            twitterApp.setPosition(2);
-            sm.saveOrUpdate(twitterApp);
-            profile_perso.addApp(twitterApp);
-            ClassicApp dropboxApp = new ClassicApp(new AppInformation(dropbox.getName()), dropbox);
-            dropboxApp.setProfile(profile_perso);
-            dropboxApp.setPosition(3);
-            sm.saveOrUpdate(dropboxApp);
-            profile_perso.addApp(dropboxApp);
             sm.setUser(newUser);
             String keyUser = newUser.getUserKeys().getDecipheredKeyUser(password);
             String privateKey = newUser.getUserKeys().getDecipheredPrivateKey(keyUser);

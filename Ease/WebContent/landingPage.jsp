@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00036/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00037/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00036/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00037/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;
@@ -193,7 +193,7 @@
 </script>
 <script type="text/javascript">
    function submitEmail() {
-       document.location.href = "/#/registration?email="+$('#divInput').find("input[name='email']").val();
+       document.location.href = "/#/teamCreation?plan_id=0&email="+$('#divInput').find("input[name='email']").val();
        return false;
     };
     $(document).ready(function () {

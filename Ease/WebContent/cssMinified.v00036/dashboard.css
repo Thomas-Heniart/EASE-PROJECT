@@ -1,3 +1,34 @@
+#general_logout_modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+  background-color: white;
+  color: #373b60; }
+  #general_logout_modal > span {
+    text-align: center;
+    font-size: 36px;
+    line-height: 1.3;
+    margin-bottom: 30px; }
+  #general_logout_modal > .progress {
+    width: 430px; }
+  #general_logout_modal > .progress {
+    border-radius: 100px;
+    background-color: #949eb7;
+    height: 20px;
+    overflow: hidden; }
+    #general_logout_modal > .progress .bar {
+      height: 20px;
+      border-bottom-left-radius: 100px;
+      border-top-left-radius: 100px;
+      background-color: #373b60; }
+
 #dashboard {
   margin-top: -60px;
   padding-top: 60px;
