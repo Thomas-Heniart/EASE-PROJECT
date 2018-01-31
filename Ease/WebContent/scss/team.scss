@@ -1128,7 +1128,12 @@ button.only-text-button {
           }
           .menu {
             overflow: auto;
-            height: 840%;
+            min-height: 0;
+            max-height: 840%;
+            height: auto;
+            min-width: 100%;
+            max-width: 200%;
+            width: auto;
             right:0;
             left: auto;
           }

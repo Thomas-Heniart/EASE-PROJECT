@@ -531,7 +531,7 @@ class DisplayAccounts extends React.Component {
                         id="importation_dropdown">
                 <Dropdown.Menu>
                   {teamsList}
-                  <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
+                  {/*<Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
                   {profiles}
                   {profileAdded === false &&
                   <Dropdown.Item>
@@ -546,7 +546,7 @@ class DisplayAccounts extends React.Component {
                         icon={<Icon name="plus square" link onClick={createProfile}/>}
                         placeholder='New group' />
                     </form>
-                  </Dropdown.Item>}
+                  </Dropdown.Item>}*/}
                 </Dropdown.Menu>
               </Dropdown>
               {!this.props.user.status.tip_importation_seen &&
