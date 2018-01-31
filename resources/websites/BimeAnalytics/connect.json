@@ -1,21 +1,50 @@
 {
-    "name":"BimeAnalytics",
-    "lastLogin":"",
-    "home":{"http":"https://", "subdomain":"team", "domain":"bime.io/users/sign_in"},
-    "connect":{
-        "todo":[
-          	{"action":"fill", "what":"login", "search":"#user_email", "grave":true},
-            {"action":"fill", "what":"password", "search":"#user_password", "grave":true},
-            {"action":"click", "search":"#login-bu", "grave":true}
-        ]
-    },
-    "logout":{
-        "todo":[
-            {"action":"click", "search":"form[action*=sign_out] button[type=submit]"},
-            {"action": "waitload"}
-         ]
-    },
-    "checkAlreadyLogged":[
-        {"search":"form[action*=sign_out]"}
+  "name": "BimeAnalytics",
+  "lastLogin": "",
+  "home": {
+    "http": "https://",
+    "subdomain": "team",
+    "domain": "bime.io/"
+  },
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#user_email",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#user_password",
+        "grave": true
+      },
+      {
+        "action": "click",
+        "search": "#login-bu",
+        "grave": true
+      }
     ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "click",
+        "search": "form[action*=sign_out] button[type=submit]"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "form[action*=sign_out], #user_email"
+    },
+    {
+      "search": "form[action*=sign_out]"
+    }
+  ]
 }

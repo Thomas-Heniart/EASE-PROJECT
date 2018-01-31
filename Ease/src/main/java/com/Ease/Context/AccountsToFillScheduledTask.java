@@ -20,6 +20,7 @@ public class AccountsToFillScheduledTask extends TimerTask {
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         HibernateQuery hibernateQuery = new HibernateQuery();
+        Long now = new Date().getTime();
         try {
             hibernateQuery.queryString("SELECT a FROM App a INNER JOIN a.teamCardReceiver as r WHERE a.insert_date >= :date");
             hibernateQuery.setDate("date", calendar.getTime());
@@ -27,6 +28,8 @@ public class AccountsToFillScheduledTask extends TimerTask {
             Map<TeamUser, Set<App>> teamUserSetMap = new HashMap<>();
             for (App app : apps) {
                 TeamUser teamUser = app.getTeamCardReceiver().getTeamUser();
+                if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now)
+                    continue;
                 Set<App> appSet = teamUserSetMap.get(teamUser);
                 if (appSet == null)
                     appSet = new HashSet<>();
