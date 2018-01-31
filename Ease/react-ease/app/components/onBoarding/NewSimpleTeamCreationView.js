@@ -68,6 +68,7 @@ class InformationCompany extends React.Component {
               name='phone'
               value={phone}
               placeholder='+33'
+              icon='check circle'
               onChange={handleInputPhone}
               className={!phoneError ? 'password_verified' : null}/>
           </div>
@@ -91,6 +92,7 @@ class NewSimpleTeamCreationView extends React.Component {
       email: '',
       plan_id: 0,
       firstLoading: false,
+      phoneError: true,
       loading: false,
       error: '',
       activeItem: 1,
@@ -325,7 +327,7 @@ class NewSimpleTeamCreationView extends React.Component {
     this.setState({pasteEmails: emails});
   };
   checkPassword = () => {
-    return (this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
+    return (this.state.companyName !== '' && this.state.companySize !== '' && !this.state.phoneError);
   };
   checkNoDuplicateEmails = () => {
     return this.state.emails.filter((item, idx) => {
