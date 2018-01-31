@@ -55,11 +55,18 @@ function TeamHeader(props){
                 title: 'Edit rooms here to add or remove people.',
                 isFixed: true,
                 selector:"#open_card_button",
-                position: 'bottom'
+                position: 'bottom',
+                style: {
+                  beacon: {
+                    inner: '#45C997',
+                    outer: '#45C997'
+                  }
+                }
               }]}
               locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
               disableOverlay={true}
               run={true}
+              allowClicksThruHole={true}
               callback={(action) => {
                 if (action.type === 'finished')
                   dispatch(setTipSeen({
@@ -73,11 +80,18 @@ function TeamHeader(props){
                 title: <span>Setup personal settings of a user here <span class="fw-normal">(ex: departure date).</span></span>,
                 isFixed: true,
                 selector:"#open_card_button",
-                position: 'bottom'
+                position: 'bottom',
+                style: {
+                  beacon: {
+                    inner: '#45C997',
+                    outer: '#45C997'
+                  }
+                }
               }]}
               locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
               disableOverlay={true}
               run={true}
+              allowClicksThruHole={true}
               callback={(action) => {
                 if (action.type === 'finished')
                   dispatch(setTipSeen({
