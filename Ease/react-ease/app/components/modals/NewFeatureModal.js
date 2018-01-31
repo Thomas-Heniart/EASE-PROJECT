@@ -91,7 +91,7 @@ const CarouselContent = createReactClass({
             decorators={decorators}
             wrapAround={true}
             autoplay={true}
-            autoplayInterval={1000}>
+            autoplayInterval={10000}>
           <img src="/resources/images/chrome_import.jpg" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
           <img src="/resources/images/extension_popup.jpg"/>
           <img src="/resources/images/google_accounts.jpg"/>
