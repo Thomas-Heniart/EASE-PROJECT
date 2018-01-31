@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00035/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/securityPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00037/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -189,11 +189,10 @@
             <div class="ui row" style="display:inline-block;float:left">
                 <div class="eleven wide column" style="display:inline-block;float:left">
                     <h2><fmt:message key="product.control.title"/></h2>
-                    <p><fmt:message key="product.control.text.1"/></p>
-                    <fmt:message key="product.control.text.2"/>
+                    <fmt:message key="product.control.text.1"/>
                 </div>
                 <div class="five wide column" style="display:inline-block;float:left">
-                    <img class="ui small right floated image" src="/resources/images/controlTagLouise.png">
+                    <img class="ui small right floated image" src="/resources/images/Tag.png">
                 </div>
             </div>
         </div>
@@ -228,7 +227,7 @@
         <div class="ui stackable two column grid textMobile">
             <div class="ui mobile reversed row" style="display:inline-block;float:left">
                 <div class="five wide computer only column" style="display:inline-block;float:left">
-                    <img class="ui small left floated image" src="/resources/images/black_phone.png">
+                    <img class="ui small left floated image" src="/resources/images/grey_phone.png">
                 </div>
                 <div class="eleven wide column" style="display:inline-block;float:left">
                     <h2><fmt:message key="product.mobile.title"/></h2>
@@ -238,7 +237,7 @@
                     <img class="google" src="/resources/icons/google-play-badge.png"/>
                 </div>
                 <div class="five wide mobile only column" style="display:inline-block;float:left">
-                    <img class="ui small left floated image" src="/resources/images/black_phone.png">
+                    <img class="ui small left floated image" src="/resources/images/grey_phone.png">
                 </div>
             </div>
         </div>
@@ -300,11 +299,25 @@
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                <tr >
+                    <td><fmt:message key="product.table.feature.18"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
                     <td><fmt:message key="product.table.feature.7"/></td>
                     <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
                     <td></td>
                     <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><fmt:message key="product.table.feature.19"/></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
+                    <td></td>
+                    <td class="center aligned" style="color:#4fcb6c;font-size:20px;"><i class="check circle icon"></i></td>
                     <td></td>
                 </tr>
                 <tr style="background-color: #f8f8f8;">
@@ -389,7 +402,7 @@
                     <p><fmt:message key="product.setUp.text.3"/></p>
                 </div>
                 <div class="seven wide column" style="display:inline-block;float:left">
-                    <a class="ui right floated blue button" href="/pricing" style="margin-top:60px;color:#ffffff;font-size: 20px;font-weight: bold;"><fmt:message key="product.setUp.button.1"/></a>
+                    <a class="ui right floated blue button" href="/#/teamCreation?plan_id=0" style="margin-top:60px;color:#ffffff;font-size: 20px;font-weight: bold;"><fmt:message key="product.setUp.button.1"/></a>
                     <a class="ui right floated button" href="/companyContact" style="margin-top: 30px;font-size: 20px;font-weight: bold;"><fmt:message key="product.setUp.button.2"/></a>
                 </div>
             </div>
@@ -397,14 +410,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/jquery.complexify.js"></script>
-<script src="/jsMinified.v00022/bootstrap.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/landingPage.js" async></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/languageChooser.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/jquery.complexify.js"></script>
+<script src="/jsMinified.v00023/bootstrap.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/landingPage.js" async></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/languageChooser.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
 <script>
     if (window.matchMedia("(max-width: 768px)").matches) {

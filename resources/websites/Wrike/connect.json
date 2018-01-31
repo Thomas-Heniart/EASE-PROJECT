@@ -7,19 +7,19 @@
       {"action":"aclick", "search":"a[href*='login']"},
       {"action":"fill", "what":"login", "search":"#nativeLoginForm #emailField"},
       {"action":"fill", "what":"password", "search":"#nativeLoginForm #passwordField"},
-      {"action":"click", "search":"#submit-login-button"}
+      {"action":"trueClick", "search":"#submit-login-button"}
     ]
   },
   "logout": {
     "todo": [
-      {"action":"click", "search":"#ext-comp-1010"},
-      {"action":"waitfor", "search":"#ext-comp-1020"},
-      {"action":"clickona", "search":"#ext-comp-1020"},
+      {"action":"trueClick", "search":"#ext-comp-1007"},
+      {"action":"waitfor", "search":"#ext-comp-1007.x-btn-menu-active"},
+      {"action":"trueClick", "search":"#ext-comp-1018"},
       {"action":"waitload"}
     ]
   },
   "checkAlreadyLogged": [
-    {"action":"waitfor", "search":"#ext-comp-1010, a[href*='login']"},
-    {"search":"#ext-comp-1010"}
+    {"action":"waitfor", "search":"#menu-panel, a[href*='login']"},
+    {"search":"#menu-panel"}
   ]
 }

@@ -1,0 +1,26 @@
+{
+  "name":"Atlassian",
+  "lastLogin":"",
+  "home":{"http":"https://", "subdomain":"team", "domain":"atlassian.net/"},
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"trueClick", "search":"#login-submit"},
+      {"action":"waitfor", "search":"#password[autofocus='']"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":"#login-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#menu-profile"},
+      {"action":"waitfor", "search":"a[href*='logout']"},
+      {"action":"trueClick", "search":"a[href*='logout']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"body#jira, #form-login"},
+    {"search":"body#jira"}
+  ]
+}

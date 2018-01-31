@@ -1,7 +1,8 @@
 import React from 'react';
 import { Segment, Checkbox, Header } from 'semantic-ui-react';
-import {setBackgroundPicture} from "../../actions/commonActions";
+import {setBackgroundPicture, setHomepage} from "../../actions/commonActions";
 import {reduxActionBinder} from "../../actions/index";
+import extension from "../../utils/extension_api";
 import {connect} from "react-redux";
 
 @connect(store => ({
@@ -20,17 +21,16 @@ class Preferences extends React.Component {
     }
     toggleHomepage = () => {
         this.setState({ loadingHomepage: true });
-        if (this.props.common.homepage === true) {
-            document.dispatchEvent(new CustomEvent("SetHompage", {detail: false, bubbles: true}));
-            this.setState({ homepage: false });
-            this.props.common.homepage = false;
-        }
-        else {
-            document.dispatchEvent(new CustomEvent("SetHompage", {detail: true, bubbles: true}));
-            this.setState({ homepage: true });
-            this.props.common.homepage = true;
-        }
-        this.setState({ loadingHomepage: false });
+        extension.set_homepage({
+          state: !this.props.common.homepage
+        }).then(response => {
+          this.props.dispatch(setHomepage({
+            homepage: !this.props.common.homepage
+          }));
+          this.setState({ loadingHomepage: false });
+        }).catch(err => {
+          this.setState({ loadingHomepage: false });
+        });
     };
     toggleBackground = () => {
         this.setState({loadingBackground: true});

@@ -25,25 +25,25 @@
 
     <link rel="manifest" href="manifest.json">
 
-    <script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-    <script src="/jsMinified.v00022/bootstrap.js"></script>
-    <script src="/jsMinified.v00022/basic-utils.js"></script>
-    <script src="/jsMinified.v00022/ajaxHandler.js"></script>
-    <script src="/jsMinified.v00022/languageChooser.js"></script>
-    <script src="/jsMinified.v00022/tracker.js"></script>
+    <script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+    <script src="/jsMinified.v00023/bootstrap.js"></script>
+    <script src="/jsMinified.v00023/basic-utils.js"></script>
+    <script src="/jsMinified.v00023/ajaxHandler.js"></script>
+    <script src="/jsMinified.v00023/languageChooser.js"></script>
+    <script src="/jsMinified.v00023/tracker.js"></script>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00035/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {
         d = document;
         s = d.createElement("script");
-        s.src = "/jsMinified.v00022/crisp.js";
+        s.src = "/jsMinified.v00023/crisp.js";
         s.async = 1;
         d.getElementsByTagName("head")[0].appendChild(s);
     })();</script>
@@ -72,7 +72,7 @@
             ;e.amplitude=n})(window,document);
         amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
     </script>
-    <script type="text/javascript" src="jsMinified.v00022/tracker.js"></script>
+    <script type="text/javascript" src="jsMinified.v00023/tracker.js"></script>
 </head>
 
 <body>

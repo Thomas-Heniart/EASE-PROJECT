@@ -17,9 +17,9 @@
     <title>Ease.space admin</title>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="manifest" href="manifest.json">
-    <script src="jsMinified.v00022/jquery-3.1.0.js"></script>
-    <script src="jsMinified.v00022/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?4"></script>
+    <script src="jsMinified.v00023/jquery-3.1.0.js"></script>
+    <script src="js/ajaxHandler.js"></script>
+    <script src="js/backOffice/admin.js?3"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>
@@ -38,18 +38,29 @@
             max-width: 250px;
             overflow: auto;
         }
+
+        #onboarding_rooms_tabs div.image {
+            margin-bottom: 0.5em;
+        }
+
+        #onboarding_rooms_menu {
+            max-width: 100%;
+            width: auto;
+        }
     </style>
 </head>
 <body role="document" class="mainBody">
 <div class="ui grid">
     <div class="four wide column">
-        <div class="ui vertical fluid tabular menu">
+        <div id="admin_menu" class="ui vertical fluid tabular menu">
             <a class="item" data-target="#team-segment">Teams</a>
             <a class="item" data-target="#website-segment">Websites</a>
             <a class="item" data-target="#category-segment">Categories</a>
             <a class="item" data-target="#website-requests-segment">Requests</a>
             <a class="item" data-target="#website-failures-segment">Website failures</a>
             <a class="item" data-target="#background-upload-segment">Background upload</a>
+            <a class="item" data-target="#onboarding-rooms-segment">Onboarding rooms</a>
+            <a class="item" data-target="#teams-deleted-segment">Teams deleted</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -70,6 +81,12 @@
         </div>
         <div id="background-upload-segment" class="ui segment loading backOffice_part" style="display: none">
             <%@include file="templates/backofficeAdmin/BackgorundUpload.jsp" %>
+        </div>
+        <div id="teams-deleted-segment" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/TeamsDeleted.jsp" %>
+        </div>
+        <div id="onboarding-rooms-segment" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/OnboardingRooms.jsp" %>
         </div>
     </div>
 </div>

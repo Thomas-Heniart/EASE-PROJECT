@@ -9,15 +9,15 @@ import {fetchDashboard} from "../../actions/dashboardActions";
 import {fetchTeams} from "../../actions/teamActions";
 import {fetchMyInformation, setHomepage, fetchCriticalParts} from "../../actions/commonActions";
 import api from "../../utils/api";
-import ReactTooltip from 'react-tooltip';
+import extension from "../../utils/extension_api";
 import WebsocketClient from './WebsocketClient';
 import ModalsContainer from "./ModalsContainer";
 import {showNewFeatureModal} from "../../actions/modalActions";
+import GeneralLogoutModal from "./GeneralLogoutModal";
 
 @connect((store)=>{
   return {
-    common: store.common,
-    listener: store.listener
+    common: store.common
   };
 })
 class Base extends React.Component {
@@ -38,9 +38,6 @@ class Base extends React.Component {
       });
     }, 30000);
   };
-  eventListener = (event) => {
-    this.props.dispatch(setHomepage({ homepage: event.detail }))
-  };
   componentDidMount(){
     this.checkConnection();
     this.props.dispatch(fetchMyInformation()).then(response => {
@@ -57,18 +54,15 @@ class Base extends React.Component {
       }else
         this.setState({fetching: false});
     });
-    document.addEventListener("GetSettingsDone", this.eventListener);
-    setTimeout(() => {
-      document.dispatchEvent(new CustomEvent("GetSettings", {bubbles: true}))
-    }, 1000);
-  }
-  componentWillUnmount() {
-    document.removeEventListener("GetSettingsDone", this.eventListener);
+    extension.get_homepage().then(homepage => {
+      console.log('response', homepage);
+      this.props.dispatch(setHomepage({ homepage: homepage }));
+    });
   }
   componentWillMount(){
     const query = queryString.parse(this.props.location.search);
     if (query.skipLanding !== undefined)
-      this.props.cookies.set('skipLanding', true, {maxAge: 9999999, path: '/'});
+      localStorage.setItem('skipLanding', true);
   }
   render(){
     if (this.state.fetching)
@@ -76,23 +70,11 @@ class Base extends React.Component {
     else
       return (
           <div id="app-root">
-            <ReactTooltip place="bottom"
-                          type="dark"
-                          globalEventOff="click"
-                          effect="solid"
-                          class="ease_tooltip"
-                          multiline={true}
-                          delayShow={300}/>
-            <ReactTooltip effect="solid"
-                          class="teams_tutorial_tooltip"
-                          type="warning"
-                          multiline={true}
-                          place="bottom"
-                          event="dblclick"
-                          eventOff="dblclick"/>
             <WebsocketClient/>
             {this.props.children}
             <ModalsContainer/>
+            {this.props.common.generalLogoutModal &&
+            <GeneralLogoutModal/>}
           </div>
       )
   }

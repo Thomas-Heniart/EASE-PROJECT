@@ -101,8 +101,8 @@ public class ServletInvitePeople extends HttpServlet {
                 mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
                 mailJetBuilder.addCc(teamUser.getEmail());
                 mailJetBuilder.addTo(email);
-                mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
-                mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+                mailJetBuilder.addVariable("first_name", teamUser.getUser().getPersonalInformation().getFirst_name());
+                mailJetBuilder.addVariable("last_name", teamUser.getUser().getPersonalInformation().getLast_name());
                 mailJetBuilder.sendEmail();
             }
             JSONObject res = new JSONObject();

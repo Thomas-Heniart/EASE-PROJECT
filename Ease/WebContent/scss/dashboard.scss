@@ -1,6 +1,42 @@
 @import 'variables';
 @import 'mixins';
 
+#general_logout_modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+  background-color: white;
+  color: $themeColor;
+  & > span {
+    text-align: center;
+    font-size: 36px;
+    line-height: 1.3;
+    margin-bottom: 30px;
+  }
+  & > .progress {
+    width: 430px;
+  }
+  & > .progress {
+    border-radius: 100px;
+    background-color: #949eb7;
+    height: 20px;
+    overflow: hidden;
+    .bar {
+      height: 20px;
+      border-bottom-left-radius: 100px;
+      border-top-left-radius: 100px;
+      background-color: $themeColor;
+    }
+  }
+}
+
 #dashboard {
   margin-top: -60px;
   padding-top: 60px;

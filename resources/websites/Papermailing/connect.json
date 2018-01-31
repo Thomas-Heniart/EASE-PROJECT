@@ -1,0 +1,21 @@
+{
+  "name":"Papermailing",
+  "lastLogin":"",
+  "home":"http://www.papermailing.com/login",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#username", "grave":true},
+      {"action":"fill", "what":"password", "search":"#password", "grave":true},
+      {"action":"trueClick", "search":"button[type='submit']", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], #username"},
+    {"search":"a[href*='logout']"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  }
+}

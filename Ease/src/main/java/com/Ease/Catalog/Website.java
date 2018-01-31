@@ -3,6 +3,7 @@ package com.Ease.Catalog;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.Team.Onboarding.OnboardingRoom;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamWebsiteCard;
 import com.Ease.Utils.HttpServletException;
@@ -96,6 +97,9 @@ public class Website {
     @OneToMany(mappedBy = "website", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<WebsiteAlternativeUrl> websiteAlternativeUrlSet = ConcurrentHashMap.newKeySet();
+
+    @ManyToMany(mappedBy = "websiteSet")
+    private Set<OnboardingRoom> onboardingRoomSet = ConcurrentHashMap.newKeySet();
 
 
     public Website(String login_url, String name, String folder, String website_homepage, WebsiteAttributes websiteAttributes) {
@@ -254,6 +258,14 @@ public class Website {
         this.websiteAlternativeUrlSet = websiteAlternativeUrlSet;
     }
 
+    public Set<OnboardingRoom> getOnboardingRoomSet() {
+        return onboardingRoomSet;
+    }
+
+    public void setOnboardingRoomSet(Set<OnboardingRoom> onboardingRoomSet) {
+        this.onboardingRoomSet = onboardingRoomSet;
+    }
+
     public void addConnectWith_website(Website website) {
         this.getConnectWith_websites().add(website);
     }
@@ -304,6 +316,14 @@ public class Website {
 
     public WebsiteAlternativeUrl getWebsiteAlternativeUrl(String url) {
         return this.getWebsiteAlternativeUrlSet().stream().filter(websiteAlternativeUrl -> websiteAlternativeUrl.getUrl().startsWith(url)).findFirst().orElse(null);
+    }
+
+    public void addOnboardingRoom(OnboardingRoom onboardingRoom) {
+        this.getOnboardingRoomSet().add(onboardingRoom);
+    }
+
+    public void removeOnboardingRoom(OnboardingRoom onboardingRoom) {
+        this.getOnboardingRoomSet().remove(onboardingRoom);
     }
 
     public String getLogo() {

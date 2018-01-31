@@ -1,0 +1,126 @@
+@import 'variables';
+
+#teamBody {
+	#team {
+		margin-top: 62px;
+		.section-heading {
+			margin-bottom: 40px;
+		}
+		#members {
+			text-align: center;
+			margin: 0;
+			.memberDescription {
+				width: 180px !important;
+				margin: 80px 70px 0px 70px;
+				position: relative;
+				display: inline-block;
+				.memberPhoto {
+					width: 100%;
+					img {
+						width: 100%;
+						border-radius: 3px;
+						-webkit-filter: grayscale(100%);
+						filter: grayscale(100%);
+					}
+				}
+				.name {
+					text-align: left;
+					font-family: Raleway, sans-serif;
+					font-size: 16px;
+					font-weight: bold;
+					margin-top: -10px;
+					margin-bottom: 0px;
+					line-height: 1.19;
+					p {
+						color: #1b1c1d;
+					}
+				}
+				.post {
+					text-align: left;
+					color: #999999;
+					font-family: Lato, sans-serif;
+					letter-spacing: 1px;
+					font-size: 13px;
+				}
+			}
+		}
+	}
+}
+
+#contactBody {
+	#footer {
+		border-top:1px solid #dce0e0;
+		background-color: white;
+	}
+	#contact_us {
+		background-color: #eee;
+		margin-top: 62px;
+		#contactUsForm {
+			.contactForm {
+				padding: 30px;
+				width: 60%;
+				margin: auto;
+				background-color: white;
+				border:1px solid #dce0e0;
+				.formRaw:last-child {
+					margin-bottom: 0px;
+				}
+				.formRaw.errorMessage {
+					display: none;
+					&.show {
+						display: block;
+					}
+					p {
+						font-size: 16px;
+						color: $themeRedColor;
+						text-align: center;
+						font-weight: bold;
+					}
+				}
+				.formRaw {
+					margin-bottom: 20px;
+					width: 100%;
+					input {
+						display: block;
+						width: 100%;
+						margin-bottom: 10px;
+						padding: 10px 25px;
+						font-size: 16px;
+						line-height: 1.5em;
+						-webkit-border-radius: 2px;
+						-moz-border-radius: 2px;
+						border-radius: 2px;
+						border: 1px solid #dce0e0;
+					}
+					textarea {
+						display: block;
+						width: 100%;
+						margin-bottom: 10px;
+						padding: 10px 25px;
+						font-size: 16px;
+						line-height: 1.5em;
+						-webkit-border-radius: 2px;
+						-moz-border-radius: 2px;
+						border-radius: 2px;
+						min-height: 200px;
+						border: 1px solid #dce0e0;
+					}
+					button {
+						width: 100%;
+						background-color: #02B875;
+						padding: 12px;
+						color: white;
+						letter-spacing: 1px;
+						&.waiting {
+							background-color: #ccc;
+							pointer-events: none;
+						}
+						&:hover  {
+							opacity: 0.7;
+						}
+					}
+				}
+			}
+		}
+	}
+}

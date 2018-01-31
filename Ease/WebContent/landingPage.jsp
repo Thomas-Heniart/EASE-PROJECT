@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00035/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00037/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00035/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00037/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;
@@ -168,13 +168,13 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/jquery.complexify.js"></script>
-<script src="/jsMinified.v00022/bootstrap.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/languageChooser.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/jquery.complexify.js"></script>
+<script src="/jsMinified.v00023/bootstrap.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/languageChooser.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
@@ -193,7 +193,7 @@
 </script>
 <script type="text/javascript">
    function submitEmail() {
-       document.location.href = "/#/registration?email="+$('#divInput').find("input[name='email']").val();
+       document.location.href = "/#/teamCreation?plan_id=0&email="+$('#divInput').find("input[name='email']").val();
        return false;
     };
     $(document).ready(function () {

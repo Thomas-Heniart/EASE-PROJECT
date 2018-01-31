@@ -43,12 +43,12 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00035/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/enterpriseContact.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00037/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/enterpriseContact.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
@@ -157,12 +157,12 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/enterpriseContact.js" defer></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/languageChooser.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/enterpriseContact.js" defer></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/languageChooser.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
 
 <script type="text/javascript">
     window.addEventListener('load', function () {

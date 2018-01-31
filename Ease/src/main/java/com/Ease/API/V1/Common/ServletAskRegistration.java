@@ -2,6 +2,7 @@ package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Utils.Clearbit.EaseEnrichmentAPI;
 import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -23,23 +24,25 @@ public class ServletAskRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            String email = sm.getStringParam("email", true, true);
-            if (email == null || email.equals("") || !Regex.isEmail(email))
+            String email = sm.getStringParam("email", true, false);
+            if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
+            Boolean newsletter = sm.getBooleanParam("newsletter", true, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("SELECT COUNT(*) FROM users LEFT JOIN teamUsers ON users.id = teamUsers.user_id WHERE users.email = ? OR teamUsers.email = ?;");
             hibernateQuery.setParameter(1, email);
             hibernateQuery.setParameter(2, email);
             int count = ((BigInteger) hibernateQuery.getSingleResult()).intValue();
             if (count > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "This email is already assigned to an account.");
+                throw new HttpServletException(HttpStatus.BadRequest, "This email is already used for an account.");
             String digits = CodeGenerator.generateDigits(6);
-            hibernateQuery.querySQLString("DELETE FROM userPendingRegistrations WHERE email = ?");
-            hibernateQuery.setParameter(1, email);
+            hibernateQuery.querySQLString("DELETE FROM userPendingRegistrations WHERE email = :email");
+            hibernateQuery.setParameter("email", email);
             hibernateQuery.executeUpdate();
-            hibernateQuery.querySQLString("INSERT INTO userPendingRegistrations VALUES (null, ?, ?, default)");
-            hibernateQuery.setParameter(1, email);
-            hibernateQuery.setParameter(2, digits);
+            hibernateQuery.querySQLString("INSERT INTO userPendingRegistrations VALUES (null, :email, :digits, default, :newsletter)");
+            hibernateQuery.setParameter("email", email);
+            hibernateQuery.setParameter("digits", digits);
+            hibernateQuery.setParameter("newsletter", newsletter);
             hibernateQuery.executeUpdate();
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setTemplateId(180976);
@@ -48,8 +51,7 @@ public class ServletAskRegistration extends HttpServlet {
             mailJetBuilder.addVariable("last_digits", digits.substring(3));
             mailJetBuilder.addTo(email);
             mailJetBuilder.sendEmail();
-            JSONObject res = new JSONObject();
-            res.put("success", true);
+            JSONObject res = new EaseEnrichmentAPI().emailLookup(email);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

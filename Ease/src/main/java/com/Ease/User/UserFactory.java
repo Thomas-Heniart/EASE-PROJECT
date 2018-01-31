@@ -23,16 +23,20 @@ public class UserFactory {
     private UserFactory() {
     }
 
-    public User createUser(String email, String username, String password) throws HttpServletException {
+    public User createUser(String email, String username, String password, String first_name, String last_name, String phone_number) throws HttpServletException {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String saltPerso = AES.generateSalt();
         String keyUser = AES.keyGenerator();
         UserKeys userKeys = new UserKeys(Hashing.hash(password), saltPerso, AES.encryptUserKey(keyUser, password, saltPerso), publicAndPrivateKey.getKey(), AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
-        return new User(username, email, userKeys, new Options(), new UserStatus());
+        User user = new User(username, email, userKeys, new Options(), new UserStatus());
+        user.getPersonalInformation().setFirst_name(first_name);
+        user.getPersonalInformation().setLast_name(last_name);
+        user.getPersonalInformation().setPhone_number(phone_number);
+        return user;
     }
 
     public User loadUserFromJwt(String jwt, Key secretKey, HibernateQuery hibernateQuery) throws HttpServletException {
-        Claims claims = null;
+        Claims claims;
         try {
             claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
         } catch (MalformedJwtException e) {

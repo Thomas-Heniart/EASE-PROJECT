@@ -35,13 +35,13 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00035/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00035/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00037/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/pricingPage.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
@@ -84,7 +84,7 @@
                         <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
                         <div class="text-center" style="margin-bottom:26px">
                             <button class="button-unstyle big-button button">
-                                <a href="/#/registration" class="link-unstyle" style="font-size: 18px;">
+                                <a href="/#/teamCreation?plan_id=0" class="link-unstyle" style="font-size: 18px;">
                                     <fmt:message key="pricing.free.button"/>
                                 </a>
                             </button>
@@ -134,16 +134,12 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.10"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.free.features.11"/></span>
                         </div>
                     </div>
                     <div class="text-center" style="margin: 60px 0 0 0">
                         <button class="button-unstyle big-button button signUpButton" style="font-size: 18px;">
-                            <a href="/#/registration" class="link-unstyle" style="font-size: 18px;">
+                            <a href="/#/teamCreation?plan_id=0" class="link-unstyle" style="font-size: 18px;">
                                 <fmt:message key="pricing.free.button"/>
                             </a>
                         </button>
@@ -165,10 +161,6 @@
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
                             <span class="info"><fmt:message key="pricing.pro.features.title"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -266,13 +258,13 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00022/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00022/jquery.complexify.js"></script>
-<script src="/jsMinified.v00022/bootstrap.js" async></script>
-<script src="/jsMinified.v00022/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00022/basic-utils.js" async></script>
-<script src="/jsMinified.v00022/languageChooser.js" async></script>
-<script src="/jsMinified.v00022/tracker.js" async></script>
+<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
+<script src="/jsMinified.v00023/jquery.complexify.js"></script>
+<script src="/jsMinified.v00023/bootstrap.js" async></script>
+<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
+<script src="/jsMinified.v00023/basic-utils.js" async></script>
+<script src="/jsMinified.v00023/languageChooser.js" async></script>
+<script src="/jsMinified.v00023/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
 <script>
     $(document).ready(function() {

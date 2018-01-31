@@ -1,3 +1,5 @@
+import {goToOnBoarding} from "../actions/onBoardingActions";
+
 var React = require('react');
 var classnames = require('classnames');
 var ReactRouter = require('react-router-dom');
@@ -93,14 +95,14 @@ class TeamView extends React.Component {
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
     }
-    const me = team.team_users[team.my_team_user_id];
-    if (me.phone_number === null && me.role === 3){
-      this.props.dispatch(modalActions.showTeamPhoneNumberModal({
-        active: true,
-        team_id: team.id,
-        team_user_id: me.id
-      }));
-    }
+    // const me = team.team_users[team.my_team_user_id];
+    // if (!me.phone_number && me.role === 3){
+    //   this.props.dispatch(modalActions.showTeamPhoneNumberModal({
+    //     active: true,
+    //     team_id: team.id,
+    //     team_user_id: me.id
+    //   }));
+    // }
   }
   isValidTeamItemId = () => {
     const teamId = Number(this.props.match.params.teamId);
@@ -125,7 +127,14 @@ class TeamView extends React.Component {
     const defaultRoom = Object.keys(rooms).map(id => {
       return rooms[id];
     }).find(item => (item.default));
-    this.props.history.replace(`/teams/${teamId}/${defaultRoom.id}`);
+    if (this.props.teams[teamId].onboarding_step !== 5 && this.props.teams[teamId].team_users[this.props.teams[teamId].my_team_user_id].role === 3) {
+      this.props.dispatch(goToOnBoarding({
+        team_id: teamId
+      }));
+      this.props.history.replace(`/main/simpleTeamCreation?team=${teamId}`);
+    }
+    else
+      this.props.history.replace(`/teams/${teamId}/${defaultRoom.id}`);
   };
   getSelectedItem = () => {
     const team = this.props.teams[this.props.match.params.teamId];
@@ -160,6 +169,7 @@ class TeamView extends React.Component {
   };
   render(){
     const team = this.props.teams[this.props.match.params.teamId];
+    const user = this.props.common.user;
     const selectedItem = this.getSelectedItem();
     const me = !!team ? team.team_users[team.my_team_user_id] : null;
     return (
@@ -170,6 +180,8 @@ class TeamView extends React.Component {
             <FreeTrialEndModal team_id={team.id}/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
+            {(me.role < 3 || me.role === 3 && !!me.phone_number) && !user.status.team_tuto_done &&
+            <TeamsTutorial/>}
             {this.state.teamMenuActive &&
             <TeamMenu
                 closeMenu={this.setTeamMenu.bind(null, false)}
@@ -180,14 +192,12 @@ class TeamView extends React.Component {
             <div className="client_main_container">
               <TeamHeader
                   item={selectedItem}
+                  user={user}
+                  me={me}
                   setAddAppView={this.setAddAppView}
                   match={this.props.match}
                   dispatch={this.props.dispatch}/>
               <div className="team_client_body bordered_scrollbar">
-                <OpacityTransition appear={true}>
-                  {!!this.props.common.user && !this.props.common.user.status.team_tuto_done &&
-                  <TeamsTutorial team_id={team.id}/>}
-                </OpacityTransition>
                 <div id="col_main">
                   {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
                   <TeamAppAddingUi

@@ -4,11 +4,11 @@
     "home":"https://www.auchandirect.fr",
     "connect": {
     	"todo": [
-    		{"action":"clickona", "search":"a[href*='connexion']"},
-       	 	{"action":"waitfor", "search":".LooprLoginForm"},
-    		{"action":"fill", "what":"login", "search":".LooprLoginForm form #email"},
-    		{"action":"fill", "what":"password", "search":".LooprLoginForm form #password"},
-    		{"action":"click", "search":".LooprLoginForm form button#login"}
+    		{"action":"trueClick", "search":"a[href*='connexion']"},
+       	 	{"action":"waitfor", "search":".LooprLoginForm #email"},
+    		{"action":"fill", "what":"login", "search":".LooprLoginForm #email"},
+    		{"action":"fill", "what":"password", "search":".LooprLoginForm #password"},
+    		{"action":"trueClick", "search":".LooprLoginForm #login"}
        	]
     },
     "logout": {

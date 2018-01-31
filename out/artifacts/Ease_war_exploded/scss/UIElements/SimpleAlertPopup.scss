@@ -1,0 +1,51 @@
+@import '../variables';
+
+#alertPopup {
+	width: 250px;
+	position: fixed;
+	border-radius: 5px;
+	padding: 5px;
+	right: 2%;
+    top: 60px;
+    z-index: 10000;
+	background-color: rgba(#848484, 1);
+	text-align: center;
+	visibility: hidden;
+	color: white;
+	font-family: $defaultFont;
+	font-size: 16px;
+	.popup-content {
+		p {
+			margin: 0px;
+		}
+		p, i {
+			display: inline-block;
+		}
+	}
+}
+
+#alertPopup.show {
+	visibility: visible;
+	-webkit-animation: alertPopupShowAnimation 3s linear 1;
+	animation: alertPopupShowAnimation 3s linear 1;
+}
+
+@-webkit-keyframes alertPopupShowAnimation {
+	0% {
+		opacity: 0;
+		transform: translateX(100%);
+	}
+	10% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+	90% {
+		transform: translateY(0);
+		opacity: 1;	
+	}
+	100% {
+		transform: translateX(100%);
+		opacity: 0;
+		visibility: hidden;
+	}
+}

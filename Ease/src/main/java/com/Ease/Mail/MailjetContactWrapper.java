@@ -29,7 +29,7 @@ public class MailjetContactWrapper {
         mailjetClient.put(new MailjetRequest(Contactdata.resource, user.getEmail()).property("Data", new JSONArray()
                 .put(new JSONObject()
                         .put("Name", "prénom")
-                        .put("Value", StringUtils.capitalize(user.getUsername().toLowerCase())))));
+                        .put("Value", user.getPersonalInformation().getFirst_name().equals("") ?  StringUtils.capitalize(user.getUsername().toLowerCase()) : user.getPersonalInformation().getFirst_name()))));
     }
 
     public void updateUserContactLists(User user) throws MailjetSocketTimeoutException, MailjetException {

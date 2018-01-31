@@ -2,11 +2,24 @@
 @import 'mixins';
 @import 'dashboard';
 
+@keyframes blink {
+  from, to {
+    color: transparent;
+  }
+  50% {
+    color: #373b60;
+  }
+}
+
 button.only-text-button {
   color: $themeDarkGrayTextColor;
   &:hover {
     color: black;
   }
+}
+
+#team_view > .joyride .joyride-tooltip {
+  margin-top: -25px;
 }
 
 .next_button {
@@ -250,6 +263,364 @@ button.only-text-button {
     margin-right: 10px;
     label::before {
       background-color: rgb(224, 225, 226) !important;
+    }
+  }
+}
+
+#new_team_creation {
+  #left_bar {
+    position: relative;
+    display: inline-flex;
+    width: 400px;
+    height: 100%;
+    padding: 150px 75px 42px 75px;
+    background-image: linear-gradient(196deg, #686d99, #373b60);
+    p {
+      color: white;
+      font-size: 18px;
+      text-align: center;
+    }
+    img {
+      width: 190px;
+      height: 40px;
+      position: absolute;
+      bottom: 42px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  #center {
+    display: inline-flex;
+    #top_bar {
+      top: 0;
+      margin: 0;
+      position: absolute;
+      .item {
+        color: #d2dae4;
+        font-size: 16px;
+        margin: 5px 20px -2px 50px;
+        &.active {
+          color: #949eb7;
+          border-color: #949eb7;
+        }
+      }
+    }
+    #content {
+      padding: 30px;
+      //transform: translateY(-20%);
+      position: absolute;
+      width: 690px;
+      top: 46px;
+      &.stepUsers {
+        width: 810px;
+      }
+      label {
+        display: flex;
+        margin-bottom: 10px;
+        &.for_input {
+          color: #949eb7;
+        }
+      }
+      .input {
+        margin-bottom: 20px;
+        i {
+          color: #e8ecf1;
+        }
+      }
+      input {
+        width: 380px;
+        &:focus {
+          border-color: #373b60;
+          label {
+            color: #373b60;
+          }
+        }
+      }
+      .hidden_input {
+        position: absolute;
+        top: -1000;
+        z-index: -1;
+      }
+      .confirmation_code {
+        display: inline-flex;
+        width: 330px;
+        height: 50px;
+        font-size: 24px;
+        color: rgb(148, 158, 183);
+        .div_input {
+          border: 1px solid rgb(210, 218, 228);
+          border-left: none;
+          padding: 15px 20px;
+          width: 55px;
+          &.left {
+            border-left: 1px solid rgb(210, 218, 228);
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+          }
+          &.right {
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+          }
+          &.focus {
+            border: 1px solid #373b60;
+            color: #373b60;
+            ::after {
+              position: relative;
+              top: -6%;
+              content: '|';
+              opacity: .7;
+              animation: 1s blink steps(5,start) infinite;
+            }
+          }
+        }
+      }
+      form {
+        margin: 0;
+      }
+      .scroll {
+        height: 500px;
+        overflow-y: auto;
+      }
+      .groups {
+        padding-right: 20px;
+        .group {
+          margin-bottom: 25px;
+          p {
+            font-weight: bold;
+          }
+          .dropdown {
+            input {
+              width: 0;
+            }
+          }
+        }
+      }
+      .checkbox_email {
+        display: flex;
+        margin-top: 30px;
+      }
+      .password_verified {
+        i {
+          color: #45c997;
+        }
+      }
+      .roomsSegment {
+        display: grid;
+        width: 187px;
+        height: 58px;
+        padding: 10px;
+        margin: 0 20px 20px 0;
+        border: solid 1px #d2dae4;
+        border-radius: 5px;
+        color: #949eb7;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        &.password_manager_segment {
+          position: relative;
+          .password_manager {
+            position: absolute;
+            display: inline-flex;
+            justify-content: center;
+            padding: 6px;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            transform: translateY(-50%) translateX(-50%);
+            img {
+              width: auto;
+              height: 17px;
+              margin-right: 10px;
+            }
+            span {
+              font-weight: bold;
+              color: #949eb7;
+              font-size: 16px;
+            }
+          }
+        }
+        &.selected {
+          border-color: #373b60;
+          color: #373b60;
+          .password_manager {
+            span {
+              color: #373b60;
+            }
+          }
+        }
+        span {
+          font-size: 12px;
+          font-weight: 300;
+          color: #d2dae4;
+        }
+      }
+      .dropdown_fields {
+        margin: 0 85px;
+        color: #949eb7;
+        display: inline-flex;
+        p {
+          width: 140px;
+          margin-right: 10px;
+        }
+      }
+      .account {
+        color: #949eb7;
+        display: inline-flex;
+        margin: 7px 0 7px 0;
+        p {
+          margin-left: 5px;
+          margin-top: 5px;
+          &.underline_hover {
+            &:hover {
+              text-decoration: underline;
+              i {
+                text-decoration: none;
+              }
+            }
+          }
+        }
+        .remove_account {
+          margin-top: 10px;
+          color: #e0e1e2;
+        }
+        img {
+          width: 38px;
+          height: 38px;
+          margin: 0 5px;
+          border-radius: 5px;
+          box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97);
+        }
+        .div_dropdown {
+          position: relative;
+          margin-left: 5px;
+          .dropdown {
+            font-size: 14px;
+            height: fit-content;
+          }
+          .remove_dropdown {
+            cursor: pointer;
+            position: absolute;
+            bottom: 47px;
+            left: 183px;
+            z-index: 1;
+            color: #e0e1e2;
+            margin: 0;
+            &.white {
+              color: white;
+            }
+          }
+        }
+        .input {
+          font-size: 14px;
+          height: fit-content;
+          input {
+            color: #949eb7;
+            width: 140px;
+            margin: 0 5px;
+          }
+          i {
+            color: #949eb7;
+            margin-top: 0;
+            display: none;
+          }
+        }
+        &:hover {
+          .input {
+            i {
+              display: inline-block;
+            }
+          }
+        }
+        .disabled {
+          input {
+            background-color: #E8ECF1;
+          }
+        }
+      }
+      .logoCatalog {
+        padding-left: 20px;
+        //margin-bottom: 20px;
+        img {
+          width: 50px;
+          height: 50px;
+          //margin: 10px;
+          z-index: -1;
+          border-radius: 5px;
+          display: inline-flex;
+          box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97);
+        }
+        .showSegment {
+          padding: 0;
+          margin: 20px 0;
+          white-space: nowrap;
+          border:1px solid transparent;
+          .appLogo {
+            width: 50px;
+            height: 50px;
+            z-index: 2;
+            border-radius: 5px;
+            display: inline-block;
+            box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.15);
+            margin-right: 5px;
+          }
+          p {
+            top: 37%;
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            color: #373b60;
+            display: inline-block;
+            margin-bottom: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+          }
+          .iconCheck {
+            display: none;
+            position: absolute;
+            top: 30%;
+            left: 5%;
+            font-size: 35px;
+            color: white;
+          }
+          .iconWrite {
+            display: none;
+            color: #717274;
+            font-size: 14px;
+          }
+          &.active {
+            .appLogo {
+              background-color: rgba(74, 74, 74, 0.7);
+            }
+            .iconCheck {
+              display: flex;
+            }
+            .iconWrite {
+              display: inline-block;
+            }
+          }
+        }
+      }
+    }
+    #bottom_bar {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      padding: 10px;
+      border-top: solid 1px #d2dae4;
+      button {
+        width: 200px;
+      }
+      a {
+        font-size: 16px;
+        color: #949eb7;
+        margin-left: 10px;
+      }
+      span {
+        margin-left: 10px;
+        font-size: 16px;
+        color: #eb555c;
+      }
     }
   }
 }
@@ -537,13 +908,14 @@ button.only-text-button {
     color: #949eb7;
     font-size: 16px;
     //text-align: center;
-    margin-top: 20px;
+    padding-top: 20px;
     height: 80%;
     &.step4 {
       height: 100%;
       position: fixed;
       width: 100%;
       left: 0;
+      background-color: $themeWhiteColor2;
       //margin-left: -31.5%;
     }
     .no_margin {
@@ -718,6 +1090,9 @@ button.only-text-button {
               display: inline-block;
             }
           }
+          i.arrow.circle.right.large.icon {
+            color: $SemanticGreen;
+          }
         }
         .disabled {
           input {
@@ -731,7 +1106,10 @@ button.only-text-button {
         margin-right: 30px;
         position: fixed;
         p {
+          font-weight: 700;
           display: inline-flex;
+          margin-bottom: 0;
+          font-size: 1.2em;
         }
         div.dropdown {
           border: 1px solid rgba(34,36,38,.15);
@@ -751,6 +1129,8 @@ button.only-text-button {
           .menu {
             overflow: auto;
             height: 840%;
+            right:0;
+            left: auto;
           }
           .text {
             width: 65%;
@@ -821,7 +1201,7 @@ button.only-text-button {
           margin-top: 10px;
         }
       }
-      button {
+      #import_button {
         //position: absolute;
         //left: 20px;
         //width: 88%;
@@ -2558,7 +2938,7 @@ button.action_text_button {
       color: #E8E8E8;
       #team_menu {
         position: relative;
-        @include flex-basis(60px);
+        height: 60px;
         @include flex-shrink(0);
         padding: 0 1em;
         &:hover {
@@ -2599,10 +2979,8 @@ button.action_text_button {
           overflow-y: hidden;
           padding-bottom: 5em;
           border-right: 0.25em solid transparent;
-          #team_channels {
-            margin: 5px 0 2em;
-          }
           .section-holder {
+            margin: 5px 0 2em;
             position: relative;
             width: 205px;
             .heading-button {

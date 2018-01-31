@@ -9,7 +9,7 @@ import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebs
 import {editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 import {CopyPasswordIcon} from "../dashboard/utils";
-import {isAdmin} from "../../utils/helperFunctions";
+import {isAdmin, isOwner} from "../../utils/helperFunctions";
 import {
   removeTeamCardReceiver, teamEditSoftwareEnterpriseCard,
   teamEditEnterpriseCardReceiver
@@ -133,6 +133,7 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meAdmin = isAdmin(me.role);
+    const meOwner = isOwner(me.role);
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
     const inputs = credentials.map((item, idx) => {
@@ -219,9 +220,13 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
             onChange={this.handleInput}/>}
           {view === 'Account' &&
           <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
-            {this.state.isEmpty &&
+            {this.state.isEmpty && meOwner &&
             <Form.Field>
-              <Icon name="wrench" style={{color: '#ff9a00'}}/> your admin asked you to enter the credentials.
+              <Icon name="wrench" style={{color: '#ff9a00'}}/> An app cannot stay empty! You must fill connection information.
+            </Form.Field>}
+            {this.state.isEmpty && !meOwner &&
+            <Form.Field>
+              <Icon name="wrench" style={{color: '#ff9a00'}}/> Your admin asked you to enter the connection information.
             </Form.Field>}
             {inputs}
             <Message error content={this.state.errorMessage}/>

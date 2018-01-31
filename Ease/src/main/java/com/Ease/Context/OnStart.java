@@ -5,7 +5,6 @@ import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Metrics.MetricsSchedulerTask;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -54,11 +53,9 @@ public class OnStart implements ServletContextListener {
                 Stripe.apiKey = Variables.STRIPE_API_KEY;
                 Stripe.apiVersion = "2017-08-15";
 
-                Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
-                context.setAttribute("publicKey", publicAndPrivateKey.getKey());
-                context.setAttribute("privateKey", publicAndPrivateKey.getValue());
-
-
+                //Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+                context.setAttribute("publicKey", Variables.PUBLIC_KEY);
+                context.setAttribute("privateKey", Variables.PRIVATE_KEY);
 
                 context.setAttribute("metrics", new Metrics(db));
 
@@ -71,7 +68,7 @@ public class OnStart implements ServletContextListener {
                 Calendar delay = Calendar.getInstance();
                 int hour = delay.get(Calendar.HOUR_OF_DAY);
                 int minutes = delay.get(Calendar.MINUTE);
-                if (hour > 10 || (hour == 10 && minutes > 30))
+                if (hour > 10 || (hour == 10 && minutes >= 30))
                     delay.add(Calendar.DAY_OF_YEAR, 1);
                 delay.set(Calendar.HOUR_OF_DAY, 10);
                 delay.set(Calendar.MINUTE, 30);
@@ -87,6 +84,19 @@ public class OnStart implements ServletContextListener {
                 time.schedule(metricsSchedulerTask, 0, 12 * 60 * 60 * 1000);
                 PostRegistrationEmailScheduledTask postRegistrationEmailScheduledTask = new PostRegistrationEmailScheduledTask();
                 time.schedule(postRegistrationEmailScheduledTask, next_clock, 24 * 60 * 60 * 1000);
+                StatsScheduledTask statsScheduledTask = new StatsScheduledTask();
+                time.schedule(statsScheduledTask, next_clock, 24 * 60 * 60 * 1000);
+
+                Calendar delay_six_pm = Calendar.getInstance();
+                hour = delay_six_pm.get(Calendar.HOUR_OF_DAY);
+                minutes = delay_six_pm.get(Calendar.MINUTE);
+                if (hour > 18 || (hour == 18 && minutes >= 30))
+                    delay_six_pm.add(Calendar.DAY_OF_YEAR, 1);
+                delay_six_pm.set(Calendar.HOUR_OF_DAY, 18);
+                delay_six_pm.set(Calendar.MINUTE, 30);
+                next_clock = delay_six_pm.getTimeInMillis() - new Date().getTime();
+                AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask();
+                time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000);
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));

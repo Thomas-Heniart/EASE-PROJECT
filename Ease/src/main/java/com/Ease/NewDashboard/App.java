@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @Cacheable
@@ -40,6 +41,10 @@ abstract public class App {
 
     @Column(name = "new")
     private boolean newApp = true;
+
+    @Column(name = "insert_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date insert_date = new Date();
 
     public App() {
 
@@ -95,6 +100,14 @@ abstract public class App {
 
     public void setNewApp(boolean newApp) {
         this.newApp = newApp;
+    }
+
+    public Date getInsert_date() {
+        return insert_date;
+    }
+
+    public void setInsert_date(Date insert_date) {
+        this.insert_date = insert_date;
     }
 
     public abstract String getLogo();

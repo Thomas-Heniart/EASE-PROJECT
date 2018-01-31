@@ -36,6 +36,15 @@ export const teams = createReducer({
       }
     });
   },
+  ['TEAM_CHANGE_STEP'](state, action){
+    const teamId = action.payload.team_id;
+    const step = action.payload.step;
+    return update(state, {
+      [teamId]: {
+        onboarding_step: {$set: step}
+      }
+    });
+  },
   ['TEAM_CHANGED'](state, action){
     const team = action.payload.team;
 

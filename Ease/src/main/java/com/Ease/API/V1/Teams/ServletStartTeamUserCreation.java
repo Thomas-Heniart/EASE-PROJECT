@@ -4,7 +4,6 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Team.TeamUserRole;
-import com.Ease.Utils.Crypto.CodeGenerator;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -22,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by thomas on 24/05/2017.
@@ -48,6 +48,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have multiple admins.");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
+            System.out.println("Username: " + username);
             if (username.equals("") || team.hasTeamUserWithUsername(username)) {
                 username = email.substring(0, email.indexOf("@"));
                 username = username.replaceAll("[^a-zA-Z0-9._\\-]", "_");
@@ -63,8 +64,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
             if (!team.isValidFreemium() && TeamUserRole.Role.MEMBER.getValue() != role)
                 throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to add other admins.");
-            String first_name = sm.getStringParam("first_name", true, false);
-            String last_name = sm.getStringParam("last_name", true, false);
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.getEmail().equals(email))
                     throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
@@ -74,20 +73,13 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             Long departure_date = sm.getLongParam("departure_date", true, true);
             if (!team.isValidFreemium() || departure_date == null)
                 departure_date = null;
-            else {
-                if (departure_date <= sm.getTimestamp().getTime())
+            else if (departure_date <= sm.getTimestamp().getTime())
                     throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");
-            }
-            TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date, null, team, new TeamUserRole(role));
+            TeamUser teamUser = new TeamUser(email, username, arrival_date, null, team, new TeamUserRole(role));
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date != null)
                 teamUser.setDepartureDate(new Date(departure_date));
-            String code;
-            do {
-                code = CodeGenerator.generateNewCode();
-                query.querySQLString("SELECT * FROM teamUsers WHERE invitation_code = ?");
-                query.setParameter(1, code);
-            } while (!query.list().isEmpty());
+            String code = UUID.randomUUID().toString();
             teamUser.setInvitation_code(code);
             try {
                 sm.saveOrUpdate(teamUser);

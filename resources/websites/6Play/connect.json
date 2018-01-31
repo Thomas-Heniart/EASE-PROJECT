@@ -21,7 +21,7 @@
     "logout":{
         "todo":[
             {"action":"clickona", "search":"ul.top-menu li:nth-child(9) a"},
-            {"action":"goto", "url":"http://www.6play.fr/"}
+            {"action": "waitload"}
          ]
     },
     "checkAlreadyLogged":[

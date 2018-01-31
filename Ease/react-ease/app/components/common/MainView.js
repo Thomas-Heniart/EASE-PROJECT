@@ -10,6 +10,7 @@ import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "../dashboard/CustomDragLayer";
 import NotificationBoxContainer from "../common/NotificationBoxContainer";
 var SimpleTeamCreationView = require('../teams/SimpleTeamCreationView');
+var NewSimpleTeamCreationView = require('../onBoarding/NewSimpleTeamCreationView');
 import {connect} from "react-redux";
 import {showExtensionDownloadModal} from "../../actions/modalActions";
 
@@ -27,12 +28,12 @@ class MainView extends Component {
         <div class="display-flex flex_direction_column full_flex" style={{flexFlow: 'column-reverse'}}>
           <Switch>
             <Route path='/main/teamsPreview' component={TeamsPreview}/>
-            <Route path='/main/simpleTeamCreation' component={SimpleTeamCreationView}/>
+            <Route path='/main/simpleTeamCreation' component={NewSimpleTeamCreationView}/>
             <Route path='/main/catalog' component={Catalog}/>
             <Route path='/main/settings' component={Settings}/>
             <Route path='/main/dashboard' component={Dashboard}/>
           </Switch>
-          <EaseHeader/>
+          <EaseHeader history={this.props.history}/>
           <CustomDragLayer/>
           <NotificationBoxContainer/>
         </div>

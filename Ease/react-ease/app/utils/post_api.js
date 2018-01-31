@@ -722,9 +722,11 @@ module.exports = {
     },
     createEnterpriseCard: ({team_id, channel_id, website_id, name, description, password_reminder_interval, receivers, ws_id}) => {
       Object.keys(receivers).map(receiver => {
-        Object.keys(receivers[receiver].account_information).map(item => {
-          receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
-        });
+        if (receivers[receiver].account_information !== null) {
+          Object.keys(receivers[receiver].account_information).map(item => {
+            receivers[receiver].account_information[item] = cipher(receivers[receiver].account_information[item]);
+          });
+        }
         return receivers[receiver];
       });
       return basic_post('/api/v1/teams/CreateTeamEnterpriseCard', {
@@ -1106,33 +1108,27 @@ module.exports = {
         throw err.response.data;
       })
     },
-    createTeam: function({name, email, first_name, last_name, username, jobRole, jobDetails, digits,plan_id, ws_id}){
+    createTeam: function({name, email, username, company_size, digits ,plan_id, ws_id}){
       return axios.post('/api/v1/teams/CreateTeam', {
         team_name: name,
         email: email,
-        first_name: first_name,
-        last_name: last_name,
         username: username,
-        job_index: jobRole,
-        job_details: jobDetails,
         digits: digits,
         plan_id: plan_id,
-        ws_id:ws_id,
-        timestamp: new Date().getTime()
+        company_size: company_size,
+        ws_id: ws_id,
       }).then(response => {
         return response.data;
       }).catch(err => {
         throw err.response.data;
       })
     },
-    finalizeRegistration: function(ws_id, fname, lname, username, jobRole, jobDetails, code){
+    finalizeRegistration: function(ws_id, fname, lname, username, code){
       return axios.post('/api/v1/teams/FinalizeRegistration', {
         ws_id: ws_id,
         first_name: fname,
         last_name: lname,
         username: username,
-        job_index: jobRole,
-        job_details: jobDetails,
         code: code,
         timestamp: new Date().getTime()
       }).then(response => {
@@ -1360,9 +1356,10 @@ module.exports = {
         throw err.response.data;
       })
     },
-    askRegistration: function(email){
+    askRegistration: ({email, newsletter}) => {
       return axios.post('/api/v1/common/AskRegistration', {
-        email: email
+        email: email,
+        newsletter: newsletter
       }).then (response => {
         return response.data;
       }).catch(err => {
@@ -1422,6 +1419,71 @@ module.exports = {
           }).catch(err => {
             throw err;
           })
+    },
+    tipDone: ({name}) => {
+      return basic_post('/api/v1/common/TipDone', {
+        name: name
+      })
+    }
+  },
+  onBoarding: {
+    onBoardingChangeStep: ({team_id, step, ws_id}) => {
+      return axios.put('/api/v1/TeamOnboardingStep', {
+        team_id: team_id,
+        step: step,
+        ws_id: ws_id
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      });
+    },
+    newRegistration: ({email, username, password, digits, code, phone_number, newsletter, first_name, last_name}) => {
+      return axios.post('/api/v1/common/Registration', {
+        username: username,
+        email: email,
+        password: password,
+        digits: digits,
+        code: code,
+        phone_number: phone_number,
+        newsletter: newsletter,
+        first_name: first_name,
+        last_name: last_name
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
+    editFirstAndLastName: ({first_name, last_name}) => {
+      return axios.post('/api/v1/common/EditFirstAndLastName', {
+        first_name: first_name,
+        last_name: last_name
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err;
+      })
+    },
+    createTeamProfile: ({team_id, team_user_ids}) => {
+      return axios.post('/api/v1/teams/CreateTeamProfiles', {
+        team_id: team_id,
+        team_user_ids: team_user_ids
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err;
+      })
+    },
+    changeStep: ({team_id, step}) => {
+      return axios.put('/api/v1/TeamOnboardingStep', {
+        team_id: team_id,
+        step: step
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err;
+      });
     }
   }
 };
