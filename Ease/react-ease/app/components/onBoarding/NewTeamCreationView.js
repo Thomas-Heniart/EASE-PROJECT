@@ -82,8 +82,8 @@ class NewTeamCreationView extends React.Component {
       this.setState(() => ({plan_id: Number(query.team)}));
     if (this.props.authenticated && (query.team === undefined || query.team.length === 0))
       this.props.history.replace(`/main/simpleTeamCreation?plan_id=${this.state.plan_id}`);
-    if (this.props.authenticated && query.team !== undefined && query.team.length !== 0)
-      this.props.history.replace(`/main/simpleTeamCreation?plan_id=${this.state.plan_id}&team=${this.state.team_id}`);
+    if (this.props.authenticated && (query.team !== undefined && query.team.length !== 0))
+      this.props.history.replace(`/main/simpleTeamCreation?plan_id=${this.state.plan_id}&team=${query.team}`);
   }
   handleInput = handleSemanticInput.bind(this);
   handleConfirmationCode = (e, {name, value}) => {
@@ -183,7 +183,7 @@ class NewTeamCreationView extends React.Component {
     this.setState({pasteEmails: emails});
   };
   checkPassword = () => {
-    return (this.state.password !== '' && this.state.password === this.state.verificationPassword && this.state.phone.length > 9 && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
+    return (this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
   };
   checkNoDuplicateEmails = () => {
     return this.state.emails.filter((item, idx) => {
