@@ -49,12 +49,13 @@ class Catalog extends Component {
             <div className="container">
               <div>
                 <p>Apps Catalogue</p>
+                {this.props.location.pathname !== `/main/catalog/onBoardingImportation` &&
                 <Menu tabular>
                   <Menu.Item name='Add an App' icon='book' as={NavLink} to={`/main/catalog/website`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/website` && this.resetQuery()}}/>
                   <Menu.Item name='Add a Shortcut link' icon='bookmark' as={NavLink} exact to={`/main/catalog/bookmark`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/bookmark` && this.resetQuery()}}/>
                   <Menu.Item name='Add Software credentials' icon='disk outline' as={NavLink} exact to={`/main/catalog/softwareCredentials`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/softwareCredentials` && this.resetQuery()}}/>
                   <Menu.Item name='Import' icon='cloud upload' as={NavLink} exact to={`/main/catalog/importations`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/importations` && this.resetQuery()}}/>
-                </Menu>
+                </Menu>}
               </div>
             </div>
           </header>

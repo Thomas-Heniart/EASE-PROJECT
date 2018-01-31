@@ -5,6 +5,7 @@ import {Provider} from "react-redux";
 import {StripeProvider} from 'react-stripe-elements';
 import {CookiesProvider, withCookies, Cookies} from 'react-cookie';
 import store from "./store";
+import OnBoardingJoinTeam from './components/onBoarding/OnBoardingJoinTeam';
 
 var TeamView = require('./components/TeamView.js');
 var TeamCreationView = require('./components/teams/TeamCreationView');
@@ -29,7 +30,7 @@ class App extends React.Component {
           <Route exact path={"/"} component={Root}/>
           <Route path="/teamCreation" component={NewTeamCreationView}/>
           <Route path="/main" component={requireAuthentication(MainView)}/>
-          <Route path="/teamJoin/:code" component={TeamJoinView}/>
+          <Route path="/teamJoin/:code" component={OnBoardingJoinTeam}/>
           <Route path="/teams/:teamId/:itemId?" component={requireAuthentication(TeamView)}/>
           <Route path="/login" component={Login}/>
           <Route path="/registration" component={Registration}/>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import { Header, Grid, Image, Icon, Input, Dropdown } from 'semantic-ui-react';
+import { Header, Grid, Image, Icon, Input, Dropdown, Popup } from 'semantic-ui-react';
 
 class ChoosePasswordManager extends React.Component {
   render() {
@@ -67,11 +67,14 @@ class ChoosePasswordManager extends React.Component {
 
 class ChooseApps extends React.Component {
   render() {
-    const {appsSelected, websites, currentRoom, rooms, selectApp} = this.props;
+    const {appsSelected, websites, currentRoom, rooms, selectApp, allAppIdsSelected} = this.props;
     const room = rooms.filter((item, idx) => {
       if (currentRoom === idx)
         return item;
     })[0];
+    const website_ids = room.website_ids.filter((id, idx) => {
+      return idx < 20 && allAppIdsSelected.filter(appId => {return id === appId}).length === 0;
+    });
     return (
       <React.Fragment>
         {currentRoom === 0 &&
@@ -79,7 +82,7 @@ class ChooseApps extends React.Component {
         {currentRoom > 0 &&
         <Header as='h1'>Select accounts used in #{room.name}</Header>}
         <Grid columns={4} className="logoCatalog">
-          {room.website_ids.map(id => (
+          {website_ids.map(id => (
             <Grid.Column key={id}
                          as='a'
                          className={appsSelected.filter(appId => {return appId === id}).length > 0 ? "active showSegment" : "showSegment"}
@@ -144,6 +147,8 @@ class CredentialsSingleApps extends React.Component {
   changeFourthField = (id, int) => {
     this.state.fourthField[id] = int;
     this.setState({fourthField: this.state.fourthField});
+    if (int === 0)
+      this.props.deleteFillerId(id);
   };
   seePassword = (id) => {
     this.state.seePassword[id] = !this.state.seePassword[id];
@@ -151,24 +156,33 @@ class CredentialsSingleApps extends React.Component {
   };
   render() {
     const {
+      team,
       users,
       websites,
       singleApps,
       testPassword,
       handleAppInfo,
+      roomsSelected,
+      dropdownFiller,
       deleteSingleApp,
       credentialsSingleApps
     } = this.props;
-    const filler = users.map(item => {
-      return {
-        text: item.username,
-        value: item.id
-      }
+    const myId = team.my_team_user_id;
+    const filler = {};
+    roomsSelected.map(room_id => {
+      filler[room_id] = users.filter(item => {
+        return item.room_ids.filter(id => {return room_id === id}).length > 0 && item.id !== myId;
+      }).map(item => {
+        return {
+          text: item.username,
+          value: item.id
+        }
+      });
     });
     const accounts = Object.keys(singleApps).map(room_id => {
       return singleApps[room_id].map(id => (
       <div key={id} className='account'>
-        <Icon name='remove circle' onClick={e => deleteSingleApp(room_id, id)}/>
+        <Icon className='remove_account' name='remove circle' onClick={e => deleteSingleApp(room_id, id)}/>
         <img src={websites[id].logo}/>
         <Input size='mini'
                name='name'
@@ -195,25 +209,22 @@ class CredentialsSingleApps extends React.Component {
                icon={<Icon name='eye' link onClick={e => this.seePassword(id)}/>}
                type={this.state.seePassword[id] === false ? 'password' : 'text'}/>
         {(credentialsSingleApps[id].login === '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0) &&
-        <p onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Ask password to...</p>}
-        {(credentialsSingleApps[id].login !== '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0) &&
-        <p onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Unknown password?</p>}
+        <Popup
+          trigger={
+            <p className='underline_hover' onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Ask password to...</p>}
+          content='You can request logins and passwords from someone in your team.'/>}
         {this.state.fourthField[id] === 1 &&
-        <div style={{position:'relative',marginLeft:'5px'}}>
-          <Icon size='large' name='circle' style={{position:'absolute',bottom:'47',left:'183',zIndex:'1',color:'white',margin:'0'}} />
-          <Icon onClick={e => this.changeFourthField(id, 0)} name='remove circle' style={{
-            cursor: 'pointer',
-            position: 'absolute',
-            bottom: '47',
-            left: '183',
-            zIndex: '1',
-            color: '#e0e1e2',
-            margin: '0'
-          }}/>
-          <Dropdown selection options={filler}/>
+        <div className='div_dropdown'>
+          <Icon size='large' name='circle' className='remove_dropdown white'/>
+          <Icon onClick={e => this.changeFourthField(id, 0)} name='remove circle' className='remove_dropdown'/>
+          <Dropdown selection options={filler[room_id]} onChange={(e, value) => {dropdownFiller(id, value)}}/>
         </div>}
-        {(credentialsSingleApps[id].login !== '' && credentialsSingleApps[id].password !== '') &&
-        <p onClick={e => testPassword(id)}><Icon name='magic'/>Test this password</p>}
+        {(credentialsSingleApps[id].login !== '' || credentialsSingleApps[id].password !== '') &&
+        <Popup
+          inverted
+          trigger={
+            <p className='underline_hover' onClick={e => testPassword(id)}><Icon name='magic'/>Test this password</p>}
+          content='It will open a new tab to verify if this password works or not.'/>}
       </div>))
     });
     return (
@@ -241,6 +252,7 @@ class OnBoardingAccounts extends React.Component {
   render() {
     const {
       view,
+      team,
       rooms,
       users,
       selectApp,
@@ -251,8 +263,11 @@ class OnBoardingAccounts extends React.Component {
       handleAppInfo,
       roomsSelected,
       roomsWebsites,
+      deleteFillerId,
+      dropdownFiller,
       selectSingleApp,
       deleteSingleApp,
+      allAppIdsSelected,
       credentialsSingleApps,
       selectPasswordManager,
       passwordManagerSelected} = this.props;
@@ -268,7 +283,8 @@ class OnBoardingAccounts extends React.Component {
             selectApp={selectApp}
             websites={roomsWebsites}
             currentRoom={currentRoom}
-            appsSelected={appsSelected}/>}
+            appsSelected={appsSelected}
+            allAppIdsSelected={allAppIdsSelected}/>}
         {view === 3 &&
           <ChooseSingleApps
             rooms={rooms}
@@ -279,11 +295,15 @@ class OnBoardingAccounts extends React.Component {
             selectSingleApp={selectSingleApp}/>}
         {view === 4 &&
           <CredentialsSingleApps
+            team={team}
             users={users}
             singleApps={singleApps}
             websites={roomsWebsites}
             testPassword={testPassword}
             handleAppInfo={handleAppInfo}
+            roomsSelected={roomsSelected}
+            dropdownFiller={dropdownFiller}
+            deleteFillerId={deleteFillerId}
             deleteSingleApp={deleteSingleApp}
             credentialsSingleApps={credentialsSingleApps}/>}
       </React.Fragment>

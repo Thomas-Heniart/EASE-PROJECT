@@ -45,6 +45,7 @@ export function onBoardingChangeStep({team_id, step}) {
       step: step,
       ws_id: getState().common.ws_id
     }).then(response => {
+      dispatch({type: 'CHANGE_STEP', payload: {team_id: team_id, step: step}});
       return response
     }).catch(err => {
       throw err;
@@ -154,13 +155,11 @@ export function goToOnBoarding({passwordManager, team_id}) {
 
 export function changeStep({team_id, step}) {
   return (dispatch, getState) => {
-    dispatch({type: 'CHANGE_STEP',
-      payload: {step: step}
-    });
     return post_api.onBoarding.changeStep({
       team_id: team_id,
       step: step
     }).then(response => {
+      dispatch({type: 'TEAM_CHANGE_STEP', payload: {team_id: team_id, step: step}});
       return response;
     }).catch(err => {
       throw err;

@@ -5,7 +5,7 @@ import {
   getImportedAccounts
 } from "../../actions/catalogActions";
 import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../actions/catalogActions";
-import {handleSemanticInput, isEmail, reflect, lala, credentialIconType} from "../../utils/utils";
+import {handleSemanticInput, isEmail, reflect, credentialIconType} from "../../utils/utils";
 import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "../../actions/appsActions";
 import {createProfile} from "../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../actions/channelActions";
@@ -1601,109 +1601,6 @@ class Importations extends React.Component {
     });
     if (this.state.importedAccounts.length < 1)
       this.setState({view: 1, separator: ',',})
-  };
-  lala = () => {
-    let calls = [];
-    const receivers = {[this.props.teams[this.state.selectedTeam].my_team_user_id]: {allowed_to_see_password: true}};
-    const receiversLink = [this.props.teams[this.state.selectedTeam].my_team_user_id];
-    return this.props.dispatch(createTeamChannel({
-      team_id: this.state.selectedTeam,
-      name: this.state.roomName[this.state.selectedTeam],
-      purpose: ''
-    })).then(response => {
-      this.props.dispatch(addTeamUserToChannel({
-        team_id: this.state.selectedTeam,
-        channel_id: response.id,
-        team_user_id: this.props.teams[this.state.selectedTeam].my_team_user_id
-      })).then(() => {
-      this.state.accountsPending.map(app => {
-        if (app.website_id !== -1 && app.login !== '' && app.password !== '') {
-          calls.push(this.props.dispatch(teamCreateSingleApp({
-            team_id: this.state.selectedTeam,
-            channel_id: response.id,
-            name: app.name,
-            website_id: app.website_id,
-            password_reminder_interval: 0,
-            account_information: {login: app.login, password: app.password},
-            description: '',
-            receivers: receivers
-          })));
-        }
-        else {
-          if (app.login !== '' && app.password !== '') {
-            calls.push(this.props.dispatch(teamCreateAnySingleCard({
-              team_id: this.state.selectedTeam,
-              channel_id: response.id,
-              name: app.name,
-              description: '',
-              password_reminder_interval: 0,
-              url: app.url,
-              img_url: app.logo,
-              account_information: {login: app.login, password: app.password},
-              connection_information: {
-                login: {type: "text", priority: 0, placeholder: "Login"},
-                password: {type: "password", priority: 1, placeholder: "Password"}
-              },
-              credentials_provided: false,
-              receivers: receivers
-            })));
-          }
-          else {
-            calls.push(this.props.dispatch(teamCreateLinkCard({
-              team_id: this.state.selectedTeam,
-              channel_id: response.id,
-              name: app.name,
-              description: '',
-              url: app.url,
-              img_url: app.logo,
-              receivers: receiversLink
-            })));
-          }
-        }
-        calls.push(this.props.dispatch(deleteImportedAccount({
-          id: app.id
-        })));
-      });
-        let newTeams = {};
-        Object.keys(this.props.teams).map(item => {
-          const team  = this.props.teams[item];
-          newTeams[item] = {...team};
-          newTeams[item].rooms = {};
-          Object.keys(team.rooms).map(room_id =>  {
-            newTeams[item].rooms[room_id] = {...team.rooms[room_id]}
-          });
-        });
-        const keys = Object.keys(newTeams);
-        const roomName = {};
-        const roomAdded = {};
-        keys.map(item => {
-          roomName[item] = "";
-          roomAdded[item] = false;
-          return item;
-        });
-          return lala(calls.map(reflect)).then(() => {
-            this.setState({
-              accountsPending: [],
-              selectedProfile: -1,
-              selectedRoom: -1,
-              selectedTeam: -1,
-              profileAdded: false,
-              loadingSending: false,
-              roomAdded: roomAdded,
-              profileName: '',
-              error: '',
-              roomName: roomName,
-              location: '',
-              profiles: Object.assign({}, this.props.profiles),
-              teamsInState: newTeams
-            });
-            if (this.state.importedAccounts.length < 1)
-              this.setState({view: 1, separator: ',',})
-          }).catch(err => {
-            this.setState({error: err});
-          });
-      });
-    });
   };
   render() {
     return (

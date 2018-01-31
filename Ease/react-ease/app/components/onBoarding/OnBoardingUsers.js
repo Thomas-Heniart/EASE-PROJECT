@@ -40,7 +40,7 @@ class OnBoardingUsers extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      number: this.props.emails.length,
+      number: this.props.number,
       paste: '',
       emails: []
     }
@@ -51,6 +51,7 @@ class OnBoardingUsers extends React.Component {
       emails = checkTextArea(value);
     else
       emails = [value];
+    this.props.textareaToEmails(emails);
     this.setState({[name]: value, emails: emails});
   };
   render() {
@@ -64,6 +65,7 @@ class OnBoardingUsers extends React.Component {
           name='email'
           type='email'
           placeholder='Email'
+          autoComplete={false}
           onChange={(e, values) => {onChange(idx, values)}}
           label={<Label><Icon style={{color:'white'}} name='user'/></Label>}/>
       )
@@ -71,8 +73,8 @@ class OnBoardingUsers extends React.Component {
     return (
       <React.Fragment>
         <Header as='h1'>Who is working in your company?</Header>
-        <p>This step will not send invitations to your team.<br/>
-          Please enter {this.state.number} emails or more (manually <u>or</u> paste a list from any file).</p>
+        <p><strong>This step will not send invitations to your team</strong>.<br/>
+          Please enter at least {this.state.number} emails or more (manually <u>or</u> paste a list from any file).</p>
         <div style={{display:'inline-flex',flexWrap:'wrap'}}>
           <div style={{width:'380px',paddingRight:'23px',paddingBottom:'10px',paddingTop:'10px',overflowY:'auto',height:'340px'}}>
             {fields}
@@ -89,9 +91,10 @@ class OnBoardingUsers extends React.Component {
               Add another field
             </button>
           </div>
+          {this.state.emails.length > 0 &&
           <div style={{width:'370px',paddingLeft:'23px',paddingBottom:'10px',paddingTop:'10px'}}>
             <p>{this.state.emails.length} email addresses detected.</p>
-          </div>
+          </div>}
         </div>
 
       </React.Fragment>

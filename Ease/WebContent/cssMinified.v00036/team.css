@@ -1002,6 +1002,17 @@ button.only-text-button {
             animation: 1s blink steps(5, start) infinite; }
     #new_team_creation #center #content form {
       margin: 0; }
+    #new_team_creation #center #content .scroll {
+      height: 500px;
+      overflow-y: auto; }
+    #new_team_creation #center #content .groups {
+      padding-right: 20px; }
+      #new_team_creation #center #content .groups .group {
+        margin-bottom: 25px; }
+        #new_team_creation #center #content .groups .group p {
+          font-weight: bold; }
+        #new_team_creation #center #content .groups .group .dropdown input {
+          width: 0; }
     #new_team_creation #center #content .checkbox_email {
       display: flex;
       margin-top: 30px; }
@@ -1058,15 +1069,38 @@ button.only-text-button {
       color: #949eb7;
       display: inline-flex;
       margin: 7px 0 7px 0; }
+      #new_team_creation #center #content .account p {
+        margin-left: 5px;
+        margin-top: 5px; }
+        #new_team_creation #center #content .account p.underline_hover:hover {
+          text-decoration: underline; }
+          #new_team_creation #center #content .account p.underline_hover:hover i {
+            text-decoration: none; }
+      #new_team_creation #center #content .account .remove_account {
+        margin-top: 10px;
+        color: #e0e1e2; }
       #new_team_creation #center #content .account img {
         width: 38px;
         height: 38px;
         margin: 0 5px;
         border-radius: 5px;
         box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97); }
-      #new_team_creation #center #content .account .dropdown {
-        font-size: 14px;
-        height: fit-content; }
+      #new_team_creation #center #content .account .div_dropdown {
+        position: relative;
+        margin-left: 5px; }
+        #new_team_creation #center #content .account .div_dropdown .dropdown {
+          font-size: 14px;
+          height: fit-content; }
+        #new_team_creation #center #content .account .div_dropdown .remove_dropdown {
+          cursor: pointer;
+          position: absolute;
+          bottom: 47px;
+          left: 183px;
+          z-index: 1;
+          color: #e0e1e2;
+          margin: 0; }
+          #new_team_creation #center #content .account .div_dropdown .remove_dropdown.white {
+            color: white; }
       #new_team_creation #center #content .account .input {
         font-size: 14px;
         height: fit-content; }
@@ -1075,6 +1109,7 @@ button.only-text-button {
           width: 140px;
           margin: 0 5px; }
         #new_team_creation #center #content .account .input i {
+          color: #949eb7;
           margin-top: 0;
           display: none; }
       #new_team_creation #center #content .account:hover .input i {
@@ -1139,6 +1174,14 @@ button.only-text-button {
     border-top: solid 1px #d2dae4; }
     #new_team_creation #center #bottom_bar button {
       width: 200px; }
+    #new_team_creation #center #bottom_bar a {
+      font-size: 16px;
+      color: #949eb7;
+      margin-left: 10px; }
+    #new_team_creation #center #bottom_bar span {
+      margin-left: 10px;
+      font-size: 16px;
+      color: #eb555c; }
 
 #catalog {
   margin-top: -60px;
@@ -1366,9 +1409,10 @@ button.only-text-button {
         margin-left: 5px;
         margin-right: 0; }
   #catalog #importations {
+    background-color: #F6F7F9;
     color: #949eb7;
     font-size: 16px;
-    margin-top: 20px;
+    padding-top: 20px;
     height: 80%; }
     #catalog #importations.step4 {
       height: 100%;
@@ -1505,6 +1549,8 @@ button.only-text-button {
             display: none; }
         #catalog #importations #accounts .account:hover .input i {
           display: inline-block; }
+        #catalog #importations #accounts .account:hover i.arrow.circle.right.large.icon {
+          color: #45C997; }
         #catalog #importations #accounts .account .disabled input {
           background-color: #E8ECF1; }
       #catalog #importations #accounts .segment_pending {
@@ -1513,7 +1559,10 @@ button.only-text-button {
         margin-right: 30px;
         position: fixed; }
         #catalog #importations #accounts .segment_pending p {
-          display: inline-flex; }
+          font-weight: 700;
+          display: inline-flex;
+          margin-bottom: 0;
+          font-size: 1.2em; }
         #catalog #importations #accounts .segment_pending div.dropdown {
           border: 1px solid rgba(34, 36, 38, 0.15);
           border-radius: .28571429rem;
@@ -1528,7 +1577,9 @@ button.only-text-button {
             border-color: #e0b4b4; }
           #catalog #importations #accounts .segment_pending div.dropdown .menu {
             overflow: auto;
-            height: 840%; }
+            height: 840%;
+            right: 0;
+            left: auto; }
           #catalog #importations #accounts .segment_pending div.dropdown .text {
             width: 65%; }
         #catalog #importations #accounts .segment_pending .div_accounts {
@@ -1581,7 +1632,7 @@ button.only-text-button {
         #catalog #importations #accounts i.remove {
           color: #e8ecf1;
           margin-top: 10px; }
-      #catalog #importations #accounts button {
+      #catalog #importations #accounts #import_button {
         margin-top: 10px;
         width: 100%; }
     #catalog #importations textarea {

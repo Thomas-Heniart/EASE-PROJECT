@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
+import queryString from "query-string";
 import {
   catalogAddAnyApp, catalogAddBookmark, catalogAddClassicApp,
   getImportedAccounts
@@ -11,7 +12,9 @@ import {createProfile} from "../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../actions/channelActions";
 import {getLogo} from "../../utils/api"
 import { Segment, Button, Icon, TextArea, Dropdown, Form, Menu, Message, Input, Loader, Grid, Label} from 'semantic-ui-react';
-import {changeStep, resetOnBoardingImportation} from "../../actions/onBoardingActions";
+import {changeStep, goToOnBoarding, resetOnBoardingImportation} from "../../actions/onBoardingActions";
+import Joyride from "react-joyride";
+import {setTipSeen} from "../../actions/commonActions";
 
 function json(fields, separator, csv, dispatch) {
   const array = csv.split('\n');
@@ -352,6 +355,11 @@ class DisplayAccounts extends React.Component {
     this.setState({accountsNumber: this.props.importedAccounts.length, seePassword: seePassword});
   }
   openDropdown = () => {
+    if(!this.props.user.status.tip_importation_seen) {
+      this.props.dispatch(setTipSeen({
+        name: 'tip_importation_seen'
+      }));
+    }
     this.setState({dropdownOpened: !this.state.dropdownOpened});
   };
   closeOnBlur = () => {
@@ -519,8 +527,10 @@ class DisplayAccounts extends React.Component {
                         onClose={this.openDropdown}
                         onBlur={this.closeOnBlur}
                         text={this.props.location}
-                        error={error !== ''}>
+                        error={error !== ''}
+                        id="importation_dropdown">
                 <Dropdown.Menu>
+                  {teamsList}
                   <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
                   {profiles}
                   {profileAdded === false &&
@@ -537,15 +547,32 @@ class DisplayAccounts extends React.Component {
                         placeholder='New group' />
                     </form>
                   </Dropdown.Item>}
-                  {teamsList}
                 </Dropdown.Menu>
               </Dropdown>
+              {!this.props.user.status.tip_importation_seen &&
+              <Joyride
+                steps={[{
+                  title: 'Organize your apps by sending them where you want to!',
+                  isFixed: true,
+                  selector:"#importation_dropdown",
+                  position: 'bottom'
+                }]}
+                locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
+                disableOverlay={true}
+                run={true}
+                callback={(action) => {
+                  if (action.type === 'finished')
+                    this.props.dispatch(setTipSeen({
+                      name: 'tip_importation_seen'
+                    }));
+                  }}/>}
               <div className='div_accounts'>
                 <Message error hidden={error === ''} content={error} size='mini'/>
                 {listPending}
               </div>
               <Button
                 positive
+                id="import_button"
                 loading={loadingSending}
                 disabled={accountsPending.length < 1 || (selectedProfile === -1 && selectedRoom === -1) || loadingSending}
                 content={this.props.location ? `Import to ${this.props.location}` : "Import and encrypt"}
@@ -564,7 +591,8 @@ class DisplayAccounts extends React.Component {
   dashboard: store.dashboard,
   profiles: store.dashboard.profiles,
   teams: store.teams,
-  onBoarding: store.onBoarding
+  onBoarding: store.onBoarding,
+  user: store.common.user
 }))
 class OnBoardingImportation extends React.Component {
   constructor(props) {
@@ -598,17 +626,13 @@ class OnBoardingImportation extends React.Component {
     };
   }
   componentWillMount() {
-    if (this.props.onBoarding.passwordManager === null)
-      this.props.history.replace('/main/catalog/importations');
-    else {
-      if (this.props.onBoarding.passwordManager === 1)
-        this.setState({passwordManager: 1, view: 3}, this.choosePasswordManager(1));
-      else if (this.props.onBoarding.passwordManager === -1)
-        this.setState({passwordManager: this.props.onBoarding.passwordManager}, this.choosePasswordManager(-1));
-      else
-        this.setState({passwordManager: this.props.onBoarding.passwordManager}, this.choosePasswordManager(this.props.onBoarding.passwordManager));
-    }
     this.setState({loading: true});
+    const query = queryString.parse(this.props.location.search);
+    if (query.team !== undefined && query.team.length !== 0) {
+      this.props.dispatch(goToOnBoarding({
+        team_id: Number(query.team)
+      }));
+    }
     const profiles = {...this.props.profiles};
     let newTeams = {};
     Object.keys(this.props.teams).map(item => {
@@ -642,7 +666,29 @@ class OnBoardingImportation extends React.Component {
           }).sort((a, b) => {
             return a.url.localeCompare(b.url);
           });
-          this.setState({importedAccounts: accounts});
+          this.setState({
+            importedAccounts: accounts,
+            view: 4,
+            fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'}
+          });
+        }
+        else {
+          if (this.props.onBoarding.passwordManager === null && (query.team === undefined || query.team.length === 0))
+            this.props.history.replace('/main/catalog/importations');
+          else if (this.props.teams[query.team].onboarding_step === 4) {
+            if (this.props.onBoarding.passwordManager === 1)
+              this.setState({passwordManager: 1, view: 3}, this.choosePasswordManager(1));
+            else if (this.props.onBoarding.passwordManager === -1)
+              this.setState({passwordManager: this.props.onBoarding.passwordManager}, this.choosePasswordManager(-1));
+            else
+              this.setState({passwordManager: this.props.onBoarding.passwordManager}, this.choosePasswordManager(this.props.onBoarding.passwordManager));
+          }
+          else if (this.props.teams[query.team].onboarding_step === 3 && this.props.onBoarding.passwordManager !== null) {
+            this.props.history.replace(`/main/simpleTeamCreation/accounts?team=${query.team}`);
+          }
+          else {
+            this.props.history.replace('/main/catalog/importations');
+          }
         }
         this.setState({loading: false, profiles: profiles, teamsInState: newTeams, roomName: roomName, roomAdded: roomAdded});
       }).catch(err => {
@@ -841,7 +887,7 @@ class OnBoardingImportation extends React.Component {
       });
       Promise.all(calls.map(reflect)).then(response => {
         this.props.dispatch(changeStep({
-          team_id: this.state.team_id,
+          team_id: this.props.onBoarding.team_id,
           step: 4
         })).then(res => {
           const json = response.filter(item => {
@@ -891,7 +937,7 @@ class OnBoardingImportation extends React.Component {
       else {
         Promise.all(calls.map(reflect)).then(response => {
           this.props.dispatch(changeStep({
-            team_id: this.state.team_id,
+            team_id: this.props.onBoarding.team_id,
             step: 4
           })).then(res => {
             const json = response.filter(item => {
@@ -941,15 +987,11 @@ class OnBoardingImportation extends React.Component {
           });
           this.setState({importedAccounts: accounts, loadingDelete: false});
           if (accounts.length < 1 && this.state.accountsPending.length < 1)
-            this.setState({
-              passwordManager: 0,
-              view: 1,
-              error: '',
-              location: '',
-              selectedTeam: -1,
-              selectedRoom: -1,
-              selectedProfile: -1,
-              separator: ','
+            this.props.dispatch(changeStep({
+              team_id: this.props.onBoarding.team_id,
+              step: 5
+            })).then(res => {
+              window.location.href = "/";
             });
         });
     }
@@ -964,24 +1006,22 @@ class OnBoardingImportation extends React.Component {
           });
           this.setState({errorAccounts: accounts});
           if (accounts.length < 1)
-            this.setState({
-              passwordManager: 0,
-              view: 1,
-              error: '',
-              selectedTeam: -1,
-              selectedRoom: -1,
-              selectedProfile: -1,
-              location: '',
-              separator: ','
+            this.props.dispatch(changeStep({
+              team_id: this.props.onBoarding.team_id,
+              step: 5
+            })).then(res => {
+              window.location.href = "/";
             });
         });
     }
   };
   back = () => {
     if (this.state.passwordManager === 1)
-      this.setState({view: 1, error: '', separator: ',',});
+      window.location.replace(`/#/teams/${this.props.onBoarding.team_id}`);
+    else if (this.state.view === 3)
+      this.setState({view: 2, error: ''});
     else
-      this.setState({view: this.state.view - 1, error: ''});
+      window.location.replace(`/#/teams/${this.props.onBoarding.team_id}`);
   };
   choosePasswordManager = (int) => {
     if (int === 4)
@@ -1126,10 +1166,10 @@ class OnBoardingImportation extends React.Component {
       });
       if (this.state.importedAccounts.length < 1) {
         this.props.dispatch(changeStep({
-          team_id: this.state.team_id,
+          team_id: this.props.onBoarding.team_id,
           step: 5
         })).then(res => {
-          this.setState({view: 1, separator: ',',});
+          window.location.href = "/";
         });
       }
       easeTracker.trackEvent("EaseOnboardingImportationDone")
@@ -1217,10 +1257,10 @@ class OnBoardingImportation extends React.Component {
         });
         if (this.state.importedAccounts.length < 1) {
           this.props.dispatch(changeStep({
-            team_id: this.state.team_id,
+            team_id: this.props.onBoarding.team_id,
             step: 5
           })).then(res => {
-            this.setState({view: 1, separator: ',',});
+            window.location.href = "/";
           });
         }
       }).catch(err => {
@@ -1323,11 +1363,11 @@ class OnBoardingImportation extends React.Component {
     });
     if (this.state.importedAccounts.length < 1) {
       this.props.dispatch(changeStep({
-        team_id: this.state.team_id,
+        team_id: this.props.onBoarding.team_id,
         step: 5
       })).then(res => {
         this.props.dispatch(resetOnBoardingImportation());
-        this.setState({view: 1, separator: ',',})
+        window.location.href = "/";
       });
     }
   };
@@ -1428,11 +1468,11 @@ class OnBoardingImportation extends React.Component {
     });
     if (this.state.importedAccounts.length < 1) {
       this.props.dispatch(changeStep({
-        team_id: this.state.team_id,
+        team_id: this.props.onBoarding.team_id,
         step: 5
       })).then(res => {
         this.props.dispatch(resetOnBoardingImportation());
-        this.setState({view: 1, separator: ',',})
+        window.location.href = "/";
       });
     }
   };

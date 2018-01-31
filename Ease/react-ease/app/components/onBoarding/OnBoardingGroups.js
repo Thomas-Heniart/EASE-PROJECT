@@ -8,7 +8,13 @@ class OnBoardingGroups extends React.Component {
     this.state = {
       options: []
     };
-    this.state.options = this.props.users.map(item => {
+  }
+  render() {
+    const {rooms, roomsSelected, users, dropdownChange, value, team} = this.props;
+    const myId = team.my_team_user_id;
+    this.state.options = users.filter(user => {
+      return user.id !== myId;
+    }).map(item => {
       return {
         key: item.id,
         text: item.username + ' - ' + item.email,
@@ -16,18 +22,11 @@ class OnBoardingGroups extends React.Component {
         value: item.id
       }
     });
-    this.props.rooms.map(item => {
-      if (item.name !== 'openspace')
-        this.props.value[item.id] = [this.props.team.my_team_user_id];
-    });
-  }
-  render() {
-    const {rooms, roomsSelected, users, dropdownChange, value} = this.props;
     const roomsToShow = rooms.filter(item => {
       return item.id && item.name !== 'openspace' && roomsSelected.filter(room_id => {return item.id === room_id}).length > 0;});
     const roomsList = roomsToShow.map(item => (
-      <div key={item.id} style={{marginBottom:'25px'}}>
-        <p style={{fontWeight:'bold'}}>Who uses #{item.name} passwords?</p>
+      <div key={item.id} className='group'>
+        <p>Who uses #{item.name} passwords?</p>
         <Dropdown
           fluid
           search
@@ -35,16 +34,16 @@ class OnBoardingGroups extends React.Component {
           selection
           id={item.id}
           value={value[item.id]}
+          onChange={dropdownChange}
           placeholder="Select people"
           options={this.state.options}
-          renderLabel={renderUserLabel}
-          onChange={dropdownChange}/>
+          renderLabel={renderUserLabel}/>
       </div>
     ));
     return (
       <React.Fragment>
         <Header as='h1'>Who's in which Room?</Header>
-        <div style={{height:'450px', overflowY:'auto',paddingRight:'20px'}}>
+        <div className='scroll groups'>
           {roomsList}
         </div>
       </React.Fragment>

@@ -95,14 +95,14 @@ class TeamView extends React.Component {
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
     }
-    const me = team.team_users[team.my_team_user_id];
-    if (!me.phone_number && me.role === 3){
-      this.props.dispatch(modalActions.showTeamPhoneNumberModal({
-        active: true,
-        team_id: team.id,
-        team_user_id: me.id
-      }));
-    }
+    // const me = team.team_users[team.my_team_user_id];
+    // if (!me.phone_number && me.role === 3){
+    //   this.props.dispatch(modalActions.showTeamPhoneNumberModal({
+    //     active: true,
+    //     team_id: team.id,
+    //     team_user_id: me.id
+    //   }));
+    // }
   }
   isValidTeamItemId = () => {
     const teamId = Number(this.props.match.params.teamId);
@@ -131,7 +131,7 @@ class TeamView extends React.Component {
       this.props.dispatch(goToOnBoarding({
         team_id: teamId
       }));
-      this.props.history.replace(`/main/simpleTeamCreation`);
+      this.props.history.replace(`/main/simpleTeamCreation?team=${teamId}`);
     }
     else
       this.props.history.replace(`/teams/${teamId}/${defaultRoom.id}`);

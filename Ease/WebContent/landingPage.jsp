@@ -193,7 +193,7 @@
 </script>
 <script type="text/javascript">
    function submitEmail() {
-       document.location.href = "/#/registration?email="+$('#divInput').find("input[name='email']").val();
+       document.location.href = "/#/teamCreation?email="+$('#divInput').find("input[name='email']").val();
        return false;
     };
     $(document).ready(function () {

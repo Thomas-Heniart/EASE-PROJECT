@@ -1123,14 +1123,12 @@ module.exports = {
         throw err.response.data;
       })
     },
-    finalizeRegistration: function(ws_id, fname, lname, username, jobRole, jobDetails, code){
+    finalizeRegistration: function(ws_id, fname, lname, username, code){
       return axios.post('/api/v1/teams/FinalizeRegistration', {
         ws_id: ws_id,
         first_name: fname,
         last_name: lname,
         username: username,
-        job_index: jobRole,
-        job_details: jobDetails,
         code: code,
         timestamp: new Date().getTime()
       }).then(response => {
