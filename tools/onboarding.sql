@@ -1,3 +1,22 @@
+CREATE TABLE ONBOARDING_ROOM (
+  id      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  name    VARCHAR(255)     NOT NULL,
+  example VARCHAR(255)     NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE ONBOARDING_ROOM_WEBSITE (
+  id                 INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  onboarding_room_id INT(10) UNSIGNED NOT NULL,
+  website_id         INT(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (onboarding_room_id) REFERENCES ONBOARDING_ROOM (id),
+  FOREIGN KEY (website_id) REFERENCES websites (id),
+  UNIQUE (onboarding_room_id, website_id)
+);
+
+SET FOREIGN_KEY_CHECKS = 0;
+
 CREATE TABLE USER_PERSONAL_INFORMATION (
   id           INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   first_name   VARCHAR(255)     NOT NULL DEFAULT '',
@@ -29,10 +48,8 @@ UPDATE USER_PERSONAL_INFORMATION upi
 SET upi.phone_number = tU.phone_number
 WHERE tU.phone_number IS NOT NULL;
 
-SET FOREIGN_KEY_CHECKS = 0;
 ALTER TABLE users
   ADD FOREIGN KEY (personal_information_id) REFERENCES USER_PERSONAL_INFORMATION (id);
-SET FOREIGN_KEY_CHECKS = 1;
 
 ALTER TABLE teamUsers
   DROP COLUMN firstName;
@@ -50,6 +67,7 @@ SET company_size = (SELECT COUNT(*)
                     FROM teamUsers
                     WHERE team_id = t.id);
 
+
 CREATE TABLE TEAM_ONBOARDING_STATUS (
   id   INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   step TINYINT UNSIGNED NOT NULL DEFAULT 0,
@@ -65,28 +83,8 @@ INSERT INTO TEAM_ONBOARDING_STATUS SELECT
                                    FROM teams;
 UPDATE teams
 SET onboarding_status_id = id;
-
-SET FOREIGN_KEY_CHECKS = 0;
 ALTER TABLE teams
   ADD FOREIGN KEY (onboarding_status_id) REFERENCES TEAM_ONBOARDING_STATUS (id);
-SET FOREIGN_KEY_CHECKS = 1;
-
-CREATE TABLE ONBOARDING_ROOM (
-  id      INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  name    VARCHAR(255)     NOT NULL,
-  example VARCHAR(255)     NOT NULL,
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE ONBOARDING_ROOM_WEBSITE (
-  id                 INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  onboarding_room_id INT(10) UNSIGNED NOT NULL,
-  website_id         INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (onboarding_room_id) REFERENCES ONBOARDING_ROOM (id),
-  FOREIGN KEY (website_id) REFERENCES websites (id),
-  UNIQUE (onboarding_room_id, website_id)
-);
 
 ALTER TABLE users
   CHANGE COLUMN firstName username VARCHAR(255) NOT NULL;
@@ -115,3 +113,5 @@ ALTER TABLE status
   ADD COLUMN tip_importation_seen TINYINT(1) UNSIGNED NOT NULL DEFAULT 0;
 UPDATE status
 SET tip_importation_seen = 0;
+
+SET FOREIGN_KEY_CHECKS = 1;
