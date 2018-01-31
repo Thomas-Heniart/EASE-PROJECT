@@ -86,8 +86,8 @@ class StaticUpgradeTeamPlanModal extends Component {
             </Form.Field>
             <Form.Field>
               {meOwner ?
-                  'After trial Pro is billed 3,99€ per month per active user, but for now it’s free 1 month and no credit required' :
-                  `After trial Pro is billed 3,99€ per month per active user. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade.Want to send a request ?`
+                  'Do you want to try Pro for free for 1 month? (No credit card needed). After trial, Pro is billed 59€ per month for the whole team.' :
+                  `After trial Pro is billied 59€ per month for the whole team. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade. Want to send a request?`
               }
             </Form.Field>
             <Message error content={this.state.errorMessage}/>

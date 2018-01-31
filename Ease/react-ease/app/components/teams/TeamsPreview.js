@@ -38,7 +38,7 @@ function TeamBasicPlan(props) {
   return (
       <div class="team_plan_wrapper" style={{marginRight: '40px'}}>
         <div class="team_plan" id="starter_plan">
-          <h1 class="text-center title">Basic</h1>
+          <h1 class="text-center title">Starter</h1>
           <span class="text-center price">0 <span class="symbol">€</span></span>
           <span class="price_divider">per month</span>
           <div class="text-center">

@@ -3,18 +3,18 @@ export const proFeaturesDesc = {
   1:'to show passwords to your team members',
   2:'to fill logins and password for your team members. They will have do it themselves',
   3:'to set up Admin role for your team members',
-  4:'to have more than 30 users',
-  5:"to set up user's departure in advance"
+  4:'to have more than 15 users',
+  5:"to set up user's departure in advance",
+  6:"to setup arrival date of users (employee onboarding)",
+  7:"to setup password modification policies"
 };
 
 export const proFeatures = [
-    'Unlimited Rooms',
-    'Unlimited team members',
-    'Unlimited admins and 1 owner',
-    'Enterprise App custom logins',
-    'Room Managers set up',
-    'Access sharing with showing or hiding passwords',
-    'Automatic access removal',
+    'Unlimited employees',
+    'Password modification policy',
+    'Automatic employee onboarding',
+    'Automatic employee offboarding',
+    'Unlimited team Admins and 1 Owner',
     'Priority customer support'
 ];
 

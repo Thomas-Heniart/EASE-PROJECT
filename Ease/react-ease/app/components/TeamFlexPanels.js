@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component, Fragment} from 'react';
 import {
   showTeamDeleteChannelModal,
   showTeamDeleteUserFromChannelModal,
@@ -748,6 +748,82 @@ class DepartureDateSection extends React.Component {
   }
 }
 
+@connect()
+class ArrivalDateSection extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      arrival_date: '',
+      edit: false,
+      loading: false
+    }
+  }
+  handleInput = handleSemanticInput.bind(this);
+  setEdit = (state) => {
+    if (this.props.team.plan_id === 0) {
+      this.props.dispatch(showUpgradeTeamPlanModal({
+        active: true,
+        feature_id: 6,
+        team_id: this.props.team.id
+      }));
+      return;
+    }
+    const {user} = this.props;
+    this.setState({
+      arrival_date: !!user.arrival_date ? moment(user.arrival_date).format('YYYY-MM-DD') : '',
+      edit: state,
+      loading: false
+    });
+  };
+  confirm = (e) => {
+    e.preventDefault();
+    const {team, dispatch, user} = this.props;
+    this.setState({loading: true});
+    dispatch(userActions.editTeamUserArrivalDate({
+      team_id: team.id,
+      team_user_id: user.id,
+      arrival_date: !!this.state.arrival_date.length ? new Date(this.state.arrival_date).getTime() : null
+    })).then(response => {
+      this.setEdit(false);
+    }).catch(err => {
+      this.setState({loading: false});
+    });
+  };
+  render(){
+    const {team, user, me} = this.props;
+    if (user.state !== 0)
+      return (
+          <Grid.Column>
+            <strong>Arrival date: </strong>
+            {basicDateFormat(user.arrival_date)}
+          </Grid.Column>
+      );
+    return (
+        <Grid.Column>
+          <strong>Arrival date: </strong>
+          {!this.state.edit ?
+              <span>
+                      {user.departure_date !== null ? basicDateFormat(user.arrival_date) : 'not planned'}
+                {isSuperior(user, me) && me.id !== user.id &&
+                <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
+                {isSuperior(user, me) && me.id !== user.id && team.plan_id === 0 &&
+                <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
+                        </span> :
+              <Input type="date" size="mini"
+                     fluid action name="arrival_date"
+                     min={moment().add(1, 'days').format('YYYY-MM-DD')}
+                     max={!!user.departure_date ? moment(user.departure_date).subtract(1, 'days').format('YYYY-MM-DD') : null}
+                     value={this.state.arrival_date}
+                     onChange={this.handleInput}>
+                <input/>
+                <Button icon="delete" basic size="mini" onClick={this.setEdit.bind(null, false)}/>
+                <Button icon="checkmark" primary size="mini" loading={this.state.loading} onClick={this.confirm}/>
+              </Input>}
+        </Grid.Column>
+    )
+  }
+}
+
 class TeamUserFlexTab extends React.Component{
   constructor(props){
     super(props);
@@ -795,8 +871,10 @@ class TeamUserFlexTab extends React.Component{
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
-                  <strong>Arrival date: </strong>
-                  {basicDateFormat(user.arrival_date)}
+                  <ArrivalDateSection
+                      team={team}
+                      user={user}
+                      me={me}/>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>

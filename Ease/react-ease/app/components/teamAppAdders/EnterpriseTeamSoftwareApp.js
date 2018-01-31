@@ -469,6 +469,7 @@ class EnterpriseTeamSoftwareApp extends Component {
   render(){
     const app = this.props.app;
     const me = this.props.me;
+    const team = this.props.teams[app.team_id];
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.software;
     const users = this.getUsers();
@@ -511,8 +512,16 @@ class EnterpriseTeamSoftwareApp extends Component {
               <div class="credentials">
                 <div class="display-inline-flex align_items_center">
                   {!this.state.edit ?
-                    <PasswordChangeHolderEnterprise value={app.password_reminder_interval} roomManager={room_manager.username}/> :
-                    <PasswordChangeDropdownEnterprise value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
+                    <PasswordChangeHolderEnterprise
+                        team={team}
+                        value={app.password_reminder_interval}
+                        roomManager={room_manager.username}/> :
+                    <PasswordChangeDropdownEnterprise
+                        team={team}
+                        dispatch={this.props.dispatch}
+                        value={this.state.password_reminder_interval}
+                        onChange={this.handleInput}
+                        roomManager={room_manager.username}/>}
                 </div>
               </div>
               {!this.state.edit &&

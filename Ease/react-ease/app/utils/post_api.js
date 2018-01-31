@@ -490,13 +490,20 @@ module.exports = {
         ws_id: ws_id,
         team_id: team_id,
         team_user_id: user_id,
-        departure_date: departure_date,
-        timestamp: new Date().getTime()
+        departure_date: departure_date
       }).then(response => {
         return response.data;
       }).catch(err => {
         throw err.response.data;
       });
+    },
+    editArrivalDate: ({ws_id, team_id, team_user_id, arrival_date}) => {
+      return basic_post('/api/v1/teams/EditTeamUserArrivalDate', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_user_id: team_user_id,
+        arrival_date: arrival_date
+      })
     },
     editFirstLastName: ({team_id, team_user_id, first_name, last_name, ws_id}) => {
       return basic_post('/api/v1/teams/EditTeamUserFirstAndLastName', {
