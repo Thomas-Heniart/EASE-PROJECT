@@ -182,7 +182,7 @@ class SimpleTeamApp extends Component {
   toggleCanSeeInformation = (id) => {
     let users = this.state.users.map(item => {
       return {
-          ...item,
+        ...item,
         can_see_information: item.id === id ? (isAdmin(item.user.role) ? item.can_see_information : !item.can_see_information) : item.can_see_information
       }
     });
@@ -307,6 +307,7 @@ class SimpleTeamApp extends Component {
   render(){
     const app = this.props.app;
     const me = this.props.me;
+    const team = this.props.teams[app.team_id];
     const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
@@ -358,8 +359,16 @@ class SimpleTeamApp extends Component {
                   <SingleAppCopyPasswordButton team_card_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
-                        <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username} /> :
-                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
+                        <PasswordChangeHolder
+                            team={team}
+                            value={app.password_reminder_interval}
+                            roomManager={room_manager.username} /> :
+                        <PasswordChangeDropdown
+                            team={team}
+                            dispatch={this.props.dispatch}
+                            value={this.state.password_reminder_interval}
+                            onChange={this.handleInput}
+                            roomManager={room_manager.username}/>}
                   </div>
                 </div>
                 <div>

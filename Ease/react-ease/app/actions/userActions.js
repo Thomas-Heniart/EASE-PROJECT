@@ -130,6 +130,27 @@ export function editTeamUserDepartureDate({team_id, team_user_id, departure_date
   }
 }
 
+export function editTeamUserArrivalDate({team_id, team_user_id, arrival_date}) {
+  return (dispatch, getState) => {
+    return post_api.teamUser.editArrivalDate({
+      ws_id: getState().common.ws_id,
+      team_id: team_id,
+      team_user_id: team_user_id,
+      arrival_date: arrival_date
+    }).then(team_user => {
+      dispatch(teamUserChangedAction({
+        team_user: team_user
+      }));
+      dispatch(addNotification({
+        text: `Arrival date for ${team_user.username}, successfully changed!`
+      }));
+      return team_user;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function verifyTeamUserArrive({team_id, team_user_id}){
   return function (dispatch, getState){
     return post_api.teamUser.verifyTeamUser(getState().common.ws_id, team_id, team_user_id).then(team_user => {
