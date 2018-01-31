@@ -1,11 +1,12 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
+import com.Ease.Mail.MailjetMessageWrapper;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
@@ -17,6 +18,7 @@ import com.Ease.websocketV1.WebSocketMessage;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 import com.Ease.websocketV1.WebSocketMessageType;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -63,19 +65,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 message.replace(message.length() - 2, message.length(), ".");
                 throw new HttpServletException(HttpStatus.Forbidden, message.toString());
             }
-            String forEmail = "";
-            if (forEmail.length() != 0 && teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0) {
-                forEmail = forEmail.substring(0, forEmail.length() - 2);
-                MailJetBuilder mailJetBuilder = new MailJetBuilder();
-                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-                mailJetBuilder.setTemplateId(180165);
-                mailJetBuilder.addTo(teamUser_connected.getEmail());
-                mailJetBuilder.addVariable("first_name", teamUser_to_delete.getUser().getPersonalInformation().getFirst_name());
-                mailJetBuilder.addVariable("last_name", teamUser_to_delete.getUser().getPersonalInformation().getLast_name());
-                mailJetBuilder.addVariable("team_name", team.getName());
-                mailJetBuilder.addVariable("apps", forEmail);
-                mailJetBuilder.sendEmail();
-            }
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.getAdmin_id() == null)
                     continue;
@@ -84,8 +73,11 @@ public class ServletDeleteTeamUser extends HttpServlet {
                     sm.saveOrUpdate(teamUser);
                 }
             }
+            JSONArray singleCards = new JSONArray();
+            JSONArray enterpriseCards = new JSONArray();
             for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
                 App app = teamCardReceiver.getApp();
+                TeamCard teamCard = teamCardReceiver.getTeamCard();
                 if (app.isWebsiteApp()) {
                     WebsiteApp websiteApp = (WebsiteApp) app;
                     websiteApp.getLogWithAppSet().forEach(logWithApp -> {
@@ -109,11 +101,44 @@ public class ServletDeleteTeamUser extends HttpServlet {
                             linkApp.setLinkAppInformation(linkAppInformation);
                         }
                     }
-                    teamLinkCard.removeTeamCardReceiver(teamCardReceiver);
+                    //teamLinkCard.removeTeamCardReceiver(teamCardReceiver);
                 }
                 Profile profile = app.getProfile();
                 if (profile != null)
                     profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
+                String teamKey = sm.getTeamKey(team);
+                if (teamCard.isTeamSingleCard()) {
+                    Account account = teamCard.getAccount();
+                    if (account != null) {
+                        account.decipher(teamKey);
+                        JSONObject tmp = new JSONObject();
+                        tmp.put("name", teamCard.getName());
+                        StringBuilder account_info = new StringBuilder("(");
+                        account.getAccountInformationSet().forEach(accountInformation -> {
+                            if (!accountInformation.getInformation_name().toLowerCase().equals("password"))
+                                account_info.append(accountInformation.getDeciphered_information_value()).append(", ");
+                        });
+                        account_info.delete(account_info.length() - 2, account_info.length()).append(")");
+                        tmp.put("account", account_info);
+                        singleCards.put(tmp);
+                    }
+                } else if (teamCard.isTeamEnterpriseCard()) {
+                    Account account = app.getAccount();
+                    if (account != null) {
+                        account.decipher(teamKey);
+                        JSONObject tmp = new JSONObject();
+                        tmp.put("name", teamCard.getName());
+                        StringBuilder account_info = new StringBuilder("(");
+                        account.getAccountInformationSet().forEach(accountInformation -> {
+                            if (!accountInformation.getInformation_name().toLowerCase().equals("password"))
+                                account_info.append(accountInformation.getDeciphered_information_value()).append(", ");
+                        });
+                        account_info.delete(account_info.length() - 2, account_info.length()).append(")");
+                        tmp.put("account", account_info);
+                        enterpriseCards.put(tmp);
+                    }
+                }
+                teamCard.removeTeamCardReceiver(teamCardReceiver);
                 sm.deleteObject(teamCardReceiver);
             }
             team.getChannels().values().forEach(channel -> {
@@ -123,6 +148,8 @@ public class ServletDeleteTeamUser extends HttpServlet {
             team.removeTeamUser(teamUser_to_delete);
             User user = teamUser_to_delete.getUser();
             if (user != null) {
+                if (teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0)
+                    MailjetMessageWrapper.deleteTeamUserMail(teamUser_connected.getEmail(), teamUser_to_delete.getUser().getPersonalInformation().getFirst_name(), teamUser_to_delete.getUser().getPersonalInformation().getLast_name(), team.getName(), singleCards, enterpriseCards);
                 user.removeTeamUser(teamUser_to_delete);
                 MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
                 mailjetContactWrapper.updateUserContactLists(user);

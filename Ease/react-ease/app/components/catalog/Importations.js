@@ -153,8 +153,8 @@ class ChoosePasswordManager extends React.Component {
         <Segment.Group>
           <Segment onClick={e => choosePasswordManager(1)} className={passwordManager === 1 ? 'selected' : null}>
             <img src="/resources/other/Excel.png"/>Excel or Google sheet</Segment>
-          <Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>
-            <img src="/resources/other/Chrome.png"/>Chrome</Segment>
+          {/*<Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>
+            <img src="/resources/other/Chrome.png"/>Chrome</Segment> */}
           <Segment onClick={e => choosePasswordManager(3)} className={passwordManager === 3 ? 'selected' : null}>
             <img src="/resources/other/Dashlane.png"/>Dashlane</Segment>
           <Segment onClick={e => choosePasswordManager(4)} className={passwordManager === 4 ? 'selected' : null}>
@@ -395,6 +395,11 @@ class DisplayAccounts extends React.Component {
     this.setState({accountsNumber: this.props.importedAccounts.length, seePassword: seePassword});
   }
   openDropdown = () => {
+    if(!this.props.user.status.tip_importation_seen) {
+      this.props.dispatch(setTipSeen({
+        name: 'tip_importation_seen'
+      }));
+    }
     this.setState({dropdownOpened: !this.state.dropdownOpened});
   };
   closeOnBlur = () => {
@@ -591,11 +596,18 @@ class DisplayAccounts extends React.Component {
                     title: 'Organize your apps by sending them where you want to!',
                     isFixed: true,
                     selector:"#importation_dropdown",
-                    position: 'bottom'
+                    position: 'bottom',
+                    style: {
+                      beacon: {
+                        inner: '#45C997',
+                        outer: '#45C997'
+                      }
+                    }
                   }]}
                   locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
                   disableOverlay={true}
                   run={true}
+                  allowClicksThruHole={true}
                   callback={(action) => {
                     if (action.type === 'finished')
                       this.props.dispatch(setTipSeen({

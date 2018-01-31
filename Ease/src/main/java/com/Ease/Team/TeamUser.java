@@ -109,7 +109,7 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "profile_id")
     private Profile profile;
