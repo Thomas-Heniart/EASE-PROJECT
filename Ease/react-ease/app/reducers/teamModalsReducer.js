@@ -92,6 +92,10 @@ const initialState = {
     feature_id: -1,
     team_id: -1
   },
+  teamUserInviteLimitReachedModal: {
+    active: false,
+    team_id: -1
+  },
   freeTrialEndModal: {
     active: false
   },
@@ -263,6 +267,12 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         upgradeTeamPlanModal: action.payload
+      }
+    }
+    case 'SHOW_TEAM_USER_INVITE_LIMIT_REACHED_MODAL': {
+      return {
+          ...state,
+        teamUserInviteLimitReachedModal: action.payload
       }
     }
     case 'SHOW_FREE_TRIAL_END_MODAL': {

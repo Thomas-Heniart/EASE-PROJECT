@@ -244,3 +244,13 @@ export function showDepartureDateEndModal({active, team_user_id, team_id}) {
     }
   }
 }
+
+export function showTeamUserInviteLimitReachedModal({active, team_id}) {
+  return {
+    type: 'TEAM_USER_INVITE_LIMIT_REACHED_MODAL',
+    payload: {
+      active: active,
+      team_id: team_id
+    }
+  }
+}
