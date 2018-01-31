@@ -80,4 +80,13 @@ public class MailjetContactWrapper {
     public void deleteUserEmail(String email) throws MailjetSocketTimeoutException, MailjetException {
         mailjetClient.delete(new MailjetRequest(Contactdata.resource, email));
     }
+
+    public void addToIesegList(String email) throws MailjetSocketTimeoutException, MailjetException {
+        JSONArray lists = new JSONArray();
+        lists.put(new JSONObject()
+                .put("ListId", "34722")
+                .put("Action", "addnoforce"));
+        mailjetResponse = mailjetClient.post(new MailjetRequest(ContactManagecontactslists.resource, email)
+                .property(ContactManagecontactslists.CONTACTSLISTS, lists));
+    }
 }

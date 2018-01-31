@@ -52,7 +52,7 @@ class TeamSingleApp extends Component {
     const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
 
     return (
-      <div class='app'>
+      <div class='app classic'>
         <div class="logo_area">
           {this.state.loading &&
           <LoadingAppIndicator/>}

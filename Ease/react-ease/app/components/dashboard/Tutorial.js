@@ -20,7 +20,20 @@ class Tutorial extends Component {
   };
   render(){
     let steps = [];
-     if (!!document.querySelector('.app_wrapper:not(.empty)'))
+    if (!!document.querySelector('.app_wrapper:not(.empty) .classic'))
+      steps.push({
+        title: 'Just click on an App to login or access account info.',
+        isFixed: true,
+        selector:".app_wrapper:not(.empty) .classic",
+        position: 'right',
+        style: {
+          beacon: {
+            inner: '#45C997',
+            outer: '#45C997'
+          }
+        }
+      });
+    else if (!!document.querySelector('.app_wrapper:not(.empty)'))
       steps.push({
         title: 'Just click on an App to login or access account info.',
         isFixed: true,

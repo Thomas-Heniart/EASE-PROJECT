@@ -26,7 +26,7 @@ class ClassicApp extends Component {
     const {app, dispatch} = this.props;
 
     return (
-        <div class='app'>
+        <div class='app classic'>
           <div class="logo_area">
             {this.state.loading &&
             <LoadingAppIndicator/>}
