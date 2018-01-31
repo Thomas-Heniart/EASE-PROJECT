@@ -773,8 +773,7 @@ class NewSimpleTeamCreationView extends React.Component {
               <Menu.Item name='Accounts' active={this.state.activeItem === 5}/>
             </Menu>
             <div id='content' className={this.state.view === 2 || this.state.view === 3 || this.state.view === 1 || this.state.view === 5 ? 'stepUsers' : null}>
-              {this.state.firstLoading &&
-                <Loader active inverted size='tiny'/>}
+              <Loader active={this.state.firstLoading} inline='centered'/>
               {!this.state.firstLoading &&
               <Form onSubmit={this.state.view === 5 ? this.nextAccounts : this.next} error={this.state.error !== ''}>
                 <Switch>

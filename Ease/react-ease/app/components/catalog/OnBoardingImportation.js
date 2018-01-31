@@ -682,7 +682,7 @@ class OnBoardingImportation extends React.Component {
         else {
           if (this.props.onBoarding.passwordManager === null && (query.team === undefined || query.team.length === 0))
             this.props.history.replace('/main/catalog/importations');
-          else if (this.props.teams[query.team].onboarding_step === 4) {
+          else if (this.props.teams[query.team].onboarding_step === 4 || (this.props.teams[query.team].onboarding_step === 3 && this.props.onBoarding.passwordManager !== null)) {
             if (this.props.onBoarding.passwordManager === 1)
               this.setState({passwordManager: 1, view: 3}, this.choosePasswordManager(1));
             else if (this.props.onBoarding.passwordManager === -1)
@@ -690,7 +690,7 @@ class OnBoardingImportation extends React.Component {
             else
               this.setState({passwordManager: this.props.onBoarding.passwordManager}, this.choosePasswordManager(this.props.onBoarding.passwordManager));
           }
-          else if (this.props.teams[query.team].onboarding_step === 3 && this.props.onBoarding.passwordManager !== null) {
+          else if (this.props.teams[query.team].onboarding_step === 3 && this.props.onBoarding.passwordManager === null) {
             this.props.history.replace(`/main/simpleTeamCreation/accounts?team=${query.team}`);
           }
           else {
