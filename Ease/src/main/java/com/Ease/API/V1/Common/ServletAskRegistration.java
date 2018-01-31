@@ -34,7 +34,7 @@ public class ServletAskRegistration extends HttpServlet {
             hibernateQuery.setParameter(2, email);
             int count = ((BigInteger) hibernateQuery.getSingleResult()).intValue();
             if (count > 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "This email is already assigned to an account.");
+                throw new HttpServletException(HttpStatus.BadRequest, "This email is already used for an account.");
             String digits = CodeGenerator.generateDigits(6);
             hibernateQuery.querySQLString("DELETE FROM userPendingRegistrations WHERE email = :email");
             hibernateQuery.setParameter("email", email);
