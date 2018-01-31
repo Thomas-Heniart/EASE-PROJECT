@@ -68,12 +68,6 @@ function TeamBasicPlan(props) {
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Up to 4 <TeamPlanPopup
-                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
-                trigger={<span class="text-underlined">rooms</span>}/></span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
             <span>Password modification policy</span>
           </div>
           <div class="feature">
@@ -90,7 +84,7 @@ function TeamBasicPlan(props) {
         </div>
         <div class="text-center" style={{margin: '60px 0 0 0'}}>
           <button class="button-unstyle big-button button">
-            <NavLink to={`/main/simpleTeamCreation?plan_id=0`} className="link-unstyle"
+            <NavLink to={`/main/NewSimpleTeamCreation?plan_id=0`} className="link-unstyle"
                      activeClassName="active">
               CREATE A FREE TEAM
             </NavLink>
@@ -117,12 +111,6 @@ function TeamProPlan(props){
         <span class="tip" style={{margin: '5px 0 13px 0'}}>No credit card required</span>
         <span class="info">ALL FEATURES FROM STARTER PLAN, AND:</span>
         <div class="display-flex flex_direction_column full_flex">
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited <TeamPlanPopup
-                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
-                trigger={<span class="text-underlined">rooms</span>}/></span>
-          </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
             <span>Unlimited team members</span>
@@ -165,7 +153,7 @@ function TeamProPlan(props){
         </div>
         <div class="text-center" style={{margin: '60px 0 10px 0'}}>
           <button class="button-unstyle big-button button">
-            <NavLink to={`/main/simpleTeamCreation?plan_id=1`} className="link-unstyle" activeClassName="active">
+            <NavLink to={`/main/NewSimpleTeamCreation?plan_id=1`} className="link-unstyle" activeClassName="active">
               TRY 1 MONTH FREE
             </NavLink>
           </button>
@@ -253,11 +241,7 @@ class TeamsPreview extends React.Component {
   render(){
     return(
         <div id="teamsPreview" class="display-flex justify_content_center align_items_center">
-          {!this.state.passed ?
-              <Step1 passStep={this.setPassed}/>
-              :
-              <Step2/>
-          }
+          <Step2/>
         </div>
     )
   }

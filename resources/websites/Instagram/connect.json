@@ -6,11 +6,11 @@
     "todo": [
       {
         "action": "waitfor",
-        "search": "div > span > a, a[href*='password/reset']"
+        "search": "div > p > a, a[href*='password/reset']"
       },
       {
         "action": "trueClick",
-        "search": "div > span > a"
+        "search": "div > p > a"
       },
       {
         "action": "waitfor",
@@ -61,20 +61,8 @@
         "search": "form span:nth-child(5) button"
       },
       {
-        "action": "trueClick",
-        "search": "div > span > a"
-      },
-      {
         "action": "waitfor",
         "search": ".coreSpriteLoggedOutWordmark + div img + span button"
-      },
-      {
-        "action": "trueClick",
-        "search": "div > span > a"
-      },
-      {
-        "action": "trueClick",
-        "search": "div > span > a"
       },
       {
         "action": "trueClick",

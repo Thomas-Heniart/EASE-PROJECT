@@ -1,0 +1,397 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<div class="ease_modal" id="add_user_modal">
+    <div class="modal_background"></div>
+    <div class="modal_button close_button">
+
+    </div>
+    <div class="modal_contents_container">
+        <div class="contents" id="first_step">
+            <div class="content_row">
+                <h1 class="full_width">Invite a team member</h1>
+            </div>
+            <div class="content_row">
+                <div class="signed_input">
+                    <span>Email address</span>
+                    <input name="email" type="email" placeholder="name@company.com" class="full_width"/>
+                </div>
+                <div class="signed_input">
+                    <span>First name</span>
+                    <input name="email" type="text" placeholder="Optional" class="full_width"/>
+                </div>
+                <div class="signed_input">
+                    <span>Last name</span>
+                    <input name="email" type="text" placeholder="Optional" class="full_width"/>
+                </div>
+            </div>
+            <div class="content_row">
+                <div class="signed_input">
+                    <span>User role</span>
+                    <select class="full_width select_unstyle">
+                        <option value="0" selected>User</option>
+                        <option value="1">Admin</option>
+                        <option value="2">Super admin</option>
+                    </select>
+                </div>
+                <div class="signed_input">
+                    <span>Departure date</span>
+                    <input name="email" type="text" class="full_width" placeholder="Optional"/>
+                </div>
+            </div>
+            <div class="content_row">
+                <div class="tagged_input_container full_width">
+                <strong>Team(s)</strong>
+                    <div class="input_for_tags full_width">
+                        <input class="full_width input_unstyle" name="teams" type="text" placeholder="Search by name">
+                    </div>
+                </div>
+            </div>
+            <div class="content_row buttons_row">
+                <div class="buttons_wrapper">
+                    <button class="button-unstyle neutral_background action_text_button cancel_button">
+                        Cancel
+                    </button>
+                    <button class="button-unstyle positive_background action_text_button next_button">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="contents active" id="app_choose_step">
+            <div class="content_row">
+                <h1 class="full_width">
+                    Choose the apps you want to share with <u class="member_name">Serena</u>
+                </h1>
+            </div>
+            <div class="content_row display_flex align_items_center">
+                <div class="select_all_button_container">
+                    <button class="button-unstyle">
+                        <u>Deselect all</u>
+                    </button>
+                </div>
+                <div class="full_flex"></div>
+                <div class="validate_button_container">
+                    <button class="button-unstyle positive_background action_text_button validate_button">
+                        Validate
+                    </button>
+                </div>
+            </div>
+            <div class="content_row scroller_div flex_column">
+                <div class="content_row delimiter">
+                    <span>#<span class="team_name">general</span></span>
+                </div>
+                <div class="content_row">
+                    <div class="checkbox_container">
+                        <input type="checkbox"/>
+                    </div>
+                    <div class="app_container">
+                        <div class="team_app">
+                            <div class="name_holder">
+                                <span class="name_value value">
+                                    Mailchimp
+                                </span>
+                            </div>
+                            <div class="info_holder">
+                                <div class="info">
+                                    <div class="logo_holder">
+                                        <img src="/resources/websites/Mailchimp/logo.png"/>
+                                    </div>
+                                    <div class="credentials_holder">
+                                        <div class="credentials">
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        victor@ease.space
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        ••••••••
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="password_change_remind">
+                                            <div class="password_change_icon">
+                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="password_change_info">
+                                                <span class="password_change_value value">
+                                                    never
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sharing_info display_flex full_flex flex_direction_column">
+                                    <div class="receivers_wrapper full_flex">
+                                        <div class="receiver">
+                                            <span class="receiver_name">Alexandra</span>
+                                            <span class="view_password_perm">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </span>
+                                            <span class="password_modification_counter">
+                                            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment_holder">
+                                <div class="comment_icon">
+                                    <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="comment">
+                                    <span class="comment_value value">
+                                        Pour ce qui ont besoin d'utiliser mon compte pour envoyer des emails marketing à nos abonnés, ca se passe sur Mailchimp !
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content_row">
+                    <div class="checkbox_container">
+                        <input type="checkbox"/>
+                    </div>
+                    <div class="app_container">
+                        <div class="team_app">
+                            <div class="name_holder">
+                                <span class="name_value value">
+                                    Mailchimp
+                                </span>
+                            </div>
+                            <div class="info_holder">
+                                <div class="info">
+                                    <div class="logo_holder">
+                                        <img src="/resources/websites/Mailchimp/logo.png"/>
+                                    </div>
+                                    <div class="credentials_holder">
+                                        <div class="credentials">
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        victor@ease.space
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        ••••••••
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="password_change_remind">
+                                            <div class="password_change_icon">
+                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="password_change_info">
+                                                <span class="password_change_value value">
+                                                    never
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sharing_info display_flex full_flex flex_direction_column">
+                                    <div class="receivers_wrapper full_flex">
+                                        <div class="receiver">
+                                            <span class="receiver_name">Alexandra</span>
+                                            <span class="view_password_perm">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </span>
+                                            <span class="password_modification_counter">
+                                            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment_holder">
+                                <div class="comment_icon">
+                                    <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="comment">
+                                    <span class="comment_value value">
+                                        Pour ce qui ont besoin d'utiliser mon compte pour envoyer des emails marketing à nos abonnés, ca se passe sur Mailchimp !
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content_row">
+                    <div class="checkbox_container">
+                        <input type="checkbox"/>
+                    </div>
+                    <div class="app_container">
+                        <div class="team_app">
+                            <div class="name_holder">
+                                <span class="name_value value">
+                                    Mailchimp
+                                </span>
+                            </div>
+                            <div class="info_holder">
+                                <div class="info">
+                                    <div class="logo_holder">
+                                        <img src="/resources/websites/Mailchimp/logo.png"/>
+                                    </div>
+                                    <div class="credentials_holder">
+                                        <div class="credentials">
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        victor@ease.space
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        ••••••••
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="password_change_remind">
+                                            <div class="password_change_icon">
+                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="password_change_info">
+                                                <span class="password_change_value value">
+                                                    never
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sharing_info display_flex full_flex flex_direction_column">
+                                    <div class="receivers_wrapper full_flex">
+                                        <div class="receiver">
+                                            <span class="receiver_name">Alexandra</span>
+                                            <span class="view_password_perm">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </span>
+                                            <span class="password_modification_counter">
+                                            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment_holder">
+                                <div class="comment_icon">
+                                    <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="comment">
+                                    <span class="comment_value value">
+                                        Pour ce qui ont besoin d'utiliser mon compte pour envoyer des emails marketing à nos abonnés, ca se passe sur Mailchimp !
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content_row">
+                    <div class="checkbox_container">
+                        <input type="checkbox"/>
+                    </div>
+                    <div class="app_container">
+                        <div class="team_app">
+                            <div class="name_holder">
+                                <span class="name_value value">
+                                    Mailchimp
+                                </span>
+                            </div>
+                            <div class="info_holder">
+                                <div class="info">
+                                    <div class="logo_holder">
+                                        <img src="/resources/websites/Mailchimp/logo.png"/>
+                                    </div>
+                                    <div class="credentials_holder">
+                                        <div class="credentials">
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        victor@ease.space
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="credentials_line" data-type="email">
+                                                <div class="credentials_type_icon">
+                                                    <i class="fa fa-lock" aria-hidden="true"></i>
+                                                </div>
+                                                <div class="credentials_value_holder">
+                                                    <span class="credentials_value value">
+                                                        ••••••••
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="password_change_remind">
+                                            <div class="password_change_icon">
+                                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                                            </div>
+                                            <div class="password_change_info">
+                                                <span class="password_change_value value">
+                                                    never
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sharing_info display_flex full_flex flex_direction_column">
+                                    <div class="receivers_wrapper full_flex">
+                                        <div class="receiver">
+                                            <span class="receiver_name">Alexandra</span>
+                                            <span class="view_password_perm">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </span>
+                                            <span class="password_modification_counter">
+                                            <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment_holder">
+                                <div class="comment_icon">
+                                    <i class="fa fa-sticky-note-o" aria-hidden="true"></i>
+                                </div>
+                                <div class="comment">
+                                    <span class="comment_value value">
+                                        Pour ce qui ont besoin d'utiliser mon compte pour envoyer des emails marketing à nos abonnés, ca se passe sur Mailchimp !
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

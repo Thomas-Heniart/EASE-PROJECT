@@ -35,13 +35,13 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00036/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00036/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00037/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00037/pricingPage.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
@@ -134,10 +134,6 @@
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.10"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.free.features.11"/></span>
                         </div>
                     </div>
@@ -165,10 +161,6 @@
                     <div class="display-flex flex_direction_column full_flex">
                         <div class="feature">
                             <span class="info"><fmt:message key="pricing.pro.features.title"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>

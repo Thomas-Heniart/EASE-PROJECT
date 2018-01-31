@@ -29,7 +29,9 @@
         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
         </property>
         <mapping class="com.Ease.Team.Team"/>
+        <mapping class="com.Ease.Team.OnboardingStatus"/>
         <mapping class="com.Ease.Team.Channel"/>
+        <mapping class="com.Ease.Team.Onboarding.OnboardingRoom"/>
         <mapping class="com.Ease.Team.TeamUser"/>
         <mapping class="com.Ease.Team.TeamUserRole"/>
         <mapping class="com.Ease.Catalog.Software"/>
@@ -86,6 +88,7 @@
         <mapping class="com.Ease.User.JsonWebToken"/>
         <mapping class="com.Ease.User.PasswordLost"/>
         <mapping class="com.Ease.User.UserPostRegistrationEmails"/>
+        <mapping class="com.Ease.User.PersonalInformation"/>
         <mapping class="com.Ease.Metrics.ClickOnApp"/>
         <mapping class="com.Ease.Metrics.TeamMetrics"/>
         <mapping class="com.Ease.Metrics.ConnectionMetric"/>

@@ -1,0 +1,41 @@
+@import 'variables';
+
+#tutorialView {
+	.step4 {
+		top: 0px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+.bublePopup {
+	width: inherit;
+	overflow: hidden;
+	max-width: 300px;
+	position: fixed;
+	min-width: 200px;
+	z-index: 500;
+	.popupContent {
+		display: inline-block;
+		float: left;
+		width: 95%;
+		background-color: rgba($themeColor, 0.85);
+		color: white;
+		padding: 3px;
+		border-radius: 5px;
+		border: 1px hidden;
+		text-align: center;
+		p {
+			margin: 0px;
+		}
+	}
+	.caretHelper {
+		display: inline-block;
+		float: left;
+		color: rgba($themeColor, 0.85);
+		i {
+			line-height: 100%;
+			margin-left: 0px;
+		}
+	}
+}

@@ -34,7 +34,7 @@ public class User {
     @Column(name = "id")
     private Integer db_id;
 
-    @Column(name = "firstName")
+    @Column(name = "username")
     private String username;
 
     @Column(name = "email")
@@ -71,7 +71,7 @@ public class User {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<SsoGroup> ssoGroupSet = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamUser> teamUsers = ConcurrentHashMap.newKeySet();
 
@@ -90,6 +90,10 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_registration_emails_id")
     private UserPostRegistrationEmails userPostRegistrationEmails = new UserPostRegistrationEmails();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "personal_information_id")
+    private PersonalInformation personalInformation = new PersonalInformation();
 
     public User() {
 
@@ -231,6 +235,14 @@ public class User {
         this.userPostRegistrationEmails = userPostRegistrationEmails;
     }
 
+    public PersonalInformation getPersonalInformation() {
+        return personalInformation;
+    }
+
+    public void setPersonalInformation(PersonalInformation personalInformation) {
+        this.personalInformation = personalInformation;
+    }
+
     public boolean isAdmin() {
         return this.getAdministrator() != null;
     }
@@ -238,7 +250,10 @@ public class User {
     public JSONObject getJson() throws HttpServletException {
         JSONObject res = new JSONObject();
         res.put("email", this.getEmail());
-        res.put("first_name", this.getUsername());
+        res.put("username", this.getUsername());
+        res.put("first_name", this.getPersonalInformation().getFirst_name());
+        res.put("last_name", this.getPersonalInformation().getLast_name());
+        res.put("phone_number", this.getPersonalInformation().getPhone_number());
         JSONArray teams = new JSONArray();
         for (TeamUser teamUser : this.getTeamUsers()) {
             Team team = teamUser.getTeam();

@@ -17,7 +17,8 @@ class EaseHeader extends React.Component {
               }
           </a>
           <div class="full_flex"></div>
-          <EaseMainNavbar/>
+          {this.props.history.location.pathname !== '/main/catalog/onBoardingImportation' &&
+          <EaseMainNavbar/>}
         </header>
     )
   }

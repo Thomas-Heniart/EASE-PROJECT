@@ -68,7 +68,7 @@ public class OnStart implements ServletContextListener {
                 Calendar delay = Calendar.getInstance();
                 int hour = delay.get(Calendar.HOUR_OF_DAY);
                 int minutes = delay.get(Calendar.MINUTE);
-                if (hour > 10 || (hour == 10 && minutes > 30))
+                if (hour > 10 || (hour == 10 && minutes >= 30))
                     delay.add(Calendar.DAY_OF_YEAR, 1);
                 delay.set(Calendar.HOUR_OF_DAY, 10);
                 delay.set(Calendar.MINUTE, 30);
@@ -90,7 +90,7 @@ public class OnStart implements ServletContextListener {
                 Calendar delay_six_pm = Calendar.getInstance();
                 hour = delay_six_pm.get(Calendar.HOUR_OF_DAY);
                 minutes = delay_six_pm.get(Calendar.MINUTE);
-                if (hour > 18 || (hour == 18 && minutes > 30))
+                if (hour > 18 || (hour == 18 && minutes >= 30))
                     delay_six_pm.add(Calendar.DAY_OF_YEAR, 1);
                 delay_six_pm.set(Calendar.HOUR_OF_DAY, 18);
                 delay_six_pm.set(Calendar.MINUTE, 30);

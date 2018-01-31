@@ -7,15 +7,18 @@
         	{"action":"aclick", "search":"a[href *='signin']"},
             {"action":"fill", "what":"login", "search":"#email"},
             {"action":"fill", "what":"password", "search":"#password"},
-            {"action":"click", "search":"#btnLogin"}
+            {"action":"trueClick", "search":"#btnLogin"},
+            {"action":"waitfor", "search":"#splitPasswordSection[class=''], a[href*='signout'], #passwordSection #emailSection"},
+            {"action":"trueClick", "search":"#btnLogin"}
         ]
     },
     "logout":{
         "todo":[
-        	{"action":"goto", "url":"https://www.paypal.com/myaccount/logout"}
-            ]
+        	{"action":"aclick", "search":"a[href*='signout']"}
+        ]
     },
     "checkAlreadyLogged":[
-        {"search":"a[href*='logout']"}
+        {"action":"waitfor", "search":"a[href*='signout'], a[href *='signin'], form[action*='signin']"},
+        {"search":"a[href*='signout']"}
     ]
 }

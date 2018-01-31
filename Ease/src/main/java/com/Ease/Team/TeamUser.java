@@ -47,12 +47,6 @@ public class TeamUser {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "firstName")
-    private String firstName;
-
-    @Column(name = "lastName")
-    private String lastName;
-
     @Column(name = "email")
     private String email;
 
@@ -85,9 +79,6 @@ public class TeamUser {
     @Temporal(TemporalType.TIMESTAMP)
     private Date departureDate;
 
-    @Column(name = "jobTitle")
-    private String jobTitle;
-
     @Column(name = "disabled")
     private boolean disabled;
 
@@ -98,9 +89,6 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "status_id")
     private TeamUserStatus teamUserStatus;
-
-    @Column(name = "phone_number")
-    private String phone_number;
 
     @Column(name = "disabled_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -121,7 +109,7 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "profile_id")
     private Profile profile;
@@ -142,9 +130,7 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<PendingNotification> pendingNotificationSet = ConcurrentHashMap.newKeySet();
 
-    public TeamUser(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public TeamUser(String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
         this.email = email;
         this.username = username;
         this.teamKey = teamKey;
@@ -173,22 +159,6 @@ public class TeamUser {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -229,14 +199,6 @@ public class TeamUser {
 
     public void setDepartureDate(Date departureDate) {
         this.departureDate = departureDate;
-    }
-
-    public String getJobTitle() {
-        return jobTitle;
-    }
-
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
     }
 
     public Team getTeam() {
@@ -301,14 +263,6 @@ public class TeamUser {
 
     public void setTeamUserStatus(TeamUserStatus teamUserStatus) {
         this.teamUserStatus = teamUserStatus;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
     }
 
     public String getInvitation_code() {
@@ -391,9 +345,9 @@ public class TeamUser {
         this.getPending_channels().remove(channel);
     }
 
-    public static TeamUser createOwner(String firstName, String lastName, String email, String username, Date arrivalDate, String teamKey, Team team) throws HttpServletException {
+    public static TeamUser createOwner(String email, String username, Date arrivalDate, String teamKey, Team team) throws HttpServletException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
-        TeamUser owner = new TeamUser(firstName, lastName, email, username, arrivalDate, teamKey, team, teamUserRole);
+        TeamUser owner = new TeamUser(email, username, arrivalDate, teamKey, team, teamUserRole);
         owner.setState(2);
         return owner;
     }
@@ -401,18 +355,17 @@ public class TeamUser {
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.db_id);
-        res.put("first_name", this.firstName);
-        res.put("last_name", this.lastName);
         res.put("email", this.email);
         res.put("username", this.username);
         res.put("disabled", this.disabled);
         res.put("role", this.teamUserRole.getRoleValue());
         res.put("invitation_sent", this.getTeamUserStatus().isInvitation_sent());
         res.put("arrival_date", arrivalDate.getTime());
+        res.put("first_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getFirst_name());
+        res.put("last_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getLast_name());
         res.putOpt("departure_date", departureDate == null ? JSONObject.NULL : departureDate.getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("state", this.state);
-        res.putOpt("phone_number", this.getPhone_number() == null ? JSONObject.NULL : this.getPhone_number());
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getChannels())
             channel_ids.put(channel.getDb_id());
@@ -430,13 +383,7 @@ public class TeamUser {
     }
 
     public void edit(JSONObject editJson) {
-        String firstName = (String) editJson.get("firstName");
-        String lastName = (String) editJson.get("lastName");
         String username = (String) editJson.get("username");
-        if (lastName != null)
-            this.lastName = lastName;
-        if (firstName != null)
-            this.firstName = firstName;
         if (username != null)
             this.username = username;
     }
@@ -512,18 +459,6 @@ public class TeamUser {
 
     public void setState(Integer state) {
         this.state = state;
-    }
-
-    public void editFirstName(String firstName) {
-        if (firstName.equals(this.getFirstName()))
-            return;
-        this.firstName = firstName;
-    }
-
-    public void editLastName(String lastName) {
-        if (lastName.equals(this.getLastName()))
-            return;
-        this.lastName = lastName;
     }
 
     public void editUsername(String username) {

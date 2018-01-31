@@ -1,0 +1,21 @@
+{
+  "name":"ProAbono",
+  "lastLogin":"",
+  "home":"https://via.proabono.com/Auth/Login",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#Email"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":"form button.btn"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='Disconnect']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='Disconnect'], #Email"},
+    {"search":"a[href*='Disconnect']"}
+  ]
+}

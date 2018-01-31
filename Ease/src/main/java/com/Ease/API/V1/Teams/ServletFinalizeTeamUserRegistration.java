@@ -55,8 +55,6 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             String firstName = sm.getStringParam("first_name", true, true);
             String lastName = sm.getStringParam("last_name", true, true);
             String username = sm.getStringParam("username", true, true);
-            String job_details = sm.getStringParam("job_details", true, true);
-            Integer job_index = sm.getIntParam("job_index", true, true);
             String code = sm.getStringParam("code", false, true);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
@@ -66,10 +64,6 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (code == null || code.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "code is needed.");
-            if (job_index == null || job_index < 0 || job_index >= jobRoles.length)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid job index.");
-            if (job_index == (jobRoles.length - 1) && (job_details == null || job_details.equals("")))
-                throw new HttpServletException(HttpStatus.BadRequest, "It would be awesome to know more about your work!");
             HibernateQuery query = sm.getHibernateQuery();
             query.querySQLString("SELECT id, team_id FROM teamUsers WHERE invitation_code = ?");
             query.setParameter(1, code);
@@ -83,10 +77,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             Integer teamUser_id = (Integer) idTeamAndTeamUser[0];
             Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            teamUser.setFirstName(firstName);
-            teamUser.setLastName(lastName);
             teamUser.setUsername(username);
-            teamUser.setJobTitle(jobRoles[job_index]);
             teamUser.setUser(user);
             teamUser.setInvitation_code(null);
             teamUser.setState(1);

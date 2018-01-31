@@ -5,12 +5,14 @@ import {
   getImportedAccounts
 } from "../../actions/catalogActions";
 import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../actions/catalogActions";
-import {handleSemanticInput, isEmail, reflect, lala, credentialIconType} from "../../utils/utils";
+import {handleSemanticInput, isEmail, reflect, credentialIconType} from "../../utils/utils";
 import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "../../actions/appsActions";
 import {createProfile} from "../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../actions/channelActions";
 import {getLogo} from "../../utils/api"
 import { Segment, Button, Icon, TextArea, Dropdown, Form, Menu, Message, Input, Loader, Grid, Label} from 'semantic-ui-react';
+import Joyride from "react-joyride";
+import {setTipSeen} from "../../actions/commonActions";
 
 function json(fields, separator, csv, dispatch) {
   const array = csv.split('\n');
@@ -151,8 +153,8 @@ class ChoosePasswordManager extends React.Component {
         <Segment.Group>
           <Segment onClick={e => choosePasswordManager(1)} className={passwordManager === 1 ? 'selected' : null}>
             <img src="/resources/other/Excel.png"/>Excel or Google sheet</Segment>
-          <Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>
-            <img src="/resources/other/Chrome.png"/>Chrome</Segment>
+          {/*<Segment onClick={e => choosePasswordManager(2)} className={passwordManager === 2 ? 'selected' : null}>
+            <img src="/resources/other/Chrome.png"/>Chrome</Segment> */}
           <Segment onClick={e => choosePasswordManager(3)} className={passwordManager === 3 ? 'selected' : null}>
             <img src="/resources/other/Dashlane.png"/>Dashlane</Segment>
           <Segment onClick={e => choosePasswordManager(4)} className={passwordManager === 4 ? 'selected' : null}>
@@ -393,6 +395,11 @@ class DisplayAccounts extends React.Component {
     this.setState({accountsNumber: this.props.importedAccounts.length, seePassword: seePassword});
   }
   openDropdown = () => {
+    if(!this.props.user.status.tip_importation_seen) {
+      this.props.dispatch(setTipSeen({
+        name: 'tip_importation_seen'
+      }));
+    }
     this.setState({dropdownOpened: !this.state.dropdownOpened});
   };
   closeOnBlur = () => {
@@ -553,39 +560,68 @@ class DisplayAccounts extends React.Component {
           </Grid.Column>
           <Grid.Column width={6}>
             <Segment className='segment_pending'>
-              <p className='import'>Import selection to:</p>
-              <Dropdown open={this.state.dropdownOpened}
-                        floating item name='location'
-                        onOpen={this.openDropdown}
-                        onClose={this.openDropdown}
-                        onBlur={this.closeOnBlur}
-                        text={this.props.location}
-                        error={error !== ''}>
-                <Dropdown.Menu>
-                  <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
-                  {profiles}
-                  {profileAdded === false &&
-                  <Dropdown.Item>
-                    <form style={{marginBottom: 0}} onSubmit={createProfile}>
-                      <Input
-                        style={{fontSize: '14px'}}
-                        name="profileName"
-                        required
-                        transparent
-                        onChange={onChange}
-                        class="create_profile_input"
-                        icon={<Icon name="plus square" link onClick={createProfile}/>}
-                        placeholder='New group' />
-                    </form>
-                  </Dropdown.Item>}
-                  {teamsList}
-                </Dropdown.Menu>
-              </Dropdown>
+              <div class="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
+                <p className='import'>Import selection to:</p>
+                <Dropdown open={this.state.dropdownOpened}
+                          floating item name='location'
+                          onOpen={this.openDropdown}
+                          onClose={this.openDropdown}
+                          onBlur={this.closeOnBlur}
+                          text={this.props.location}
+                          error={error !== ''}
+                          id="importation_dropdown">
+                  <Dropdown.Menu>
+                    <Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
+                    {profiles}
+                    {profileAdded === false &&
+                    <Dropdown.Item>
+                      <form style={{marginBottom: 0}} onSubmit={createProfile}>
+                        <Input
+                          style={{fontSize: '14px'}}
+                          name="profileName"
+                          required
+                          transparent
+                          onChange={onChange}
+                          class="create_profile_input"
+                          icon={<Icon name="plus square" link onClick={createProfile}/>}
+                          placeholder='New group' />
+                      </form>
+                    </Dropdown.Item>}
+                    {teamsList}
+                  </Dropdown.Menu>
+                </Dropdown>
+                {!this.props.user.status.tip_importation_seen &&
+                <Joyride
+                  steps={[{
+                    title: 'Organize your apps by sending them where you want to!',
+                    isFixed: true,
+                    selector:"#importation_dropdown",
+                    position: 'bottom',
+                    style: {
+                      beacon: {
+                        inner: '#45C997',
+                        outer: '#45C997'
+                      }
+                    }
+                  }]}
+                  locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
+                  disableOverlay={true}
+                  run={true}
+                  allowClicksThruHole={true}
+                  callback={(action) => {
+                    if (action.type === 'finished')
+                      this.props.dispatch(setTipSeen({
+                        name: 'tip_importation_seen'
+                      }));
+                  }}
+                />}
+              </div>
               <div className='div_accounts'>
                 <Message error hidden={error === ''} content={error} size='mini'/>
                 {listPending}
               </div>
               <Button
+                id="import_button"
                 positive
                 loading={loadingSending}
                 disabled={accountsPending.length < 1 || (selectedProfile === -1 && selectedRoom === -1) || loadingSending}
@@ -676,7 +712,8 @@ class ErrorAccounts extends React.Component {
   websites: store.catalog.websites,
   dashboard: store.dashboard,
   profiles: store.dashboard.profiles,
-  teams: store.teams
+  teams: store.teams,
+  user: store.common.user
 }))
 class Importations extends React.Component {
   constructor(props) {
@@ -1019,6 +1056,7 @@ class Importations extends React.Component {
               fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'},
               loading: false
             });
+            easeTracker.trackEvent("EaseOnboardingPasteCSV");
           }
         }).catch(err => {
         });
@@ -1287,7 +1325,8 @@ class Importations extends React.Component {
           teamsInState: teams
         });
         if (this.state.importedAccounts.length < 1)
-          this.setState({view: 1, separator: ',',})
+          this.setState({view: 1, separator: ',',});
+        easeTracker.trackEvent("EaseOnboardingImportationDone")
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -1574,109 +1613,6 @@ class Importations extends React.Component {
     });
     if (this.state.importedAccounts.length < 1)
       this.setState({view: 1, separator: ',',})
-  };
-  lala = () => {
-    let calls = [];
-    const receivers = {[this.props.teams[this.state.selectedTeam].my_team_user_id]: {allowed_to_see_password: true}};
-    const receiversLink = [this.props.teams[this.state.selectedTeam].my_team_user_id];
-    return this.props.dispatch(createTeamChannel({
-      team_id: this.state.selectedTeam,
-      name: this.state.roomName[this.state.selectedTeam],
-      purpose: ''
-    })).then(response => {
-      this.props.dispatch(addTeamUserToChannel({
-        team_id: this.state.selectedTeam,
-        channel_id: response.id,
-        team_user_id: this.props.teams[this.state.selectedTeam].my_team_user_id
-      })).then(() => {
-      this.state.accountsPending.map(app => {
-        if (app.website_id !== -1 && app.login !== '' && app.password !== '') {
-          calls.push(this.props.dispatch(teamCreateSingleApp({
-            team_id: this.state.selectedTeam,
-            channel_id: response.id,
-            name: app.name,
-            website_id: app.website_id,
-            password_reminder_interval: 0,
-            account_information: {login: app.login, password: app.password},
-            description: '',
-            receivers: receivers
-          })));
-        }
-        else {
-          if (app.login !== '' && app.password !== '') {
-            calls.push(this.props.dispatch(teamCreateAnySingleCard({
-              team_id: this.state.selectedTeam,
-              channel_id: response.id,
-              name: app.name,
-              description: '',
-              password_reminder_interval: 0,
-              url: app.url,
-              img_url: app.logo,
-              account_information: {login: app.login, password: app.password},
-              connection_information: {
-                login: {type: "text", priority: 0, placeholder: "Login"},
-                password: {type: "password", priority: 1, placeholder: "Password"}
-              },
-              credentials_provided: false,
-              receivers: receivers
-            })));
-          }
-          else {
-            calls.push(this.props.dispatch(teamCreateLinkCard({
-              team_id: this.state.selectedTeam,
-              channel_id: response.id,
-              name: app.name,
-              description: '',
-              url: app.url,
-              img_url: app.logo,
-              receivers: receiversLink
-            })));
-          }
-        }
-        calls.push(this.props.dispatch(deleteImportedAccount({
-          id: app.id
-        })));
-      });
-        let newTeams = {};
-        Object.keys(this.props.teams).map(item => {
-          const team  = this.props.teams[item];
-          newTeams[item] = {...team};
-          newTeams[item].rooms = {};
-          Object.keys(team.rooms).map(room_id =>  {
-            newTeams[item].rooms[room_id] = {...team.rooms[room_id]}
-          });
-        });
-        const keys = Object.keys(newTeams);
-        const roomName = {};
-        const roomAdded = {};
-        keys.map(item => {
-          roomName[item] = "";
-          roomAdded[item] = false;
-          return item;
-        });
-          return lala(calls.map(reflect)).then(() => {
-            this.setState({
-              accountsPending: [],
-              selectedProfile: -1,
-              selectedRoom: -1,
-              selectedTeam: -1,
-              profileAdded: false,
-              loadingSending: false,
-              roomAdded: roomAdded,
-              profileName: '',
-              error: '',
-              roomName: roomName,
-              location: '',
-              profiles: Object.assign({}, this.props.profiles),
-              teamsInState: newTeams
-            });
-            if (this.state.importedAccounts.length < 1)
-              this.setState({view: 1, separator: ',',})
-          }).catch(err => {
-            this.setState({error: err});
-          });
-      });
-    });
   };
   render() {
     return (

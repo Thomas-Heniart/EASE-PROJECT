@@ -10,6 +10,7 @@ import * as modals from "./modalReducer";
 import * as dashboard from "./dashboardReducer";
 import * as teamCard from "./teamCardReducer";
 import * as notificationBox from "./notificationBoxReducer";
+import * as onBoarding from "./onBoarding";
 
 const reducers = Object.assign(
     catalog,
@@ -17,7 +18,8 @@ const reducers = Object.assign(
     modals,
     dashboard,
     teamCard,
-    notificationBox
+    notificationBox,
+    onBoarding
 );
 
 export default combineReducers({

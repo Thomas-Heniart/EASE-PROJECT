@@ -1,0 +1,22 @@
+{
+  "name":"Marchés Sécurisés",
+  "lastLogin":"",
+  "home":"https://www.marches-securises.fr/",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"input[name='log']"},
+      {"action":"fill", "what":"password", "search":"input[name='pass']"},
+      {"action":"trueClick", "search":"input[name='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#deco_log"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action": "waitfor", "search":"#deco_log, input[name='log']"},
+    {"search":"#deco_log"}
+  ]
+}

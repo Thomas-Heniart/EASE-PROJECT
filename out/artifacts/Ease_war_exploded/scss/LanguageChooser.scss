@@ -1,0 +1,80 @@
+.custom-select-language {
+	position: relative;
+}
+	.custom-sel {
+		width:63px;
+		display: inline-block;
+		border-radius: 3px;
+		.selection {
+			padding:5px;
+			img {
+				width: 65%;
+				transition: transform .3s;
+				transform: scale(1);
+			}
+			&:hover {
+				img {
+					transition: transform .3s;
+					transform: scale(1.1);
+				}
+			}
+		}
+		.selected {
+			.img {
+				width:36px;
+				height: 23px;
+				background-size: 100% 100%;
+				display: inline-block;
+				vertical-align: middle;
+			}
+			.fa {
+				display: inline-block;
+				vertical-align: middle;
+				margin-left: 4px;
+				margin-bottom: 3px;
+				color: #939eb7;
+				font-size: 15px;
+			}
+		}
+		.selected[data='en'] .img{
+			background: url(/resources/flags/english.jpg);
+			background-size: 100% 100%;
+		}
+		.selected[data='fr_FR'] .img{
+			background: url(/resources/flags/french.png);
+			background-size: 100% 100%;
+		}
+	}
+	.custom-sel a {
+		text-decoration: none;
+		text-transform: uppercase;
+		margin: 0;
+		text-align: left;
+		font-family: 'Raleway';
+		color: #546e7a;
+		font-size: 15px;
+		font-weight: 700;
+		line-height: 24px;
+		display: block;
+	}
+
+
+	.custom-sel a.selected {
+		background-color: transparent;
+	}
+
+	.custom-sel a.selected:hover {
+		background-color: transparent;
+		color: #546e7a;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.lightblue {
+		color: #03a9f4;
+	}
+
+	.show-sel {
+	}

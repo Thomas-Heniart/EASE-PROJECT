@@ -151,11 +151,8 @@ public class MailJetBuilder {
         request.property(key, value);
     }
 
-    public void setTemplateErrorDeliver() {
-        request.property(Email.MJTEMPLATEERRORDELIVERY, true);
-    }
-
     public void setTemplateErrorReporting() {
+        request.property(Email.MJTEMPLATEERRORDELIVERY, true);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("Email", "thomas@ease.space");
         jsonObject.put("Name", "Thomas Heniart");

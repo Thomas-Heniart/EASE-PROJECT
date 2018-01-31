@@ -1,0 +1,125 @@
+@import 'variables';
+
+#downloadExtension {
+	text-align: center;
+	width: 500px;
+	max-width: 45%;
+	background-color: $themeColor;
+	padding: 15px;
+	color: white;
+	border-radius: 10px;
+	z-index: 1000;
+	.popupContent{
+		p {
+			font-size: 30px;
+			span {
+				font-weight: 600;
+			}
+		}
+		.title {
+			font-size: 37px;
+			margin-bottom: 34px;
+		}
+		.info {
+			font-size: 16px;
+			margin-bottom: 15px;
+		}
+		.install-button {
+			margin-bottom: 15px;
+			background-color: #ec555b;
+			color:white;
+			border-radius: 5px;
+			border: none;
+			padding: 5px 30px;
+			transition: all 0.3s; 
+			border: 1px solid #ec555b;
+			outline: none;
+			font-size: 14px;
+		}
+		#moreInfoButton {
+			margin:0px;
+			text-decoration: underline;
+			font-size: 12px;
+			text-align: right;
+			position: absolute;
+			right: 5px;
+			bottom: 5px;
+			&:hover {
+				cursor: pointer;
+			}
+		}
+		#safariInfoButton {
+			margin:0px;
+			text-decoration: underline;
+			font-size: 12px;
+			text-align: left;
+			position: absolute;
+			left: 5px;
+			bottom: 5px;
+			&:hover {
+				cursor: pointer;
+			}
+		}
+	}
+	.popupHelper {
+		span {
+			font-weight: 600;
+		}
+		button {
+			background-color: #ec555b;
+			color:white;
+			border-radius: 5px;
+			border: none;
+			padding: 5px 30px;
+			transition: all 0.3s; 
+			border: 1px solid #ec555b;
+            margin-top: 5px;
+			outline: none;
+			font-size: 14px;
+		}
+		.firstLine {
+			overflow: hidden;
+			.imageHandler {
+				width: 40%;
+				display: inline-block;
+				float: left;
+				img {
+					width: 100%;
+				}
+			}
+			.textHelper {
+				padding: 5px;
+				padding-left: 10px;
+				text-align: left;
+				float: left;
+				width: 60%;
+				display: inline-block;
+			}
+		}
+	}
+    .safariHelper{
+    	span {
+			font-weight: 600;
+		}
+        a{
+            text-decoration: underline;
+            color: white;
+            &:hover {
+                text-decoration: underline;
+                color: white;
+            }
+        }
+        button {
+			background-color: #ec555b;
+			color:white;
+			border-radius: 5px;
+			border: none;
+			padding: 5px 30px;
+			transition: all 0.3s; 
+            margin-top: 5px;
+			border: 1px solid #ec555b;
+			outline: none;
+			font-size: 14px;
+		}
+    }
+}

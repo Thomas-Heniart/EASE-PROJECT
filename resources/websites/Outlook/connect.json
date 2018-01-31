@@ -18,7 +18,7 @@
         "search": "form[name='f1'] input[name='passwd']"
       },
       {
-        "action": "click",
+        "action": "trueClick",
         "search": "form[name='f1'] input[type='submit']"
       },
       {
@@ -31,7 +31,7 @@
         "search": "form[name='f1'] input[name='passwd'][aria-required='true']"
       },
       {
-        "action": "click",
+        "action": "trueClick",
         "search": "form[name='f1'] input[type='submit']"
       }
     ]
@@ -39,26 +39,21 @@
   "logout": {
     "todo": [
       {
-        "action": "goto",
-        "url": "https://outlook.live.com/owa/logoff.owa"
+        "action": "trueClick",
+        "search": ".msame_Drop_signOut a"
       },
       {
-        "action": "waitfor",
-        "search": "a[href='http://outlook.com/']"
-      },
-      {
-        "action": "goto",
-        "url": "https://outlook.live.com/owa/?nlp=1"
+        "action": "waitload"
       }
     ]
   },
   "checkAlreadyLogged": [
     {
       "action": "waitfor",
-      "search": "#O365_MainLink_Logo, input[name='loginfmt']"
+      "search": ".msame_Drop_signOut, form[name='f1'] input[name='loginfmt']"
     },
     {
-      "search": "#O365_MainLink_Logo"
+      "search": ".msame_Drop_signOut"
     }
   ]
 }
