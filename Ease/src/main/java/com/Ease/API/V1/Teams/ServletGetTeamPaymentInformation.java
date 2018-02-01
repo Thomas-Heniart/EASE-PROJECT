@@ -46,7 +46,7 @@ public class ServletGetTeamPaymentInformation extends HttpServlet {
                 business_vat_id = "";
             res.put("business_vat_id", business_vat_id);
             res.put("people_invited", team.invite_people());
-            res.put("card", card);
+            res.put("card", card == null ? JSONObject.NULL : card);
             sm.setSuccess(res);
         } catch (StripeException e) {
             sm.setError(e);
