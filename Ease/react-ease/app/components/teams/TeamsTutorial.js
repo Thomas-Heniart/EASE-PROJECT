@@ -9,6 +9,10 @@ import Joyride from "react-joyride";
 class TeamsTutorial extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      run: false,
+      steps: []
+    }
   }
   tipsCallback = (action) => {
     switch (action.type) {
@@ -19,7 +23,7 @@ class TeamsTutorial extends React.Component {
         break;
     }
   };
-  render(){
+  componentDidMount(){
     let steps = [];
     steps.push({
       title: '#openspace gathers all your members and their common tools.',
@@ -71,9 +75,12 @@ class TeamsTutorial extends React.Component {
           }
         }
       });
+    this.setState({steps: steps, run: true});
+  }
+  render(){
     return(
         <Joyride
-            steps={steps}
+            steps={this.state.steps}
             autoStart={true}
             locale={{ back: 'Back', close: 'Close', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
             showSkipButton={true}
@@ -82,7 +89,7 @@ class TeamsTutorial extends React.Component {
             showStepsProgress={true}
             allowClicksThruHole={true}
             type="continuous"
-            run={true}
+            run={this.state.run}
             callback={this.tipsCallback}
         />
     )
