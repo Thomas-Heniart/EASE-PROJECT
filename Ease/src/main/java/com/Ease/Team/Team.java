@@ -80,7 +80,7 @@ public class Team {
     private OnboardingStatus onboardingStatus = new OnboardingStatus();
 
     @Column(name = "extra_members")
-    private Integer extra_members;
+    private Integer extra_members = 0;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
