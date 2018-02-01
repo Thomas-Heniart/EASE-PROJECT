@@ -81,7 +81,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Arrival date cannot be past.");
             if (arrival_date != null && departure_date != null && arrival_date > departure_date)
                 throw new HttpServletException(HttpStatus.BadRequest, "Arrival date must be before departure date");
-            TeamUser teamUser = new TeamUser(first_name, last_name, email, username, arrival_date == null ? null : new Date(arrival_date), null, team, new TeamUserRole(role));
+            TeamUser teamUser = new TeamUser(email, username, arrival_date == null ? null : new Date(arrival_date), null, team, new TeamUserRole(role));
             teamUser.setAdmin_id(adminTeamUser.getDb_id());
             if (departure_date != null)
                 teamUser.setDepartureDate(new Date(departure_date));
