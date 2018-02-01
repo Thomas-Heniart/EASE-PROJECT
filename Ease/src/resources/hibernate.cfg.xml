@@ -30,6 +30,7 @@
         </property>
         <property name="hibernate.order_updates">true</property>
         <property name="hibernate.order_inserts">true</property>
+        <property name="hibernate.connection.isolation">2</property>
         <mapping class="com.Ease.Team.Team"/>
         <mapping class="com.Ease.Team.OnboardingStatus"/>
         <mapping class="com.Ease.Team.Channel"/>
