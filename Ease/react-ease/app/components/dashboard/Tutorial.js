@@ -18,6 +18,9 @@ class Tutorial extends Component {
         break;
     }
   };
+  componentDidMount(){
+
+  }
   render(){
     let steps = [];
     if (!!document.querySelector('.app_wrapper:not(.empty) .classic'))
