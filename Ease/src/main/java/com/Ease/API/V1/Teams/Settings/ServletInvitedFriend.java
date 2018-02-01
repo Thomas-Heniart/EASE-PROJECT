@@ -26,7 +26,7 @@ public class ServletInvitedFriend extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            //sm.needToBeOwnerOfTeam(team);
+            sm.needToBeOwnerOfTeam(team);
             if (team.getExtra_members() >= 15)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot invite more than 15 friends");
             String email = sm.getStringParam("email", true, false);
