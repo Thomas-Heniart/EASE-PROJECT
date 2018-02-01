@@ -1,0 +1,22 @@
+{
+  "name":"Graphicpear",
+  "lastLogin":"",
+  "home":"https://www.graphicpear.com/",
+  "connect":{
+    "todo":[
+      {"action":"goto", "url":"https://www.graphicpear.com/wp-login.php/"},
+      {"action":"fill", "what":"login", "search":"#user_login"},
+      {"action":"fill", "what":"password", "search":"#user_pass"},
+      {"action":"trueClick", "search":"#wp-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action": "waitfor", "search":"a[href*='logout'], a.sign-in"},
+    {"search":"a[href*='logout']"}
+  ]
+}

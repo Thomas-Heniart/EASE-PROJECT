@@ -7,6 +7,7 @@ import {showTeamEnterpriseAppSettingsModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput, TestCredentialsButton} from "./utils";
 import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
+import {isAdmin, isOwner} from "../../utils/helperFunctions";
 import {connect} from "react-redux";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {removeTeamCardReceiver, teamEditEnterpriseCardReceiver} from "../../actions/appsActions";
@@ -129,6 +130,7 @@ class TeamEnterpriseAppSettingsModal extends Component {
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
+    const meOwner = isOwner(me.role);
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
     const inputs = credentials.map((item, idx) => {
@@ -215,9 +217,13 @@ class TeamEnterpriseAppSettingsModal extends Component {
                 onChange={this.handleInput}/>}
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
-              {this.state.isEmpty &&
+              {this.state.isEmpty && meOwner &&
               <Form.Field>
-                <Icon name="wrench" style={{color: '#ff9a00'}}/> your admin asked you to enter the credentials.
+                <Icon name="wrench" style={{color: '#ff9a00'}}/> An app cannot stay empty! You must fill connection information.
+              </Form.Field>}
+              {this.state.isEmpty && !meOwner &&
+              <Form.Field>
+                <Icon name="wrench" style={{color: '#ff9a00'}}/> Your admin asked you to enter the connection information.
               </Form.Field>}
               {inputs}
               <Message error content={this.state.errorMessage}/>

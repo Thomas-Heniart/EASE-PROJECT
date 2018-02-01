@@ -6,16 +6,16 @@
     "todo":[
       {"action":"fill", "what":"login", "search":"input[name='username']"},
       {"action":"fill", "what":"password", "search":"form input[name='password']"},
-      {"action":"click", "search":"input[name='commit']"}
+      {"action":"trueClick", "search":"input[name='commit']"}
     ]
   },
   "logout":{
     "todo":[
-      {"action":"clickona", "search":".log-out a"},
-      {"action":"waitload"}
+      {"action":"aclick", "search":"a[href*='deconnexion']"}
     ]
   },
   "checkAlreadyLogged":[
-    {"search":".log-out"}
+    {"action":"waitfor", "search":"a[href*='deconnexion'], input[name='username']"},
+    {"search":"a[href*='deconnexion']"}
   ]
 }

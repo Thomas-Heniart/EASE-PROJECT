@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by thomas on 24/04/2017.
@@ -203,5 +204,9 @@ public class Catalog {
         } catch (MalformedURLException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "This is not a valid url");
         }
+    }
+
+    public List<Website> getPublicCatalogWebsites(HibernateQuery hibernateQuery) {
+        return this.getWebsites(hibernateQuery).stream().filter(website -> website.getWebsiteAttributes().isPublic_website()).collect(Collectors.toList());
     }
 }

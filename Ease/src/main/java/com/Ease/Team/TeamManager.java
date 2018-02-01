@@ -98,8 +98,8 @@ public class TeamManager {
                 mailJetBuilder.setTemplateId(180262);
                 mailJetBuilder.addTo(teamUser.getEmail());
                 TeamUser admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
-                mailJetBuilder.addVariable("first_name", admin.getFirstName());
-                mailJetBuilder.addVariable("last_name", admin.getLastName());
+                mailJetBuilder.addVariable("first_name", admin.getUser().getPersonalInformation().getFirst_name());
+                mailJetBuilder.addVariable("last_name", admin.getUser().getPersonalInformation().getLast_name());
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
                 String url = Variables.URL_PATH + "#/teamJoin/";
@@ -120,8 +120,8 @@ public class TeamManager {
                 mailJetBuilder.setTemplateId(238541);
                 mailJetBuilder.addTo(teamUser.getEmail());
                 TeamUser admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
-                mailJetBuilder.addVariable("first_name", admin.getFirstName());
-                mailJetBuilder.addVariable("last_name", admin.getLastName());
+                mailJetBuilder.addVariable("first_name", admin.getUser().getPersonalInformation().getFirst_name());
+                mailJetBuilder.addVariable("last_name", admin.getUser().getPersonalInformation().getLast_name());
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
                 String url = Variables.URL_PATH + "#/teamJoin/";
@@ -142,8 +142,8 @@ public class TeamManager {
                 mailJetBuilder.setTemplateId(238542);
                 mailJetBuilder.addTo(teamUser.getEmail());
                 TeamUser admin = teamUser.getTeam().getTeamUserWithId(teamUser.getAdmin_id());
-                mailJetBuilder.addVariable("first_name", admin.getFirstName());
-                mailJetBuilder.addVariable("last_name", admin.getLastName());
+                mailJetBuilder.addVariable("first_name", admin.getUser().getPersonalInformation().getFirst_name());
+                mailJetBuilder.addVariable("last_name", admin.getUser().getPersonalInformation().getLast_name());
                 mailJetBuilder.addVariable("email", admin.getEmail());
                 mailJetBuilder.addVariable("team_name", teamUser.getTeam().getName());
                 String url = Variables.URL_PATH + "#/teamJoin/";

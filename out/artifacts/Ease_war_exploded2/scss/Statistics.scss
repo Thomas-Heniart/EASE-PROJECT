@@ -1,0 +1,81 @@
+@import 'variables';
+@import 'mixins';
+
+#responses {
+  .stats-graph {
+    width: 0;
+    display: inline-block !important;
+    position: relative;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 1s ease-out;
+  }
+  .stats-graph.show {
+    margin: 10px auto;
+    width: 45%;
+    opacity: 1;
+    height: auto;
+  }
+}
+
+#statisticsForm {
+  position: relative;
+  margin: auto;
+  width: fit-content;
+  .stats-input-group {
+    position: relative;
+    margin: 10px auto;
+    width: fit-content;
+    border: 1px solid $themeColor;
+    border-radius: 5px;
+    padding: 7px;
+    background-color: $themeColor;
+    color: white;
+    .statsinput {
+        display: block;
+    }
+    input[type="date"] {
+      color: $themeColor;
+    }
+  }
+  a#getStats {
+    cursor: pointer;
+    display: block;
+    background-color: $themeColor;
+    color: white;
+    position: relative;
+    width: fit-content;
+    margin: 10px auto;
+    border: 1px solid $themeColor;
+    transition: all 0.6s ease;
+    padding: 3px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    &:hover {
+      transition: all 0.6s ease;
+      background-color: white;
+      color: $themeColor;
+      text-decoration: none;
+    }
+  }
+}
+
+.loading-stats {
+  position: relative;
+  display: none;
+  margin: 40px auto;
+  h3 {
+    color: $themeColor;
+    text-align: center;
+  }
+ .sk-fading-circle {
+   width: 80px;
+    height: 80px;
+    position: relative;
+    margin: auto;
+    .sk-circle:before {
+      background-color: $themeColor;
+    }
+  }
+}

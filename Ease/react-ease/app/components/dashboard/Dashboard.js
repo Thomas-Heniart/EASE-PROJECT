@@ -23,7 +23,8 @@ class Dashboard extends Component {
   constructor(props){
     super(props);
     this.state = {
-      scrolling: false
+      scrolling: false,
+      tutorial: false
     }
   }
   onScroll = (e) => {
@@ -66,13 +67,23 @@ class Dashboard extends Component {
         }, 3000);
       }
     }
+    if (!this.props.tutorial_done)
+      this.setState({tutorial: true});
   }
   componentWillMount() {
     document.title = "Ease.space";
   }
   render(){
     const {columns} = this.props.dashboard;
-
+    const {
+      isReady,
+      isRunning,
+      joyrideOverlay,
+      joyrideType,
+      selector,
+      stepIndex,
+      steps,
+    } = this.state;
     return (
         <div id="dashboard" class={classnames(this.props.background_picture ? 'ease-background' : null, this.state.scrolling ? 'scrolling': null, 'lite_scrollbar')}>
           <ScrollingComponent onScroll={this.onScroll} class="ui container fluid full_flex display_flex">
@@ -81,7 +92,7 @@ class Dashboard extends Component {
                   <DashboardColumn idx={idx} key={idx} profile_ids={column}/>
               )
             })}
-            {!this.props.tutorial_done &&
+            {this.state.tutorial &&
             <Tutorial/>}
           </ScrollingComponent>
         </div>

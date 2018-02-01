@@ -36,8 +36,8 @@ public class ServletAskOwnerToUpgrade extends HttpServlet {
             mailJetBuilder.setTemplateId(218931);
             mailJetBuilder.addTo(team.getTeamUserOwner().getEmail());
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");
-            mailJetBuilder.addVariable("first_name", teamUser.getFirstName());
-            mailJetBuilder.addVariable("last_name", teamUser.getLastName());
+            mailJetBuilder.addVariable("first_name", teamUser.getUser().getPersonalInformation().getFirst_name());
+            mailJetBuilder.addVariable("last_name", teamUser.getUser().getPersonalInformation().getLast_name());
             mailJetBuilder.addVariable("url", Variables.URL_PATH + team.getDb_id() + "/" + team.getDefaultChannel().getDb_id() + "/upgrade");
             mailJetBuilder.sendEmail();
             NotificationFactory.getInstance().createAskOwnerToUpgradeNotification(team, teamUser, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());

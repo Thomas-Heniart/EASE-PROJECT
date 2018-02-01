@@ -20,24 +20,68 @@ class Tutorial extends Component {
   };
   render(){
     let steps = [];
-//    if (document.querySelector('.app_wrapper:not(.empty)'))
+    if (!!document.querySelector('.app_wrapper:not(.empty) .classic'))
+      steps.push({
+        title: 'Just click on an App to login or access account info.',
+        isFixed: true,
+        selector:".app_wrapper:not(.empty) .classic",
+        position: 'right',
+        style: {
+          beacon: {
+            inner: '#45C997',
+            outer: '#45C997'
+          }
+        }
+      });
+    else if (!!document.querySelector('.app_wrapper:not(.empty)'))
+      steps.push({
+        title: 'Just click on an App to login or access account info.',
+        isFixed: true,
+        selector:".app_wrapper:not(.empty)",
+        position: 'right',
+        style: {
+          beacon: {
+            inner: '#45C997',
+            outer: '#45C997'
+          }
+        }
+      });
+    else
       steps.push({
         title: 'Just click on an App to login or access account info.',
         isFixed: true,
         selector:".app_wrapper",
-        position: 'right'
+        position: 'right',
+        style: {
+          beacon: {
+            inner: '#45C997',
+            outer: '#45C997'
+          }
+        }
       });
     steps.push({
       title: 'Here is where you access your Team(s).',
       isFixed: true,
       selector:"#teams_list",
-      position: 'bottom'
+      position: 'bottom',
+      style: {
+        beacon: {
+          inner: '#45C997',
+          outer: '#45C997'
+        }
+      }
     });
     steps.push({
       title: 'To add more apps, just click this button!',
       isFixed: true,
       selector:"#catalog_button",
-      position: 'bottom'
+      position: 'bottom',
+      style: {
+        beacon: {
+          inner: '#45C997',
+          outer: '#45C997'
+        }
+      }
     });
     return (
         <Joyride
@@ -48,9 +92,9 @@ class Tutorial extends Component {
             showBackButton={false}
             disableOverlay={true}
             showStepsProgress={true}
+            allowClicksThruHole={true}
             type="continuous"
             run={true}
-            debug={true}
             callback={this.tipsCallback}
         />
     )

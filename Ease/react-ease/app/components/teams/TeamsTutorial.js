@@ -26,26 +26,50 @@ class TeamsTutorial extends React.Component {
       isFixed: true,
       selector:".channel.default",
       position: 'right',
+      style: {
+        beacon: {
+          inner: '#45C997',
+          outer: '#45C997'
+        }
+      }
     });
     if (document.querySelector('#new_channel_button'))
       steps.push({
         title: 'Create new rooms here.',
         isFixed: true,
         selector:"#new_channel_button",
-        position: 'right'
+        position: 'right',
+        style: {
+          beacon: {
+            inner: '#45C997',
+            outer: '#45C997'
+          }
+        }
       });
     steps.push({
       title: 'Click on a name to see all accesses of a person.',
       isFixed: true,
       selector:"#team_users > .section-list",
-      position: 'right'
+      position: 'right',
+      style: {
+        beacon: {
+          inner: '#45C997',
+          outer: '#45C997'
+        }
+      }
     });
     if (document.querySelector('#new_member_button'))
       steps.push({
         title: 'Add more team members here.',
         isFixed: true,
         selector:"#new_member_button",
-        position: 'right'
+        position: 'right',
+        style: {
+          beacon: {
+            inner: '#45C997',
+            outer: '#45C997'
+          }
+        }
       });
     return(
         <Joyride
@@ -56,6 +80,7 @@ class TeamsTutorial extends React.Component {
             showBackButton={false}
             disableOverlay={true}
             showStepsProgress={true}
+            allowClicksThruHole={true}
             type="continuous"
             run={true}
             callback={this.tipsCallback}

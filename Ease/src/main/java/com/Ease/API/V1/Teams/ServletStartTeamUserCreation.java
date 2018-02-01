@@ -64,8 +64,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid inputs");
             if (!team.isValidFreemium() && TeamUserRole.Role.MEMBER.getValue() != role)
                 throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to add other admins.");
-            String first_name = sm.getStringParam("first_name", true, false);
-            String last_name = sm.getStringParam("last_name", true, false);
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.getEmail().equals(email))
                     throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
@@ -74,10 +72,8 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             Long departure_date = sm.getLongParam("departure_date", true, true);
             if (!team.isValidFreemium() || departure_date == null)
                 departure_date = null;
-            else {
-                if (departure_date <= sm.getTimestamp().getTime())
+            else if (departure_date <= sm.getTimestamp().getTime())
                     throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");
-            }
             Long arrival_date = sm.getLongParam("arrival_date", true, true);
             if (!team.isValidFreemium())
                 arrival_date = null;

@@ -1,29 +1,83 @@
 {
-    "name":"Kayak",
-    "lastlogin":"",
-    "home": "https://www.kayak.fr/",
-    "connect": {
-    	"todo": [
-            {"action":"clickona", "search": "a[id$='login']"},
-            {"action":"waitfor", "search": ".Common-Authentication-LoginForm"},
-    		{"action":"fill", "what":"login", "search":".Common-Authentication-LoginForm input.username"},
-    		{"action":"fill", "what":"password", "search":".Common-Authentication-LoginForm input.pass"},
-    		{"action":"click", "search":".Common-Authentication-LoginForm button.submit"}
-       	]
+  "name": "Kayak",
+  "lastlogin": "",
+  "home": "https://www.kayak.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".col-account-menu"
+      },
+      {
+        "action": "waitfor",
+        "search": "div.login[id$='login']"
+      },
+      {
+        "action": "trueClick",
+        "search": "div.login[id$='login']"
+      },
+      {
+        "action": "waitfor",
+        "search": ".Common-Authentication-LoginForm"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": ".Common-Authentication-LoginForm input.username"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": ".Common-Authentication-LoginForm input.pass"
+      },
+      {
+        "action": "trueClick",
+        "search": ".Common-Authentication-LoginForm button.submit"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "div.logout[id$='logout']"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "div.logout[id$='logout'], div.login[id$='login']"
     },
-    "logout": {
-    	"todo": [
-            {"action":"clickona", "search": "a.logout"} 
-        ]
-    },
-    "checkAlreadyLogged": [
-    	{"search":".logout"}
-    ],
-    "Facebook": {
-    	"todo": [
-            {"action":"clickona", "search": "a[id$='login']"},
-            {"action":"waitfor", "search": ".Common-Authentication-LoginForm"},
-            {"action":"click", "search":".facebookOuter .socialButtonText"}
-    	]
+    {
+      "search": "div.logout[id$='logout']"
     }
+  ],
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".col-account-menu"
+      },
+      {
+        "action": "waitfor",
+        "search": "div.login[id$='login']"
+      },
+      {
+        "action": "trueClick",
+        "search": "div.login[id$='login']"
+      },
+      {
+        "action": "waitfor",
+        "search": ".Common-Authentication-LoginForm"
+      },
+      {
+        "action": "click",
+        "search": ".facebookOuter .socialButtonText"
+      }
+    ]
+  }
 }

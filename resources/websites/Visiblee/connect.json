@@ -1,0 +1,47 @@
+{
+  "name": "Visiblee",
+  "lastlogin": "",
+  "home": "https://software.visiblee.io/login",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": ".loginForm input[name='email']",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": ".loginForm input[name='password']",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": ".logButton",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".leftSideNavButton:last-child()"
+      },
+      {
+        "action": "waitfor",
+        "search": ".loginForm input[name='email']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".loginForm input[name='email'], .leftSideNavButton:last-child()"
+    },
+    {
+      "search": ".leftSideNavButton:last-child()"
+    }
+  ]
+}

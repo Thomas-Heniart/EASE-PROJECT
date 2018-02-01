@@ -1,0 +1,1 @@
+0==window.location.href.indexOf("https://www.facebook.com")&&document.getElementById("email")&&extensionLight.runtime.sendMessage("fbDisconnected",{},function(){});

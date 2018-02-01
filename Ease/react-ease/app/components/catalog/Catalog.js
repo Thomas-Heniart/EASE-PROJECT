@@ -5,6 +5,7 @@ import AddBookmark from './AddBookmark';
 import AddAnyApp from './AddAnyApp'
 import AddSoftwareCredentials from './AddSoftwareCredentials';
 import Importations from './Importations'
+import OnBoardingImportation from './OnBoardingImportation';
 import {handleSemanticInput} from "../../utils/utils";
 import { Grid, Menu, Input, Icon } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
@@ -48,12 +49,13 @@ class Catalog extends Component {
             <div className="container">
               <div>
                 <p>Apps Catalogue</p>
+                {this.props.location.pathname !== `/main/catalog/onBoardingImportation` &&
                 <Menu tabular>
                   <Menu.Item name='Add an App' icon='book' as={NavLink} to={`/main/catalog/website`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/website` && this.resetQuery()}}/>
                   <Menu.Item name='Add a Shortcut link' icon='bookmark' as={NavLink} exact to={`/main/catalog/bookmark`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/bookmark` && this.resetQuery()}}/>
                   <Menu.Item name='Add Software credentials' icon='disk outline' as={NavLink} exact to={`/main/catalog/softwareCredentials`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/softwareCredentials` && this.resetQuery()}}/>
                   <Menu.Item name='Import' icon='cloud upload' as={NavLink} exact to={`/main/catalog/importations`} activeClassName="active" onClick={e => {this.props.location.pathname !== `/main/catalog/importations` && this.resetQuery()}}/>
-                </Menu>
+                </Menu>}
               </div>
             </div>
           </header>
@@ -81,6 +83,7 @@ class Catalog extends Component {
                   {this.state.mounted &&
                     <Switch>
                       <Route path={`${this.props.match.path}/importations`} component={Importations}/>
+                      <Route path={`${this.props.match.path}/onBoardingImportation`} component={OnBoardingImportation}/>
                       <Route path={`${this.props.match.path}/softwareCredentials`} component={AddSoftwareCredentials}/>
                       <Route path={`${this.props.match.path}/bookmark`} component={AddBookmark}/>
                       <Route exact path={`${this.props.match.path}/website/addWebsite`}

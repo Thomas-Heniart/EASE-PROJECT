@@ -13,7 +13,7 @@ class PersonalInfo extends React.Component {
     super(props);
     this.state = {
       newUsername: '',
-      username: this.props.userInfo.first_name,
+      username: this.props.userInfo.username,
       newEmail: '',
       email: '',
       confirmationCode: '',

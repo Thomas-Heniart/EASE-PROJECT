@@ -1,0 +1,28 @@
+{
+  "name":"Net-Entreprises",
+  "lastLogin":"",
+  "home":"https://portail.net-entreprises.fr/priv/",
+  "connect":{
+    "todo":[
+      {"action":"goto", "url":"https://portail.net-entreprises.fr/"},
+      {"action":"waitfor", "search":"#connexion"},
+      {"action":"fill", "what":"login", "search":"#j_siret", "grave":true},
+      {"action":"fill", "what":"nom", "search":"#j_nom", "grave":true},
+      {"action":"fill", "what":"prénom", "search":"#j_prenom", "grave":true},
+      {"action":"fill", "what":"password", "search":"#j_password", "grave":true},
+      {"action":"trueClick", "search":"#validButtonConnexion", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#header_deconnection1, #btn-retour"},
+    {"search":"#header_deconnection1"}
+  ],
+  "logout":{
+    "todo":[
+      {
+        "action": "erasecookies",
+        "name": "c_user"
+      }
+    ]
+  }
+}

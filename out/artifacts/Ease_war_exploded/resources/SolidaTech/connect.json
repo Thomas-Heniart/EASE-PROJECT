@@ -1,0 +1,22 @@
+{
+  "name":"SolidaTech",
+  "lastLogin":"",
+  "home":"https://www.solidatech.fr/",
+  "connect":{
+    "todo":[
+      {"action": "aclick", "search": "a[href*='user/login']"},
+      {"action":"fill", "what":"login", "search":"#edit-name"},
+      {"action":"fill", "what":"password", "search":"#edit-pass"},
+      {"action":"click", "search":"#edit-submit"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='user/logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='user/logout'], a[href*='user/login']"},
+    {"search":"a[href*=logout]"}
+  ]
+}

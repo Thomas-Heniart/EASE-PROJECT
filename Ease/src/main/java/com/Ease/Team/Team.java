@@ -69,6 +69,16 @@ public class Team {
     @Column(name = "active")
     private boolean active = true;
 
+    @Column(name = "company_size")
+    private Integer company_size;
+
+    @Column(name = "invitations_sent")
+    private boolean invitations_sent = false;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "onboarding_status_id")
+    private OnboardingStatus onboardingStatus = new OnboardingStatus();
+
     @Column(name = "extra_members")
     private Integer extra_members;
 
@@ -103,8 +113,9 @@ public class Team {
     @Transient
     private Channel default_channel;
 
-    public Team(String name) {
+    public Team(String name, Integer company_size) {
         this.name = name;
+        this.company_size = company_size;
     }
 
     public Team() {
@@ -174,6 +185,22 @@ public class Team {
         this.active = active;
     }
 
+    public Integer getCompany_size() {
+        return company_size;
+    }
+
+    public void setCompany_size(Integer company_size) {
+        this.company_size = company_size;
+    }
+
+    public boolean isInvitations_sent() {
+        return invitations_sent;
+    }
+
+    public void setInvitations_sent(boolean invitations_sent) {
+        this.invitations_sent = invitations_sent;
+    }
+
     public Integer getExtra_members() {
         return extra_members;
     }
@@ -204,6 +231,14 @@ public class Team {
 
     public void setSubscription(Subscription subscription) {
         this.subscription = subscription;
+    }
+
+    public OnboardingStatus getOnboardingStatus() {
+        return onboardingStatus;
+    }
+
+    public void setOnboardingStatus(OnboardingStatus onboardingStatus) {
+        this.onboardingStatus = onboardingStatus;
     }
 
     public TeamCard getTeamCard(Integer id) throws HttpServletException {
@@ -354,14 +389,17 @@ public class Team {
 
     public JSONObject getSimpleJson() throws HttpServletException {
         JSONObject res = new JSONObject();
-        res.put("id", this.db_id);
-        res.put("name", this.name);
+        res.put("id", this.getDb_id());
+        res.put("name", this.getName());
+        res.put("company_size", this.getCompany_size());
         Integer plan_id = this.getPlan_id();
         /* Hack for sergii frontend */
         if (plan_id == 2)
             plan_id = 1;
         res.put("plan_id", plan_id);
+        res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
+        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamUsers().size() >= 8);
         res.put("extra_members", this.getExtra_members());
         return res;
     }
@@ -419,6 +457,7 @@ public class Team {
                 return;
             int activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
             System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");
+            this.initializeStripe(teamProperties);
             if (this.getSubscription().getQuantity() <= activeSubscriptions) {
                 Map<String, Object> updateParams = new HashMap<>();
                 updateParams.put("quantity", activeSubscriptions);

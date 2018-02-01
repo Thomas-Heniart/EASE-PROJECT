@@ -1,0 +1,22 @@
+{
+  "name":"TestLink",
+  "lastLogin":"",
+  "home":"http://testlink-a-volute.com/",
+  "connect":{
+    "todo":[
+      {"action":"waitfor", "search":"#tl_login"},
+      {"action":"fill", "what":"login", "search":"#tl_login", "grave":true},
+      {"action":"fill", "what":"password", "search":"#tl_password", "grave":true},
+      {"action":"trueClick", "search":"input[type='submit']", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"frame[name='titlebar'], #tl_login"},
+    {"search":"frame[name='titlebar']"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"goto", "url":"http://testlink-a-volute.com/logout.php?viewer="}
+    ]
+  }
+}
