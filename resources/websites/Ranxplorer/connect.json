@@ -1,0 +1,22 @@
+{
+  "name":"Ranxplorer",
+  "lastLogin":"",
+  "home":"https://ranxplorer.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='/auth/login']"},
+      {"action":"fill", "what":"login", "search":"#log", "grave":true},
+      {"action":"fill", "what":"password", "search":"#password", "grave":true},
+      {"action":"trueClick", "search":"input[type='submit']", "grave":true}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='/auth/login']"},
+    {"search":"a[href*='logout']"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  }
+}
