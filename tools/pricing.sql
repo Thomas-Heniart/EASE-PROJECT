@@ -15,6 +15,7 @@ CREATE TABLE TEAM_EMAIL_INVITED (
   team_id INT(10) UNSIGNED NOT NULL,
   email   VARCHAR(255)     NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (team_id) REFERENCES teams (id),
-  UNIQUE (team_id, email)
+  FOREIGN KEY (team_id) REFERENCES teams (id)
 );
+
+/* UNIQUE (team_id, email) */

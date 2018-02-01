@@ -21,12 +21,30 @@ import java.util.List;
 
 @WebServlet("/api/v1/teams/InviteFriend")
 public class ServletInvitedFriend extends HttpServlet {
+
+
+    public ServletInvitedFriend() {
+        System.out.println("Je suis créé");
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println("Destroy");
+        super.destroy();
+    }
+
+    @Override
+    public void init() throws ServletException {
+        System.out.println("Init");
+        super.init();
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeOwnerOfTeam(team);
+            //sm.needToBeOwnerOfTeam(team);
             if (team.getExtra_members() >= 15)
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot invite more than 15 friends");
             String email = sm.getStringParam("email", true, false);
@@ -34,20 +52,19 @@ public class ServletInvitedFriend extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You must provide an email");
             if (email.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Email cannot be longer than 255 characters");
-            if (team.getInvitedFriend(email) != null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You already invited this person");
+            //if (team.getInvitedFriend(email) != null)
+              //  throw new HttpServletException(HttpStatus.BadRequest, "You already invited this person");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
-            hibernateQuery.setParameter("email", email);
-            if (!hibernateQuery.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "Email already registered on Ease.Space");
-            hibernateQuery.queryString("SELECT tu FROM TeamUser tu WHERE tu.email = :email");
-            hibernateQuery.setParameter("email", email);
-            if (!hibernateQuery.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "Already in a team");
+            //hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
+            //hibernateQuery.setParameter("email", email);
+            //if (!hibernateQuery.list().isEmpty())
+                //throw new HttpServletException(HttpStatus.BadRequest, "Email already registered on Ease.Space");
+            //hibernateQuery.queryString("SELECT tu FROM TeamUser tu WHERE tu.email = :email");
+            //hibernateQuery.setParameter("email", email);
+            //if (!hibernateQuery.list().isEmpty())
+                //throw new HttpServletException(HttpStatus.BadRequest, "Already in a team");
             InvitedFriend invitedFriend = new InvitedFriend(email, team);
             team.addInvitedFriend(invitedFriend);
-            sm.saveOrUpdate(invitedFriend);
             team.increaseExtraMembers();
             sm.saveOrUpdate(team);
             sm.setSuccess("Done");

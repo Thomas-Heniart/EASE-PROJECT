@@ -101,6 +101,7 @@ public class Team {
     private Set<TeamCard> teamCardSet = ConcurrentHashMap.newKeySet();
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @MapKey(name = "email")
     private Map<String, InvitedFriend> invitedFriendMap = new ConcurrentHashMap<>();
 
@@ -292,7 +293,7 @@ public class Team {
         this.teamWebsites = teamWebsites;
     }
 
-    public Map<String, InvitedFriend> getInvitedFriendMap() {
+    public synchronized Map<String, InvitedFriend> getInvitedFriendMap() {
         return invitedFriendMap;
     }
 

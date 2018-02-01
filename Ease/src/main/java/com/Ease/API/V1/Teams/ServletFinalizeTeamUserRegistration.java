@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created by thomas on 02/05/2017.
@@ -52,16 +53,10 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            String firstName = sm.getStringParam("first_name", true, true);
-            String lastName = sm.getStringParam("last_name", true, true);
             String username = sm.getStringParam("username", true, true);
             String code = sm.getStringParam("code", false, true);
             if (username == null || username.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "username is needed.");
-            if (firstName == null || firstName.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "firstName is needed.");
-            if (lastName == null || lastName.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "lastName is needed.");
             if (code == null || code.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "code is needed.");
             HibernateQuery query = sm.getHibernateQuery();
@@ -82,8 +77,6 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot register.");
             if (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() > now.getTime())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot register.");
-            teamUser.setFirstName(firstName);
-            teamUser.setLastName(lastName);
             teamUser.setUsername(username);
             teamUser.setUser(user);
             teamUser.setInvitation_code(null);

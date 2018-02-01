@@ -1,10 +1,13 @@
 package com.Ease.Team;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "TEAM_EMAIL_INVITED")
 public class InvitedFriend {
     @Id

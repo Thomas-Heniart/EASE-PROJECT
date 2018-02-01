@@ -1306,4 +1306,182 @@ populateTeamsDeleted = (data) => {
       "</tr>");
     jElem.appendTo(tableBody);
   });
-}
+};
+
+testAsync = () => {
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas24@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas23@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas22@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas21@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas20@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas19@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas18@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas17@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas16@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas15@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas14@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas13@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas12@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas11@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas10@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas9@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas8@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas7@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas6@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas5@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas4@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas3@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas3@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas2@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+  ajaxHandler.post("/api/v1/teams/InviteFriend", {
+    team_id: 143,
+    email: "thomas1@ease.space"
+  }, () => {
+  }, () => {
+  }, () => {
+  });
+};

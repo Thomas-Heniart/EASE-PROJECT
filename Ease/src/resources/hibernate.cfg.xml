@@ -28,6 +28,8 @@
         <property name="hibernate.cache.use_query_cache">true</property>
         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
         </property>
+        <property name="hibernate.order_updates">true</property>
+        <property name="hibernate.order_inserts">true</property>
         <mapping class="com.Ease.Team.Team"/>
         <mapping class="com.Ease.Team.OnboardingStatus"/>
         <mapping class="com.Ease.Team.Channel"/>
