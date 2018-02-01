@@ -125,7 +125,15 @@ export function createTeamProfile({team_id, team_user_ids}) {
       team_id: team_id,
       team_user_ids: team_user_ids
     }).then(response => {
-      return response;
+      if (response.profile !== null) {
+        dispatch({
+          type: 'DASHBOARD_PROFILE_CREATED',
+          payload: {
+            profile: response.profile
+          }
+        });
+      }
+      return response.profile;
     }).catch(err => {
       throw err;
     })
