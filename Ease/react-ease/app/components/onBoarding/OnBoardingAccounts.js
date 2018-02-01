@@ -72,8 +72,12 @@ class ChooseApps extends React.Component {
       if (currentRoom === idx)
         return item;
     })[0];
-    const website_ids = room.website_ids.filter((id, idx) => {
-      return idx < 20 && allAppIdsSelected.filter(appId => {return id === appId}).length === 0;
+    let idx = 0;
+    const website_ids = room.website_ids.filter(id => {
+      if (idx < 20 && allAppIdsSelected.filter(appId => {return id === appId}).length === 0) {
+        idx++;
+        return id;
+      }
     });
     return (
       <React.Fragment>

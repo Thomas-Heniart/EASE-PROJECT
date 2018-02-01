@@ -1,0 +1,28 @@
+{
+  "name":"Disqus",
+  "lastLogin":"",
+  "home":"https://disqus.com/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='/profile/login/']"},
+      {"action":"fill", "what":"login", "search":"#username-input", "grave":true},
+      {"action":"fill", "what":"password", "search":"#password-input", "grave":true},
+      {"action":"trueClick", "search":"button.submit", "grave":true}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='/profile/login/']"},
+      {"action":"trueClick", "search":"button[title='facebook']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='/profile/login/']"},
+    {"search":"a[href*='logout']"}
+  ],
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  }
+}
