@@ -409,7 +409,7 @@ module.exports = {
     }
   },
   teamUser: {
-    createTeamUser: function(ws_id, team_id, first_name, last_name, email, username, departure_date, role){
+    createTeamUser: function(ws_id, team_id, first_name, last_name, email, username, departure_date, role, arrival_date){
       return axios.post('/api/v1/teams/StartTeamUserCreation', {
         ws_id: ws_id,
         team_id: team_id,
@@ -418,7 +418,8 @@ module.exports = {
         email: email,
         username: username,
         departure_date: departure_date,
-        role: role,
+        arrival_date: arrival_date,
+        role: role
       }).then(response => {
         return response.data;
       }).catch(err => {

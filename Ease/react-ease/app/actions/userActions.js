@@ -20,9 +20,9 @@ export function createTeamUserNow({team_id, first_name, last_name, email, userna
   }
 }
 
-export function createTeamUser({team_id, first_name, last_name, email, username, departure_date, role}){
+export function createTeamUser({team_id, first_name, last_name, email, username, departure_date, arrival_date, role}){
   return function(dispatch, getState){
-    return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role).then(response => {
+    return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role, arrival_date).then(response => {
       dispatch(teamUserCreatedAction({team_user: response}));
       return response;
     }).catch(err => {

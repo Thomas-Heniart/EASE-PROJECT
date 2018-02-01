@@ -21,6 +21,7 @@ import AcceptEnterpriseAppModal from "../teamModals/AcceptEnterpriseAppModal";
 import EditEnterpriseAppModal from "../teamModals/EditEnterpriseAppModal";
 import FreeTrialEndModal from "../teamModals/FreeTrialEndModal";
 import UpgradeTeamPlanModal from "../teamModals/UpgradeTeamPlanModal";
+import TeamUserInviteLimitReachedModal from "../teamModals/TeamUserInviteLimitReachedModal";
 import DepartureDateEndModal from "../teamModals/DepartureDateEndModal";
 import CatalogAddBookmarkModal from "../catalog/AddBookmarkModal";
 import ClassicAppModal from "../catalog/ClassicAppModal";
@@ -72,6 +73,7 @@ import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal"
   requestWebsiteModal: store.teamModals.requestWebsiteModal,
   freeTrialEndModal: store.teamModals.freeTrialEndModal,
   upgradeTeamPlanModal: store.teamModals.upgradeTeamPlanModal,
+  teamUserInviteLimitReachedModal: store.teamModals.teamUserInviteLimitReachedModal,
   departureDateEndModal: store.teamModals.departureDateEndModal,
   catalogAddBookmarkModal: store.teamModals.catalogAddBookmarkModal,
   catalogAddAppModal: store.teamModals.catalogAddAppModal,
@@ -131,6 +133,8 @@ class ModalsContainer extends Component{
           <FreeTrialEndModal/>}
           {this.props.upgradeTeamPlanModal.active &&
           <UpgradeTeamPlanModal/>}
+          {this.props.teamUserInviteLimitReachedModal.active &&
+          <TeamUserInviteLimitReachedModal/>}
           {this.props.departureDateEndModal.active &&
           <DepartureDateEndModal/>}
           {this.props.catalogAddBookmarkModal.active &&
