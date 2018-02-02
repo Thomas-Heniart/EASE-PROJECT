@@ -35,8 +35,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
-            if (team.getTeamUsers().size() >= (15 + team.getExtra_members()) && !team.isValidFreemium())
-                throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have more than 15 members.");
             TeamUser adminTeamUser = sm.getTeamUser(team);
             String email = sm.getStringParam("email", true, false);
             String username = sm.getStringParam("username", true, true);

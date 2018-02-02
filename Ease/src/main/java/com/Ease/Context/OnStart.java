@@ -95,7 +95,7 @@ public class OnStart implements ServletContextListener {
                 delay_six_pm.set(Calendar.HOUR_OF_DAY, 18);
                 delay_six_pm.set(Calendar.MINUTE, 30);
                 next_clock = delay_six_pm.getTimeInMillis() - new Date().getTime();
-                AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask();
+                AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask(teamIdMap);
                 time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000);
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");

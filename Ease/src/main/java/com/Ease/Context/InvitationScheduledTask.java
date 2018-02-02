@@ -4,15 +4,20 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
-import com.stripe.exception.StripeException;
-import com.stripe.model.Customer;
-import com.stripe.model.Subscription;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InvitationScheduledTask extends TimerTask {
+
+    private Map<Integer, Map<String, Object>> teamIdMap;
+
+    public InvitationScheduledTask(Map<Integer, Map<String, Object>> teamIdMap) {
+        this.teamIdMap = teamIdMap;
+    }
 
     @Override
     public void run() {
@@ -23,6 +28,14 @@ public class InvitationScheduledTask extends TimerTask {
             List<TeamUser> teamUsers = hibernateQuery.list();
             for (TeamUser teamUser : teamUsers) {
                 Team team = teamUser.getTeam();
+                Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
+                if (teamProperties == null) {
+                    teamProperties = new ConcurrentHashMap<>();
+                    teamIdMap.put(team.getDb_id(), teamProperties);
+                }
+                team.initializeStripe(teamProperties);
+                if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (15 + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                    continue;
                 teamUser.getTeamUserStatus().setInvitation_sent(true);
                 hibernateQuery.saveOrUpdateObject(teamUser.getTeamUserStatus());
                 /* Mail part */
@@ -31,21 +44,6 @@ public class InvitationScheduledTask extends TimerTask {
         } catch (HttpServletException e) {
             e.printStackTrace();
             hibernateQuery.rollback();
-        }
-    }
-
-    public void stripeInitialization(Team team) {
-        try {
-            if (team.getCustomer_id() != null) {
-                Customer customer = Customer.retrieve(team.getCustomer_id());
-                team.setCustomer(customer);
-            }
-            if (team.getSubscription_id() != null) {
-                Subscription subscription = Subscription.retrieve(team.getSubscription_id());
-                team.setSubscription(subscription);
-            }
-        } catch (StripeException e) {
-            e.printStackTrace();
         }
     }
 }
