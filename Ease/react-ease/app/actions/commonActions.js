@@ -74,6 +74,7 @@ export function setTeamsTutorial(state) {
   if (state)
     return (dispatch) => {
       return post_api.teams.validateTutorial().then(r => {
+        easeTracker.trackEvent("EaseOnboardingTeamTuto");
         dispatch({type: 'SET_TEAMS_TUTORIAL', payload: state});
       });
     };
