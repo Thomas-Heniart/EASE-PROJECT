@@ -2,7 +2,7 @@ package com.Ease.Context;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailjetMessageWrapper;
-import com.Ease.NewDashboard.App;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,25 +20,25 @@ public class AccountsToFillScheduledTask extends TimerTask {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.queryString("SELECT a FROM App a INNER JOIN a.teamCardReceiver as r WHERE a.insert_date >= :date");
+            hibernateQuery.queryString("SELECT tcr FROM TeamCardReceiver tcr WHERE r.sharing_date >= :date");
             hibernateQuery.setDate("date", calendar.getTime());
-            List<App> apps = hibernateQuery.list();
-            Map<TeamUser, Set<App>> teamUserSetMap = new HashMap<>();
-            for (App app : apps) {
-                TeamUser teamUser = app.getTeamCardReceiver().getTeamUser();
-                Set<App> appSet = teamUserSetMap.get(teamUser);
-                if (appSet == null)
-                    appSet = new HashSet<>();
-                appSet.add(app);
-                teamUserSetMap.put(teamUser, appSet);
+            List<TeamCardReceiver> teamCardReceivers = hibernateQuery.list();
+            Map<TeamUser, Set<TeamCardReceiver>> teamUserSetMap = new HashMap<>();
+            for (TeamCardReceiver teamCardReceiver : teamCardReceivers) {
+                TeamUser teamUser = teamCardReceiver.getTeamUser();
+                Set<TeamCardReceiver> teamCardReceiverSet = teamUserSetMap.get(teamUser);
+                if (teamCardReceiverSet == null)
+                    teamCardReceiverSet = new HashSet<>();
+                teamCardReceiverSet.add(teamCardReceiver);
+                teamUserSetMap.put(teamUser, teamCardReceiverSet);
             }
-            for (Map.Entry<TeamUser, Set<App>> entry : teamUserSetMap.entrySet()) {
+            for (Map.Entry<TeamUser, Set<TeamCardReceiver>> entry : teamUserSetMap.entrySet()) {
                 TeamUser teamUser = entry.getKey();
-                Set<App> appSet = entry.getValue();
+                Set<TeamCardReceiver> teamCardReceiverSet = entry.getValue();
                 JSONArray appArr = new JSONArray();
-                appSet.forEach(app -> {
+                teamCardReceiverSet.forEach(teamCardReceiver -> {
                     JSONObject appObj = new JSONObject();
-                    appObj.put("name", app.getAppInformation().getName());
+                    appObj.put("name", teamCardReceiver.getTeamCard().getName());
                     appArr.put(appObj);
                 });
                 MailjetMessageWrapper.newAccountsMail(teamUser, appArr, appArr.length());

@@ -1,0 +1,52 @@
+{
+  "name": "Prerender",
+  "lastLogin": "",
+  "home": "https://prerender.io/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='login']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#exampleInputEmail1"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#exampleInputEmail1"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#exampleInputPassword1"
+      },
+      {
+        "action": "trueClick",
+        "search": "form[action*='login'] button[type='submit']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "form[action*='logout'] button"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='login']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "form[action*='logout'], a[href*='login']"
+    },
+    {
+      "search": "form[action*='logout']"
+    }
+  ]
+}
