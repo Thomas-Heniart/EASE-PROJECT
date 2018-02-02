@@ -848,12 +848,15 @@
         margin-bottom: 20px; }
         #new_team_creation #center #content .input i {
           color: #e8ecf1; }
-      #new_team_creation #center #content input {
-        width: 370px; }
-        #new_team_creation #center #content input:focus {
-          border-color: #373b60; }
-          #new_team_creation #center #content input:focus label {
-            color: #373b60; }
+      #new_team_creation #center #content .input {
+        max-width: 370px; }
+        #new_team_creation #center #content .input input {
+          width: 370px;
+          max-width: 370px; }
+          #new_team_creation #center #content .input input:focus {
+            border-color: #373b60; }
+            #new_team_creation #center #content .input input:focus label {
+              color: #373b60; }
       #new_team_creation #center #content .hidden_input {
         position: absolute;
         top: -1000;

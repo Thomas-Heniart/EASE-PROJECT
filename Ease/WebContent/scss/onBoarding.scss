@@ -142,12 +142,16 @@
           color: #e8ecf1;
         }
       }
-      input {
-        width: 370px;
-        &:focus {
-          border-color: #373b60;
-          label {
-            color: #373b60;
+      .input {
+        max-width: 370px;
+        input {
+          width: 370px;
+          max-width: 370px;
+          &:focus {
+            border-color: #373b60;
+            label {
+              color: #373b60;
+            }
           }
         }
       }
