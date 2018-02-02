@@ -1,6 +1,7 @@
 package com.Ease.Context;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
@@ -23,11 +24,13 @@ public class InvitationScheduledTask extends TimerTask {
     public void run() {
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.queryString("SELECT t FROM TeamUser t JOIN t.teamUserStatus AS s WHERE t.arrival_date > :date AND t.invitation_sent is false");
+            hibernateQuery.queryString("SELECT t FROM TeamUser t JOIN t.teamUserStatus AS s WHERE t.arrival_date IS NOT NULL AND t.arrival_date < :date AND s.invitation_sent is false");
             hibernateQuery.setDate("date", new Date());
             List<TeamUser> teamUsers = hibernateQuery.list();
             for (TeamUser teamUser : teamUsers) {
                 Team team = teamUser.getTeam();
+                if (!team.isActive())
+                    continue;
                 Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
                 if (teamProperties == null) {
                     teamProperties = new ConcurrentHashMap<>();
@@ -38,7 +41,21 @@ public class InvitationScheduledTask extends TimerTask {
                     continue;
                 teamUser.getTeamUserStatus().setInvitation_sent(true);
                 hibernateQuery.saveOrUpdateObject(teamUser.getTeamUserStatus());
-                /* Mail part */
+                if (!team.isInvitations_sent()) {
+                    team.setInvitations_sent(true);
+                    hibernateQuery.saveOrUpdateObject(team);
+                }
+                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setTemplateId(179023);
+                mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+                mailJetBuilder.addTo(teamUser.getEmail());
+                TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                mailJetBuilder.addVariable("team_name", team.getName());
+                mailJetBuilder.addVariable("first_name", teamUser_admin.getUser().getPersonalInformation().getFirst_name());
+                mailJetBuilder.addVariable("last_name", teamUser_admin.getUser().getPersonalInformation().getLast_name());
+                mailJetBuilder.addVariable("email", teamUser_admin.getEmail());
+                mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code());
+                mailJetBuilder.sendEmail();
             }
             hibernateQuery.commit();
         } catch (HttpServletException e) {

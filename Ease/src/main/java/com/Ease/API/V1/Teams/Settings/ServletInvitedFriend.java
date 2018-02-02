@@ -78,4 +78,24 @@ public class ServletInvitedFriend extends HttpServlet {
         }
         sm.sendResponse();
     }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
+        try {
+            sm.needToBeEaseAdmin();
+            Long id = sm.getLongParam("id", true, false);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            InvitedFriend invitedFriend = (InvitedFriend) hibernateQuery.get(InvitedFriend.class, id);
+            if (invitedFriend == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid id");
+            Team team = invitedFriend.getTeam();
+            team.removeInvitedFriend(invitedFriend);
+            sm.saveOrUpdate(team);
+            sm.setSuccess("Done");
+        } catch (Exception e) {
+            sm.setError(e);
+        }
+        sm.sendResponse();
+    }
 }
