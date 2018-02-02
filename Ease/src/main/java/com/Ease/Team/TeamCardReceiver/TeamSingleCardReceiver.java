@@ -27,7 +27,9 @@ public class TeamSingleCardReceiver extends TeamCardReceiver {
 
     public TeamSingleCardReceiver(App app, TeamCard teamCard, TeamUser teamUser, boolean allowed_to_see_password) {
         super(app, teamCard, teamUser);
-        this.allowed_to_see_password = allowed_to_see_password;
+        /* Everyone can see password for the moment */
+        //this.allowed_to_see_password = allowed_to_see_password;
+        this.allowed_to_see_password = true;
     }
 
     public Integer getDb_id() {
@@ -43,7 +45,9 @@ public class TeamSingleCardReceiver extends TeamCardReceiver {
     }
 
     public void setAllowed_to_see_password(boolean allowed_to_see_password) {
-        this.allowed_to_see_password = allowed_to_see_password;
+        /* Everyone can see password for the moment */
+        //this.allowed_to_see_password = allowed_to_see_password;
+        this.allowed_to_see_password = true;
     }
 
     @Override

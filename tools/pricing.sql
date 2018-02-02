@@ -17,3 +17,5 @@ CREATE TABLE TEAM_EMAIL_INVITED (
   PRIMARY KEY (id),
   FOREIGN KEY (team_id) REFERENCES teams (id)
 );
+
+UPDATE teamSingleCardReceivers SET allowed_to_see_password = 1;
