@@ -401,7 +401,7 @@ public class Team {
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
         res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamUsers().size() >= 8);
-        res.put("extra_members", this.getExtra_members());
+        res.put("extra_members", this.getInvitedFriendMap().size());
         return res;
     }
 
