@@ -1,0 +1,26 @@
+{
+  "name":"Bing Webmaster",
+  "lastLogin":"",
+  "home":"https://www.bing.com/toolbox/webmaster/",
+  "connect":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='/webmaster/WebmasterManageSitesPage.aspx']"},
+      {"action":"fill", "what":"login", "search":"form[name='f1'] input[name='loginfmt']"},
+      {"action":"trueClick", "search":"form[name='f1'] input[type='submit']"},
+      {"action":"waitfor", "search":"form[name='f1'] input[name='passwd'][aria-required='true']"},
+      {"action":"fill", "what":"password", "search":"form[name='f1'] input[name='passwd'][aria-required='true']"},
+      {"action":"trueClick", "search":"form[name='f1'] input[type='submit']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], a[href*='/webmaster/WebmasterManageSitesPage.aspx']"},
+    {"search":"a[href*='logout']"}
+  ],
+  "logout":{
+    "todo":[
+      {"action": "erasecookies", "name":"KievRPSAuth"},
+      {"action": "erasecookies", "name":"KievRPSSecAuth"},
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  }
+}
