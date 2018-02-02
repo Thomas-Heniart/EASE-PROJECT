@@ -1,20 +1,24 @@
 import React from 'react';
 import {connect} from "react-redux";
 import queryString from "query-string";
+import ChromeFirstStep from "./ChromeFirstStep";
+import ChromeSecondStep from "./ChromeSecondStep";
+import Explication from "./Explication";
+import PasteStep from "./PasteStep";
+import DisplayAccounts from "./DisplayAccounts";
+import ErrorAccounts from "./ErrorAccounts";
 import {
   catalogAddAnyApp, catalogAddBookmark, catalogAddClassicApp,
   getImportedAccounts
-} from "../../actions/catalogActions";
-import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../actions/catalogActions";
-import {handleSemanticInput, isEmail, reflect, credentialIconType} from "../../utils/utils";
-import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "../../actions/appsActions";
-import {createProfile} from "../../actions/dashboardActions";
-import {createTeamChannel, addTeamUserToChannel} from "../../actions/channelActions";
-import {getLogo} from "../../utils/api"
-import { Segment, Button, Icon, TextArea, Dropdown, Form, Menu, Message, Input, Loader, Grid, Label} from 'semantic-ui-react';
-import {changeStep, goToOnBoarding, resetOnBoardingImportation} from "../../actions/onBoardingActions";
-import Joyride from "react-joyride";
-import {setTipSeen} from "../../actions/commonActions";
+} from "../../../actions/catalogActions";
+import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../../actions/catalogActions";
+import {handleSemanticInput, isEmail, reflect} from "../../../utils/utils";
+import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "../../../actions/appsActions";
+import {createProfile} from "../../../actions/dashboardActions";
+import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
+import {getLogo} from "../../../utils/api"
+import {Loader} from 'semantic-ui-react';
+import {changeStep, goToOnBoarding, resetOnBoardingImportation} from "../../../actions/onBoardingActions";
 
 function json(fields, separator, csv, dispatch) {
   const array = csv.split('\n');
@@ -60,521 +64,6 @@ function json(fields, separator, csv, dispatch) {
     return json(fields, '\t', csv, dispatch);
   else
     return null;
-}
-
-class ChromeFirstStep extends React.Component {
-  render() {
-    const {
-      login,
-      password,
-      error,
-      back,
-      next,
-      onChange
-    } = this.props;
-    return (
-      <Form className='chromeForm' error={error !== ''} onSubmit={next}>
-        <Segment id='chromeSteps'>
-          <p className='title'><img src="/resources/other/Chrome.png"/> Import your passwords from Chrome</p>
-          <div className='inline'>
-            <p>Enter below the information of your Chrome account</p>
-            <img src="/resources/images/agathe_chrome.png"/>
-          </div>
-          <Form.Field>
-            <label>Login</label>
-            <Input size="large"
-                   autoFocus
-                   class="modalInput team-app-input"
-                   required
-                   autoComplete='on'
-                   name='chromeLogin'
-                   onChange={onChange}
-                   label={<Label><Icon name={credentialIconType['login']}/></Label>}
-                   labelPosition="left"
-                   placeholder='Your login'
-                   value={login}
-                   type='text'/>
-          </Form.Field>
-          <Form.Field>
-            <label>Password</label>
-            <Input size="large"
-                   class="modalInput team-app-input"
-                   required
-                   autoComplete='on'
-                   name='chromePassword'
-                   onChange={onChange}
-                   label={<Label><Icon name={credentialIconType['password']}/></Label>}
-                   labelPosition="left"
-                   placeholder='Your password'
-                   value={password}
-                   type='password'/>
-          </Form.Field>
-          <Form.Field>
-            <Message error size="mini" content={error}/>
-          </Form.Field>
-        </Segment>
-        <Button className={'left'} onClick={back} type='button'>
-          <Icon name='arrow left'/> Back
-        </Button>
-        <Button className={'right'} positive onClick={next} type='submit' disabled={login === '' || password === ''}>
-          Next <Icon name='arrow right'/>
-        </Button>
-      </Form>
-    )
-  }
-}
-
-class ChromeSecondStep extends React.Component {
-  render() {
-    return (
-      <React.Fragment>
-        <Segment id='chromeSteps'>
-          <p className='title'><img src="/resources/other/Chrome.png"/> Google Chrome is being imported</p>
-          <div style={{margin:'45px 0'}}>
-            <Loader active style={{position:'relative',transform:'translateX(-50%)',bottom:'50%'}}/>
-          </div>
-          <p>Ease.space integrates your accounts by finding them in a new tab. Please, do not close it.</p>
-          <p>Once it’s done, you will be able to select what you keep on Ease.space.</p>
-          <p>It will take approximately 45sec, be patient ;)</p>
-        </Segment>
-      </React.Fragment>
-    )
-  }
-}
-
-class Explication extends React.Component {
-  render() {
-    const {
-      next,
-      back,
-      passwordManager
-    } = this.props;
-    return (
-      <React.Fragment>
-        {passwordManager === 2 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/Chrome.png"/> Import your passwords from Chrome</p>
-          <p><a  target='_blank'/></p>
-          <p>2. Once you get the CSV, click on Next bellow :)</p>
-        </React.Fragment>}
-        {passwordManager === 3 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/Dashlane.png"/> Import your passwords from Dashlane</p>
-          <p className='no_margin'>&emsp;1. Export your passwords from Dashlane to a <strong>CSV file</strong>.</p>
-          <ul>
-            <li>Open your Dashlane desktop application.</li>
-            <li>Click the “<strong>File</strong>” tab</li>
-            <li>Select “<strong>Export</strong>”, then choose “<strong>Export to CSV</strong>”</li>
-          </ul>
-          <p className='no_margin'>&emsp;2. Your almost done!</p>
-          <ul>
-            <li>Open the downloaded file</li>
-            <li>Copy the whole content of the file, then click on “<strong>Next</strong>” bellow :)</li>
-          </ul>
-        </React.Fragment>}
-        {passwordManager === 4 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/Lastpass.png"/> Import your passwords from LastPass</p>
-          <p className='no_margin'>&emsp;1. Export your passwords from Lastpass to a <strong>CSV file</strong>.</p>
-          <ul>
-            <li>Open Lastpass, click on “<strong>More Options</strong>” > “<strong>Advanced</strong>” > “<strong>Export</strong>”.</li>
-          </ul>
-          <p className='no_margin'>&emsp;2. Your almost done!</p>
-          <ul>
-            <li>Copy the whole text containing your account names, logins and passwords.</li>
-            <li>Click on “<strong>Next</strong>” bellow :)</li>
-          </ul>
-        </React.Fragment>}
-        {passwordManager === 5 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/1password.png"/> Import your passwords from 1Password</p>
-          <p className='no_margin'>&emsp;1. Export your passwords from 1Password to a <strong>CSV file</strong>.</p>
-          <ul>
-            <li>Open 1Password desktop application</li>
-            <li>Select a Vault (you cannot export several Vaults at once)</li>
-            <li>Click the “<strong>File</strong>” tab > “<strong>Export</strong>” > “<strong>All elements</strong>”</li>
-            <li>Enter your 1Password master password</li>
-            <li>As File Format chose <strong>Comma Separated Values (.csv)</strong></li>
-            <li>Leave other default settings as displayed, then click “<strong>Save</strong>”</li>
-          </ul>
-          <p className='no_margin'>&emsp;2. Your almost done!</p>
-          <ul>
-            <li>Open the downloaded file.</li>
-            <li>Copy the whole content of the file, then click on “<strong>Next</strong>” bellow :)</li>
-          </ul>
-        </React.Fragment>}
-        {passwordManager === 6 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/Keepass.png"/> Import your passwords from Keepass</p>
-          <p>&emsp;1. Export your passwords from Keepass to a <strong>CSV file</strong>.
-            <a href='https://keepass.info/help/base/importexport.html' target='_blank'>
-              Check how here
-            </a>
-          </p>
-          <p className='no_margin'>&emsp;2. Your almost done!</p>
-          <ul>
-            <li>Open the downloaded file.</li>
-            <li>Copy the whole content of the file, then click on “<strong>Next</strong>” bellow :)</li>
-          </ul>
-        </React.Fragment>}
-        {passwordManager === 7 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/roboform.png"/> Import your passwords from RoboForm</p>
-          <p>&emsp;1. Export your passwords from Roboform to a <strong>CSV file</strong>.
-            <a href='https://help.roboform.com/hc/en-us/articles/230425008-How-to-export-your-RoboForm-logins-' target='_blank'>
-              Check how here
-            </a>
-          </p>
-          <p className='no_margin'>&emsp;2. Your almost done!</p>
-          <ul>
-            <li>Open the downloaded file.</li>
-            <li>Copy the whole content of the file, then click on “<strong>Next</strong>” bellow :)</li>
-          </ul>
-        </React.Fragment>}
-        {passwordManager === 8 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/Zohovault.png"/> Import your passwords from Zoho Vault</p>
-          <p className='no_margin'>&emsp;1. Export your passwords from Zoho Vault</p>
-          <ul>
-            <li>Open Zoho Vault.</li>
-            <li>Click the “<strong>Tools</strong>” tab. Choose “<strong>Export Secrets</strong>” button on the left panel.</li>
-            <li>You can either export all the secrets OR export only the ones that belong to a particular secret type.</li>
-            <li>Select “<strong>General CSV</strong>”</li>
-            <li>Click on “<strong>Export Secrets</strong>”</li>
-          </ul>
-          <p className='no_margin'>&emsp;2. Your almost done!</p>
-          <ul>
-            <li>Copy the whole text containing your account names, logins and passwords.</li>
-            <li>Click on “<strong>Next</strong>” bellow :)</li>
-          </ul>
-        </React.Fragment>}
-        {passwordManager === 9 &&
-        <React.Fragment>
-          <p className='title'><img src="/resources/other/passpack.png"/> Import your passwords from Passpack</p>
-          <p>&emsp;1. Export your passwords from Passpack to a <strong>Comma Separated Values (CSV) file</strong>.
-            <a href='https://help.roboform.com/hc/en-us/articles/230425008-How-to-export-your-RoboForm-logins-' target='_blank'>
-              Check how here
-            </a>
-          </p>
-          <p className='no_margin'>&emsp;2. Your almost done!</p>
-          <ul>
-            <li>Open the downloaded file.</li>
-            <li>Copy the whole content of the file, then click on “<strong>Next</strong>” bellow :)</li>
-          </ul>
-        </React.Fragment>}
-        <Button className={'left'} onClick={back}>
-          <Icon name='arrow left'/> Back
-        </Button>
-        <Button className={'right'} positive onClick={next}>
-          Next <Icon name='arrow right'/>
-        </Button>
-      </React.Fragment>
-    )
-  }
-}
-
-class PasteStep extends React.Component {
-  render() {
-    const {
-      next,
-      back,
-      onChange,
-      onChangeField,
-      fields,
-      pasted,
-      passwordManager
-    } = this.props;
-    const separator = [
-      {text: 'Comma (,)', value: ','},
-      {text: 'Tab', value: '\t'},
-      {text: 'Semicolon (;)', value: ';'},
-      {text: 'Space', value: ' '}];
-    const order = [
-      {text: 'Name', value: 'name'},
-      {text: 'URL', value: 'url'},
-      {text: 'User ID', value: 'login'},
-      {text: 'Password', value: 'password'},
-      {text: 'Note', value: 'note'},
-      {text: 'Tag', value: 'tag'},
-      {text: '-', value: '-'}];
-    return (
-      <React.Fragment>
-        <Form id='step3' error={this.props.error !== ''}>
-          <p className='title'>Paste here the content of your file.</p>
-          <TextArea name='paste' onChange={onChange} className={(passwordManager > 2 && passwordManager < 9) ? 'alone' : null} autoFocus/>
-          {(passwordManager < 3 || passwordManager > 8) &&
-          <React.Fragment>
-            <p className='question'>1. How is your file structured?</p>
-            <Menu className='menu_fields'>
-              <Dropdown pointing className='link item' value={fields.field1} options={order} name='field1' onChange={onChangeField}/>
-              <Dropdown pointing className='link item' value={fields.field2} options={order} name='field2' onChange={onChangeField}/>
-              <Dropdown pointing className='link item' value={fields.field3} options={order} name='field3' onChange={onChangeField}/>
-              <Dropdown pointing className='link item' value={fields.field4} options={order} name='field4' onChange={onChangeField}/>
-              <Dropdown pointing className='link item' value={fields.field5} options={order} name='field5' onChange={onChangeField}/>
-              <Dropdown pointing className='link item' value={fields.field6} options={order} name='field6' onChange={onChangeField}/>
-            </Menu>
-            <p>It should be as above if your file is ordered like: Linkedin, https://www.linkedin.com/, elon@spacex.com, ElonPassword75, personal account.</p>
-            <div id='div_separator'>
-              <p className='question'>2. How is the data separated in your file?</p>
-              <Dropdown selection name='separator' defaultValue={','} options={separator} onChange={onChange}/>
-            </div>
-            <p>Ex: if your first row is "Website URL", "Login", "Password"; then choose Comma (,)</p>
-          </React.Fragment>}
-          <Message error content={this.props.error}/>
-        </Form>
-        <Button className={'left'} onClick={back}>
-          <Icon name='arrow left'/> Back
-        </Button>
-        <Button className={'right'} positive onClick={next} disabled={!pasted}>
-          Next <Icon name='arrow right'/>
-        </Button>
-      </React.Fragment>
-    )
-  }
-}
-
-class DisplayAccounts extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      accounts: [],
-      accountsNumber: 0,
-      seePassword: {},
-      dropdownOpened: false
-    }
-  }
-  componentWillMount(){
-    this.setState(this.props.getLogo());
-  }
-  componentDidMount(){
-    const seePassword = this.props.importedAccounts.map(item => {
-      return {type: 'password', id: item.id};
-    }).reduce((prev, curr) =>{
-      return {...prev, [curr.id]: curr.type}
-    }, {});
-    this.setState({accountsNumber: this.props.importedAccounts.length, seePassword: seePassword});
-  }
-  openDropdown = () => {
-    if (this.props.loadingSending)
-      return;
-    if(!this.props.user.status.tip_importation_seen) {
-      this.props.dispatch(setTipSeen({
-        name: 'tip_importation_seen'
-      }));
-    }
-    this.setState({dropdownOpened: !this.state.dropdownOpened});
-  };
-  closeOnBlur = () => {
-    this.setState({dropdownOpened: false});
-  };
-  seePassword = (id) => {
-    const seePassword = this.state.seePassword;
-    if (seePassword[id] === 'password')
-      seePassword[id] = 'text';
-    else
-      seePassword[id] = 'password';
-    this.setState({seePassword: seePassword});
-  };
-  logoLetter = (name) => {
-    let first = '';
-    let second = '';
-    let space = false;
-    for (let letter = 0; letter < name.length; letter++) {
-      if (first.length < 1 && name[letter] !== ' ')
-        first = name[letter];
-      else if (first.length > 0 && second.length < 1 && name[letter] !== ' ' && space === true)
-        second = name[letter];
-      else if (name[letter] === ' ')
-        space = true;
-    }
-    if (second !== '')
-      return first.toUpperCase() + second.toUpperCase();
-    else
-      return first.toUpperCase();
-  };
-  render() {
-    const {
-      onChange,
-      onChangeRoomName,
-      roomName,
-      toPending,
-      cancelPending,
-      onChangeField,
-      deleteAccount,
-      selectProfile,
-      createRoom,
-      selectRoom,
-      roomAdded,
-      loadingSending,
-      importAccounts,
-      error,
-      fields,
-      importedAccounts,
-      accountsPending,
-      selectedProfile,
-      selectedRoom
-    } = this.props;
-    const order = [
-      {text: 'Name', value: 'name'},
-      {text: 'URL', value: 'url'},
-      {text: 'User ID', value: 'login'},
-      {text: 'Password', value: 'password'}];
-    const profiles =
-      <Dropdown.Item as="a"
-                     class="display_flex"
-                     active={selectedProfile > -1}
-                     onClick={selectProfile}>
-        <strong className="overflow-ellipsis"><Icon name='user'/>Personal Space</strong>
-        &nbsp;&nbsp;
-      </Dropdown.Item>;
-    const teamsList = Object.entries(this.props.teamsInState).map((teams, i) => (
-      teams.map((team) => (
-        team.rooms &&
-        <React.Fragment key={team.id}>
-          <Dropdown.Header><Icon name='users'/>{team.name}</Dropdown.Header>
-          {Object.entries(team.rooms).map(rooms => (
-            rooms.map(room => (
-              (room.team_user_ids && room.team_user_ids.filter(id => (id === team.my_team_user_id)).length > 0) &&
-              <Dropdown.Item
-                as="a"
-                class="display_flex"
-                active={selectedRoom === room.id}
-                onClick={e => selectRoom(team.id, room.id, room.name)}
-                key={room.id}>
-                <strong className='overflow-ellipsis'># {room.name}</strong>
-                &nbsp;&nbsp;
-              </Dropdown.Item>
-            ))
-          ))}
-          {((team.plan_id === 1 || (team.plan_id === 0 && Object.keys(team.rooms).length < 4)) && roomAdded[team.id] === false && team.team_users[team.my_team_user_id].role > 1) &&
-          <Dropdown.Item>
-            <form style={{marginBottom: 0}} onSubmit={e => createRoom(team.id)}>
-              <Input
-                style={{fontSize: '14px'}}
-                name="roomName"
-                required
-                transparent
-                value={roomName[team.id]}
-                onChange={e => onChangeRoomName(e, team.id)}
-                class="create_profile_input"
-                icon={<Icon name="plus square" link onClick={e => createRoom(team.id)}/>}
-                placeholder='New Room' />
-            </form>
-          </Dropdown.Item>}
-        </React.Fragment>
-      ))
-    ));
-    const accounts = importedAccounts.map(item => (
-      <div key={item.id} className='account'>
-        <Icon name='remove circle' onClick={e => deleteAccount(item.id)}/>
-        {(item.logo && item.logo.length > 0) && <img src={item.logo}/>}
-        {(!item.logo || item.logo.length < 1) &&
-        <div className='logo_letter'>
-          <p style={{margin: 'auto'}}>{this.logoLetter(item.name)}</p>
-        </div>}
-        {Object.keys(fields).map(field => (
-          <Input idapp={item.id}
-                 key={fields[field]}
-                 size='mini'
-                 name={fields[field]}
-                 error={this.props.fieldProblem.id === item.id && this.props.fieldProblem.name === fields[field]}
-                 value={item[fields[field]]}
-                 onChange={this.props.handleAppInfo}
-                 disabled={fields[field] === 'url' && item.website_id !== -1}
-                 icon={fields[field] === 'password' && <Icon name='eye' link onClick={e => this.seePassword(item.id)}/>}
-                 type={fields[field] === 'password' ? this.state.seePassword[item.id] : 'text'} />
-        ))}
-        <Icon name='arrow circle right' size='large' onClick={e => toPending(item.id)}/>
-      </div>
-    ));
-    const listPending = accountsPending.map(item => (
-      <div key={item.id} className='div_account'>
-        <Icon name='arrow circle left' onClick={e => cancelPending(item.id)}/>
-        {(item.logo && item.logo.length > 0) && <img src={item.logo}/>}
-        {(!item.logo || item.logo.length < 1) &&
-        <div className='logo_letter pending'>
-          <p>{this.logoLetter(item.name)}</p>
-        </div>}
-        <p>{item.name} - {item.login && item.password ? item.login : 'Add as a bookmark'}</p>
-      </div>
-    ));
-    return (
-      <React.Fragment>
-        <p style={{marginBottom: '50px', marginLeft: '70px', marginTop: '10px'}}>
-          <span style={{color:'#45c997',fontWeight:'bold'}}>{this.state.accountsNumber} accounts detected! </span>
-          Make sure your data are put in the right columns, then import.
-        </p>
-        <Grid id='accounts'>
-          <Grid.Column width={10}>
-            <div className='dropdown_fields'>
-              <p className='import'>Logo</p>
-              <Dropdown pointing value={fields.field1} options={order} name='field1' onChange={onChangeField}/>
-              <Dropdown pointing value={fields.field2} options={order} name='field2' onChange={onChangeField}/>
-              <Dropdown pointing value={fields.field3} options={order} name='field3' onChange={onChangeField}/>
-              <Dropdown pointing value={fields.field4} options={order} name='field4' onChange={onChangeField}/>
-            </div>
-            {accounts}
-          </Grid.Column>
-          <Grid.Column width={6}>
-            <Segment className='segment_pending'>
-              <div class="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
-              <p className='import'>Import selection to:</p>
-              <Dropdown open={this.state.dropdownOpened}
-                        floating item name='location'
-                        onOpen={this.openDropdown}
-                        onClose={this.openDropdown}
-                        onBlur={this.closeOnBlur}
-                        text={this.props.location}
-                        error={error !== ''}
-                        id="importation_dropdown">
-                <Dropdown.Menu>
-                  {teamsList}
-                  <Dropdown.Divider />
-                  {profiles}
-                </Dropdown.Menu>
-              </Dropdown>
-              </div>
-              {!this.props.user.status.tip_importation_seen &&
-              <Joyride
-                steps={[{
-                  title: 'Organize your apps by sending them where you want to!',
-                  isFixed: true,
-                  selector:"#importation_dropdown",
-                  position: 'bottom',
-                  style: {
-                    beacon: {
-                      inner: '#45C997',
-                      outer: '#45C997'
-                    }
-                  }
-                }]}
-                locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
-                disableOverlay={true}
-                run={true}
-                allowClicksThruHole={true}
-                callback={(action) => {
-                  if (action.type === 'finished')
-                    this.props.dispatch(setTipSeen({
-                      name: 'tip_importation_seen'
-                    }));
-                }}/>}
-              <div className='div_accounts'>
-                <Message error hidden={error === ''} content={error} size='mini'/>
-                {listPending}
-              </div>
-              <Button
-                positive
-                id="import_button"
-                loading={loadingSending}
-                disabled={accountsPending.length < 1 || (selectedProfile === -1 && selectedRoom === -1) || loadingSending}
-                content={this.props.location ? `Import to ${this.props.location}` : "Import and encrypt"}
-                onClick={importAccounts}/>
-            </Segment>
-          </Grid.Column>
-        </Grid>
-      </React.Fragment>
-    )
-  }
 }
 
 @connect(store => ({
@@ -1088,6 +577,49 @@ class OnBoardingImportation extends React.Component {
             id: app.id
           })));
       });
+      let teams = {};
+      Object.keys(this.props.teams).map(item => {
+        const team = this.props.teams[item];
+        teams[item] = {...team};
+        teams[item].rooms = {};
+        Object.keys(team.rooms).map(room_id => {
+          teams[item].rooms[room_id] = {...team.rooms[room_id]}
+        });
+      });
+      const keys = Object.keys(teams);
+      const roomName = {};
+      const roomAdded = {};
+      keys.map(item => {
+        roomName[item] = "";
+        roomAdded[item] = false;
+        return item;
+      });
+      return Promise.all(calls.map(reflect)).then(response => {
+        this.setState({
+          accountsPending: [],
+          selectedProfile: -1,
+          selectedRoom: -1,
+          selectedTeam: -1,
+          loadingSending: false,
+          roomAdded: roomAdded,
+          error: '',
+          roomName: roomName,
+          location: '',
+          profiles: Object.assign({}, this.props.profiles),
+          teamsInState: teams
+        });
+        if (this.state.importedAccounts.length < 1) {
+          this.props.dispatch(changeStep({
+            team_id: this.props.onBoarding.team_id,
+            step: 5
+          })).then(res => {
+            window.location.href = "/";
+          });
+        }
+        easeTracker.trackEvent("EaseOnboardingImportationDone")
+      }).catch(err => {
+        this.setState({error: err, loadingSending: false});
+      });
     }
     else if (this.state.selectedProfile === -1 && this.state.selectedRoom > 0)
       calls = this.importAccountsRoom();
@@ -1095,49 +627,6 @@ class OnBoardingImportation extends React.Component {
       calls = this.importAccountsNewProfile();
     else if (this.state.selectedRoom === 0)
       calls = this.importAccountsNewRoom();
-    let teams = {};
-    Object.keys(this.props.teams).map(item => {
-      const team = this.props.teams[item];
-      teams[item] = {...team};
-      teams[item].rooms = {};
-      Object.keys(team.rooms).map(room_id => {
-        teams[item].rooms[room_id] = {...team.rooms[room_id]}
-      });
-    });
-    const keys = Object.keys(teams);
-    const roomName = {};
-    const roomAdded = {};
-    keys.map(item => {
-      roomName[item] = "";
-      roomAdded[item] = false;
-      return item;
-    });
-    return Promise.all(calls.map(reflect)).then(response => {
-      this.setState({
-        accountsPending: [],
-        selectedProfile: -1,
-        selectedRoom: -1,
-        selectedTeam: -1,
-        loadingSending: false,
-        roomAdded: roomAdded,
-        error: '',
-        roomName: roomName,
-        location: '',
-        profiles: Object.assign({}, this.props.profiles),
-        teamsInState: teams
-      });
-      if (this.state.importedAccounts.length < 1) {
-        this.props.dispatch(changeStep({
-          team_id: this.props.onBoarding.team_id,
-          step: 5
-        })).then(res => {
-          window.location.href = "/";
-        });
-      }
-      easeTracker.trackEvent("EaseOnboardingImportationDone")
-    }).catch(err => {
-      this.setState({error: err, loadingSending: false});
-    });
   };
   importAccountsNewProfile = () => {
     let calls = [];
