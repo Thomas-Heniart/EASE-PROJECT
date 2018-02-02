@@ -131,9 +131,13 @@ class NewSimpleTeamCreationView extends React.Component {
     if ((query.plan_id !== undefined && query.plan_id.length !== 0))
       this.setState(() => ({plan_id: Number(query.plan_id)}));
     if (query.team !== undefined && query.team.length !== 0) {
-      this.props.dispatch(goToOnBoarding({
-        team_id: Number(query.team)
-      }));
+      if (this.props.teams[query.team].onboarding_step < 5) {
+        this.props.dispatch(goToOnBoarding({
+          team_id: Number(query.team)
+        }));
+      }
+      else
+        window.location.href = '/';
     }
   }
   componentDidMount(){
