@@ -302,6 +302,7 @@ class NewSimpleTeamCreationView extends React.Component {
         team_id: this.state.team_id,
         step: 5
       })).then(res => {
+        easeTracker.trackEvent("EaseOnboardingEnterAccounts");
         window.location.href = "/";
       });
     }
@@ -390,6 +391,7 @@ class NewSimpleTeamCreationView extends React.Component {
           };
         });
       });
+      easeTracker.trackEvent("EaseOnboardingChooseTools");
       this.setState({loading: false, appsSelected: [], viewAccounts: 4});
     }
     else
@@ -397,6 +399,7 @@ class NewSimpleTeamCreationView extends React.Component {
         team_id: this.state.team_id,
         step: 5
       })).then(res => {
+        easeTracker.trackEvent("EaseOnboardingEnterAccounts");
         window.location.href = "/";
       });
   };
@@ -460,6 +463,7 @@ class NewSimpleTeamCreationView extends React.Component {
           })));
         });
         Promise.all(calls.map(reflect)).then(response => {
+          easeTracker.trackEvent("EaseOnboardingChooseTools");
           this.setState({
             loading: false,
             appsSelected: [],
@@ -495,6 +499,7 @@ class NewSimpleTeamCreationView extends React.Component {
             team_id: this.state.team_id,
             step: 5
           })).then(res => {
+            easeTracker.trackEvent("EaseOnboardingEnterAccounts");
             window.location.href = "/";
           });
         });
@@ -506,6 +511,7 @@ class NewSimpleTeamCreationView extends React.Component {
       this.setState({loading: true});
       // Choose PM or mano
       if (this.state.passwordManagerSelected < 10) {
+        easeTracker.trackEvent("EaseOnboardingImportation");
         this.props.dispatch(onBoardingImportation({
           team_id: this.state.team_id,
           passwordManager: this.state.passwordManagerSelected
@@ -513,8 +519,10 @@ class NewSimpleTeamCreationView extends React.Component {
         this.props.history.replace(`/main/catalog/onBoardingImportation?team=${this.state.team_id}`);
       }
       //send to reducer PM etc...
-      else
+      else {
+        easeTracker.trackEvent("EaseOnboardingNoImportation");
         this.setState({viewAccounts: 2, loading: false});
+      }
     }
     else if (this.state.viewAccounts === 2) {
       this.setState({loading: true});
@@ -632,13 +640,16 @@ class NewSimpleTeamCreationView extends React.Component {
             });
             if (Object.keys(this.state.singleApps).filter(item => {
                 return this.state.singleApps[item].length > 0
-              }).length > 0)
+              }).length > 0) {
+              easeTracker.trackEvent("EaseOnboardingChooseTools");
               this.setState({viewAccounts: 4, loading: false});
+            }
             else
               this.props.dispatch(changeStep({
                 team_id: this.state.team_id,
                 step: 5
               })).then(res => {
+                easeTracker.trackEvent("EaseOnboardingEnterAccounts");
                 window.location.href = "/";
               });
           });
@@ -687,6 +698,7 @@ class NewSimpleTeamCreationView extends React.Component {
               team_id: this.state.team_id,
               step: 5
             })).then(res => {
+              easeTracker.trackEvent("EaseOnboardingEnterAccounts");
               window.location.href = "/";
             });
           });
