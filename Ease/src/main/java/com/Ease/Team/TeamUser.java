@@ -554,10 +554,10 @@ public class TeamUser {
         }
     }
 
-    public void createTeamProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+    public Profile createTeamProfile(HibernateQuery hibernateQuery) throws HttpServletException {
         if (!this.isVerified())
-            return;
-        Profile profile;
+            return null;
+        Profile profile = null;
         if (!this.getTeamUserStatus().isProfile_created()) {
             int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
             profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
@@ -576,7 +576,7 @@ public class TeamUser {
                 hibernateQuery.saveOrUpdateObject(this);
             }
         }
-
+        return profile;
     }
 
     @Override

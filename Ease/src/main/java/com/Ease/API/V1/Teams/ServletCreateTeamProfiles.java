@@ -1,9 +1,11 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,12 +24,18 @@ public class ServletCreateTeamProfiles extends HttpServlet {
             Team team = sm.getTeam(team_id);
             sm.needToBeTeamUserOfTeam(team);
             JSONArray teamUser_ids = sm.getArrayParam("team_user_ids", true, false);
+            JSONObject res = new JSONObject();
+            Integer my_id = sm.getTeamUser(team).getDb_id();
+            Profile profile = null;
             for (int i = 0; i < teamUser_ids.length(); i++) {
                 Integer teamUser_id = teamUser_ids.getInt(i);
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-                teamUser.createTeamProfile(sm.getHibernateQuery());
+                Profile tmp = teamUser.createTeamProfile(sm.getHibernateQuery());
+                if (my_id.equals(teamUser_id))
+                    profile = tmp;
             }
-            sm.setSuccess("Done");
+            res.put("profile", profile == null ? JSONObject.NULL : profile.getJson());
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }

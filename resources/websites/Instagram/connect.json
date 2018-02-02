@@ -6,11 +6,11 @@
     "todo": [
       {
         "action": "waitfor",
-        "search": "div > p > a, a[href*='password/reset']"
+        "search": "div > p > a, div > span > a, a[href*='password/reset']"
       },
       {
         "action": "trueClick",
-        "search": "div > p > a"
+        "search": "div > p > a, div > span > a"
       },
       {
         "action": "waitfor",
