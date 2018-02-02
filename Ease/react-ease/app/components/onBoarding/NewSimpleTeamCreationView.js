@@ -168,8 +168,8 @@ class NewSimpleTeamCreationView extends React.Component {
           return 0;
         });
         let emails = [{email: '', error: ''}];
-        if (this.state.companySize <= 20)
-          for (let i = 1; this.state.companySize - 1 > i; i++)
+        if (this.props.teams[this.props.onBoarding.team_id].company_size <= 20)
+          for (let i = 1; this.props.teams[this.props.onBoarding.team_id].company_size - 1 > i; i++)
             emails.push({email: '', error: ''});
         else
           for (let i = 1; 20 > i; i++)
@@ -252,11 +252,6 @@ class NewSimpleTeamCreationView extends React.Component {
   handleAppInfo = (id, {name, value}) => {
     const credentialsSingleApps = Object.assign({}, this.state.credentialsSingleApps);
     credentialsSingleApps[id][name] = value;
-    this.setState({credentialsSingleApps: credentialsSingleApps});
-  };
-  changeDropdownFiller = (id, {value}) => {
-    const credentialsSingleApps = Object.assign({}, this.state.credentialsSingleApps);
-    credentialsSingleApps[id].filler_id = value;
     this.setState({credentialsSingleApps: credentialsSingleApps});
   };
   selectRoom = (id) => {
@@ -374,8 +369,8 @@ class NewSimpleTeamCreationView extends React.Component {
     }
   };
   invitationsReady = () => {
-    return this.state.emails.filter(item => (isEmail(item.email))).length >= (this.state.companySize === 1 ? 0 : 1 < this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1)
-      || this.state.pasteEmails.filter(item => (isEmail(item))).length >= (this.state.companySize === 1 ? 0 : 1 < this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1);
+    return this.state.emails.filter(item => (isEmail(item.email))).length >= (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1))
+      || this.state.pasteEmails.filter(item => (isEmail(item))).length >= (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1));
   };
   noToolsFound = () => {
     if (this.state.roomsSelected.length - 1 > this.state.currentRoom)
@@ -408,27 +403,27 @@ class NewSimpleTeamCreationView extends React.Component {
     singleApps[this.state.rooms[this.state.currentRoom].id] = this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(item => {
       return item !== item;
     });
-    if (this.state.roomsSelected.length - 1 > this.state.currentRoom) {
-      let calls = [];
-      const users = {};
-      this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
-        users[user_id] = {account_information: null};
+    let calls = [];
+    const users = {};
+    this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
+      users[user_id] = {account_information: null};
+    });
+    this.props.dispatch(createTeamProfile({
+      team_id: this.state.team_id,
+      team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+    })).then(res => {
+      this.state.appsSelected.map(app_id => {
+        calls.push(this.props.dispatch(teamCreateEnterpriseCard({
+          team_id: this.state.team_id,
+          channel_id: this.state.rooms[this.state.currentRoom].id,
+          website_id: app_id,
+          name: this.state.roomsWebsites[app_id].name,
+          description: '',
+          password_reminder_interval: 0,
+          receivers: users
+        })));
       });
-      this.props.dispatch(createTeamProfile({
-        team_id: this.state.team_id,
-        team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
-      })).then(res => {
-        this.state.appsSelected.map(app_id => {
-          calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-            team_id: this.state.team_id,
-            channel_id: this.state.rooms[this.state.currentRoom].id,
-            website_id: app_id,
-            name: this.state.roomsWebsites[app_id].name,
-            description: '',
-            password_reminder_interval: 0,
-            receivers: users
-          })));
-        });
+      if (this.state.roomsSelected.length - 1 > this.state.currentRoom) {
         Promise.all(calls.map(reflect)).then(response => {
           this.setState({
             currentRoom: this.state.currentRoom + 1,
@@ -439,29 +434,10 @@ class NewSimpleTeamCreationView extends React.Component {
             allAppIdsSelected: this.state.allAppIdsSelected.concat(this.state.appsSelected)
           });
         });
-      });
-    }
-    else if (Object.keys(singleApps).filter(item => {return singleApps[item].length > 0}).length > 0) {
-      let calls = [];
-      const users = {};
-      this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
-        users[user_id] = {account_information: null};
-      });
-      this.props.dispatch(createTeamProfile({
-        team_id: this.state.team_id,
-        team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
-      })).then(res => {
-        this.state.appsSelected.map(app_id => {
-          calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-            team_id: this.state.team_id,
-            channel_id: this.state.rooms[this.state.currentRoom].id,
-            website_id: app_id,
-            name: this.state.roomsWebsites[app_id].name,
-            description: '',
-            password_reminder_interval: 0,
-            receivers: users
-          })));
-        });
+      }
+      else if (Object.keys(singleApps).filter(item => {
+          return singleApps[item].length > 0
+        }).length > 0) {
         Promise.all(calls.map(reflect)).then(response => {
           easeTracker.trackEvent("EaseOnboardingChooseTools");
           this.setState({
@@ -471,29 +447,8 @@ class NewSimpleTeamCreationView extends React.Component {
             singleApps: singleApps,
           });
         });
-      });
-    }
-    else {
-      let calls = [];
-      const users = {};
-      this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
-        users[user_id] = {account_information: null};
-      });
-      this.props.dispatch(createTeamProfile({
-        team_id: this.state.team_id,
-        team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
-      })).then(res => {
-        this.state.appsSelected.map(app_id => {
-          calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-            team_id: this.state.team_id,
-            channel_id: this.state.rooms[this.state.currentRoom].id,
-            website_id: app_id,
-            name: this.state.roomsWebsites[app_id].name,
-            description: '',
-            password_reminder_interval: 0,
-            receivers: users
-          })));
-        });
+      }
+      else {
         Promise.all(calls.map(reflect)).then(response => {
           this.props.dispatch(changeStep({
             team_id: this.state.team_id,
@@ -503,8 +458,8 @@ class NewSimpleTeamCreationView extends React.Component {
             window.location.href = "/";
           });
         });
-      });
-    }
+      }
+    });
   };
   nextAccounts = () => {
     if (this.state.viewAccounts === 1 && isEmail(this.state.email)) {
@@ -564,32 +519,32 @@ class NewSimpleTeamCreationView extends React.Component {
     else if (this.state.viewAccounts === 3) {
       this.setState({loading: true});
       // Choose if single or enterprise / create enterpriseCard
-      if (this.state.roomsSelected.length - 1 > this.state.currentRoom) {
-        let calls = [];
-        const enterpriseApp = this.state.appsSelected.filter(app_id => {
-          return this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(single_id => {
-            return app_id === single_id
-          }).length === 0
+      let calls = [];
+      const enterpriseApp = this.state.appsSelected.filter(app_id => {
+        return this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(single_id => {
+          return app_id === single_id
+        }).length === 0
+      });
+      const users = {};
+      this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
+        users[user_id] = {account_information: null};
+      });
+      this.props.dispatch(createTeamProfile({
+        team_id: this.state.team_id,
+        team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+      })).then(res => {
+        enterpriseApp.map(app_id => {
+          calls.push(this.props.dispatch(teamCreateEnterpriseCard({
+            team_id: this.state.team_id,
+            channel_id: this.state.rooms[this.state.currentRoom].id,
+            website_id: app_id,
+            name: this.state.roomsWebsites[app_id].name,
+            description: '',
+            password_reminder_interval: 0,
+            receivers: users
+          })));
         });
-        const users = {};
-        this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
-          users[user_id] = {account_information: null};
-        });
-        this.props.dispatch(createTeamProfile({
-          team_id: this.state.team_id,
-          team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
-        })).then(res => {
-          enterpriseApp.map(app_id => {
-            calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-              team_id: this.state.team_id,
-              channel_id: this.state.rooms[this.state.currentRoom].id,
-              website_id: app_id,
-              name: this.state.roomsWebsites[app_id].name,
-              description: '',
-              password_reminder_interval: 0,
-              receivers: users
-            })));
-          });
+        if (this.state.roomsSelected.length - 1 > this.state.currentRoom) {
           Promise.all(calls.map(reflect)).then(response => {
             this.setState({
               currentRoom: this.state.currentRoom + 1,
@@ -599,34 +554,8 @@ class NewSimpleTeamCreationView extends React.Component {
               allAppIdsSelected: this.state.allAppIdsSelected.concat(this.state.appsSelected)
             });
           });
-        });
-      }
-      else {
-        let calls = [];
-        const enterpriseApp = this.state.appsSelected.filter(app_id => {
-          return this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(single_id => {
-            return app_id === single_id
-          }).length === 0
-        });
-        const users = {};
-        this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
-          users[user_id] = {account_information: null};
-        });
-        this.props.dispatch(createTeamProfile({
-          team_id: this.state.team_id,
-          team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
-        })).then(res => {
-          enterpriseApp.map(app_id => {
-            calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-              team_id: this.state.team_id,
-              channel_id: this.state.rooms[this.state.currentRoom].id,
-              website_id: app_id,
-              name: this.state.roomsWebsites[app_id].name,
-              description: '',
-              password_reminder_interval: 0,
-              receivers: users
-            })));
-          });
+        }
+        else {
           Promise.all(calls.map(reflect)).then(response => {
             Object.keys(this.state.singleApps).map(room_id => {
               this.state.singleApps[room_id].map(id => {
@@ -653,8 +582,8 @@ class NewSimpleTeamCreationView extends React.Component {
                 window.location.href = "/";
               });
           });
-        });
-      }
+        }
+      });
     }
     else if (this.state.viewAccounts === 4) {
       this.setState({loading: true});
@@ -798,15 +727,24 @@ class NewSimpleTeamCreationView extends React.Component {
     }
     else if (this.state.view === 3) {
       // create users
-      let emails = this.state.emails.filter((item, idx) => {
-        return (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29)));
+      let idx = 0;
+      let emails = this.state.emails.filter(item => {
+        if (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29))) {
+          idx++;
+          return item;
+        }
       }).map(item => {
         return item.email;
       });
-      if (emails.length < (this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 ))
-        emails = this.state.pasteEmails.filter((item, idx) => {
-          return (isEmail(item) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29)));
+      if (emails.length < (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1))) {
+        idx = 0;
+        emails = this.state.pasteEmails.filter(item => {
+          if (isEmail(item) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29))) {
+            idx++;
+            return item;
+          }
         });
+      }
       let calls = emails.map(item => {
         return this.props.dispatch(createTeamUser({
           team_id: this.state.team_id,
@@ -933,10 +871,10 @@ class NewSimpleTeamCreationView extends React.Component {
                              emails={this.state.emails}
                              addNewField={this.addNewField}
                              textareaToEmails={this.textareaToEmails}
-                             number={(this.state.companySize === 1 ? 0
-                               : 1 < this.state.companySize <= 5 ? 1
-                                 : this.state.companySize > 30 ? 15
-                                   : this.state.companySize / 2 - 1 )}/>}/>}
+                             number={((this.state.companySize == 1) ? 0
+                               : (this.state.companySize <= 5) ? 1
+                                 : (this.state.companySize > 30) ? 15
+                                   : parseInt(this.state.companySize / 2 - 1, 10))}/>}/>}
                   {this.state.view === 4 &&
                   <Route path={`${this.props.match.path}/groups`}
                          render={(props) =>
@@ -956,7 +894,6 @@ class NewSimpleTeamCreationView extends React.Component {
                              selectPasswordManager={this.selectPasswordManager}
                              allAppIdsSelected={this.state.allAppIdsSelected}
                              team={this.props.teams[this.state.team_id]}
-                             dropdownFiller={this.changeDropdownFiller}
                              roomsWebsites={this.state.roomsWebsites}
                              roomsSelected={this.state.roomsSelected}
                              selectSingleApp={this.selectSingleApp}
