@@ -368,6 +368,10 @@ public class Team {
         this.getInvitedFriendMap().put(invitedFriend.getEmail(), invitedFriend);
     }
 
+    public void removeInvitedFriend(InvitedFriend invitedFriend) {
+        this.getInvitedFriendMap().remove(invitedFriend.getEmail());
+    }
+
     public void edit(JSONObject editJson) {
         String name = (String) editJson.get("name");
         if (name != null)
@@ -635,10 +639,6 @@ public class Team {
             res.put(day_seven / teamUsers_size);
         }
         return res;
-    }
-
-    public void increaseExtraMembers() {
-        this.extra_members++;
     }
 
     @Override

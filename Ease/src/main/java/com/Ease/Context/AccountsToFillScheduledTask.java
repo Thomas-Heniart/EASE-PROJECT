@@ -2,14 +2,13 @@ package com.Ease.Context;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailjetMessageWrapper;
-import com.Ease.NewDashboard.App;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class AccountsToFillScheduledTask extends TimerTask {
 
@@ -32,39 +31,37 @@ public class AccountsToFillScheduledTask extends TimerTask {
         try {
             hibernateQuery.queryString("SELECT tcr FROM TeamCardReceiver tcr WHERE tcr.sharing_date >= :date");
             hibernateQuery.setDate("date", calendar.getTime());
-            List<App> apps = hibernateQuery.list();
-            Map<TeamUser, Set<App>> teamUserSetMap = new HashMap<>();
-            for (App app : apps) {
-                TeamUser teamUser = app.getTeamCardReceiver().getTeamUser();
-                if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now)
-                    continue;
-                Set<App> appSet = teamUserSetMap.get(teamUser);
-                if (appSet == null)
-                    appSet = new HashSet<>();
-                appSet.add(app);
-                teamUserSetMap.put(teamUser, appSet);
+            List<TeamCardReceiver> teamCardReceivers = hibernateQuery.list();
+            Map<TeamUser, Set<TeamCardReceiver>> teamUserSetMap = new HashMap<>();
+            for (TeamCardReceiver teamCardReceiver : teamCardReceivers) {
+                TeamUser teamUser = teamCardReceiver.getTeamUser();
+                Set<TeamCardReceiver> teamCardReceiverSet = teamUserSetMap.get(teamUser);
+                if (teamCardReceiverSet == null)
+                    teamCardReceiverSet = new HashSet<>();
+                teamCardReceiverSet.add(teamCardReceiver);
+                teamUserSetMap.put(teamUser, teamCardReceiverSet);
             }
-            for (Map.Entry<TeamUser, Set<App>> entry : teamUserSetMap.entrySet()) {
+            for (Map.Entry<TeamUser, Set<TeamCardReceiver>> entry : teamUserSetMap.entrySet()) {
                 TeamUser teamUser = entry.getKey();
                 Team team = teamUser.getTeam();
-                Map<String, Object> teamProperties = teamIdMap.get(team.getDb_id());
-                if (teamProperties == null) {
-                    teamProperties = new ConcurrentHashMap<>();
-                    teamIdMap.put(team.getDb_id(), teamProperties);
-                }
-                team.initializeStripe(teamProperties);
-                if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (15 + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                Map<String, Object> teamProperties = teamIdMap.computeIfAbsent(team.getDb_id(), k -> new HashMap<>());
+                if ((teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now) || (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (15 + team.getInvitedFriendMap().size()) && !team.isValidFreemium()))
                     continue;
-                Set<App> appSet = entry.getValue();
+                team.initializeStripe(teamProperties);
+                Set<TeamCardReceiver> teamCardReceiverSet = entry.getValue();
                 JSONArray appArr = new JSONArray();
-                appSet.forEach(app -> {
+                teamCardReceiverSet.forEach(teamCardReceiver -> {
                     JSONObject appObj = new JSONObject();
-                    appObj.put("name", app.getAppInformation().getName());
+                    appObj.put("name", teamCardReceiver.getTeamCard().getName());
                     appArr.put(appObj);
                 });
                 if (!teamUser.getTeamUserStatus().isInvitation_sent()) {
                     teamUser.getTeamUserStatus().setInvitation_sent(true);
                     hibernateQuery.saveOrUpdateObject(teamUser.getTeamUserStatus());
+                    if (!team.isInvitations_sent()) {
+                        team.setInvitations_sent(true);
+                        hibernateQuery.saveOrUpdateObject(team);
+                    }
                 }
                 MailjetMessageWrapper.newAccountsMail(teamUser, appArr, appArr.length());
             }

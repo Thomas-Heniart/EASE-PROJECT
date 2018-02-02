@@ -37,6 +37,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             sm.needToBeAdminOfTeam(team);
             TeamUser adminTeamUser = sm.getTeamUser(team);
             String email = sm.getStringParam("email", true, false);
+            email = email.toLowerCase();
             String username = sm.getStringParam("username", true, true);
             if (username == null)
                 username = "";
@@ -49,7 +50,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             System.out.println("Username: " + username);
             if (username.equals("") || team.hasTeamUserWithUsername(username)) {
                 username = email.substring(0, email.indexOf("@"));
-                username = username.replaceAll("[^a-zA-Z0-9._\\-]", "_");
+                username = username.replaceAll("[\\W]", "_");
                 if (team.hasTeamUserWithUsername(username)) {
                     int suffixe = 1;
                     while (team.hasTeamUserWithUsername(username + suffixe))
@@ -93,6 +94,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             try {
                 sm.saveOrUpdate(teamUser);
             } catch (ConstraintViolationException e) {
+                e.printStackTrace();
                 throw new HttpServletException(HttpStatus.BadRequest, "This person is already on your team.");
             }
             team.addTeamUser(teamUser);

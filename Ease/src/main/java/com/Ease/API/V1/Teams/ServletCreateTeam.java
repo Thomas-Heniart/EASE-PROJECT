@@ -78,6 +78,7 @@ public class ServletCreateTeam extends HttpServlet {
             owner.setUser(user);
             sm.saveOrUpdate(team);
             sm.getTeamProperties(team.getDb_id()).put("teamKey", teamKey);
+            owner.getTeamUserStatus().setInvitation_sent(true);
             sm.saveOrUpdate(owner);
             Channel channel = team.createDefaultChannel(owner);
             sm.saveOrUpdate(channel);
