@@ -77,7 +77,7 @@ public class CreateTeamSingleCard extends HttpServlet {
                 String key = String.valueOf(object);
                 JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
-                Boolean allowed_to_see_password = value.getBoolean("allowed_to_see_password");
+                Boolean allowed_to_see_password = true; //value.getBoolean("allowed_to_see_password");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");

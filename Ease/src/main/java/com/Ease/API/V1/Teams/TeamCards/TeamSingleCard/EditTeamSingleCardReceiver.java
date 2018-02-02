@@ -33,7 +33,7 @@ public class EditTeamSingleCardReceiver extends HttpServlet {
             Team team = teamCard.getTeam();
             sm.initializeTeamWithContext(team);
             sm.needToBeAdminOfTeam(team);
-            Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
+            Boolean allowed_to_see_password = true; //sm.getBooleanParam("allowed_to_see_password", true, false);
             teamSingleCardReceiver.setAllowed_to_see_password(allowed_to_see_password);
             sm.saveOrUpdate(teamSingleCardReceiver);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamSingleCardReceiver.getWebSocketJson()));
