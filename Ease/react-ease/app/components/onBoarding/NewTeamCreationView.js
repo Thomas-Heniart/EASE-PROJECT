@@ -278,8 +278,8 @@ class NewTeamCreationView extends React.Component {
     });
   };
   invitationsReady = () => {
-    return this.state.emails.filter(item => (isEmail(item.email))).length >= (this.state.companySize === 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 )
-      || this.state.pasteEmails.filter(item => (isEmail(item))).length >= (this.state.companySize === 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 );
+    return this.state.emails.filter(item => (isEmail(item.email))).length >= (this.state.companySize === 1 ? 0 : 1 < this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 )
+      || this.state.pasteEmails.filter(item => (isEmail(item))).length >= (this.state.companySize === 1 ? 0 : 1 < this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : this.state.companySize / 2 - 1 );
   };
   noToolsFound = () => {
     if (this.state.roomsSelected.length - 1 > this.state.currentRoom)
@@ -749,11 +749,11 @@ class NewTeamCreationView extends React.Component {
         }
       });
       let emails = [{email: '', error: ''}];
-      if (this.state.companySize >= 6 && this.state.companySize <= 30)
-        for (let i = 1; this.state.companySize / 2 - 1 > i; i++)
+      if (this.state.companySize <= 20)
+        for (let i = 1; this.state.companySize - 1 > i; i++)
           emails.push({email: '', error: ''});
-      else if (this.state.companySize > 30)
-        for (let i = 1; 15 > i; i++)
+      else
+        for (let i = 1; 20 > i; i++)
           emails.push({email: '', error: ''});
       Promise.all(calls.map(reflect)).then(response => {
         this.props.dispatch(changeStep({
@@ -933,7 +933,7 @@ class NewTeamCreationView extends React.Component {
                            addNewField={this.addNewField}
                            textareaToEmails={this.textareaToEmails}
                            number={(this.state.companySize === 1 ? 0
-                             : this.state.companySize <= 5 ? 1
+                             : 1 < this.state.companySize <= 5 ? 1
                                : this.state.companySize > 30 ? 15
                                  : this.state.companySize / 2 - 1 )}/>}/>}
                 {this.state.view === 4 &&
