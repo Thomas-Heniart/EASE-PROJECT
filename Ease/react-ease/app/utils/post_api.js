@@ -1274,6 +1274,13 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       });
+    },
+    inviteFriend: ({ws_id, team_id, email}) => {
+      return basic_post('/api/v1/teams/InviteFriend', {
+        ws_id: ws_id,
+        team_id: team_id,
+        email: email
+      });
     }
   },
   common : {

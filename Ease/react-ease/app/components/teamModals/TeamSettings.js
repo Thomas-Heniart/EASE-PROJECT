@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {Component, Fragment} from 'react';
 import {editTeamName} from '../../actions/teamActions';
-import { Header, Container, Menu, Segment, Comment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import { Progress, Header, Container, Menu, Segment, Comment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 import {StripeProvider} from 'react-stripe-elements';
 import {connect} from "react-redux";
+import {handleSemanticInput} from "../../utils/utils";
 import {isOwner} from "../../utils/helperFunctions";
 import {fetchTeamPaymentInformation, teamInviteFriends, teamUpdateBillingInformation, unsubscribe} from "../../actions/teamActions";
 import countryValues from "../../utils/countrySelectList";
 import {withRouter, Switch, Route, NavLink} from "react-router-dom";
+import {inviteFriend} from "../../actions/teamActions";
 var MyStoreCheckout = require('../stripe/MyStoreCheckout');
 
 @connect(store => ({
@@ -37,6 +39,8 @@ class TeamInformations extends React.Component {
     })).then(() => {
       this.setState({loading: false});
       this.setModifying(false);
+    }).catch(err => {
+      this.setState({loading: false});
     });
   };
   render(){
@@ -63,9 +67,7 @@ class TeamInformations extends React.Component {
                     placeholder="Team name..."/>
               </Form.Group>
               <Form.Field>
-                Your Team Name is displayed in your Team Space.<br/>
-                All invitation to new team members will mention your Team Name.<br/>
-                The Team Name remains confidential to your team members only.<br/>
+                Your Team name appears in the Team Space and invitation emails, but is not displayed publicly.
               </Form.Field>
               {!this.state.modifying ?
                   <Form.Field style={{overflow: 'hidden'}}>
@@ -126,10 +128,11 @@ class PaymentMethod extends React.Component {
           </Header>
           <Segment size="mini" loading={payment.loading}>
             <Header as="h4">
-              Subscription information
+              Credit card information
             </Header>
-            <p>You can suscribe or unsubscribe whenever you want. Pay as you go, without commitment.</p>
-            <p>Only active users are billed each month at the rate of 3,99€ before VAT. Other users are not billed.</p>
+            <p>Our billing is fair and transparent: you won’t be billed until your free trial ends :)</p>
+            <p>No commitment: unsubscribe whenever you want, we bill monthly.</p>
+            <p>Pro is 59€/month before VAT.</p>
             <Header as="h4">
               {!!card ? 'Credit card information' : 'There is no credit card set up yet'}
             </Header>
@@ -145,7 +148,6 @@ class PaymentMethod extends React.Component {
                 cancel={this.setModifying.bind(null, false)}
                 validate={this.cardTokenCallback}/>}
           </Segment>
-          {<FriendInvitations team_id={team_id}/>}
         </div>
     )
   }
@@ -331,17 +333,18 @@ class BillingInformation extends React.Component {
           </Header>
           <Segment loading={payment.loading} size="mini">
             <Header as="h4">
-              If needed you can fill billing informations
+              Add billing information
             </Header>
             <p>
-              All information filled will be displayed on your monthly bill.
+              Do you want to have some company information displayed on your monthly bill?
             </p>
             {!payment.loading && card === null &&
             <Message color="red">
-              Before adding your billing information, you need to set up your credit card in the&nbsp;
-              <NavLink to={`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/settings/payment`}>
-                Payment section.
-              </NavLink>
+              Please&nbsp;
+              <NavLink style={{color:'inherit', textDecoration: 'underline'}}to={`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/settings/payment`}>
+                set up your credit card
+              </NavLink>&nbsp;
+              before adding billing information.
             </Message>}
             <Form size="mini" onChange={this.handleInput} onSubmit={this.submit} error={this.state.errorMessage.length > 0}>
               <Form.Select
@@ -422,7 +425,7 @@ class TeamAccount extends React.Component {
       loading: false,
       errorMessage: ''
     };
-  }
+  };
   handleInput = (e, {name, value}) => {
     this.setState({[name]: value});
   };
@@ -448,15 +451,16 @@ class TeamAccount extends React.Component {
     return (
         <div class="team_settings_section">
           <Header as="h3" >
-            Team Account
+            Team activation
           </Header>
           <Segment size="mini">
             <Header as="h4">
-              Your team account is activated
+              Team Account
             </Header>
             <div style={{marginBottom:'1rem'}}>
-              While you are in free trial or have a credit card set up, your account is activated.<br/>
-              Our subscription system is made so that you do not have to worry about unsubscription, you can unsuscribe at anytime. At the beginning of each 30 day period you are billed for the period, so if you unsuscribe you won’t owe us anything and the monthly billing will stop instantly.
+              <p>Your team is now active.</p>
+              <p>We bill each 30 or 31 days. So if you started Pro on a 12th, we will bill you each month on the 12th.</p>
+              <p>You can unsubscribe at anytime, if you started Pro on a 12th and you unsubscribe on a 28th, you won’t be billed the following month.</p>
             </div>
             {!this.state.modifying &&
             <div class="overflow-hidden">
@@ -468,18 +472,19 @@ class TeamAccount extends React.Component {
                 Confirm your unsubscription
               </Header>
               <Form.Field>
-                Unsuscribing implies a permanent loss of all passwords and IDs secured related to your Team Space. Also all your team members will loose the access to team apps and to the Team Space.
+                By unsubscribing, you will loose the team passwords and the team space permanently.
               </Form.Field>
               <Form.Field>
                 <Checkbox
                     className="mini"
                     checked={this.state.checked}
                     onClick={this.check}
-                    label="I understand the condition of unsubscription"/>
+                    label="I accept the condition of unsubscription"/>
               </Form.Field>
               <Form.Group>
                 <Form.Input
                     required
+                    width={8}
                     label="Your password"
                     type="password"
                     name="password"
@@ -496,7 +501,7 @@ class TeamAccount extends React.Component {
                         loading={this.state.loading}
                         type="submit"
                         content="Unsubscribe"/>
-                <Button floated="right" size="mini" content='Cancel' onClick={this.setModifying.bind(null, false)}/>
+                <Button type="button" floated="right" size="mini" content='Cancel' onClick={this.setModifying.bind(null, false)}/>
               </Form.Field>
             </Form>}
           </Segment>
@@ -506,6 +511,7 @@ class TeamAccount extends React.Component {
 }
 
 function SettingsMenu(props){
+  const {team} = props;
   return (
       <Menu pointing vertical fluid size="mini" style={{marginTop: '43px'}}>
         <Menu.Item as={NavLink} to={`${props.match.url}/information`}>
@@ -532,8 +538,139 @@ function SettingsMenu(props){
           </Header>
           <span>Information about your account</span>
         </Menu.Item>
+        {team.plan_id === 0 &&
+        <Menu.Item as={NavLink} to={`${props.match.url}/referral`}>
+          <Header as="h4">
+            Referral
+          </Header>
+          <span>This is a sentence</span>
+        </Menu.Item>}
       </Menu>
   )
+}
+
+const blacklistEmails = [
+  'gmail.com',
+  'yahoo.com',
+  'hotmail.com'
+];
+
+@connect(store => ({
+  teams: store.teams
+}))
+class ReferralSection extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false,
+      modifying: false,
+      email: '',
+      errorMessage: ''
+    }
+  }
+  handleInput = handleSemanticInput.bind(this);
+  setModifying = (state) => {
+    this.setState({modifying: state});
+  };
+  submit = (e) => {
+    e.preventDefault();
+    const team_id = this.props.match.params.teamId;
+    const email = this.state.email;
+
+    this.setState({errorMessage: ''});
+    if (blacklistEmails.indexOf(email.split('@')[1]) !== -1){
+      this.setState({errorMessage: 'lala'});
+      return;
+    }
+    this.setState({loading: true});
+    this.props.dispatch(inviteFriend({
+      team_id: team_id,
+      email: email
+    })).then(response => {
+      this.setState({loading: false, email: ''});
+      this.inputRef.focus();
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+      this.inputRef.focus();
+    });
+  };
+  render(){
+    const team = this.props.teams[this.props.match.params.teamId];
+    const maxInvitations = 15 + team.extra_members;
+    const currentInvitations = Object.keys(team.team_users).reduce((value, team_user_id) => {
+      const team_user = team.team_users[team_user_id];
+      if (team_user.invitation_sent)
+        return ++value;
+      return value;
+    }, 0);
+    const availableInvitations = maxInvitations - currentInvitations;
+
+    return (
+        <div class="team_settings_section" id="team_referral_section">
+          <Header as="h3">
+            Header
+          </Header>
+          <Segment size="mini">
+            <Header as="h4">
+              Team {team.name}:
+            </Header>
+            <Form size="mini" onSubmit={this.submit} error={!!this.state.errorMessage.length}>
+              <Form.Field class="display_flex align_items_center">
+                <Progress
+                    total={maxInvitations}
+                    value={currentInvitations}/>
+                <strong>{availableInvitations} seats available!!</strong>
+              </Form.Field>
+              <Form.Field class="display_flex flex_direction_column">
+                <strong style={{marginBottom: '11px'}}>
+                  Earn more seats:
+                </strong>
+                <span>
+                  It is simple, 1 friend referred = 1 extra seat for your team. You can go up to 30 persons in your team.
+                </span>
+              </Form.Field>
+              {this.state.modifying ?
+                  <React.Fragment>
+                    <Form.Field
+                        width={10}>
+                      <Input
+                          name="email"
+                          ref={(ref)=>{this.inputRef = ref}}
+                          autoFocus
+                          type="email"
+                          required
+                          placeholder="friend@company.com"
+                          onChange={this.handleInput}
+                          value={this.state.email}/>
+                    </Form.Field>
+                    {!!this.state.errorMessage.length &&
+                    <Form.Field>
+                      <Message error content={this.state.errorMessage}/>
+                    </Form.Field>}
+                    <Form.Field class="display_flex align_items_center" style={{justifyContent:'flex-end'}}>
+                      <Button
+                          loading={this.state.loading}
+                          disabled={this.state.loading}
+                          primary
+                          size="mini"
+                          content="Invite friends"/>
+                    </Form.Field>
+                  </React.Fragment> :
+                  <Form.Field class="display_flex align_items_center" style={{justifyContent:'flex-end'}}>
+                    <strong style={{marginRight: '20px'}}>{team.extra_members} friends referred</strong>
+                    <Button
+                        disabled={team.extra_members === 15}
+                        type="button"
+                        primary
+                        size="mini"
+                        content="Invite friends"
+                        onClick={this.setModifying.bind(null, true)}/>
+                  </Form.Field>}
+            </Form>
+          </Segment>
+        </div>
+    )
+  }
 }
 
 const stripe_api_key = window.location.hostname === 'ease.space' ? 'pk_live_lPfbuzvll7siv1CM3ncJ22Bu' : 'pk_test_95DsYIUHWlEgZa5YWglIJHXd';
@@ -561,6 +698,7 @@ class TeamSettings extends React.Component {
       this.props.history.replace(`${this.props.match.url}/information`);
   };
   render() {
+    const team = this.props.teams[this.props.match.params.teamId];
     return (
         <StripeProvider apiKey={stripe_api_key}>
           <div className="ease_modal" id="team_settings_modal">
@@ -577,7 +715,10 @@ class TeamSettings extends React.Component {
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={5}>
-                      <SettingsMenu teamName={this.props.teams[this.props.match.params.teamId].name} match={this.props.match}/>
+                      <SettingsMenu
+                          team={team}
+                          teamName={this.props.teams[this.props.match.params.teamId].name}
+                          match={this.props.match}/>
                     </Grid.Column>
                     <Grid.Column width={11}>
                       <Switch>
@@ -586,6 +727,8 @@ class TeamSettings extends React.Component {
                         <Route path={`${this.props.match.path}/payment`} component={PaymentMethod}/>
                         <Route path={`${this.props.match.path}/billing`} component={BillingInformationWithRouter}/>
                         <Route path={`${this.props.match.path}/activation`} component={TeamAccount}/>
+                        {team.plan_id === 0 &&
+                        <Route path={`${this.props.match.path}/referral`} component={ReferralSection}/>}
                       </Switch>
                     </Grid.Column>
                   </Grid.Row>

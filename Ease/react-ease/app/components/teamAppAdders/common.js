@@ -48,20 +48,22 @@ export const renderSimpleAppEditUserLabel = (label, index, props) => {
       <Popup size="mini"
              position="bottom center"
              inverted
-             flowing
              hideOnScroll={true}
              trigger={
                <Label class={classnames("user-label static accepted", (receiver !== null && receiver.accepted) ? 'accepted' : null, can_see_information ? 'can_see_information' : null)}>
                  {username}
-                 <Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
+                 {/*<Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
                  {can_see_information &&
-                 <Icon name='mobile'/>}
-                 <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
+                 <Icon name='mobile'/>}*/}
+                 <Icon
+                     name="delete"
+                     onClick={e => {props.onRemove(e, label)}}/>
                </Label>
              }
              content={
                <div>
-                 {can_see_information &&
+                 This person can access the account on desktop and mobile.
+                 {/*{can_see_information &&
                  <span>Mobile access: on</span>}
                  {!can_see_information &&
                  <span>Mobile access: off</span>}
@@ -69,7 +71,7 @@ export const renderSimpleAppEditUserLabel = (label, index, props) => {
                  {can_see_information &&
                  <span>Password copy: on</span>}
                  {!can_see_information &&
-                 <span>Password copy: off</span>}
+                 <span>Password copy: off</span>}*/}
                </div>}/>
   )
 };
@@ -81,20 +83,20 @@ export const renderSimpleAppAddUserLabel = (label, index, props) => {
       <Popup size="mini"
              position="bottom center"
              inverted
-             flowing
              hideOnScroll={true}
              trigger={
                <Label class={classnames("user-label static", can_see_information ? 'can_see_information' : null)}>
                  {username}
-                 <Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;
-                 {can_see_information &&
-                 <Icon name='mobile'/>}
+                 {/*<Icon link name={can_see_information ? 'unhide' : 'hide'} onClick={label.toggleCanSeeInformation}/>&nbsp;*/}
+                 {/*can_see_information &&
+                 <Icon name='mobile'/>*/}
                  <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
                </Label>
              }
              content={
                <div>
-                 {can_see_information &&
+                 This person can access the account on desktop and mobile.
+                 {/*{can_see_information &&
                  <span>Mobile access: on</span>}
                  {!can_see_information &&
                  <span>Mobile access: off</span>}
@@ -102,7 +104,7 @@ export const renderSimpleAppAddUserLabel = (label, index, props) => {
                  {can_see_information &&
                  <span>Password copy: on</span>}
                  {!can_see_information &&
-                 <span>Password copy: off</span>}
+                 <span>Password copy: off</span>}*/}
                </div>}/>
   )
 };
@@ -113,23 +115,18 @@ export const renderLinkAppAddUserLabel = (label, index, props) => {
       <Popup size="mini"
              position="bottom center"
              inverted
-             flowing
              hideOnScroll={true}
              trigger={
                <Label class={"user-label static pinned can_see_information"}>
                  {username}
-                 {can_see_information &&
-                 <Icon name='mobile'/>}
+                 {/*{can_see_information &&
+                 <Icon name='mobile'/>}*/}
                  <Icon name="delete" onClick={e => {props.onRemove(e, label)}}/>
                </Label>
              }
              content={
                <div>
-                 {can_see_information &&
-                 <span>Mobile access: on</span>}
-                 {!can_see_information &&
-                 <span>Mobile access: off</span>}
-                 <br/>
+                 This person can access the link on desktop and mobile.
                </div>}/>
   )
 };

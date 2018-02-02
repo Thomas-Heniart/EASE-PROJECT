@@ -56,63 +56,63 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
 const EnterpriseAppEditReceiverLabel = ({receiver, reminder_interval, onDelete}) => {
   const up_to_date =  !!receiver.receiver ? !needPasswordUpdate(receiver.receiver.last_update_date, reminder_interval) : true;
   return (
-    <Popup size="mini"
-           position="bottom center"
-           inverted
-           flowing
-           hideOnScroll={true}
-           trigger={
-             <Label class={classnames("receiver-label", (!!receiver.receiver && !receiver.empty) ? 'accepted': null)}>
-               <span>{receiver.user.username}</span>
-               {!!reminder_interval &&
-               <Icon name="refresh" color={up_to_date ? null : 'red'}/>}
-               <Icon name="mobile" style={{marginRight: 0}}/>
-               <Icon name="delete"
-                     link
-                     onClick={onDelete.bind(null, receiver.user.id)}/>
-             </Label>
-           }
-           content={
-             <div>
-               <span>Mobile access: on</span>
-               <br/>
-               <span>Password copy: on</span>
-               <br/>
-               {!!receiver.receiver && !!reminder_interval && up_to_date &&
-               <span>Password is up to date</span>}
-               {!!receiver.receiver && !!reminder_interval && !up_to_date &&
-               <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
-             </div>}/>
+      <Popup size="mini"
+             position="bottom center"
+             inverted
+             hideOnScroll={true}
+             trigger={
+               <Label class={classnames("receiver-label", (!!receiver.receiver && !receiver.empty) ? 'accepted': null)}>
+                 <span>{receiver.user.username}</span>
+                 {/*<Icon name="mobile" style={{marginRight: 0}}/>*/}
+                 {!!reminder_interval &&
+                 <Icon name="refresh" class="mrgn0" color={up_to_date ? null : 'red'}/>}
+                 <Icon name="delete"
+                       link
+                       onClick={onDelete.bind(null, receiver.user.id)}/>
+               </Label>
+             }
+             content={
+               <div>
+                 This person can access the account on desktop and mobile.
+                 {/*<span>Mobile access: on</span>
+                 <br/>
+                 <span>Password copy: on</span>
+                 <br/>
+                 {!!receiver.receiver && !!reminder_interval && up_to_date &&
+                 <span>Password is up to date</span>}*/}
+                 {!!receiver.receiver && !!reminder_interval && !up_to_date &&
+                 <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
+               </div>}/>
   )
 };
 
 const EnterpriseAppReceiverLabel = ({receiver, reminder_interval}) => {
   const up_to_date =  !needPasswordUpdate(receiver.receiver.last_update_date, reminder_interval);
   return (
-    <Popup size="mini"
-           position="bottom center"
-           inverted
-           flowing
-           hideOnScroll={true}
-           trigger={
-             <Label class={classnames("receiver-label", !receiver.receiver.empty ? 'accepted': null)}>
-               <span>{receiver.user.username}</span>
-               {!!reminder_interval &&
-               <Icon name="refresh" color={up_to_date ? null : 'red'}/>}
-               <Icon name="mobile"/>
-             </Label>
-           }
-           content={
-             <div>
-               <span>Mobile access: on</span>
-               <br/>
-               <span>Password copy: on</span>
-               <br/>
-               {up_to_date &&
-               <span>Password is up to date</span>}
-               {!up_to_date &&
-               <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
-             </div>}/>
+      <Popup size="mini"
+             position="bottom center"
+             inverted
+             hideOnScroll={true}
+             trigger={
+               <Label class={classnames("receiver-label", !receiver.receiver.empty ? 'accepted': null)}>
+                 <span>{receiver.user.username}</span>
+                 {!!reminder_interval &&
+                 <Icon name="refresh" class="mrgn0" color={up_to_date ? null : 'red'}/>}
+                 {/*<Icon name="mobile"/>*/}
+               </Label>
+             }
+             content={
+               <div>
+                 This person can access the account on desktop and mobile.
+                 {/*<span>Mobile access: on</span>
+                 <br/>
+                 <span>Password copy: on</span>
+                 <br/>
+                 {up_to_date &&
+                 <span>Password is up to date</span>}*/}
+                 {!up_to_date &&
+                 <span>Password <span style={{ textDecorationLine: 'underline' }}>is not up to date</span></span>}
+               </div>}/>
   )
 };
 
