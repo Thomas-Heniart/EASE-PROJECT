@@ -43,10 +43,10 @@ class Base extends React.Component {
     this.props.dispatch(fetchMyInformation()).then(response => {
       if (this.props.common.authenticated){
         this.props.dispatch(fetchCriticalParts()).then(response => {
-          sessionstack('identify', {
+          /*sessionstack('identify', {
             userId: this.props.common.user.email, // Replace the USER-ID with the user id from your app
             email: this.props.common.user.email, // Not required
-          });
+          });*/
           this.setState({fetching: false});
         });
         if (!response.user.new_feature_seen)

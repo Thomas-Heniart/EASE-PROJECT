@@ -18,6 +18,14 @@ export const teams = createReducer({
       }
     });
   },
+  ['TEAM_INVITE_FRIEND_FULFILLED'](state, action){
+    const {team_id} = action.payload;
+    return update(state, {
+      [team_id]: {
+        extra_members: {$set: state[team_id].extra_members + 1}
+      }
+    })
+  },
   ['TEAM_ADD_CREDIT_CARD_FULFILLED'](state, action){
     const {team_id} = action.payload;
 

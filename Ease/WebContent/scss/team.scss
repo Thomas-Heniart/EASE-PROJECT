@@ -1617,18 +1617,17 @@ i.icon.pin_button {
   .ui.label.user-label {
     font-size: .85714286rem;
     box-shadow: 0 0 0 1px rgba(34,36,38,.15) inset;
-    &.static {
+    background-color: #2185d0;
+    color: $themeWhiteColor ;
+    font-weight: normal;
+/*    &.static {
       font-weight:normal;
       background-color: transparent;
       &.accepted {
-        background-color: $themeBlue2Color;
+        background-color: #2185d0;
         color: $themeWhiteColor ;
       }
-      &.accepted.can_see_information, &.pinned {
-        color: $themeWhiteColor;
-        background-color: $themeButtonGreenColor;
-      }
-    }
+    }*/
     i.icon {
       margin-right: 0;
       margin-left: .5rem;
@@ -1786,7 +1785,7 @@ i.icon.pin_button {
       color: $themeLightGreyTextColor;
       box-shadow: 0 0 0 1px rgba(34,36,38,0.15) inset;
       &.accepted {
-        background-color: $themeButtonGreenColor;
+        background-color: #2185d0;
         color: white;
       }
     }
@@ -2021,6 +2020,19 @@ button.action_text_button {
   .team_settings_section {
     .segment {
       background-color: $themeGreyLightColor;
+    }
+  }
+  #team_referral_section {
+    .ui.progress {
+      background-color: white;
+      border: 1px solid $themeGreenColor;
+      margin: 0 20px 0 0;
+      width: 60%;
+      .bar {
+        background-color: $themeGreenColor;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
     }
   }
 }

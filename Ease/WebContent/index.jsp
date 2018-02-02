@@ -70,11 +70,11 @@
 </div>
 <script src="teams_bundle.js?v=58"></script>
 <script type="text/javascript">
-  !function(a,b){var c=window;c.SessionStack=a,c[a]=c[a]||function(){
+/*  !function(a,b){var c=window;c.SessionStack=a,c[a]=c[a]||function(){
     c[a].q=c[a].q||[],c[a].q.push(arguments)},c[a].t=b;var d=document.createElement("script");
     d.async=1,d.src="https://cdn.sessionstack.com/sessionstack.js";
     var e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(d,e);
-  }("sessionstack","b7fb0a1e043c4b10ad2531f240c71202");
+  }("sessionstack","b7fb0a1e043c4b10ad2531f240c71202");*/
 </script>
 <script type="text/javascript">
   window.addEventListener('load', function () {

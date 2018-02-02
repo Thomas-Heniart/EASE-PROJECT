@@ -79,7 +79,9 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) =
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe, addFields, removeField, first}) => {
   return (
       <div class="receiver">
-        <Label class="receiver-label"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        <Label class="receiver-label">
+          <span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
+        </Label>
         {
           receiver.credentials.map(item => {
             if (item.name !== 'login' && item.name !== 'password' && !item.placeholderIcon)
@@ -98,7 +100,15 @@ const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField,
   return (
       <div class="receivers">
         {receivers.map((item, idx) => {
-          return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete} addFields={addFields} removeField={removeField} first={idx === 0 && !classic}/>;
+          return <ExtendedReceiverCredentialsInput
+              key={item.id}
+              isMe={item.id === myId}
+              receiver={item}
+              onChange={onChange}
+              onDelete={onDelete}
+              addFields={addFields}
+              removeField={removeField}
+              first={idx === 0 && !classic}/>;
         })}
       </div>
   )
@@ -404,7 +414,14 @@ class EnterpriseTeamAppAdder extends Component {
                             roomManager={room_manager.username}/>
                       </div>
                     </div>
-                    <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput} removeField={this.removeField} addFields={this.addFields} classic={this.props.card.subtype === 'classic'}/>
+                    <Receivers
+                        myId={this.props.teams[this.props.card.team_id].my_team_user_id}
+                        receivers={selected_users}
+                        onDelete={this.onDeleteReceiver}
+                        onChange={this.handleReceiverInput}
+                        removeField={this.removeField}
+                        addFields={this.addFields}
+                        classic={this.props.card.subtype === 'classic'}/>
                     <div>
                       {this.state.selected_users.length !== this.state.users.length &&
                       <Dropdown

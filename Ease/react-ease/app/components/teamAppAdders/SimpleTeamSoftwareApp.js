@@ -73,20 +73,20 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
     <Popup size="mini"
            position="bottom center"
            inverted
-           flowing
            hideOnScroll={true}
            trigger={
              <Label class={classnames("user-label static accepted", can_see_information ? 'can_see_information' : null)}>
                {username}
-               {admin &&
+               {/*{admin &&
                <Icon name={can_see_information ? 'unhide' : 'hide'}/>}&nbsp;
                {can_see_information &&
-               <Icon name='mobile'/>}
+               <Icon name='mobile'/>}*/}
              </Label>
            }
            content={
              <div>
-               {can_see_information &&
+               This person can access the account on desktop and mobile.
+               {/*{can_see_information &&
                <span>Mobile access: on</span>}
                {!can_see_information &&
                <span>Mobile access: off</span>}
@@ -94,7 +94,7 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
                {can_see_information &&
                <span>Password copy: on</span>}
                {!can_see_information &&
-               <span>Password copy: off</span>}
+               <span>Password copy: off</span>}*/}
              </div>}/>
   )
 };
