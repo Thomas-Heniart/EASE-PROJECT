@@ -1011,7 +1011,6 @@ class Importations extends React.Component {
               fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'},
               loading: false
             });
-            easeTracker.trackEvent("EaseOnboardingPasteCSV");
           }
         }).catch(err => {
         });
@@ -1279,7 +1278,6 @@ class Importations extends React.Component {
         });
         if (this.state.importedAccounts.length < 1)
           this.setState({view: 1, separator: ',',});
-        easeTracker.trackEvent("EaseOnboardingImportationDone")
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
