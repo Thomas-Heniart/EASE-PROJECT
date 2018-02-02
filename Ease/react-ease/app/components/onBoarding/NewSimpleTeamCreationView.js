@@ -870,7 +870,7 @@ class NewSimpleTeamCreationView extends React.Component {
       this.props.history.replace(`/main/simpleTeamCreation/accounts?team=${this.state.team_id}`);
     const firstP = this.sentences();
     return (
-      <React.Fragment>
+      <div className='on_boarding_wrapper'>
         <div id='new_team_creation'>
           <div id='left_bar'>
             {firstP}
@@ -986,7 +986,7 @@ class NewSimpleTeamCreationView extends React.Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

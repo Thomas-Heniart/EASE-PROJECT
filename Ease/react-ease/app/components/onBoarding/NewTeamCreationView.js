@@ -876,6 +876,7 @@ class NewTeamCreationView extends React.Component {
       this.props.history.replace(`/teamCreation/accounts?team=${this.state.team_id}`);
     const firstP = this.sentences();
     return (
+      <div className='on_boarding_wrapper'>
       <div id='new_team_creation'>
         <div id='left_bar'>
           {firstP}
@@ -1003,6 +1004,7 @@ class NewTeamCreationView extends React.Component {
             <span>Hey!! you can’t send us empty field(s) 🤚Fill them or delete the entire line(s).</span>}
           </div>
         </div>
+      </div>
       </div>
     )
   }

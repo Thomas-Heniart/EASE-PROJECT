@@ -1,0 +1,414 @@
+.on_boarding_wrapper {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translateY(0);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden; }
+
+#new_team_creation {
+  font-size: 18px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-grow: 1;
+  -moz-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  overflow: hidden; }
+  #new_team_creation #left_bar {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-basis: 220px;
+    -moz-flex-basis: 220px;
+    -ms-flex-preferred-size: 220px;
+    flex-basis: 400px;
+    -webkit-flex-shrink: 0;
+    -moz-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    padding: 150px 75px 42px 75px;
+    background-image: linear-gradient(196deg, #686d99, #373b60); }
+    #new_team_creation #left_bar p {
+      color: white;
+      font-size: 18px;
+      text-align: center; }
+    #new_team_creation #left_bar img {
+      width: 190px;
+      height: 40px;
+      position: absolute;
+      bottom: 42px;
+      left: 50%;
+      transform: translateX(-50%); }
+  #new_team_creation #center {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-grow: 1;
+    -moz-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1; }
+    #new_team_creation #center #top_bar {
+      -webkit-flex-basis: 60px;
+      -moz-flex-basis: 60px;
+      -ms-flex-preferred-size: 60px;
+      flex-basis: 50px;
+      border-bottom: 1px solid #E6E6E6;
+      height: 50px;
+      top: 0;
+      margin: 0;
+      position: absolute; }
+      #new_team_creation #center #top_bar .item {
+        color: #d2dae4;
+        font-size: 16px;
+        margin: 5px 20px -2px 50px; }
+        #new_team_creation #center #top_bar .item.active {
+          color: #949eb7;
+          border-color: #949eb7; }
+    #new_team_creation #center #content {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -moz-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex: 1;
+      -webkit-flex: 1;
+      flex: 1;
+      position: relative;
+      height: 100%;
+      margin: 51px 30px 59px 30px;
+      width: 690px; }
+      #new_team_creation #center #content.stepUsers {
+        width: 810px; }
+      #new_team_creation #center #content label {
+        display: flex;
+        margin-bottom: 10px; }
+        #new_team_creation #center #content label.for_input {
+          color: #949eb7; }
+      #new_team_creation #center #content .input {
+        margin-bottom: 20px; }
+        #new_team_creation #center #content .input i {
+          color: #e8ecf1; }
+      #new_team_creation #center #content input {
+        width: 370px; }
+        #new_team_creation #center #content input:focus {
+          border-color: #373b60; }
+          #new_team_creation #center #content input:focus label {
+            color: #373b60; }
+      #new_team_creation #center #content .hidden_input {
+        position: absolute;
+        top: -1000;
+        z-index: -1; }
+      #new_team_creation #center #content .confirmation_code {
+        display: inline-flex;
+        width: 330px;
+        height: 50px;
+        font-size: 24px;
+        color: #949eb7; }
+        #new_team_creation #center #content .confirmation_code .div_input {
+          border: 1px solid #d2dae4;
+          border-left: none;
+          padding: 15px 20px;
+          width: 55px; }
+          #new_team_creation #center #content .confirmation_code .div_input.left {
+            border-left: 1px solid #d2dae4;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px; }
+          #new_team_creation #center #content .confirmation_code .div_input.right {
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px; }
+          #new_team_creation #center #content .confirmation_code .div_input.focus {
+            border: 1px solid #373b60;
+            color: #373b60; }
+            #new_team_creation #center #content .confirmation_code .div_input.focus ::after {
+              position: relative;
+              top: -6%;
+              content: '|';
+              opacity: .7;
+              animation: 1s blink steps(5, start) infinite; }
+      #new_team_creation #center #content form {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        overflow: auto;
+        overflow-x: hidden;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        -ms-flex-direction: column;
+        -moz-flex-direction: column;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        margin: 0; }
+        #new_team_creation #center #content form #accounts {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex: 1;
+          -webkit-flex: 1;
+          flex: 1;
+          z-index: 1;
+          height: 100%;
+          overflow-y: auto; }
+        #new_team_creation #center #content form h1 {
+          margin-top: 30px; }
+        #new_team_creation #center #content form .add_users {
+          display: inline-flex;
+          flex-wrap: wrap;
+          flex-direction: column;
+          position: relative; }
+          #new_team_creation #center #content form .add_users .user_fields {
+            width: 370px;
+            padding-bottom: 10px;
+            padding-top: 10px; }
+            #new_team_creation #center #content form .add_users .user_fields.input_fields {
+              padding-right: 23px;
+              overflow-y: auto;
+              height: 340px; }
+            #new_team_creation #center #content form .add_users .user_fields.textarea_field {
+              padding-left: 23px;
+              border-left: solid 1px black;
+              height: 100%; }
+        #new_team_creation #center #content form .under_add_users {
+          display: -webkit-box; }
+          #new_team_creation #center #content form .under_add_users .add_user_field {
+            width: 380px;
+            padding-right: 23px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            display: flex; }
+          #new_team_creation #center #content form .under_add_users .show_users_found {
+            width: 370px;
+            padding-left: 23px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            display: flex; }
+      #new_team_creation #center #content .scroll {
+        height: 100%;
+        overflow-y: auto;
+        -webkit-flex: 1;
+        flex: 1; }
+      #new_team_creation #center #content .groups {
+        width: 650px;
+        padding-right: 20px; }
+        #new_team_creation #center #content .groups .group {
+          margin-bottom: 25px; }
+          #new_team_creation #center #content .groups .group p {
+            font-weight: bold; }
+          #new_team_creation #center #content .groups .group .dropdown input {
+            width: 0; }
+      #new_team_creation #center #content .checkbox_email {
+        display: flex;
+        margin-top: 30px; }
+      #new_team_creation #center #content .password_verified i {
+        color: #45c997; }
+      #new_team_creation #center #content .roomsSegment {
+        display: grid;
+        width: 187px;
+        height: 58px;
+        padding: 10px;
+        margin: 0 20px 20px 0;
+        border: solid 1px #d2dae4;
+        border-radius: 5px;
+        color: #949eb7;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer; }
+        #new_team_creation #center #content .roomsSegment.password_manager_segment {
+          position: relative; }
+          #new_team_creation #center #content .roomsSegment.password_manager_segment .password_manager {
+            position: absolute;
+            display: inline-flex;
+            justify-content: center;
+            padding: 6px;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            transform: translateY(-50%) translateX(-50%); }
+            #new_team_creation #center #content .roomsSegment.password_manager_segment .password_manager img {
+              width: auto;
+              height: 17px;
+              margin-right: 10px; }
+            #new_team_creation #center #content .roomsSegment.password_manager_segment .password_manager span {
+              font-weight: bold;
+              color: #949eb7;
+              font-size: 16px; }
+        #new_team_creation #center #content .roomsSegment.selected {
+          border-color: #373b60;
+          color: #373b60; }
+          #new_team_creation #center #content .roomsSegment.selected .password_manager span {
+            color: #373b60; }
+        #new_team_creation #center #content .roomsSegment span {
+          font-size: 12px;
+          font-weight: 300;
+          color: #d2dae4; }
+      #new_team_creation #center #content .dropdown_fields {
+        margin: 0 85px;
+        color: #949eb7;
+        display: inline-flex; }
+        #new_team_creation #center #content .dropdown_fields p {
+          width: 140px;
+          margin-right: 10px; }
+      #new_team_creation #center #content .account {
+        color: #949eb7;
+        display: inline-flex;
+        margin: 7px 0 7px 0; }
+        #new_team_creation #center #content .account p {
+          margin-left: 5px;
+          margin-top: 5px; }
+          #new_team_creation #center #content .account p.underline_hover:hover {
+            text-decoration: underline; }
+            #new_team_creation #center #content .account p.underline_hover:hover i {
+              text-decoration: none; }
+        #new_team_creation #center #content .account .remove_account {
+          margin-top: 10px;
+          color: #e0e1e2; }
+        #new_team_creation #center #content .account img {
+          width: 38px;
+          height: 38px;
+          margin: 0 5px;
+          border-radius: 5px;
+          box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97); }
+        #new_team_creation #center #content .account .div_dropdown {
+          position: relative;
+          margin-left: 5px; }
+          #new_team_creation #center #content .account .div_dropdown .dropdown {
+            font-size: 14px;
+            height: fit-content; }
+          #new_team_creation #center #content .account .div_dropdown .remove_dropdown {
+            cursor: pointer;
+            position: absolute;
+            bottom: 47px;
+            left: 183px;
+            z-index: 1;
+            color: #e0e1e2;
+            margin: 0; }
+            #new_team_creation #center #content .account .div_dropdown .remove_dropdown.white {
+              color: white; }
+        #new_team_creation #center #content .account .input {
+          font-size: 14px;
+          height: fit-content; }
+          #new_team_creation #center #content .account .input input {
+            color: #949eb7;
+            width: 140px;
+            margin: 0 5px; }
+          #new_team_creation #center #content .account .input i {
+            color: #949eb7;
+            margin-top: 0;
+            display: none; }
+        #new_team_creation #center #content .account:hover .input i {
+          display: inline-block; }
+        #new_team_creation #center #content .account .disabled input {
+          background-color: #E8ECF1; }
+      #new_team_creation #center #content .logoCatalog {
+        z-index: 1;
+        padding-top: 1.25em;
+        padding-bottom: 1.25em;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-left: 20px; }
+        #new_team_creation #center #content .logoCatalog img {
+          width: 50px;
+          height: 50px;
+          z-index: -1;
+          border-radius: 5px;
+          display: inline-flex;
+          box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97); }
+        #new_team_creation #center #content .logoCatalog .showSegment {
+          padding: 0;
+          margin: 20px 0;
+          white-space: nowrap;
+          border: 1px solid transparent;
+          height: 46px; }
+          #new_team_creation #center #content .logoCatalog .showSegment .appLogo {
+            width: 50px;
+            height: 50px;
+            z-index: 2;
+            border-radius: 5px;
+            display: inline-block;
+            margin-right: 5px; }
+          #new_team_creation #center #content .logoCatalog .showSegment p {
+            top: 37%;
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            color: #373b60;
+            display: inline-block;
+            margin-bottom: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px; }
+          #new_team_creation #center #content .logoCatalog .showSegment .iconCheck {
+            display: none;
+            position: absolute;
+            top: 30%;
+            left: 5%;
+            font-size: 35px;
+            color: white; }
+          #new_team_creation #center #content .logoCatalog .showSegment .iconWrite {
+            display: none;
+            color: #717274;
+            font-size: 14px; }
+          #new_team_creation #center #content .logoCatalog .showSegment.active .appLogo {
+            background-color: rgba(74, 74, 74, 0.7); }
+          #new_team_creation #center #content .logoCatalog .showSegment.active .iconCheck {
+            display: flex; }
+          #new_team_creation #center #content .logoCatalog .showSegment.active .iconWrite {
+            display: inline-block; }
+    #new_team_creation #center #bottom_bar {
+      -webkit-flex-basis: 60px;
+      -moz-flex-basis: 60px;
+      -ms-flex-preferred-size: 60px;
+      flex-basis: 60px;
+      border-bottom: 1px solid #E6E6E6;
+      height: 60px;
+      background-color: white;
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      padding: 10px;
+      border-top: solid 1px #d2dae4; }
+      #new_team_creation #center #bottom_bar button {
+        width: 200px; }
+      #new_team_creation #center #bottom_bar a {
+        font-size: 16px;
+        color: #949eb7;
+        margin-left: 10px; }
+      #new_team_creation #center #bottom_bar span {
+        margin-left: 10px;
+        font-size: 16px;
+        color: #eb555c; }
+
+/*# sourceMappingURL=onBoarding.css.map */

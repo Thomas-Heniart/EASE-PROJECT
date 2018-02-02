@@ -55,7 +55,6 @@ class Base extends React.Component {
         this.setState({fetching: false});
     });
     extension.get_homepage().then(homepage => {
-      console.log('response', homepage);
       this.props.dispatch(setHomepage({ homepage: homepage }));
     });
   }

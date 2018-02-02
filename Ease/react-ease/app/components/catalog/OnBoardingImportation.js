@@ -401,9 +401,7 @@ class DisplayAccounts extends React.Component {
       cancelPending,
       onChangeField,
       deleteAccount,
-      createProfile,
       selectProfile,
-      profileAdded,
       createRoom,
       selectRoom,
       roomAdded,
@@ -421,21 +419,18 @@ class DisplayAccounts extends React.Component {
       {text: 'URL', value: 'url'},
       {text: 'User ID', value: 'login'},
       {text: 'Password', value: 'password'}];
-    const profiles = Object.keys(this.props.profilesInState).map(profile => (
+    const profiles =
       <Dropdown.Item as="a"
-                     key={this.props.profilesInState[profile].id}
                      class="display_flex"
-                     active={selectedProfile === profile.id}
-                     onClick={e => selectProfile(this.props.profilesInState[profile].id, this.props.profilesInState[profile].name)}>
-        <strong className="overflow-ellipsis">{this.props.profilesInState[profile].name}</strong>
+                     active={selectedProfile > -1}
+                     onClick={selectProfile}>
+        <strong className="overflow-ellipsis"><Icon name='user'/>Personal Space</strong>
         &nbsp;&nbsp;
-      </Dropdown.Item>
-    ));
+      </Dropdown.Item>;
     const teamsList = Object.entries(this.props.teamsInState).map((teams, i) => (
       teams.map((team) => (
         team.rooms &&
         <React.Fragment key={team.id}>
-          <Dropdown.Divider />
           <Dropdown.Header><Icon name='users'/>{team.name}</Dropdown.Header>
           {Object.entries(team.rooms).map(rooms => (
             rooms.map(room => (
@@ -534,22 +529,8 @@ class DisplayAccounts extends React.Component {
                         id="importation_dropdown">
                 <Dropdown.Menu>
                   {teamsList}
-                  {/*<Dropdown.Header><Icon name='user'/>Personal Space</Dropdown.Header>
+                  <Dropdown.Divider />
                   {profiles}
-                  {profileAdded === false &&
-                  <Dropdown.Item>
-                    <form style={{marginBottom: 0}} onSubmit={createProfile}>
-                      <Input
-                        style={{fontSize: '14px'}}
-                        name="profileName"
-                        required
-                        transparent
-                        onChange={onChange}
-                        class="create_profile_input"
-                        icon={<Icon name="plus square" link onClick={createProfile}/>}
-                        placeholder='New group' />
-                    </form>
-                  </Dropdown.Item>}*/}
                 </Dropdown.Menu>
               </Dropdown>
               </div>
@@ -625,8 +606,6 @@ class OnBoardingImportation extends React.Component {
       accountsPending: [],
       errorAccounts: [],
       profiles: {},
-      profileName: '',
-      profileAdded: false,
       selectedProfile: -1,
       teamsInState: {},
       roomName: {},
@@ -760,13 +739,6 @@ class OnBoardingImportation extends React.Component {
     });
     this.setState({errorAccounts: errorAccounts});
   };
-  createProfile = () => {
-    if (this.state.profileName.length === 0)
-      return;
-    let profiles = Object.assign({}, this.state.profiles);
-    profiles.newProfile = {id: 0, name: this.state.profileName};
-    this.setState({profileAdded: true, profiles: profiles, selectedProfile: 0, location: this.state.profileName});
-  };
   createRoom = (id) => {
     if (this.state.roomName[id].length === 0)
       return;
@@ -775,31 +747,6 @@ class OnBoardingImportation extends React.Component {
     newTeams[id].rooms.newRoom = {id: 0, name: this.state.roomName[id], team_user_ids:[newTeams[id].my_team_user_id]};
     roomAdded[id] = true;
     this.setState({roomAdded: roomAdded, teamsInState: newTeams, selectedRoom: 0, selectedTeam: id, location: `#${this.state.roomName[id]}`});
-  };
-  chooseColumn = () => {
-    const columns = this.props.dashboard.columns.map((column, index) => {
-      let apps = 0;
-      column.map(item => {
-        let tmp = this.props.dashboard.profiles[item].app_ids.length / 3;
-        if (tmp <= Number(tmp.toFixed(0)))
-          tmp = Number(tmp.toFixed(0)) + 1;
-        else if (tmp > Number(tmp.toFixed(0)))
-          tmp = Number(tmp.toFixed(0)) + 2;
-        apps = apps + tmp;
-      });
-      if (apps > 0)
-        return apps;
-      else
-        return 0;
-    });
-    let columnChoose = null;
-    columns.map((column, index) => {
-      let test = columns.slice();
-      test.sort();
-      if (column === test[0] && columnChoose === null)
-        columnChoose = index;
-    });
-    return columnChoose;
   };
   toPending = (id) => {
     if (this.state.selectedProfile === -1 && this.state.selectedRoom === -1) {
@@ -838,8 +785,14 @@ class OnBoardingImportation extends React.Component {
     });
     this.setState({importedAccounts: importedAccounts, accountsPending: accountsPending});
   };
-  selectProfile = (id, name) => {
-    this.setState({ selectedProfile: id, selectedTeam: -1, selectedRoom: -1, location: name, error:""});
+  selectProfile = () => {
+    this.setState({
+      selectedProfile: Object.keys(this.props.profiles).length > 0 ? 1 : 0,
+      selectedTeam: -1,
+      selectedRoom: -1,
+      location: 'Personal Apps',
+      error: ""
+    });
   };
   selectRoom = (teamId, roomId, name) => {
     this.setState({ selectedTeam: teamId, selectedRoom: roomId, selectedProfile: -1, location: `#${name}`, error:""});
@@ -1102,7 +1055,7 @@ class OnBoardingImportation extends React.Component {
           calls.push(this.props.dispatch(catalogAddClassicApp({
             name: app.name,
             website_id: app.website_id,
-            profile_id: this.state.selectedProfile,
+            profile_id: Object.keys(this.props.profiles)[0],
             account_information: {login: app.login, password: app.password}
           })));
         }
@@ -1112,7 +1065,7 @@ class OnBoardingImportation extends React.Component {
               name: app.name,
               url: app.url,
               img_url: app.logo,
-              profile_id: this.state.selectedProfile,
+              profile_id: Object.keys(this.props.profiles)[0],
               account_information: {login: app.login, password: app.password},
               connection_information: {
                 login: {type: "text", priority: 0, placeholder: "Login"},
@@ -1126,7 +1079,7 @@ class OnBoardingImportation extends React.Component {
               name: app.name,
               url: app.url,
               img_url: app.logo !== '' ? app.logo : '/resources/icons/link_app.png',
-              profile_id: this.state.selectedProfile
+              profile_id: Object.keys(this.props.profiles)[0]
             })));
           }
         }
@@ -1165,10 +1118,8 @@ class OnBoardingImportation extends React.Component {
         selectedProfile: -1,
         selectedRoom: -1,
         selectedTeam: -1,
-        profileAdded: false,
         loadingSending: false,
         roomAdded: roomAdded,
-        profileName: '',
         error: '',
         roomName: roomName,
         location: '',
@@ -1191,8 +1142,8 @@ class OnBoardingImportation extends React.Component {
   importAccountsNewProfile = () => {
     let calls = [];
     this.props.dispatch(createProfile({
-      name: this.state.profileName,
-      column_index: this.chooseColumn()
+      name: 'Me',
+      column_index: 1
     })).then(response => {
       this.state.accountsPending.map(app => {
         let thirdField = false;
@@ -1256,10 +1207,8 @@ class OnBoardingImportation extends React.Component {
           selectedProfile: -1,
           selectedRoom: -1,
           selectedTeam: -1,
-          profileAdded: false,
           loadingSending: false,
           roomAdded: roomAdded,
-          profileName: '',
           error: '',
           roomName: roomName,
           location: '',
@@ -1362,10 +1311,8 @@ class OnBoardingImportation extends React.Component {
       selectedProfile: -1,
       selectedRoom: -1,
       selectedTeam: -1,
-      profileAdded: false,
       loadingSending: false,
       roomAdded: roomAdded,
-      profileName: '',
       error: '',
       roomName: roomName,
       location: '',
@@ -1467,10 +1414,8 @@ class OnBoardingImportation extends React.Component {
       selectedProfile: -1,
       selectedRoom: -1,
       selectedTeam: -1,
-      profileAdded: false,
       loadingSending: false,
       roomAdded: roomAdded,
-      profileName: '',
       error: '',
       roomName: roomName,
       location: '',
@@ -1530,8 +1475,6 @@ class OnBoardingImportation extends React.Component {
           roomName={this.state.roomName}
           profilesInState={this.state.profiles}
           selectProfile={this.selectProfile}
-          createProfile={this.createProfile}
-          profileAdded={this.state.profileAdded}
           teamsInState={this.state.teamsInState}
           selectRoom={this.selectRoom}
           createRoom={this.createRoom}

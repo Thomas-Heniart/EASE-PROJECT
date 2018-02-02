@@ -8,17 +8,17 @@ class ChoosePasswordManager extends React.Component {
     return (
       <React.Fragment>
         <Header as='h1'>Add your accounts from:</Header>
-        <div style={{display:'inline-flex',flexWrap:'wrap'}}>
+        <div style={{display:'inline-flex',flexWrap:'wrap',overflowY:'auto'}}>
           <div
             onClick={e => selectPasswordManager(1)}
             className={passwordManagerSelected === 1 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
             <div className='password_manager'><img style={{marginTop:'7px'}} src="/resources/other/Excel.png"/><span>Excel or Google sheet</span></div>
           </div>
-          {/*<div
+          <div
             onClick={e => selectPasswordManager(2)}
             className={passwordManagerSelected === 2 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
             <div className='password_manager'><img src="/resources/other/Chrome.png"/><span>Chrome</span></div>
-          </div>*/}
+          </div>
           <div
             onClick={e => selectPasswordManager(10)}
             className={passwordManagerSelected === 10 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
