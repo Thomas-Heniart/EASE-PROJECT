@@ -654,8 +654,7 @@ button.only-text-button {
       .item {
         font-size: 14px;
         color: #949eb7 !important;
-        padding-top: 7px !important;
-        padding-bottom: 7px !important;
+        padding: 7px 0 7px 30px !important;
       }
     }
     .segments {
@@ -784,6 +783,9 @@ button.only-text-button {
           }
           .text {
             width: 65%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
           }
           i {
             //float: right;
