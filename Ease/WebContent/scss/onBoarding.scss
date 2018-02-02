@@ -255,14 +255,13 @@
         .under_add_users {
           display: -webkit-box;
           .add_user_field {
-            width: 380px;
+            width: 50%;
             padding-right: 23px;
             padding-bottom: 10px;
             padding-top: 10px;
-            display: flex;
           }
           .show_users_found {
-            width: 370px;
+            width: 50%;
             padding-left: 23px;
             padding-bottom: 10px;
             padding-top: 10px;

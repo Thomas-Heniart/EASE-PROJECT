@@ -84,7 +84,7 @@ class OnBoardingUsers extends React.Component {
           </div>
         </div>
         <div className='under_add_users'>
-          <div style={{}}>
+          <div className='add_user_field'>
             <Icon name="add circle" color="blue" size='large'/>
             <button className="button-unstyle inline-text-button primary"
                     type="button" onClick={addNewField}>
