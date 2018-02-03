@@ -148,12 +148,17 @@ class NewTeamCreationView extends React.Component {
     this.setState({singleApps: singleApps});
   };
   deleteSingleApp = (room_id, id) => {
+    let credentialsSingleApps = {};
+    Object.keys(this.state.credentialsSingleApps).map(item => {
+      if (Number(item) !== id)
+        credentialsSingleApps[item] = this.state.credentialsSingleApps[item];
+    });
     const singleApps = Object.assign({}, this.state.singleApps);
     singleApps[room_id] = singleApps[room_id].filter(item => {
       if (item !== id)
         return item;
     });
-    this.setState({singleApps: singleApps});
+    this.setState({singleApps: singleApps, credentialsSingleApps: credentialsSingleApps});
     if (Object.keys(singleApps).filter(item => {
         return singleApps[item].length > 0
       }).length === 0) {
