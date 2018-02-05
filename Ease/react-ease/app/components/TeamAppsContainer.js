@@ -1,4 +1,4 @@
-var React = require('react');
+import React, {Component, Fragment} from "react";
 import SimpleTeamApp from "./teamAppAdders/SimpleTeamApp";
 import SimpleTeamSoftwareApp from "./teamAppAdders/SimpleTeamSoftwareApp";
 import SimpleTeamAnyApp from "./teamAppAdders/SimpleTeamAnyApp";
@@ -12,7 +12,8 @@ import {connect} from "react-redux";
 import { Icon, Segment, Loader } from 'semantic-ui-react';
 import {reflect} from "../utils/utils";
 import {sendTeamUserInvitation} from "../actions/userActions";
-import {withRouter} from "react-router-dom";
+import {withRouter, NavLink} from "react-router-dom";
+import TeamUserInviteIndicators from "./teams/TeamUserInviteIndicators";
 
 @connect(store => ({
   team_apps: store.team_apps,
@@ -176,30 +177,8 @@ class TeamAppsContainer extends React.Component{
     return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
-            {(item.state === 0 && me.role > 1) &&
-            <div id='invitation'>
-              {item.invitation_sent ?
-                  <Segment className='resend' inverted disabled={this.state.loadingSendInvitation}>
-                    {this.state.loadingSendInvitation ?
-                      <div style={{textAlign: 'center'}}>
-                        <span style={{textDecoration: 'none'}}>Invitations sent ! <Icon name='rocket'/></span>
-                      </div>
-                      :
-                    <div>
-                      {item.username} hasn’t joined your team yet. <span onClick={e => this.sendInvitation(item)}>Resend invitation <Icon name='send'/></span>
-                      <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
-                      <span className='right' onClick={this.reSendAllInvitations}>Resend all pending invitations <Icon name='rocket'/></span>
-                    </div>}
-                  </Segment>
-                  :
-                  <Segment className='send' inverted disabled={this.state.loadingSendInvitation}>
-                    <div>
-                      {item.username} hasn’t been invited to join your team yet. <span onClick={e => this.sendInvitation(item)}>Send invitation <Icon name='send'/></span>
-                      <Loader active={this.state.loadingSendInvitation} inverted size='tiny'/>
-                      <span className='right' onClick={this.sendAllInvitations}>Send to all uninvited people <Icon name='rocket'/></span>
-                    </div>
-                  </Segment>}
-            </div>}
+            {!!item.username && item.state === 0 &&
+                <TeamUserInviteIndicators team_user={item}/>}
             {!this.state.loading ?
                 team_cards.map(item => {
                   if (item.type === 'teamSingleCard') {

@@ -3103,15 +3103,17 @@ button.action_text_button {
       ::-webkit-scrollbar-thumb:window-inactive {
         background: #d9d9de;
       }
-      #invitation {
+      .user_invitation_indicator {
         padding: .3rem .6rem 0 .6rem;
         .segment {
           padding: 12px;
-          &.resend {
-            background-color: #ff9a00;
-          }
-          &.send {
-            background-color: #eb555c;
+          a {
+            color: white;
+            text-decoration: underline;
+            opacity: .8;
+            &:hover {
+              opacity: 1;
+            }
           }
           span {
             text-decoration: underline;

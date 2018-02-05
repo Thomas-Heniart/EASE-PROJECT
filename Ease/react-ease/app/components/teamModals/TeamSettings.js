@@ -541,9 +541,9 @@ function SettingsMenu(props){
         {team.plan_id === 0 &&
         <Menu.Item as={NavLink} to={`${props.match.url}/referral`}>
           <Header as="h4">
-            Referral
+            <img style={{height: '19px', width: 'auto'}} src="/resources/images/team_settings_referral_header.png"/>
           </Header>
-          <span>This is a sentence</span>
+          <span/>
         </Menu.Item>}
       </Menu>
   )
@@ -579,7 +579,7 @@ class ReferralSection extends Component {
 
     this.setState({errorMessage: ''});
     if (blacklistEmails.indexOf(email.split('@')[1]) !== -1){
-      this.setState({errorMessage: 'lala'});
+      this.setState({errorMessage: 'Please use a company email!'});
       return;
     }
     this.setState({loading: true});
@@ -608,7 +608,7 @@ class ReferralSection extends Component {
     return (
         <div class="team_settings_section" id="team_referral_section">
           <Header as="h3">
-            Header
+            <img style={{height: '24px', width: 'auto'}}src="/resources/images/team_settings_referral_header.png"/>
           </Header>
           <Segment size="mini">
             <Header as="h4">

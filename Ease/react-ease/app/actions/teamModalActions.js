@@ -254,3 +254,13 @@ export function showTeamUserInviteLimitReachedModal({active, team_id}) {
     }
   }
 }
+
+export function showInviteTeamUsersModal({active, team_id}) {
+  return {
+    type: 'INVITE_TEAM_USERS_MODAL',
+    payload: {
+      active: active,
+      team_id: team_id
+    }
+  }
+}

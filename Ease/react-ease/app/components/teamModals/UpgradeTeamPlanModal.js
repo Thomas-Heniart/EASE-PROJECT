@@ -73,9 +73,10 @@ class UpgradeTeamPlanModal extends Component {
             onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal({active: false}))}}
             headerContent={'Try Pro now!'}>
           <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
+            {!!this.props.feature_id &&
             <Form.Field>
               Your current plan (Starter) doesn’t enable {proFeaturesDesc[feature_id]}.
-            </Form.Field>
+            </Form.Field>}
             <Form.Field>
               <h5>
                 Pro includes your current features and:

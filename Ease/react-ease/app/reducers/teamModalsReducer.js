@@ -104,6 +104,10 @@ const initialState = {
     team_user_id: -1,
     team_id: -1
   },
+  inviteTeamUsersModal: {
+    active: false,
+    team_id: -1
+  },
   catalogAddBookmarkModal: {
     active: false,
     name: '',
@@ -285,6 +289,12 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         departureDateEndModal: action.payload
+      }
+    }
+    case 'INVITE_TEAM_USERS_MODAL': {
+      return {
+          ...state,
+        inviteTeamUsersModal: action.payload
       }
     }
     case 'SHOW_CATALOG_ADD_BOOKMARK_MODAL': {

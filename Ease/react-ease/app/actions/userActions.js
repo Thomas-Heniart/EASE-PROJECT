@@ -34,11 +34,42 @@ export function createTeamUser({team_id, first_name, last_name, email, username,
 export function sendTeamUserInvitation({team_id, team_user_id}){
   return function(dispatch, getState){
     return post_api.teamUser.sendTeamUserInvitation(getState().common.ws_id, team_id, team_user_id).then(response => {
-      dispatch(teamUserCreatedAction({team_user: response}));
+      dispatch(teamUserChangedAction({team_user: response}));
       return response;
     }).catch(err => {
       throw err;
     });
+  }
+}
+
+export function inviteAllUninvitedTeamUsers({team_id}) {
+  return (dispatch, getState) =>  {
+    const state = getState();
+    const team = state.teams[team_id];
+
+    if (team.plan_id === 1){
+      const calls = [];
+      Object.keys(team.team_users).forEach(team_user_id => {
+        const team_user = team.team_users[team_user_id];
+        if (!team_user.invitation_sent)
+          calls.push(dispatch(sendTeamUserInvitation({
+            team_id: team_id,
+            team_user_id: team_user_id
+          })));
+      });
+      return Promise.all(calls);
+    }
+    const invitationsToSend = [];
+    const invitedMembers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
+      const team_user = team.team_users[team_user_id];
+      if (team_user.invitation_sent)
+        return ++stack;
+      invitationsToSend.push(team_user_id);
+      return stack;
+    }, 0);
+    const calls = [];
+    let availableSlots = 15 + team.extra_members - invitedMembers;
+
   }
 }
 

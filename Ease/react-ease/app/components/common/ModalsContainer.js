@@ -49,6 +49,7 @@ import UpdateAppPasswordModal from "../modals/UpdateAppPasswordModal";
 import NewFeatureModal from "../modals/NewFeatureModal";
 import AddAnyAppModal from "../catalog/AddAnyAppModal";
 import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal";
+import InviteTeamUsersModal from "../teamModals/InviteTeamUsersModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -80,6 +81,7 @@ import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal"
   catalogAddSSOAppModal: store.teamModals.catalogAddSSOAppModal,
   catalogAddAnyAppModal: store.teamModals.catalogAddAnyAppModal,
   catalogAddSoftwareAppModal: store.teamModals.catalogAddSoftwareAppModal,
+  inviteTeamUsersModal: store.teamModals.inviteTeamUsersModal,
   modals: store.modals
 }))
 class ModalsContainer extends Component{
@@ -189,6 +191,8 @@ class ModalsContainer extends Component{
           <AddAnyAppModal/>}
           {this.props.catalogAddSoftwareAppModal.active &&
           <AddSoftwareCredentialsModal/>}
+          {this.props.inviteTeamUsersModal.active &&
+          <InviteTeamUsersModal/>}
         </div>
     )
   }
