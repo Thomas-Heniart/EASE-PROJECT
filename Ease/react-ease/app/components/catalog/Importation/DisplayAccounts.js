@@ -116,7 +116,7 @@ class DisplayAccounts extends React.Component {
               </Dropdown.Item>
             ))
           ))}
-          {((team.plan_id === 1 || (team.plan_id === 0 && Object.keys(team.rooms).length < 4)) && roomAdded[team.id] === false && team.team_users[team.my_team_user_id].role > 1) &&
+          {(roomAdded[team.id] === false && team.team_users[team.my_team_user_id].role > 1) &&
           <Dropdown.Item>
             <form style={{marginBottom: 0}} onSubmit={e => createRoom(team.id)}>
               <Input
