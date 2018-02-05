@@ -292,102 +292,6 @@ class NewTeamCreationView extends React.Component {
     return this.state.emails.filter(item => (isEmail(item.email))).length >= (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1))
       || this.state.pasteEmails.filter(item => (isEmail(item))).length >= (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1));
   };
-  noToolsFound = () => {
-    if (this.state.roomsSelected.length - 1 > this.state.currentRoom)
-      this.setState({
-        currentRoom: this.state.currentRoom + 1,
-        loading: false,
-        appsSelected: [],
-        allAppIdsSelected: this.state.allAppIdsSelected.concat(this.state.appsSelected)
-      });
-    else if (Object.keys(this.state.singleApps).filter(item => {
-        return this.state.singleApps[item].length > 0
-      }).length > 0) {
-      Object.keys(this.state.singleApps).map(room_id => {
-        this.state.singleApps[room_id].map(id => {
-          this.state.credentialsSingleApps[id] = {
-            name: this.state.roomsWebsites[id].name,
-            login: '',
-            password: '',
-            filler_id: null
-          };
-        });
-      });
-      easeTracker.trackEvent("EaseOnboardingChooseTools");
-      this.setState({loading: false, appsSelected: [], viewAccounts: 4});
-    }
-    else
-      this.props.dispatch(changeStep({
-        team_id: this.state.team_id,
-        step: 5
-      })).then(res => {
-        easeTracker.trackEvent("EaseOnboardingEnterAccounts");
-        window.location.href = "/";
-      });
-  };
-  noSingleCards = () => {
-    let singleApps = Object.assign({}, this.state.singleApps);
-    singleApps[this.state.rooms[this.state.currentRoom].id] = this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(item => {
-      return item !== item;
-    });
-    let calls = [];
-    const users = {};
-    this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
-      users[user_id] = {account_information: null};
-    });
-    this.props.dispatch(createTeamProfile({
-      team_id: this.state.team_id,
-      team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
-    })).then(res => {
-      this.state.appsSelected.map(app_id => {
-        calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-          team_id: this.state.team_id,
-          channel_id: this.state.rooms[this.state.currentRoom].id,
-          website_id: app_id,
-          name: this.state.roomsWebsites[app_id].name,
-          description: '',
-          password_reminder_interval: 0,
-          receivers: users
-        })));
-      });
-      if (this.state.roomsSelected.length - 1 > this.state.currentRoom) {
-        Promise.all(calls.map(reflect)).then(response => {
-          this.setState({
-            currentRoom: this.state.currentRoom + 1,
-            viewAccounts: 2,
-            loading: false,
-            appsSelected: [],
-            singleApps: singleApps,
-            allAppIdsSelected: this.state.allAppIdsSelected.concat(this.state.appsSelected)
-          });
-        });
-      }
-      else if (Object.keys(singleApps).filter(item => {
-          return singleApps[item].length > 0
-        }).length > 0) {
-        Promise.all(calls.map(reflect)).then(response => {
-          easeTracker.trackEvent("EaseOnboardingChooseTools");
-          this.setState({
-            loading: false,
-            appsSelected: [],
-            viewAccounts: 4,
-            singleApps: singleApps,
-          });
-        });
-      }
-      else {
-        Promise.all(calls.map(reflect)).then(response => {
-          this.props.dispatch(changeStep({
-            team_id: this.state.team_id,
-            step: 5
-          })).then(res => {
-            easeTracker.trackEvent("EaseOnboardingEnterAccounts");
-            window.location.href = "/";
-          });
-        });
-      }
-    });
-  };
   nextInformation = () => {
     if (this.state.viewInfo === 1 && isEmail(this.state.email)) {
       this.setState({loading: true});
@@ -565,10 +469,18 @@ class NewTeamCreationView extends React.Component {
           });
         });
       }
-      else if (this.state.appsSelected.length === 0)
+      else if (this.state.appsSelected.length === 0 && this.state.roomsSelected.length - 1 > this.state.currentRoom)
         this.setState({currentRoom: this.state.currentRoom + 1, viewAccounts: 2, loading: false});
-      else
+      else if (this.state.appsSelected.length > 0)
         this.setState({viewAccounts: 3, loading: false});
+      else
+        this.props.dispatch(changeStep({
+          team_id: this.state.team_id,
+          step: 5
+        })).then(res => {
+          easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+          window.location.href = "/";
+        });
     }
     else if (this.state.viewAccounts === 3) {
       this.setState({loading: true});
