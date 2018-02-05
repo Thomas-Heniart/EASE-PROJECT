@@ -651,31 +651,33 @@ class FirstLastNameSection extends React.Component {
 
     return (
         <Grid.Column>
-          {!this.state.edit ?
+          {/*{!this.state.edit &&*/}
               <h4>
                 {user.first_name} {user.last_name}
-                {isSuperiorOrMe(user, me) &&
-                <Icon link name="pencil" class="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
-              </h4> :
-              <Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
-                <Form.Input
-                    size="mini"
-                    placeholder="First name"
-                    type="text" name="first_name" fluid
-                    value={this.state.first_name}
-                    onChange={this.handleInput}/>
-                <Form.Input
-                    size="mini"
-                    placeholder="Last name"
-                    type="text" name="last_name" fluid
-                    value={this.state.last_name}
-                    onChange={this.handleInput}/>
-                <Message error size="mini" content={this.state.errorMessage}/>
-                <Form.Field>
-                  <Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>
-                  <Button primary size="mini" loading={this.state.loading}>Save</Button>
-                </Form.Field>
-              </Form>}
+                {/*{isSuperiorOrMe(user, me) &&
+                <Icon link name="pencil" class="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}*/}
+              </h4>
+          {/*}*/}
+            {/*:*/}
+              {/*<Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>*/}
+                {/*<Form.Input*/}
+                    {/*size="mini"*/}
+                    {/*placeholder="First name"*/}
+                    {/*type="text" name="first_name" fluid*/}
+                    {/*value={this.state.first_name}*/}
+                    {/*onChange={this.handleInput}/>*/}
+                {/*<Form.Input*/}
+                    {/*size="mini"*/}
+                    {/*placeholder="Last name"*/}
+                    {/*type="text" name="last_name" fluid*/}
+                    {/*value={this.state.last_name}*/}
+                    {/*onChange={this.handleInput}/>*/}
+                {/*<Message error size="mini" content={this.state.errorMessage}/>*/}
+                {/*<Form.Field>*/}
+                  {/*<Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>*/}
+                  {/*<Button primary size="mini" loading={this.state.loading}>Save</Button>*/}
+                {/*</Form.Field>*/}
+              {/*</Form>*/}
         </Grid.Column>
     )
   }
