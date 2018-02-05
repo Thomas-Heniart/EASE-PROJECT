@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from "react";
 import {withRouter, NavLink} from "react-router-dom";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import {reInviteAllInvitedTeamUsers, sendTeamUserInvitation, inviteAllUninvitedTeamUsers} from "../../actions/userActions";
+import {sendInvitationToTeamUserList, reInviteAllInvitedTeamUsers, sendTeamUserInvitation, inviteAllUninvitedTeamUsers} from "../../actions/userActions";
 import {connect} from "react-redux";
 import { Icon, Segment, Loader } from 'semantic-ui-react';
 import {reflect} from "../../utils/utils";
@@ -58,8 +58,18 @@ class TeamUserInviteSegment extends Component {
     const team = teams[team_user.team_id];
 
     this.setState({sent: true});
-    this.props.dispatch(inviteAllUninvitedTeamUsers({
-      team_id: team.id
+    let team_user_id_list = [];
+    team_user_id_list.push(team_user.id);
+
+    Object.keys(team.team_users).forEach(team_user_id => {
+      const user = team.team_users[team_user_id];
+      if (user.id !== team_user.id && !user.invitation_sent)
+        team_user_id_list.push(user.id);
+    });
+
+    this.props.dispatch(sendInvitationToTeamUserList({
+      team_id: team.id,
+      team_user_id_list: team_user_id_list
     })).then(response => {
       setTimeout(() => {
         this.setState({sent: false})
@@ -168,13 +178,13 @@ class TeamUserInviteIndicators extends Component {
         return ++stack;
       return stack;
     }, 0);
-    if (team.plan_id === 0 && maxSeats === invitedUsers)
-      return (
-          <TeamUserInviteLimitReachedSegmentWithRouter {...this.props}/>
-      );
     if (team_user.state === 0 && team_user.invitation_sent)
       return (
           <TeamUserReInviteSegment {...this.props}/>
+      );
+    if (team.plan_id === 0 && maxSeats === invitedUsers)
+      return (
+          <TeamUserInviteLimitReachedSegmentWithRouter {...this.props}/>
       );
     if (team_user.state === 0 && !team_user.invitation_sent)
       return (

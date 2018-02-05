@@ -245,22 +245,32 @@ export function showDepartureDateEndModal({active, team_user_id, team_id}) {
   }
 }
 
-export function showTeamUserInviteLimitReachedModal({active, team_id}) {
+export function showTeamUserInviteLimitReachedModal({active, team_id, team_user_id_list}) {
   return {
-    type: 'TEAM_USER_INVITE_LIMIT_REACHED_MODAL',
+    type: 'SHOW_TEAM_USER_INVITE_LIMIT_REACHED_MODAL',
     payload: {
       active: active,
-      team_id: team_id
+      team_id: team_id,
+      team_user_id_list: team_user_id_list
     }
   }
 }
 
 export function showInviteTeamUsersModal({active, team_id}) {
-  return {
-    type: 'INVITE_TEAM_USERS_MODAL',
-    payload: {
-      active: active,
-      team_id: team_id
-    }
-  }
+  return (dispatch) => {
+    if (!active)
+      dispatch({
+        type: 'DISABLE_INVITE_TEAM_USERS_MODAL',
+        payload: {
+          team_id: team_id
+        }
+      });
+    dispatch({
+      type: 'INVITE_TEAM_USERS_MODAL',
+      payload: {
+        active: active,
+        team_id: team_id
+      }
+    });
+  };
 }

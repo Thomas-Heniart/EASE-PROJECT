@@ -8,6 +8,15 @@ export const teams = createReducer({
       ...action.payload.teams
     }
   },
+  ['DISABLE_INVITE_TEAM_USERS_MODAL'](state, action){
+    const {team_id} = action.payload;
+
+    return update(state, {
+      [team_id]: {
+        show_invite_people_popup: {$set: false}
+      }
+    });
+  },
   ['UPGRADE_TEAM_PLAN_FULFILLED'](state, action){
     const team = action.payload.team;
 

@@ -4,6 +4,7 @@ import {showInviteTeamUsersModal} from "../../actions/teamModalActions";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import post_api from "../../utils/post_api";
 import {connect} from "react-redux";
+import {sendInvitationToTeamUserList} from "../../actions/userActions";
 
 @connect(store => ({
   team: store.teams[store.teamModals.inviteTeamUsersModal.team_id]
@@ -22,7 +23,23 @@ class InviteTeamUsersModal extends Component {
     }))
   };
   confirm = (e) => {
+    const {team} = this.props;
     e.preventDefault();
+    this.setState({loading: true, errorMessage: ''});
+    let team_user_id_list = [];
+    Object.keys(team.team_users).forEach(team_user_id => {
+      const team_user = team.team_users[team_user_id];
+      if (!team_user.invitation_sent)
+        team_user_id_list.push(team_user.id);
+    });
+    this.props.dispatch(sendInvitationToTeamUserList({
+      team_id: team.id,
+      team_user_id_list: team_user_id_list
+    })).then(response => {
+      this.close();
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
   };
   render(){
     return (
@@ -37,6 +54,7 @@ class InviteTeamUsersModal extends Component {
             <Button
                 type="submit"
                 loading={this.state.loading}
+                disabled={this.state.loading}
                 positive
                 className="modal-button"
                 content={

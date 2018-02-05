@@ -1,7 +1,7 @@
 var api =require('../utils/api');
 var post_api = require('../utils/post_api');
 import {teamRemovedAction} from "./teamActions";
-import {teamUserRoles} from "../utils/utils";
+import {reflect, teamUserRoles} from "../utils/utils";
 import {teamCardReceiverRemovedAction, teamCardReceiverRemovedAction2} from "./appsActions";
 import {addNotification} from "./notificationBoxActions";
 import {showTeamUserInviteLimitReachedModal} from "./teamModalActions";
@@ -60,50 +60,41 @@ export function reInviteAllInvitedTeamUsers({team_id}) {
   }
 }
 
-export function inviteAllUninvitedTeamUsers({team_id}) {
-  return (dispatch, getState) =>  {
-    const state = getState();
-    const team = state.teams[team_id];
+export function sendInvitationToTeamUserList({team_id, team_user_id_list}) {
+  return async (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[team_id];
 
     if (team.plan_id === 1){
-      const calls = [];
-      Object.keys(team.team_users).forEach(team_user_id => {
-        const team_user = team.team_users[team_user_id];
-        if (!team_user.invitation_sent)
-          calls.push(dispatch(sendTeamUserInvitation({
-            team_id: team_id,
-            team_user_id: team_user_id
-          })));
+      const calls = team_user_id_list.map(team_user_id => {
+        return dispatch(sendTeamUserInvitation({
+          team_id: team_id,
+          team_user_id: team_user_id
+        }))
       });
-      return Promise.all(calls);
+      return Promise.all(calls.map(reflect));
     }
-    const invitationsToSend = [];
+    const invitationsToSend = team_user_id_list;
     const invitedMembers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
       const team_user = team.team_users[team_user_id];
       if (team_user.invitation_sent)
         return ++stack;
-      invitationsToSend.push(team_user_id);
       return stack;
     }, 0);
-    const calls = [];
     let availableSlots = 15 + team.extra_members - invitedMembers;
-    for (let i = 0; i < availableSlots || i < invitationsToSend.length; i++){
-      calls.push(dispatch(sendTeamUserInvitation({
+    for (let i = 0; i < availableSlots && i < invitationsToSend.length; i++){
+      await dispatch(sendTeamUserInvitation({
         team_id: team_id,
         team_user_id: invitationsToSend[i]
-      })));
+      }));
     }
-    return Promise.all(calls).then(response => {
-      if (invitationsToSend.length > availableSlots)
-        dispatch(showTeamUserInviteLimitReachedModal({
-          active: true,
-          team_id: team_id
-        }));
-      return response;
-    }).catch(err => {
-      throw err;
-    })
-  }
+    if (invitationsToSend.length > availableSlots)
+      dispatch(showTeamUserInviteLimitReachedModal({
+        active: true,
+        team_id: team_id,
+        team_user_id_list: team_user_id_list
+      }));
+  };
 }
 
 export function deleteTeamUser({team_id,team_user_id}){
