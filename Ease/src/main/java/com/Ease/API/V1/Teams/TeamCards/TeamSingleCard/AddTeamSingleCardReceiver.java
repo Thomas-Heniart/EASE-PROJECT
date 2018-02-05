@@ -33,7 +33,7 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
-            Boolean allowed_to_see_password = sm.getBooleanParam("allowed_to_see_password", true, false);
+            Boolean allowed_to_see_password = true; //sm.getBooleanParam("allowed_to_see_password", true, false);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
             if (!teamCard.isTeamSingleCard())

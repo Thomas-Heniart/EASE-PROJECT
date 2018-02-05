@@ -71,9 +71,13 @@ public class TeamUser {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "arrivalDate")
+    @Column(name = "creation_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date arrivalDate;
+    private Date creation_date = new Date();
+
+    @Column(name = "arrival_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date arrival_date;
 
     @Column(name = "departureDate")
     @Temporal(TemporalType.TIMESTAMP)
@@ -130,13 +134,13 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<PendingNotification> pendingNotificationSet = ConcurrentHashMap.newKeySet();
 
-    public TeamUser(String email, String username, Date arrivalDate, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
+    public TeamUser(String email, String username, Date arrival_date, String teamKey, Team team, TeamUserRole teamUserRole) throws HttpServletException {
         this.email = email;
         this.username = username;
         this.teamKey = teamKey;
         this.team = team;
         this.teamUserRole = teamUserRole;
-        this.arrivalDate = arrivalDate;
+        this.arrival_date = arrival_date;
         this.disabled = false;
         this.teamUserStatus = new TeamUserStatus();
         this.teamUserStatus.setReminder_three_days_sended(false);
@@ -185,12 +189,20 @@ public class TeamUser {
         this.teamKey = teamKey;
     }
 
-    public Date getArrivalDate() {
-        return arrivalDate;
+    public Date getCreation_date() {
+        return creation_date;
     }
 
-    public void setArrivalDate(Date arrivalDate) {
-        this.arrivalDate = arrivalDate;
+    public void setCreation_date(Date arrivalDate) {
+        this.creation_date = arrivalDate;
+    }
+
+    public Date getArrival_date() {
+        return arrival_date;
+    }
+
+    public void setArrival_date(Date arrival_date) {
+        this.arrival_date = arrival_date;
     }
 
     public Date getDepartureDate() {
@@ -354,18 +366,19 @@ public class TeamUser {
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
-        res.put("id", this.db_id);
-        res.put("email", this.email);
+        res.put("id", this.getDb_id());
+        res.put("email", this.getEmail());
         res.put("username", this.username);
         res.put("disabled", this.disabled);
-        res.put("role", this.teamUserRole.getRoleValue());
+        res.put("role", this.getTeamUserRole().getRoleValue());
         res.put("invitation_sent", this.getTeamUserStatus().isInvitation_sent());
-        res.put("arrival_date", arrivalDate.getTime());
+        res.put("creation_date", this.getCreation_date().getTime());
+        res.put("arrival_date", this.getArrival_date() == null ? JSONObject.NULL : this.getArrival_date().getTime());
         res.put("first_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getFirst_name());
         res.put("last_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getLast_name());
-        res.putOpt("departure_date", departureDate == null ? JSONObject.NULL : departureDate.getTime());
+        res.putOpt("departure_date", this.getDepartureDate() == null ? JSONObject.NULL : this.getDepartureDate().getTime());
         res.put("team_id", this.getTeam().getDb_id());
-        res.put("state", this.state);
+        res.put("state", this.getState());
         JSONArray channel_ids = new JSONArray();
         for (Channel channel : this.getChannels())
             channel_ids.put(channel.getDb_id());
@@ -477,7 +490,7 @@ public class TeamUser {
 
     public void transferOwnershipTo(TeamUser new_teamUser_owner) throws HttpServletException {
         new_teamUser_owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
-        if (!team.isValidFreemium())
+        if (!this.getTeam().isValidFreemium())
             this.getTeamUserRole().setRole(TeamUserRole.Role.MEMBER);
         else
             this.getTeamUserRole().setRole(TeamUserRole.Role.ADMINISTRATOR);
@@ -595,5 +608,13 @@ public class TeamUser {
 
     public void removeTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
         this.getTeamSingleSoftwareCardSet().remove(teamSingleSoftwareCard);
+    }
+
+    public void addTeamSingleCardToFill(TeamSingleCard teamSingleCard) {
+        this.getTeamSingleCardToFillSet().add(teamSingleCard);
+    }
+
+    public void addTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
+        this.getTeamSingleSoftwareCardSet().add(teamSingleSoftwareCard);
     }
 }

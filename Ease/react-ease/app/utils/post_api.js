@@ -367,6 +367,7 @@ module.exports = {
         purpose: purpose,
         timestamp: new Date().getTime()
       }).then(response => {
+        easeTracker.trackEvent("AddRoom");
         return response.data;
       }).catch(err => {
         throw err.response.data;
@@ -409,7 +410,7 @@ module.exports = {
     }
   },
   teamUser: {
-    createTeamUser: function(ws_id, team_id, first_name, last_name, email, username, departure_date, role){
+    createTeamUser: function(ws_id, team_id, first_name, last_name, email, username, departure_date, role, arrival_date){
       return axios.post('/api/v1/teams/StartTeamUserCreation', {
         ws_id: ws_id,
         team_id: team_id,
@@ -418,8 +419,16 @@ module.exports = {
         email: email,
         username: username,
         departure_date: departure_date,
-        role: role,
+        arrival_date: arrival_date,
+        role: role
       }).then(response => {
+        easeTracker.trackEvent("AddMember");
+        console.log("Arrival date: ", !!arrival_date);
+        console.log("Departure date: ", !!departure_date);
+        if (!!arrival_date)
+          easeTracker.trackEvent("ArrivalDate");
+        if (!!departure_date)
+          easeTracker.trackEvent("DepartureDate");
         return response.data;
       }).catch(err => {
         throw err.response.data;
@@ -490,13 +499,21 @@ module.exports = {
         ws_id: ws_id,
         team_id: team_id,
         team_user_id: user_id,
-        departure_date: departure_date,
-        timestamp: new Date().getTime()
+        departure_date: departure_date
       }).then(response => {
+        easeTracker.trackEvent("DepartureDate");
         return response.data;
       }).catch(err => {
         throw err.response.data;
       });
+    },
+    editArrivalDate: ({ws_id, team_id, team_user_id, arrival_date}) => {
+      return basic_post('/api/v1/teams/EditTeamUserArrivalDate', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_user_id: team_user_id,
+        arrival_date: arrival_date
+      })
     },
     editFirstLastName: ({team_id, team_user_id, first_name, last_name, ws_id}) => {
       return basic_post('/api/v1/teams/EditTeamUserFirstAndLastName', {
@@ -1265,6 +1282,13 @@ module.exports = {
         return response.data;
       }).catch(err => {
         throw err.response.data;
+      });
+    },
+    inviteFriend: ({ws_id, team_id, email}) => {
+      return basic_post('/api/v1/teams/InviteFriend', {
+        ws_id: ws_id,
+        team_id: team_id,
+        email: email
       });
     }
   },

@@ -199,6 +199,28 @@ export function upgradePlan({team_id, plan_id}){
   }
 }
 
+export function inviteFriend({team_id, email}) {
+  return (dispatch, getState) => {
+    return post_api.teams.inviteFriend({
+      ws_id: getState().common.ws_id,
+      team_id: team_id,
+      email: email
+    }).then(response => {
+      dispatch({
+        type: 'TEAM_INVITE_FRIEND_FULFILLED',
+        payload: {
+          team_id: team_id
+        }
+      });
+      dispatch(addNotification({
+        text: 'Invitation sent! Thank you!'
+      }));
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function teamCreatedAction({team}) {
   return {
     type: 'TEAM_CREATED',

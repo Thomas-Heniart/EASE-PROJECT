@@ -1,0 +1,28 @@
+{
+    "name": "Abconecrts",
+    "lastlogin":"",
+    "home":"https://www.abconcerts.be",
+    "connect": {
+    	"todo": [
+            {"action": "aclick", "search": ".-profile"},
+    		{"action":"fill", "what":"login","search":"#frm_email_l", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#frm_password_l", "grave":"true"},
+    		{"action":"click", "search":"button[name=login_submit]", "grave":"true"}
+    	]
+    },
+    "Facebook": {
+        "todo": [
+            {"action": "aclick", "search": ".-profile"},
+            {"action": "aclick", "search": ".-facebook"}
+        ]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":".masthead__links__dropdown__list > li:last-child a"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":".masthead__links__dropdown__list"}
+    ]
+    
+}

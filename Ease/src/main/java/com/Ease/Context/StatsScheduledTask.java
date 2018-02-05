@@ -23,11 +23,9 @@ public class StatsScheduledTask extends TimerTask {
         last_week.add(Calendar.WEEK_OF_YEAR, -1);
         Date this_week = calendar.getTime();
         Date last_week_date = last_week.getTime();
-        System.out.println(this_week.toString());
-        System.out.println(last_week_date.toString());
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
-            hibernateQuery.queryString("SELECT t FROM Team t WHERE t.subscription_date >= :date_start AND t.subscription_date < :date_end");
+            hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active IS true AND t.subscription_date >= :date_start AND t.subscription_date < :date_end");
             hibernateQuery.setDate("date_start", last_week_date);
             hibernateQuery.setDate("date_end", this_week);
             int new_companies = hibernateQuery.list().size();
@@ -39,7 +37,7 @@ public class StatsScheduledTask extends TimerTask {
             hibernateQuery.setDate("date_start", last_week_date);
             hibernateQuery.setDate("date_end", this_week);
             int new_apps = hibernateQuery.list().size();
-            hibernateQuery.queryString("SELECT a FROM App a LEFT JOIN a.teamCardReceiver as r WHERE r IS NOT NULL AND a.insert_date >= :date_start AND a.insert_date < :date_end");
+            hibernateQuery.queryString("SELECT a FROM App a LEFT JOIN a.teamCardReceiver as r WHERE r IS NOT NULL AND a.insert_date >= :date_start AND a.insert_date < :date_end AND r.teamCard.team.active IS true");
             hibernateQuery.setDate("date_start", last_week_date);
             hibernateQuery.setDate("date_end", this_week);
             int new_team_apps = hibernateQuery.list().size();

@@ -1,0 +1,76 @@
+{
+  "name": "Swapcard",
+  "lastLogin": "",
+  "home": "https://app.swapcard.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#email"
+      },
+      {
+        "action": "waitfor",
+        "search": "button.button.button-md.button-rounded.two_px.swapcard"
+      },
+      {
+        "action": "trueClick",
+        "search": "button.button.button-md.button-rounded.two_px.swapcard"
+      },
+      {
+        "action": "waitfor",
+        "search": "input[type='password']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "input[type='password']"
+      },
+      {
+        "action": "waitfor",
+        "search": "button.button.button-md.button-rounded.swapcard.two_px"
+      },
+      {
+        "action": "trueClick",
+        "search": "button.button.button-md.button-rounded.swapcard.two_px"
+      }
+    ]
+  },
+  "LinkedIn": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "button[ng-click*='loginWithLinkedin']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "button[ng-click*='vm.onSettings']"
+      },
+      {
+        "action": "waitfor",
+        "search": "button.button-logout"
+      },
+      {
+        "action": "trueClick",
+        "search": "button.button-logout"
+      },
+      {
+        "action": "waitfor",
+        "search": "form[ng-submit*='login']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "button[ng-click*='vm.onSettings'], form[ng-submit*='login']"
+    },
+    {
+      "search": "button[ng-click*='vm.onSettings']"
+    }
+  ]
+}

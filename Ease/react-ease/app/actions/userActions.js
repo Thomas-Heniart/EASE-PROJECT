@@ -1,9 +1,10 @@
 var api =require('../utils/api');
 var post_api = require('../utils/post_api');
 import {teamRemovedAction} from "./teamActions";
-import {teamUserRoles} from "../utils/utils";
+import {reflect, teamUserRoles} from "../utils/utils";
 import {teamCardReceiverRemovedAction, teamCardReceiverRemovedAction2} from "./appsActions";
 import {addNotification} from "./notificationBoxActions";
+import {showTeamUserInviteLimitReachedModal} from "./teamModalActions";
 
 export function createTeamUserNow({team_id, first_name, last_name, email, username, departure_date, role}){
   return function(dispatch, getState){
@@ -20,9 +21,9 @@ export function createTeamUserNow({team_id, first_name, last_name, email, userna
   }
 }
 
-export function createTeamUser({team_id, first_name, last_name, email, username, departure_date, role}){
+export function createTeamUser({team_id, first_name, last_name, email, username, departure_date, arrival_date, role}){
   return function(dispatch, getState){
-    return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role).then(response => {
+    return post_api.teamUser.createTeamUser(getState().common.ws_id, team_id, first_name, last_name, email, username, departure_date, role, arrival_date).then(response => {
       dispatch(teamUserCreatedAction({team_user: response}));
       return response;
     }).catch(err => {
@@ -34,12 +35,66 @@ export function createTeamUser({team_id, first_name, last_name, email, username,
 export function sendTeamUserInvitation({team_id, team_user_id}){
   return function(dispatch, getState){
     return post_api.teamUser.sendTeamUserInvitation(getState().common.ws_id, team_id, team_user_id).then(response => {
-      dispatch(teamUserCreatedAction({team_user: response}));
+      dispatch(teamUserChangedAction({team_user: response}));
       return response;
     }).catch(err => {
       throw err;
     });
   }
+}
+
+export function reInviteAllInvitedTeamUsers({team_id}) {
+  return (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[team_id];
+    const calls = [];
+    Object.keys(team.team_users).forEach(team_user_id => {
+      const team_user = team.team_users[team_user_id];
+      if (team_user.state === 0 && team_user.invitation_sent)
+        calls.push(dispatch(sendTeamUserInvitation({
+          team_id: team_id,
+          team_user_id: team_user_id
+        })));
+    });
+    return Promise.all(calls);
+  }
+}
+
+export function sendInvitationToTeamUserList({team_id, team_user_id_list}) {
+  return async (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[team_id];
+
+    if (team.plan_id === 1){
+      const calls = team_user_id_list.map(team_user_id => {
+        return dispatch(sendTeamUserInvitation({
+          team_id: team_id,
+          team_user_id: team_user_id
+        }))
+      });
+      return Promise.all(calls.map(reflect));
+    }
+    const invitationsToSend = team_user_id_list;
+    const invitedMembers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
+      const team_user = team.team_users[team_user_id];
+      if (team_user.invitation_sent)
+        return ++stack;
+      return stack;
+    }, 0);
+    let availableSlots = 15 + team.extra_members - invitedMembers;
+    for (let i = 0; i < availableSlots && i < invitationsToSend.length; i++){
+      await reflect(dispatch(sendTeamUserInvitation({
+        team_id: team_id,
+        team_user_id: invitationsToSend[i]
+      })));
+    }
+    if (invitationsToSend.length > availableSlots)
+      dispatch(showTeamUserInviteLimitReachedModal({
+        active: true,
+        team_id: team_id,
+        team_user_id_list: team_user_id_list
+      }));
+  };
 }
 
 export function deleteTeamUser({team_id,team_user_id}){
@@ -127,6 +182,28 @@ export function editTeamUserDepartureDate({team_id, team_user_id, departure_date
     }).catch(err => {
       throw err;
     })
+  }
+}
+
+export function editTeamUserArrivalDate({team_id, team_user_id, arrival_date}) {
+  return (dispatch, getState) => {
+    return post_api.teamUser.editArrivalDate({
+      ws_id: getState().common.ws_id,
+      team_id: team_id,
+      team_user_id: team_user_id,
+      arrival_date: arrival_date
+    }).then(team_user => {
+      easeTracker.trackEvent("ArrivalDate");
+      dispatch(teamUserChangedAction({
+        team_user: team_user
+      }));
+      dispatch(addNotification({
+        text: `Arrival date for ${team_user.username}, successfully changed!`
+      }));
+      return team_user;
+    }).catch(err => {
+      throw err;
+    });
   }
 }
 

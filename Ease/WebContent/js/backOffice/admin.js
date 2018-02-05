@@ -782,8 +782,6 @@ function openWebsiteIntegration(website, websiteElem) {
       alternative_urls: new_alternative_urls
     }, function () {
     }, function () {
-
-    }, function () {
       website.name = name.val();
       website.landing_url = landing_url.val();
       website.login_url = login_url.val();
@@ -1306,4 +1304,4 @@ populateTeamsDeleted = (data) => {
       "</tr>");
     jElem.appendTo(tableBody);
   });
-}
+};

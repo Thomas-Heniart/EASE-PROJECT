@@ -53,13 +53,10 @@ class FreeTrialEndModal extends Component {
           <Form style={{color: "#96a1b9"}} class="container" onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
             <Form.Field>
               {meOwner ?
-                  <p>Your free trial on Pro is over! Now you can choose to update your billing info or leave it like this. Not updating your billing info will remain access blocked, for you and your team members, to {this.props.team_name}.</p> :
-                  <p>Your free trial on Pro is over! You can let your Team Owner {teamOwner.username} know you would like to access your team, we will pass the message along.</p>}
+                  <p>Update your billing information to keep having unlimited members and additional security features for 59€ before VAT billed monthly.</p> :
+                  <p>Ask your team owner to update your billing information so you can keep having unlimited members and additional security features on Ease.space!</p>}
               {meOwner &&
-              <p>Pro is billed 3,99€ per month per active user.</p>}
-              <p>
-                Want to see all Pro features? <a style={{textDecoration: 'underline'}} href="/pricing" target="_blank">Visit our website</a>.
-              </p>
+              <p>If you want to come back to Free, <a style={{textDecoration: 'underline'}} href="mailto:benjamin@ease.space" target="_blank">contact us.</a></p>}
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button

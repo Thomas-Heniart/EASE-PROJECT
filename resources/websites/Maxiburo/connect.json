@@ -1,0 +1,21 @@
+{
+    "name": "Maxiburo",
+    "lastlogin":"",
+    "home":"https://www.maxiburo.fr/Client/Identification",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#UserName", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#Password", "grave":"true"},
+    		{"action":"click", "search":"#form_identification .btn-submit", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"goto", "url":"https://www.maxiburo.fr/Client/Identification/Deconnexion"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#MonCompte"}
+    ]
+    
+}

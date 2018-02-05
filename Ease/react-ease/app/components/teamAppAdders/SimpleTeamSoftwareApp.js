@@ -73,20 +73,20 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
     <Popup size="mini"
            position="bottom center"
            inverted
-           flowing
            hideOnScroll={true}
            trigger={
              <Label class={classnames("user-label static accepted", can_see_information ? 'can_see_information' : null)}>
                {username}
-               {admin &&
+               {/*{admin &&
                <Icon name={can_see_information ? 'unhide' : 'hide'}/>}&nbsp;
                {can_see_information &&
-               <Icon name='mobile'/>}
+               <Icon name='mobile'/>}*/}
              </Label>
            }
            content={
              <div>
-               {can_see_information &&
+               This person can access the account on desktop and mobile.
+               {/*{can_see_information &&
                <span>Mobile access: on</span>}
                {!can_see_information &&
                <span>Mobile access: off</span>}
@@ -94,7 +94,7 @@ const TeamAppReceiverLabel = ({admin, username, accepted, can_see_information}) 
                {can_see_information &&
                <span>Password copy: on</span>}
                {!can_see_information &&
-               <span>Password copy: off</span>}
+               <span>Password copy: off</span>}*/}
              </div>}/>
   )
 };
@@ -287,6 +287,7 @@ class SimpleTeamSoftwareApp extends Component {
   render(){
     const app = this.props.app;
     const me = this.props.me;
+    const team = this.props.teams[app.team_id];
     const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
@@ -338,8 +339,16 @@ class SimpleTeamSoftwareApp extends Component {
                 <SingleAppCopyPasswordButton team_card_id={app.id}/>}
                 <div class="display-inline-flex">
                   {!this.state.edit ?
-                    <PasswordChangeHolder value={app.password_reminder_interval} roomManager={room_manager.username} /> :
-                    <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>}
+                    <PasswordChangeHolder
+                        team={team}
+                        value={app.password_reminder_interval}
+                        roomManager={room_manager.username} /> :
+                    <PasswordChangeDropdown
+                        team={team}
+                        dispatch={this.props.dispatch}
+                        value={this.state.password_reminder_interval}
+                        onChange={this.handleInput}
+                        roomManager={room_manager.username}/>}
                 </div>
               </div>
               <div>

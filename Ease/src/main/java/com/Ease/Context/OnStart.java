@@ -95,8 +95,18 @@ public class OnStart implements ServletContextListener {
                 delay_six_pm.set(Calendar.HOUR_OF_DAY, 18);
                 delay_six_pm.set(Calendar.MINUTE, 30);
                 next_clock = delay_six_pm.getTimeInMillis() - new Date().getTime();
-                AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask();
+                AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask(teamIdMap);
                 time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000);
+
+                Calendar delay_six_am = Calendar.getInstance();
+                hour = delay_six_am.get(Calendar.HOUR_OF_DAY);
+                minutes = delay_six_am.get(Calendar.MINUTE);
+                if (hour > 6 || (hour == 6 && minutes >= 0))
+                    delay_six_am.add(Calendar.DAY_OF_YEAR, 1);
+                delay_six_am.set(Calendar.HOUR_OF_DAY, 6);
+                delay_six_am.set(Calendar.MINUTE, 0);
+                InvitationScheduledTask invitationScheduledTask = new InvitationScheduledTask(teamIdMap);
+                time.schedule(invitationScheduledTask, delay_six_am.getTime(), 24 * 60 * 60 * 1000);
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
