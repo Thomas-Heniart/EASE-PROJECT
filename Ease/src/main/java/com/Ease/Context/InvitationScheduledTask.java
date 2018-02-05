@@ -41,10 +41,6 @@ public class InvitationScheduledTask extends TimerTask {
                     continue;
                 teamUser.getTeamUserStatus().setInvitation_sent(true);
                 hibernateQuery.saveOrUpdateObject(teamUser.getTeamUserStatus());
-                if (!team.isInvitations_sent()) {
-                    team.setInvitations_sent(true);
-                    hibernateQuery.saveOrUpdateObject(team);
-                }
                 MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setTemplateId(179023);
                 mailJetBuilder.setFrom("contact@ease.space", "Ease.space");

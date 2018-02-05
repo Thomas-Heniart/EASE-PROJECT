@@ -58,10 +58,6 @@ public class AccountsToFillScheduledTask extends TimerTask {
                 if (!teamUser.getTeamUserStatus().isInvitation_sent()) {
                     teamUser.getTeamUserStatus().setInvitation_sent(true);
                     hibernateQuery.saveOrUpdateObject(teamUser.getTeamUserStatus());
-                    if (!team.isInvitations_sent()) {
-                        team.setInvitations_sent(true);
-                        hibernateQuery.saveOrUpdateObject(team);
-                    }
                 }
                 MailjetMessageWrapper.newAccountsMail(teamUser, appArr, appArr.length());
             }
