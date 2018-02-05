@@ -84,7 +84,7 @@
                         <span class="price_divider" ><fmt:message key="pricing.sub-tip"/></span>
                         <div class="text-center">
                             <button class="button-unstyle big-button button">
-                                <a href="/#/registration" class="link-unstyle" style="font-size: 18px;">
+                                <a href="/#/teamCreation?plan_id=0" class="link-unstyle" style="font-size: 18px;">
                                     <fmt:message key="pricing.free.button"/>
                                 </a>
                             </button>

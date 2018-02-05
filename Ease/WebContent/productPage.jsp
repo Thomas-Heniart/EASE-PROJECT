@@ -87,7 +87,7 @@
             <div class="intro-heading">
                 <fmt:message key="product.title"/>
             </div>
-            <button class="button-product big centered ui button" onclick="location.href='/#/registration'">
+            <button class="button-product big centered ui button" onclick="location.href='/#/teamCreation?plan_id=0'">
                 <fmt:message key="product.button"/>
             </button>
         </div>

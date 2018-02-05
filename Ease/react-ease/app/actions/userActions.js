@@ -83,10 +83,10 @@ export function sendInvitationToTeamUserList({team_id, team_user_id_list}) {
     }, 0);
     let availableSlots = 15 + team.extra_members - invitedMembers;
     for (let i = 0; i < availableSlots && i < invitationsToSend.length; i++){
-      await dispatch(sendTeamUserInvitation({
+      await reflect(dispatch(sendTeamUserInvitation({
         team_id: team_id,
         team_user_id: invitationsToSend[i]
-      }));
+      })));
     }
     if (invitationsToSend.length > availableSlots)
       dispatch(showTeamUserInviteLimitReachedModal({

@@ -4,7 +4,7 @@ import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {sendInvitationToTeamUserList, reInviteAllInvitedTeamUsers, sendTeamUserInvitation, inviteAllUninvitedTeamUsers} from "../../actions/userActions";
 import {connect} from "react-redux";
 import { Icon, Segment, Loader } from 'semantic-ui-react';
-import {reflect} from "../../utils/utils";
+import {basicDateFormat, reflect} from "../../utils/utils";
 
 class TeamUserInviteLimitReachedSegment extends Component {
   constructor(props){
@@ -162,6 +162,27 @@ class TeamUserReInviteSegment extends Component {
   }
 }
 
+class TeamUserArrivalDateIndicator extends Component {
+  constructor(props){
+    super(props);
+  }
+  render(){
+    const {team_user} = this.props;
+
+    return (
+        <div class="user_invitation_indicator">
+          <Segment
+              inverted
+              style={{backgroundColor: "#4a90e2"}}>
+            {team_user.username} will be invited to join your team on {moment(team_user.arrival_date).format('DD/MM/YYYY')}. <NavLink to={`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}/flexPanel`}>Manage</NavLink>
+          </Segment>
+        </div>
+    )
+  }
+}
+
+const TeamUserArrivalDateIndicatorWithRouter = withRouter(TeamUserArrivalDateIndicator);
+
 @connect(store => ({
   teams: store.teams
 }))
@@ -178,6 +199,10 @@ class TeamUserInviteIndicators extends Component {
         return ++stack;
       return stack;
     }, 0);
+    if (team_user.state === 0 && !!team_user.arrival_date)
+      return (
+          <TeamUserArrivalDateIndicatorWithRouter {...this.props}/>
+      );
     if (team_user.state === 0 && team_user.invitation_sent)
       return (
           <TeamUserReInviteSegment {...this.props}/>

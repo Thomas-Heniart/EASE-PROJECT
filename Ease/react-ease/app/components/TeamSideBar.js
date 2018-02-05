@@ -74,6 +74,12 @@ function UserList(props){
   const {team, me} = props;
   const user_list = Object.keys(team.team_users).map(user_id => {
     return team.team_users[user_id];
+  }).sort((a, b) => {
+    if (a.state !== b.state)
+      return b.state - a.state;
+    if (a.invitation_sent !== b.invitation_sent)
+      return b.invitation_sent - a.invitation_sent;
+    return a.username.localeCompare(b.username);
   });
   const invitedMembers = user_list.reduce((stack, team_user) => {
     if (team_user.invitation_sent)

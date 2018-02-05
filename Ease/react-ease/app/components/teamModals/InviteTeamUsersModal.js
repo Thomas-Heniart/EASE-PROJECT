@@ -19,7 +19,8 @@ class InviteTeamUsersModal extends Component {
   }
   close = () => {
     this.props.dispatch(showInviteTeamUsersModal({
-      active: false
+      active: false,
+      team_id: this.props.team.id
     }))
   };
   confirm = (e) => {
