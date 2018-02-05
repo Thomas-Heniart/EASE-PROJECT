@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from "react";
 import {withRouter, NavLink} from "react-router-dom";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
-import {sendTeamUserInvitation} from "../../actions/userActions";
+import {reInviteAllInvitedTeamUsers, sendTeamUserInvitation, inviteAllUninvitedTeamUsers} from "../../actions/userActions";
 import {connect} from "react-redux";
 import { Icon, Segment, Loader } from 'semantic-ui-react';
 import {reflect} from "../../utils/utils";
@@ -56,18 +56,15 @@ class TeamUserInviteSegment extends Component {
   inviteAllUsers = () => {
     const {teams, team_user} = this.props;
     const team = teams[team_user.team_id];
-    const calls = [];
 
     this.setState({sent: true});
-    Object.keys(team.team_users).forEach(team_user_id => {
-      const team_user = team.team_users[team_user_id];
-      if (team_user.state === 0 && team_user.invitation_sent)
-        calls.push(reflect(sendTeamUserInvitation({
-          team_id: team.id,
-          team_user_id: team_user.id
-        })))
-    });
-    Promise.all(calls).then(response => {
+    this.props.dispatch(inviteAllUninvitedTeamUsers({
+      team_id: team.id
+    })).then(response => {
+      setTimeout(() => {
+        this.setState({sent: false})
+      }, 2000);
+    }).catch(err => {
       setTimeout(() => {
         this.setState({sent: false})
       }, 2000);
@@ -117,19 +114,16 @@ class TeamUserReInviteSegment extends Component {
   };
   reInviteAllUsers = () => {
     const {teams, team_user} = this.props;
-    const team = teams[team_user.team_id];
-    const calls = [];
 
     this.setState({sent: true});
-    Object.keys(team.team_users).forEach(team_user_id => {
-      const team_user = team.team_users[team_user_id];
-      if (team_user.state === 0 && team_user.invitation_sent)
-        calls.push(reflect(this.props.dispatch(sendTeamUserInvitation({
-          team_id: team.id,
-          team_user_id: team_user.id
-        }))));
-    });
-    Promise.all(calls).then(response => {
+
+    this.props.dispatch(reInviteAllInvitedTeamUsers({
+      team_id: team_user.team_id
+    })).then(response => {
+      setTimeout(() => {
+        this.setState({sent: false})
+      }, 2000);
+    }).catch(err => {
       setTimeout(() => {
         this.setState({sent: false})
       }, 2000);
