@@ -22,6 +22,7 @@ class TeamLinkApp extends Component {
         app_id: this.props.app.id
       }));
     this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
+    easeTracker.trackEvent("ClickOnAppPro");
     window.open(team_app.url, '_blank');
   };
   render(){

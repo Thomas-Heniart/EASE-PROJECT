@@ -11,6 +11,9 @@ class MainView extends Component {
       step: 0
     }
   }
+  componentDidMount() {
+    easeTracker.trackEvent("PopupChromeExtension");
+  }
   onClick = () => {
     if (this.state.step === 0){
       this.setState({step: 1});
