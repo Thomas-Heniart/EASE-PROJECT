@@ -96,7 +96,6 @@ const extension_api = {
           },
           {},
           (response) => {
-            console.log('response batard', response);
             if (!response && !!browser.runtime.lastError)
               reject(browser.runtime.lastError.message);
             else if (response.error)

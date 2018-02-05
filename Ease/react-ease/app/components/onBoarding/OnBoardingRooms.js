@@ -18,7 +18,7 @@ class OnBoardingRooms extends React.Component {
       <React.Fragment>
         <Header as='h1'>What passwords does your company uses?</Header>
         <p>Select at least 3 types of passwords your company has. You’ll be able to add the tools you want in it, as well as create your own # later.</p>
-        <div style={{display:'inline-flex',flexWrap:'wrap'}}>
+        <div style={{display:'inline-flex',flexWrap:'wrap',overflowY:'auto',overflowX:'hidden'}}>
           {roomsList}
         </div>
       </React.Fragment>

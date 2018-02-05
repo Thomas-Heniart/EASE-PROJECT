@@ -217,7 +217,7 @@ class OnBoardingJoinTeam extends React.Component {
     }
   }
   checkPassword = () => {
-    return (this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
+    return (this.state.checkCGU === true && this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
   };
   submit = () => {
     this.setState({loading: true});
@@ -280,10 +280,9 @@ class OnBoardingJoinTeam extends React.Component {
         <div id='center'>
           <Menu id='top_bar' pointing secondary fluid>
             <Menu.Item name='Information' active={this.state.activeItem === 1}/>
-            <Menu.Item name='Rooms' active={this.state.activeItem === 2}/>
+            <Menu.Item name='Password' active={this.state.activeItem === 2}/>
           </Menu>
-          <div id='content'
-               className={this.state.view === 3 || (this.state.view === 1 && this.state.viewInfo === 4) || this.state.view === 5 ? 'stepUsers' : null}>
+          <div id='content' className='stepUsers'>
             <Form
               onSubmit={this.state.view === 1 ? this.nextInformation : this.state.view === 5 ? this.nextAccounts : this.next}
               error={this.state.error !== ''}>
@@ -315,7 +314,7 @@ class OnBoardingJoinTeam extends React.Component {
                     onClick={this.submit}
                     disabled={(this.state.loading)
                               || (this.state.view === 1 && (this.state.firstName === '' || this.state.lastName === ''))
-                              || (this.state.view === 2 && (!this.checkPassword || !this.state.checkCGU))}>
+                              || (this.state.view === 2 && !this.checkPassword())}>
               Next
               <Icon name='arrow right'/>
             </Button>

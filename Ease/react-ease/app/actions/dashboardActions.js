@@ -660,6 +660,7 @@ export function clickOnAppMetric({app_id}) {
 export function validateTutorial() {
   return (dispatch, getState) => {
     return post_api.dashboard.validateTutorial().then(response => {
+      easeTracker.trackEvent("EaseOnboardingPersonalTuto");
       dispatch({
         type: 'DASHBOARD_TUTORIAL_DONE'
       });

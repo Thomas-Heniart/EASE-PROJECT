@@ -33,7 +33,8 @@ class MainView extends Component {
             <Route path='/main/settings' component={Settings}/>
             <Route path='/main/dashboard' component={Dashboard}/>
           </Switch>
-          <EaseHeader history={this.props.history}/>
+          {this.props.location.pathname.split("/")[2] !== "simpleTeamCreation" &&
+          <EaseHeader history={this.props.history}/>}
           <CustomDragLayer/>
           <NotificationBoxContainer/>
         </div>
