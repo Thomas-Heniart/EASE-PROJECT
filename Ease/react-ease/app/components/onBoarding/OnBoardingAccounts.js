@@ -12,7 +12,7 @@ class ChoosePasswordManager extends React.Component {
           <div
             onClick={e => selectPasswordManager(1)}
             className={passwordManagerSelected === 1 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
-            <div className='password_manager'><img style={{marginTop:'7px'}} src="/resources/other/Excel.png"/><span>Excel or Google sheet</span></div>
+            <div className='password_manager'><img style={{marginTop:'7px'}} src="/resources/other/Excel.png"/><span>Excel or<br/>Google sheet</span></div>
           </div>
           <div
             onClick={e => selectPasswordManager(2)}
