@@ -82,9 +82,9 @@ class ChooseApps extends React.Component {
     return (
       <React.Fragment>
         {currentRoom === 0 &&
-        <Header as='h1'>Select tools everybody uses in your team</Header>}
+        <Header as='h1'>Select tools everybody uses</Header>}
         {currentRoom > 0 &&
-        <Header as='h1'>Select accounts used in #{room.name}</Header>}
+        <Header as='h1'>Select tools for #{room.name}</Header>}
         <Grid columns={4} className="logoCatalog">
           {website_ids.map(id => (
             <Grid.Column key={id}
@@ -113,8 +113,8 @@ class ChooseSingleApps extends React.Component {
     })[0];
     return (
       <React.Fragment>
-        <Header as='h1'>Do people share common passwords?</Header>
-        <p>Select the tool(s) where people share an account, meaning one login and one password together.</p>
+        <Header as='h1'>Select the #{room.name} tools where team members share 1 password?</Header>
+        <p>Only select a tool if your team has only 1 password on it. Do not select a tool where team members have their own accounts on the tool.</p>
         <Grid columns={4} className="logoCatalog">
           {appsSelected.map(id => (
             <Grid.Column key={id}
@@ -161,6 +161,7 @@ class CredentialsSingleApps extends React.Component {
   render() {
     const {
       team,
+      error,
       users,
       websites,
       singleApps,
@@ -197,38 +198,46 @@ class CredentialsSingleApps extends React.Component {
         <Input size='mini'
                type='text'
                name='login'
+               error={error === `${id}login` || error === `${id}all`}
                onChange={(e, name, value) => {
                  handleAppInfo(id, name, value)
                }}
                value={credentialsSingleApps[id].login}
                disabled={this.state.fourthField[id] === 1}/>
-        <Input size='mini'
-               name='password'
-               onChange={(e, name, value) => {
-                 handleAppInfo(id, name, value)
-               }}
-               value={credentialsSingleApps[id].password}
-               disabled={this.state.fourthField[id] === 1}
-               icon={<Icon name='eye' link onClick={e => this.seePassword(id)}/>}
-               type={this.state.seePassword[id] === false ? 'password' : 'text'}/>
+        <div className='password_with_test_connection'>
+          <Input size='mini'
+                 name='password'
+                 className='password'
+                 error={error === `${id}password` || error === `${id}all`}
+                 onChange={(e, name, value) => {
+                   handleAppInfo(id, name, value)
+                 }}
+                 value={credentialsSingleApps[id].password}
+                 disabled={this.state.fourthField[id] === 1}
+                 icon={<Icon name='eye' link onClick={e => this.seePassword(id)}/>}
+                 type={this.state.seePassword[id] === false ? 'password' : 'text'}/>
+          <Popup
+            inverted
+            trigger={
+              <p
+                className={this.state.fourthField[id] === 1 ? 'underline_hover test_connection disabled' : 'underline_hover test_connection'}
+                onClick={this.state.fourthField[id] === 0 ? e => testPassword(id) : null}>
+                <Icon name='magic'/>Test this password
+              </p>}
+            content='We will open a new tab to test if the password works or not.'/>
+        </div>
         {(credentialsSingleApps[id].login === '' && credentialsSingleApps[id].password === '' && this.state.fourthField[id] === 0 && filler[room_id].length !== 0) &&
         <Popup
           inverted
           trigger={
             <p className='underline_hover' onClick={e => this.changeFourthField(id, 1)}><Icon name='life ring'/>Ask password to...</p>}
-          content='You can request logins and passwords from someone in your team.'/>}
+          content='Ask a team member to fill that for you.'/>}
         {this.state.fourthField[id] === 1 &&
         <div className='div_dropdown'>
           <Icon size='large' name='circle' className='remove_dropdown white'/>
           <Icon onClick={e => this.changeFourthField(id, 0)} name='remove circle' className='remove_dropdown'/>
           <Dropdown selection name='filler_id' options={filler[room_id]} onChange={(e, name, value) => {handleAppInfo(id, name, value)}}/>
         </div>}
-        {(credentialsSingleApps[id].login !== '' || credentialsSingleApps[id].password !== '') &&
-        <Popup
-          inverted
-          trigger={
-            <p className='underline_hover' onClick={e => testPassword(id)}><Icon name='magic'/>Test this password</p>}
-          content='It will open a new tab to verify if this password works or not.'/>}
       </div>))
     });
     return (
@@ -257,6 +266,7 @@ class OnBoardingAccounts extends React.Component {
     const {
       view,
       team,
+      error,
       rooms,
       users,
       selectApp,
@@ -299,6 +309,7 @@ class OnBoardingAccounts extends React.Component {
         {view === 4 &&
           <CredentialsSingleApps
             team={team}
+            error={error}
             users={users}
             singleApps={singleApps}
             websites={roomsWebsites}
