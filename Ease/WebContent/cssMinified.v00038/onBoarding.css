@@ -105,6 +105,8 @@
       width: 690px; }
       #new_team_creation #center #content.stepUsers {
         width: 810px; }
+      #new_team_creation #center #content .loader {
+        top: 50%; }
       #new_team_creation #center #content .message.error {
         margin: 0;
         background: transparent;
