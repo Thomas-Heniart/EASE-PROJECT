@@ -422,6 +422,7 @@ class OnBoardingImportation extends React.Component {
               easeTracker.trackEvent("EaseOnboardingPasteCSV");
             }
           });
+          easeTracker.trackEvent("Importation");
         }).catch(err => {
         });
       }
