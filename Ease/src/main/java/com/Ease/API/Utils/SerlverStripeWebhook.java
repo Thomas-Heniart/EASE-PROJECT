@@ -1,9 +1,10 @@
 package com.Ease.API.Utils;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.stripe.model.Event;
+import com.stripe.model.Subscription;
 import com.stripe.net.APIResource;
 import org.json.JSONObject;
 
@@ -26,18 +27,56 @@ public class SerlverStripeWebhook extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             Event eventJson = APIResource.GSON.fromJson(sm.getBody(), Event.class);
+            String type = new JSONObject(eventJson.toJson()).getString("type");
             JSONObject jsonObject = new JSONObject(eventJson.getData().getObject().toJson());
-            Long trialEnd = (Long) jsonObject.get("trial_end");
-            if (trialEnd != null) {
-                String subscription_id = (String) jsonObject.get("id");
+            System.out.println(eventJson.getData().toJson());
+            System.out.println(jsonObject.toString());
+            //String type = jsonObject.getString("type");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            JSONObject data = null;
+            String subscription_id = null;
+            Team team = null;
+            switch (type) {
+                case "invoice.payment_succeeded":
+                    data = jsonObject.getJSONObject("lines").getJSONArray("data").getJSONObject(0);
+                    subscription_id = data.getString("id");
+                    hibernateQuery.queryString("SELECT t FROM Team t WHERE subscription_id = :sub_id");
+                    hibernateQuery.setParameter("sub_id", subscription_id);
+                    team = (Team) hibernateQuery.getSingleResult();
+                    if (team != null) {
+                        Subscription subscription = Subscription.retrieve(subscription_id);
+                        team.setSubscription(subscription);
+                        sm.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+                    }
+                    break;
+                case "invoice.payment_failed":
+                    data = jsonObject.getJSONObject("lines").getJSONArray("data").getJSONObject(0);
+                    subscription_id = data.getString("id");
+                    hibernateQuery.queryString("SELECT t FROM Team t WHERE subscription_id = :sub_id");
+                    hibernateQuery.setParameter("sub_id", subscription_id);
+                    team = (Team) hibernateQuery.getSingleResult();
+                    if (team != null) {
+                        Subscription subscription = Subscription.retrieve(subscription_id);
+                        team.setSubscription(subscription);
+                        sm.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+                    }
+                    break;
+                case "customer.subscription.updated":
+                    break;
+                default:
+                    break;
+            }
+            /* if (jsonObject.has("trial_end")) {
+                Long trialEnd = jsonObject.getLong("trial_end");
+                String subscription_id = jsonObject.getString("id");
                 TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
                 for (Team team : teamManager.getTeams(sm.getHibernateQuery())) {
-                    if (!team.getSubscription_id().equals(subscription_id))
+                    if (team.getSubscription_id() == null || !team.getSubscription_id().equals(subscription_id))
                         continue;
                     sm.initializeTeamWithContext(team);
                     team.getSubscription().setTrialEnd(trialEnd);
                 }
-            }
+            } */
             sm.setSuccess("success");
         } catch (Exception e) {
             sm.setError(e);

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @WebServlet("/api/v1/teams/SendTeamUserInvitation")
 public class ServletSendTeamUserInvitation extends HttpServlet {
@@ -33,6 +34,9 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             if (teamUser.getState() != 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "This teamUser has already created his account");
+            Long now = new Date().getTime();
+            if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot invite this member before his arrival date");
             TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");

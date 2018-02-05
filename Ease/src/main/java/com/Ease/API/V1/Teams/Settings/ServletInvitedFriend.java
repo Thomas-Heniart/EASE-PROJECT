@@ -41,11 +41,11 @@ public class ServletInvitedFriend extends HttpServlet {
             hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
             hibernateQuery.setParameter("email", email);
             if (!hibernateQuery.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "Email already registered on Ease.Space");
+                throw new HttpServletException(HttpStatus.BadRequest, "This person already uses Ease.space, please referre another one!");
             hibernateQuery.queryString("SELECT tu FROM TeamUser tu WHERE tu.email = :email");
             hibernateQuery.setParameter("email", email);
             if (!hibernateQuery.list().isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "Already in a team");
+                throw new HttpServletException(HttpStatus.BadRequest, "This person already uses Ease.space, please referre another one!");
             InvitedFriend invitedFriend = new InvitedFriend(email, team);
             team.addInvitedFriend(invitedFriend);
             sm.saveOrUpdate(team);
