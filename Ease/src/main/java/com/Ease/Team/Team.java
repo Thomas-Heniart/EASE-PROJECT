@@ -33,6 +33,7 @@ public class Team {
 
     public static final Map<Integer, String> plansMap = new HashMap<>();
     private static final Map<String, Integer> inverse_plansMap = new HashMap<>();
+    public static final int MAX_MEMBERS = 15;
 
     static {
         plansMap.put(0, "FreePlan");
@@ -78,9 +79,6 @@ public class Team {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "onboarding_status_id")
     private OnboardingStatus onboardingStatus = new OnboardingStatus();
-
-    @Column(name = "extra_members")
-    private Integer extra_members = 0;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -200,14 +198,6 @@ public class Team {
 
     public void setInvitations_sent(boolean invitations_sent) {
         this.invitations_sent = invitations_sent;
-    }
-
-    public Integer getExtra_members() {
-        return extra_members;
-    }
-
-    public void setExtra_members(Integer extra_members) {
-        this.extra_members = extra_members;
     }
 
     public synchronized Set<TeamCard> getTeamCardSet() {

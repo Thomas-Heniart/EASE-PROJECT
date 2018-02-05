@@ -29,8 +29,8 @@ public class ServletInvitedFriend extends HttpServlet {
             Team team = sm.getTeam(team_id);
             sm.needToBeOwnerOfTeam(team);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            if (team.getInvitedFriendMap().size() >= 15)
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot invite more than 15 friends");
+            if (team.getInvitedFriendMap().size() >= Team.MAX_MEMBERS)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot invite more than " + Team.MAX_MEMBERS + " friends");
             String email = sm.getStringParam("email", true, false);
             if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "You must provide an email");

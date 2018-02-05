@@ -149,7 +149,7 @@ public class NotificationFactory {
     }
 
     public void createAcceptJoinRequestNotification(TeamUser teamUser_receiver, TeamUser teamUser, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        Notification notification = this.createNotification(teamUser_receiver.getUser(), teamUser.getUsername() + " approoved your access to " + teamCard.getName() + " in #" + teamCard.getChannel().getName(), teamCard.getLogo(), teamCard);
+        Notification notification = this.createNotification(teamUser_receiver.getUser(), teamUser.getUsername() + " approved your access to " + teamCard.getName() + " in #" + teamCard.getChannel().getName(), teamCard.getLogo(), teamCard);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
@@ -216,7 +216,7 @@ public class NotificationFactory {
         TeamCard teamCard = teamCardReceiver.getTeamCard();
         Team team = teamCardReceiver.getTeamCard().getTeam();
         Channel channel = teamCard.getChannel();
-        String url = team.getDb_id() + "/" + channel.getDb_id() + "?app_id=" + teamCard.getDb_id();
+        String url = "#/teams/" + team.getDb_id() + "/" + channel.getDb_id() + "?app_id=" + teamCard.getDb_id();
         Notification notification = this.createNotification(channel.getRoom_manager().getUser(), "The password of " + teamCardReceiver.getTeamUser().getUsername() + " for " + teamCard.getName() + " is not up to date for the last 7 days", teamCard.getLogo(), url);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));

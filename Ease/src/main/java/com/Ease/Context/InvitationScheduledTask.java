@@ -37,7 +37,7 @@ public class InvitationScheduledTask extends TimerTask {
                     teamIdMap.put(team.getDb_id(), teamProperties);
                 }
                 team.initializeStripe(teamProperties);
-                if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (15 + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
                     continue;
                 teamUser.getTeamUserStatus().setInvitation_sent(true);
                 hibernateQuery.saveOrUpdateObject(teamUser.getTeamUserStatus());
