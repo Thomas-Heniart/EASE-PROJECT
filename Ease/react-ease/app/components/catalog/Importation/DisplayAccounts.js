@@ -94,7 +94,7 @@ class DisplayAccounts extends React.Component {
                      class="display_flex"
                      active={selectedProfile > -1}
                      onClick={selectProfile}>
-        <strong className="overflow-ellipsis"><Icon name='user'/>Personal Space</strong>
+        <strong className="overflow-ellipsis"><Icon name='user'/>Personal Apps</strong>
         &nbsp;&nbsp;
       </Dropdown.Item>;
     const teamsList = Object.entries(this.props.teamsInState).map((teams, i) => (
