@@ -2262,6 +2262,16 @@ button.action_text_button {
 
 #team_user_invite_limit_reached_modal {
   color: $themeBlue2Color;
+  .users {
+    & > span {
+      color: #eb555c;
+      margin-bottom: 10px;
+    }
+  }
+  u {
+    color: $themeBlue2Color;
+    cursor: pointer;
+  }
 }
 
 #upgrade_team_plan_modal {
@@ -3075,7 +3085,7 @@ button.action_text_button {
                   }
                   .userNotAccepted {
                     font-style: italic;
-                    color: rgba(232, 232, 232, 0.6);
+                    opacity: .6;
                     width: 100%;
                   }
                 }

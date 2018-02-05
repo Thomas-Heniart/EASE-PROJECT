@@ -75,6 +75,12 @@ function UserList(props){
   const user_list = Object.keys(team.team_users).map(user_id => {
     return team.team_users[user_id];
   });
+  const invitedMembers = user_list.reduce((stack, team_user) => {
+    if (team_user.invitation_sent)
+      return stack + 1;
+    return stack;
+  }, 0);
+  const maxInvitations = 15 + team.extra_members;
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_users">
         {isAdmin(me.role) &&
@@ -106,23 +112,34 @@ function UserList(props){
         </NavLink>
         <div className="section-list">
           {
-            user_list.map(function(user){
+            user_list.map(function(user, idx){
+              if (user.state >= 1)
+                return (
+                    <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                      <div className="primary_action channel_name">
+                        <i className="fa fa-user prefix"/>
+                        <span className="overflow-ellipsis">{user.username}</span>
+                      </div>
+                    </NavLink>
+                );
+              if (user.state === 0 && idx < maxInvitations)
+                return (
+                    <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                      <div className="primary_action channel_name">
+                        <i className="fa fa-user-o prefix"/>
+                        <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
+                      </div>
+                    </NavLink>
+                );
               return (
                   <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
-                    {user.state >= 1 ?
-                        <div className="primary_action channel_name">
-                          <i className="fa fa-user prefix"/>
-                          <span className="overflow-ellipsis">{user.username}</span>
-                        </div>
-                        :
-                        <div className="primary_action channel_name">
-                          <i className="fa fa-user-o prefix"/>
-                          <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
-                        </div>}
+                    <div style={{color: (isAdmin(me.role) && team.plan_id === 0) ? 'red' : null}} className="primary_action channel_name">
+                      <i className="fa fa-user-o prefix"/>
+                      <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
+                    </div>
                   </NavLink>
               )
-            }, this)
-          }
+          })}
         </div>
       </div>
   )
