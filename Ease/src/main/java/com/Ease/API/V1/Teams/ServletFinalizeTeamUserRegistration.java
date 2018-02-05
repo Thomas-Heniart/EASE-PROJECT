@@ -73,9 +73,7 @@ public class ServletFinalizeTeamUserRegistration extends HttpServlet {
             Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             Date now = new Date();
-            if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() < now.getTime())
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot register.");
-            if (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() > now.getTime())
+            if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now.getTime())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot register.");
             teamUser.setUsername(username);
             teamUser.setUser(user);
