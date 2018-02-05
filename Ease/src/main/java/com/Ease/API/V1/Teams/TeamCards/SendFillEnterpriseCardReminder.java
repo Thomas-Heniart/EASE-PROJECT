@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards;
 
+import com.Ease.Context.Variables;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -42,6 +43,7 @@ public class SendFillEnterpriseCardReminder extends HttpServlet {
                 mailJetBuilder.addVariable("first_name", teamUser_connected.getUser().getPersonalInformation().getFirst_name());
                 mailJetBuilder.addVariable("last_name", teamUser_connected.getUser().getPersonalInformation().getLast_name());
                 mailJetBuilder.addVariable("app_name", teamCard.getName());
+                mailJetBuilder.addVariable("url", Variables.URL_PATH);
                 mailJetBuilder.sendEmail();
                 NotificationFactory.getInstance().createRemindTeamCardFiller(teamCard, teamUser_connected, sm.getTeamUser(team), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
             }
