@@ -129,6 +129,21 @@
       &.stepUsers {
         width: 810px;
       }
+      .loader {
+        top: 50%;
+      }
+      .message.error {
+        margin: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 0 0 25px 0;
+        color: #eb555c;
+        &.rooms {
+          position: absolute;
+          bottom: 10px;
+          padding: 0;
+        }
+      }
       label {
         display: flex;
         margin-bottom: 10px;
@@ -151,6 +166,14 @@
             border-color: #373b60;
             label {
               color: #373b60;
+            }
+          }
+        }
+        &.error {
+          input {
+            border-color: #eb555c;
+            &:focus {
+              border-color: #eb555c;
             }
           }
         }
@@ -362,9 +385,27 @@
         color: #949eb7;
         display: inline-flex;
         margin: 7px 0 7px 0;
+        .password_with_test_connection {
+          position: relative;
+          .password {
+            height: auto;
+            margin: 0;
+          }
+          .test_connection {
+            position: absolute;
+            margin-top: 0;
+            &.disabled {
+              text-decoration: none;
+              cursor: auto;
+              color: #E8ECF1;
+            }
+          }
+        }
         p {
+          font-size: 14px;
           margin-left: 5px;
-          margin-top: 5px;
+          margin-top: 9px;
+          cursor: pointer;
           &.underline_hover {
             &:hover {
               text-decoration: underline;
@@ -375,6 +416,7 @@
           }
         }
         .remove_account {
+          cursor: pointer;
           margin-top: 10px;
           color: #e0e1e2;
         }
@@ -534,6 +576,7 @@
         font-size: 16px;
         color: #949eb7;
         margin-left: 10px;
+        cursor: auto;
       }
       span {
         margin-left: 10px;

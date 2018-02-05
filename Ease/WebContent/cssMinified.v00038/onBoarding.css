@@ -105,6 +105,16 @@
       width: 690px; }
       #new_team_creation #center #content.stepUsers {
         width: 810px; }
+      #new_team_creation #center #content .message.error {
+        margin: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 0 0 25px 0;
+        color: #eb555c; }
+        #new_team_creation #center #content .message.error.rooms {
+          position: absolute;
+          bottom: 10px;
+          padding: 0; }
       #new_team_creation #center #content label {
         display: flex;
         margin-bottom: 10px; }
@@ -123,6 +133,10 @@
             border-color: #373b60; }
             #new_team_creation #center #content .input input:focus label {
               color: #373b60; }
+        #new_team_creation #center #content .input.error input {
+          border-color: #eb555c; }
+          #new_team_creation #center #content .input.error input:focus {
+            border-color: #eb555c; }
       #new_team_creation #center #content .hidden_input {
         position: absolute;
         top: -1000;
@@ -287,14 +301,29 @@
         color: #949eb7;
         display: inline-flex;
         margin: 7px 0 7px 0; }
+        #new_team_creation #center #content .account .password_with_test_connection {
+          position: relative; }
+          #new_team_creation #center #content .account .password_with_test_connection .password {
+            height: auto;
+            margin: 0; }
+          #new_team_creation #center #content .account .password_with_test_connection .test_connection {
+            position: absolute;
+            margin-top: 0; }
+            #new_team_creation #center #content .account .password_with_test_connection .test_connection.disabled {
+              text-decoration: none;
+              cursor: auto;
+              color: #E8ECF1; }
         #new_team_creation #center #content .account p {
+          font-size: 14px;
           margin-left: 5px;
-          margin-top: 5px; }
+          margin-top: 9px;
+          cursor: pointer; }
           #new_team_creation #center #content .account p.underline_hover:hover {
             text-decoration: underline; }
             #new_team_creation #center #content .account p.underline_hover:hover i {
               text-decoration: none; }
         #new_team_creation #center #content .account .remove_account {
+          cursor: pointer;
           margin-top: 10px;
           color: #e0e1e2; }
         #new_team_creation #center #content .account img {
@@ -407,7 +436,8 @@
       #new_team_creation #center #bottom_bar a {
         font-size: 16px;
         color: #949eb7;
-        margin-left: 10px; }
+        margin-left: 10px;
+        cursor: auto; }
       #new_team_creation #center #bottom_bar span {
         margin-left: 10px;
         font-size: 16px;
