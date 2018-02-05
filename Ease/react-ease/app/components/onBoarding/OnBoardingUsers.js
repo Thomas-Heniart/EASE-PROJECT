@@ -75,16 +75,16 @@ class OnBoardingUsers extends React.Component {
         <Header as='h1'>Who is working in your company?</Header>
         <p><strong>This step will not send invitations to your team</strong>.<br/>
           Please enter at least {this.state.number} emails or more (manually <u>or</u> paste a list from any file).</p>
-        <div style={{display:'inline-flex',flexWrap:'wrap'}}>
-          <div style={{width:'380px',paddingRight:'23px',paddingBottom:'10px',paddingTop:'10px',overflowY:'auto',height:'340px'}}>
+        <div className='add_users'>
+          <div className='user_fields input_fields'>
             {fields}
           </div>
-          <div style={{width:'370px',paddingLeft:'23px',paddingBottom:'10px',paddingTop:'10px',borderLeft:'solid 1px black'}}>
-            <TextArea name='paste' onChange={this.handleInput} placeholder='Paste a list of emails from any file….' style={{height:'320px'}}/>
+          <div className='user_fields textarea_field'>
+            <TextArea name='paste' onChange={this.handleInput} placeholder='Paste a list of emails from any file….' style={{width:'350px',height:'100%',position:'absolute'}}/>
           </div>
         </div>
-        <div style={{display:'inline-flex',flexWrap:'wrap'}}>
-          <div style={{width:'380px',paddingRight:'23px',paddingBottom:'10px',paddingTop:'10px'}}>
+        <div className='under_add_users'>
+          <div className='add_user_field'>
             <Icon name="add circle" color="blue" size='large'/>
             <button className="button-unstyle inline-text-button primary"
                     type="button" onClick={addNewField}>
@@ -92,7 +92,7 @@ class OnBoardingUsers extends React.Component {
             </button>
           </div>
           {this.state.emails.length > 0 &&
-          <div style={{width:'370px',paddingLeft:'23px',paddingBottom:'10px',paddingTop:'10px'}}>
+          <div className='show_users_found'>
             <p>{this.state.emails.length} email addresses detected.</p>
           </div>}
         </div>

@@ -8,17 +8,17 @@ class ChoosePasswordManager extends React.Component {
     return (
       <React.Fragment>
         <Header as='h1'>Add your accounts from:</Header>
-        <div style={{display:'inline-flex',flexWrap:'wrap'}}>
+        <div style={{display:'inline-flex',flexWrap:'wrap',overflowY:'auto'}}>
           <div
             onClick={e => selectPasswordManager(1)}
             className={passwordManagerSelected === 1 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
             <div className='password_manager'><img style={{marginTop:'7px'}} src="/resources/other/Excel.png"/><span>Excel or Google sheet</span></div>
           </div>
-          {/*<div
+          <div
             onClick={e => selectPasswordManager(2)}
             className={passwordManagerSelected === 2 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
             <div className='password_manager'><img src="/resources/other/Chrome.png"/><span>Chrome</span></div>
-          </div>*/}
+          </div>
           <div
             onClick={e => selectPasswordManager(10)}
             className={passwordManagerSelected === 10 ? 'selected roomsSegment password_manager_segment' : 'roomsSegment password_manager_segment'}>
@@ -167,7 +167,6 @@ class CredentialsSingleApps extends React.Component {
       testPassword,
       handleAppInfo,
       roomsSelected,
-      dropdownFiller,
       deleteSingleApp,
       credentialsSingleApps
     } = this.props;
@@ -222,7 +221,7 @@ class CredentialsSingleApps extends React.Component {
         <div className='div_dropdown'>
           <Icon size='large' name='circle' className='remove_dropdown white'/>
           <Icon onClick={e => this.changeFourthField(id, 0)} name='remove circle' className='remove_dropdown'/>
-          <Dropdown selection options={filler[room_id]} onChange={(e, value) => {dropdownFiller(id, value)}}/>
+          <Dropdown selection name='filler_id' options={filler[room_id]} onChange={(e, name, value) => {handleAppInfo(id, name, value)}}/>
         </div>}
         {(credentialsSingleApps[id].login !== '' || credentialsSingleApps[id].password !== '') &&
         <Popup
@@ -269,7 +268,6 @@ class OnBoardingAccounts extends React.Component {
       roomsSelected,
       roomsWebsites,
       deleteFillerId,
-      dropdownFiller,
       selectSingleApp,
       deleteSingleApp,
       allAppIdsSelected,
@@ -307,7 +305,6 @@ class OnBoardingAccounts extends React.Component {
             testPassword={testPassword}
             handleAppInfo={handleAppInfo}
             roomsSelected={roomsSelected}
-            dropdownFiller={dropdownFiller}
             deleteFillerId={deleteFillerId}
             deleteSingleApp={deleteSingleApp}
             credentialsSingleApps={credentialsSingleApps}/>}

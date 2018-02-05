@@ -5,9 +5,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
-import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.websocketV1.WebSocketManager;
@@ -110,12 +108,12 @@ public class NotificationFactory {
         }
     }
 
-    public void createRemindTeamSingleCardFiller(TeamSingleCardReceiver teamSingleCardReceiver, TeamUser teamUser, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
-        TeamUser filler = teamSingleCardReceiver.getTeamUser();
+    public void createRemindTeamCardFiller(TeamCardReceiver teamCardReceiver, TeamUser teamUser, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
+        TeamUser filler = teamCardReceiver.getTeamUser();
         User user = filler.getUser();
-        String content = teamUser.getUsername() + " reminds you to enter " + teamSingleCardReceiver.getTeamCard().getName() + "'s information";
-        String url = "#/main/dashboard?app_id=" + teamSingleCardReceiver.getApp().getDb_id();
-        String logo = teamSingleCardReceiver.getApp().getLogo();
+        String content = teamUser.getUsername() + " reminds you to enter " + teamCardReceiver.getTeamCard().getName() + "'s information";
+        String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
+        String logo = teamCardReceiver.getApp().getLogo();
         if (user != null) {
             Notification notification = this.createNotification(user, content, logo, url);
             hibernateQuery.saveOrUpdateObject(notification);
@@ -126,11 +124,11 @@ public class NotificationFactory {
         }
     }
 
-    public void createRemindTeamSingleCardFiller(TeamSingleCard teamSingleCard, TeamUser teamUser, TeamUser room_manager, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+    public void createRemindTeamCardFiller(TeamCard teamCard, TeamUser teamUser, TeamUser room_manager, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         User user = room_manager.getUser();
-        String content = teamUser.getUsername() + " reminds you to enter " + teamSingleCard.getName() + "'s information";
-        String url = "#/teams/" + teamSingleCard.getChannel().getDb_id() + "?app_id=" + teamSingleCard.getDb_id();
-        String logo = teamSingleCard.getLogo();
+        String content = teamUser.getUsername() + " reminds you to enter " + teamCard.getName() + "'s information";
+        String url = "#/teams/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
+        String logo = teamCard.getLogo();
         Notification notification = this.createNotification(user, content, logo, url);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));

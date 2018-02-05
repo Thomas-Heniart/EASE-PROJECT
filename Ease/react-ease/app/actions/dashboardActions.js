@@ -329,6 +329,7 @@ export function endAppDrag(){
       position: index,
       ws_id: getState().common.ws_id
     });
+    easeTracker.trackEvent("MoveApp");
   };
 }
 
@@ -421,6 +422,7 @@ export function createProfile({column_index, name}) {
       column_index: column_index,
       ws_id: getState().common.ws_id
     }).then(profile => {
+      easeTracker.trackEvent("NewGroup");
       dispatch({
         type: 'DASHBOARD_PROFILE_CREATED',
         payload: {
@@ -660,6 +662,7 @@ export function clickOnAppMetric({app_id}) {
 export function validateTutorial() {
   return (dispatch, getState) => {
     return post_api.dashboard.validateTutorial().then(response => {
+      easeTracker.trackEvent("EaseOnboardingPersonalTuto");
       dispatch({
         type: 'DASHBOARD_TUTORIAL_DONE'
       });

@@ -27,6 +27,7 @@ class SoftwareApp extends Component {
         if (this.props.app.new)
           this.props.dispatch(validateApp({app_id: this.props.app.id}));
         this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
+        easeTracker.trackEvent("ClickOnAppPerso");
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {

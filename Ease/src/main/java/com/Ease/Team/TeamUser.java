@@ -609,4 +609,12 @@ public class TeamUser {
     public void removeTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
         this.getTeamSingleSoftwareCardSet().remove(teamSingleSoftwareCard);
     }
+
+    public void addTeamSingleCardToFill(TeamSingleCard teamSingleCard) {
+        this.getTeamSingleCardToFillSet().add(teamSingleCard);
+    }
+
+    public void addTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
+        this.getTeamSingleSoftwareCardSet().add(teamSingleSoftwareCard);
+    }
 }

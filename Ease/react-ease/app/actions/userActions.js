@@ -193,6 +193,7 @@ export function editTeamUserArrivalDate({team_id, team_user_id, arrival_date}) {
       team_user_id: team_user_id,
       arrival_date: arrival_date
     }).then(team_user => {
+      easeTracker.trackEvent("ArrivalDate");
       dispatch(teamUserChangedAction({
         team_user: team_user
       }));
