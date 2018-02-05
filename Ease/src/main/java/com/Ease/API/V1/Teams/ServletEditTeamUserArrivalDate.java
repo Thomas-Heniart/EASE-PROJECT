@@ -34,11 +34,11 @@ public class ServletEditTeamUserArrivalDate extends HttpServlet {
             if (teamUser.getTeamUserRole().isSuperiorOrEquals(teamUser_connected.getTeamUserRole().getRoleValue()))
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit departure date of this member");
             Long arrival_date = sm.getLongParam("arrival_date", true, true);
-            if (arrival_date < new Date().getTime())
+            if (arrival_date != null && arrival_date < new Date().getTime())
                 throw new HttpServletException(HttpStatus.BadRequest, "Arrival date cannot be past");
-            if (teamUser.getDepartureDate() != null && arrival_date > teamUser.getDepartureDate().getTime())
+            if (teamUser.getDepartureDate() != null && arrival_date != null && arrival_date > teamUser.getDepartureDate().getTime())
                 throw new HttpServletException(HttpStatus.BadRequest, "Arrival date cannot be after departure date");
-            teamUser.setArrival_date(new Date(arrival_date));
+            teamUser.setArrival_date(arrival_date == null ? null : new Date(arrival_date));
             sm.saveOrUpdate(teamUser);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_USER, WebSocketMessageAction.CHANGED, teamUser.getWebSocketJson()));
             sm.setSuccess(teamUser.getJson());
