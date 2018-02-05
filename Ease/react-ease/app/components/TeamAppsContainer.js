@@ -14,6 +14,7 @@ import {reflect} from "../utils/utils";
 import {sendTeamUserInvitation} from "../actions/userActions";
 import {withRouter, NavLink} from "react-router-dom";
 import TeamUserInviteIndicators from "./teams/TeamUserInviteIndicators";
+import {isAdmin} from "../utils/helperFunctions";
 
 @connect(store => ({
   team_apps: store.team_apps,
@@ -177,7 +178,7 @@ class TeamAppsContainer extends React.Component{
     return (
         <div class="apps_container">
           <div class="apps_scroller_div" id="team_apps_container">
-            {!!item.username && item.state === 0 &&
+            {!!item.username && isAdmin(me.role) && item.state === 0 &&
                 <TeamUserInviteIndicators team_user={item}/>}
             {!this.state.loading ?
                 team_cards.map(item => {

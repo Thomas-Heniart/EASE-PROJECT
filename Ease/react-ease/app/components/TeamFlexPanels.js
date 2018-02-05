@@ -737,6 +737,7 @@ class DepartureDateSection extends React.Component {
                         </span> :
               <Input type="date" size="mini"
                      fluid action name="departure_date"
+                     min={!!user.arrival_date ? moment(user.arrival_date).add(1, 'days').format('YYYY-MM-DD') : null}
                      value={this.state.departure_date}
                      onChange={this.handleInput}>
                 <input/>
@@ -803,7 +804,7 @@ class ArrivalDateSection extends Component {
           <strong>Arrival date: </strong>
           {!this.state.edit ?
               <span>
-                      {user.departure_date !== null ? basicDateFormat(user.arrival_date) : 'not planned'}
+                      {user.arrival_date !== null ? basicDateFormat(user.arrival_date) : 'not planned'}
                 {isSuperior(user, me) && me.id !== user.id &&
                 <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
                 {isSuperior(user, me) && me.id !== user.id && team.plan_id === 0 &&

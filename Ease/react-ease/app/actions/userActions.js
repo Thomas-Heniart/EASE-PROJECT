@@ -4,6 +4,7 @@ import {teamRemovedAction} from "./teamActions";
 import {teamUserRoles} from "../utils/utils";
 import {teamCardReceiverRemovedAction, teamCardReceiverRemovedAction2} from "./appsActions";
 import {addNotification} from "./notificationBoxActions";
+import {showTeamUserInviteLimitReachedModal} from "./teamModalActions";
 
 export function createTeamUserNow({team_id, first_name, last_name, email, username, departure_date, role}){
   return function(dispatch, getState){
@@ -42,6 +43,23 @@ export function sendTeamUserInvitation({team_id, team_user_id}){
   }
 }
 
+export function reInviteAllInvitedTeamUsers({team_id}) {
+  return (dispatch, getState) => {
+    const store = getState();
+    const team = store.teams[team_id];
+    const calls = [];
+    Object.keys(team.team_users).forEach(team_user_id => {
+      const team_user = team.team_users[team_user_id];
+      if (team_user.state === 0 && team_user.invitation_sent)
+        calls.push(dispatch(sendTeamUserInvitation({
+          team_id: team_id,
+          team_user_id: team_user_id
+        })));
+    });
+    return Promise.all(calls);
+  }
+}
+
 export function inviteAllUninvitedTeamUsers({team_id}) {
   return (dispatch, getState) =>  {
     const state = getState();
@@ -69,7 +87,22 @@ export function inviteAllUninvitedTeamUsers({team_id}) {
     }, 0);
     const calls = [];
     let availableSlots = 15 + team.extra_members - invitedMembers;
-
+    for (let i = 0; i < availableSlots || i < invitationsToSend.length; i++){
+      calls.push(dispatch(sendTeamUserInvitation({
+        team_id: team_id,
+        team_user_id: invitationsToSend[i]
+      })));
+    }
+    return Promise.all(calls).then(response => {
+      if (invitationsToSend.length > availableSlots)
+        dispatch(showTeamUserInviteLimitReachedModal({
+          active: true,
+          team_id: team_id
+        }));
+      return response;
+    }).catch(err => {
+      throw err;
+    })
   }
 }
 
