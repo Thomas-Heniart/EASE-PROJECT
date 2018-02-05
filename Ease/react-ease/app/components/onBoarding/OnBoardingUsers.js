@@ -1,6 +1,6 @@
 import React from 'react';
-import { Input, Icon, Header, Label, TextArea } from 'semantic-ui-react';
-import {handleSemanticInput, isEmail} from "../../utils/utils";
+import { Input, Icon, Header, Label, TextArea, Message } from 'semantic-ui-react';
+import {isEmail} from "../../utils/utils";
 
 function checkTextArea(paste) {
   const comma = paste.search(/[,]/g);
@@ -55,7 +55,7 @@ class OnBoardingUsers extends React.Component {
     this.setState({[name]: value, emails: emails});
   };
   render() {
-    const {emails, onChange, addNewField} = this.props;
+    const {emails, onChange, addNewField, error, checkDuplicateEmails} = this.props;
     checkTextArea(this.state.paste);
     const fields = emails.map((item, idx) => {
       return (
@@ -72,15 +72,15 @@ class OnBoardingUsers extends React.Component {
     });
     return (
       <React.Fragment>
-        <Header as='h1'>Who is working in your company?</Header>
-        <p><strong>This step will not send invitations to your team</strong>.<br/>
-          Please enter at least {this.state.number} emails or more (manually <u>or</u> paste a list from any file).</p>
+        <Header as='h1'>Who works in your company?</Header>
+        <p><strong>This step will not send invitations, send them only when you are ready</strong>.<br/>
+          Enter at least {this.state.number} emails (manually <u>or</u> paste a list from anywhere).</p>
         <div className='add_users'>
           <div className='user_fields input_fields'>
             {fields}
           </div>
           <div className='user_fields textarea_field'>
-            <TextArea name='paste' onChange={this.handleInput} placeholder='Paste a list of emails from any file….' style={{width:'350px',height:'100%',position:'absolute'}}/>
+            <TextArea name='paste' onChange={this.handleInput} placeholder='Paste a list of emails from any file….' style={{width:'350px',height:'95%',position:'absolute'}}/>
           </div>
         </div>
         <div className='under_add_users'>
@@ -96,7 +96,8 @@ class OnBoardingUsers extends React.Component {
             <p>{this.state.emails.length} email addresses detected.</p>
           </div>}
         </div>
-
+        {checkDuplicateEmails() &&
+        <Message error content='We’ve detected duplicate(s), can you make sure they are not in the list anymore?'/>}
       </React.Fragment>
     )
   }

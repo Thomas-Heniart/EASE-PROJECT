@@ -394,7 +394,7 @@ public class Team {
         res.put("plan_id", plan_id);
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
-        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8);
+        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateComparator.isOutdated(this.getSubscription_date(), 0, 1));
         res.put("extra_members", this.getInvitedFriendMap().size());
         return res;
     }
