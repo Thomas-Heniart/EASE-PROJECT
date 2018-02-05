@@ -217,7 +217,7 @@ class OnBoardingJoinTeam extends React.Component {
     }
   }
   checkPassword = () => {
-    return (this.state.checkCGU && this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
+    return (this.state.checkCGU === true && this.state.password !== '' && this.state.password === this.state.verificationPassword && !this.state.phoneError && /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{8,}$/.test(this.state.password));
   };
   submit = () => {
     this.setState({loading: true});
@@ -315,7 +315,7 @@ class OnBoardingJoinTeam extends React.Component {
                     onClick={this.submit}
                     disabled={(this.state.loading)
                               || (this.state.view === 1 && (this.state.firstName === '' || this.state.lastName === ''))
-                              || (this.state.view === 2 && !this.checkPassword)}>
+                              || (this.state.view === 2 && !this.checkPassword())}>
               Next
               <Icon name='arrow right'/>
             </Button>
