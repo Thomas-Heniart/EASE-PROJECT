@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Teams;
+package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
