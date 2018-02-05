@@ -15,12 +15,11 @@
       {"action":"trueClick", "search":".desktop-app-bar div:last-child() div:last-child() button"},
       {"action":"waitfor", "search":".fa-sign-out"},
       {"action":"trueClick", "search":".fa-sign-out"},
-      {"action":"waitfor", "search":".login-panel"},
-      {"action":"goto", "url":"https://www.brainsfeed.com/"}
+      {"action":"waitfor", "search":".login-panel .text-center button[type='button']"}
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"waitfor", "search":".desktop-app-bar, .login-panel"},
+    {"action":"waitfor", "search":".desktop-app-bar, .login-panel .text-center button[type='button']"},
     {"search":".desktop-app-bar"}
   ],
   "Facebook":{
