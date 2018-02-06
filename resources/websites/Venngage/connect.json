@@ -1,0 +1,60 @@
+{
+  "name": "Venngage",
+  "lastLogin": "",
+  "home": "https://infograph.venngage.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#user_email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#user_password"
+      },
+      {
+        "action": "trueClick",
+        "search": "#btn_login"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#facebook"
+      }
+    ]
+  },
+  "Google": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#google"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#btn_login"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='logout'], #btn_login, #google, #facebook"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package com.Ease.API.Utils;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.stripe.model.Event;
@@ -47,6 +48,14 @@ public class SerlverStripeWebhook extends HttpServlet {
                         Subscription subscription = Subscription.retrieve(subscription_id);
                         team.setSubscription(subscription);
                         sm.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+                        MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                        mailJetBuilder.setTemplateId(308436);
+                        mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
+                        mailJetBuilder.addTo("thomas@ease.space");
+                        mailJetBuilder.addTo("benjamin@ease.space");
+                        mailJetBuilder.addVariable("sub_id", subscription_id);
+                        mailJetBuilder.addVariable("state", "success");
+                        mailJetBuilder.sendEmail();
                     }
                     break;
                 case "invoice.payment_failed":
@@ -59,6 +68,14 @@ public class SerlverStripeWebhook extends HttpServlet {
                         Subscription subscription = Subscription.retrieve(subscription_id);
                         team.setSubscription(subscription);
                         sm.getTeamProperties(team.getDb_id()).put("subscription", subscription);
+                        MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                        mailJetBuilder.setTemplateId(308436);
+                        mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
+                        mailJetBuilder.addTo("thomas@ease.space");
+                        mailJetBuilder.addTo("benjamin@ease.space");
+                        mailJetBuilder.addVariable("sub_id", subscription_id);
+                        mailJetBuilder.addVariable("state", "false");
+                        mailJetBuilder.sendEmail();
                     }
                     break;
                 case "customer.subscription.updated":
