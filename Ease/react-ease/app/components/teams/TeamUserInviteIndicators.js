@@ -94,8 +94,8 @@ class TeamUserInviteSegment extends Component {
                   <span style={{textDecoration: 'none'}}>Invitations sent ! <Icon name='rocket'/></span>
                 </div> :
                 <React.Fragment>
-                  <a onClick={this.inviteUser}>Invite {team_user.username}</a> to join your team now.
-                  <a style={{float:'right'}} onClick={this.inviteAllUsers}>Send to all uninvited people</a>
+                  <a onClick={this.inviteUser}>Invite {team_user.username}</a> to join your team now.<Icon name="send"/>
+                  <a style={{float:'right'}} onClick={this.inviteAllUsers}>Send to all uninvited people<Icon style={{textDecoration: 'none'}}name="rocket"/></a>
                 </React.Fragment>}
           </Segment>
         </div>
@@ -153,8 +153,8 @@ class TeamUserReInviteSegment extends Component {
                   <span style={{textDecoration: 'none'}}>Invitations sent ! <Icon name='rocket'/></span>
                 </div> :
                 <React.Fragment>
-                  <a onClick={this.inviteUser}>Remind {team_user.username}</a> to join your team.
-                  <a style={{float:'right'}} onClick={this.reInviteAllUsers}>Resend all pending invitations</a>
+                  <a onClick={this.inviteUser}>Remind {team_user.username}</a> to join your team.<Icon name="send"/>
+                  <a style={{float:'right'}} onClick={this.reInviteAllUsers}>Resend all pending invitations<Icon style={{textDecoration: 'none'}} name="rocket"/></a>
                 </React.Fragment>}
           </Segment>
         </div>
