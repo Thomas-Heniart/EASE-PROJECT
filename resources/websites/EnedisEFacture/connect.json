@@ -1,0 +1,21 @@
+{
+  "name":"EnedisEFacture",
+  "lastLogin":"",
+  "home":"https://enedis.e-facture.net/index.php",
+  "connect":{
+    "todo":[
+      {"action": "waitfor", "search": "#id"},
+      {"action":"fill", "what":"login", "search":"#id", "grave": true},
+      {"action":"fill", "what":"password", "search":"#password", "grave": true},
+      {"action":"click", "search":"#submit_log", "grave": true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"#btn_deconnexion a"}
+    ]
+  },  
+  "checkAlreadyLogged":[
+    {"search":"#btn_deconnexion"}
+  ]
+}

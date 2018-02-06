@@ -495,7 +495,7 @@ button.only-text-button {
       }
     }
   }
-    .addBookmark {
+  .addBookmark {
     border: 1px solid rgba(34,36,38,.15);
     border-radius: 7px;
     box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
@@ -799,6 +799,7 @@ button.only-text-button {
             display: flex;
             margin: 7px 0 7px 10px;
             width: 100%;
+            font-size: 13px;
             img {
               width: 30px;
               height: 30px;
@@ -807,6 +808,7 @@ button.only-text-button {
               white-space: nowrap;
               width: 30px;
               text-align: center;
+              margin-top: 4px;
             }
           }
         }
@@ -1257,18 +1259,17 @@ i.icon.pin_button {
   .ui.label.user-label {
     font-size: .85714286rem;
     box-shadow: 0 0 0 1px rgba(34,36,38,.15) inset;
-    &.static {
+    background-color: #2185d0;
+    color: $themeWhiteColor ;
+    font-weight: normal;
+/*    &.static {
       font-weight:normal;
       background-color: transparent;
       &.accepted {
-        background-color: $themeBlue2Color;
+        background-color: #2185d0;
         color: $themeWhiteColor ;
       }
-      &.accepted.can_see_information, &.pinned {
-        color: $themeWhiteColor;
-        background-color: $themeButtonGreenColor;
-      }
-    }
+    }*/
     i.icon {
       margin-right: 0;
       margin-left: .5rem;
@@ -1426,7 +1427,7 @@ i.icon.pin_button {
       color: $themeLightGreyTextColor;
       box-shadow: 0 0 0 1px rgba(34,36,38,0.15) inset;
       &.accepted {
-        background-color: $themeButtonGreenColor;
+        background-color: #2185d0;
         color: white;
       }
     }
@@ -1663,6 +1664,19 @@ button.action_text_button {
       background-color: $themeGreyLightColor;
     }
   }
+  #team_referral_section {
+    .ui.progress {
+      background-color: white;
+      border: 1px solid $themeGreenColor;
+      margin: 0 20px 0 0;
+      width: 60%;
+      .bar {
+        background-color: $themeGreenColor;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+  }
 }
 
 #team_plan_popup {
@@ -1675,13 +1689,7 @@ button.action_text_button {
   }
 }
 
-#starter_plan {
-  background-image: url(/resources/other/Spaceship.svg);
-  position: relative;
-  background-size: 350px 535px;
-  background-repeat: no-repeat;
-  background-position-x: left;
-  background-position-y: top;
+#enterprise_team_plan {
   padding-bottom: 40px;
   .button {
     background-color: transparent;
@@ -1693,7 +1701,17 @@ button.action_text_button {
   }
 }
 
-#starter_plan, #pro_team_plan {
+#starter_plan {
+  background-image: url(/resources/other/Spaceship.svg);
+  position: relative;
+  background-size: 350px 535px;
+  background-repeat: no-repeat;
+  background-position-x: left;
+  background-position-y: top;
+  padding-bottom: 40px;
+}
+
+#starter_plan, #pro_team_plan, #enterprise_team_plan {
   padding-top: 31px;
   h1 {
     margin: 0 0 15px 0;
@@ -1709,27 +1727,9 @@ button.action_text_button {
   }
 }
 
-#pro_team_plan {
+#pro_team_plan, #starter_plan {
   .price, .title {
     color: $DarkGreen;
-  }
-}
-
-#enterprise_team_plan {
-  padding-bottom: 40px;
-  h1 {
-    margin: 0;
-  }
-  .styleImage {
-    z-index: 0;
-  }
-  .plan_header {
-    background-color: $LightGreen;
-    height: 245px;
-    padding-top: 31px;
-    margin: -12px -30px 0;
-    margin-bottom: 35px;
-    color: white;
   }
 }
 
@@ -1786,18 +1786,53 @@ button.action_text_button {
   }
 }
 
+.team_plan_wrapper {
+  @include flex-basis(370px);
+  padding: 0 !important;
+  .features {
+    padding: 0 30px;
+    margin-top: 50px;
+    &.first {
+      margin-top: 40px;
+    }
+  }
+  .feature {
+    @include display-flex();
+    margin-bottom: 20px;
+    font-size: 1rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .tic {
+      padding-top: 2px;
+      margin-right: 10px;
+    }
+    i {
+      color: $LightGreen;
+    }
+    span {
+      color: $themeBlue2Color;
+      line-height: 1.2;
+    }
+  }
+}
+
 .team_plan {
   @include display-flex();
   @include flex-direction(column);
   @include flex-basis(370px);
   @include flex-shrink(0);
   overflow: hidden;
-  height: 920px;
   position: relative;
+  height: 303px;
   width: 370px;
   padding: 12px 30px;
   border: 1px solid $themeGreyDarkColor;
   border-radius: 5px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);;
+  h1 {
+    font-weight: normal;
+  }
   .styleImage {
     position: absolute;
     left:0;
@@ -1805,23 +1840,17 @@ button.action_text_button {
     z-index: -1;
     width: 150px;
   }
-  .info {
-    margin: 0 0 19px 0;
-    font-weight: bold;
-    font-size: 0.9rem;
-    color: $DarkGreen;
-    text-transform: uppercase;
-  }
   .tip {
     font-size: 0.8rem;
     color: $themeBlue2Color;
     text-align: center;
   }
   .price {
-    font-weight:bold;
+    font-weight:bold !important;
     font-size: 36px;
     .symbol {
       font-size: 0.8rem;
+      font-weight: normal;
     }
   }
   .button {
@@ -1840,24 +1869,6 @@ button.action_text_button {
       @include display-flex();
       @include align-items(center);
       @include justify-content(center);
-    }
-  }
-  .feature {
-    @include display-flex();
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-    .tic {
-      padding-top: 2px;
-      margin-right: 10px;
-    }
-    i {
-      color: $LightGreen;
-    }
-    span {
-      color: $themeBlue2Color;
-      line-height: 1.2;
     }
   }
 }
@@ -1888,6 +1899,20 @@ button.action_text_button {
   }
   label {
     line-height: 1.8;
+  }
+}
+
+#team_user_invite_limit_reached_modal {
+  color: $themeBlue2Color;
+  .users {
+    & > span {
+      color: #eb555c;
+      margin-bottom: 10px;
+    }
+  }
+  u {
+    color: $themeBlue2Color;
+    cursor: pointer;
   }
 }
 
@@ -2702,7 +2727,7 @@ button.action_text_button {
                   }
                   .userNotAccepted {
                     font-style: italic;
-                    color: rgba(232, 232, 232, 0.6);
+                    opacity: .6;
                     width: 100%;
                   }
                 }
@@ -2730,15 +2755,17 @@ button.action_text_button {
       ::-webkit-scrollbar-thumb:window-inactive {
         background: #d9d9de;
       }
-      #invitation {
+      .user_invitation_indicator {
         padding: .3rem .6rem 0 .6rem;
         .segment {
           padding: 12px;
-          &.resend {
-            background-color: #ff9a00;
-          }
-          &.send {
-            background-color: #eb555c;
+          a {
+            color: white;
+            text-decoration: underline;
+            opacity: .8;
+            &:hover {
+              opacity: 1;
+            }
           }
           span {
             text-decoration: underline;

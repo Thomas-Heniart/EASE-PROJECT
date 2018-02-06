@@ -11,7 +11,7 @@
     height: 36px;
     position: relative;
     width: 36px;
-    z-index: 50; }
+    z-index: 9; }
     .joyride-beacon:active, .joyride-beacon:focus, .joyride-beacon:hover {
       outline: none; }
     .joyride-beacon__inner {
@@ -47,7 +47,7 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 50; }
+    z-index: 9; }
   .joyride-hole {
     border-radius: 4px;
     box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 0, 0, 0.5);
@@ -65,7 +65,7 @@
     pointer-events: auto;
     transform: translate3d(0, 0, 0);
     width: 160px;
-    z-index: 60; }
+    z-index: 19; }
     .joyride-tooltip--animate {
       animation: joyride-tooltip 0.4s forwards;
       animation-timing-function: cubic-bezier(0, 1.05, 0.55, 1.18); }

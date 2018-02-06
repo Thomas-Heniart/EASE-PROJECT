@@ -252,15 +252,19 @@ class NewSimpleTeamCreationView extends React.Component {
   handleAppInfo = (id, {name, value}) => {
     const credentialsSingleApps = Object.assign({}, this.state.credentialsSingleApps);
     credentialsSingleApps[id][name] = value;
-    this.setState({credentialsSingleApps: credentialsSingleApps});
+    this.setState({credentialsSingleApps: credentialsSingleApps, error: ''});
   };
   selectRoom = (id) => {
     const roomsSelected = this.state.roomsSelected.filter(item => {
       if (item !== id)
         return item;
     });
-    if (roomsSelected.length === this.state.roomsSelected.length)
+    if (roomsSelected.length === this.state.roomsSelected.length && this.state.roomsSelected.length < 7)
       roomsSelected.push(id);
+    else if (roomsSelected.length === this.state.roomsSelected.length && this.state.roomsSelected.length > 6)
+      this.setState({error: 'Please start with 6 rooms maximum. You’ll be able to add more later!'});
+    else if (roomsSelected.length !== this.state.roomsSelected.length && this.state.roomsSelected.length <= 7)
+      this.setState({error: ''});
     this.setState({roomsSelected: roomsSelected});
   };
   selectPasswordManager = (id) => {
@@ -341,34 +345,44 @@ class NewSimpleTeamCreationView extends React.Component {
     }).length > 0;
   };
   testPassword = (id) => {
-    this.props.dispatch(testCredentials({
-      account_information: {
-        login: this.state.credentialsSingleApps[id].login,
-        password: this.state.credentialsSingleApps[id].password
-      },
-      website_id: id
-    }));
+    if (this.state.credentialsSingleApps[id].login !== ''
+      && this.state.credentialsSingleApps[id].password !== ''
+      && this.state.credentialsSingleApps[id].filler_id === null) {
+      this.props.dispatch(testCredentials({
+        account_information: {
+          login: this.state.credentialsSingleApps[id].login,
+          password: this.state.credentialsSingleApps[id].password
+        },
+        website_id: id
+      }));
+      this.setState({error: ''});
+    }
+    else if (this.state.credentialsSingleApps[id].password === '' && this.state.credentialsSingleApps[id].login === '')
+      this.setState({error: `${id}all`});
+    else if (this.state.credentialsSingleApps[id].login === '')
+      this.setState({error: `${id}login`});
+    else if (this.state.credentialsSingleApps[id].password === '')
+      this.setState({error: `${id}password`});
   };
   sentences = () => {
     if (this.state.view === 1)
       return <p>This information will be available only to your team.</p>;
     else if (this.state.view === 2)
-      return  <p>On Ease.space, passwords are grouped into Rooms. <strong>Rooms enable fast and organised password sharing</strong>.<br/><br/>
-        Ex: the Marketing Room groups the marketing passwords and is accessible by the marketing team.</p>;
+      return  <p>Rooms: On Ease.space, <strong>Rooms group passwords to enable easy sharing.</strong>.<br/><br/>
+        Ex: #marketing groups the passwords of the marketing team</p>;
     else if (this.state.view === 3)
-      return <p>This step <strong>will not send invitations to your team</strong>.<br/>
-        Adding members allows to start the setup of your platform before you invite them. The best for you is to add everyone.</p>;
+      return <p>Add your team now so you can decide who has access to what passwords.</p>;
     else if (this.state.view === 4)
       return <p>Remember, a Room groups passwords together so people can access them easily. People can be in more than one room.</p>;
     else if (this.state.view === 5) {
       if (this.state.viewAccounts === 1)
         return <p>We have done our best to make your account importation seamless.<br/>Choose a tool to import or justmanage manually</p>;
       else if (this.state.viewAccounts === 2 && this.state.currentRoom === 0)
-        return <p>There is a special Room for accounts everybody uses, it’s the #openspace. Also, if you have more than one account on a website, you’ll be able to add it later.</p>;
+        return <p>Is there tools all your team uses?<br/>If yes, they will be in a special Room called #openspace</p>;
       else if (this.state.viewAccounts === 2 && this.state.currentRoom > 0)
-        return <p>This is a short list of tools to get started, you’ll be able to add more accounts later.</p>;
+        return <p>This is a short list, you can add more tools later.</p>;
       else if (this.state.viewAccounts === 3)
-        return <p>On the company’s Twitter for example, people share the same login and password to access the account.</p>;
+        return <p>Ex: Most companies only have 1 twitter account they all share.</p>;
       else if (this.state.viewAccounts === 4)
         return <p>If someone else knows a password, ask him or her to fill it for everybody. Also, when you are not 1000% sure about a password, you can test it in one click. </p>;
     }
@@ -376,95 +390,6 @@ class NewSimpleTeamCreationView extends React.Component {
   invitationsReady = () => {
     return this.state.emails.filter(item => (isEmail(item.email))).length >= (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1))
       || this.state.pasteEmails.filter(item => (isEmail(item))).length >= (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1));
-  };
-  noToolsFound = () => {
-    if (this.state.roomsSelected.length - 1 > this.state.currentRoom)
-      this.setState({currentRoom: this.state.currentRoom + 1, loading: false, appsSelected: [], allAppIdsSelected: this.state.allAppIdsSelected.concat(this.state.appsSelected)});
-    else if (Object.keys(this.state.singleApps).filter(item => {return this.state.singleApps[item].length > 0}).length > 0) {
-      Object.keys(this.state.singleApps).map(room_id => {
-        this.state.singleApps[room_id].map(id => {
-          this.state.credentialsSingleApps[id] = {
-            name: this.state.roomsWebsites[id].name,
-            login: '',
-            password: '',
-            filler_id: null
-          };
-        });
-      });
-      easeTracker.trackEvent("EaseOnboardingChooseTools");
-      this.setState({loading: false, appsSelected: [], viewAccounts: 4});
-    }
-    else
-      this.props.dispatch(changeStep({
-        team_id: this.state.team_id,
-        step: 5
-      })).then(res => {
-        easeTracker.trackEvent("EaseOnboardingEnterAccounts");
-        window.location.href = "/";
-      });
-  };
-  noSingleCards = () => {
-    let singleApps = Object.assign({}, this.state.singleApps);
-    singleApps[this.state.rooms[this.state.currentRoom].id] = this.state.singleApps[this.state.rooms[this.state.currentRoom].id].filter(item => {
-      return item !== item;
-    });
-    let calls = [];
-    const users = {};
-    this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
-      users[user_id] = {account_information: null};
-    });
-    this.props.dispatch(createTeamProfile({
-      team_id: this.state.team_id,
-      team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
-    })).then(res => {
-      this.state.appsSelected.map(app_id => {
-        calls.push(this.props.dispatch(teamCreateEnterpriseCard({
-          team_id: this.state.team_id,
-          channel_id: this.state.rooms[this.state.currentRoom].id,
-          website_id: app_id,
-          name: this.state.roomsWebsites[app_id].name,
-          description: '',
-          password_reminder_interval: 0,
-          receivers: users
-        })));
-      });
-      if (this.state.roomsSelected.length - 1 > this.state.currentRoom) {
-        Promise.all(calls.map(reflect)).then(response => {
-          this.setState({
-            currentRoom: this.state.currentRoom + 1,
-            viewAccounts: 2,
-            loading: false,
-            appsSelected: [],
-            singleApps: singleApps,
-            allAppIdsSelected: this.state.allAppIdsSelected.concat(this.state.appsSelected)
-          });
-        });
-      }
-      else if (Object.keys(singleApps).filter(item => {
-          return singleApps[item].length > 0
-        }).length > 0) {
-        Promise.all(calls.map(reflect)).then(response => {
-          easeTracker.trackEvent("EaseOnboardingChooseTools");
-          this.setState({
-            loading: false,
-            appsSelected: [],
-            viewAccounts: 4,
-            singleApps: singleApps,
-          });
-        });
-      }
-      else {
-        Promise.all(calls.map(reflect)).then(response => {
-          this.props.dispatch(changeStep({
-            team_id: this.state.team_id,
-            step: 5
-          })).then(res => {
-            easeTracker.trackEvent("EaseOnboardingEnterAccounts");
-            window.location.href = "/";
-          });
-        });
-      }
-    });
   };
   nextAccounts = () => {
     if (this.state.viewAccounts === 1 && isEmail(this.state.email)) {
@@ -487,7 +412,7 @@ class NewSimpleTeamCreationView extends React.Component {
     else if (this.state.viewAccounts === 2) {
       this.setState({loading: true});
       // Choose apps for #openspace and #rooms
-      if (this.state.rooms[this.state.currentRoom].name === 'openspace') {
+      if (this.state.rooms[this.state.currentRoom].name === 'openspace' && this.state.appsSelected.length !== 0) {
         let calls = [];
         const users = {};
         this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
@@ -518,8 +443,35 @@ class NewSimpleTeamCreationView extends React.Component {
           });
         });
       }
-      else
+      else if (this.state.appsSelected.length === 0 && this.state.roomsSelected.length - 1 > this.state.currentRoom)
+        this.setState({currentRoom: this.state.currentRoom + 1, viewAccounts: 2, loading: false});
+      else if (this.state.appsSelected.length === 0
+        && this.state.roomsSelected.length - 1 <= this.state.currentRoom
+        && Object.keys(this.state.singleApps).filter(item => {
+          return this.state.singleApps[item].length > 0
+        }).length > 0) {
+        Object.keys(this.state.singleApps).map(room_id => {
+          this.state.singleApps[room_id].map(id => {
+            this.state.credentialsSingleApps[id] = {
+              name: this.state.roomsWebsites[id].name,
+              login: '',
+              password: '',
+              filler_id: null
+            };
+          });
+        });
+        this.setState({loading: false, appsSelected: [], viewAccounts: 4})
+      }
+      else if (this.state.appsSelected.length > 0)
         this.setState({viewAccounts: 3, loading: false});
+      else
+        this.props.dispatch(changeStep({
+          team_id: this.state.team_id,
+          step: 5
+        })).then(res => {
+          easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+          window.location.href = "/";
+        });
     }
     else if (this.state.viewAccounts === 3) {
       this.setState({loading: true});
@@ -686,6 +638,7 @@ class NewSimpleTeamCreationView extends React.Component {
               roomsWebsites: onBoardingWebsites,
               activeItem: 2,
               view: 2,
+              error: '',
               loading: false,
               team_id: response.id,
               roomsSelected: [Object.keys(response.rooms)[0]]
@@ -727,27 +680,19 @@ class NewSimpleTeamCreationView extends React.Component {
           });
         });
         this.props.history.replace(`/main/simpleTeamCreation/users?team=${this.state.team_id}`);
-        this.setState({loading: false, activeItem: 3, view: 3, emails: emails, rooms: rooms, roomsSelected: roomsSelected});
+        this.setState({loading: false, activeItem: 3, view: 3, error: '', emails: emails, rooms: rooms, roomsSelected: roomsSelected});
       });
     }
     else if (this.state.view === 3) {
       // create users
-      let idx = 0;
       let emails = this.state.emails.filter(item => {
-        if (isEmail(item.email) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29))) {
-          idx++;
-          return item;
-        }
+        return (isEmail(item.email));
       }).map(item => {
         return item.email;
       });
       if (emails.length < (this.state.companySize == 1 ? 0 : this.state.companySize <= 5 ? 1 : this.state.companySize > 30 ? 15 : parseInt(this.state.companySize / 2 - 1))) {
-        idx = 0;
         emails = this.state.pasteEmails.filter(item => {
-          if (isEmail(item) && (this.state.plan_id === 1 || (this.state.plan_id === 0 && idx < 29))) {
-            idx++;
-            return item;
-          }
+          return isEmail(item);
         });
       }
       let calls = emails.map(item => {
@@ -777,7 +722,7 @@ class NewSimpleTeamCreationView extends React.Component {
               value[item.id] = [this.props.teams[this.state.team_id].my_team_user_id];
           });
           this.props.history.replace(`/main/simpleTeamCreation/groups?team=${this.state.team_id}`);
-          this.setState({loading: false, activeItem: 4, view: 4, users: users, value: value});
+          this.setState({loading: false, activeItem: 4, view: 4, error: '', users: users, value: value});
         });
       });
     }
@@ -811,7 +756,7 @@ class NewSimpleTeamCreationView extends React.Component {
           });
           this.state.value[this.state.roomsSelected[0]].push(this.props.teams[this.state.team_id].my_team_user_id);
           this.props.history.replace(`/main/simpleTeamCreation/accounts?team=${this.state.team_id}`);
-          this.setState({loading: false, activeItem: 5, view: 5, singleApps: singleApps, users: users});
+          this.setState({loading: false, activeItem: 5, view: 5, error: '', singleApps: singleApps, users: users});
         });
       });
     }
@@ -846,7 +791,9 @@ class NewSimpleTeamCreationView extends React.Component {
             <div id='content' className={this.state.view === 2 || this.state.view === 3 || this.state.view === 1 || this.state.view === 5 ? 'stepUsers' : null}>
               <Loader active={this.state.firstLoading} inline='centered'/>
               {!this.state.firstLoading &&
-              <Form onSubmit={this.state.view === 5 ? this.nextAccounts : this.next} error={this.state.error !== ''}>
+              <Form
+                className={this.state.view === 3 ? 'addMembers' : null}
+                onSubmit={this.state.view === 5 ? this.nextAccounts : this.next} error={this.state.error !== '' || this.checkNoDuplicateEmails()}>
                 <Switch>
                   {this.state.view === 1 &&
                   <Route path={`${this.props.match.path}/informations`}
@@ -865,6 +812,7 @@ class NewSimpleTeamCreationView extends React.Component {
                   <Route path={`${this.props.match.path}/rooms`}
                          render={(props) =>
                            <OnBoardingRooms
+                             error={this.state.error}
                              rooms={this.state.rooms}
                              roomsSelected={this.state.roomsSelected}
                              selectRoom={this.selectRoom}/>}/>}
@@ -872,10 +820,12 @@ class NewSimpleTeamCreationView extends React.Component {
                   <Route path={`${this.props.match.path}/users`}
                          render={(props) =>
                            <OnBoardingUsers
+                             error={this.state.error}
                              onChange={this.editField}
                              emails={this.state.emails}
                              addNewField={this.addNewField}
                              textareaToEmails={this.textareaToEmails}
+                             checkDuplicateEmails={this.checkNoDuplicateEmails}
                              number={((this.state.companySize == 1) ? 0
                                : (this.state.companySize <= 5) ? 1
                                  : (this.state.companySize > 30) ? 15
@@ -911,6 +861,7 @@ class NewSimpleTeamCreationView extends React.Component {
                              testPassword={this.testPassword}
                              view={this.state.viewAccounts}
                              selectApp={this.selectApp}
+                             error={this.state.error}
                              rooms={this.state.rooms}
                              users={this.state.users}
                              {...this.props}/>}/>}
@@ -925,22 +876,16 @@ class NewSimpleTeamCreationView extends React.Component {
                       onClick={this.state.view === 5 ? this.nextAccounts : this.next}
                       disabled={(this.state.loading)
                       || (this.state.view === 1 && !this.checkPassword())
-                      || (this.state.view === 2 && this.state.roomsSelected.length < 4)
+                      || (this.state.view === 2 && this.state.roomsSelected.length < 3)
                       || (this.state.view === 3 && (!this.invitationsReady() || this.checkNoDuplicateEmails()))
-                      || (this.state.view === 5 && this.state.viewAccounts === 1 && this.state.passwordManagerSelected === 0)
-                      || (this.state.view === 5 && this.state.viewAccounts === 2 && this.state.appsSelected.length === 0)
-                      || (this.state.view === 5 && this.state.viewAccounts === 3 && this.state.singleApps[this.state.rooms[this.state.currentRoom].id].length === 0)}>
+                      || (this.state.view === 5 && this.state.viewAccounts === 1 && this.state.passwordManagerSelected === 0)}>
                 Next
                 <Icon name='arrow right'/>
               </Button>
-              {(this.state.view === 3 && this.checkNoDuplicateEmails()) &&
-              <span>We’ve detected duplicate(s), can you make sure they are not in the list anymore?</span>}
-              {this.state.view === 5 && this.state.viewAccounts === 2 &&
-              <a onClick={this.noToolsFound}>I can’t find my tools in that list</a>}
-              {this.state.view === 5 && this.state.viewAccounts === 3 &&
-              <a onClick={this.noSingleCards}>We don’t share passwords for these tools</a>}
-              {(this.state.view === 5 && this.state.viewAccounts === 4 && this.state.error.length > 0) &&
-              <span>Hey!! you can’t send us empty field(s) 🤚Fill them or delete the entire line(s).</span>}
+              {this.state.view === 3 &&
+              <a>It will not send invitations.</a>}
+              {(this.state.view === 5 && this.state.viewAccounts === 4 && this.state.error === 'true') &&
+              <span>Hey!! you can’t send us empty field(s) 🤚 Fill them or delete the entire line(s).</span>}
             </div>
           </div>
         </div>

@@ -1,0 +1,21 @@
+{
+    "name": "Visiblis",
+    "lastlogin":"",
+    "home":"http://www.visiblis.net/",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"form[name=connect] input[name=log]", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"form[name=connect] input[name=pword]", "grave":"true"},
+    		{"action":"click", "search":"form[name=connect] .btn", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"click", "search":"#logout"},
+            {"action": "waitload"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#altmenu"}
+    ]
+}

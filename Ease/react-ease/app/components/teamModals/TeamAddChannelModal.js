@@ -37,14 +37,14 @@ class TeamAddChannelModal extends React.Component {
     e.preventDefault();
     const team = this.props.team;
 
-    if (Object.keys(team.rooms).length > 3 && team.plan_id === 0){
+/*    if (Object.keys(team.rooms).length > 3 && team.plan_id === 0){
       this.props.dispatch(showUpgradeTeamPlanModal({
         active: true,
         feature_id: 0,
         team_id: team.id
       }));
       return;
-    }
+    }*/
     const name = this.state.name;
     const purpose = this.state.purpose;
     const selectedUsers = this.state.value;

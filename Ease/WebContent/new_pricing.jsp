@@ -35,37 +35,37 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00038/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00039/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/pricingPage.css"/>
     <script type="text/javascript">
-        (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
-        ;r.type="text/javascript";r.async=true
-        ;r.src="https://cdn.amplitude.com/libs/amplitude-4.0.0-min.gz.js"
-        ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
-            e.amplitude.runQueuedFunctions()}else{
-            console.log("[Amplitude] Error: could not load SDK")}}
-        ;var i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)
-        ;function s(e,t){e.prototype[t]=function(){
-            this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
-            var o=function(){this._q=[];return this}
-            ;var a=["add","append","clearAll","prepend","set","setOnce","unset"]
-            ;for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[]
-                ;return this}
-            ;var l=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
-            ;for(var p=0;p<l.length;p++){s(c,l[p])}n.Revenue=c
-            ;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","logEventWithTimestamp","logEventWithGroups","setSessionId"]
-            ;function v(e){function t(t){e[t]=function(){
-                e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
-                for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){
-                e=(!e||e.length===0?"$default_instance":e).toLowerCase()
-                ;if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]}
-            ;e.amplitude=n})(window,document);
-        amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
+      (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
+      ;r.type="text/javascript";r.async=true
+      ;r.src="https://cdn.amplitude.com/libs/amplitude-4.0.0-min.gz.js"
+      ;r.onload=function(){if(e.amplitude.runQueuedFunctions){
+        e.amplitude.runQueuedFunctions()}else{
+        console.log("[Amplitude] Error: could not load SDK")}}
+      ;var i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)
+      ;function s(e,t){e.prototype[t]=function(){
+        this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
+        var o=function(){this._q=[];return this}
+        ;var a=["add","append","clearAll","prepend","set","setOnce","unset"]
+        ;for(var u=0;u<a.length;u++){s(o,a[u])}n.Identify=o;var c=function(){this._q=[]
+            ;return this}
+        ;var l=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
+        ;for(var p=0;p<l.length;p++){s(c,l[p])}n.Revenue=c
+        ;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","logEventWithTimestamp","logEventWithGroups","setSessionId"]
+        ;function v(e){function t(t){e[t]=function(){
+          e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
+          for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){
+          e=(!e||e.length===0?"$default_instance":e).toLowerCase()
+          ;if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]}
+        ;e.amplitude=n})(window,document);
+      amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
     </script>
     <link rel="manifest" href="manifest.json">
 </head>
@@ -74,186 +74,201 @@
 <section id="pricing" style="background-color: white">
     <div class="container" id="teamsPreview" style="overflow:unset;">
         <div class="content display-flex flex_direction_column step2">
-            <h1 class="text-center" style="margin:0 0 10px 0"><fmt:message key="pricing.title"/></h1>
+            <h1 class="text-center" style="font-weight:normal;font-size:54px;margin:0 0 30px 0"><fmt:message key="pricing.title"/></h1>
             <span class="sub-title"><fmt:message key="pricing.sub-title"/></span>
-            <div class="ui grid display-flex" style="margin:55px 0 37px 0">
-                <div class="team_plan" id="starter_plan" style="margin:15px 10px;overflow:unset;">
-                    <%--<img src="/resources/other/Spaceship.svg" alt="icon" class="styleImage" style="background-size:400px 400px;width:400px;height:400px;" />--%>
-                    <h1 class="text-center title"><fmt:message key="pricing.free.title"/></h1>
+            <div class="ui grid display-flex" style="justify-content:space-between;margin:55px 0 80px 0">
+                <div class="team_plan_wrapper">
+                    <div class="team_plan" id="starter_plan">
+                        <h1 class="text-center title"><fmt:message key="pricing.free.title"/></h1>
                         <span class="text-center price" style="font-size:36px;">0 <span class="symbol">€HT</span></span>
-                        <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
-                        <div class="text-center" style="margin-bottom:26px">
+                        <span class="price_divider" ><fmt:message key="pricing.sub-tip"/></span>
+                        <div class="text-center">
                             <button class="button-unstyle big-button button">
                                 <a href="/#/teamCreation?plan_id=0" class="link-unstyle" style="font-size: 18px;">
                                     <fmt:message key="pricing.free.button"/>
                                 </a>
                             </button>
                         </div>
-                    <div class="display-flex flex_direction_column full_flex">
+                    </div>
+                    <div class="features display-flex flex_direction_column full_flex">
                         <div class="feature">
-                            <fmt:message key="pricing.free.features.title.1"/>
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.1"/></span>
+                            <span><fmt:message key="pricing.feature.2"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.2"/></span>
+                            <span><fmt:message key="pricing.feature.3"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.3"/></span>
+                            <span><fmt:message key="pricing.feature.4"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <fmt:message key="pricing.free.features.4"/>
-                        </div>
-                        <div class="feature">
-                            <fmt:message key="pricing.free.features.title.2"/>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.5"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.6"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.7"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.8"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.9"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.free.features.11"/></span>
+                            <span><fmt:message key="pricing.feature.5"/></span>
                         </div>
                     </div>
-                    <div class="text-center" style="margin: 60px 0 0 0">
-                        <button class="button-unstyle big-button button signUpButton" style="font-size: 18px;">
-                            <a href="/#/teamCreation?plan_id=0" class="link-unstyle" style="font-size: 18px;">
-                                <fmt:message key="pricing.free.button"/>
-                            </a>
-                        </button>
+                    <div class="features display-flex flex_direction_column full_flex">
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.6"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.7"/></span>
+                        </div>
                     </div>
                 </div>
-                <div class="team_plan" id="pro_team_plan" style="margin: 15px 10px;overflow:unset">
-                    <img src="/resources/other/illu.svg" alt="icon" class="styleImage"/>
-                    <h1 class="text-center title greenText"><fmt:message key="pricing.pro.title"/></h1>
-                    <span class="text-center price">3,99 <span class="symbol">€HT</span></span>
-                    <span class="tip" style="margin:0 0 15px 0"><fmt:message key="pricing.sub-tip"/></span>
-                    <div class="text-center">
-                        <button class="button-unstyle big-button button">
-                            <a href="/#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
-                                <fmt:message key="pricing.pro.button-text"/>
-                            </a>
-                        </button>
+                <div class="team_plan_wrapper">
+                    <div class="team_plan" id="pro_team_plan">
+                        <img src="/resources/other/illu.svg" alt="icon" class="styleImage"/>
+                        <h1 class="text-center title greenText"><fmt:message key="pricing.pro.title"/></h1>
+                        <span class="text-center price">59 <span class="symbol">€HT</span></span>
+                        <span class="price_divider" ><fmt:message key="pricing.sub-tip"/></span>
+                        <div class="text-center">
+                            <button class="button-unstyle big-button button">
+                                <a href="/#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
+                                    <fmt:message key="pricing.pro.button-text"/>
+                                </a>
+                            </button>
+                        </div>
+                        <span class="tip" style="margin: 10px 0 0 0;"><fmt:message key="pricing.pro.sub-button"/></span>
                     </div>
-                    <span class="tip" style="margin: 10px 0 0 0;"><fmt:message key="pricing.pro.sub-button"/></span>
-                    <div class="display-flex flex_direction_column full_flex">
+                    <div class="features display-flex flex_direction_column full_flex">
                         <div class="feature">
-                            <span class="info"><fmt:message key="pricing.pro.features.title"/></span>
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.1"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.2"/></span>
+                            <span><fmt:message key="pricing.feature.2"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.3"/></span>
+                            <span><fmt:message key="pricing.feature.3"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.4"/></span>
+                            <span><fmt:message key="pricing.feature.4"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.5"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.6"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.pro.features.7"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <fmt:message key="pricing.pro.features.8"/>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <fmt:message key="pricing.pro.features.9"/>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <fmt:message key="pricing.pro.features.10"/>
+                            <span><fmt:message key="pricing.feature.5"/></span>
                         </div>
                     </div>
-                    <div class="text-center" style="margin: 60px 0 10px 0">
-                        <button class="button-unstyle big-button button">
-                            <a href="/#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
-                                <fmt:message key="pricing.pro.button-text"/>
-                            </a>
-                        </button>
+                    <div class="features display-flex flex_direction_column full_flex">
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.8"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.9"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.10"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.11"/></span>
+                        </div>
                     </div>
-                    <span class="tip" style="font-size:14px;margin-bottom:1px;"><fmt:message key="pricing.pro.sub-button"/></span>
                 </div>
-                <div class="team_plan" id="enterprise_team_plan" style="margin: 15px 10px;">>
-                    <img src="/resources/other/Saturn.svg" alt="icon" class="styleImage"/>
-                    <div class="plan_header display-flex flex_direction_column text-center" style="height:261px;margin-top:-30px;margin-bottom:26px">
+                <div class="team_plan_wrapper">
+                    <div class="team_plan" id="enterprise_team_plan">
+                        <img src="/resources/other/Saturn.svg" alt="icon" class="styleImage"/>
                         <h1 class="text-center title"><fmt:message key="pricing.premium.title"/></h1>
-                        <span class="text-center price">7,89 <span class="symbol">€HT</span></span>
-                        <span class="tip" style="margin:0 0 15px 0;color:white;"><fmt:message key="pricing.sub-tip"/></span>
-                    </div>
-                    <div class="display-flex flex_direction_column full_flex">
-                        <div class="feature">
-                            <span class="info"><fmt:message key="pricing.premium.features.title"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.premium.features.1"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.premium.features.2"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.premium.features.3"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.premium.features.4"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.premium.features.5"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.premium.features.6"/></span>
+                        <span class="text-center price">299 <span class="symbol">€HT</span></span>
+                        <span class="price_divider"><fmt:message key="pricing.sub-tip"/></span>
+                        <div class="text-center">
+                            <button class="button-unstyle big-button button">
+                                <a href="/companyContact" class="link-unstyle" style="font-size: 18px;">
+                                    <fmt:message key="pricing.premium.button"/>
+                                </a>
+                            </button>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <button class="button-unstyle big-button button">
-                            <a href="/companyContact" class="link-unstyle" style="font-size: 18px;">
-                                <fmt:message key="pricing.premium.button"/>
-                            </a>
-                        </button>
+                    <div class="features display-flex flex_direction_column full_flex">
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.1"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.2"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.3"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.4"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.5"/></span>
+                        </div>
+                    </div>
+                    <div class="features display-flex flex_direction_column full_flex">
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.8"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.9"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.10"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.11"/></span>
+                        </div>
+                    </div>
+                    <div class="features display-flex flex_direction_column full_flex">
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.12"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.13"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.14"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.15"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.16"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.17"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.18"/></span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <span class="sub-title" style="font-size: 1rem"><fmt:message key="pricing.endsentence"/></span>
+            <span style="width:30%;border-top: 1px solid #979797; align-self: center"></span>
+            <span style="font-size:36px;line-height: 1.83;text-align: center;color:#373B60;margin-top: 30px"><fmt:message key="pricing.user-rating.text"/></span>
+            <img style="width: 500px; align-self: center;margin-top: 19px;" src="/resources/images/stars.png"/>
+            <span style="font-size:36px;font-weight: bold;line-height: 1.83;text-align: center;color:#373B60;margin-top: 40px">4.92 / 5</span>
         </div>
     </div>
 </section>
@@ -267,88 +282,64 @@
 <script src="/jsMinified.v00023/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#starter-title-1').popup({
-            on        : 'hover',
-            position  : 'bottom center',
-            target    : '#starter-title-1-icon'
-        });
-        $('#starter-title-1-icon').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#starter-title-2').popup({
-            on        : 'hover',
-            position  : 'bottom center',
-            target    : '#starter-title-2-icon'
-        });
-        $('#starter-title-2-icon').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#free-feature-1').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#free-feature-2').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#free-feature-3').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#free-feature-4').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#free-feature-8').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#free-feature-10').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#free-feature-11').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#pro-feature-1').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#pro-feature-4').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#pro-feature-6').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
-        $('#premium-feature-1').popup({
-            on        : 'hover',
-            position  : 'bottom center'
-        });
+  $(document).ready(function() {
+    $('#starter-title-1').popup({
+      on        : 'hover',
+      position  : 'bottom center',
+      target    : '#starter-title-1-icon'
     });
+    $('#starter-title-1-icon').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+    $('#starter-title-2').popup({
+      on        : 'hover',
+      position  : 'bottom center',
+      target    : '#starter-title-2-icon'
+    });
+    $('#starter-title-2-icon').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+    $('.feature-1').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+    $('.feature-2').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+    $('.feature-3').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+    $('.feature-4').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+    $('.feature-5').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+  });
 </script>
 <script type="text/javascript">
-    window.addEventListener('load',function(){
-        $crisp = [];
-        CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
-        (function () {
-            d = document;
-            s = d.createElement("script");
-            s.src = "https://client.crisp.chat/l.js";
-            s.async = 1;
-            d.getElementsByTagName("head")[0].appendChild(s);
-        })();
-    });
+  window.addEventListener('load',function(){
+    $crisp = [];
+    CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
+    (function () {
+      d = document;
+      s = d.createElement("script");
+      s.src = "https://client.crisp.chat/l.js";
+      s.async = 1;
+      d.getElementsByTagName("head")[0].appendChild(s);
+    })();
+  });
 </script>
 <script type="text/javascript">
-    window.addEventListener('load',function(){
-        easeTracker.trackEvent("PricingVisit");
-    });
+  window.addEventListener('load',function(){
+    easeTracker.trackEvent("PricingVisit");
+  });
 </script>
 </body>
 </html>

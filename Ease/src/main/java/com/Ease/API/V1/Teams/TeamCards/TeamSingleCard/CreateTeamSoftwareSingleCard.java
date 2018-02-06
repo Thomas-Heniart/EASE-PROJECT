@@ -61,8 +61,8 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             JSONObject account_information = sm.getJsonParam("account_information", false, true);
             sm.decipher(account_information);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             TeamSingleSoftwareCard teamSingleSoftwareCard = new TeamSingleSoftwareCard(name, team, channel, description, software);
             Account account = null;
             String teamKey = sm.getTeamKey(team);
@@ -84,7 +84,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 String key = String.valueOf(object);
                 JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
-                Boolean allowed_to_see_password = value.getBoolean("allowed_to_see_password");
+                Boolean allowed_to_see_password = true; //value.getBoolean("allowed_to_see_password");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");

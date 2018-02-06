@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @WebServlet("/api/v1/teams/SendTeamUserInvitation")
 public class ServletSendTeamUserInvitation extends HttpServlet {
@@ -27,10 +28,15 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
+            if (team.getTeamUsers().values().stream().filter(teamUser -> teamUser.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to have more than " + Team.MAX_MEMBERS + " members.");
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             if (teamUser.getState() != 0)
                 throw new HttpServletException(HttpStatus.BadRequest, "This teamUser has already created his account");
+            Long now = new Date().getTime();
+            if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now)
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot invite this member before his arrival date");
             TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");

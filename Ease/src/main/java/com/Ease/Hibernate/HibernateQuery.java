@@ -2,6 +2,8 @@ package com.Ease.Hibernate;
 
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -70,6 +72,10 @@ public class HibernateQuery {
             this.transaction.rollback();
             throw new HttpServletException(HttpStatus.InternError, e);
         }
+    }
+
+    public void lockEntity(Object o) {
+        this.session.buildLockRequest(new LockOptions(LockMode.PESSIMISTIC_WRITE)).lock(o);
     }
 
     public Object load(Class c, Serializable s) {

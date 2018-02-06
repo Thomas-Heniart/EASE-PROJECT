@@ -34,7 +34,7 @@ const TeamAppReceiverLabel = ({username}) => {
              trigger={
                  <Label class={classnames("user-label static pinned")}>
                    {username}
-                   <Icon name='mobile'/>
+                   {/*<Icon name='mobile'/>*/}
                  </Label>
              }
              content={

@@ -1,4 +1,4 @@
-var React = require('react');
+import React, {Component, Fragment} from 'react';
 import WhiteModalTemplate from "../common/WhiteModalTemplate";
 import {connect} from "react-redux";
 import * as userActions from "../../actions/userActions";
@@ -6,7 +6,7 @@ import {addTeamUserToChannel} from "../../actions/channelActions";
 import {showAddTeamUserModal, showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions"
 import {renderRoomLabel} from "../../utils/renderHelpers";
 import {reflect, handleSemanticInput, isEmail} from "../../utils/utils";
-import { Header, Container, Divider, Icon, Form, Input, Message } from 'semantic-ui-react';
+import { Header, Container, Divider, Icon, Form, Input, Message, Button } from 'semantic-ui-react';
 import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect((store) => ({
@@ -22,6 +22,7 @@ class TeamAddUserModal extends React.Component {
       role: 1,
       username: '',
       departure_date: '',
+      arrival_date: '',
       options: [],
       defaultRooms: [],
       value: [],
@@ -52,9 +53,9 @@ class TeamAddUserModal extends React.Component {
   }
   handleInput = handleSemanticInput.bind(this);
   emailInput = (e, {name, value}) => {
-    const newValue = value.replace(".", "").toLowerCase();
-    const username = newValue.split('@')[0];
-    this.setState(() => ({[name]: value, username: username}));
+//    const newValue = value.replace(".", "").toLowerCase();
+//    const username = newValue.split('@')[0];
+    this.setState({[name]: value/*, username: username*/});
   };
   handleUsernameInput = (e, {name, value}) => {
     if (value && value.match(/[a-zA-Z0-9\s_\-]/gi)) {
@@ -90,14 +91,7 @@ class TeamAddUserModal extends React.Component {
     const team = this.props.team;
     this.setState({errorMessage: '', loading: true});
     const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : null;
-    if (Object.keys(team.team_users).length > 29 && team.plan_id === 0){
-      this.props.dispatch(showUpgradeTeamPlanModal({
-        active: true,
-        feature_id: 4,
-        team_id: team.id
-      }));
-      return;
-    }
+    const arrivalDate = this.state.arrival_date.length > 0 ? new Date(this.state.arrival_date).getTime() : null;
     this.props.dispatch(userActions.createTeamUser({
       team_id: team.id,
       first_name: this.state.fname,
@@ -105,6 +99,7 @@ class TeamAddUserModal extends React.Component {
       email: this.state.email,
       username: this.state.username,
       departure_date: departureDate,
+      arrival_date: arrivalDate,
       role: this.state.role
     })).then(response => {
       const user = response;
@@ -133,21 +128,15 @@ class TeamAddUserModal extends React.Component {
     const team = this.props.team;
     this.setState({errorMessage: '', loadingInvitationNow: true});
     const departureDate = this.state.departure_date.length > 0 ? new Date(this.state.departure_date).getTime() : null;
-    if (Object.keys(team.team_users).length > 29 && team.plan_id === 0){
-      this.props.dispatch(showUpgradeTeamPlanModal({
-        active: true,
-        feature_id: 4,
-        team_id: team.id
-      }));
-      return;
-    }
-    this.props.dispatch(userActions.createTeamUserNow({
+    const arrivalDate = this.state.arrival_date.length > 0 ? new Date(this.state.arrival_date).getTime() : null;
+    this.props.dispatch(userActions.createTeamUser({
       team_id: team.id,
       first_name: this.state.fname,
       last_name: this.state.lname,
       email: this.state.email,
       username: this.state.username,
       departure_date: departureDate,
+      arrival_date: arrivalDate,
       role: this.state.role
     })).then(response => {
       const user = response;
@@ -166,6 +155,10 @@ class TeamAddUserModal extends React.Component {
           text: "New team user(s) successfully created!"
         }));
         this.props.dispatch(showAddTeamUserModal({active: false}));
+        this.props.dispatch(userActions.sendInvitationToTeamUserList({
+          team_id: team.id,
+          team_user_id_list: [user.id]
+        }));
       });
     }).catch(err => {
       this.setState({loadingInvitationNow: false, errorMessage: err});
@@ -185,7 +178,7 @@ class TeamAddUserModal extends React.Component {
       {key:2, value:2, content:<span>Admin{team.plan_id === 0 && <img style={{height: '14px', paddingLeft: '2px'}} src="/resources/images/upgrade.png"/>}</span>, text:'Admin'}
     ];
     return (
-        <WhiteModalTemplate onClose={e => {this.props.dispatch(showAddTeamUserModal(false))}}>
+        <WhiteModalTemplate onClose={e => {this.props.dispatch(showAddTeamUserModal({active: false}))}}>
           <Container>
             <Header as="h1">
               Create a team member
@@ -198,12 +191,6 @@ class TeamAddUserModal extends React.Component {
                             value={this.state.email}
                             required
                             width={8}/>
-                <Form.Input label="Username" type="text" name="username"
-                            value={this.state.username}
-                            onChange={this.handleUsernameInput}
-                            placeholder="username" width={8}/>
-              </Form.Group>
-              <Form.Group>
                 <Form.Select
                     style={{minWidth: '0px'}}
                     name="role"
@@ -212,14 +199,37 @@ class TeamAddUserModal extends React.Component {
                     label="User role"
                     width={8}
                     options={dropdownOptions}/>
+              </Form.Group>
+              <Form.Group>
                 <Form.Field width={8}>
-                  <label>
+                  <label class="display_flex align_items_center">
+                    Arrival date&nbsp;
+                    {team.plan_id === 0 &&
+                    <img style={{height: '22px'}} src="/resources/images/upgrade.png"/>}
+                  </label>
+                  <Input type="date"
+                         onFocus={team.plan_id === 0 ?
+                             e => {
+                               this.props.dispatch(showUpgradeTeamPlanModal({active: true, feature_id: 6, team_id: this.props.team.id}))
+                             } : null}
+                         min={moment().add(1, 'days').format('YYYY-MM-DD')}
+                         max={!!this.state.departure_date ? moment(this.state.departure_date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD') : null}
+                         onChange={this.handleInput}
+                         name="arrival_date"
+                         placeholder="Optional" width={8}/>
+                </Form.Field>
+                <Form.Field width={8}>
+                  <label class="display_flex align_items_center">
                     Departure date&nbsp;
                     {team.plan_id === 0 &&
                     <img style={{height: '22px'}} src="/resources/images/upgrade.png"/>}
                   </label>
                   <Input type="date"
-                         onFocus={team.plan_id === 0 ? e => {this.props.dispatch(showUpgradeTeamPlanModal({active: true, feature_id: 5, team_id: this.props.team.id}))} : null}
+                         onFocus={team.plan_id === 0 ?
+                             e => {
+                               this.props.dispatch(showUpgradeTeamPlanModal({active: true, feature_id: 5, team_id: this.props.team.id}))
+                             } : null}
+                         min={!!this.state.arrival_date ? moment(this.state.arrival_date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD') : moment().add(1, 'days').format('YYYY-MM-DD')}
                          onChange={this.handleInput}
                          name="departure_date"
                          placeholder="Optional" width={8}/>
@@ -240,26 +250,42 @@ class TeamAddUserModal extends React.Component {
                   label="Room(s)"/>
               <Message error content={this.state.errorMessage}/>
               <Form.Group id='invitationButton' class="overflow-hidden">
-                <Form.Button
-                    basic color='green'
-                    positive
-                    floated='right'
-                    loading={this.state.loading}
-                    disabled={this.state.loading || !isEmail(this.state.email)}
-                    type="submit"
-                    width={8}>
-                  Send invitation <u><strong>later</strong></u>
-                </Form.Button>
-                <Form.Button
-                    color='green'
-                    floated='right'
-                    type="button"
-                    loading={this.state.loadingInvitationNow}
-                    disabled={this.state.loadingInvitationNow || !isEmail(this.state.email)}
-                    onClick={this.sendNow}
-                    width={8}>
-                  Send invitation <u><strong>now</strong></u>
-                </Form.Button>
+                {!this.state.arrival_date ?
+                    <React.Fragment>
+                      <Form.Button
+                          basic color='green'
+                          positive
+                          floated='right'
+                          loading={this.state.loading}
+                          disabled={this.state.loading || !isEmail(this.state.email)}
+                          type="submit"
+                          width={8}>
+                        Send invitation <u><strong>later</strong></u>
+                      </Form.Button>
+                      <Form.Button
+                          color='green'
+                          floated='right'
+                          type="button"
+                          loading={this.state.loadingInvitationNow}
+                          disabled={this.state.loadingInvitationNow || !isEmail(this.state.email)}
+                          onClick={this.sendNow}
+                          width={8}>
+                        Send invitation <u><strong>now</strong></u>
+                      </Form.Button>
+                    </React.Fragment> :
+                    <React.Fragment>
+                      <Form.Field width={8}/>
+                      <Form.Button
+                          color='green'
+                          positive
+                          width={8}
+                          loading={this.state.loading}
+                          disabled={this.state.loading || !isEmail(this.state.email)}
+                          type="submit">
+                        Send invitation on {moment(this.state.arrival_date, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+                      </Form.Button>
+                    </React.Fragment>
+                }
               </Form.Group>
               <Divider horizontal>Or</Divider>
               <Form.Group class="justify_content_center">

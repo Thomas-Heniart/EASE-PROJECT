@@ -1,0 +1,46 @@
+{
+    "name":"ZohoContactManager",
+    "lastLogin":"",
+    "home": "https://cm.zoho.com",
+    "connect":{
+        "todo":[
+            {"action": "aclick", "search": ".header .signing a.signin"},
+          	{"action":"fill", "what":"login", "search":"#lid", "grave":true},
+            {"action":"fill", "what":"password", "search":"#pwd", "grave":true},
+            {"action":"click", "search":"#signin_submit", "grave":true}
+        ]
+    },
+    "Facebook": {
+        "todo": [
+            {"action": "aclick", "search": ".header .signing a.signin"},
+            {"action": "click", "search": "#fs-facebook-icon"}
+        ]
+    },
+    "Google": {
+        "todo": [
+            {"action": "aclick", "search": ".header .signing a.signin"},
+            {"action": "click", "search": "#fs-google-icon"}
+        ]
+    },
+    "Office365": {
+        "todo": [
+            {"action": "aclick", "search": ".header .signing a.signin"},
+            {"action": "click", "search": "#fs-azure-icon"}
+        ]
+    },
+    "Yahoo": {
+        "todo": [
+            {"action": "aclick", "search": ".header .signing a.signin"},
+            {"action": "click", "search": "#fs-yahoo-icon"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"click", "search":"a[href*=Logout]"},
+                {"action": "waitload"}
+         ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*=Logout]"}
+    ]
+}

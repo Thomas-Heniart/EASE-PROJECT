@@ -10,8 +10,8 @@ import {showChooseAppCredentialsModal, showChooseAnyAppCredentialsModal, showCho
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {connect} from "react-redux";
 import {
-    setUserDropdownText, PasswordChangeDropdown, PasswordChangeManagerLabel,
-    renderSimpleAppAddUserLabel
+  setUserDropdownText, PasswordChangeDropdown, PasswordChangeManagerLabel,
+  renderSimpleAppAddUserLabel
 } from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
@@ -227,6 +227,8 @@ class SimpleTeamAppAdder extends Component {
   render(){
     const app = this.state.app;
     const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id];
+    const team = this.props.teams[this.props.item.team_id];
+
     return (
         <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
           <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
@@ -254,21 +256,21 @@ class SimpleTeamAppAdder extends Component {
                   <div class="logo_column">
                     <div class="logo">
                       {this.state.img_url ?
-                        <div style={{backgroundImage:`url('${this.state.img_url}')`}}>
-                          {(this.state.subtype === 'AnyApp' || this.state.subtype === 'softwareApp') &&
-                          <button className="button-unstyle action_button close_button" onClick={this.imgNone}>
-                            <Icon name="close" class="mrgn0" link/>
-                          </button>}
-                        </div>
-                        : this.state.app_name ?
-                          <div style={{backgroundColor:'#373b60',color:'white'}}>
-                            <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                          <div style={{backgroundImage:`url('${this.state.img_url}')`}}>
+                            {(this.state.subtype === 'AnyApp' || this.state.subtype === 'softwareApp') &&
+                            <button className="button-unstyle action_button close_button" onClick={this.imgNone}>
+                              <Icon name="close" class="mrgn0" link/>
+                            </button>}
                           </div>
-                          :
-                          <div style={{backgroundColor:'white',color: '#dededf'}}>
-                            <Icon name='wait' style={{margin:'auto'}}/>
-                          </div>}
-                      </div>
+                          : this.state.app_name ?
+                              <div style={{backgroundColor:'#373b60',color:'white'}}>
+                                <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                              </div>
+                              :
+                              <div style={{backgroundColor:'white',color: '#dededf'}}>
+                                <Icon name='wait' style={{margin:'auto'}}/>
+                              </div>}
+                    </div>
                   </div>
                   <div class="main_column">
                     <div class="credentials">
@@ -284,9 +286,12 @@ class SimpleTeamAppAdder extends Component {
                                label={<Label><Icon name="home"/></Label>}
                                labelPosition="left"
                                required/>}
-                        <PasswordChangeDropdown value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
-                        {/*{this.state.password_reminder_interval !== 0 &&*/}
-                        {/*<PasswordChangeManagerLabel username={this.state.room_manager_name}/>}*/}
+                        <PasswordChangeDropdown
+                            team={team}
+                            dispatch={this.props.dispatch}
+                            value={this.state.password_reminder_interval}
+                            onChange={this.handleInput}
+                            roomManager={room_manager.username}/>
                       </div>
                     </div>
                     <div>

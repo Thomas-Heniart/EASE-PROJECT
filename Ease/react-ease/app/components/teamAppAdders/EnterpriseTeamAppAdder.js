@@ -14,51 +14,51 @@ import {reduxActionBinder} from "../../actions/index";
 
 const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, first}) => {
   return (
-    <div style={{position: 'relative'}}>
-      {first &&
-      <Icon name='circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'white',margin:'0'}} />}
-      {first &&
-      <Icon onClick={e => removeField(item)} name='remove circle' style={{cursor:'pointer',position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
-      <Input size="mini"
-             id={item.priority}
-             autoFocus={item.autoFocus && isMe}
-             readOnly={readOnly}
-             class="team-app-input"
-             required={isMe}
-             autoComplete='on'
-             name={item.name}
-             onChange={(e, data) => {onChange(receiver_id, data)}}
-             label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-             labelPosition="left"
-             placeholder={isMe ? item.placeholder : `${item.placeholder} (Optional)`}
-             value={item.value}
-             type={item.type}/>
-    </div>
+      <div style={{position: 'relative'}}>
+        {first &&
+        <Icon name='circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'white',margin:'0'}} />}
+        {first &&
+        <Icon onClick={e => removeField(item)} name='remove circle' style={{cursor:'pointer',position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+        <Input size="mini"
+               id={item.priority}
+               autoFocus={item.autoFocus && isMe}
+               readOnly={readOnly}
+               class="team-app-input"
+               required={isMe}
+               autoComplete='on'
+               name={item.name}
+               onChange={(e, data) => {onChange(receiver_id, data)}}
+               label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+               labelPosition="left"
+               placeholder={isMe ? item.placeholder : `${item.placeholder} (Optional)`}
+               value={item.value}
+               type={item.type}/>
+      </div>
   )
 };
 
 const OtherInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, first}) => {
   return (
-    <div style={{position: 'relative'}}>
-      {first &&
-      <Icon name='circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'white',margin:'0'}} />}
-      {first &&
-      <Icon onClick={e => removeField(item)} name='remove circle' style={{cursor:'pointer',position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
-      <Input size="mini"
-             id={item.priority}
-             autoFocus={item.autoFocus}
-             readOnly={readOnly}
-             class="team-app-input"
-             required={isMe}
-             autoComplete='on'
-             name={item.name}
-             onChange={(e, data) => {onChange(receiver_id, data)}}
-             label={<Label><Icon name={'wait'}/></Label>}
-             labelPosition="left"
-             placeholder={isMe ? 'New field' : 'New field (Optional)'}
-             value={item.value}
-             type={item.type}/>
-    </div>
+      <div style={{position: 'relative'}}>
+        {first &&
+        <Icon name='circle' style={{position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'white',margin:'0'}} />}
+        {first &&
+        <Icon onClick={e => removeField(item)} name='remove circle' style={{cursor:'pointer',position:'absolute',bottom:'27px',left:'199px',zIndex:'1',color:'#e0e1e2',margin:'0'}} />}
+        <Input size="mini"
+               id={item.priority}
+               autoFocus={item.autoFocus}
+               readOnly={readOnly}
+               class="team-app-input"
+               required={isMe}
+               autoComplete='on'
+               name={item.name}
+               onChange={(e, data) => {onChange(receiver_id, data)}}
+               label={<Label><Icon name={'wait'}/></Label>}
+               labelPosition="left"
+               placeholder={isMe ? 'New field' : 'New field (Optional)'}
+               value={item.value}
+               type={item.type}/>
+      </div>
   )
 };
 
@@ -79,7 +79,9 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) =
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe, addFields, removeField, first}) => {
   return (
       <div class="receiver">
-        <Label class="receiver-label"><span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/></Label>
+        <Label class="receiver-label">
+          <span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
+        </Label>
         {
           receiver.credentials.map(item => {
             if (item.name !== 'login' && item.name !== 'password' && !item.placeholderIcon)
@@ -98,7 +100,15 @@ const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField,
   return (
       <div class="receivers">
         {receivers.map((item, idx) => {
-          return <ExtendedReceiverCredentialsInput key={item.id} isMe={item.id === myId} receiver={item} onChange={onChange} onDelete={onDelete} addFields={addFields} removeField={removeField} first={idx === 0 && !classic}/>;
+          return <ExtendedReceiverCredentialsInput
+              key={item.id}
+              isMe={item.id === myId}
+              receiver={item}
+              onChange={onChange}
+              onDelete={onDelete}
+              addFields={addFields}
+              removeField={removeField}
+              first={idx === 0 && !classic}/>;
         })}
       </div>
   )
@@ -274,10 +284,10 @@ class EnterpriseTeamAppAdder extends Component {
     e.preventDefault();
     this.setState({loading: true});
     const receivers = this.state.users
-      .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
-      .map(item => ({
-        [item.id]: {account_information: transformCredentialsListIntoObject(item.credentials)}
-      }));
+        .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
+        .map(item => ({
+          [item.id]: {account_information: transformCredentialsListIntoObject(item.credentials)}
+        }));
     const newReceivers = receivers.reduce(function (result, item) {
       result = Object.assign(result, item);
       return result;
@@ -337,7 +347,8 @@ class EnterpriseTeamAppAdder extends Component {
   render(){
     const app = this.state.app;
     const selected_users = this.state.users.filter(item => (this.state.selected_users.indexOf(item.id) !== -1));
-    const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.teams[this.props.card.team_id].rooms[this.props.card.channel_id].room_manager_id];
+    const team = this.props.teams[this.props.card.team_id];
+    const room_manager = team.team_users[team.rooms[this.props.card.channel_id].room_manager_id];
     return (
         <Container fluid id='enterprise-app-adder' class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
           <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
@@ -365,20 +376,20 @@ class EnterpriseTeamAppAdder extends Component {
                   <div class="logo_column">
                     <div class="logo">
                       {this.state.img_url ?
-                        <div style={{backgroundImage:`url('${this.state.img_url}')`}}>
-                          {(this.state.subtype === 'AnyApp' || this.state.subtype === 'softwareApp') &&
-                          <button className="button-unstyle action_button close_button" onClick={this.imgNone}>
-                            <Icon name="close" class="mrgn0" link/>
-                          </button>}
-                        </div>
-                        : this.state.app_name ?
-                          <div style={{backgroundColor:'#373b60',color:'white'}}>
-                            <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                          <div style={{backgroundImage:`url('${this.state.img_url}')`}}>
+                            {(this.state.subtype === 'AnyApp' || this.state.subtype === 'softwareApp') &&
+                            <button className="button-unstyle action_button close_button" onClick={this.imgNone}>
+                              <Icon name="close" class="mrgn0" link/>
+                            </button>}
                           </div>
-                          :
-                          <div style={{backgroundColor:'white',color: '#dededf'}}>
-                            <Icon name='wait' style={{margin:'auto'}}/>
-                          </div>}
+                          : this.state.app_name ?
+                              <div style={{backgroundColor:'#373b60',color:'white'}}>
+                                <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                              </div>
+                              :
+                              <div style={{backgroundColor:'white',color: '#dededf'}}>
+                                <Icon name='wait' style={{margin:'auto'}}/>
+                              </div>}
                     </div>
                   </div>
                   <div class="main_column">
@@ -395,10 +406,22 @@ class EnterpriseTeamAppAdder extends Component {
                                label={<Label><Icon name="home"/></Label>}
                                labelPosition="left"
                                required/>}
-                        <PasswordChangeDropdownEnterprise value={this.state.password_reminder_interval} onChange={this.handleInput} roomManager={room_manager.username}/>
+                        <PasswordChangeDropdownEnterprise
+                            team={team}
+                            dispatch={this.props.dispatch}
+                            value={this.state.password_reminder_interval}
+                            onChange={this.handleInput}
+                            roomManager={room_manager.username}/>
                       </div>
                     </div>
-                    <Receivers myId={this.props.teams[this.props.card.team_id].my_team_user_id} receivers={selected_users} onDelete={this.onDeleteReceiver} onChange={this.handleReceiverInput} removeField={this.removeField} addFields={this.addFields} classic={this.props.card.subtype === 'classic'}/>
+                    <Receivers
+                        myId={this.props.teams[this.props.card.team_id].my_team_user_id}
+                        receivers={selected_users}
+                        onDelete={this.onDeleteReceiver}
+                        onChange={this.handleReceiverInput}
+                        removeField={this.removeField}
+                        addFields={this.addFields}
+                        classic={this.props.card.subtype === 'classic'}/>
                     <div>
                       {this.state.selected_users.length !== this.state.users.length &&
                       <Dropdown
@@ -430,14 +453,14 @@ class EnterpriseTeamAppAdder extends Component {
                 </div>
               </Segment>
               <Button
-                icon="send"
-                content="Send"
-                loading={this.state.loading}
-                disabled={this.state.loading || this.state.users[0].credentials.length < 1}
-                floated="right"
-                class="mrgn0"
-                positive
-                size="mini"/>
+                  icon="send"
+                  content="Send"
+                  loading={this.state.loading}
+                  disabled={this.state.loading || this.state.users[0].credentials.length < 1}
+                  floated="right"
+                  class="mrgn0"
+                  positive
+                  size="mini"/>
             </div>}
           </Transition>
         </Container>

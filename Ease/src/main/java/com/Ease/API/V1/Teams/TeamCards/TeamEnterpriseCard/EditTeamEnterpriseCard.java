@@ -4,6 +4,7 @@ import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -46,17 +47,17 @@ public class EditTeamEnterpriseCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
             teamEnterpriseCard.setName(name);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
             teamEnterpriseCard.decipher(teamKey);
             teamEnterpriseCard.setPassword_reminder_interval(password_reminder_interval);
-            teamEnterpriseCard.getTeamCardReceiverMap().values().stream().forEach(teamCardReceiver -> {
+            for (TeamCardReceiver teamCardReceiver : teamEnterpriseCard.getTeamCardReceiverMap().values()) {
                 TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCardReceiver;
                 ClassicApp classicApp = (ClassicApp) teamEnterpriseCardReceiver.getApp();
                 if (classicApp.getAccount() != null)
                     classicApp.getAccount().setReminder_interval(password_reminder_interval);
-            });
+            }
             sm.saveOrUpdate(teamEnterpriseCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamEnterpriseCard.getWebSocketJson()));
             sm.setSuccess(teamEnterpriseCard.getJson());

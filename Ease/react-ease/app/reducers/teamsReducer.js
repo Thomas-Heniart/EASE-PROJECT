@@ -8,6 +8,15 @@ export const teams = createReducer({
       ...action.payload.teams
     }
   },
+  ['DISABLE_INVITE_TEAM_USERS_MODAL'](state, action){
+    const {team_id} = action.payload;
+
+    return update(state, {
+      [team_id]: {
+        show_invite_people_popup: {$set: false}
+      }
+    });
+  },
   ['UPGRADE_TEAM_PLAN_FULFILLED'](state, action){
     const team = action.payload.team;
 
@@ -17,6 +26,14 @@ export const teams = createReducer({
         payment_required: {$set: team.payment_required}
       }
     });
+  },
+  ['TEAM_INVITE_FRIEND_FULFILLED'](state, action){
+    const {team_id} = action.payload;
+    return update(state, {
+      [team_id]: {
+        extra_members: {$set: state[team_id].extra_members + 1}
+      }
+    })
   },
   ['TEAM_ADD_CREDIT_CARD_FULFILLED'](state, action){
     const {team_id} = action.payload;

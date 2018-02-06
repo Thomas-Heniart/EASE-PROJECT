@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00038/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/securityPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00038/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00039/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00039/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -87,7 +87,7 @@
             <div class="intro-heading">
                 <fmt:message key="product.title"/>
             </div>
-            <button class="button-product big centered ui button" onclick="location.href='/#/registration'">
+            <button class="button-product big centered ui button" onclick="location.href='/#/teamCreation?plan_id=0'">
                 <fmt:message key="product.button"/>
             </button>
         </div>
