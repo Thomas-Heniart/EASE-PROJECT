@@ -757,7 +757,7 @@ const ArrivalDateHelpPopup = ({username}) => {
              position="top right"
              inverted
              trigger={
-               <Icon style={{
+               <Icon link style={{
                  position: 'absolute',
                  right: '1px',
                  top: '15px',
@@ -774,7 +774,7 @@ const DepartureDateHelpPopup = ({username}) => {
              position="top right"
              inverted
              trigger={
-               <Icon style={{
+               <Icon link style={{
                  position: 'absolute',
                  right: '1px',
                  top: '15px',

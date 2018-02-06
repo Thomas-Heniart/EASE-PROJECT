@@ -1,0 +1,30 @@
+{
+    "name":"ScoopIt",
+    "lastLogin":"",
+    "home": "https://www.scoop.it/login",
+    "connect":{
+        "todo":[
+          	{"action":"fill", "what":"login", "search":"#loginForm input[name=email]", "grave":true},
+            {"action":"fill", "what":"password", "search":"#loginForm input[name=password]", "grave":true},
+            {"action":"click", "search":"#loginForm button[type=submit]", "grave":true}
+        ]
+    },
+    "Facebook": {
+        "todo": [
+            {"action": "click", "search": "#snlogins a[href*=facebook]"}
+        ]
+    },
+    "Twitter": {
+        "todo": [
+            {"action": "click", "search": "#snlogins a[href*=twitter]"}
+        ]  
+    },
+    "logout":{
+        "todo":[
+            {"action":"aclick", "search":"a[href*=logout]"}
+         ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"a[href*=logout]"}
+    ]
+}
