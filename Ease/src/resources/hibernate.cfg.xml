@@ -28,12 +28,16 @@
         <property name="hibernate.cache.use_query_cache">true</property>
         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
         </property>
+        <property name="hibernate.order_updates">true</property>
+        <property name="hibernate.order_inserts">true</property>
+        <property name="hibernate.connection.isolation">2</property>
         <mapping class="com.Ease.Team.Team"/>
         <mapping class="com.Ease.Team.OnboardingStatus"/>
         <mapping class="com.Ease.Team.Channel"/>
         <mapping class="com.Ease.Team.Onboarding.OnboardingRoom"/>
         <mapping class="com.Ease.Team.TeamUser"/>
         <mapping class="com.Ease.Team.TeamUserRole"/>
+        <mapping class="com.Ease.Team.InvitedFriend"/>
         <mapping class="com.Ease.Catalog.Software"/>
         <mapping class="com.Ease.Catalog.SoftwareConnectionInformation"/>
         <mapping class="com.Ease.Catalog.Website"/>

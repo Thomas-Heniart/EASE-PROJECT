@@ -339,6 +339,7 @@ class Importations extends React.Component {
             fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'}
           });
         }
+        easeTracker.trackEvent("Importation")
       }).catch(err => {
       });
     }
@@ -387,6 +388,7 @@ class Importations extends React.Component {
               loading: false
             });
           }
+          easeTracker.trackEvent("Importation")
         }).catch(err => {
         });
       }

@@ -47,8 +47,8 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter description");
             teamEnterpriseCard.setDescription(description);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             teamEnterpriseCard.setPassword_reminder_interval(password_reminder_interval);
             String url = sm.getStringParam("url", true, false);
             if (!Regex.isSimpleUrl(url) || url.length() > 2000)

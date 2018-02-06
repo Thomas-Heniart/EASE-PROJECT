@@ -1,0 +1,40 @@
+{
+    "name":"AddThis",
+    "lastLogin":"",
+    "home":"https://www.addthis.com/login?next=/dashboard",
+    "connect":{
+        "todo":[
+          	{"action":"fill", "what":"login", "search":"#eee", "grave":true},
+            {"action":"fill", "what":"password", "search":"#password"},
+            {"action": "enterFrame", "search": ".g-recaptcha iframe"},
+            {"action": "click", "search": "#recaptcha-anchor"},
+            {"action": "waitfor", "search": "#recaptcha-anchor.recaptcha-checkbox-checked"},
+            {"action": "exitFrame"},
+            {"action":"click", "search":"#sign_in_submit"}
+        ]
+    },
+    "Twitter":{
+    	"todo":[
+            {"action":"click", "search":"#auth-twitter-frm .auth-twitter-lnk"}
+    	]
+    },
+    "Google": {
+        "todo": [
+            {"action":"click", "search":"#auth-google-frm .auth-google-lnk"}
+        ]
+    },
+    "Facebook": {
+        "todo": [
+            {"action":"click", "search":"#auth-facebook-frm .auth-facebook-lnk"}
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"click", "search":"form[action*=logout] input[type=submit]"},
+            {"action": "waitload"}
+         ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"form[action*=logout] input[type=submit]"}
+    ]
+}

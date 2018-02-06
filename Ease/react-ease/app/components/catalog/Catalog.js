@@ -31,6 +31,7 @@ class Catalog extends Component {
   componentDidMount() {
     if (!this.props.catalog.loaded)
       this.props.fetchCatalog();
+    easeTracker.trackEvent("OpenCatalog");
     setTimeout(() => {
       this.setState({mounted: true});
     }, 1);

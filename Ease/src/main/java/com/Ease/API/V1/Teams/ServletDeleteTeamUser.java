@@ -118,6 +118,8 @@ public class ServletDeleteTeamUser extends HttpServlet {
                             if (!accountInformation.getInformation_name().toLowerCase().equals("password"))
                                 account_info.append(accountInformation.getDeciphered_information_value()).append(", ");
                         });
+                        if (account_info.length() < 2)
+                            continue;
                         account_info.delete(account_info.length() - 2, account_info.length()).append(")");
                         tmp.put("account", account_info);
                         singleCards.put(tmp);
@@ -133,6 +135,8 @@ public class ServletDeleteTeamUser extends HttpServlet {
                             if (!accountInformation.getInformation_name().toLowerCase().equals("password"))
                                 account_info.append(accountInformation.getDeciphered_information_value()).append(", ");
                         });
+                        if (account_info.length() < 2)
+                            continue;
                         account_info.delete(account_info.length() - 2, account_info.length()).append(")");
                         tmp.put("account", account_info);
                         enterpriseCards.put(tmp);

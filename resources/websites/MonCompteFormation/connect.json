@@ -1,0 +1,20 @@
+{
+    "name": "MonCompteFormation",
+    "lastlogin":"",
+    "home":"https://espaceprive.moncompteformation.gouv.fr",
+    "connect": {
+    	"todo": [
+    		{"action":"fill", "what":"login","search":"#j_username", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#j_password", "grave":"true"},
+    		{"action":"click", "search":"#connexion button[type=submit]", "grave":"true"}
+    	]
+    },
+    "logout": {
+    	"todo": [
+    		{"action":"aclick", "search":"a[href*=logout]"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#account"}
+    ]
+}

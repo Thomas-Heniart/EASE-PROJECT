@@ -75,7 +75,7 @@ class TeamsTutorial extends React.Component {
           }
         }
       });
-    this.setState({run: true, steps: steps});
+    this.setState({steps: steps, run: true});
   }
   render(){
     return(

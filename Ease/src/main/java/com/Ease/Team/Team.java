@@ -33,12 +33,15 @@ public class Team {
 
     public static final Map<Integer, String> plansMap = new HashMap<>();
     private static final Map<String, Integer> inverse_plansMap = new HashMap<>();
+    public static final int MAX_MEMBERS = 15;
 
     static {
         plansMap.put(0, "FreePlan");
         inverse_plansMap.put("FreePlan", 0);
         plansMap.put(1, "EaseFreemium");
         inverse_plansMap.put("EaseFreemium", 1);
+        plansMap.put(2, "Pro");
+        inverse_plansMap.put("Pro", 2);
     }
 
     @Id
@@ -94,6 +97,11 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCard> teamCardSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @MapKey(name = "email")
+    private Map<String, InvitedFriend> invitedFriendMap = new ConcurrentHashMap<>();
 
     @Transient
     private Customer customer;
@@ -240,7 +248,7 @@ public class Team {
     }
 
     public boolean isFreemium() throws HttpServletException {
-        return this.getSubscription().getPlan().getId().equals("EaseFreemium");
+        return this.getSubscription().getPlan().getId().equals("EaseFreemium") || this.getSubscription().getPlan().getId().equals("Pro");
     }
 
     public boolean isValidFreemium() throws HttpServletException {
@@ -273,6 +281,14 @@ public class Team {
 
     public void setTeamWebsites(Set<Website> teamWebsites) {
         this.teamWebsites = teamWebsites;
+    }
+
+    public synchronized Map<String, InvitedFriend> getInvitedFriendMap() {
+        return invitedFriendMap;
+    }
+
+    public void setInvitedFriendMap(Map<String, InvitedFriend> invitedFriendMap) {
+        this.invitedFriendMap = invitedFriendMap;
     }
 
     public Channel getChannelWithId(Integer channel_id) throws HttpServletException {
@@ -334,6 +350,18 @@ public class Team {
         this.getTeamWebsites().remove(website);
     }
 
+    public InvitedFriend getInvitedFriend(String email) {
+        return this.getInvitedFriendMap().get(email);
+    }
+
+    public void addInvitedFriend(InvitedFriend invitedFriend) {
+        this.getInvitedFriendMap().put(invitedFriend.getEmail(), invitedFriend);
+    }
+
+    public void removeInvitedFriend(InvitedFriend invitedFriend) {
+        this.getInvitedFriendMap().remove(invitedFriend.getEmail());
+    }
+
     public void edit(JSONObject editJson) {
         String name = (String) editJson.get("name");
         if (name != null)
@@ -360,10 +388,14 @@ public class Team {
         res.put("name", this.getName());
         res.put("company_size", this.getCompany_size());
         Integer plan_id = this.getPlan_id();
+        /* Hack for sergii frontend */
+        if (plan_id == 2)
+            plan_id = 1;
         res.put("plan_id", plan_id);
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
-        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamUsers().size() >= 8);
+        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateComparator.isOutdated(this.getSubscription_date(), 0, 1));
+        res.put("extra_members", this.getInvitedFriendMap().size());
         return res;
     }
 
@@ -414,6 +446,9 @@ public class Team {
     public void updateSubscription(Map<String, Object> teamProperties) {
         try {
             if (this.subscription_id == null || this.subscription_id.equals(""))
+                return;
+            this.initializeStripe(teamProperties);
+            if (this.getPlan_id() == 2)
                 return;
             int activeSubscriptions = Math.toIntExact(this.getTeamUsers().values().stream().filter(teamUser -> teamUser.isVerified() && !teamUser.getTeamCardReceivers().isEmpty()).count());
             System.out.println("Team: " + this.getName() + " has " + activeSubscriptions + " active subscriptions.");

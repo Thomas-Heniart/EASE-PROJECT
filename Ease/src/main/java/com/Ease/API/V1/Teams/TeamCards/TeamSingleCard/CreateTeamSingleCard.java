@@ -47,8 +47,8 @@ public class CreateTeamSingleCard extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(website_id, sm.getHibernateQuery());
             Integer reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Reminder interval cannot be under 0");
+            if (reminder_interval < 0 || !team.isValidFreemium())
+                reminder_interval = 0;
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
@@ -77,7 +77,7 @@ public class CreateTeamSingleCard extends HttpServlet {
                 String key = String.valueOf(object);
                 JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
-                Boolean allowed_to_see_password = value.getBoolean("allowed_to_see_password");
+                Boolean allowed_to_see_password = true; //value.getBoolean("allowed_to_see_password");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");

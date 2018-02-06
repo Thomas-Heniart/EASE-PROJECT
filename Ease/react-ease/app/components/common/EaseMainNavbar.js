@@ -81,6 +81,9 @@ class NotificationList extends React.Component {
     }
     this.lastScrollTop = e.target.scrollTop;
   };
+  onOpen = () => {
+    easeTracker.trackEvent("OpenNotifications")
+  };
   executeNotification = (notification) => {
     if (!!notification.url.length) {
       window.location.href = notification.url;
@@ -92,7 +95,8 @@ class NotificationList extends React.Component {
     return (
         <Dropdown class="bordered_scrollbar"
                   icon={newNotifs ? newNotificationIcon() : <Icon name="bell" data-tip="Notifications"/>} item
-                  floating scrolling onClose={this.onClose} id="notifications_menu">
+                  floating scrolling onClose={this.onClose} id="notifications_menu"
+                  onOpen={this.onOpen}>
           <Dropdown.Menu onScroll={this.onScroll}>
             {!this.props.notifications.notifications.length &&
             <Dropdown.Item>There isn't notifications yet</Dropdown.Item>}

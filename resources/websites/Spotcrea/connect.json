@@ -1,0 +1,52 @@
+{
+  "name": "Spotcréa",
+  "lastLogin": "",
+  "home": "http://www.spotcrea.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='connexion']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#user_login"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#user_login"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#user_password"
+      },
+      {
+        "action": "trueClick",
+        "search": "#new_user input[name='commit']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".logout a"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='connexion']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".logout, a[href*='connexion']"
+    },
+    {
+      "search": ".logout"
+    }
+  ]
+}

@@ -73,9 +73,10 @@ class UpgradeTeamPlanModal extends Component {
             onClose={e => {this.props.dispatch(showUpgradeTeamPlanModal({active: false}))}}
             headerContent={'Try Pro now!'}>
           <Form class="container" error={this.state.errorMessage.length > 0} onSubmit={this.confirm} id="upgrade_team_plan_modal">
+            {!!this.props.feature_id &&
             <Form.Field>
-              Your current plan (Basic) doesn’t enable {proFeaturesDesc[feature_id]}.
-            </Form.Field>
+              Your current plan (Starter) doesn’t enable {proFeaturesDesc[feature_id]}.
+            </Form.Field>}
             <Form.Field>
               <h5>
                 Pro includes your current features and:
@@ -88,8 +89,8 @@ class UpgradeTeamPlanModal extends Component {
             </Form.Field>
             <Form.Field>
               {meOwner ?
-                  'After trial Pro is billed 3,99€ per month per active user, but for now it’s free 1 month and no credit required' :
-                  `After trial Pro is billed 3,99€ per month per active user. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade.Want to send a request ?`
+                  'Do you want to try Pro for free for 1 month? (No credit card needed). After trial, Pro is billed 59€ per month for the whole team.' :
+                  `After trial Pro is billied 59€ per month for the whole team. Your team owner ${teamOwner.username}, is the only person able to take decision to upgrade. Want to send a request?`
               }
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
