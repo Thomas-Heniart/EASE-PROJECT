@@ -471,6 +471,23 @@ class NewTeamCreationView extends React.Component {
       }
       else if (this.state.appsSelected.length === 0 && this.state.roomsSelected.length - 1 > this.state.currentRoom)
         this.setState({currentRoom: this.state.currentRoom + 1, viewAccounts: 2, loading: false});
+      else if (this.state.appsSelected.length === 0
+        && this.state.roomsSelected.length - 1 <= this.state.currentRoom
+        && Object.keys(this.state.singleApps).filter(item => {
+          return this.state.singleApps[item].length > 0
+        }).length > 0) {
+        Object.keys(this.state.singleApps).map(room_id => {
+          this.state.singleApps[room_id].map(id => {
+            this.state.credentialsSingleApps[id] = {
+              name: this.state.roomsWebsites[id].name,
+              login: '',
+              password: '',
+              filler_id: null
+            };
+          });
+        });
+        this.setState({loading: false, appsSelected: [], viewAccounts: 4})
+      }
       else if (this.state.appsSelected.length > 0)
         this.setState({viewAccounts: 3, loading: false});
       else
@@ -761,7 +778,9 @@ class NewTeamCreationView extends React.Component {
             <Menu.Item name='Accounts' active={this.state.activeItem === 5}/>
           </Menu>
           <div id='content' className={this.state.view === 2 || this.state.view === 3 || (this.state.view === 1 && this.state.viewInfo === 4) || this.state.view === 5 ? 'stepUsers' : null}>
-            <Form onSubmit={this.state.view === 1 ? this.nextInformation : this.state.view === 5 ? this.nextAccounts : this.next} error={this.state.error !== '' || this.checkNoDuplicateEmails()}>
+            <Form
+              className={this.state.view === 3 ? 'addMembers' : null}
+              onSubmit={this.state.view === 1 ? this.nextInformation : this.state.view === 5 ? this.nextAccounts : this.next} error={this.state.error !== '' || this.checkNoDuplicateEmails()}>
               <Switch>
                 {this.state.view === 1 &&
                 <Route path={`${this.props.match.path}/informations`}
