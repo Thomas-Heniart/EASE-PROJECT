@@ -1,0 +1,22 @@
+{
+  "name":"Apec",
+  "lastLogin":"",
+  "home":"https://cadres.apec.fr/home/mon-compte/identification.html",
+  "connect":{
+    "todo":[
+      {"action": "waitfor", "search":"input#username"},
+      {"action":"fill", "what":"login", "search":"input#username", "grave": true},
+      {"action":"fill", "what":"password", "search":"input#password", "grave": true},
+      {"action":"click", "search":"#loginForm button[type=submit]", "grave": true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='LogOut']"}
+    ]
+  },  
+  "checkAlreadyLogged":[
+    {"action": "waitfor", "search":"a[href*='LogOut'], input#username"},
+    {"search":"a[href*='LogOut']"}
+  ]
+}
