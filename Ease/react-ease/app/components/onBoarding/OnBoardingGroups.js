@@ -43,7 +43,7 @@ class OnBoardingGroups extends React.Component {
     return (
       <React.Fragment>
         <Header as='h1'>Who's in which Room?</Header>
-        <div className='scroll groups'>
+        <div className='groups'>
           {roomsList}
         </div>
       </React.Fragment>

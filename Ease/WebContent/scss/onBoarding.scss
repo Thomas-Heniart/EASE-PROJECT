@@ -159,6 +159,7 @@
       }
       .input {
         max-width: 370px;
+        min-height: 47px;
         input {
           width: 370px;
           max-width: 370px;
@@ -224,11 +225,13 @@
         //position: relative;
         overflow: auto;
         overflow-x: hidden;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flexbox;
-        display: flex;
+        &.addMembers {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: -ms-flexbox;
+          display: flex;
+        }
         -ms-flex: 1;
         -webkit-flex: 1;
         flex: 1;
@@ -384,7 +387,7 @@
       .account {
         color: #949eb7;
         display: inline-flex;
-        margin: 7px 0 7px 0;
+        margin: 7px 0 17px 0;
         .password_with_test_connection {
           position: relative;
           .password {
@@ -450,6 +453,7 @@
         .input {
           font-size: 14px;
           height: fit-content;
+          min-height: 0;
           input {
             color: #949eb7;
             width: 140px;

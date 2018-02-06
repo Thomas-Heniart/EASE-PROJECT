@@ -799,6 +799,7 @@ button.only-text-button {
             display: flex;
             margin: 7px 0 7px 10px;
             width: 100%;
+            font-size: 13px;
             img {
               width: 30px;
               height: 30px;
@@ -807,6 +808,7 @@ button.only-text-button {
               white-space: nowrap;
               width: 30px;
               text-align: center;
+              margin-top: 4px;
             }
           }
         }
