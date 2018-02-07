@@ -20,11 +20,12 @@ CREATE TABLE EASE_UPDATE (
   update_account_id INT(10) UNSIGNED NOT NULL,
   app_id INT(10) UNSIGNED,
   team_card_id INT(10) UNSIGNED,
+  team_user_id INT(10) UNSIGNED,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (website_id) REFERENCES websites(id),
   FOREIGN KEY (update_account_id) REFERENCES UPDATE_ACCOUNT(id),
   FOREIGN KEY (app_id) REFERENCES apps(id),
-  FOREIGN KEY (team_card_id) REFERENCES teamCards(id)
+  FOREIGN KEY (team_card_id) REFERENCES teamCards(id),
+  FOREIGN KEY (team_user_id) REFERENCES teamUsers(id)
 );
-
