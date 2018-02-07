@@ -1,0 +1,44 @@
+{
+  "name": "N-admin",
+  "lastLogin": "",
+  "home": "https://n-admin.nexylan.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#username"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password"
+      },
+      {
+        "action": "trueClick",
+        "search": "#login_form button[type='submit']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login_form button[type='submit']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='logout'], #login_form button[type='submit']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
+}

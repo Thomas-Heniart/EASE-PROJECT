@@ -51,8 +51,8 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter description");
             teamSingleSoftwareCard.setDescription(description);
             Integer password_reminder_interval = sm.getIntParam("password_reminder_interval", true, false);
-            if (password_reminder_interval < 0)
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter password_reminder_interval");
+            if (password_reminder_interval < 0 || !team.isValidFreemium())
+                password_reminder_interval = 0;
             teamSingleSoftwareCard.setPassword_reminder_interval(password_reminder_interval);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             sm.decipher(account_information);

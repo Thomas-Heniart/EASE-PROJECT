@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component, Fragment} from 'react';
 import {
   showTeamDeleteChannelModal,
   showTeamDeleteUserFromChannelModal,
@@ -35,6 +35,7 @@ import {
 } from 'semantic-ui-react';
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
+import {DepartureDatePassedIndicator} from "./dashboard/utils";
 
 function ChannelJoinRequestList(props){
   const {room, team} = props;
@@ -207,7 +208,7 @@ class RoomManagerSection extends React.Component {
           </div>
           {this.state.errorMessage.length > 0 &&
           <Message  color="red" content={this.state.errorMessage}/>}
-          <p>Room Managers are responsible for administer rooms and apps in it. <RoomManagerInfoIcon/></p>
+          <p>Room managers administer the apps in the room (add, accept or revoke people). <RoomManagerInfoIcon/></p>
         </Grid.Column>
     )
   }
@@ -651,31 +652,33 @@ class FirstLastNameSection extends React.Component {
 
     return (
         <Grid.Column>
-          {!this.state.edit ?
+          {/*{!this.state.edit &&*/}
               <h4>
                 {user.first_name} {user.last_name}
-                {isSuperiorOrMe(user, me) &&
-                <Icon link name="pencil" class="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
-              </h4> :
-              <Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
-                <Form.Input
-                    size="mini"
-                    placeholder="First name"
-                    type="text" name="first_name" fluid
-                    value={this.state.first_name}
-                    onChange={this.handleInput}/>
-                <Form.Input
-                    size="mini"
-                    placeholder="Last name"
-                    type="text" name="last_name" fluid
-                    value={this.state.last_name}
-                    onChange={this.handleInput}/>
-                <Message error size="mini" content={this.state.errorMessage}/>
-                <Form.Field>
-                  <Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>
-                  <Button primary size="mini" loading={this.state.loading}>Save</Button>
-                </Form.Field>
-              </Form>}
+                {/*{isSuperiorOrMe(user, me) &&
+                <Icon link name="pencil" class="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}*/}
+              </h4>
+          {/*}*/}
+            {/*:*/}
+              {/*<Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>*/}
+                {/*<Form.Input*/}
+                    {/*size="mini"*/}
+                    {/*placeholder="First name"*/}
+                    {/*type="text" name="first_name" fluid*/}
+                    {/*value={this.state.first_name}*/}
+                    {/*onChange={this.handleInput}/>*/}
+                {/*<Form.Input*/}
+                    {/*size="mini"*/}
+                    {/*placeholder="Last name"*/}
+                    {/*type="text" name="last_name" fluid*/}
+                    {/*value={this.state.last_name}*/}
+                    {/*onChange={this.handleInput}/>*/}
+                {/*<Message error size="mini" content={this.state.errorMessage}/>*/}
+                {/*<Form.Field>*/}
+                  {/*<Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>*/}
+                  {/*<Button primary size="mini" loading={this.state.loading}>Save</Button>*/}
+                {/*</Form.Field>*/}
+              {/*</Form>*/}
         </Grid.Column>
     )
   }
@@ -726,6 +729,7 @@ class DepartureDateSection extends React.Component {
     const {team, user, me} = this.props;
     return (
         <Grid.Column>
+          <DepartureDateHelpPopup username={user.username}/>
           <strong>Departure date: </strong>
           {!this.state.edit ?
               <span>
@@ -737,12 +741,149 @@ class DepartureDateSection extends React.Component {
                         </span> :
               <Input type="date" size="mini"
                      fluid action name="departure_date"
+                     min={!!user.arrival_date ? moment(user.arrival_date).add(1, 'days').format('YYYY-MM-DD') : null}
                      value={this.state.departure_date}
                      onChange={this.handleInput}>
                 <input/>
                 <Button icon="delete" basic size="mini" onClick={this.setEdit.bind(null, false)}/>
                 <Button icon="checkmark" primary size="mini" loading={this.state.loading} onClick={this.confirm}/>
               </Input>}
+        </Grid.Column>
+    )
+  }
+}
+
+const ArrivalDateHelpPopup = ({username}) => {
+  return (
+      <Popup size="mini"
+             position="top right"
+             inverted
+             trigger={
+               <Icon link style={{
+                 position: 'absolute',
+                 right: '1px',
+                 top: '15px',
+                 fontSize:'16px'
+               }} name="info circle"/>
+             }
+             content={`The invitation will be  sent to ${username} on the arrival date.`}/>
+  )
+};
+
+const DepartureDateHelpPopup = ({username}) => {
+  return (
+      <Popup size="mini"
+             position="top right"
+             inverted
+             trigger={
+               <Icon link style={{
+                 position: 'absolute',
+                 right: '1px',
+                 top: '15px',
+                 fontSize:'16px'
+               }} name="info circle"/>
+             }
+             content={`${username}’s web accesses will be revoked on departure date.`}/>
+  )
+};
+
+@connect()
+class ArrivalDateSection extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      arrival_date: '',
+      edit: false,
+      loading: false
+    }
+  }
+  handleInput = handleSemanticInput.bind(this);
+  setEdit = (state) => {
+    if (this.props.team.plan_id === 0) {
+      this.props.dispatch(showUpgradeTeamPlanModal({
+        active: true,
+        feature_id: 6,
+        team_id: this.props.team.id
+      }));
+      return;
+    }
+    const {user} = this.props;
+    this.setState({
+      arrival_date: !!user.arrival_date ? moment(user.arrival_date).format('YYYY-MM-DD') : '',
+      edit: state,
+      loading: false
+    });
+  };
+  resetArrivalDate = (e) => {
+    e.preventDefault();
+    const {team, dispatch, user} = this.props;
+    this.setState({loading: true});
+    dispatch(userActions.editTeamUserArrivalDate({
+      team_id: team.id,
+      team_user_id: user.id,
+      arrival_date: null
+    })).then(response => {
+      this.setEdit(false);
+    }).catch(err => {
+      this.setState({loading: false});
+    });
+  };
+  confirm = (e) => {
+    e.preventDefault();
+    const {team, dispatch, user} = this.props;
+    this.setState({loading: true});
+    dispatch(userActions.editTeamUserArrivalDate({
+      team_id: team.id,
+      team_user_id: user.id,
+      arrival_date: !!this.state.arrival_date.length ? new Date(this.state.arrival_date).getTime() : null
+    })).then(response => {
+      this.setEdit(false);
+    }).catch(err => {
+      this.setState({loading: false});
+    });
+  };
+  render(){
+    const {team, user, me} = this.props;
+    if (user.state !== 0)
+      return (
+          <Grid.Column>
+            <strong>Arrival date: </strong>
+            {basicDateFormat(user.arrival_date)}
+          </Grid.Column>
+      );
+    return (
+        <Grid.Column>
+          <ArrivalDateHelpPopup username={user.username}/>
+          <strong>Arrival date: </strong>
+          {!this.state.edit ?
+              <span>
+                      {user.arrival_date !== null ? basicDateFormat(user.arrival_date) : 'not planned'}
+                {isSuperior(user, me) && me.id !== user.id &&
+                <Icon link name="pencil" className="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}
+                {isSuperior(user, me) && me.id !== user.id && team.plan_id === 0 &&
+                <img style={{height: '16px'}} src="/resources/images/upgrade.png"/>}
+                        </span> :
+              <React.Fragment>
+                <Input type="date" size="mini"
+                       fluid action name="arrival_date"
+                       min={moment().add(1, 'days').format('YYYY-MM-DD')}
+                       max={!!user.departure_date ? moment(user.departure_date).subtract(1, 'days').format('YYYY-MM-DD') : null}
+                       value={this.state.arrival_date}
+                       onChange={this.handleInput}>
+                  <input/>
+                  <Button icon="delete" basic size="mini" onClick={this.setEdit.bind(null, false)}/>
+                  <Button icon="checkmark" primary size="mini" loading={this.state.loading} onClick={this.confirm}/>
+                </Input>
+                <span
+                    style={{
+                      cursor: 'pointer',
+                      textDecoration:'underline',
+                      float:'right',
+                      marginTop: '5px'
+                    }}
+                    onClick={this.resetArrivalDate}>Cancel arrival date</span>
+              </React.Fragment>
+          }
         </Grid.Column>
     )
   }
@@ -795,8 +936,10 @@ class TeamUserFlexTab extends React.Component{
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
-                  <strong>Arrival date: </strong>
-                  {basicDateFormat(user.arrival_date)}
+                  <ArrivalDateSection
+                      team={team}
+                      user={user}
+                      me={me}/>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>

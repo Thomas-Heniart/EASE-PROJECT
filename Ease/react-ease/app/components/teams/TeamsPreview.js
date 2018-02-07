@@ -36,44 +36,34 @@ function Step1(props){
 
 function TeamBasicPlan(props) {
   return (
-      <div class="team_plan" id="starter_plan" style={{marginRight: '40px'}}>
-        <h1 class="text-center title">Basic</h1>
-        <span class="text-center price">0 <span class="symbol">€</span></span>
-        <span class="price_divider">per month, per active user</span>
-        <div class="text-center" style={{marginBottom: '35px'}}>
-          <button class="button-unstyle big-button button">
-            <NavLink to={`/main/simpleTeamCreation?plan_id=0`} className="link-unstyle"
-                     activeClassName="active">
-              CREATE A TEAM FOR FREE
-            </NavLink>
-          </button>
+      <div class="team_plan_wrapper" style={{marginRight: '40px'}}>
+        <div class="team_plan" id="starter_plan">
+          <h1 class="text-center title">Starter</h1>
+          <span class="text-center price">0 <span class="symbol">€</span></span>
+          <span class="price_divider">per month</span>
+          <div class="text-center">
+            <button class="button-unstyle big-button button">
+              <NavLink to={`/main/simpleTeamCreation?plan_id=0`} className="link-unstyle"
+                       activeClassName="active">
+                CREATE A TEAM FOR FREE
+              </NavLink>
+            </button>
+          </div>
         </div>
-        <span class="info">INCLUDED IN THE <TeamPlanPopup text={'Collaborative interface to handle passwords accessible by team members'}
-                                                          trigger={<span
-                                                              class="text-underlined">TEAM SPACE</span>}/> <TeamPlanPopup
-            text={'Collaborative interface to handle passwords accessible by team members'}
-            trigger={<Icon link name="help circle outline"/>}/></span>
-        <div class="display-flex flex_direction_column full_flex">
+        <div class="features first display-flex flex_direction_column full_flex">
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Up to 30 team members</span>
+            <span>Unlimited shared passwords</span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>One to one & group password sharing</span>
+            <span>Unlimited enterprise passwords</span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Unlimited team passwords</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Password modification policy</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>1 <TeamPlanPopup text={'Admins can activate, deactivate members, give them access to tools…'}
-                                   trigger={<span class="text-underlined">Admin</span>}/></span>
+            <span>Unlimited <TeamPlanPopup
+                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
+                trigger={<span class="text-underlined">rooms</span>}/></span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
@@ -81,14 +71,23 @@ function TeamBasicPlan(props) {
                 text={'Notifications makes it all work smoothly, it simplifies interacting with team members'}
                 trigger={<span class="text-underlined">Notifications</span>}/></span>
           </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Multi-device <TeamPlanPopup
+                text={'Your account is automatically synchronized across your devices.'}
+                trigger={<span class="text-underlined">synchronization</span>}/></span>
+          </div>
         </div>
-        <div class="text-center" style={{margin: '60px 0 0 0'}}>
-          <button class="button-unstyle big-button button">
-            <NavLink to={`/main/NewSimpleTeamCreation?plan_id=0`} className="link-unstyle"
-                     activeClassName="active">
-              CREATE A FREE TEAM
-            </NavLink>
-          </button>
+        <div class="features first display-flex flex_direction_column full_flex">
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Up to 15 employees</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Up to 1 Team <TeamPlanPopup text={'Admins can activate, deactivate members, give them access to tools…'}
+                                              trigger={<span class="text-underlined">Admin</span>}/></span>
+          </div>
         </div>
       </div>
   )
@@ -96,116 +95,166 @@ function TeamBasicPlan(props) {
 
 function TeamProPlan(props){
   return (
-      <div class="team_plan" id="pro_team_plan" style={{marginRight: '40px'}}>
-        <img src="/resources/other/illu.svg" alt="icon" class="styleImage"/>
-        <h1 class="text-center title">Pro</h1>
-        <span class="text-center price">3,99 <span class="symbol">€HT</span></span>
-        <span class="price_divider">per month, per active user</span>
-        <div class="text-center">
-          <button class="button-unstyle big-button button">
-            <NavLink to={`/main/simpleTeamCreation?plan_id=1`} className="link-unstyle" activeClassName="active">
-              TRY 1 MONTH FREE
-            </NavLink>
-          </button>
+      <div  style={{marginRight: '40px'}} class="team_plan_wrapper">
+        <div class="team_plan" id="pro_team_plan">
+          <img src="/resources/other/illu.svg" alt="icon" class="styleImage"/>
+          <h1 class="text-center title">Pro</h1>
+          <span class="text-center price">59 <span class="symbol">€HT</span></span>
+          <span class="price_divider">per month</span>
+          <div class="text-center">
+            <button class="button-unstyle big-button button">
+              <NavLink to={`/main/simpleTeamCreation?plan_id=1`} className="link-unstyle" activeClassName="active">
+                TRY 1 MONTH FREE
+              </NavLink>
+            </button>
+          </div>
+          <span class="tip" style={{margin: '5px 0 13px 0'}}>No credit card required</span>
         </div>
-        <span class="tip" style={{margin: '5px 0 13px 0'}}>No credit card required</span>
-        <span class="info">ALL FEATURES FROM STARTER PLAN, AND:</span>
-        <div class="display-flex flex_direction_column full_flex">
+        <div class="features first display-flex flex_direction_column full_flex">
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Unlimited team members</span>
+            <span>Unlimited shared passwords</span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Unlimited admins and 1 owner</span>
+            <span>Unlimited enterprise passwords</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Unlimited <TeamPlanPopup
+                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
+                trigger={<span class="text-underlined">rooms</span>}/></span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
             <span><TeamPlanPopup
-                text={'Room managers are responsible to administer people and apps accesses within a room'}
-                trigger={<span class="text-underlined">Room Managers</span>}/> set up</span>
+                text={'Notifications makes it all work smoothly, it simplifies interacting with team members'}
+                trigger={<span class="text-underlined">Notifications</span>}/></span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Automatic <TeamPlanPopup
-                text={'You can set up departure dates on members to remove accesses automatically'}
-                trigger={<span class="text-underlined">access removal</span>}/></span>
+            <span>Multi-device <TeamPlanPopup
+                text={'Your account is automatically synchronized across your devices.'}
+                trigger={<span class="text-underlined">synchronization</span>}/></span>
+          </div>
+        </div>
+        <div class="features display-flex flex_direction_column full_flex">
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Unlimited employees</span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
-            <span>Priority customer support</span>
+            <span>Hierarchical access control</span>
           </div>
-          <div class="feature align_items_center">
+          <div class="feature">
             <i class="fa fa-check tic"/>
-            <span class="full_flex">Temporary password sharing</span>
-            <img src="/resources/icons/Soon.png" style={{width: '56px', height: '20px'}}/>
+            <span>Employee's <TeamPlanPopup
+                text={'Set up people’s arrival and departure dates to send or revoke accesses automatically.'}
+                trigger={<span class="text-underlined">on/off boarding</span>}/></span>
           </div>
-          <div class="feature align_items_center">
+          <div class="feature">
             <i class="fa fa-check tic"/>
-            <span class="full_flex">Software credential sharing</span>
-            <img src="/resources/icons/Soon.png" style={{width: '56px', height: '20px'}}/>
-          </div>
-          <div class="feature align_items_center">
-            <i class="fa fa-check tic"/>
-            <span class="full_flex">2FA login</span>
-            <img src="/resources/icons/Soon.png" style={{width: '56px', height: '20px'}}/>
+            <span>Password modification policy</span>
           </div>
         </div>
-        <div class="text-center" style={{margin: '60px 0 10px 0'}}>
-          <button class="button-unstyle big-button button">
-            <NavLink to={`/main/NewSimpleTeamCreation?plan_id=1`} className="link-unstyle" activeClassName="active">
-              TRY 1 MONTH FREE
-            </NavLink>
-          </button>
-        </div>
-        <span class="tip">No credit card required</span>
       </div>
   )
 }
 
 function TeamEnterprisePlan(props){
   return (
-      <div class="team_plan" id="enterprise_team_plan">
-        <img src="/resources/other/Saturn.svg" alt="icon" class="styleImage"/>
-        <div class="plan_header display-flex flex_direction_column text-center">
-          <h1 class="text-center title" style={{marginBottom: '25px'}}>Premium</h1>
-          <span class="text-center price">7,89 <span class="symbol">€HT</span></span>
-          <span style={{fontSize: '0.8rem', marginTop: '10px'}}>per month, per active user</span>
-        </div>
-        <span class="info">ALL FEATURES FROM STARTER, PRO, AND:</span>
-        <div class="display-flex flex_direction_column full_flex">
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span><TeamPlanPopup text={'Companies using an internal SSO can integrate Ease.space'} trigger={<span
-                class="text-underlined">Single Sign-on</span>}/> integration (SSO)</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>In house database</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Active Directory synchronisation</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Activity logs</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Archives</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>99.8% SLA</span>
+      <div class="team_plan_wrapper">
+        <div class="team_plan" id="enterprise_team_plan">
+          <img src="/resources/other/Saturn.svg" alt="icon" class="styleImage"/>
+          <h1 class="text-center title">Premium</h1>
+          <span class="text-center price">299 <span class="symbol">€HT</span></span>
+          <span class="price_divider">per month</span>
+          <div class="text-center">
+            <button class="button-unstyle big-button button">
+              <a href="/companyContact" class="link-unstyle">
+                CONTACT US
+              </a>
+            </button>
           </div>
         </div>
-        <div class="text-center">
-          <button class="button-unstyle big-button button">
-            <a href="/companyContact" class="link-unstyle">
-              CONTACT US
-            </a>
-          </button>
+        <div class="features first display-flex flex_direction_column full_flex">
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Unlimited shared passwords</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Unlimited enterprise passwords</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Unlimited <TeamPlanPopup
+                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
+                trigger={<span class="text-underlined">rooms</span>}/></span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span><TeamPlanPopup
+                text={'Notifications makes it all work smoothly, it simplifies interacting with team members'}
+                trigger={<span class="text-underlined">Notifications</span>}/></span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Multi-device <TeamPlanPopup
+                text={'Your account is automatically synchronized across your devices.'}
+                trigger={<span class="text-underlined">synchronization</span>}/></span>
+          </div>
+        </div>
+        <div class="features display-flex flex_direction_column full_flex">
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Unlimited employees</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Hierarchical access control</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Employee's <TeamPlanPopup
+                text={'Set up people’s arrival and departure dates to send or revoke accesses automatically.'}
+                trigger={<span class="text-underlined">on/off boarding</span>}/></span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Password modification policy</span>
+          </div>
+        </div>
+        <div class="features first display-flex flex_direction_column full_flex">
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Mandatory 2FA</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Time specific password sharing</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Geolocated access control</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Securely receive external passwords</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>On-premise database</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>AD-LDAP integration</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Activity Logs</span>
+          </div>
         </div>
       </div>
   )
@@ -215,14 +264,12 @@ function Step2(props){
   return (
       <div class="content display-flex flex_direction_column marginAuto step2">
         <h1 class="text-center" style={{margin: '0 0 10px 0'}}>Before creating your team, please choose a plan.</h1>
-        <span class="sub-title"><u>Monthly billing</u> per <u>active user</u>*, <u>cancel any time</u></span>
+        <span class="sub-title">Monthly billing, cancellable anytime</span>
         <div class="display-flex" style={{margin: '55px 0 37px 0'}}>
           <TeamBasicPlan/>
           <TeamProPlan/>
           <TeamEnterprisePlan/>
         </div>
-        <span
-            class="sub-title">* a user is active from the day he/she shares or receives an app in his/her Team Space</span>
       </div>
   )
 }

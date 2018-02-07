@@ -92,12 +92,20 @@ const initialState = {
     feature_id: -1,
     team_id: -1
   },
+  teamUserInviteLimitReachedModal: {
+    active: false,
+    team_id: -1
+  },
   freeTrialEndModal: {
     active: false
   },
   departureDateEndModal: {
     active: false,
     team_user_id: -1,
+    team_id: -1
+  },
+  inviteTeamUsersModal: {
+    active: false,
     team_id: -1
   },
   catalogAddBookmarkModal: {
@@ -265,6 +273,12 @@ export default function reducer(state=initialState, action){
         upgradeTeamPlanModal: action.payload
       }
     }
+    case 'SHOW_TEAM_USER_INVITE_LIMIT_REACHED_MODAL': {
+      return {
+          ...state,
+        teamUserInviteLimitReachedModal: action.payload
+      }
+    }
     case 'SHOW_FREE_TRIAL_END_MODAL': {
       return {
         ...state,
@@ -275,6 +289,12 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         departureDateEndModal: action.payload
+      }
+    }
+    case 'INVITE_TEAM_USERS_MODAL': {
+      return {
+          ...state,
+        inviteTeamUsersModal: action.payload
       }
     }
     case 'SHOW_CATALOG_ADD_BOOKMARK_MODAL': {

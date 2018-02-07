@@ -17,7 +17,7 @@
 						<a href="/?skipLanding=true">
 							<fmt:message key="landing.header.connexion-link"/>
 						</a>
-						<a href="/teams#/registration">
+						<a href="/#/teamCreation?plan_id=0">
 							<fmt:message key="landing.footer.link.create-account"/>
 						</a>
 					</div>

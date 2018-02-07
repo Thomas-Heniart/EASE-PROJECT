@@ -1,6 +1,6 @@
 var React = require('react');
 import {connect} from "react-redux";
-import {createTeamUser, createTeamUserNow} from "../../actions/userActions";
+import {createTeamUser, createTeamUserNow, sendInvitationToTeamUserList} from "../../actions/userActions";
 import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
 import {showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import { Header, Label, Container, Divider, Icon, TextArea, Form, Input, Button, Message } from 'semantic-ui-react';
@@ -32,7 +32,7 @@ class PreviewStep extends React.Component {
       )
     });
     return (
-        <Form onSubmit={this.submit}>
+        <Form onSubmit={this.submit} error={this.props.errorMessage.length > 0}>
           <Divider hidden clearing/>
           <Form.Group>
             <Form.Field><label>Email address</label></Form.Field>
@@ -44,29 +44,26 @@ class PreviewStep extends React.Component {
             &nbsp;or&nbsp;
             <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.changeStep}>Paste a list of emails</button>
           </Form.Field>
-          {this.props.errorMessage !== null &&
-              <Message color="red">
-                {this.props.errorMessage}
-              </Message>}
+          <Message error content={this.props.errorMessage}/>
           <Form.Group id='invitationButton' class="overflow-hidden">
             <Form.Button
-              basic color='green'
-              positive
-              floated='right'
-              loading={this.props.loading}
-              type="submit"
-              disabled={!this.props.invitationsReady() || this.props.loading}
-              width={8}>
+                basic color='green'
+                positive
+                floated='right'
+                loading={this.props.loading}
+                type="submit"
+                disabled={!this.props.invitationsReady() || this.props.loading}
+                width={8}>
               Send invitation <u><strong>later</strong></u>
             </Form.Button>
             <Form.Button
-              disabled={!this.props.invitationsReady() || this.props.loadingInvitationsNow}
-              loading={this.props.loadingInvitationsNow}
-              color='green'
-              floated='right'
-              type="button"
-              onClick={this.props.sendInvitationsNow}
-              width={8}>
+                disabled={!this.props.invitationsReady() || this.props.loadingInvitationsNow}
+                loading={this.props.loadingInvitationsNow}
+                color='green'
+                floated='right'
+                type="button"
+                onClick={this.props.sendInvitationsNow}
+                width={8}>
               Send invitation <u><strong>now</strong></u>
             </Form.Button>
           </Form.Group>
@@ -85,44 +82,40 @@ class EmailListStep extends React.Component {
   handleInput = handleSemanticInput.bind(this);
   process = (e) => {
     e.preventDefault();
-    let filterSpacesValue = this.state.value.replace(/\s+/g, '');
-    this.props.multipleAddLater(filterSpacesValue);
+    this.props.addMultipleFields(this.state.value);
+    this.props.changeStep();
+    /*    let filterSpacesValue = this.state.value.replace(/\s+/g, '');
+        this.props.multipleAddLater(filterSpacesValue);*/
   };
-  processNow = (e) => {
-    e.preventDefault();
-    let filterSpacesValue = this.state.value.replace(/\s+/g, '');
-    this.props.multipleAddNow(filterSpacesValue);
-  };
+  /*  processNow = (e) => {
+      e.preventDefault();
+      let filterSpacesValue = this.state.value.replace(/\s+/g, '');
+      this.props.multipleAddNow(filterSpacesValue);
+    };*/
   render(){
     return (
-        <Form onSubmit={this.process} error={this.props.errorMessage !== null}>
+        <Form onSubmit={this.process}>
           <Form.Field>
             Enter multiple email addresses, separated with commas
           </Form.Field>
           <Form.Field>
             <TextArea rows={7} name="value" onChange={this.handleInput} placeholder="Write emails here..."/>
-            <Message error content={this.props.errorMessage}/>
           </Form.Field>
           <Form.Group id='invitationButton' class="overflow-hidden">
             <Form.Button
-              basic color='green'
-              positive
-              disabled={!this.state.value || this.props.loading}
-              floated='right'
-              loading={this.props.loading}
-              type="submit"
-              width={8}>
-              Send invitation <u><strong>later</strong></u>
+                onClick={this.props.changeStep}
+                type="button"
+                floated='right'
+                width={8}>
+              Cancel
             </Form.Button>
             <Form.Button
-              color='green'
-              floated='right'
-              loading={this.props.loadingInvitationsNow}
-              disabled={!this.state.value || this.props.loadingInvitationsNow}
-              type="button"
-              onClick={this.processNow}
-              width={8}>
-              Send invitation <u><strong>now</strong></u>
+                color='green'
+                floated='right'
+                disabled={!this.state.value}
+                type="submit"
+                width={8}>
+              Next
             </Form.Button>
           </Form.Group>
         </Form>
@@ -140,14 +133,14 @@ class TeamAddMultipleUsersModal extends React.Component {
     this.state = {
       view: 'main',
       invitations: [
-        {email: '', username: '', error: ''},
-        {email: '', username: '', error: ''},
-        {email: '', username: '', error: ''}],
+        {email: '', error: ''},
+        {email: '', error: ''},
+        {email: '', error: ''}],
       loading: false,
       loadingInvitationsNow: false,
       validateButtonText: 'Send invitations',
       cancelButtonText: 'Cancel',
-      errorMessage: null
+      errorMessage: ''
     }
   }
   showUpgradeModal = () => {
@@ -160,16 +153,16 @@ class TeamAddMultipleUsersModal extends React.Component {
     let invitations = this.state.invitations.slice();
     const team = this.props.teams[this.props.team_id];
     const users_length = Object.keys(team.team_users).length;
-    invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
-    if (invitations.length + users_length > 30 && team.plan_id === 0){
-      this.setState({
-        errorMessage:
-            <span>
-              You are adding {invitations.length} people to your team but unfortunately you only have {30 - users_length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
-            </span>
-      });
-      return;
-    }
+    invitations = invitations.filter(item => (item.email.length > 0));
+    /*    if (invitations.length + users_length > 30 && team.plan_id === 0){
+          this.setState({
+            errorMessage:
+                <span>
+                  You are adding {invitations.length} people to your team but unfortunately you only have {30 - users_length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
+                </span>
+          });
+          return;
+        }*/
     let calls = invitations.map(item => {
       return this.props.dispatch(createTeamUser({
         team_id: this.props.team_id,
@@ -181,7 +174,7 @@ class TeamAddMultipleUsersModal extends React.Component {
         role: 1
       }));
     });
-    this.setState({loading: true, errorMessage: null});
+    this.setState({loading: true, errorMessage: ''});
     Promise.all(calls.map(reflect)).then(results => {
       results.map((item, idx) => {
         if (item.error)
@@ -202,41 +195,52 @@ class TeamAddMultipleUsersModal extends React.Component {
       this.setState({loading: false, invitations: invitations, validateButtonText:'Resend invitations', cancelButtonText: "Ok, I'm done"});
     });
   };
-  sendInvitationsNow = () => {
+  sendInvitationsNow = async () => {
     let invitations = this.state.invitations.slice();
     const team = this.props.teams[this.props.team_id];
-    this.setState({loadingInvitationsNow: true, errorMessage: null});
+    this.setState({
+      loadingInvitationsNow: true,
+      errorMessage: ''});
     const users_length = Object.keys(team.team_users).length;
-    invitations = invitations.filter(item => (item.email.length > 0 || item.username.length > 0));
-    if (invitations.length + users_length > 30 && team.plan_id === 0){
-      this.setState({
-        errorMessage:
-          <span>
-              You are adding {invitations.length} people to your team but unfortunately you only have {30 - users_length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
-            </span>
-      });
-      return;
-    }
+    invitations = invitations.filter(item => (item.email.length > 0));
+    /*    if (invitations.length + users_length > 30 && team.plan_id === 0){
+          this.setState({
+            errorMessage:
+                <span>
+                  You are adding {invitations.length} people to your team but unfortunately you only have {30 - users_length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
+                </span>
+          });
+          return;
+        }*/
     let calls = invitations.map(item => {
-      return this.props.dispatch(createTeamUserNow({
+      return this.props.dispatch(createTeamUser({
         team_id: this.props.team_id,
         first_name: '',
         last_name: '',
         email: item.email,
         username: item.username,
         departure_date: null,
+        arrival_date: null,
         role: 1
       }));
     });
-    Promise.all(calls.map(reflect)).then(results => {
+    const invitationsToSend = [];
+    Promise.all(calls.map(reflect)).then(async results => {
       results.map((item, idx) => {
         if (item.error)
           invitations[idx].error = item.data;
-        else
+        else {
           invitations[idx].error = '';
+          invitationsToSend.push(item.data.id);
+        }
       });
       invitations = invitations.filter(item => (item.error.length > 0));
-      if (calls.length !==invitations.length){
+      if (!!invitationsToSend.length)
+        await this.props.dispatch(sendInvitationToTeamUserList({
+          team_id: team.id,
+          team_user_id_list: invitationsToSend
+        }));
+      if (calls.length !== invitations.length){
         this.props.dispatch(addNotification({
           text: "New team user(s) successfully created!"
         }));
@@ -245,7 +249,12 @@ class TeamAddMultipleUsersModal extends React.Component {
         this.props.dispatch(showTeamAddMultipleUsersModal({active: false}));
         return;
       }
-      this.setState({loadingInvitationsNow: false, invitations: invitations, validateButtonText:'Resend invitations', cancelButtonText: "Ok, I'm done"});
+      this.setState({
+        loadingInvitationsNow: false,
+        invitations: invitations,
+        validateButtonText:'Resend invitations',
+        cancelButtonText: "Ok, I'm done"
+      });
     });
   };
   changeView = (view) => {
@@ -260,10 +269,13 @@ class TeamAddMultipleUsersModal extends React.Component {
   };
   addMultipleFields = (value) => {
     let invitations = [];
-    let emails = value.split(',');
+    let emails = value.split(/[ ,\n\t]+/);
+    emails = emails.filter(item => {
+      return isEmail(item);
+    });
+    emails = Array.from(new Set(emails));
     emails.map(item => {
-      let username = item.split('@')[0];
-      invitations.push({email: item, username: username, error: ''});
+      invitations.push({email: item, error: ''});
     });
     this.setState({invitations: invitations});
   };
@@ -330,6 +342,7 @@ class TeamAddMultipleUsersModal extends React.Component {
                     changeStep={this.changeView.bind(null, 'main')}
                     validate={this.sendInvitations}
                     loading={this.state.loading}
+                    addMultipleFields={this.addMultipleFields}
                     loadingInvitationsNow={this.state.loadingInvitationsNow}
                     errorMessage={this.state.errorMessage}
                     multipleAddNow={this.multipleAddNow}

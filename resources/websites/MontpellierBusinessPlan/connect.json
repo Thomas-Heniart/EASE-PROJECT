@@ -1,0 +1,44 @@
+{
+  "name": "Montpellier Business Plan",
+  "lastLogin": "",
+  "home": "http://montpellier-business-plan.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": ".menu-login-absolute #email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": ".menu-login-absolute #password"
+      },
+      {
+        "action": "trueClick",
+        "search": ".menu-login-absolute input.type-submit"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='deconnexion']"
+      },
+      {
+        "action": "waitfor",
+        "search": ".menu-login-absolute #email"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='deconnexion'], .menu-login-absolute #email"
+    },
+    {
+      "search": "a[href*='deconnexion']"
+    }
+  ]
+}

@@ -22,7 +22,7 @@ import * as modalActions from "../actions/teamModalActions"
 import {OpacityTransition} from "../utils/transitions";
 import {teamUserState} from "../utils/utils";
 import {isAdmin} from "../utils/helperFunctions";
-import {showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateEndModal} from "../actions/teamModalActions";
+import {showInviteTeamUsersModal, showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateEndModal} from "../actions/teamModalActions";
 import {Route, Switch, withRouter} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
 import {connect} from "react-redux";
@@ -68,6 +68,11 @@ class TeamView extends React.Component {
       this.props.history.replace('/main/dashboard');
       return false;
     }
+    if (this.props.match.params.teamId !== nextProps.match.params.teamId && team.show_invite_people_popup)
+      this.props.dispatch(showInviteTeamUsersModal({
+        active: true,
+        team_id: team.id
+      }));
     return true;
   }
   componentWillReceiveProps(nextProps){
@@ -76,14 +81,14 @@ class TeamView extends React.Component {
         this.setAddAppView('none');
     }
   }
-/*  componentWillMount(){
-    const teamId = this.props.match.params.teamId;
-    const team = this.props.teams[teamId];
+  /*  componentWillMount(){
+      const teamId = this.props.match.params.teamId;
+      const team = this.props.teams[teamId];
 
-    if (!team){
-      this.props.history.replace('/main/dashboard');
-    }
-  }*/
+      if (!team){
+        this.props.history.replace('/main/dashboard');
+      }
+    }*/
   componentDidMount() {
     const teamId = this.props.match.params.teamId;
     const team = this.props.teams[teamId];
@@ -92,6 +97,11 @@ class TeamView extends React.Component {
       this.props.history.replace('/main/dashboard');
       return;
     }
+    if (team.show_invite_people_popup)
+      this.props.dispatch(showInviteTeamUsersModal({
+        active: true,
+        team_id: team.id
+      }));
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
     }

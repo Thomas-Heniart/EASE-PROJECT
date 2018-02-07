@@ -105,6 +105,18 @@
       width: 690px; }
       #new_team_creation #center #content.stepUsers {
         width: 810px; }
+      #new_team_creation #center #content .loader {
+        top: 50%; }
+      #new_team_creation #center #content .message.error {
+        margin: 0;
+        background: transparent;
+        box-shadow: none;
+        padding: 0 0 25px 0;
+        color: #eb555c; }
+        #new_team_creation #center #content .message.error.rooms {
+          position: absolute;
+          bottom: 10px;
+          padding: 0; }
       #new_team_creation #center #content label {
         display: flex;
         margin-bottom: 10px; }
@@ -115,7 +127,8 @@
         #new_team_creation #center #content .input i {
           color: #e8ecf1; }
       #new_team_creation #center #content .input {
-        max-width: 370px; }
+        max-width: 370px;
+        min-height: 47px; }
         #new_team_creation #center #content .input input {
           width: 370px;
           max-width: 370px; }
@@ -123,6 +136,10 @@
             border-color: #373b60; }
             #new_team_creation #center #content .input input:focus label {
               color: #373b60; }
+        #new_team_creation #center #content .input.error input {
+          border-color: #eb555c; }
+          #new_team_creation #center #content .input.error input:focus {
+            border-color: #eb555c; }
       #new_team_creation #center #content .hidden_input {
         position: absolute;
         top: -1000;
@@ -160,11 +177,6 @@
         position: absolute;
         overflow: auto;
         overflow-x: hidden;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flexbox;
-        display: flex;
         -ms-flex: 1;
         -webkit-flex: 1;
         flex: 1;
@@ -173,6 +185,12 @@
         -webkit-flex-direction: column;
         flex-direction: column;
         margin: 0; }
+        #new_team_creation #center #content form.addMembers {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -moz-flex;
+          display: -ms-flexbox;
+          display: flex; }
         #new_team_creation #center #content form #accounts {
           display: -webkit-box;
           display: -webkit-flex;
@@ -286,15 +304,30 @@
       #new_team_creation #center #content .account {
         color: #949eb7;
         display: inline-flex;
-        margin: 7px 0 7px 0; }
+        margin: 7px 0 17px 0; }
+        #new_team_creation #center #content .account .password_with_test_connection {
+          position: relative; }
+          #new_team_creation #center #content .account .password_with_test_connection .password {
+            height: auto;
+            margin: 0; }
+          #new_team_creation #center #content .account .password_with_test_connection .test_connection {
+            position: absolute;
+            margin-top: 0; }
+            #new_team_creation #center #content .account .password_with_test_connection .test_connection.disabled {
+              text-decoration: none;
+              cursor: auto;
+              color: #E8ECF1; }
         #new_team_creation #center #content .account p {
+          font-size: 14px;
           margin-left: 5px;
-          margin-top: 5px; }
+          margin-top: 9px;
+          cursor: pointer; }
           #new_team_creation #center #content .account p.underline_hover:hover {
             text-decoration: underline; }
             #new_team_creation #center #content .account p.underline_hover:hover i {
               text-decoration: none; }
         #new_team_creation #center #content .account .remove_account {
+          cursor: pointer;
           margin-top: 10px;
           color: #e0e1e2; }
         #new_team_creation #center #content .account img {
@@ -321,7 +354,8 @@
               color: white; }
         #new_team_creation #center #content .account .input {
           font-size: 14px;
-          height: fit-content; }
+          height: fit-content;
+          min-height: 0; }
           #new_team_creation #center #content .account .input input {
             color: #949eb7;
             width: 140px;
@@ -407,7 +441,8 @@
       #new_team_creation #center #bottom_bar a {
         font-size: 16px;
         color: #949eb7;
-        margin-left: 10px; }
+        margin-left: 10px;
+        cursor: auto; }
       #new_team_creation #center #bottom_bar span {
         margin-left: 10px;
         font-size: 16px;

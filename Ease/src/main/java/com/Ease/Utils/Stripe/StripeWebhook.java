@@ -15,10 +15,9 @@ import java.io.IOException;
 @WebServlet("/stripe/webhook")
 public class StripeWebhook extends HttpServlet {
 
-    private final static String webhook_key = "whsec_6gtoGZC12pTa3uHt9ZRK8MGhrwgz5Eh8";
+    private final static String webhook_key = "whsec_CL5VQnBVurk9VgFxpGIIWKPMexVO7p48";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Request reach");
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             String header_key = request.getHeader("Stripe-Signature");

@@ -1,0 +1,37 @@
+{
+    "name":"AdobeStock",
+    "lastLogin":"",
+    "home": "https://stock.adobe.com",
+    "connect":{
+        "todo":[
+            {"action": "click", "search": "#sign-in-link a"},
+            {"action": "waitload"},
+          	{"action":"fill", "what":"login", "search":"#adobeid_username", "grave":true},
+            {"action":"fill", "what":"password", "search":"#adobeid_password", "grave":true},
+            {"action":"click", "search":"#sign_in", "grave":true}
+        ]
+    },
+    "Facebook": {
+        "todo": [
+            {"action": "click", "search": "#sign-in-link a"},
+            {"action": "waitload"},
+            {"action": "click", "search": "#facebook-sign-in-button"}
+        ]
+    },
+    "Google": {
+        "todo": [
+            {"action": "click", "search": "#sign-in-link a"},
+            {"action": "waitload"},
+            {"action": "click", "search": "#google-sign-in-button"}            
+        ]
+    },
+    "logout":{
+        "todo":[
+            {"action":"click", "search":"#sign-out-link"},
+            {"action": "waitload"}
+         ]
+    },
+    "checkAlreadyLogged":[
+        {"search":"#sign-out-link"}
+    ]
+}

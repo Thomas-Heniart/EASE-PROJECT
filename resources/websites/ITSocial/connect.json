@@ -1,21 +1,55 @@
 {
-	"name":"ITSocial",
-	"lastLogin":"",
-	"home":"http://itsocial.fr/",
-	"connect":{
-		"todo":[
-			{"action":"fill", "what":"login", "search":"#login_email", "grave":true},
-			{"action":"fill", "what":"password", "search":"#login_pass", "grave":true},
-			{"action":"trueClick", "search":"#login_button", "grave":true}
-		]
-	},
-	"logout":{
-		"todo":[
-			{"action": "trueClick", "search": ".td_ul_logout > li:last-child a"},
-			{"action": "waitload"}
-        ]
-	},
-	"checkAlreadyLogged":[
-		{"search":".td_ul_logout"}
-	]
+  "name": "ITSocial",
+  "lastLogin": "",
+  "home": "http://itsocial.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".td-login-modal-js"
+      },
+      {
+        "action": "waitfor",
+        "what": "login",
+        "search": "#login_email"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login_email",
+        "grave": true
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login_pass",
+        "grave": true
+      },
+      {
+        "action": "trueClick",
+        "search": "#login_button",
+        "grave": true
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".td_ul_logout > li:last-child a"
+      },
+      {
+        "action": "waitload"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": ".td-login-modal-js, .td_ul_logout"
+    },
+    {
+      "search": ".td_ul_logout"
+    }
+  ]
 }

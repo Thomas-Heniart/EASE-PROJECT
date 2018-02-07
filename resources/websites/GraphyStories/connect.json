@@ -1,0 +1,36 @@
+{
+    "name": "GraphyStories",
+    "lastlogin":"",
+    "home":"http://app.graphystories.com/home",
+    "connect": {
+    	"todo": [
+            {"action": "click", "search": "a[ng-click*=Login]"},
+            {"action": "waitfor", "search": "#userEmail"},
+    		{"action":"fill", "what":"login","search":"#userEmail", "grave":"true"},
+    		{"action":"fill", "what":"password","search":"#userPassword", "grave":"true"},
+    		{"action":"click", "search":"#loginButton", "grave":"true"}
+    	]
+    },
+    "Facebook": {
+        "todo": [
+            {"action": "click", "search": "a[ng-click*=Login]"},
+            {"action": "waitfor", "search": "a[ng-click*='fb_login()']"},
+            {"action": "click", "search": "a[ng-click*='fb_login()']"}
+        ]
+    },
+    "Twitter": {
+        "todo": [
+            {"action": "click", "search": "a[ng-click*=Login]"},
+            {"action": "waitfor", "search": "a[ng-click*='tw_login()']"},
+            {"action": "click", "search": "a[ng-click*='tw_login()']"}
+        ]
+    },
+    "logout":{
+    	"todo": [
+    		{"action":"click", "search":"a[ng-click*=logout]"}
+    	]
+    },
+    "checkAlreadyLogged": [
+    	{"search":"#user__scope"}
+    ]
+}

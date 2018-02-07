@@ -79,11 +79,11 @@ public class TeamManager {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.isRegistered())
                     continue;
-                if (DateComparator.wasDaysAgo(teamUser.getArrivalDate(), 3))
+                if (DateComparator.wasDaysAgo(teamUser.getCreation_date(), 3))
                     three_days_teamUsers.add(teamUser);
-                else if (DateComparator.wasDaysAgo(teamUser.getArrivalDate(), 8))
+                else if (DateComparator.wasDaysAgo(teamUser.getCreation_date(), 8))
                     eight_days_teamUsers.add(teamUser);
-                else if (DateComparator.wasDaysAgo(teamUser.getArrivalDate(), 12))
+                else if (DateComparator.wasDaysAgo(teamUser.getCreation_date(), 12))
                     twelve_days_teamUsers.add(teamUser);
             }
         }
