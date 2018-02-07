@@ -1,0 +1,24 @@
+{
+  "name":"Swaggerhub",
+  "lastLogin":"",
+  "home":"https://app.swaggerhub.com",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"#main > div.topbarWrapper > div > div > div.topbar-auth-links.col-md-9.col-sm-8.col-xs-8 > div > div.user-area.login > button.login-item.btn.btn-link"},
+      {"action":"waitfor", "search":"#wel-content-wrap > div > div > div > form > div.form-group > div > button"},
+      {"action":"fill", "what":"login", "search":"#username"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action": "trueClick", "search":"#wel-content-wrap > div > div > div > form > div.form-group > div > button"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"#main > div.topbarWrapper > div > div > div.topbar-auth-links.col-md-9.col-sm-8.col-xs-8 > div > div.user-area-settings > span > div > ul > li:nth-child(3) > a"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#main > div.topbarWrapper > div > div > div.topbar-auth-links.col-md-9.col-sm-8.col-xs-8 > div > div.user-area-settings > span > div > ul > li:nth-child(3) > a, #main > div.topbarWrapper > div > div > div.topbar-auth-links.col-md-9.col-sm-8.col-xs-8 > div > div.user-area.login > button.login-item.btn.btn-link"},
+    {"search":"#main > div.topbarWrapper > div > div > div.topbar-auth-links.col-md-9.col-sm-8.col-xs-8 > div > div.user-area-settings > span > div > ul > li:nth-child(3) > a"}
+  ]
+}
