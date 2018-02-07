@@ -1,0 +1,21 @@
+{
+  "name":"Blockonomics",
+  "lastLogin":"",
+  "home":"https://www.blockonomics.co/views/wallet-watcher.html",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#email"},
+      {"action":"fill", "what":"password", "search":"#password"},
+      {"action":"trueClick", "search":"body > section.login-section > div > div > div.col-md-4.col-md-push-8.login-buttons-section > div > form > div:nth-child(4) > input"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='logout'], #email"},
+    {"search":"a[href*='logout']"}
+  ]
+}
