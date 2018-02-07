@@ -59,25 +59,21 @@ class ChooseTypeAppModal extends React.Component {
               </div>
           </Form.Field>
           <Form.Field>
-              <div style={{marginBottom: '25px'}}>People who will access this app:</div>
+              <div style={{fontWeight:'bold'}}>People who will access this app:</div>
           </Form.Field>
-          <Form.Field>
+          <Form.Field className='choose_type_app'>
               <Checkbox radio
-                        label='Will share the same account'
+                        label='Share a common account together'
                         name='checkboxRadioGroup'
                         value='Simple'
                         checked={this.state.value === 'Simple'}
-                        onChange={this.handleChange}
-                        style={{margin: '0'}}/>
-          </Form.Field>
-          <Form.Field>
+                        onChange={this.handleChange}/>
               <Checkbox radio
-                        label='Each of them will have their own account'
+                        label='Each use their own nominative account'
                         name='checkboxRadioGroup'
                         value='Multi'
                         checked={this.state.value === 'Multi'}
-                        onChange={this.handleChange}
-                        style={{margin: '0'}}/>
+                        onChange={this.handleChange}/>
           </Form.Field>
           <Button
             attached='bottom'
