@@ -24,8 +24,12 @@ public class ServletUpdate extends HttpServlet {
             hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id");
             hibernateQuery.setParameter("user_id", sm.getUser().getDb_id());
             List<Update> updates = hibernateQuery.list();
+            String private_key = sm.getUserPrivateKey();
             JSONArray res = new JSONArray();
-            updates.forEach(update -> res.put(update.getJson()));
+            for (Update update : updates) {
+                update.decipher(private_key);
+                res.put(update.getJson());
+            }
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
