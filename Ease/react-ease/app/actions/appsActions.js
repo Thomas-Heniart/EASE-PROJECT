@@ -265,6 +265,38 @@ export function teamCreateSoftwareSingleCard({team_id, channel_id, name, descrip
   }
 }
 
+export function teamEditSingleCardCredentials({account_information, team_card}) {
+  if (team_card.sub_type === 'any')
+    return teamEditAnySingleApp({
+      team_card_id: team_card.id,
+      description: team_card.description,
+      url: team_card.url,
+      img_url: team_card.img_url,
+      connection_information: team_card.connection_information,
+      account_information: account_information,
+      password_reminder_interval: team_card.password_reminder_interval,
+      name: team_card.name
+    });
+  else if (team_card.sub_type === 'software')
+    return teamEditSoftwareSingleApp({
+      team_card_id: team_card.id,
+      description: team_card.description,
+      connection_information: team_card.connection_information,
+      account_information: account_information,
+      password_reminder_interval: team_card.password_reminder_interval,
+      name: team_card.name
+    });
+  else
+    return teamEditSingleApp({
+      team_id: team_card.team_id,
+      team_card_id: team_card.id,
+      description: team_card.description,
+      account_information: account_information,
+      password_reminder_interval: team_card.password_reminder_interval,
+      name: team_card.name
+    })
+}
+
 export function teamEditSingleApp({team_id, team_card_id, description, account_information, password_reminder_interval, name}){
   return function (dispatch, getState){
     return post_api.teamApps.editSingleCard({
@@ -420,6 +452,24 @@ export function teamEditSingleCardReceiver({team_id, team_card_id, allowed_to_se
     }).catch(err => {
       throw err;
     });
+  }
+}
+
+export function teamEditSingleCardFiller({team_id, team_card_id, filler_id}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.editSingleCardFiller({
+      ws_id: getState().common.ws_id,
+      team_id:team_id,
+      team_card_id: team_card_id,
+      filler_id: filler_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    })
   }
 }
 

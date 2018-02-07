@@ -81,11 +81,6 @@ function UserList(props){
       return b.invitation_sent - a.invitation_sent;
     return a.username.localeCompare(b.username);
   });
-  const invitedMembers = user_list.reduce((stack, team_user) => {
-    if (team_user.invitation_sent)
-      return stack + 1;
-    return stack;
-  }, 0);
   const maxInvitations = 15 + team.extra_members;
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_users">

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import classnames from "classnames";
+import post_api from "../../utils/post_api";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
@@ -161,6 +162,99 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
     )
 };
 
+class EmptyCredentialsAppFillerChooser extends Component {
+  constructor(props){
+    super(props);
+  }
+  chooseFiller = () => {
+
+  };
+  render(){
+    const {team_users, team_card} = this.props;
+    return (
+        <Button
+            as='div'
+            icon
+            class="empty_app_indicator"
+            size="mini"
+            labelPosition='left'>
+          <Icon name="user"/>
+          Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
+          <u onClick={this.chooseFiller}>
+            Choose another person
+          </u>
+        </Button>
+    )
+  }
+}
+
+class EmptyCredentialsAppIndicator extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      reminderSent: false
+    }
+  }
+  sendReminder = () => {
+    const {team_card} = this.props;
+    if (this.state.reminderSent)
+      return;
+    this.setState({reminderSent: true});
+    post_api.teamApps.sendSingleCardFillerReminder({
+      team_card_id: team_card.id
+    }).then(response => {
+      setTimeout(() => {
+        this.setState({reminderSent: false});
+      }, 2000);
+    }).catch(err => {
+      setTimeout(() => {
+        this.setState({reminderSent: false});
+      }, 2000);
+    });
+  };
+  chooseMember = () => {
+    this.props.dispatch(modalActions.chooseSimpleAppFiller({
+      team_card: this.props.team_card
+    })).then(response => {
+
+    }).catch(err => {
+
+    });
+  };
+  render(){
+    const {team_card, team_users, meReceiver, me} = this.props;
+
+    return (
+        <Button
+            as='div'
+            icon
+            class="empty_app_indicator"
+            size="mini"
+            labelPosition='left'>
+          <Icon name="user"/>
+          Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
+          {this.props.actions_enabled &&
+          <React.Fragment>
+            {(!!meReceiver || isAdmin(me.role)) &&
+            <u onClick={this.sendReminder}>
+              {this.state.reminderSent ?
+                  'Reminder sent!' :
+                  'Send reminder'}
+            </u>}
+            {isAdmin(me.role) &&
+            <React.Fragment>
+              &nbsp;or
+              <u onClick={this.chooseMember}>
+                choose another person
+              </u>
+            </React.Fragment>}
+          </React.Fragment>
+          }
+        </Button>
+    )
+  }
+}
+
 @connect(store => ({
   teams: store.teams
 }))
@@ -312,16 +406,26 @@ class SimpleTeamApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
-    const credentials = !this.state.edit ?
-        transformWebsiteInfoIntoListAndSetValues(website.information, app.account_information).map(item => {
-          return <TeamAppCredentialInput key={item.priority}
-                                         readOnly={true}
-                                         item={item}/>
-        }) : this.state.credentials.map(item => {
-          return <TeamAppCredentialInput key={item.priority}
-                                         onChange={this.handleCredentialInput}
-                                         item={item}/>
-        });
+    let credentials;
+    if (app.empty){
+      credentials = <EmptyCredentialsAppIndicator
+          actions_enabled={!this.state.edit}
+          dispatch={this.props.dispatch}
+          meReceiver={meReceiver}
+          me={me}
+          team_users={team.team_users}
+          team_card={app}/>
+    } else
+      credentials = !this.state.edit ?
+          transformWebsiteInfoIntoListAndSetValues(website.information, app.account_information).map(item => {
+            return <TeamAppCredentialInput key={item.priority}
+                                           readOnly={true}
+                                           item={item}/>
+          }) : this.state.credentials.map(item => {
+            return <TeamAppCredentialInput key={item.priority}
+                                           onChange={this.handleCredentialInput}
+                                           item={item}/>
+          });
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
           <Segment>
@@ -355,7 +459,7 @@ class SimpleTeamApp extends Component {
               <div class="main_column">
                 <div class="credentials">
                   {credentials}
-                  {((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id) &&
+                  {(!app.empty && ((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id)) &&
                   <SingleAppCopyPasswordButton team_card_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
@@ -373,7 +477,9 @@ class SimpleTeamApp extends Component {
                 </div>
                 <div>
                   {!this.state.edit ?
-                      <ReceiversLabelGroup meAdmin={isAdmin(me.role)} receivers={userReceiversMap}/> :
+                      <ReceiversLabelGroup
+                          meAdmin={isAdmin(me.role)}
+                          receivers={userReceiversMap}/> :
                       <Dropdown
                           class="mini"
                           search={true}

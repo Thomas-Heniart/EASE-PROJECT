@@ -1081,6 +1081,14 @@ module.exports = {
         ws_id: ws_id
       });
     },
+    editSingleCardFiller: ({ws_id, team_id, team_card_id, filler_id}) => {
+      return basic_post('/api/v1/teams/EditTeamCardFiller', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        filler_id: filler_id,
+        ws_id:ws_id
+      })
+    },
     requestTeamEnterpriseCard : function({ws_id, team_id, team_card_id, account_information}){
       return basic_post('/api/v1/teams/JoinTeamEnterpriseCard', {
         ws_id: ws_id,
