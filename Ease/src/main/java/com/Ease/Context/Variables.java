@@ -23,6 +23,7 @@ public class Variables {
     public static final String SOFTWARE_FOLDER_PATH = "/var/lib/tomcat8/resources/software/";
     public static final String BACKGROUND_PATH = "/var/lib/tomcat8/webapps/backgrounds/";
     */
+
     //Prod
     /*
     public static final String ENVIRONNEMENT = "Prod";

@@ -98,5 +98,8 @@
         <mapping class="com.Ease.Metrics.ConnectionMetric"/>
         <mapping class="com.Ease.Importation.ImportedAccount"/>
         <mapping class="com.Ease.Importation.ImportedAccountInformation"/>
+        <mapping class="com.Ease.Update.Update"/>
+        <mapping class="com.Ease.Update.UpdateAccount"/>
+        <mapping class="com.Ease.Update.UpdateAccountInformation"/>
     </session-factory>
 </hibernate-configuration>

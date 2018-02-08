@@ -579,6 +579,10 @@ public abstract class ServletManager {
         return (String) this.getTeamProperties(team.getDb_id()).get("teamKey");
     }
 
+    public String getUserPrivateKey() {
+        return (String) this.getUserProperties(this.getUser().getDb_id()).get("privateKey");
+    }
+
     public void decipher(JSONObject jsonObject) throws HttpServletException {
         try {
             String private_key = (String) this.getContextAttr("privateKey");
