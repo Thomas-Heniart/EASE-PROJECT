@@ -10,7 +10,8 @@ export function fetchCatalog(){
       api.catalog.getWebsites(),
       api.catalog.getCategories(),
       api.catalog.getSsoList(),
-      api.catalog.getRequestsNumber()
+      api.catalog.getRequestsNumber(),
+      api.catalog.getUpdates()
     ]).then(values => {
       const websites = values[0].websites;
       const categories = values[1].categories.sort((a, b) => {
@@ -18,11 +19,13 @@ export function fetchCatalog(){
       });
       const sso_list = values[2].ssoList;
       const requestsNumber = values[3].request_number;
+      const updates = values[4];
       dispatch({type: 'FETCH_CATALOG_FULFILLED', payload:{
         websites : websites,
         categories: categories,
         sso_list: sso_list,
-        requests_number: requestsNumber
+        requests_number: requestsNumber,
+        updates: updates
       }});
       return values;
     }).catch(err => {

@@ -27,6 +27,9 @@ module.exports = {
     },
     getImportation: () => {
       return basic_get('/api/v1/importedAccounts');
+    },
+    getUpdates: () => {
+      return basic_get('/api/v1/updates');
     }
   },
   getClearbitLogo : function (url) {

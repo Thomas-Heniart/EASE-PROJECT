@@ -2,6 +2,7 @@ import createReducer from  "./createReducer";
 
 export const catalog = createReducer({
   websites: [],
+  updates: [],
   categories: [],
   sso_list: [],
   requests_number: 0,
@@ -21,6 +22,7 @@ export const catalog = createReducer({
       categories: action.payload.categories,
       sso_list: action.payload.sso_list,
       requests_number: action.payload.requests_number,
+      updates: action.payload.updates,
       fetching: false,
       loaded: true
     }
