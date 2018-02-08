@@ -1,0 +1,42 @@
+{
+  "name":"CoinGate",
+  "lastLogin":"",
+  "home":"https://coingate.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='sign_in']"},
+      {"action":"waitfor", "search":"#new_user input[type='submit']"},
+      {"action":"fill", "what":"login", "search":"#user_email"},
+      {"action":"fill", "what":"password", "search":"#user_password"},
+      {"action":"enterFrame", "search":"iframe[src*='recaptcha/api2']"},
+      {"action":"trueClick", "search":".recaptcha-checkbox-checkmark"},
+      {"action":"waitfor", "search":".recaptcha-checkbox-checked"},
+      {"action":"exitFrame"},
+      {"action":"trueClick", "search":"#new_user input[type='submit']"}
+    ]
+  },
+  "Facebook":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='sign_in']"},
+      {"action":"waitfor", "search":"a.sign_in_with_button.facebook"},
+      {"action":"trueClick", "search":"a.sign_in_with_button.facebook"}
+    ]
+  },
+  "Google":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='sign_in']"},
+      {"action":"waitfor", "search":"a.sign_in_with_button.google"},
+      {"action":"trueClick", "search":"a.sign_in_with_button.google"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":"a[href*='sign_out']"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"a[href*='sign_out'], a[href*='sign_in']"},
+    {"search":"a[href*='sign_out']"}
+  ]
+}
