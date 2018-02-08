@@ -4,12 +4,16 @@ import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Update.Update;
+import com.Ease.Update.UpdateAccount;
+import com.Ease.Update.UpdateAccountInformation;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,18 +51,53 @@ public class ServletUpdate extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
+            User user = sm.getUser();
             String url = sm.getStringParam("url", true, false);
             if (url.equals("") || url.length() > 2000 || !Regex.isSimpleUrl(url))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid url");
+            JSONObject account_information = sm.getJsonParam("account_information", false, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Website website = catalog.getPublicWebsiteWithUrl(url, new HashSet<>(), hibernateQuery);
+            List<Update> updates;
             if (website != null) {
                 /* Find update(s) with this website */
+                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND website_id = :website_id");
+                hibernateQuery.setParameter("user_id", user.getDb_id());
+                hibernateQuery.setParameter("website_id", website.getDb_id());
             } else {
                 /* Find update(s) with same URL */
+                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND url = :url");
+                hibernateQuery.setParameter("user_id", user.getDb_id());
+                hibernateQuery.setParameter("url", url);
             }
+            updates = hibernateQuery.list();
             /* Decipher updates and check if credentials are the same except for password */
+            String privateKey = sm.getUserPrivateKey();
+            for (Update update : updates)
+                update.decipher(privateKey);
+            if (updates.isEmpty()) {
+                Update update;
+                if (website == null)
+                    update = new Update(user, url);
+                else
+                    update = new Update(user, website);
+                UpdateAccount updateAccount = new UpdateAccount();
+                for (Object keyObj : account_information.keySet()) {
+                    String key = (String) keyObj;
+                    String value = account_information.getString(key);
+                    updateAccount.addUpdateAccountInformation(new UpdateAccountInformation(key, value, updateAccount));
+                }
+                update.setUpdateAccount(updateAccount);
+                sm.saveOrUpdate(update);
+                sm.setSuccess(update.getJson());
+            } else {
+                for (Update update : updates) {
+                    if (website != null) {
+                           
+                    }
+                }
+            }
             /* if one or more */
                 /* delete them */
                 /* save new update and team card if exists */
