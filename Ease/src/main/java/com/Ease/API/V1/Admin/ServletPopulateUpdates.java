@@ -76,7 +76,7 @@ public class ServletPopulateUpdates extends HttpServlet {
             /* Fill AnyEnterpriseCard */
             App testAnyEnterpriseCard = (App) hibernateQuery.get(App.class, 32385);
             Website testAnyEnterpriseCardWebsite = ((WebsiteApp)testAnyEnterpriseCard).getWebsite();
-            Update update4 = new Update(user, testAnyEnterpriseCardWebsite, testAnyEnterpriseCard);
+            Update update4 = new Update(user, testAnyEnterpriseCardWebsite, testAnyEnterpriseCard, testAnyEnterpriseCard.getTeamCardReceiver().getTeamCard());
             UpdateAccount updateAccount4 = new UpdateAccount();
             updateAccount4.addUpdateAccountInformation(new UpdateAccountInformation("login", RSA.Encrypt("easetester1@gmail.com", publicKey), updateAccount4));
             updateAccount4.addUpdateAccountInformation(new UpdateAccountInformation("password", RSA.Encrypt("testest4", publicKey), updateAccount4));
