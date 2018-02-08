@@ -440,10 +440,7 @@ public class TeamUser {
         });
     }
 
-    public void lastRegistrationStep(String keyUser, String teamKey, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
-        this.setTeamKey(AES.encrypt(teamKey, keyUser));
-        this.setState(2);
-        hibernateQuery.saveOrUpdateObject(this);
+    public void lastRegistrationStep(WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
         NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
         if (this.getTeamCardReceivers().isEmpty())
             return;
@@ -481,7 +478,8 @@ public class TeamUser {
     }
 
     public boolean isRegistered() {
-        return this.getUser() != null;
+        System.out.println(this.getUser().getUserStatus().isRegistered());
+        return this.getUser() != null && this.getUser().getUserStatus().isRegistered();
     }
 
     public boolean isSuperior(TeamUser teamUserToModify) {
@@ -525,7 +523,7 @@ public class TeamUser {
      * @throws HttpServletException
      */
     public Profile getOrCreateProfile(WebSocketManager webSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
-        if (this.getUser() == null)
+        if (this.getUser() == null || !this.getUser().getUserStatus().isRegistered())
             throw new HttpServletException(HttpStatus.InternError);
         Profile profile;
         if (!this.getTeamUserStatus().isProfile_created()) {

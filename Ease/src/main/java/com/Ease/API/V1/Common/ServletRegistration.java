@@ -40,25 +40,21 @@ public class ServletRegistration extends HttpServlet {
             username = username.toLowerCase();
             String email = sm.getStringParam("email", true, false);
             String password = sm.getStringParam("password", false, false);
-            String digits = sm.getStringParam("digits", false, true);
-            String code = sm.getStringParam("code", false, true);
+            String digits = sm.getStringParam("digits", false, false);
             String phone_number = sm.getStringParam("phone_number", true, false);
-            Boolean send_news = sm.getBooleanParam("newsletter", true, true);
             String first_name = sm.getStringParam("first_name", true, true);
             String last_name = sm.getStringParam("last_name", true, true);
             if (first_name == null)
                 first_name = "";
             if (last_name == null)
                 last_name = "";
-            if (send_news == null)
-                send_news = false;
             checkUsernameIntegrity(username);
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             if (password == null || !Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
-            if ((digits == null || digits.length() != 6) && (code == null || code.equals("")))
-                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
+            if (digits.length() != 6)
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits");
             if (phone_number.isEmpty() || phone_number.length() > 255 || !Regex.isPhoneNumber(phone_number))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number");
             if (!first_name.isEmpty() && !Regex.isValidName(first_name))
@@ -66,27 +62,17 @@ public class ServletRegistration extends HttpServlet {
             if (!last_name.isEmpty() && !Regex.isValidName(last_name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid last name");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            if (code != null && !code.equals("")) {
-                hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = :email AND invitation_code LIKE :code");
-                hibernateQuery.setParameter("email", email);
-                hibernateQuery.setParameter("code", code);
-                String valid_code = (String) hibernateQuery.getSingleResult();
-                if (valid_code == null)
-                    throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
-            } else {
-                hibernateQuery.querySQLString("SELECT digits, newsletter FROM userPendingRegistrations WHERE email = :email");
-                hibernateQuery.setParameter("email", email);
-                Object[] objects = (Object[]) hibernateQuery.getSingleResult();
-                if (objects == null)
-                    throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
-                String db_digits = (String) objects[0];
-                if (db_digits == null || db_digits.equals(""))
-                    throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
-                if (!db_digits.equals(digits))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
-                send_news = (Boolean) objects[1];
-
-            }
+            hibernateQuery.querySQLString("SELECT digits, newsletter FROM userPendingRegistrations WHERE email = :email");
+            hibernateQuery.setParameter("email", email);
+            Object[] objects = (Object[]) hibernateQuery.getSingleResult();
+            if (objects == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
+            String db_digits = (String) objects[0];
+            if (db_digits == null || db_digits.equals(""))
+                throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
+            if (!db_digits.equals(digits))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
+            boolean send_news = (Boolean) objects[1];
             User newUser = UserFactory.getInstance().createUser(email, username, password, "", "", phone_number);
             newUser.getUserStatus().setOnboarding_step(1);
             newUser.getPersonalInformation().setFirst_name(first_name);
