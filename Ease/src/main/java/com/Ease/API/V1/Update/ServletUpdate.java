@@ -4,8 +4,6 @@ import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Update.Update;
-import com.Ease.Update.UpdateAccount;
-import com.Ease.Update.UpdateAccountInformation;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -23,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @WebServlet("/api/v1/updates")
 public class ServletUpdate extends HttpServlet {
@@ -74,30 +73,14 @@ public class ServletUpdate extends HttpServlet {
             updates = hibernateQuery.list();
             /* Decipher updates and check if credentials are the same except for password */
             String privateKey = sm.getUserPrivateKey();
-            for (Update update : updates)
+            Set<Update> updateSet = new HashSet<>();
+            JSONArray res = new JSONArray();
+            for (Update update : updates) {
                 update.decipher(privateKey);
-            if (updates.isEmpty()) {
-                Update update;
-                if (website == null)
-                    update = new Update(user, url);
-                else
-                    update = new Update(user, website);
-                UpdateAccount updateAccount = new UpdateAccount();
-                for (Object keyObj : account_information.keySet()) {
-                    String key = (String) keyObj;
-                    String value = account_information.getString(key);
-                    updateAccount.addUpdateAccountInformation(new UpdateAccountInformation(key, value, updateAccount));
-                }
-                update.setUpdateAccount(updateAccount);
-                sm.saveOrUpdate(update);
-                sm.setSuccess(update.getJson());
-            } else {
-                for (Update update : updates) {
-                    if (website != null) {
-                           
-                    }
-                }
+                if (update.accountMatch(account_information))
+                    updateSet.add(update);
             }
+
             /* if one or more */
                 /* delete them */
                 /* save new update and team card if exists */

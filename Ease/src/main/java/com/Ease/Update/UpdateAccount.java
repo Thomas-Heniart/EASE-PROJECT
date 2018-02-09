@@ -56,4 +56,18 @@ public class UpdateAccount {
         this.getUpdateAccountInformationSet().forEach(updateAccountInformation -> res.put(updateAccountInformation.getName(), updateAccountInformation.getDeciphered_value()));
         return res;
     }
+
+    public boolean match(JSONObject account_information) {
+        for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
+            String value = account_information.optString(updateAccountInformation.getName());
+            if (value.equals(""))
+                return false;
+            if (updateAccountInformation.getName().equals("password")) {
+                if (updateAccountInformation.getDeciphered_value().equals(value))
+                    return false;
+            } else if (!updateAccountInformation.getDeciphered_value().equals(value))
+                return false;
+        }
+        return true;
+    }
 }
