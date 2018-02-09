@@ -324,13 +324,13 @@ class OnBoardingImportation extends React.Component {
     this.setState({fields: fields, importedAccounts: accounts});
   };
   eventListener = event => {
-    if (event.detail.success === true) {
+    if (event.detail.success === true && event.detail.msg !== []) {
       let calls = [];
       event.detail.msg.map((item, idx) => {
         calls.push(this.props.dispatch(importAccount({
           id: idx,
           name: '',
-          url:  item.website.startsWith("http") === false && item.website !== '' ? "https://" + item.website : item.website,
+          url: item.website.startsWith("http") === false && item.website !== '' ? "https://" + item.website : item.website,
           website_id: -1,
           account_information: {
             login: {name:"login", value: item.login},
@@ -369,10 +369,15 @@ class OnBoardingImportation extends React.Component {
               fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'}
             });
           }
+          else
+            this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
         });
       }).catch(err => {
+        this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
       });
     }
+    else if (event.detail.msg === [])
+      this.setState({view: 2, error: 'No password found'});
     else
       this.setState({view: 2, error: event.detail.msg});
   };
