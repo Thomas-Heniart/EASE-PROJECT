@@ -81,6 +81,12 @@ function UserList(props){
       return b.invitation_sent - a.invitation_sent;
     return a.username.localeCompare(b.username);
   });
+  const invitedMembers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
+    const team_user = team.team_users[team_user_id];
+    if (team_user.invitation_sent)
+      return ++stack;
+    return stack;
+  }, 0);
   const maxInvitations = 15 + team.extra_members;
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_users">
@@ -134,7 +140,7 @@ function UserList(props){
                 );
               return (
                   <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
-                    <div style={{color: (isAdmin(me.role) && team.plan_id === 0) ? 'red' : null}} className="primary_action channel_name">
+                    <div style={{color: (isAdmin(me.role) && team.plan_id === 0 && invitedMembers >= maxInvitations) ? 'red' : null}} className="primary_action channel_name">
                       <i className="fa fa-user-o prefix"/>
                       <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
                     </div>

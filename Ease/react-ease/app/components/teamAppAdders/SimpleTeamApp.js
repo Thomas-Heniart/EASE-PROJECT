@@ -4,6 +4,7 @@ import post_api from "../../utils/post_api";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
+  EmptyCredentialsSimpleAppIndicator,
   SingleAppCopyPasswordButton,
   PasswordChangeDropdown,
   PasswordChangeHolder,
@@ -162,99 +163,6 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
     )
 };
 
-class EmptyCredentialsAppFillerChooser extends Component {
-  constructor(props){
-    super(props);
-  }
-  chooseFiller = () => {
-
-  };
-  render(){
-    const {team_users, team_card} = this.props;
-    return (
-        <Button
-            as='div'
-            icon
-            class="empty_app_indicator"
-            size="mini"
-            labelPosition='left'>
-          <Icon name="user"/>
-          Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
-          <u onClick={this.chooseFiller}>
-            Choose another person
-          </u>
-        </Button>
-    )
-  }
-}
-
-class EmptyCredentialsAppIndicator extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      reminderSent: false
-    }
-  }
-  sendReminder = () => {
-    const {team_card} = this.props;
-    if (this.state.reminderSent)
-      return;
-    this.setState({reminderSent: true});
-    post_api.teamApps.sendSingleCardFillerReminder({
-      team_card_id: team_card.id
-    }).then(response => {
-      setTimeout(() => {
-        this.setState({reminderSent: false});
-      }, 2000);
-    }).catch(err => {
-      setTimeout(() => {
-        this.setState({reminderSent: false});
-      }, 2000);
-    });
-  };
-  chooseMember = () => {
-    this.props.dispatch(modalActions.chooseSimpleAppFiller({
-      team_card: this.props.team_card
-    })).then(response => {
-
-    }).catch(err => {
-
-    });
-  };
-  render(){
-    const {team_card, team_users, meReceiver, me} = this.props;
-
-    return (
-        <Button
-            as='div'
-            icon
-            class="empty_app_indicator"
-            size="mini"
-            labelPosition='left'>
-          <Icon name="user"/>
-          Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
-          {this.props.actions_enabled &&
-          <React.Fragment>
-            {(!!meReceiver || isAdmin(me.role)) &&
-            <u onClick={this.sendReminder}>
-              {this.state.reminderSent ?
-                  'Reminder sent!' :
-                  'Send reminder'}
-            </u>}
-            {isAdmin(me.role) &&
-            <React.Fragment>
-              &nbsp;or
-              <u onClick={this.chooseMember}>
-                choose another person
-              </u>
-            </React.Fragment>}
-          </React.Fragment>
-          }
-        </Button>
-    )
-  }
-}
-
 @connect(store => ({
   teams: store.teams
 }))
@@ -408,7 +316,7 @@ class SimpleTeamApp extends Component {
     const website = app.website;
     let credentials;
     if (app.empty){
-      credentials = <EmptyCredentialsAppIndicator
+      credentials = <EmptyCredentialsSimpleAppIndicator
           actions_enabled={!this.state.edit}
           dispatch={this.props.dispatch}
           meReceiver={meReceiver}

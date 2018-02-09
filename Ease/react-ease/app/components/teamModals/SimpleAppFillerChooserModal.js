@@ -61,11 +61,12 @@ class ChooseMemberStep extends Component {
   };
   render(){
     const {team_card, team} = this.props;
-    const receivers = team_card.receivers;
     const team_users = team.team_users;
     const me = team.team_users[team.my_team_user_id];
     const selected_user_id = this.state.team_user_id;
-
+    const receivers = team_card.receivers.sort((a,b) => {
+      return team_users[a.team_user_id].username.localeCompare(team_users[b.team_user_id].username);
+    });
     return (
         <Form onSubmit={this.validate} error={!!this.state.errorMessage.length}>
           <Form.Field>
@@ -114,7 +115,8 @@ class SetupCredentialsStep extends Component {
       loading: false,
       errorMessage: ''
     };
-    this.state.credentials = transformWebsiteInfoIntoList(this.props.team_card.website.information);
+    const team_card = this.props.team_card;
+    this.state.credentials = transformWebsiteInfoIntoList(!!team_card.website ? team_card.website.information : team_card.software.connection_information);
   }
   handleCredentialInput = (e, {name, value}) => {
     let credentials = this.state.credentials.map(item => {
@@ -132,7 +134,7 @@ class SetupCredentialsStep extends Component {
       team_card: team_card,
       account_information: transformCredentialsListIntoObject(this.state.credentials)
     })).then(response => {
-      this.props.closeModal();
+      this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     })
@@ -159,9 +161,7 @@ class SetupCredentialsStep extends Component {
 
 @connect(store => ({
   team: store.teams[store.teamModals.simpleAppFillerChooserModal.team_card.team_id],
-  team_card: store.teamModals.simpleAppFillerChooserModal.team_card,
-  resolve: store.teamModals.simpleAppFillerChooserModal.resolve,
-  reject: store.teamModals.simpleAppFillerChooserModal.reject
+  team_card: store.teamModals.simpleAppFillerChooserModal.team_card
 }))
 class SimpleAppFillerChooserModal extends Component {
   constructor(props){
@@ -190,7 +190,7 @@ class SimpleAppFillerChooserModal extends Component {
           <Container id="popup_team_single_card">
             <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
               <div className="squared_image_handler">
-                <img src={team_card.website.logo} alt="Website logo"/>
+                <img src={!!team_card.website ? team_card.website.logo : team_card.software.logo} alt="Website logo"/>
               </div>
               <span className="app_name">{team_card.name}</span>
             </div>

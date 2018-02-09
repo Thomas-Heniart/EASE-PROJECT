@@ -204,26 +204,11 @@ export function showRequestWebsiteModal(state, resolve, reject){
   }
 }
 
-export function chooseSimpleAppFiller({team_card}){
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      dispatch(showSimpleAppFillerChooserModal({
-        active: true,
-        team_card: team_card,
-        resolve: resolve,
-        reject: reject
-      }));
-    });
-  }
-}
-
-export function showSimpleAppFillerChooserModal({active, team_card, resolve, reject}){
+export function showSimpleAppFillerChooserModal({active, team_card}){
   return {
     type: 'SHOW_SIMPLE_APP_FILLER_CHOOSER_MODAL',
     payload: {
       active: active,
-      resolve: resolve,
-      reject: reject,
       team_card: team_card
     }
   }
@@ -277,6 +262,16 @@ export function showTeamUserInviteLimitReachedModal({active, team_id, team_user_
       active: active,
       team_id: team_id,
       team_user_id_list: team_user_id_list
+    }
+  }
+}
+
+export function showFillSimpleCardCredentialsModal({active, team_card}) {
+  return {
+    type: 'SHOW_FILL_SIMPLE_CARD_CREDENTIALS_MODAL',
+    payload: {
+      active: active,
+      team_card: team_card
     }
   }
 }

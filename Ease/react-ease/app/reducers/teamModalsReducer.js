@@ -140,9 +140,11 @@ const initialState = {
   },
   simpleAppFillerChooserModal: {
     active: false,
-    team_card: null,
-    resolve: null,
-    reject: null
+    team_card: null
+  },
+  fillSimpleCardCredentialsModal: {
+    active: false,
+    team_card: null
   }
 };
 export default function reducer(state=initialState, action){
@@ -337,6 +339,12 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         simpleAppFillerChooserModal: action.payload
+      }
+    }
+    case 'SHOW_FILL_SIMPLE_CARD_CREDENTIALS_MODAL': {
+      return {
+          ...state,
+        fillSimpleCardCredentialsModal: action.payload
       }
     }
   }

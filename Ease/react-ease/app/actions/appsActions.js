@@ -1,6 +1,7 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
+import {fetchTeamApp} from "../actions/teamActions";
 import {addNotification} from "./notificationBoxActions";
 
 export function teamCreateEnterpriseCard({team_id, channel_id, website_id, name, description, password_reminder_interval, receivers}){
@@ -270,9 +271,9 @@ export function teamEditSingleCardCredentials({account_information, team_card}) 
     return teamEditAnySingleApp({
       team_card_id: team_card.id,
       description: team_card.description,
-      url: team_card.url,
-      img_url: team_card.img_url,
-      connection_information: team_card.connection_information,
+      url: team_card.website.login_url,
+      img_url: team_card.website.logo,
+      connection_information: team_card.website.information,
       account_information: account_information,
       password_reminder_interval: team_card.password_reminder_interval,
       name: team_card.name
@@ -281,7 +282,7 @@ export function teamEditSingleCardCredentials({account_information, team_card}) 
     return teamEditSoftwareSingleApp({
       team_card_id: team_card.id,
       description: team_card.description,
-      connection_information: team_card.connection_information,
+      connection_information: team_card.software.connection_information,
       account_information: account_information,
       password_reminder_interval: team_card.password_reminder_interval,
       name: team_card.name
@@ -648,14 +649,30 @@ export function teamCardReceiverCreatedAction({receiver}) {
   return (dispatch, getState) => {
     const store = getState();
     const team = store.teams[receiver.team_id];
-    dispatch({
-      type: 'TEAM_CARD_RECEIVER_CREATED',
-      payload: {
-        receiver: receiver
+    const team_apps = store.team_apps;
+    if (!team_apps[receiver.team_card_id] && receiver.team_user_id === team.my_team_user_id){
+      dispatch(fetchTeamApp({
+        team_id: team.id,
+        app_id: receiver.team_card_id
+      })).then(response => {
+        dispatch({
+          type: 'TEAM_CARD_RECEIVER_CREATED',
+          payload: {
+            receiver: receiver
+          }
+        });
+        dispatch(fetchApp({app_id: receiver.app_id}));
+      })
+    }else {
+      dispatch({
+        type: 'TEAM_CARD_RECEIVER_CREATED',
+        payload: {
+          receiver: receiver
+        }
+      });
+      if (team.my_team_user_id === receiver.team_user_id) {
+        dispatch(fetchApp({app_id: receiver.app_id}));
       }
-    });
-    if (team.my_team_user_id === receiver.team_user_id){
-      dispatch(fetchApp({app_id: receiver.app_id}));
     }
   }
 }
