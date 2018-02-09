@@ -3,7 +3,6 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -33,9 +32,6 @@ public class ServletUnsubscribe extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
             sm.needToBeOwnerOfTeam(team);
-            TeamUser teamUser = sm.getUser().getTeamUser(team);
-            if (!teamUser.isTeamOwner())
-                throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
             String password = sm.getStringParam("password", false, false);
             if (!sm.getUser().getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
