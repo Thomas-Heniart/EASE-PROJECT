@@ -423,8 +423,6 @@ module.exports = {
         role: role
       }).then(response => {
         easeTracker.trackEvent("AddMember");
-        console.log("Arrival date: ", !!arrival_date);
-        console.log("Departure date: ", !!departure_date);
         if (!!arrival_date)
           easeTracker.trackEvent("ArrivalDate");
         if (!!departure_date)
@@ -654,6 +652,13 @@ module.exports = {
         team_card_id: team_card_id
       })
     },
+    sendFillerEnterpriseCardReminder: ({team_id, team_card_id, team_card_receiver_id}) => {
+      return basic_post('/api/v1/teams/SendFillEnterpriseCardReminder', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: team_card_receiver_id
+      });
+    },
     addTeamSingleCardReceiver: ({team_id, team_card_id, team_user_id, allowed_to_see_password, ws_id}) => {
       return basic_post('/api/v1/teams/AddTeamSingleCardReceiver', {
         team_id: team_id,
@@ -677,9 +682,17 @@ module.exports = {
       });
     },
     editSingleCard: ({team_id, team_card_id, description, account_information, password_reminder_interval, name, ws_id}) => {
-      Object.keys(account_information).map(item => {
-        account_information[item] = cipher(account_information[item]);
+      let a = Object.keys(account_information).length;
+      Object.keys(account_information).forEach(item => {
+        if (!account_information[item].length)
+          a--;
       });
+      if (a === 0)
+        account_information = {};
+      else
+        Object.keys(account_information).map(item => {
+          account_information[item] = cipher(account_information[item]);
+        });
       return axios.post('/api/v1/teams/EditTeamSingleCard', {
         team_id: team_id,
         team_card_id: team_card_id,
@@ -695,9 +708,17 @@ module.exports = {
       });
     },
     editAnySingleCard: ({team_card_id, description, connection_information, account_information, password_reminder_interval, url, img_url, name, ws_id}) => {
-      Object.keys(account_information).map(item => {
-        account_information[item] = cipher(account_information[item]);
+      let a = Object.keys(account_information).length;
+      Object.keys(account_information).forEach(item => {
+        if (!account_information[item].length)
+          a--;
       });
+      if (a === 0)
+        account_information = {};
+      else
+        Object.keys(account_information).map(item => {
+          account_information[item] = cipher(account_information[item]);
+        });
       return basic_post('/api/v1/teams/EditTeamAnySingleCard', {
         team_card_id: team_card_id,
         name: name,
@@ -711,9 +732,17 @@ module.exports = {
       });
     },
     editSoftwareSingleCard: ({team_card_id, description, account_information, connection_information, password_reminder_interval, name, ws_id}) => {
-      Object.keys(account_information).map(item => {
-        account_information[item] = cipher(account_information[item]);
+      let a = Object.keys(account_information).length;
+      Object.keys(account_information).forEach(item => {
+        if (!account_information[item].length)
+          a--;
       });
+      if (a === 0)
+        account_information = {};
+      else
+        Object.keys(account_information).map(item => {
+          account_information[item] = cipher(account_information[item]);
+        });
       return basic_post('/api/v1/teams/EditTeamSoftwareSingleCard', {
         team_card_id: team_card_id,
         name: name,
@@ -1080,6 +1109,14 @@ module.exports = {
         request_id: request_id,
         ws_id: ws_id
       });
+    },
+    editSingleCardFiller: ({ws_id, team_id, team_card_id, filler_id}) => {
+      return basic_post('/api/v1/teams/EditTeamCardFiller', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        filler_id: filler_id,
+        ws_id:ws_id
+      })
     },
     requestTeamEnterpriseCard : function({ws_id, team_id, team_card_id, account_information}){
       return basic_post('/api/v1/teams/JoinTeamEnterpriseCard', {

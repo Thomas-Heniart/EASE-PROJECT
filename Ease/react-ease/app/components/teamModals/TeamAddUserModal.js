@@ -8,6 +8,7 @@ import {renderRoomLabel} from "../../utils/renderHelpers";
 import {reflect, handleSemanticInput, isEmail} from "../../utils/utils";
 import { Header, Container, Divider, Icon, Form, Input, Message, Button } from 'semantic-ui-react';
 import {addNotification} from "../../actions/notificationBoxActions";
+import {withRouter} from "react-router-dom";
 
 @connect((store) => ({
   team: store.teams[store.teamModals.addUserModal.team_id]
@@ -118,6 +119,7 @@ class TeamAddUserModal extends React.Component {
           text: "New team user(s) successfully created!"
         }));
         this.props.dispatch(showAddTeamUserModal({active: false}));
+        this.props.history.push(`/teams/${team.id}/@${user.id}`);
       });
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
@@ -154,6 +156,7 @@ class TeamAddUserModal extends React.Component {
         this.props.dispatch(addNotification({
           text: "New team user(s) successfully created!"
         }));
+        this.props.history.push(`/teams/${team.id}/@${user.id}`);
         this.props.dispatch(showAddTeamUserModal({active: false}));
         this.props.dispatch(userActions.sendInvitationToTeamUserList({
           team_id: team.id,
@@ -301,4 +304,4 @@ class TeamAddUserModal extends React.Component {
   }
 }
 
-module.exports = TeamAddUserModal;
+module.exports = withRouter(TeamAddUserModal);

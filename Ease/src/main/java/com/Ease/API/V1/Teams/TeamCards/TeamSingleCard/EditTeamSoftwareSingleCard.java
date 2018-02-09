@@ -54,7 +54,9 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             if (password_reminder_interval < 0 || !team.isValidFreemium())
                 password_reminder_interval = 0;
             teamSingleSoftwareCard.setPassword_reminder_interval(password_reminder_interval);
-            JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            JSONObject account_information = sm.getJsonParam("account_information", false, true);
+            if (account_information == null)
+                account_information = new JSONObject();
             sm.decipher(account_information);
             JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
             Software software = teamSingleSoftwareCard.getSoftware();
@@ -64,18 +66,20 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             }
             account_information = software.getPresentCredentialsFromJson(account_information);
             Account account = teamSingleSoftwareCard.getAccount();
-            if (account == null) {
-                String teamKey = sm.getTeamKey(team);
-                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, hibernateQuery);
-                teamSingleSoftwareCard.setAccount(account);
-                for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
-                    teamCardReceiver.getApp().setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleSoftwareCard.getPassword_reminder_interval(), sm.getHibernateQuery()));
-                NotificationFactory.getInstance().createAppFilledNotification(teamUser, teamSingleSoftwareCard, sm.getUserIdMap(), sm.getHibernateQuery());
-                teamSingleSoftwareCard.setTeamUser_filler_test(null);
-            } else {
-                teamSingleSoftwareCard.getAccount().edit(account_information, password_reminder_interval, hibernateQuery);
-                for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
-                    teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
+            if (account_information.length() != 0) {
+                if (account == null) {
+                    String teamKey = sm.getTeamKey(team);
+                    account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, hibernateQuery);
+                    teamSingleSoftwareCard.setAccount(account);
+                    for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
+                        teamCardReceiver.getApp().setAccount(AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamSingleSoftwareCard.getPassword_reminder_interval(), sm.getHibernateQuery()));
+                    NotificationFactory.getInstance().createAppFilledNotification(teamUser, teamSingleSoftwareCard, sm.getUserIdMap(), sm.getHibernateQuery());
+                    teamSingleSoftwareCard.setTeamUser_filler_test(null);
+                } else {
+                    teamSingleSoftwareCard.getAccount().edit(account_information, password_reminder_interval, hibernateQuery);
+                    for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
+                        teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
+                }
             }
             sm.saveOrUpdate(teamSingleSoftwareCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleSoftwareCard.getWebSocketJson()));

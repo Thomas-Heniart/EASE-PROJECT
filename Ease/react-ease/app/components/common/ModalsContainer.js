@@ -50,6 +50,8 @@ import NewFeatureModal from "../modals/NewFeatureModal";
 import AddAnyAppModal from "../catalog/AddAnyAppModal";
 import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal";
 import InviteTeamUsersModal from "../teamModals/InviteTeamUsersModal";
+import SimpleAppFillerChooserModal from "../teamModals/SimpleAppFillerChooserModal";
+import FillSimpleCardCredentialsModal from "../teamModals/FillSimpleCardCredentialsModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -82,6 +84,8 @@ import InviteTeamUsersModal from "../teamModals/InviteTeamUsersModal";
   catalogAddAnyAppModal: store.teamModals.catalogAddAnyAppModal,
   catalogAddSoftwareAppModal: store.teamModals.catalogAddSoftwareAppModal,
   inviteTeamUsersModal: store.teamModals.inviteTeamUsersModal,
+  simpleAppFillerChooserModal: store.teamModals.simpleAppFillerChooserModal,
+  fillSimpleCardCredentialsModal: store.teamModals.fillSimpleCardCredentialsModal,
   modals: store.modals
 }))
 class ModalsContainer extends Component{
@@ -193,6 +197,10 @@ class ModalsContainer extends Component{
           <AddSoftwareCredentialsModal/>}
           {this.props.inviteTeamUsersModal.active &&
           <InviteTeamUsersModal/>}
+          {this.props.simpleAppFillerChooserModal.active &&
+          <SimpleAppFillerChooserModal/>}
+          {this.props.fillSimpleCardCredentialsModal.active &&
+          <FillSimpleCardCredentialsModal/>}
         </div>
     )
   }

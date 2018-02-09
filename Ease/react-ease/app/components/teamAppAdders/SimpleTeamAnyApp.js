@@ -3,6 +3,7 @@ import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
+  EmptyCredentialsSimpleAppIndicator,
   SingleAppCopyPasswordButton,
   PasswordChangeDropdown,
   PasswordChangeHolder,
@@ -316,16 +317,26 @@ class SimpleTeamAnyApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
-    const credentials = !this.state.edit ?
-      transformWebsiteInfoIntoListAndSetValues(website.information, app.account_information).map(item => {
-        return <TeamAppCredentialInput key={item.priority}
-                                       readOnly={true}
-                                       item={item}/>
-      }) : this.state.credentials.map(item => {
-        return <TeamAppCredentialInput key={item.priority}
-                                       onChange={this.handleCredentialInput}
-                                       item={item}/>
-      });
+    let credentials;
+    if (app.empty){
+      credentials = <EmptyCredentialsSimpleAppIndicator
+          actions_enabled={!this.state.edit}
+          dispatch={this.props.dispatch}
+          meReceiver={meReceiver}
+          me={me}
+          team_users={team.team_users}
+          team_card={app}/>
+    } else
+      credentials = !this.state.edit ?
+          transformWebsiteInfoIntoListAndSetValues(website.information, app.account_information).map(item => {
+            return <TeamAppCredentialInput key={item.priority}
+                                           readOnly={true}
+                                           item={item}/>
+          }) : this.state.credentials.map(item => {
+            return <TeamAppCredentialInput key={item.priority}
+                                           onChange={this.handleCredentialInput}
+                                           item={item}/>
+          });
     return (
       <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
         <Segment>
