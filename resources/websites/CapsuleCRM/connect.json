@@ -1,0 +1,56 @@
+{
+  "name": "Kerala Capsule CRM",
+  "lastLogin": "",
+  "home": {
+    "http": "https://",
+    "subdomain": "team",
+    "domain": "capsulecrm.com"
+  },
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "input[id='login:usernameDecorate:username']"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "input[id='login:passwordDecorate:password']"
+      },
+      {
+        "action": "trueClick",
+        "search": "input[id='login:login']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".nav-bar-account .nav-bar-account-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitfor",
+        "search": "input[id='login:usernameDecorate:username']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "input[id='login:usernameDecorate:username'], .nav-bar-account .nav-bar-account-button"
+    },
+    {
+      "search": ".nav-bar-account .nav-bar-account-button"
+    }
+  ]
+}

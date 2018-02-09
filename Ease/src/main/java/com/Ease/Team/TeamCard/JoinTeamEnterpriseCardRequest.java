@@ -1,10 +1,7 @@
 package com.Ease.Team.TeamCard;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.NewDashboard.Account;
-import com.Ease.NewDashboard.App;
-import com.Ease.NewDashboard.AppInformation;
-import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.NewDashboard.*;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Team.TeamUser;
@@ -56,8 +53,12 @@ public class JoinTeamEnterpriseCardRequest extends JoinTeamCardRequest {
     @Override
     public TeamCardReceiver accept(String symmetric_key, HibernateQuery hibernateQuery) throws HttpServletException {
         this.getAccount().decipher(symmetric_key);
-        TeamEnterpriseCard teamCard = (TeamEnterpriseCard) this.getTeamCard();
-        App app = new ClassicApp(new AppInformation(teamCard.getName()), teamCard.getWebsite(), this.getAccount());
+        TeamCard teamCard = this.getTeamCard();
+        App app;
+        if (teamCard.isTeamSoftwareCard())
+            app = new SoftwareApp(new AppInformation(teamCard.getName()), ((TeamEnterpriseSoftwareCard) teamCard).getSoftware(), account);
+        else
+            app = new ClassicApp(new AppInformation(teamCard.getName()), ((TeamEnterpriseCard) teamCard).getWebsite(), account);
         TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, this.getTeamUser());
         hibernateQuery.saveOrUpdateObject(teamEnterpriseCardReceiver);
         teamCard.removeJoinTeamCardRequest(this);

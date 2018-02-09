@@ -44,6 +44,12 @@ public class ServletRegistration extends HttpServlet {
             String code = sm.getStringParam("code", false, true);
             String phone_number = sm.getStringParam("phone_number", true, false);
             Boolean send_news = sm.getBooleanParam("newsletter", true, true);
+            String first_name = sm.getStringParam("first_name", true, true);
+            String last_name = sm.getStringParam("last_name", true, true);
+            if (first_name == null)
+                first_name = "";
+            if (last_name == null)
+                last_name = "";
             if (send_news == null)
                 send_news = false;
             checkUsernameIntegrity(username);
@@ -55,6 +61,10 @@ public class ServletRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits or code");
             if (phone_number.isEmpty() || phone_number.length() > 255 || !Regex.isPhoneNumber(phone_number))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number");
+            if (!first_name.isEmpty() && !Regex.isValidName(first_name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid first name");
+            if (!last_name.isEmpty() && !Regex.isValidName(last_name))
+                throw new HttpServletException(HttpStatus.BadRequest, "Invalid last name");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (code != null && !code.equals("")) {
                 hibernateQuery.querySQLString("SELECT invitation_code FROM teamUsers WHERE teamUsers.email = :email AND invitation_code LIKE :code");
@@ -79,6 +89,8 @@ public class ServletRegistration extends HttpServlet {
             }
             User newUser = UserFactory.getInstance().createUser(email, username, password, "", "", phone_number);
             newUser.getUserStatus().setOnboarding_step(1);
+            newUser.getPersonalInformation().setFirst_name(first_name);
+            newUser.getPersonalInformation().setLast_name(last_name);
             sm.saveOrUpdate(newUser);
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);
