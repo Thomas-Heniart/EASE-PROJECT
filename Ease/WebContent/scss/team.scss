@@ -1364,6 +1364,21 @@ i.icon.pin_button {
         font-weight: 300;
         border: 1px solid #e0e1e2;
         background-color: transparent;
+        &.empty_app_indicator {
+          cursor: auto;
+          border: 1px solid $themeOrangeColor;
+          text-align: left;
+          color: $themeOrangeColor;
+          font-style: italic;
+          & > .icon {
+            background-color: $themeOrangeColor;
+          }
+          u {
+            margin-left: 5px;
+            cursor: pointer;
+            font-style: normal;
+          }
+        }
         i {
           background-color: #e0e1e2;
           color: white;
@@ -1449,6 +1464,36 @@ i.icon.pin_button {
       margin-right: .5rem;
       &:last-child {
         margin-right: 0;
+      }
+    }
+    &.empty {
+      .team-app-input {
+        .label {
+          background-color: $themeOrangeColor;
+        }
+        input {
+          border: 1px solid $themeOrangeColor;
+        }
+      }
+    }
+    .empty_app_indicator {
+      cursor: auto;
+      border: 1px solid $themeOrangeColor;
+      background-color: transparent;
+      width: 450px;
+      font-weight: normal;
+      text-align: left;
+      color: $themeOrangeColor;
+      font-style: italic;
+      & > .icon {
+        background-color: $themeOrangeColor;
+        color: white;
+        border-radius: 0;
+      }
+      u {
+        margin-left: 5px;
+        cursor: pointer;
+        font-style: normal;
       }
     }
     .receiver-label {

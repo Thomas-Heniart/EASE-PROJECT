@@ -298,10 +298,10 @@ class Importations extends React.Component {
     this.setState({fields: fields, importedAccounts: accounts});
   };
   eventListener = event => {
-    if (event.detail.success === true) {
+    if (event.detail.success === true && event.detail.msg.length > 0) {
       let calls = [];
       event.detail.msg.map((item, idx) => {
-         calls.push(this.props.dispatch(importAccount({
+        calls.push(this.props.dispatch(importAccount({
           id: idx,
           name: '',
           url:  item.website.startsWith("http") === false && item.website !== '' ? "https://" + item.website : item.website,
@@ -310,7 +310,7 @@ class Importations extends React.Component {
             login: {name:"login", value: item.login},
             password: {name:"password", value: item.pass}
           }
-         })));
+        })));
       });
       Promise.all(calls.map(reflect)).then(response => {
         const json = response.filter(item => {
@@ -339,10 +339,17 @@ class Importations extends React.Component {
             fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'}
           });
         }
-        easeTracker.trackEvent("Importation")
+        else
+          this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
+        easeTracker.trackEvent("Importation");
       }).catch(err => {
+        this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
       });
     }
+    else if (event.detail.msg === [])
+      this.setState({view: 2, error: 'No password found'});
+    else if (event.detail.msg.length === 0)
+      this.setState({view: 2, error: 'No password found'});
     else
       this.setState({view: 2, error: event.detail.msg});
   };

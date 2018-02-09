@@ -5,6 +5,7 @@ import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
 import {showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import { Header, Label, Container, Divider, Icon, TextArea, Form, Input, Button, Message } from 'semantic-ui-react';
 import {addNotification} from "../../actions/notificationBoxActions";
+import {withRouter} from "react-router-dom";
 
 class PreviewStep extends React.Component {
   constructor(props){
@@ -154,15 +155,6 @@ class TeamAddMultipleUsersModal extends React.Component {
     const team = this.props.teams[this.props.team_id];
     const users_length = Object.keys(team.team_users).length;
     invitations = invitations.filter(item => (item.email.length > 0));
-    /*    if (invitations.length + users_length > 30 && team.plan_id === 0){
-          this.setState({
-            errorMessage:
-                <span>
-                  You are adding {invitations.length} people to your team but unfortunately you only have {30 - users_length} spots remaining to stay in the Basic plan. <button onClick={this.showUpgradeModal} class="button-unstyle inline-text-button" type="button">Upgrade to Pro</button> or add less people.
-                </span>
-          });
-          return;
-        }*/
     let calls = invitations.map(item => {
       return this.props.dispatch(createTeamUser({
         team_id: this.props.team_id,
@@ -175,15 +167,20 @@ class TeamAddMultipleUsersModal extends React.Component {
       }));
     });
     this.setState({loading: true, errorMessage: ''});
+    let lastInvitedUser = null;
     Promise.all(calls.map(reflect)).then(results => {
       results.map((item, idx) => {
         if (item.error)
           invitations[idx].error = item.data;
-        else
+        else {
           invitations[idx].error = '';
+          lastInvitedUser = item.data;
+        }
       });
       invitations = invitations.filter(item => (item.error.length > 0));
-      if (calls.length !==invitations.length){
+      if (!!lastInvitedUser)
+        this.props.history.replace(`/teams/${team.id}/@${lastInvitedUser.id}`);
+      if (calls.length !== invitations.length){
         this.props.dispatch(addNotification({
           text: "New team user(s) successfully created!"
         }));
@@ -225,6 +222,7 @@ class TeamAddMultipleUsersModal extends React.Component {
       }));
     });
     const invitationsToSend = [];
+    let lastInvitedUser = null;
     Promise.all(calls.map(reflect)).then(async results => {
       results.map((item, idx) => {
         if (item.error)
@@ -232,6 +230,7 @@ class TeamAddMultipleUsersModal extends React.Component {
         else {
           invitations[idx].error = '';
           invitationsToSend.push(item.data.id);
+          lastInvitedUser = item.data;
         }
       });
       invitations = invitations.filter(item => (item.error.length > 0));
@@ -240,6 +239,8 @@ class TeamAddMultipleUsersModal extends React.Component {
           team_id: team.id,
           team_user_id_list: invitationsToSend
         }));
+      if (!!lastInvitedUser)
+        this.props.history.replace(`/teams/${team.id}/@${lastInvitedUser.id}`);
       if (calls.length !== invitations.length){
         this.props.dispatch(addNotification({
           text: "New team user(s) successfully created!"
@@ -355,4 +356,4 @@ class TeamAddMultipleUsersModal extends React.Component {
   }
 }
 
-module.exports = TeamAddMultipleUsersModal;
+module.exports = withRouter(TeamAddMultipleUsersModal);

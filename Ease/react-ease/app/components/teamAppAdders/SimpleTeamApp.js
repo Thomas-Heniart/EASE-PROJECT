@@ -1,8 +1,10 @@
 import React, {Component} from "react";
 import classnames from "classnames";
+import post_api from "../../utils/post_api";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
+  EmptyCredentialsSimpleAppIndicator,
   SingleAppCopyPasswordButton,
   PasswordChangeDropdown,
   PasswordChangeHolder,
@@ -312,16 +314,26 @@ class SimpleTeamApp extends Component {
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
-    const credentials = !this.state.edit ?
-        transformWebsiteInfoIntoListAndSetValues(website.information, app.account_information).map(item => {
-          return <TeamAppCredentialInput key={item.priority}
-                                         readOnly={true}
-                                         item={item}/>
-        }) : this.state.credentials.map(item => {
-          return <TeamAppCredentialInput key={item.priority}
-                                         onChange={this.handleCredentialInput}
-                                         item={item}/>
-        });
+    let credentials;
+    if (app.empty){
+      credentials = <EmptyCredentialsSimpleAppIndicator
+          actions_enabled={!this.state.edit}
+          dispatch={this.props.dispatch}
+          meReceiver={meReceiver}
+          me={me}
+          team_users={team.team_users}
+          team_card={app}/>
+    } else
+      credentials = !this.state.edit ?
+          transformWebsiteInfoIntoListAndSetValues(website.information, app.account_information).map(item => {
+            return <TeamAppCredentialInput key={item.priority}
+                                           readOnly={true}
+                                           item={item}/>
+          }) : this.state.credentials.map(item => {
+            return <TeamAppCredentialInput key={item.priority}
+                                           onChange={this.handleCredentialInput}
+                                           item={item}/>
+          });
     return (
         <Container fluid id={`app_${app.id}`} class="team-app mrgn0 simple-team-app" as="form" onSubmit={this.modify}>
           <Segment>
@@ -355,7 +367,7 @@ class SimpleTeamApp extends Component {
               <div class="main_column">
                 <div class="credentials">
                   {credentials}
-                  {((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id) &&
+                  {(!app.empty && ((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id)) &&
                   <SingleAppCopyPasswordButton team_card_id={app.id}/>}
                   <div class="display-inline-flex">
                     {!this.state.edit ?
@@ -373,7 +385,9 @@ class SimpleTeamApp extends Component {
                 </div>
                 <div>
                   {!this.state.edit ?
-                      <ReceiversLabelGroup meAdmin={isAdmin(me.role)} receivers={userReceiversMap}/> :
+                      <ReceiversLabelGroup
+                          meAdmin={isAdmin(me.role)}
+                          receivers={userReceiversMap}/> :
                       <Dropdown
                           class="mini"
                           search={true}
