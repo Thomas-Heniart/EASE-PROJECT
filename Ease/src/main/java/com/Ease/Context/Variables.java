@@ -23,23 +23,6 @@ public class Variables {
     public static final String SOFTWARE_FOLDER_PATH = "/var/lib/tomcat8/resources/software/";
     public static final String BACKGROUND_PATH = "/var/lib/tomcat8/webapps/backgrounds/";
     */
-
-    //Prod
-    /*
-    public static final String ENVIRONNEMENT = "Prod";
-	public static final String KEYS_PATH = "/var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/com/Ease/Utils/Crypto/privateKeys.txt";
-	public static final String URL_PATH = "https://ease.space/";
-	public static final String DATABASE_IP = "10.12.217.11";
-	public static final String STRIPE_API_KEY ="sk_live_P9qlj7iut6cpNkb8hfY4S43M";
-	*/
-    //Préprod
-    /*
-    public static final String ENVIRONNEMENT = "FPréprod";
-    public static final String KEYS_PATH = "/var/lib/tomcat8/webapps/ROOT/WEB-INF/classes/com/Ease/Utils/Crypto/privateKeys.txt";
-    public static final String URL_PATH = "https://turfu.ease.space:8443/";
-    public static final String DATABASE_IP = "10.12.218.11";
-    public static final String STRIPE_API_KEY ="sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
-    */
     //Préprod
     /*
     public static final String ENVIRONNEMENT = "Préprod";
