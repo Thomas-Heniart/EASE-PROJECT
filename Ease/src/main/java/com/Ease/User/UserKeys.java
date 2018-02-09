@@ -35,16 +35,27 @@ public class UserKeys {
     @Column(name = "privateKey")
     private String privateKey;
 
+    @Column(name = "access_code_hash")
+    private String access_code_hash;
+
     public UserKeys() {
 
     }
 
-    public UserKeys(String hashed_password, String saltPerso, String keyUser, String publicKey, String privateKey) {
+    /* public UserKeys(String hashed_password, String saltPerso, String keyUser, String publicKey, String privateKey) {
         this.hashed_password = hashed_password;
         this.saltPerso = saltPerso;
         this.keyUser = keyUser;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+    } */
+
+    public UserKeys(String access_code_hash, String saltPerso, String keyUser, String publicKey, String privateKey) {
+        this.saltPerso = saltPerso;
+        this.keyUser = keyUser;
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+        this.access_code_hash = access_code_hash;
     }
 
     public Integer getDb_id() {
@@ -103,8 +114,16 @@ public class UserKeys {
         this.privateKey = privateKey;
     }
 
+    public String getAccess_code_hash() {
+        return access_code_hash;
+    }
+
+    public void setAccess_code_hash(String access_code_hash) {
+        this.access_code_hash = access_code_hash;
+    }
+
     public String getDecipheredKeyUser(String password) throws HttpServletException {
-        if (!isGoodPassword(password))
+        if (!isGoodPassword(password) && !isGoodAccessCode(password))
             throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
         return AES.decryptUserKey(this.getKeyUser(), password, this.getSaltPerso());
     }
@@ -116,7 +135,11 @@ public class UserKeys {
     }
 
     public boolean isGoodPassword(String password) {
-        return Hashing.compare(password, this.getHashed_password());
+        return this.getHashed_password() != null && Hashing.compare(password, this.getHashed_password());
+    }
+
+    public boolean isGoodAccessCode(String access_code) {
+        return this.getAccess_code_hash() != null && Hashing.compare(access_code, this.getAccess_code_hash());
     }
 
     @Override

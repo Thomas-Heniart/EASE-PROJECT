@@ -174,7 +174,7 @@ public class TeamManager {
                     }
                 } else if (teamCard.isTeamEnterpriseCard()) {
                     for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
-                        if (teamCardReceiver.getTeamUser().getUser() == null)
+                        if (teamCardReceiver.getTeamUser().getUser() == null || !teamCardReceiver.getTeamUser().getUser().getUserStatus().isRegistered())
                             continue;
                         App app = teamCardReceiver.getApp();
                         if (app == null || app.getAccount() == null)
@@ -269,7 +269,7 @@ public class TeamManager {
                         }
                     }
                     String formattedDate = simpleDateFormat.format(teamUser.getDepartureDate()) + suffixe;
-                    if (teamUser.getUser() == null)
+                    if (teamUser.getUser() == null || !teamUser.getUser().getUserStatus().isRegistered())
                         continue;
                     TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
                     NotificationFactory.getInstance().createDepartureDateThreeDaysNotification(teamUser, teamUser_admin, formattedDate, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id(), servletContext), hibernateQuery);

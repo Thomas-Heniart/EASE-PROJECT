@@ -59,6 +59,9 @@ public class UserStatus {
     @Column(name = "tip_importation_seen")
     private boolean tip_importation_seen = false;
 
+    @Column(name = "registered")
+    private boolean registered = false;
+
     public UserStatus() {
 
     }
@@ -189,6 +192,14 @@ public class UserStatus {
 
     public void setTip_importation_seen(boolean tip_importation_seen) {
         this.tip_importation_seen = tip_importation_seen;
+    }
+
+    public boolean isRegistered() {
+        return registered;
+    }
+
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
     }
 
     @Override

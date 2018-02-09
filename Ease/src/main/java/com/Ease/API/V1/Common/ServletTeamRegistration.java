@@ -4,10 +4,13 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
+import com.Ease.Team.TeamUser;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
 import com.Ease.User.UserEmail;
 import com.Ease.User.UserFactory;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -28,33 +31,32 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-@WebServlet("/api/v1/common/Registration")
-public class ServletRegistration extends HttpServlet {
+@WebServlet("/api/v1/common/TeamRegistration")
+public class ServletTeamRegistration extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             User user = sm.getUser();
             if (user != null)
                 sm.setUser(null);
-            String username = sm.getStringParam("username", true, false);
-            username = username.toLowerCase();
+            String access_code = sm.getStringParam("access_code", true, false);
             String email = sm.getStringParam("email", true, false);
             String password = sm.getStringParam("password", false, false);
-            String digits = sm.getStringParam("digits", false, false);
+            String code = sm.getStringParam("code", false, false);
             String phone_number = sm.getStringParam("phone_number", true, false);
+            Boolean send_news = sm.getBooleanParam("newsletter", true, true);
             String first_name = sm.getStringParam("first_name", true, true);
             String last_name = sm.getStringParam("last_name", true, true);
             if (first_name == null)
                 first_name = "";
             if (last_name == null)
                 last_name = "";
-            checkUsernameIntegrity(username);
+            if (send_news == null)
+                send_news = false;
             if (email == null || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             if (password == null || !Regex.isPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Password must be at least 8 characters, contains 1 uppercase, 1 lowercase and 1 digit.");
-            if (digits.length() != 6)
-                throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter digits");
             if (phone_number.isEmpty() || phone_number.length() > 255 || !Regex.isPhoneNumber(phone_number))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid phone number");
             if (!first_name.isEmpty() && !Regex.isValidName(first_name))
@@ -62,26 +64,44 @@ public class ServletRegistration extends HttpServlet {
             if (!last_name.isEmpty() && !Regex.isValidName(last_name))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid last name");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.querySQLString("SELECT digits, newsletter FROM userPendingRegistrations WHERE email = :email");
+            User newUser;
+            hibernateQuery.queryString("SELECT t FROM TeamUser t WHERE t.email = :email AND t.invitation_code = :code");
             hibernateQuery.setParameter("email", email);
-            Object[] objects = (Object[]) hibernateQuery.getSingleResult();
-            if (objects == null)
-                throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
-            String db_digits = (String) objects[0];
-            if (db_digits == null || db_digits.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "You didn't ask for an account.");
-            if (!db_digits.equals(digits))
-                throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
-            boolean send_news = (Boolean) objects[1];
-            User newUser = UserFactory.getInstance().createUser(email, username, password, "", "", phone_number);
-            newUser.getUserStatus().setOnboarding_step(1);
-            newUser.getPersonalInformation().setFirst_name(first_name);
-            newUser.getPersonalInformation().setLast_name(last_name);
-            sm.saveOrUpdate(newUser);
-            UserEmail userEmail = new UserEmail(email, true, newUser);
-            sm.saveOrUpdate(userEmail);
-            newUser.addUserEmail(userEmail);
-            newUser.getUserStatus().setNew_feature_seen(true);
+            hibernateQuery.setParameter("code", code);
+            TeamUser teamUser = (TeamUser) hibernateQuery.getSingleResult();
+            if (teamUser == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
+            sm.initializeTeamWithContext(teamUser.getTeam());
+            if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > new Date().getTime())
+                throw new HttpServletException(HttpStatus.BadRequest, "This is not the moment of your registration");
+            newUser = teamUser.getUser();
+            if (newUser != null) {
+
+                if (!newUser.getUserKeys().isGoodAccessCode(access_code))
+                    throw new HttpServletException(HttpStatus.BadRequest, "This link is no longer valid");
+                newUser.getUserKeys().setHashed_password(Hashing.hash(password));
+                newUser.getUserKeys().setKeyUser(AES.encryptUserKey(newUser.getUserKeys().getDecipheredKeyUser(access_code), password, newUser.getUserKeys().getSaltPerso()));
+                newUser.getUserKeys().setAccess_code_hash(null);
+                newUser.getUserStatus().setRegistered(true);
+                newUser.getUserStatus().setOnboarding_step(1);
+                newUser.getPersonalInformation().setFirst_name(first_name);
+                newUser.getPersonalInformation().setLast_name(last_name);
+                sm.saveOrUpdate(newUser);
+                UserEmail userEmail = new UserEmail(email, true, newUser);
+                sm.saveOrUpdate(userEmail);
+                newUser.addUserEmail(userEmail);
+                teamUser.setState(1);
+            } else {
+                String username = sm.getStringParam("username", true, false);
+                username = username.toLowerCase();
+                checkUsernameIntegrity(username);
+                newUser = UserFactory.getInstance().createUser(email, username, password, first_name, last_name, phone_number);
+                newUser.getUserStatus().setRegistered(true);
+                sm.saveOrUpdate(newUser);
+                UserEmail userEmail = new UserEmail(email, true, newUser);
+                sm.saveOrUpdate(userEmail);
+                newUser.addUserEmail(userEmail);
+            }
             sm.setUser(newUser);
             String keyUser = newUser.getUserKeys().getDecipheredKeyUser(password);
             String privateKey = newUser.getUserKeys().getDecipheredPrivateKey(keyUser);
