@@ -50,6 +50,7 @@ import NewFeatureModal from "../modals/NewFeatureModal";
 import AddAnyAppModal from "../catalog/AddAnyAppModal";
 import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal";
 import InviteTeamUsersModal from "../teamModals/InviteTeamUsersModal";
+import AccountUpdateModal from "../catalog/Updates/AccountUpdateModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -193,6 +194,8 @@ class ModalsContainer extends Component{
           <AddSoftwareCredentialsModal/>}
           {this.props.inviteTeamUsersModal.active &&
           <InviteTeamUsersModal/>}
+          {this.props.modals.accountUpdate.active &&
+          <AccountUpdateModal/>}
         </div>
     )
   }
