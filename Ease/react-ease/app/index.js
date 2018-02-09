@@ -30,7 +30,7 @@ class App extends React.Component {
           <Route exact path={"/"} component={Root}/>
           <Route path="/teamCreation" component={NewTeamCreationView}/>
           <Route path="/main" component={requireAuthentication(MainView)}/>
-          <Route path="/teamJoin/:code" component={OnBoardingJoinTeam}/>
+          <Route path="/teamJoin/:code/:access_code" component={OnBoardingJoinTeam}/>
           <Route path="/teams/:teamId/:itemId?" component={requireAuthentication(TeamView)}/>
           <Route path="/login" component={Login}/>
           <Route path="/registration" component={Registration}/>

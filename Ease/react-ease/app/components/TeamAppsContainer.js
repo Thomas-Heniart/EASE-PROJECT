@@ -24,8 +24,7 @@ class TeamAppsContainer extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      loading: true,
-      loadingSendInvitation: false
+      loading: true
     }
   }
   componentWillReceiveProps(nextProps){
@@ -72,91 +71,6 @@ class TeamAppsContainer extends React.Component{
       }
     }
   }
-  sendInvitation = (teamUser) => {
-    if (this.state.loadingSendInvitation !== true) {
-      this.setState({loadingSendInvitation: true});
-      const team = this.props.teams[this.props.match.params.teamId];
-      this.props.dispatch(sendTeamUserInvitation({
-        team_id: team.id,
-        team_user_id: teamUser.id
-      })).then(r => {
-        setTimeout(() => {
-          this.setState({loadingSendInvitation: false});
-        }, 2000);
-        // this.setState({loadingSendInvitation: false});
-      }).catch(err => {
-        setTimeout(() => {
-          this.setState({loadingSendInvitation: false});
-        }, 2000);
-        // this.setState({loadingSendInvitation: false});
-        // this.setState({errorMessage: err});
-        console.log(err);
-      });
-      // this.setState({loadingSendInvitation: false});
-    }
-  };
-  sendAllInvitations = () => {
-    if (this.state.loadingSendInvitation !== true) {
-      const team = this.props.teams[this.props.match.params.teamId];
-      this.setState({loadingSendInvitation: true});
-      const calls = Object.keys(team.team_users).map(item => {
-        if (team.team_users[item].state === 0 && team.team_users[item].invitation_sent === false) {
-          this.props.dispatch(sendTeamUserInvitation({
-            team_id: team.id,
-            team_user_id: Number(item)
-          }));
-        }
-      });
-      const response = calls.filter(item => {
-        if (item)
-          return true
-      });
-      Promise.all(response.map(reflect)).then(r => {
-        setTimeout(() => {
-          this.setState({loadingSendInvitation: false});
-        }, 2000);
-        // this.setState({loadingSendInvitation: false});
-      }).catch(err => {
-        setTimeout(() => {
-          this.setState({loadingSendInvitation: false});
-        }, 2000);
-        // this.setState({loadingSendInvitation: false});
-        // this.setState({errorMessage: err});
-        console.log(err);
-      });
-    }
-  };
-  reSendAllInvitations = () => {
-    if (this.state.loadingSendInvitation !== true) {
-      const team = this.props.teams[this.props.match.params.teamId];
-      this.setState({loadingSendInvitation: true});
-      const calls = Object.keys(team.team_users).map(item => {
-        if (team.team_users[item].state === 0 && team.team_users[item].invitation_sent === true) {
-          this.props.dispatch(sendTeamUserInvitation({
-            team_id: team.id,
-            team_user_id: Number(item)
-          }));
-        }
-      });
-      const response = calls.filter(item => {
-        if (item)
-          return true
-      });
-      Promise.all(response.map(reflect)).then(r => {
-        setTimeout(() => {
-          this.setState({loadingSendInvitation: false});
-        }, 2000);
-        // this.setState({loadingSendInvitation: false});
-      }).catch(err => {
-        setTimeout(() => {
-          this.setState({loadingSendInvitation: false});
-        }, 2000);
-        // this.setState({loadingSendInvitation: false});
-        // this.setState({errorMessage: err});
-        console.log(err);
-      });
-    }
-  };
   render() {
     const item = this.props.item;
     const team = this.props.team;

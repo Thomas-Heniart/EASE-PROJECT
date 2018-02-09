@@ -4,7 +4,9 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -34,6 +36,9 @@ public class EditTeamCardFiller extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "No such team single card");
             Integer filler_id = sm.getIntParam("filler_id", true, false);
             TeamUser filler = team.getTeamUserWithId(filler_id);
+            TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(filler);
+            if (teamCardReceiver == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "No such receiver");
             if (teamCard.isTeamSoftwareCard()) {
                 TeamSingleSoftwareCard teamSingleSoftwareCard = (TeamSingleSoftwareCard) teamCard;
                 TeamUser teamUser = teamSingleSoftwareCard.getTeamUser_filler_test();
@@ -49,6 +54,8 @@ public class EditTeamCardFiller extends HttpServlet {
                 teamSingleCard.setTeamUser_filler(filler);
                 filler.addTeamSingleCardToFill(teamSingleCard);
             }
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            NotificationFactory.getInstance().createMustFillAppNotification(filler, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
             sm.setSuccess(teamCard.getJson());

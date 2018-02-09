@@ -35,6 +35,8 @@ public class AccountsToFillScheduledTask extends TimerTask {
             Map<TeamUser, Set<TeamCardReceiver>> teamUserSetMap = new HashMap<>();
             for (TeamCardReceiver teamCardReceiver : teamCardReceivers) {
                 TeamUser teamUser = teamCardReceiver.getTeamUser();
+                if (!teamUser.isRegistered())
+                    continue;
                 Set<TeamCardReceiver> teamCardReceiverSet = teamUserSetMap.get(teamUser);
                 if (teamCardReceiverSet == null)
                     teamCardReceiverSet = new HashSet<>();
