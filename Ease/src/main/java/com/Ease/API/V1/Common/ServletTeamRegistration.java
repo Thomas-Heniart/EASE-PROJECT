@@ -76,7 +76,6 @@ public class ServletTeamRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This is not the moment of your registration");
             newUser = teamUser.getUser();
             if (newUser != null) {
-
                 if (!newUser.getUserKeys().isGoodAccessCode(access_code))
                     throw new HttpServletException(HttpStatus.BadRequest, "This link is no longer valid");
                 newUser.getUserKeys().setHashed_password(Hashing.hash(password));
@@ -86,6 +85,7 @@ public class ServletTeamRegistration extends HttpServlet {
                 newUser.getUserStatus().setOnboarding_step(1);
                 newUser.getPersonalInformation().setFirst_name(first_name);
                 newUser.getPersonalInformation().setLast_name(last_name);
+                newUser.getPersonalInformation().setPhone_number(phone_number);
                 sm.saveOrUpdate(newUser);
                 UserEmail userEmail = new UserEmail(email, true, newUser);
                 sm.saveOrUpdate(userEmail);
