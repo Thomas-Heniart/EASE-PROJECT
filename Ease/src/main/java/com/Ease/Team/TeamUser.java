@@ -615,4 +615,10 @@ public class TeamUser {
     public void addTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
         this.getTeamSingleSoftwareCardSet().add(teamSingleSoftwareCard);
     }
+
+    public TeamUser getAdmin() throws HttpServletException {
+        if (this.getAdmin_id() == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "This user does not have admin");
+        return this.getTeam().getTeamUserWithId(this.getAdmin_id());
+    }
 }
