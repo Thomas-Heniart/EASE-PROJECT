@@ -78,7 +78,7 @@ public class ServletUpdate extends HttpServlet {
             for (Update update : updates) {
                 update.decipher(privateKey);
                 if (update.accountMatch(account_information))
-                    updateSet.add(update);
+                    update.editAccount(account_information, user.getUserKeys().getPublicKey());
             }
 
             /* if one or more */
