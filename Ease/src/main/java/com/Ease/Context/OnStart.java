@@ -106,7 +106,7 @@ public class OnStart implements ServletContextListener {
                 delay_six_am.set(Calendar.HOUR_OF_DAY, 6);
                 delay_six_am.set(Calendar.MINUTE, 0);
                 InvitationScheduledTask invitationScheduledTask = new InvitationScheduledTask(teamIdMap);
-                time.schedule(invitationScheduledTask, 0/* delay_six_am.getTime() */, 24 * 60 * 60 * 1000);
+                time.schedule(invitationScheduledTask, new Date()/* delay_six_am.getTime() */, 24 * 60 * 60 * 1000);
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));

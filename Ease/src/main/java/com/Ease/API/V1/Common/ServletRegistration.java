@@ -73,10 +73,7 @@ public class ServletRegistration extends HttpServlet {
             if (!db_digits.equals(digits))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid digits.");
             boolean send_news = (Boolean) objects[1];
-            User newUser = UserFactory.getInstance().createUser(email, username, password, "", "", phone_number);
-            newUser.getUserStatus().setOnboarding_step(1);
-            newUser.getPersonalInformation().setFirst_name(first_name);
-            newUser.getPersonalInformation().setLast_name(last_name);
+            User newUser = UserFactory.getInstance().createUser(email, username, password, first_name, last_name, phone_number);
             sm.saveOrUpdate(newUser);
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);
