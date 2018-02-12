@@ -164,7 +164,7 @@ public class Update {
         return this.getUpdateAccount().match(account_information);
     }
 
-    public void editAccount(JSONObject account_information, String publicKey) throws HttpServletException {
+    public void edit(JSONObject account_information, String publicKey) throws HttpServletException {
         this.getUpdateAccount().edit(account_information, publicKey);
     }
 }

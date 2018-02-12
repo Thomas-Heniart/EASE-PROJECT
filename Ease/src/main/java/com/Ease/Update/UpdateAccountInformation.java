@@ -36,6 +36,13 @@ public class UpdateAccountInformation {
         this.updateAccount = updateAccount;
     }
 
+    public UpdateAccountInformation(String name, String value, UpdateAccount updateAccount, String deciphered_value) {
+        this.name = name;
+        this.value = value;
+        this.updateAccount = updateAccount;
+        this.deciphered_value = deciphered_value;
+    }
+
     public Long getId() {
         return id;
     }
@@ -80,5 +87,10 @@ public class UpdateAccountInformation {
         if (this.getDeciphered_value() != null)
             return;
         this.setDeciphered_value(RSA.Decrypt(this.getValue(), private_key));
+    }
+
+    public void edit(String value, String publicKey) throws HttpServletException {
+        this.setValue(RSA.Encrypt(value, publicKey));
+        this.setDeciphered_value(value);
     }
 }
