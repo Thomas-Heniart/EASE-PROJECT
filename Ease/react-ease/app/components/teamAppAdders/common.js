@@ -56,7 +56,7 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
             labelPosition='left'>
           <Icon name="user"/>
           {team_card.team_user_filler_id === -1 &&
-          <u onClick={this.fillCredentials}>
+          <u onClick={this.chooseMember}>
             Choose a user to fill connection info.
           </u>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
