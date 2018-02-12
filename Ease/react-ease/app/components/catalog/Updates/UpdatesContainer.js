@@ -121,7 +121,8 @@ class UpdatesContainer extends React.Component {
                   <p>{website.name}</p>
                   {this.typeUpdate(item, card, app, meId)}
                   {(item.team_card_id !== -1
-                    && (card.team_user_filler_id === meId || card.team_user_filler_id === -1)) &&
+                    && (card.type === "teamEnterpriseCard"
+                      || (card.team_user_filler_id === meId || card.team_user_filler_id === -1))) &&
                   <span className='room'>#{this.props.teams[item.team_id].rooms[card.channel_id].name}</span>}
                 </div>
                 <Icon name="trash" onClick={e => this.props.dispatch(deleteUpdate({id: item.id}))}/>
