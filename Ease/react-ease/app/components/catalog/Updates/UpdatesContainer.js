@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
-import {accountUpdateModal, newAccountUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
+import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
 import {getLogo} from "../../../utils/api";
 
 @connect(store => ({
@@ -20,7 +20,10 @@ class UpdatesContainer extends React.Component {
   }
   getLogoAny = (url) => {
     getLogo({url: url}).then(response => {
-      return response;
+      if (response !== '/resources/icons/link_app.png')
+        return response;
+      else
+        return '';
     });
   };
   openModal = ({item, website, account_information, team, room}) => {
@@ -38,9 +41,14 @@ class UpdatesContainer extends React.Component {
         website,
         account_information
       );
-    else {
-      // action open modal passwordUpdate
-    }
+    else
+      passwordUpdateModal(
+        this.props.dispatch,
+        website,
+        account_information,
+        team,
+        room,
+      );
   };
   typeUpdate = (item, card, app, meId) => {
     if ((item.app_id === -1 && item.team_card_id === -1) || (item.team_card_id !== -1 && (card.type !== "teamEnterpriseCard"
@@ -97,7 +105,6 @@ class UpdatesContainer extends React.Component {
                   password: {placeholder:"Password",priority:1,type:"password"}
                 }
               };
-              console.log('website: ', website);
             }
             return (
               <Grid.Column key={item.id} className="showSegment update">
@@ -114,7 +121,8 @@ class UpdatesContainer extends React.Component {
                   <p>{website.name}</p>
                   {this.typeUpdate(item, card, app, meId)}
                   {(item.team_card_id !== -1
-                    && (card.team_user_filler_id === meId || card.team_user_filler_id === -1)) &&
+                    && (card.type === "teamEnterpriseCard"
+                      || (card.team_user_filler_id === meId || card.team_user_filler_id === -1))) &&
                   <span className='room'>#{this.props.teams[item.team_id].rooms[card.channel_id].name}</span>}
                 </div>
                 <Icon name="trash" onClick={() => this.props.dispatch(deleteUpdate({id: item.id}))}/>

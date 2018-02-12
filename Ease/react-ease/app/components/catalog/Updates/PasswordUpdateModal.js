@@ -2,14 +2,14 @@ import React from 'react';
 import {connect} from "react-redux";
 import {testCredentials} from "../../../actions/catalogActions";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import CredentialInputs from "./AccountUpdateModal";
-import {handleSemanticInput, credentialIconType} from "../../../utils/utils";
-import { Input, Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
+import CredentialInputs from "./CredentialInputs";
+import {handleSemanticInput} from "../../../utils/utils";
+import { Container, Icon, Form, Message, Button } from 'semantic-ui-react';
 
 @connect(store => ({
-  modal: store.modals.accountUpdate
+  modal: store.modals.passwordUpdate
 }))
-class AccountUpdateModal extends React.Component {
+class PasswordUpdateModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -53,7 +53,7 @@ class AccountUpdateModal extends React.Component {
     return (
       <SimpleModalTemplate
         onClose={this.close}
-        headerContent={"Account Update"}>
+        headerContent={"Password Update"}>
         <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
@@ -83,4 +83,4 @@ class AccountUpdateModal extends React.Component {
   }
 }
 
-export default AccountUpdateModal;
+export default PasswordUpdateModal;

@@ -1,10 +1,10 @@
 package com.Ease.Update;
 
-import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +15,10 @@ public class UpdateAccount {
     @GeneratedValue
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate = new Date();
 
     @OneToMany(mappedBy = "updateAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UpdateAccountInformation> updateAccountInformationSet = new HashSet<>();
@@ -29,6 +33,14 @@ public class UpdateAccount {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Set<UpdateAccountInformation> getUpdateAccountInformationSet() {
@@ -61,22 +73,24 @@ public class UpdateAccount {
     public boolean match(JSONObject account_information) {
         for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
             String value = account_information.optString(updateAccountInformation.getName());
-            if (value.equals(""))
-                return false;
-            if (updateAccountInformation.getName().equals("password")) {
-                if (updateAccountInformation.getDeciphered_value().equals(value))
-                    return false;
-            } else if (!updateAccountInformation.getDeciphered_value().equals(value))
+            if (value.equals("") || !updateAccountInformation.getName().equals("password") && !updateAccountInformation.getDeciphered_value().equals(value))
                 return false;
         }
         return true;
     }
 
     public void edit(JSONObject account_information, String publicKey) throws HttpServletException {
+        for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet())
+            updateAccountInformation.edit(account_information.getString(updateAccountInformation.getName()), publicKey);
+    }
+
+    public boolean passwordMatch(JSONObject account_information) {
         for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
-            String value = account_information.getString(updateAccountInformation.getName());
-            updateAccountInformation.setValue(RSA.Encrypt(value, publicKey));
-            updateAccountInformation.setDeciphered_value(value);
+            if (!updateAccountInformation.getName().equals("password"))
+                continue;
+            String value = account_information.optString(updateAccountInformation.getName());
+            return value.equals(updateAccountInformation.getDeciphered_value());
         }
+        return true;
     }
 }
