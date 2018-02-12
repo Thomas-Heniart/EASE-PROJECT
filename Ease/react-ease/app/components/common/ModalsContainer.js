@@ -53,6 +53,7 @@ import InviteTeamUsersModal from "../teamModals/InviteTeamUsersModal";
 import SimpleAppFillerChooserModal from "../teamModals/SimpleAppFillerChooserModal";
 import FillSimpleCardCredentialsModal from "../teamModals/FillSimpleCardCredentialsModal";
 import AccountUpdateModal from "../catalog/Updates/AccountUpdateModal";
+import NewAccountUpdateModal from "../catalog/Updates/NewAccountUpdateModal";
 import PasswordUpdateModal from "../catalog/Updates/PasswordUpdateModal";
 
 @connect(store => ({
@@ -205,11 +206,13 @@ class ModalsContainer extends Component{
           <FillSimpleCardCredentialsModal/>}
           {this.props.modals.accountUpdate.active &&
           <AccountUpdateModal/>}
+          {this.props.modals.newAccountUpdate.active &&
+          <NewAccountUpdateModal/>}
           {this.props.modals.passwordUpdate.active &&
           <PasswordUpdateModal/>}
         </div>
     )
   }
-};
+}
 
 export default ModalsContainer;

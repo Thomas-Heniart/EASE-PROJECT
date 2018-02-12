@@ -515,6 +515,35 @@ export function showPasswordUpdateModal({state, resolve, reject, website, accoun
   }
 }
 
+export function newAccountUpdateModal(dispatch, website, account_information){
+    return new Promise((resolve, reject) => {
+        dispatch(showNewAccountUpdateModal({
+            state: true,
+            website: website,
+            account_information: account_information,
+            resolve: resolve,
+            reject: reject
+        }));
+    }).then(response => {
+        console.log('resolve')
+    }).catch(err => {
+        dispatch(showNewAccountUpdateModal({state: false}));
+    });
+}
+
+export function showNewAccountUpdateModal({state, resolve, reject, website, account_information}){
+    return {
+        type: 'SHOW_NEW_ACCOUNT_UPDATE_MODAL',
+        payload: {
+            active: state,
+            website: website,
+            account_information: account_information,
+            resolve: resolve,
+            reject: reject
+        }
+    }
+}
+
 export function deleteUpdate({id}){
   return (dispatch, getState) => {
     return delete_api.catalog.deleteUpdate({

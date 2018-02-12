@@ -42,6 +42,9 @@ public class ServletDeleteTeam extends HttpServlet {
                 }
             }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.team.db_id = :team_id");
+            hibernateQuery.setParameter("team_id", team_id);
+            hibernateQuery.executeUpdate();
             team.getTeamCardSet().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null) {

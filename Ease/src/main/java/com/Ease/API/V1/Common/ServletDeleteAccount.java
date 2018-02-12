@@ -40,6 +40,9 @@ public class ServletDeleteAccount extends HttpServlet {
             hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
             hibernateQuery.setParameter("id", user.getDb_id());
             hibernateQuery.executeUpdate();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.user.db_id = :user_id");
+            hibernateQuery.setParameter("user_id", user.getDb_id());
+            hibernateQuery.executeUpdate();
             user.getApps().forEach(app -> {
                 if (app.isLogWithApp()) {
                     ((LogWithApp) app).setLoginWith_app(null);

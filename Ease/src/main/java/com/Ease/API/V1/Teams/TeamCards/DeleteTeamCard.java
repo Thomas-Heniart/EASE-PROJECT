@@ -86,6 +86,10 @@ public class DeleteTeamCard extends HttpServlet {
             }
             team.removeTeamCard(teamCard);
             channel.removeTeamCard(teamCard);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
+            hibernateQuery.setParameter("card_id", team_card_id);
+            hibernateQuery.executeUpdate();
             sm.deleteObject(teamCard);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("team_id", team.getDb_id());

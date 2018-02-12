@@ -184,4 +184,8 @@ public class Update {
     public boolean passwordMatch(JSONObject account_information) {
         return this.getUpdateAccount().passwordMatch(account_information);
     }
+
+    public JSONObject getAccountInformation() {
+        return this.getUpdateAccount().getAccountInformation();
+    }
 }
