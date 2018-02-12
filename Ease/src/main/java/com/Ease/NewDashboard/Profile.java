@@ -131,6 +131,7 @@ public class Profile {
         res.put("app_ids", app_ids);
         res.put("name", this.getProfileInformation().getName());
         res.put("column_index", this.getColumn_index());
+        res.put("team_id", this.getTeamUser() == null ? -1 : this.getTeamUser().getTeam().getDb_id());
         return res;
     }
 

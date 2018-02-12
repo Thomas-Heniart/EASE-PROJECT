@@ -1,5 +1,6 @@
 package com.Ease.Update;
 
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import org.json.JSONObject;
 
@@ -55,5 +56,27 @@ public class UpdateAccount {
         JSONObject res = new JSONObject();
         this.getUpdateAccountInformationSet().forEach(updateAccountInformation -> res.put(updateAccountInformation.getName(), updateAccountInformation.getDeciphered_value()));
         return res;
+    }
+
+    public boolean match(JSONObject account_information) {
+        for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
+            String value = account_information.optString(updateAccountInformation.getName());
+            if (value.equals(""))
+                return false;
+            if (updateAccountInformation.getName().equals("password")) {
+                if (updateAccountInformation.getDeciphered_value().equals(value))
+                    return false;
+            } else if (!updateAccountInformation.getDeciphered_value().equals(value))
+                return false;
+        }
+        return true;
+    }
+
+    public void edit(JSONObject account_information, String publicKey) throws HttpServletException {
+        for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
+            String value = account_information.getString(updateAccountInformation.getName());
+            updateAccountInformation.setValue(RSA.Encrypt(value, publicKey));
+            updateAccountInformation.setDeciphered_value(value);
+        }
     }
 }

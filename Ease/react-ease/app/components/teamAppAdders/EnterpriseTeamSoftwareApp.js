@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import {
+  EmptyCredentialsEnterpriseAppIndicator,
   PasswordChangeDropdownEnterprise,
   PasswordChangeHolderEnterprise,
   setUserDropdownText,
@@ -37,19 +38,19 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
   const asked = !!app.requests.find(request => (request.team_user_id === me.id));
 
   return (
-    <div class="team_app_actions_holder">
-      {!meReceiver &&
-      <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
-                           onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
-                           icon="pointing up"
-                           disabled={asked}/>}
-      {(isAdmin(me.role) || !!meReceiver) &&
-      <TeamAppActionButton text='Edit App'
-                           icon='pencil'
-                           onClick={editMode}/>}
-      {isAdmin(me.role) &&
-      <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
-    </div>
+      <div class="team_app_actions_holder">
+        {!meReceiver &&
+        <TeamAppActionButton text={isAdmin(me.role) ? 'Join App' : asked ? 'Request Sent' : 'Ask to join'}
+                             onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
+                             icon="pointing up"
+                             disabled={asked}/>}
+        {(isAdmin(me.role) || !!meReceiver) &&
+        <TeamAppActionButton text='Edit App'
+                             icon='pencil'
+                             onClick={editMode}/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
+      </div>
   )
 };
 
@@ -159,48 +160,55 @@ class CopyPasswordButton extends Component {
       'Error'}
     </div>;
     return (
-      <Popup size="mini"
-             position="top center"
-             open={this.state.state > 0 ? true : undefined}
-             inverted
-             hoverable
-             trigger={
-               <Icon name="copy" class="copy_pwd_button" link onClick={this.fetchPassword}/>
-             }
-             content={content}/>
+        <Popup size="mini"
+               position="top center"
+               open={this.state.state > 0 ? true : undefined}
+               inverted
+               hoverable
+               trigger={
+                 <Icon name="copy" class="copy_pwd_button" link onClick={this.fetchPassword}/>
+               }
+               content={content}/>
     )
   }
 };
 
-const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) => {
+const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch}) => {
+  const meAdmin = isAdmin(me.role);
   return (
-    <div class="receivers">
-      {receivers.map((receiver, idx) => {
-        if (idx > 2 && !expanded)
-          return null;
-        return (
-          <div class="receiver align_items_center" key={receiver.user.id}>
-            <EnterpriseAppReceiverLabel
-              receiver={receiver}
-              reminder_interval={password_reminder_interval}/>
-            {receiver.credentials.map(item => {
-              return <Input size="mini"
-                            key={item.name}
-                            class="team-app-input"
-                            readOnly={true}
-                            name={item.name}
-                            label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
-                            labelPosition="left"
-                            placeholder={item.placeholder}
-                            value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
-                            type={item.information_type}/>;
-            })}
-            {receiver.user.id === me.id &&
-            <CopyPasswordButton app_id={receiver.receiver.app_id}/>}
-          </div>
-        );
-      })}
-    </div>
+      <div class="receivers">
+        {receivers.map((receiver, idx) => {
+          if (idx > 2 && !expanded)
+            return null;
+          return (
+              <div class="receiver align_items_center" key={receiver.user.id}>
+                <EnterpriseAppReceiverLabel
+                    receiver={receiver}
+                    reminder_interval={password_reminder_interval}/>
+                {receiver.receiver.empty ?
+                    <EmptyCredentialsEnterpriseAppIndicator
+                        receiver={receiver.receiver}
+                        me={me}
+                        dispatch={dispatch}
+                        team_user={receiver.user}
+                        meAdmin={meAdmin}/> :
+                    receiver.credentials.map(item => {
+                      return <Input size="mini"
+                                    key={item.name}
+                                    class="team-app-input"
+                                    readOnly={true}
+                                    name={item.name}
+                                    label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
+                                    labelPosition="left"
+                                    placeholder={item.placeholder}
+                                    value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
+                                    type={item.information_type}/>;                })}
+                {receiver.user.id === me.id && !receiver.receiver.empty &&
+                <CopyPasswordButton app_id={receiver.receiver.app_id}/>}
+              </div>
+          );
+        })}
+      </div>
   )
 };
 
@@ -227,54 +235,54 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
 
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, password_reminder_interval}) => {
   return (
-    <div class="receiver">
-      <EnterpriseAppEditReceiverLabel
-        receiver={receiver}
-        reminder_interval={password_reminder_interval}
-        onDelete={onDelete}/>
-      {
-        receiver.credentials.map(item => {
-          return <TeamAppCredentialInput
-            empty={receiver.empty}
-            myId={myId}
+      <div class={classnames('receiver', receiver.empty ? 'empty':null)}>
+        <EnterpriseAppEditReceiverLabel
             receiver={receiver}
-            key={item.priority}
-            onChange={onChange}
-            item={item}/>
-        })
-      }
-    </div>
+            reminder_interval={password_reminder_interval}
+            onDelete={onDelete}/>
+        {
+          receiver.credentials.map(item => {
+            return <TeamAppCredentialInput
+                empty={receiver.empty}
+                myId={myId}
+                receiver={receiver}
+                key={item.priority}
+                onChange={onChange}
+                item={item}/>
+          })
+        }
+      </div>
   )
 };
 
 const Receivers = ({receivers, onChange, onDelete, myId, password_reminder_interval}) => {
   return (
-    <div class="receivers">
-      {receivers.map(item => {
-        return <ExtendedReceiverCredentialsInput key={item.user.id}
-                                                 password_reminder_interval={password_reminder_interval}
-                                                 myId={myId}
-                                                 receiver={item}
-                                                 onChange={onChange}
-                                                 onDelete={onDelete}/>;
-      })}
-    </div>
+      <div class="receivers">
+        {receivers.map(item => {
+          return <ExtendedReceiverCredentialsInput key={item.user.id}
+                                                   password_reminder_interval={password_reminder_interval}
+                                                   myId={myId}
+                                                   receiver={item}
+                                                   onChange={onChange}
+                                                   onDelete={onDelete}/>;
+        })}
+      </div>
   )
 };
 
 const ButtonShowMore = ({number_of_users, show_more, showMore}) => {
   if (show_more)
     return (
-      <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, false)}>
-        <Icon name="remove user"/>
-        Show less
-      </Button>
+        <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, false)}>
+          <Icon name="remove user"/>
+          Show less
+        </Button>
     );
   return (
-    <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, true)}>
-      <Icon name="add user"/>
-      {number_of_users}&nbsp;users
-    </Button>
+      <Button size="mini" type="button" class="fw-normal" onClick={showMore.bind(null, true)}>
+        <Icon name="add user"/>
+        {number_of_users}&nbsp;users
+      </Button>
   )
 };
 
@@ -475,109 +483,110 @@ class EnterpriseTeamSoftwareApp extends Component {
     const users = this.getUsers();
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
     return (
-      <Container fluid
-                 id={`app_${app.id}`}
-                 class="team-app mrgn0 enterprise-team-app"
-                 as="form"
-                 onSubmit={this.modify}>
-        <Segment>
-          <Header as="h4">
-            {!this.state.edit ?
-              app.name :
-              <Input size="mini"
-                     class="team-app-input"
-                     onChange={this.handleInput}
-                     name="name"
-                     value={this.state.name}
-                     placeholder="Card name..."
-                     type="text"
-                     required/>}
-            {app.requests.length > 0 && isAdmin(me.role) &&
-            <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
-          </Header>
-          {!this.state.edit &&
-          <TeamEnterpriseAppButtonSet app={app}
-                                      me={me}
-                                      selfJoin={this.selfJoinApp}
-                                      requestApp={this.requestApp}
-                                      dispatch={this.props.dispatch}
-                                      editMode={this.setEdit.bind(null, true)}/>}
-          <div class="display_flex">
-            <div class="logo_column">
-              <div class="logo">
-                <img src={website.logo}/>
-              </div>
-            </div>
-            <div class="main_column">
-              <div class="credentials">
-                <div class="display-inline-flex align_items_center">
-                  {!this.state.edit ?
-                    <PasswordChangeHolderEnterprise
-                        team={team}
-                        value={app.password_reminder_interval}
-                        roomManager={room_manager.username}/> :
-                    <PasswordChangeDropdownEnterprise
-                        team={team}
-                        dispatch={this.props.dispatch}
-                        value={this.state.password_reminder_interval}
-                        onChange={this.handleInput}
-                        roomManager={room_manager.username}/>}
+        <Container fluid
+                   id={`app_${app.id}`}
+                   class="team-app mrgn0 enterprise-team-app"
+                   as="form"
+                   onSubmit={this.modify}>
+          <Segment>
+            <Header as="h4">
+              {!this.state.edit ?
+                  app.name :
+                  <Input size="mini"
+                         class="team-app-input"
+                         onChange={this.handleInput}
+                         name="name"
+                         value={this.state.name}
+                         placeholder="Card name..."
+                         type="text"
+                         required/>}
+              {app.requests.length > 0 && isAdmin(me.role) &&
+              <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+            </Header>
+            {!this.state.edit &&
+            <TeamEnterpriseAppButtonSet app={app}
+                                        me={me}
+                                        selfJoin={this.selfJoinApp}
+                                        requestApp={this.requestApp}
+                                        dispatch={this.props.dispatch}
+                                        editMode={this.setEdit.bind(null, true)}/>}
+            <div class="display_flex">
+              <div class="logo_column">
+                <div class="logo">
+                  <img src={website.logo}/>
                 </div>
               </div>
-              {!this.state.edit &&
-              <StaticReceivers receivers={users}
-                               password_reminder_interval={app.password_reminder_interval}
-                               expanded={this.state.show_more}
-                               me={me}/>}
-              <div>
-                {!this.state.edit && users.length > 3 &&
-                <ButtonShowMore
-                  number_of_users={users.length - 3}
-                  show_more={this.state.show_more}
-                  showMore={this.setShowMore}/>}
+              <div class="main_column">
+                <div class="credentials">
+                  <div class="display-inline-flex align_items_center">
+                    {!this.state.edit ?
+                        <PasswordChangeHolderEnterprise
+                            team={team}
+                            value={app.password_reminder_interval}
+                            roomManager={room_manager.username}/> :
+                        <PasswordChangeDropdownEnterprise
+                            team={team}
+                            dispatch={this.props.dispatch}
+                            value={this.state.password_reminder_interval}
+                            onChange={this.handleInput}
+                            roomManager={room_manager.username}/>}
+                  </div>
+                </div>
+                {!this.state.edit &&
+                <StaticReceivers receivers={users}
+                                 dispatch={this.props.dispatch}
+                                 password_reminder_interval={app.password_reminder_interval}
+                                 expanded={this.state.show_more}
+                                 me={me}/>}
+                <div>
+                  {!this.state.edit && users.length > 3 &&
+                  <ButtonShowMore
+                      number_of_users={users.length - 3}
+                      show_more={this.state.show_more}
+                      showMore={this.setShowMore}/>}
+                </div>
+                {this.state.edit &&
+                <Receivers receivers={users}
+                           password_reminder_interval={this.state.password_reminder_interval}
+                           onChange={this.handleReceiverInput}
+                           onDelete={this.deleteReceiver}
+                           myId={me.id}/>}
+                {this.state.edit &&
+                <Dropdown
+                    class="mini users-dropdown"
+                    search={true}
+                    fluid
+                    name="selected_users"
+                    options={this.state.users}
+                    onChange={this.handleInput}
+                    value={this.state.selected_users}
+                    selection={true}
+                    multiple
+                    noResultsMessage='No more results found'
+                    placeholder="Tag your team members here..."/>}
+                {(this.state.description || app.description || this.state.edit) &&
+                <div>
+                  <Input size="mini"
+                         fluid
+                         class="team-app-input"
+                         onChange={this.handleInput}
+                         name="description"
+                         readOnly={!this.state.edit}
+                         value={this.state.edit ? this.state.description : app.description}
+                         placeholder="You can add a comment here"
+                         type="text"
+                         label={<Label><Icon name="sticky note"/></Label>}
+                         labelPosition="left"/>
+                </div>}
               </div>
-              {this.state.edit &&
-              <Receivers receivers={users}
-                         password_reminder_interval={this.state.password_reminder_interval}
-                         onChange={this.handleReceiverInput}
-                         onDelete={this.deleteReceiver}
-                         myId={me.id}/>}
-              {this.state.edit &&
-              <Dropdown
-                class="mini users-dropdown"
-                search={true}
-                fluid
-                name="selected_users"
-                options={this.state.users}
-                onChange={this.handleInput}
-                value={this.state.selected_users}
-                selection={true}
-                multiple
-                noResultsMessage='No more results found'
-                placeholder="Tag your team members here..."/>}
-              {(this.state.description || app.description || this.state.edit) &&
-              <div>
-                <Input size="mini"
-                       fluid
-                       class="team-app-input"
-                       onChange={this.handleInput}
-                       name="description"
-                       readOnly={!this.state.edit}
-                       value={this.state.edit ? this.state.description : app.description}
-                       placeholder="You can add a comment here"
-                       type="text"
-                       label={<Label><Icon name="sticky note"/></Label>}
-                       labelPosition="left"/>
-              </div>}
             </div>
-          </div>
-        </Segment>
-        {this.state.edit &&
-        <div>
-          <Button content="Save" floated="right" positive size="mini" loading={this.state.loading} disabled={this.state.loading}/>
-          <Button content="Cancel" type="button" floated="right" onClick={this.setEdit.bind(null, false)} size="mini"/>
-        </div>}
-      </Container>
+          </Segment>
+          {this.state.edit &&
+          <div>
+            <Button content="Save" floated="right" positive size="mini" loading={this.state.loading} disabled={this.state.loading}/>
+            <Button content="Cancel" type="button" floated="right" onClick={this.setEdit.bind(null, false)} size="mini"/>
+          </div>}
+        </Container>
     )
   }
 }

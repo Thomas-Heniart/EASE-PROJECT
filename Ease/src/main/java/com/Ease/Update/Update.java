@@ -159,4 +159,12 @@ public class Update {
         res.put("account_information", this.getUpdateAccount() == null ? JSONObject.NULL : this.getUpdateAccount().getJson());
         return res;
     }
+
+    public boolean accountMatch(JSONObject account_information) {
+        return this.getUpdateAccount().match(account_information);
+    }
+
+    public void editAccount(JSONObject account_information, String publicKey) throws HttpServletException {
+        this.getUpdateAccount().edit(account_information, publicKey);
+    }
 }

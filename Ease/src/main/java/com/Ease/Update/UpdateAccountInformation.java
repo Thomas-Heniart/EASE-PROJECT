@@ -77,6 +77,8 @@ public class UpdateAccountInformation {
     }
 
     public void decipher(String private_key) throws HttpServletException {
+        if (this.getDeciphered_value() != null)
+            return;
         this.setDeciphered_value(RSA.Decrypt(this.getValue(), private_key));
     }
 }

@@ -73,6 +73,25 @@ export function newRegistration({email, username, password, digits, code, phone_
   }
 }
 
+export function joinTeamRegistration({email, password, code, phone_number, newsletter, first_name, last_name, access_code}) {
+  return (dispatch, getState) => {
+    return post_api.onBoarding.joinTeamRegistration({
+      email: email,
+      password: password,
+      code: code,
+      phone_number: phone_number,
+      newsletter: newsletter,
+      first_name: first_name,
+      last_name: last_name,
+      access_code: access_code
+    }).then(response => {
+      return response
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function editFirstNameAndLastName({first_name, last_name}) {
   return (dispatch, getState) => {
     return post_api.onBoarding.editFirstAndLastName({

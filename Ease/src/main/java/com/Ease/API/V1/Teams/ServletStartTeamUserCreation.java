@@ -47,7 +47,6 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You must upgrade to have multiple admins.");
             if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
-            System.out.println("Username: " + username);
             if (username.equals("") || team.hasTeamUserWithUsername(username)) {
                 username = email.substring(0, email.indexOf("@"));
                 username = username.replaceAll("[\\W]", "_");

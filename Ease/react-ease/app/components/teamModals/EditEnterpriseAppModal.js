@@ -3,24 +3,32 @@ import {showTeamEditEnterpriseAppModal, showPinTeamAppToDashboardModal} from '..
 import {teamEditEnterpriseCardReceiver} from "../../actions/appsActions";
 import api from "../../utils/api";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import {findMeInReceivers} from "../../utils/helperFunctions";
 import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import {
-  transformWebsiteInfoIntoList, transformCredentialsListIntoObject,
+  credentialIconType,
+  transformCredentialsListIntoObject,
   transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
 import {connect} from "react-redux";
 
 const CredentialInput = ({item, onChange}) => {
-  return <Input
-      class="team-app-input"
-      name={item.name}
-      autoFocus={item.autoFocus}
-      onChange={onChange}
-      required
-      placeholder={item.placeholder}
-      value={item.value}
-      type={item.type}/>;
+  return (
+      <Form.Field>
+        <label style={{fontSize: '16px', fontWeight: '300', color: '#424242'}}>{item.placeholder}</label>
+        <Input size="large"
+               autoFocus={item.autoFocus}
+               class="modalInput team-app-input"
+               required
+               autoComplete='on'
+               name={item.name}
+               onChange={onChange}
+               label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+               labelPosition="left"
+               placeholder={item.placeholder}
+               value={item.value}
+               type={item.type}/>
+      </Form.Field>
+  )
 };
 
 @connect(store => ({
@@ -37,8 +45,9 @@ class EditEnterpriseAppModal extends Component {
       my_id: this.props.teams[this.props.team_card.team_id].my_team_user_id,
       credentials: []
     };
+    const team_card = this.props.team_card;
     const meReceiver = this.state.team_card.receivers.find(receiver => (receiver.team_user_id === this.state.my_id));
-    this.state.credentials = transformWebsiteInfoIntoListAndSetValues(this.state.team_card.website.information, meReceiver.account_information);
+    this.state.credentials = transformWebsiteInfoIntoListAndSetValues(!!team_card.website ? team_card.website.information : team_card.software.connection_information, meReceiver.account_information);
   };
   handleCredentialInput = (e, {name, value}) => {
     const credentials = this.state.credentials.map(item => {
@@ -87,36 +96,34 @@ class EditEnterpriseAppModal extends Component {
     }));
   };
   render(){
-    const app = this.props.team_card;
+    const {team_card} = this.state;
+    const credentialsInputs = this.state.credentials.map((item,idx) => {
+      return <CredentialInput key={idx} onChange={this.handleCredentialInput} item={item}/>;
+    });
+
     return (
         <SimpleModalTemplate
             onClose={this.close}
-            headerContent={'Enter your info, last time ever'}>
-          <Form class="container" onSubmit={this.confirm} error={this.state.errorMessage.length > 0}>
-            <Form.Field class="display-flex align_items_center" style={{marginBottom: '35px'}}>
-              <div class="squared_image_handler">
-                <img src={app.website.logo} alt="Website logo"/>
+            headerContent={'App credentials'}>
+          <Container>
+            <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
+              <div className="squared_image_handler">
+                <img src={!!team_card.website ? team_card.website.logo : team_card.software.logo} alt="Website logo"/>
               </div>
-              <span style={{fontSize: "1.3rem"}}>{app.name}</span>
-            </Form.Field>
-            {this.state.credentials.map(item => {
-              return (
-                  <Form.Field key={item.priority}>
-                    <label>
-                      {item.placeholder}
-                    </label>
-                    <CredentialInput item={item} onChange={this.handleCredentialInput}/>
-                  </Form.Field>
-              )
-            })}
-            <Message error content={this.state.errorMessage}/>
-            <Button
-                type="submit"
-                loading={this.state.loading}
-                positive
-                className="modal-button"
-                content="CONFIRM"/>
-          </Form>
+              <span className="app_name">{team_card.name}</span>
+            </div>
+            <Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
+              {credentialsInputs}
+              <Message error content={this.state.errorMessage}/>
+              <Button
+                  type="submit"
+                  disabled={this.state.loading}
+                  loading={this.state.loading}
+                  positive
+                  className="modal-button uppercase"
+                  content={'CONFIRM'}/>
+            </Form>
+          </Container>
         </SimpleModalTemplate>
     )
   }
