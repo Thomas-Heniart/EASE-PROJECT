@@ -65,12 +65,12 @@ public class ServletUpdate extends HttpServlet {
             List<Update> updates;
             if (website != null) {
                 /* Find update(s) with this website */
-                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND website_id = :website_id");
+                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website_id = :website_id");
                 hibernateQuery.setParameter("user_id", user.getDb_id());
                 hibernateQuery.setParameter("website_id", website.getDb_id());
             } else {
                 /* Find update(s) with same URL */
-                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND url = :url");
+                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.url = :url");
                 hibernateQuery.setParameter("user_id", user.getDb_id());
                 hibernateQuery.setParameter("url", url);
             }
