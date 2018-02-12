@@ -38,5 +38,11 @@ export const catalog = createReducer({
         ...state,
       requests_number: state.requests_number + 1
     }
+  },
+  ['DELETE_UPDATE'](state, action){
+    return {
+      ...state,
+      updates: state.updates.filter(item => {return action.payload.update_id !== item.id})
+    }
   }
 });

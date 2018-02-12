@@ -1,5 +1,6 @@
 import api from "../utils/api";
 import post_api from "../utils/post_api";
+import delete_api from "../utils/delete_api";
 import {addNotification} from "./notificationBoxActions";
 import extension from "../utils/extension_api";
 
@@ -443,5 +444,52 @@ export function showCatalogAddSoftwareAppModal({active, name, img_url, logoLette
       resolve: resolve,
       reject: reject
     }
+  }
+}
+
+export function accountUpdateModal(dispatch, website, account_information, team, room){
+  return new Promise((resolve, reject) => {
+    dispatch(showAccountUpdateModal({
+      state: true,
+      website: website,
+      account_information: account_information,
+      team: team,
+      room: room,
+      resolve: resolve,
+      reject: reject
+    }));
+  }).then(response => {
+    console.log('resolve')
+  }).catch(err => {
+    dispatch(showAccountUpdateModal({state: false}));
+  });
+}
+
+export function showAccountUpdateModal({state, resolve, reject, website, account_information, team, room}){
+  return {
+    type: 'SHOW_ACCOUNT_UPDATE_MODAL',
+    payload: {
+      active: state,
+      website: website,
+      account_information: account_information,
+      team: team,
+      room: room,
+      resolve: resolve,
+      reject: reject
+    }
+  }
+}
+
+export function deleteUpdate({id}){
+  return (dispatch, getState) => {
+    return delete_api.catalog.deleteUpdate({
+      id: id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'DELETE_UPDATE', payload: {update_id: id}});
+      return response;
+    }).catch(err => {
+      throw err;
+    })
   }
 }

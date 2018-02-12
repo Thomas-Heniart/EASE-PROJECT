@@ -52,6 +52,7 @@ import AddSoftwareCredentialsModal from "../catalog/AddSoftwareCredentialsModal"
 import InviteTeamUsersModal from "../teamModals/InviteTeamUsersModal";
 import SimpleAppFillerChooserModal from "../teamModals/SimpleAppFillerChooserModal";
 import FillSimpleCardCredentialsModal from "../teamModals/FillSimpleCardCredentialsModal";
+import AccountUpdateModal from "../catalog/Updates/AccountUpdateModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -201,6 +202,8 @@ class ModalsContainer extends Component{
           <SimpleAppFillerChooserModal/>}
           {this.props.fillSimpleCardCredentialsModal.active &&
           <FillSimpleCardCredentialsModal/>}
+          {this.props.modals.accountUpdate.active &&
+          <AccountUpdateModal/>}
         </div>
     )
   }
