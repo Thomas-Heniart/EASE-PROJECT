@@ -3,8 +3,8 @@ import {connect} from "react-redux";
 import CredentialInputs from "./CredentialInputs";
 import {testCredentials} from "../../../actions/catalogActions";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import {handleSemanticInput, credentialIconType} from "../../../utils/utils";
-import { Input, Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
+import {handleSemanticInput} from "../../../utils/utils";
+import { Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
 
 @connect(store => ({
   modal: store.modals.accountUpdate

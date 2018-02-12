@@ -480,6 +480,39 @@ export function showAccountUpdateModal({state, resolve, reject, website, account
   }
 }
 
+export function passwordUpdateModal(dispatch, website, account_information, team, room){
+  return new Promise((resolve, reject) => {
+    dispatch(showPasswordUpdateModal({
+      state: true,
+      website: website,
+      account_information: account_information,
+      team: team,
+      room: room,
+      resolve: resolve,
+      reject: reject
+    }));
+  }).then(response => {
+    console.log('resolve')
+  }).catch(err => {
+    dispatch(showPasswordUpdateModal({state: false}));
+  });
+}
+
+export function showPasswordUpdateModal({state, resolve, reject, website, account_information, team, room}){
+  return {
+    type: 'SHOW_PASSWORD_UPDATE_MODAL',
+    payload: {
+      active: state,
+      website: website,
+      account_information: account_information,
+      team: team,
+      room: room,
+      resolve: resolve,
+      reject: reject
+    }
+  }
+}
+
 export function deleteUpdate({id}){
   return (dispatch, getState) => {
     return delete_api.catalog.deleteUpdate({
