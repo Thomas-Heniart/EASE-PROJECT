@@ -73,12 +73,7 @@ public class UpdateAccount {
     public boolean match(JSONObject account_information) {
         for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
             String value = account_information.optString(updateAccountInformation.getName());
-            if (value.equals(""))
-                return false;
-            if (updateAccountInformation.getName().equals("password")) {
-                if (updateAccountInformation.getDeciphered_value().equals(value))
-                    return false;
-            } else if (!updateAccountInformation.getDeciphered_value().equals(value))
+            if (value.equals("") || !updateAccountInformation.getName().equals("password") && !updateAccountInformation.getDeciphered_value().equals(value))
                 return false;
         }
         return true;
@@ -87,5 +82,15 @@ public class UpdateAccount {
     public void edit(JSONObject account_information, String publicKey) throws HttpServletException {
         for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet())
             updateAccountInformation.edit(account_information.getString(updateAccountInformation.getName()), publicKey);
+    }
+
+    public boolean passwordMatch(JSONObject account_information) {
+        for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
+            if (!updateAccountInformation.getName().equals("password"))
+                continue;
+            String value = account_information.optString(updateAccountInformation.getName());
+            return value.equals(updateAccountInformation.getDeciphered_value());
+        }
+        return true;
     }
 }

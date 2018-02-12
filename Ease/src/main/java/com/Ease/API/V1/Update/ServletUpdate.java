@@ -63,7 +63,6 @@ public class ServletUpdate extends HttpServlet {
             Set<String> informationNameSet = new HashSet<>();
             account_information.keySet().forEach(o -> informationNameSet.add((String) o));
             Website website = catalog.getPublicWebsiteWithUrl(url, informationNameSet, hibernateQuery);
-            List<Update> updates;
             if (website != null) {
                 /* Find update(s) with this website */
                 hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
@@ -75,44 +74,50 @@ public class ServletUpdate extends HttpServlet {
                 hibernateQuery.setParameter("user_id", user.getDb_id());
                 hibernateQuery.setParameter("url", url);
             }
-            updates = hibernateQuery.list();
+            List<Update> updates = hibernateQuery.list();
             /* Decipher updates and check if credentials are the same except for password */
             String privateKey = sm.getUserPrivateKey();
             JSONArray res = new JSONArray();
             for (Update update : updates)
                 update.decipher(privateKey);
             updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
-            if (updates.isEmpty()) {
-                if (website != null) {
-                    hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.db_id = :website_id AND w.profile.user.db_id = :user_id");
-                    hibernateQuery.setParameter("website_id", website.getDb_id());
-                    hibernateQuery.setParameter("user_id", user.getDb_id());
-                    List<WebsiteApp> websiteApps = hibernateQuery.list();
-                    if (websiteApps.isEmpty()) {
-                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
-                        sm.saveOrUpdate(tmp);
-                        res.put(tmp.getJson());
-                    } else
-                        for (WebsiteApp websiteApp : websiteApps) {
-                            Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
-                            sm.saveOrUpdate(tmp);
-                            res.put(tmp.getJson());
-                        }
-                } else {
-                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
-                    sm.saveOrUpdate(tmp);
-                    res.put(tmp.getJson());
-                }
-            } else
+            if (updates.isEmpty())
+                populateResponse(res, user, account_information, website, url, hibernateQuery);
+            else {
+                updates = updates.stream().filter(update -> !update.passwordMatch(account_information)).collect(Collectors.toList());
                 for (Update update : updates) {
                     update.edit(account_information, user.getUserKeys().getPublicKey());
                     res.put(update.getJson());
                 }
+            }
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void populateResponse(JSONArray res, User user, JSONObject account_information, Website website, String url, HibernateQuery hibernateQuery) throws HttpServletException {
+        if (website != null) {
+            hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.db_id = :website_id AND w.profile.user.db_id = :user_id");
+            hibernateQuery.setParameter("website_id", website.getDb_id());
+            hibernateQuery.setParameter("user_id", user.getDb_id());
+            List<WebsiteApp> websiteApps = hibernateQuery.list();
+            if (websiteApps.isEmpty()) {
+                Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
+                hibernateQuery.saveOrUpdateObject(tmp);
+                res.put(tmp.getJson());
+            } else
+                for (WebsiteApp websiteApp : websiteApps) {
+                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                    hibernateQuery.saveOrUpdateObject(tmp);
+                    res.put(tmp.getJson());
+                }
+        } else {
+            Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
+            hibernateQuery.saveOrUpdateObject(tmp);
+            res.put(tmp.getJson());
+        }
     }
 
     @Override

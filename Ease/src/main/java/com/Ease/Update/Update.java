@@ -180,4 +180,8 @@ public class Update {
     public void edit(JSONObject account_information, String publicKey) throws HttpServletException {
         this.getUpdateAccount().edit(account_information, publicKey);
     }
+
+    public boolean passwordMatch(JSONObject account_information) {
+        return this.getUpdateAccount().passwordMatch(account_information);
+    }
 }
