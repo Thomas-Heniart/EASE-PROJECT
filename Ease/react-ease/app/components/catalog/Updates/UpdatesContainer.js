@@ -4,6 +4,7 @@ import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
 import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
 import {getLogo} from "../../../utils/api";
+import {teamEditAnyEnterpriseCard, teamEditEnterpriseCardReceiver} from "../../../actions/appsActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -34,7 +35,26 @@ class UpdatesContainer extends React.Component {
         account_information,
         team,
         room,
-      );
+      ).then(response => {
+        if (response.check === 'Simple') {
+          this.props.dispatch(teamEditEnterpriseCardReceiver({
+            team_id: item.team_id,
+            team_card_id: item.team_card_id,
+            team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(item => {
+              return team.my_team_user_id === item.team_user_id
+            })[0].id,
+            account_information: response.account_information
+          })).then(response => {
+            this.props.dispatch(deleteUpdate({id: item.id}));
+          })
+        }
+        else
+          newAccountUpdateModal(
+            this.props.dispatch,
+            website,
+            account_information
+          );
+      });
     else if (this.state.type[item.id] === 'new')
       newAccountUpdateModal(
         this.props.dispatch,
