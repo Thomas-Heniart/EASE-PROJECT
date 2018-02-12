@@ -446,14 +446,16 @@ export function showCatalogAddSoftwareAppModal({active, name, img_url, logoLette
   }
 }
 
-export function accountUpdateModal(dispatch, website, account_information){
+export function accountUpdateModal(dispatch, website, account_information, team, room){
   return new Promise((resolve, reject) => {
     dispatch(showAccountUpdateModal({
       state: true,
-      resolve: resolve,
-      reject: reject,
       website: website,
-      account_information: account_information
+      account_information: account_information,
+      team: team,
+      room: room,
+      resolve: resolve,
+      reject: reject
     }));
   }).then(response => {
     console.log('resolve')
@@ -462,15 +464,17 @@ export function accountUpdateModal(dispatch, website, account_information){
   });
 }
 
-export function showAccountUpdateModal({state, resolve, reject, website, account_information}){
+export function showAccountUpdateModal({state, resolve, reject, website, account_information, team, room}){
   return {
     type: 'SHOW_ACCOUNT_UPDATE_MODAL',
     payload: {
       active: state,
       website: website,
       account_information: account_information,
+      team: team,
+      room: room,
       resolve: resolve,
-      reject: reject,
+      reject: reject
     }
   }
 }

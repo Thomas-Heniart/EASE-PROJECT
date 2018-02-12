@@ -62,7 +62,13 @@ class UpdatesContainer extends React.Component {
                   <span className='room'>#{this.props.teams[item.team_id].rooms[this.props.team_apps[item.team_card_id].channel_id].name}</span>}
                 </div>
                 <Icon name="trash" onClick={e => console.log('remove update')}/>
-                <a onClick={e => accountUpdateModal(this.props.dispatch, website, item.account_information, this.props.teams[item.team_id])}>Manage now <Icon name="caret right"/></a>
+                <a onClick={e => accountUpdateModal(
+                  this.props.dispatch,
+                  website,
+                  item.account_information,
+                  this.props.teams[item.team_id],
+                  this.props.teams[item.team_id].rooms[this.props.team_apps[item.team_card_id].channel_id]
+                )}>Manage now <Icon name="caret right"/></a>
               </Grid.Column>)
           })}
         </Grid>

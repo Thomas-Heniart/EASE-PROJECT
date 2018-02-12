@@ -1,8 +1,8 @@
 import React from 'react';
 import {connect} from "react-redux";
-import CredentialInputs from "./CredentialInputs";
 import {testCredentials} from "../../../actions/catalogActions";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
+import CredentialInputs from "./AccountUpdateModal";
 import {handleSemanticInput, credentialIconType} from "../../../utils/utils";
 import { Input, Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
 
@@ -21,7 +21,6 @@ class AccountUpdateModal extends React.Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
-  handleChange = (e, {value}) => this.setState({check: value});
   handleCredentialsInput = (e, {name, value}) => {
     let account_information = {...this.state.account_information};
     account_information[name] = value;
@@ -53,8 +52,8 @@ class AccountUpdateModal extends React.Component {
   render() {
     return (
       <SimpleModalTemplate
-          onClose={this.close}
-          headerContent={"Account Update"}>
+        onClose={this.close}
+        headerContent={"Account Update"}>
         <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
@@ -69,29 +68,12 @@ class AccountUpdateModal extends React.Component {
               information={this.state.website.information}
               account_information={this.state.account_information}/>
             <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>
-            <Form.Field>
-              <div style={{fontWeight:'bold'}}>Which App do you want to update with this account?</div>
-            </Form.Field>
-            <Form.Field className='choose_type_app'>
-              <Checkbox radio
-                        name='check'
-                        value='Simple'
-                        onChange={this.handleChange}
-                        label={this.state.website.app_name + ', ' + this.props.modal.team.name + ', #' + this.props.modal.room.name}
-                        checked={this.state.check === 'Simple'}/>
-              <Checkbox radio
-                        name='check'
-                        value='newApp'
-                        label='Create a new app'
-                        onChange={this.handleChange}
-                        checked={this.state.check === 'newApp'}/>
-            </Form.Field>
             <Message error content={this.state.error}/>
             <Button
               positive
               type="submit"
               className="modal-button"
-              content="SAVE ACCOUNT..."
+              content="SAVE NEW PASSWORD"
               loading={this.state.loading}
               disabled={this.state.loading}/>
           </Form>
