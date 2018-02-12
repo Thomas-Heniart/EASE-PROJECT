@@ -188,7 +188,6 @@ public class Catalog {
             int last_value = 0;
             Website last_website = null;
             for (Website website : websites) {
-                System.out.println(website.getDb_id());
                 int match_value = website.matchUrl(subdomain, domain, path);
                 if (match_value == 3) {
                     if (website.matchInformationSet(information_names))

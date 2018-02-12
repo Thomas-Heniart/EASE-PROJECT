@@ -4,6 +4,7 @@ import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "UPDATE_ACCOUNT_INFORMATION")
@@ -23,6 +24,10 @@ public class UpdateAccountInformation {
     @JoinColumn(name = "update_account_id")
     private UpdateAccount updateAccount;
 
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate = new Date();
+
     @Transient
     private String deciphered_value;
 
@@ -34,6 +39,13 @@ public class UpdateAccountInformation {
         this.name = name;
         this.value = value;
         this.updateAccount = updateAccount;
+    }
+
+    public UpdateAccountInformation(String name, String value, UpdateAccount updateAccount, String deciphered_value) {
+        this.name = name;
+        this.value = value;
+        this.updateAccount = updateAccount;
+        this.deciphered_value = deciphered_value;
     }
 
     public Long getId() {
@@ -68,6 +80,14 @@ public class UpdateAccountInformation {
         this.updateAccount = updateAccount;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public String getDeciphered_value() {
         return deciphered_value;
     }
@@ -80,5 +100,10 @@ public class UpdateAccountInformation {
         if (this.getDeciphered_value() != null)
             return;
         this.setDeciphered_value(RSA.Decrypt(this.getValue(), private_key));
+    }
+
+    public void edit(String value, String publicKey) throws HttpServletException {
+        this.setValue(RSA.Encrypt(value, publicKey));
+        this.setDeciphered_value(value);
     }
 }
