@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
-import {accountUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
+import {deleteUpdate, newAccountUpdateModal} from "../../../actions/catalogActions";
 import {getLogo} from "../../../utils/api";
 
 @connect(store => ({
@@ -83,13 +83,11 @@ class UpdatesContainer extends React.Component {
                     || this.props.team_apps[item.team_card_id].team_user_filler_id === -1)) &&
                   <span className='room'>#{this.props.teams[item.team_id].rooms[this.props.team_apps[item.team_card_id].channel_id].name}</span>}
                 </div>
-                <Icon name="trash" onClick={e => this.props.dispatch(deleteUpdate({id: item.id}))}/>
-                <a onClick={e => accountUpdateModal(
+                <Icon name="trash" onClick={() => this.props.dispatch(deleteUpdate({id: item.id}))}/>
+                <a onClick={() => newAccountUpdateModal(
                   this.props.dispatch,
                   website,
-                  item.account_information,
-                  this.props.teams[item.team_id],
-                  this.props.teams[item.team_id].rooms[this.props.team_apps[item.team_card_id].channel_id]
+                  item.account_information
                 )}>Manage now <Icon name="caret right"/></a>
               </Grid.Column>)
           })}
