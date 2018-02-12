@@ -109,7 +109,7 @@ class UpdatesContainer extends React.Component {
             return (
               <Grid.Column key={item.id} className="showSegment update">
                 {website.logo && website.logo !== '' ?
-                <Image src={website.logo} label={<NewAppLabel/>}/>
+                <Image src="/resources/icons/link_app.png" label={<NewAppLabel/>}/>
                 :
                   <div className="logo">
                     <div className='div_wait_logo'>
@@ -125,8 +125,8 @@ class UpdatesContainer extends React.Component {
                       || (card.team_user_filler_id === meId || card.team_user_filler_id === -1))) &&
                   <span className='room'>#{this.props.teams[item.team_id].rooms[card.channel_id].name}</span>}
                 </div>
-                <Icon name="trash" onClick={e => this.props.dispatch(deleteUpdate({id: item.id}))}/>
-                <a onClick={e => this.openModal({
+                <Icon name="trash" onClick={() => this.props.dispatch(deleteUpdate({id: item.id}))}/>
+                <a onClick={() => this.openModal({
                   item: item,
                   website: website,
                   account_information: item.account_information,

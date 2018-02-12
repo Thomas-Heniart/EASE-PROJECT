@@ -3,11 +3,11 @@ import {connect} from "react-redux";
 import CredentialInputs from "./CredentialInputs";
 import {testCredentials} from "../../../actions/catalogActions";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import {handleSemanticInput, credentialIconType} from "../../../utils/utils";
-import { Input, Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
+import {handleSemanticInput} from "../../../utils/utils";
+import {Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
 
 @connect(store => ({
-    modal: store.modals.accountUpdate
+    modal: store.modals.newAccountUpdate
 }))
 class NewAccountUpdateModal extends React.Component {
     constructor(props){
@@ -58,9 +58,9 @@ class NewAccountUpdateModal extends React.Component {
                 <Container className="app_settings_modal">
                     <div className="app_name_container display-flex align_items_center">
                         <div className="squared_image_handler">
-                            <img src={this.state.website.logo} alt="Website logo"/>
+                            <img src="/resources/icons/link_app.png" alt="Website Logo"/>
                         </div>
-                        <span className="app_name">{this.state.website.app_name}</span>
+                        <span className="app_name">{this.state.website.name}</span>
                     </div>
                     <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
                         <CredentialInputs
