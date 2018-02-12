@@ -4,6 +4,7 @@ import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "UPDATE_ACCOUNT_INFORMATION")
@@ -22,6 +23,10 @@ public class UpdateAccountInformation {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "update_account_id")
     private UpdateAccount updateAccount;
+
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate = new Date();
 
     @Transient
     private String deciphered_value;
@@ -73,6 +78,14 @@ public class UpdateAccountInformation {
 
     public void setUpdateAccount(UpdateAccount updateAccount) {
         this.updateAccount = updateAccount;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getDeciphered_value() {

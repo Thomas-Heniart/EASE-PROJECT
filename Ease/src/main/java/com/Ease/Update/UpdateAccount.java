@@ -4,6 +4,7 @@ import com.Ease.Utils.HttpServletException;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,10 @@ public class UpdateAccount {
     @GeneratedValue
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate = new Date();
 
     @OneToMany(mappedBy = "updateAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UpdateAccountInformation> updateAccountInformationSet = new HashSet<>();
@@ -28,6 +33,14 @@ public class UpdateAccount {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Set<UpdateAccountInformation> getUpdateAccountInformationSet() {

@@ -9,6 +9,7 @@ import com.Ease.Utils.HttpServletException;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "EASE_UPDATE")
@@ -44,6 +45,10 @@ public class Update {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "update_account_id")
     private UpdateAccount updateAccount;
+
+    @Column(name = "creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date creationDate = new Date();
 
     public Update() {
 
@@ -141,6 +146,14 @@ public class Update {
 
     public void setUpdateAccount(UpdateAccount updateAccount) {
         this.updateAccount = updateAccount;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public void decipher(String private_key) throws HttpServletException {
