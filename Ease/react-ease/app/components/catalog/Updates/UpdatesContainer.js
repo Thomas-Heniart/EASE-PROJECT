@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
 import {accountUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
+import {getLogo} from "../../../utils/api";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -11,6 +12,14 @@ import {accountUpdateModal, deleteUpdate} from "../../../actions/catalogActions"
   updates: store.catalog.updates
 }))
 class UpdatesContainer extends React.Component {
+  getLogoAny = (url) => {
+    getLogo({url: url}).then(response => {
+      if (response !== '/resources/icons/link_app.png')
+        return response;
+      else
+        return '';
+    });
+  };
   render() {
     const {
       title,
@@ -35,9 +44,22 @@ class UpdatesContainer extends React.Component {
               if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
                 website.name = this.props.dashboard.apps[item.app_id].name
             }
+            if (item.website_id === -1) {
+              website = {
+                url: item.url,
+                logo: this.getLogoAny(item.url)
+              };
+            }
             return (
-              <Grid.Column key={item.id} as='a' className="showSegment update">
+              <Grid.Column key={item.id} className="showSegment update">
+                {website.logo && website.logo !== '' ?
                 <Image src={website.logo} label={<NewAppLabel/>}/>
+                :
+                  <div className="logo">
+                    <div className='div_wait_logo'>
+                      <Icon name='wait'/>
+                    </div>
+                  </div>}
                 <div className='wrap'>
                   <p>{website.name}</p>
                   {((item.app_id === -1 && item.team_card_id === -1)
