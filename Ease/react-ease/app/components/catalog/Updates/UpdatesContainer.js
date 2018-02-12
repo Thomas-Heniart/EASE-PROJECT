@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
-import {accountUpdateModal} from "../../../actions/catalogActions";
+import {accountUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -61,7 +61,7 @@ class UpdatesContainer extends React.Component {
                     || this.props.team_apps[item.team_card_id].team_user_filler_id === -1)) &&
                   <span className='room'>#{this.props.teams[item.team_id].rooms[this.props.team_apps[item.team_card_id].channel_id].name}</span>}
                 </div>
-                <Icon name="trash" onClick={e => console.log('remove update')}/>
+                <Icon name="trash" onClick={e => this.props.dispatch(deleteUpdate({id: item.id}))}/>
                 <a onClick={e => accountUpdateModal(
                   this.props.dispatch,
                   website,

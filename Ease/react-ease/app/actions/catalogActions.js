@@ -1,5 +1,6 @@
 import api from "../utils/api";
 import post_api from "../utils/post_api";
+import delete_api from "../utils/delete_api";
 import {addNotification} from "./notificationBoxActions";
 import extension from "../utils/extension_api";
 
@@ -476,5 +477,19 @@ export function showAccountUpdateModal({state, resolve, reject, website, account
       resolve: resolve,
       reject: reject
     }
+  }
+}
+
+export function deleteUpdate({id}){
+  return (dispatch, getState) => {
+    return delete_api.catalog.deleteUpdate({
+      id: id,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'DELETE_UPDATE', payload: {update_id: id}});
+      return response;
+    }).catch(err => {
+      throw err;
+    })
   }
 }
