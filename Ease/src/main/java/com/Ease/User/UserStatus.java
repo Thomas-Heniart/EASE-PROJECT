@@ -33,7 +33,7 @@ public class UserStatus {
     private boolean homepage_email_sent = false;
 
     @Column(name = "terms_reviewed")
-    private boolean terms_reviewed = false;
+    private boolean terms_reviewed = true;
 
     @Column(name = "team_tuto_done")
     private boolean team_tuto_done = false;
