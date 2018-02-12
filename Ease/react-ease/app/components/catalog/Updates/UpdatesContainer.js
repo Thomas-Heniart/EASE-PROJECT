@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
-import {deleteUpdate, newAccountUpdateModal} from "../../../actions/catalogActions";
+import {accountUpdateModal, newAccountUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
 import {getLogo} from "../../../utils/api";
 
 @connect(store => ({
@@ -12,13 +12,53 @@ import {getLogo} from "../../../utils/api";
   updates: store.catalog.updates
 }))
 class UpdatesContainer extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      type: {}
+    }
+  }
   getLogoAny = (url) => {
     getLogo({url: url}).then(response => {
-      if (response !== '/resources/icons/link_app.png')
-        return response;
-      else
-        return '';
+      return response;
     });
+  };
+  openModal = ({item, website, account_information, team, room}) => {
+    if (this.state.type[item.id] === 'account')
+      accountUpdateModal(
+        this.props.dispatch,
+        website,
+        account_information,
+        team,
+        room,
+      );
+    else if (this.state.type[item.id] === 'new')
+      newAccountUpdateModal(
+        this.props.dispatch,
+        website,
+        account_information
+      );
+    else {
+      // action open modal passwordUpdate
+    }
+  };
+  typeUpdate = (item, card, app, meId) => {
+    if ((item.app_id === -1 && item.team_card_id === -1) || (item.team_card_id !== -1 && (card.type !== "teamEnterpriseCard"
+      && card.team_user_filler_id !== meId && card.team_user_filler_id !== -1))) {
+      this.state.type[item.id] = 'new';
+      return <span>New Account</span>;
+    }
+    else if (item.app_id !== -1 && (Object.keys(app.account_information).length > 0 && app.account_information.login !== '')) {
+      this.state.type[item.id] = 'password';
+      return <span>Password update</span>;
+    }
+    else if (item.app_id !== -1 &&
+      (Object.keys(app.account_information).length === 0 || app.account_information.login === '')
+      && (item.team_card_id !== -1 && (card.type === "teamEnterpriseCard"
+        || card.team_user_filler_id === meId || card.team_user_filler_id === -1))) {
+      this.state.type[item.id] = 'account';
+      return <span>Account update</span>;
+    }
   };
   render() {
     const {
@@ -33,22 +73,31 @@ class UpdatesContainer extends React.Component {
         <Grid columns={4} className="logoCatalog">
           {this.props.updates.map((item) => {
             let website = {};
+            const meId = item.team_id !== -1 ? this.props.teams[item.team_id].my_team_user_id : -1;
+            const card = item.team_card_id !== -1 ? this.props.team_apps[item.team_card_id] : -1;
+            const app = item.app_id !== -1 ? this.props.dashboard.apps[item.app_id] : -1;
             websites.filter(site => {
               if (site.id === item.website_id)
                 website = site;
               return site;
             });
             if (item.app_id !== -1) {
-              website = this.props.dashboard.apps[item.app_id].website;
-              website.app_name = this.props.dashboard.apps[item.app_id].name;
-              if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
-                website.name = this.props.dashboard.apps[item.app_id].name
+              website = app.website;
+              website.app_name = app.name;
+              if (app.sub_type === 'any')
+                website.name = app.name
             }
             if (item.website_id === -1) {
               website = {
+                name: item.url,
                 url: item.url,
-                logo: this.getLogoAny(item.url)
+                logo: this.getLogoAny(item.url),
+                information: {
+                  login: {placeholder: "Login",priority:0,type:"text"},
+                  password: {placeholder:"Password",priority:1,type:"password"}
+                }
               };
+              console.log('website: ', website);
             }
             return (
               <Grid.Column key={item.id} className="showSegment update">
@@ -57,38 +106,26 @@ class UpdatesContainer extends React.Component {
                 :
                   <div className="logo">
                     <div className='div_wait_logo'>
+                      <NewAppLabel/>
                       <Icon name='wait'/>
                     </div>
                   </div>}
                 <div className='wrap'>
                   <p>{website.name}</p>
-                  {((item.app_id === -1 && item.team_card_id === -1)
-                    || (item.team_card_id !== -1 && (this.props.team_apps[item.team_card_id].type !== "teamEnterpriseCard"
-                      && this.props.team_apps[item.team_card_id].team_user_filler_id !== this.props.teams[item.team_id].my_team_user_id
-                      && this.props.team_apps[item.team_card_id].team_user_filler_id !== -1))) &&
-                  <span>New Account</span>}
-                  {(item.app_id !== -1 &&
-                    (Object.keys(this.props.dashboard.apps[item.app_id].account_information).length > 0
-                      && this.props.dashboard.apps[item.app_id].account_information.login !== '')) &&
-                  <span>Password update</span>}
-                  {(item.app_id !== -1 &&
-                    (Object.keys(this.props.dashboard.apps[item.app_id].account_information).length === 0
-                      || this.props.dashboard.apps[item.app_id].account_information.login === '')
-                    && (item.team_card_id !== -1 && (this.props.team_apps[item.team_card_id].type === "teamEnterpriseCard"
-                      || this.props.team_apps[item.team_card_id].team_user_filler_id === this.props.teams[item.team_id].my_team_user_id
-                      || this.props.team_apps[item.team_card_id].team_user_filler_id === -1))) &&
-                  <span>Account update</span>}
+                  {this.typeUpdate(item, card, app, meId)}
                   {(item.team_card_id !== -1
-                    && (this.props.team_apps[item.team_card_id].team_user_filler_id === this.props.teams[item.team_id].my_team_user_id
-                    || this.props.team_apps[item.team_card_id].team_user_filler_id === -1)) &&
-                  <span className='room'>#{this.props.teams[item.team_id].rooms[this.props.team_apps[item.team_card_id].channel_id].name}</span>}
+                    && (card.team_user_filler_id === meId || card.team_user_filler_id === -1)) &&
+                  <span className='room'>#{this.props.teams[item.team_id].rooms[card.channel_id].name}</span>}
                 </div>
-                <Icon name="trash" onClick={() => this.props.dispatch(deleteUpdate({id: item.id}))}/>
-                <a onClick={() => newAccountUpdateModal(
-                  this.props.dispatch,
-                  website,
-                  item.account_information
-                )}>Manage now <Icon name="caret right"/></a>
+                <Icon name="trash" onClick={e => this.props.dispatch(deleteUpdate({id: item.id}))}/>
+                <a onClick={e => this.openModal({
+                  item: item,
+                  website: website,
+                  account_information: item.account_information,
+                  team: item.team_id !== -1 ? this.props.teams[item.team_id] : -1,
+                  room: item.team_id !== -1 ? this.props.teams[item.team_id].rooms[card.channel_id] : -1})}>
+                  Manage now <Icon name="caret right"/>
+                </a>
               </Grid.Column>)
           })}
         </Grid>
