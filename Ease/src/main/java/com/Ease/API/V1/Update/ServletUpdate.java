@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @WebServlet("/api/v1/updates")
 public class ServletUpdate extends HttpServlet {
@@ -65,7 +66,7 @@ public class ServletUpdate extends HttpServlet {
             List<Update> updates;
             if (website != null) {
                 /* Find update(s) with this website */
-                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website_id = :website_id");
+                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
                 hibernateQuery.setParameter("user_id", user.getDb_id());
                 hibernateQuery.setParameter("website_id", website.getDb_id());
             } else {
@@ -78,14 +79,10 @@ public class ServletUpdate extends HttpServlet {
             /* Decipher updates and check if credentials are the same except for password */
             String privateKey = sm.getUserPrivateKey();
             JSONArray res = new JSONArray();
-            for (Update update : updates) {
+            for (Update update : updates)
                 update.decipher(privateKey);
-                if (update.accountMatch(account_information)) {
-                    update.edit(account_information, user.getUserKeys().getPublicKey());
-                    res.put(update.getJson());
-                }
-            }
-            if (res.length() == 0) {
+            updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
+            if (updates.isEmpty()) {
                 if (website != null) {
                     hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.db_id = :website_id AND w.profile.user.db_id = :user_id");
                     hibernateQuery.setParameter("website_id", website.getDb_id());
@@ -106,7 +103,11 @@ public class ServletUpdate extends HttpServlet {
                     sm.saveOrUpdate(tmp);
                     res.put(tmp.getJson());
                 }
-            }
+            } else
+                for (Update update : updates) {
+                    update.edit(account_information, user.getUserKeys().getPublicKey());
+                    res.put(update.getJson());
+                }
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
