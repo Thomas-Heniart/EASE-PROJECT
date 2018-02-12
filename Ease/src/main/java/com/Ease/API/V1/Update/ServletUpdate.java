@@ -3,7 +3,9 @@ package com.Ease.API.V1.Update;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Update.Update;
+import com.Ease.Update.UpdateFactory;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -57,7 +59,9 @@ public class ServletUpdate extends HttpServlet {
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            Website website = catalog.getPublicWebsiteWithUrl(url, new HashSet<>(), hibernateQuery);
+            Set<String> informationNameSet = new HashSet<>();
+            account_information.keySet().forEach(o -> informationNameSet.add((String) o));
+            Website website = catalog.getPublicWebsiteWithUrl(url, informationNameSet, hibernateQuery);
             List<Update> updates;
             if (website != null) {
                 /* Find update(s) with this website */
@@ -73,19 +77,37 @@ public class ServletUpdate extends HttpServlet {
             updates = hibernateQuery.list();
             /* Decipher updates and check if credentials are the same except for password */
             String privateKey = sm.getUserPrivateKey();
-            Set<Update> updateSet = new HashSet<>();
             JSONArray res = new JSONArray();
             for (Update update : updates) {
                 update.decipher(privateKey);
-                if (update.accountMatch(account_information))
+                if (update.accountMatch(account_information)) {
                     update.edit(account_information, user.getUserKeys().getPublicKey());
+                    res.put(update.getJson());
+                }
             }
-
-            /* if one or more */
-                /* delete them */
-                /* save new update and team card if exists */
-            /* else */
-
+            if (res.length() == 0) {
+                if (website != null) {
+                    hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.db_id = :website_id AND w.profile.user.db_id = :user_id");
+                    hibernateQuery.setParameter("website_id", website.getDb_id());
+                    hibernateQuery.setParameter("user_id", user.getDb_id());
+                    List<WebsiteApp> websiteApps = hibernateQuery.list();
+                    if (websiteApps.isEmpty()) {
+                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
+                        sm.saveOrUpdate(tmp);
+                        res.put(tmp.getJson());
+                    } else
+                        for (WebsiteApp websiteApp : websiteApps) {
+                            Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                            sm.saveOrUpdate(tmp);
+                            res.put(tmp.getJson());
+                        }
+                } else {
+                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
+                    sm.saveOrUpdate(tmp);
+                    res.put(tmp.getJson());
+                }
+            }
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
