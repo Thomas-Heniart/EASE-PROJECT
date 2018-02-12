@@ -249,8 +249,13 @@ class Importations extends React.Component {
     this.setState({importedAccounts: importedAccounts, accountsPending: accountsPending});
   };
   selectProfile = () => {
+    let profileChoose = null;
+    Object.keys(this.props.profiles).map(item => {
+      if (profileChoose === null && this.props.profiles[item].team_id === -1)
+        profileChoose = this.props.profiles[item].id;
+    });
     this.setState({
-      selectedProfile: Object.keys(this.props.profiles).length > 0 ? 1 : 0,
+      selectedProfile: profileChoose !== null ? profileChoose : 0,
       selectedTeam: -1,
       selectedRoom: -1,
       location: 'Personal Apps',
@@ -586,7 +591,7 @@ class Importations extends React.Component {
             calls.push(this.props.dispatch(catalogAddClassicApp({
               name: app.name,
               website_id: app.website_id,
-              profile_id: Object.keys(this.props.profiles)[0],
+              profile_id: this.state.selectedProfile,
               account_information: {login: app.login, password: app.password}
             })));
           // }
@@ -599,7 +604,7 @@ class Importations extends React.Component {
               name: app.name,
               url: app.url,
               img_url: app.logo,
-              profile_id: Object.keys(this.props.profiles)[0],
+              profile_id: this.state.selectedProfile,
               account_information: {login: app.login, password: app.password},
               connection_information: {
                 login: {type: "text", priority: 0, placeholder: "Login"},
@@ -613,7 +618,7 @@ class Importations extends React.Component {
               name: app.name,
               url: app.url,
               img_url: app.logo !== '' ? app.logo : '/resources/icons/link_app.png',
-              profile_id: Object.keys(this.props.profiles)[0]
+              profile_id: this.state.selectedProfile
             })));
           }
         }

@@ -82,7 +82,7 @@ public class CreateTeamSoftwareEnterpriseCard extends HttpServlet {
                 App app = new SoftwareApp(appInformation, software, account);
                 TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamEnterpriseSoftwareCard, teamUser);
                 if (teamUser.isVerified()) {
-                    Profile profile = teamUser.getOrCreateProfile(sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+                    Profile profile = teamUser.getOrCreateProfile(sm.getHibernateQuery());
                     app.setProfile(profile);
                     app.setPosition(profile.getSize());
                     sm.saveOrUpdate(app);

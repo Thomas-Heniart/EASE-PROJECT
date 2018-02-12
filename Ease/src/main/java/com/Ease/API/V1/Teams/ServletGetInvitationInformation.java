@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -24,20 +23,17 @@ public class ServletGetInvitationInformation extends HttpServlet {
             if (code == null || code.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing code parameter");
             DataBaseConnection db = sm.getDB();
-            DatabaseRequest databaseRequest = db.prepareRequest("SELECT team_id, id FROM teamUsers WHERE invitation_code = ?;");            databaseRequest.setString(code);
+            DatabaseRequest databaseRequest = db.prepareRequest("SELECT team_id, id FROM teamUsers WHERE invitation_code = ?;");
+            databaseRequest.setString(code);
             DatabaseResult rs = databaseRequest.get();
             if (!rs.next())
                 throw new HttpServletException(HttpStatus.BadRequest, "Please provide a valid code.");
             Integer team_id = rs.getInt(1);
             Integer teamUser_id = rs.getInt(2);
-            TeamManager teamManager = (TeamManager) sm.getContextAttr("teamManager");
             Team team = sm.getTeam(team_id);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            databaseRequest = db.prepareRequest("SELECT id from users where email = ?;");
-            databaseRequest.setString(teamUser.getEmail());
-            rs = databaseRequest.get();
             JSONObject res = new JSONObject();
-            res.put("account_exists", rs.next());
+            res.put("account_exists", teamUser.isRegistered());
             res.put("email", teamUser.getEmail());
             res.put("team_name", team.getName());
             res.put("teamUser", teamUser.getJson());

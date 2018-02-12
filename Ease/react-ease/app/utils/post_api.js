@@ -1516,6 +1516,22 @@ module.exports = {
         throw err.response.data;
       })
     },
+    joinTeamRegistration: ({email, password, code, phone_number, newsletter, first_name, last_name, access_code}) => {
+      return axios.post('/api/v1/common/TeamRegistration', {
+        email: email,
+        password: password,
+        code: code,
+        phone_number: phone_number,
+        newsletter: newsletter,
+        first_name: first_name,
+        last_name: last_name,
+        access_code: access_code
+      }).then(response => {
+        return response.data;
+      }).catch(err => {
+        throw err.response.data;
+      })
+    },
     editFirstAndLastName: ({first_name, last_name}) => {
       return axios.post('/api/v1/common/EditFirstAndLastName', {
         first_name: first_name,
