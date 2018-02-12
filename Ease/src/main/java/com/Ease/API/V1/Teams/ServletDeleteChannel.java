@@ -42,6 +42,7 @@ public class ServletDeleteChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
             for (TeamCard teamCard : channel.getTeamCardSet()) {
                 for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                     App app = teamCardReceiver.getApp();
@@ -61,7 +62,6 @@ public class ServletDeleteChannel extends HttpServlet {
                             if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
                                 LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
                                 sm.saveOrUpdate(linkAppInformation);
-                                HibernateQuery hibernateQuery = sm.getHibernateQuery();
                                 hibernateQuery.queryString("UPDATE LinkApp l SET l.linkAppInformation = :info WHERE l.db_id = :id");
                                 hibernateQuery.setParameter("info", linkAppInformation);
                                 hibernateQuery.setParameter("id", linkApp.getDb_id());
@@ -74,6 +74,9 @@ public class ServletDeleteChannel extends HttpServlet {
                         profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 }
             }
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.channel.db_id = :channel_id");
+            hibernateQuery.setParameter("channel_id", channel_id);
+            hibernateQuery.executeUpdate();
             channel.getTeamUsers().forEach(teamUser1 -> teamUser1.getChannels().remove(channel));
             channel.getTeamCardSet().clear();
             channel.getPending_teamUsers().forEach(teamUser1 -> teamUser1.getPending_channels().remove(channel));

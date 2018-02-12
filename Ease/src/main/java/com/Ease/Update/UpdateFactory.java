@@ -2,7 +2,6 @@ package com.Ease.Update;
 
 import com.Ease.Catalog.Website;
 import com.Ease.NewDashboard.WebsiteApp;
-import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
@@ -59,14 +58,6 @@ public class UpdateFactory {
         Update update = this.createUpdate(user, account_information);
         update.setWebsite(teamSingleCard.getWebsite());
         update.setTeamCard(teamSingleCard);
-        update.setTeamUser(teamUser);
-        return update;
-    }
-
-    public Update createUpdate(User user, JSONObject account_information, TeamEnterpriseCard teamEnterpriseCard, TeamUser teamUser) throws HttpServletException {
-        Update update = this.createUpdate(user, account_information);
-        update.setWebsite(teamEnterpriseCard.getWebsite());
-        update.setTeamCard(teamEnterpriseCard);
         update.setTeamUser(teamUser);
         return update;
     }

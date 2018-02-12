@@ -45,6 +45,9 @@ public class ServletDeleteApp extends HttpServlet {
             }
             if (profile != null)
                 profile.removeAppAndUpdatePositions(app, hibernateQuery);
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");
+            hibernateQuery.setParameter("app_id", app.getDb_id());
+            hibernateQuery.executeUpdate();
             sm.deleteObject(app);
             if (ssoGroup != null && ssoGroup.getSsoAppMap().isEmpty()) {
                 user.removeSsoGroup(ssoGroup);

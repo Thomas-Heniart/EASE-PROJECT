@@ -93,4 +93,11 @@ public class UpdateAccount {
         }
         return true;
     }
+
+    public JSONObject getAccountInformation() {
+        JSONObject res = new JSONObject();
+        for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet())
+            res.put(updateAccountInformation.getName(), updateAccountInformation.getDeciphered_value());
+        return res;
+    }
 }
