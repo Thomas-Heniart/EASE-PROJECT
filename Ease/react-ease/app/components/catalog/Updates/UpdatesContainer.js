@@ -20,14 +20,11 @@ class UpdatesContainer extends React.Component {
   }
   getLogoAny = (url) => {
     getLogo({url: url}).then(response => {
-      if (response !== '/resources/icons/link_app.png')
-        return response;
-      else
-        return '';
+      return response;
     });
   };
   openModal = ({item, website, account_information, team, room}) => {
-    if (this.state.type[item.id] === 'account') {
+    if (this.state.type[item.id] === 'account')
       accountUpdateModal(
         this.props.dispatch,
         website,
@@ -35,14 +32,12 @@ class UpdatesContainer extends React.Component {
         team,
         room,
       );
-    }
-    else if (this.state.type[item.id] === 'new') {
+    else if (this.state.type[item.id] === 'new')
       newAccountUpdateModal(
         this.props.dispatch,
         website,
         account_information
-      )
-    }
+      );
     else {
       // action open modal passwordUpdate
     }
@@ -96,8 +91,13 @@ class UpdatesContainer extends React.Component {
               website = {
                 name: item.url,
                 url: item.url,
-                logo: this.getLogoAny(item.url)
+                logo: this.getLogoAny(item.url),
+                information: {
+                  login: {placeholder: "Login",priority:0,type:"text"},
+                  password: {placeholder:"Password",priority:1,type:"password"}
+                }
               };
+              console.log('website: ', website);
             }
             return (
               <Grid.Column key={item.id} className="showSegment update">
