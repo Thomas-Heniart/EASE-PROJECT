@@ -447,14 +447,12 @@ export function showCatalogAddSoftwareAppModal({active, name, img_url, logoLette
   }
 }
 
-export function accountUpdateModal(dispatch, website, account_information, team, room){
+export function accountUpdateModal(dispatch, website, item){
   return new Promise((resolve, reject) => {
     dispatch(showAccountUpdateModal({
       state: true,
       website: website,
-      account_information: account_information,
-      team: team,
-      room: room,
+      item: item,
       resolve: resolve,
       reject: reject
     }));
@@ -466,30 +464,25 @@ export function accountUpdateModal(dispatch, website, account_information, team,
   });
 }
 
-export function showAccountUpdateModal({state, resolve, reject, website, account_information, team, room}){
+export function showAccountUpdateModal({state, resolve, reject, website, item}){
   return {
     type: 'SHOW_ACCOUNT_UPDATE_MODAL',
     payload: {
       active: state,
       website: website,
-      account_information: account_information,
-      team: team,
-      room: room,
+      item: item,
       resolve: resolve,
       reject: reject
     }
   }
 }
 
-export function passwordUpdateModal(dispatch, website, account_information, team, room, team_user_id){
+export function passwordUpdateModal(dispatch, website, item){
   return new Promise((resolve, reject) => {
     dispatch(showPasswordUpdateModal({
       state: true,
       website: website,
-      account_information: account_information,
-      team: team,
-      room: room,
-      team_user_id: team_user_id,
+      item: item,
       resolve: resolve,
       reject: reject
     }));
@@ -501,16 +494,13 @@ export function passwordUpdateModal(dispatch, website, account_information, team
   });
 }
 
-export function showPasswordUpdateModal({state, resolve, reject, website, account_information, team, room, team_user_id}){
+export function showPasswordUpdateModal({state, resolve, reject, website, item}){
   return {
     type: 'SHOW_PASSWORD_UPDATE_MODAL',
     payload: {
       active: state,
       website: website,
-      account_information: account_information,
-      team: team,
-      room: room,
-      team_user_id: team_user_id,
+      item: item,
       resolve: resolve,
       reject: reject
     }
