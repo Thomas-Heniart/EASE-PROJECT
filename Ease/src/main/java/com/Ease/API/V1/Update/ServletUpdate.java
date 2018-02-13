@@ -4,6 +4,8 @@ import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Update.Update;
 import com.Ease.Update.UpdateFactory;
 import com.Ease.User.User;
@@ -115,8 +117,19 @@ public class ServletUpdate extends HttpServlet {
                     if (websiteApp.getTeamCardReceiver() != null)
                         teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
                     websiteApp.decipher(keyUser, teamKey);
-                    if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information)) {
-                    } else if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
+                    if (websiteApp.getTeamCardReceiver() != null && websiteApp.isEmpty()) {
+                        TeamCard teamCard = websiteApp.getTeamCardReceiver().getTeamCard();
+                        if (teamCard.isTeamSingleCard()) {
+                            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                            if (teamSingleCard.getTeamUser_filler() != null && teamSingleCard.getTeamUser_filler().equals(sm.getTeamUser(teamCard.getTeam()))) {
+                                Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                                hibernateQuery.saveOrUpdateObject(tmp);
+                                res.put(tmp.getJson());
+                                continue;
+                            }
+                        }
+                    }
+                    if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
                         Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                         hibernateQuery.saveOrUpdateObject(tmp);
                         res.put(tmp.getJson());
