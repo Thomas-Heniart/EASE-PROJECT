@@ -1,7 +1,7 @@
 {
   "name":"Sapiendo retraite PrestaShop",
   "lastLogin":"",
-  "home":"https://www.sapiendo-retraite.fr/admin_sapiend0/",
+  "home":"https://preprod.sapiendo.fr/admin_sapiend0/",
   "connect":{
     "todo":[
       {"action":"fill", "what":"login", "search":"#login_form #email"},
