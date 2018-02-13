@@ -54,67 +54,13 @@ class UpdatesContainer extends React.Component {
     }
     return website;
   };
-  confirmAppUpdate = ({response, item, app, team, account_information}) => {
-    if (!response.check || response.check === 'Simple') {
-      if (item.team_card_id !== -1) {
-        if (app.type === 'teamEnterpriseApp') {
-          this.props.dispatch(teamEditEnterpriseCardReceiver({
-            team_id: item.team_id,
-            team_card_id: item.team_card_id,
-            team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(receiver => {
-              return team.my_team_user_id === receiver.team_user_id
-            })[0].id,
-            account_information: response.account_information
-          })).then(response => {
-            this.props.dispatch(deleteUpdate({id: item.id}));
-          });
-        }
-        else {
-          if (team.team_users[team.my_team_user_id].role > 1 || this.props.team_apps[app.team_card_id].team_user_filler_id === team.my_team_user_id) {
-            this.props.dispatch(teamEditSingleCardCredentials({
-              team_card: this.props.team_apps[item.team_card_id],
-              account_information: response.account_information
-            })).then(response => {
-              this.props.dispatch(deleteUpdate({id: item.id}));
-            });
-          }
-          else {
-            // suggestion to Admin
-            this.props.dispatch(editAppCredentials({
-              app: app,
-              account_information: response.account_information
-            })).then(() => {
-              this.props.dispatch(deleteUpdate({id: item.id}));
-            });
-          }
-        }
-      }
-      else {
-        this.props.dispatch(editAppCredentials({
-          app: app,
-          account_information: response.account_information
-        })).then(() => {
-          this.props.dispatch(deleteUpdate({id: item.id}));
-        });
-      }
-    }
-    else
-      newAccountUpdateModal(
-        this.props.dispatch,
-        website,
-        account_information
-      );
-  };
-  openModal = ({app, item, website, account_information, team, room}) => {
+  openModal = ({item, website, account_information}) => {
     if (this.state.type[item.id] === 'account')
       accountUpdateModal(
         this.props.dispatch,
         website,
-        account_information,
-        team,
-        room,
+        item
       ).then(response => {
-        response && this.confirmAppUpdate({response, item, app, team, account_information})
       });
     else if (this.state.type[item.id] === 'new')
       newAccountUpdateModal(
@@ -122,18 +68,13 @@ class UpdatesContainer extends React.Component {
         website,
         account_information
       ).then(response => {
-        // ce que tu dois faire quand la promesse est résolue
       });
     else
       passwordUpdateModal(
         this.props.dispatch,
         website,
-        account_information,
-        team,
-        room,
-        item.team_user_id
+        item
       ).then(response => {
-        response && this.confirmAppUpdate({response, item, app, team, account_information});
       });
   };
   typeUpdate = (item, card, app, meId) => {
@@ -191,12 +132,9 @@ class UpdatesContainer extends React.Component {
                 </div>
                 <Icon name="trash" onClick={() => this.props.dispatch(deleteUpdate({id: item.id}))}/>
                 <a onClick={() => this.openModal({
-                  app: app,
                   item: item,
                   website: website,
-                  account_information: item.account_information,
-                  team: item.team_id !== -1 ? this.props.teams[item.team_id] : -1,
-                  room: item.team_id !== -1 ? this.props.teams[item.team_id].rooms[card.channel_id] : -1})}>
+                  account_information: item.account_information})}>
                   Manage now <Icon name="caret right"/>
                 </a>
               </Grid.Column>)
