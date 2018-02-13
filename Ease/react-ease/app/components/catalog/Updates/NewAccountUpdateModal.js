@@ -15,6 +15,7 @@ class NewAccountUpdateModal extends React.Component {
         super(props);
         this.state = {
             error: '',
+            appName: '',
             teamName: [],
             check: '',
             loading: false,
@@ -56,6 +57,9 @@ class NewAccountUpdateModal extends React.Component {
         console.log('submit');
         this.props.modal.resolve();
     };
+    handleAppName = e => {
+        this.setState({appName: e.target.value});
+    };
 
     componentWillMount() {
         let teamName = [];
@@ -81,6 +85,7 @@ class NewAccountUpdateModal extends React.Component {
                                     placeholder="Name your App"
                                     size='large'
                                     className ="modalInput ui.input team-app-input"
+                                    onChange={this.handleAppName}
                                     required/>
                             </div>
                         </div>
@@ -101,10 +106,10 @@ class NewAccountUpdateModal extends React.Component {
                                 return <Checkbox radio
                                                  style={{margin: "0 0 10px 0"}}
                                                  name='check'
-                                                 value={team.name}
+                                                 value={team.id}
                                                  onChange={this.handleChange}
                                                  label={team.name}
-                                                 checked={this.state.check === team.name}/>
+                                                 checked={this.state.check === team.id}/>
                             })
                         }
                             <Checkbox radio

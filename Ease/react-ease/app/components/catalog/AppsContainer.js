@@ -3,10 +3,11 @@ import AddAnyApp from './AddAnyApp';
 import UpdatesContainer from './Updates/UpdatesContainer';
 import { Grid, Image, Icon, Header, Input, Container, Loader } from 'semantic-ui-react';
 
-const AppsContainer  = ({websites, title, openModal}) => {
+const AppsContainer  = ({match, websites, updates, title, openModal}) => {
   return (
       <Container fluid>
-        <UpdatesContainer title={'Updates detected'} websites={websites}/>
+        {(match.path === '/main/catalog/website' && updates.length > 0) &&
+        <UpdatesContainer title={'Updates detected'} websites={websites}/>}
         <h3>
           {title}
         </h3>
