@@ -476,6 +476,9 @@ button.only-text-button {
         color: #939eb7;
         font-size: 14px;
         font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       &.checked {
         label {
@@ -483,7 +486,6 @@ button.only-text-button {
         }
       }
     }
-
   }
   .create_profile_input {
     input {
