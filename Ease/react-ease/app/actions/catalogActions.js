@@ -513,12 +513,14 @@ export function showPasswordUpdateModal({state, resolve, reject, website, accoun
   }
 }
 
-export function newAccountUpdateModal(dispatch, website, account_information){
+export function newAccountUpdateModal(dispatch, website, account_information, team, room){
     return new Promise((resolve, reject) => {
         dispatch(showNewAccountUpdateModal({
             state: true,
             website: website,
             account_information: account_information,
+            team: team,
+            room: room,
             resolve: resolve,
             reject: reject
         }));

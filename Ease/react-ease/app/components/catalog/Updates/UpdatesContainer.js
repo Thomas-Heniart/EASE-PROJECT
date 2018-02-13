@@ -39,7 +39,8 @@ class UpdatesContainer extends React.Component {
       newAccountUpdateModal(
         this.props.dispatch,
         website,
-        account_information
+        account_information,
+
       );
     else
       passwordUpdateModal(
@@ -109,7 +110,7 @@ class UpdatesContainer extends React.Component {
             return (
               <Grid.Column key={item.id} className="showSegment update">
                 {website.logo && website.logo !== '' ?
-                <Image src="/resources/icons/link_app.png" label={<NewAppLabel/>}/>
+                <Image src={website.logo} label={<NewAppLabel/>}/>
                 :
                   <div className="logo">
                     <div className='div_wait_logo'>
