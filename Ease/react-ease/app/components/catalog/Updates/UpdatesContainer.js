@@ -54,47 +54,15 @@ class UpdatesContainer extends React.Component {
     }
     return website;
   };
-  confirmPasswordUpdate = ({response, item, app, team}) => {
-    if (item.team_card_id !== -1) {
-      if (app.type === 'teamEnterpriseApp') {
-        this.props.dispatch(teamEditEnterpriseCardReceiver({
-          team_id: item.team_id,
-          team_card_id: item.team_card_id,
-          team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(receiver => {
-            return team.my_team_user_id === receiver.team_user_id
-          })[0].id,
-          account_information: response.account_information
-        })).then(response => {
-          this.props.dispatch(deleteUpdate({id: item.id}));
-        });
-      }
-      else {
-        this.props.dispatch(teamEditSingleCardCredentials({
-          team_card: this.props.team_apps[item.team_card_id],
-          account_information: response.account_information
-        })).then(response => {
-          this.props.dispatch(deleteUpdate({id: item.id}));
-        });
-      }
-    }
-    else {
-      this.props.dispatch(editAppCredentials({
-        app: app,
-        account_information: response.account_information
-      })).then(() => {
-        this.props.dispatch(deleteUpdate({id: item.id}));
-      });
-    }
-  };
-  confirmAccountUpdate = ({response, item, app, team, account_information}) => {
-    if (response.check === 'Simple') {
+  confirmAppUpdate = ({response, item, app, team, account_information}) => {
+    if (!response.check || response.check === 'Simple') {
       if (item.team_card_id !== -1) {
         if (app.type === 'teamEnterpriseApp') {
           this.props.dispatch(teamEditEnterpriseCardReceiver({
             team_id: item.team_id,
             team_card_id: item.team_card_id,
-            team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(item => {
-              return team.my_team_user_id === item.team_user_id
+            team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(receiver => {
+              return team.my_team_user_id === receiver.team_user_id
             })[0].id,
             account_information: response.account_information
           })).then(response => {
@@ -102,19 +70,30 @@ class UpdatesContainer extends React.Component {
           });
         }
         else {
-          this.props.dispatch(teamEditSingleCardCredentials({
-            team_card: this.props.team_apps[item.team_card_id],
-            account_information: response.account_information
-          })).then(response => {
-            this.props.dispatch(deleteUpdate({id: item.id}));
-          });
+          if (team.team_users[team.my_team_user_id].role > 1 || this.props.team_apps[app.team_card_id].team_user_filler_id === team.my_team_user_id) {
+            this.props.dispatch(teamEditSingleCardCredentials({
+              team_card: this.props.team_apps[item.team_card_id],
+              account_information: response.account_information
+            })).then(response => {
+              this.props.dispatch(deleteUpdate({id: item.id}));
+            });
+          }
+          else {
+            // suggestion to Admin
+            this.props.dispatch(editAppCredentials({
+              app: app,
+              account_information: response.account_information
+            })).then(() => {
+              this.props.dispatch(deleteUpdate({id: item.id}));
+            });
+          }
         }
       }
       else {
         this.props.dispatch(editAppCredentials({
           app: app,
           account_information: response.account_information
-        })).then(response => {
+        })).then(() => {
           this.props.dispatch(deleteUpdate({id: item.id}));
         });
       }
@@ -135,7 +114,7 @@ class UpdatesContainer extends React.Component {
         team,
         room,
       ).then(response => {
-        response && this.confirmAccountUpdate({response, item, app, team, account_information})
+        response && this.confirmAppUpdate({response, item, app, team, account_information})
       });
     else if (this.state.type[item.id] === 'new')
       newAccountUpdateModal(
@@ -152,8 +131,9 @@ class UpdatesContainer extends React.Component {
         account_information,
         team,
         room,
+        item.team_user_id
       ).then(response => {
-        response && this.confirmPasswordUpdate({response, item, app, team});
+        response && this.confirmAppUpdate({response, item, app, team, account_information});
       });
   };
   typeUpdate = (item, card, app, meId) => {

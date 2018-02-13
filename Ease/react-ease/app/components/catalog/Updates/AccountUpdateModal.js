@@ -1,9 +1,9 @@
 import React from 'react';
 import {connect} from "react-redux";
 import CredentialInputs from "./CredentialInputs";
+import {handleSemanticInput} from "../../../utils/utils";
 import {testCredentials} from "../../../actions/catalogActions";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import {handleSemanticInput} from "../../../utils/utils";
 import { Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
 
 @connect(store => ({
