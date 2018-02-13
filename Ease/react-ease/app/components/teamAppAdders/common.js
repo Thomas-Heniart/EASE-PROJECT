@@ -55,8 +55,13 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
             size="mini"
             labelPosition='left'>
           <Icon name="user"/>
-          {team_card.team_user_filler_id === me.id ?
-              <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span> :
+          {team_card.team_user_filler_id === -1 &&
+          <u onClick={this.chooseMember}>
+            Choose a user to fill connection info.
+          </u>}
+          {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
+              <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
+          {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&
               <span>
                   Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
                 {this.props.actions_enabled &&
