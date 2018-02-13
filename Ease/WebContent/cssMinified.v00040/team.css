@@ -1339,6 +1339,9 @@
           top: 40%;
           right: 0;
           color: #d2dae4; }
+          #catalog .logoCatalog .showSegment:hover i.trash {
+            cursor: pointer;
+            color: #949EB7; }
       #catalog .logoCatalog .showSegment.update {
         padding: 7px 0 12px 0; }
         #catalog .logoCatalog .showSegment.update .app_corner_indicator {

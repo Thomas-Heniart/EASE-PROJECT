@@ -7,15 +7,18 @@ import {handleSemanticInput} from "../../../utils/utils";
 import {Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
 
 @connect(store => ({
-    modal: store.modals.newAccountUpdate
+    modal: store.modals.newAccountUpdate,
+    teams: store.teams,
 }))
 class NewAccountUpdateModal extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             error: '',
+            teamName: [],
             check: '',
             loading: false,
+            seePassword: false,
             website: this.props.modal.website,
             account_information: this.props.modal.account_information
         }
@@ -37,6 +40,9 @@ class NewAccountUpdateModal extends React.Component {
         });
         this.setState({credentials: credentials});
     };
+    toggleSeePassword = () => {
+        this.setState({seePassword: !this.state.seePassword});
+    };
     testConnection = () => {
         this.props.dispatch(testCredentials({
             account_information: this.state.account_information,
@@ -50,22 +56,39 @@ class NewAccountUpdateModal extends React.Component {
         console.log('submit');
         this.props.modal.resolve();
     };
+
+    componentWillMount() {
+        let teamName = [];
+        Object.keys(this.props.teams).map(team => {
+            teamName.push(this.props.teams[team]);
+        });
+        this.setState({teamName: teamName});
+    }
+
     render() {
         return (
             <SimpleModalTemplate
                 onClose={this.close}
                 headerContent={"New Account detected"}>
                 <Container className="app_settings_modal">
-                    <div className="app_name_container display-flex align_items_center">
-                        <div className="squared_image_handler">
-                            <img src="/resources/icons/link_app.png" alt="Website Logo"/>
-                        </div>
-                        <span className="app_name">{this.state.website.name}</span>
-                    </div>
                     <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
+                        <div className="app_name_container display-flex align_items_center">
+                            <div className="squared_image_handler">
+                                <img src="/resources/icons/link_app.png" alt="Website Logo"/>
+                            </div>
+                            <div className="ui input">
+                                <input
+                                    placeholder="Name your App"
+                                    size='large'
+                                    className ="modalInput ui.input team-app-input"
+                                    required/>
+                            </div>
+                        </div>
                         <CredentialInputs
                             toggle={this.toggleCredentialEdit}
+                            seePassword={this.state.seePassword}
                             handleChange={this.handleCredentialsInput}
+                            toggleSeePassword={this.toggleSeePassword}
                             information={this.state.website.information}
                             account_information={this.state.account_information}/>
                         <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>
@@ -73,12 +96,17 @@ class NewAccountUpdateModal extends React.Component {
                             <div style={{fontWeight:'bold'}}>I use this account for:</div>
                         </Form.Field>
                         <Form.Field className='choose_type_app'>
-                            <Checkbox radio
-                                      name='check'
-                                      value='Simple'
-                                      onChange={this.handleChange}
-                                      label={this.state.website.app_name}
-                                      checked={this.state.check === 'Simple'}/>
+                        {
+                            this.state.teamName.map(team => {
+                                return <Checkbox radio
+                                                 style={{margin: "0 0 10px 0"}}
+                                                 name='check'
+                                                 value={team.name}
+                                                 onChange={this.handleChange}
+                                                 label={team.name}
+                                                 checked={this.state.check === team.name}/>
+                            })
+                        }
                             <Checkbox radio
                                       name='check'
                                       value='newApp'

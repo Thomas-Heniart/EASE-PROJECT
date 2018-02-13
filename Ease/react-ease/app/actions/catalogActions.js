@@ -481,7 +481,7 @@ export function showAccountUpdateModal({state, resolve, reject, website, account
   }
 }
 
-export function passwordUpdateModal(dispatch, website, account_information, team, room){
+export function passwordUpdateModal(dispatch, website, account_information, team, room, team_user_id){
   return new Promise((resolve, reject) => {
     dispatch(showPasswordUpdateModal({
       state: true,
@@ -489,6 +489,7 @@ export function passwordUpdateModal(dispatch, website, account_information, team
       account_information: account_information,
       team: team,
       room: room,
+      team_user_id: team_user_id,
       resolve: resolve,
       reject: reject
     }));
@@ -500,7 +501,7 @@ export function passwordUpdateModal(dispatch, website, account_information, team
   });
 }
 
-export function showPasswordUpdateModal({state, resolve, reject, website, account_information, team, room}){
+export function showPasswordUpdateModal({state, resolve, reject, website, account_information, team, room, team_user_id}){
   return {
     type: 'SHOW_PASSWORD_UPDATE_MODAL',
     payload: {
@@ -509,6 +510,7 @@ export function showPasswordUpdateModal({state, resolve, reject, website, accoun
       account_information: account_information,
       team: team,
       room: room,
+      team_user_id: team_user_id,
       resolve: resolve,
       reject: reject
     }

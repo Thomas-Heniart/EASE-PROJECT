@@ -1,9 +1,9 @@
 import React from 'react';
 import {connect} from "react-redux";
 import CredentialInputs from "./CredentialInputs";
+import {handleSemanticInput} from "../../../utils/utils";
 import {testCredentials} from "../../../actions/catalogActions";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import {handleSemanticInput} from "../../../utils/utils";
 import { Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
 
 @connect(store => ({
@@ -16,6 +16,7 @@ class AccountUpdateModal extends React.Component {
       error: '',
       check: '',
       loading: false,
+      seePassword: false,
       website: this.props.modal.website,
       account_information: this.props.modal.account_information
     }
@@ -36,6 +37,9 @@ class AccountUpdateModal extends React.Component {
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  toggleSeePassword = () => {
+    this.setState({seePassword: !this.state.seePassword});
   };
   testConnection = () => {
     this.props.dispatch(testCredentials({
@@ -64,7 +68,9 @@ class AccountUpdateModal extends React.Component {
           <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
             <CredentialInputs
               toggle={this.toggleCredentialEdit}
+              seePassword={this.state.seePassword}
               handleChange={this.handleCredentialsInput}
+              toggleSeePassword={this.toggleSeePassword}
               information={this.state.website.information}
               account_information={this.state.account_information}/>
             <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>

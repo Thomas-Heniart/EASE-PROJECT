@@ -1,10 +1,10 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {testCredentials} from "../../../actions/catalogActions";
-import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import CredentialInputs from "./CredentialInputs";
 import {handleSemanticInput} from "../../../utils/utils";
-import { Container, Icon, Form, Message, Button } from 'semantic-ui-react';
+import {testCredentials} from "../../../actions/catalogActions";
+import SimpleModalTemplate from "../../common/SimpleModalTemplate";
+import { Container, Icon, Form, Message, Button, Label } from 'semantic-ui-react';
 
 @connect(store => ({
   modal: store.modals.passwordUpdate
@@ -16,6 +16,7 @@ class PasswordUpdateModal extends React.Component {
       error: '',
       check: '',
       loading: false,
+      seePassword: false,
       website: this.props.modal.website,
       account_information: this.props.modal.account_information
     }
@@ -35,6 +36,9 @@ class PasswordUpdateModal extends React.Component {
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  toggleSeePassword = () => {
+    this.setState({seePassword: !this.state.seePassword});
   };
   testConnection = () => {
     this.props.dispatch(testCredentials({
@@ -58,12 +62,32 @@ class PasswordUpdateModal extends React.Component {
             <div className="squared_image_handler">
               <img src={this.state.website.logo} alt="Website logo"/>
             </div>
-            <span className="app_name">{this.state.website.app_name}</span>
+            <div className="display_flex flex_direction_column team_app_settings_name">
+              <span className="app_name">{this.state.website.app_name}</span>
+              {this.props.modal.team !== -1 &&
+                <React.Fragment>
+                  <div>
+                    <Label className="team_name" icon={<Icon name="users" class="mrgnRight5"/>} size="tiny" content={this.props.modal.team.name}/>
+                  </div>
+                  <span className="room_name"># {this.props.modal.room.name}</span>
+                </React.Fragment>}
+            </div>
           </div>
+          {this.props.modal.team_user_id !== -1 &&
+            <div>
+              <p>Password suggested by: </p>
+              <div>{this.props.modal.team.team_users[this.props.modal.team_user_id].name}</div>
+            </div>}
+          {this.props.modal.team !== -1 && this.props.modal.team.team_users[this.props.modal.team.my_team_user_id].role > 1 &&
+          <p>Modifications will be applied to your Team.</p>}
+          {this.props.modal.team !== -1 && this.props.modal.team.team_users[this.props.modal.team.my_team_user_id].role < 2 &&
+          <p>Modifications will be applied to you and suggested to the Admin of {this.state.website.app_name}.</p>}
           <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
             <CredentialInputs
               toggle={this.toggleCredentialEdit}
+              seePassword={this.state.seePassword}
               handleChange={this.handleCredentialsInput}
+              toggleSeePassword={this.toggleSeePassword}
               information={this.state.website.information}
               account_information={this.state.account_information}/>
             <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>
