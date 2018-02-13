@@ -115,11 +115,16 @@ public class ServletUpdate extends HttpServlet {
                     if (websiteApp.getTeamCardReceiver() != null)
                         teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
                     websiteApp.decipher(keyUser, teamKey);
-                    if (websiteApp.getAccount() != null && websiteApp.getAccount().match(account_information))
-                        continue;
-                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
-                    hibernateQuery.saveOrUpdateObject(tmp);
-                    res.put(tmp.getJson());
+                    if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information)) {
+                    } else if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
+                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                        hibernateQuery.saveOrUpdateObject(tmp);
+                        res.put(tmp.getJson());
+                    } else {
+                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
+                        hibernateQuery.saveOrUpdateObject(tmp);
+                        res.put(tmp.getJson());
+                    }
                 }
         } else {
             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
