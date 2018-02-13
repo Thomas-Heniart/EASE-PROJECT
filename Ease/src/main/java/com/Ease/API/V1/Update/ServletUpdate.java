@@ -82,7 +82,6 @@ public class ServletUpdate extends HttpServlet {
             for (Update update : updates)
                 update.decipher(privateKey);
             updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
-            System.out.println("Updates empty: " + updates.isEmpty());
             if (updates.isEmpty())
                 populateResponse(res, user, account_information, website, url, hibernateQuery, sm);
             else {
@@ -110,19 +109,22 @@ public class ServletUpdate extends HttpServlet {
                 hibernateQuery.saveOrUpdateObject(tmp);
                 res.put(tmp.getJson());
             } else
-                System.out.println("WebsiteApps not empty");
                 for (WebsiteApp websiteApp : websiteApps) {
                     String teamKey = null;
                     String keyUser = sm.getKeyUser();
                     if (websiteApp.getTeamCardReceiver() != null)
                         teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
                     websiteApp.decipher(keyUser, teamKey);
-                    System.out.println("WebsiteApp account null: " + (websiteApp.getAccount() == null));
-                    if (websiteApp.getAccount() != null && websiteApp.getAccount().match(account_information))
-                        continue;
-                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
-                    hibernateQuery.saveOrUpdateObject(tmp);
-                    res.put(tmp.getJson());
+                    if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information)) {
+                    } else if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
+                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                        hibernateQuery.saveOrUpdateObject(tmp);
+                        res.put(tmp.getJson());
+                    } else {
+                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
+                        hibernateQuery.saveOrUpdateObject(tmp);
+                        res.put(tmp.getJson());
+                    }
                 }
         } else {
             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);

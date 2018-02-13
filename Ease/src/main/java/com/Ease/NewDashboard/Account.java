@@ -277,10 +277,23 @@ public class Account {
         return true;
     }
 
-    public boolean match(JSONObject account_information) {
+    public boolean sameAs(JSONObject account_information) {
         if (this.getAccountInformationSet().isEmpty())
             return false;
         for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            String value = account_information.optString(accountInformation.getInformation_name());
+            if (value.equals("") || !value.equals(accountInformation.getDeciphered_information_value()))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean matchExceptPassword(JSONObject account_information) {
+        if (this.getAccountInformationSet().isEmpty())
+            return false;
+        for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            if (accountInformation.getInformation_name().equals("password"))
+                continue;
             String value = account_information.optString(accountInformation.getInformation_name());
             if (value.equals("") || !value.equals(accountInformation.getDeciphered_information_value()))
                 return false;

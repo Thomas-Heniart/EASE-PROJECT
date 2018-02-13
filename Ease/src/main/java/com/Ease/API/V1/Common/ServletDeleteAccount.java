@@ -26,11 +26,11 @@ public class ServletDeleteAccount extends HttpServlet {
             sm.needToBeConnected();
             String password = sm.getStringParam("password", false, false);
             if (password == null || password.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Password does not not match.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Password does not not sameAs.");
             password = sm.decipher(password);
             User user = sm.getUser();
             if (!user.getUserKeys().isGoodPassword(password))
-                throw new HttpServletException(HttpStatus.BadRequest, "Password does not match.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Password does not sameAs.");
             for (TeamUser teamUser : user.getTeamUsers()) {
                 Team team = teamUser.getTeam();
                 if (team.isActive())

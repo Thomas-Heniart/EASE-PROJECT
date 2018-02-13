@@ -76,11 +76,17 @@ public class ServletDeleteTeamUser extends HttpServlet {
             JSONArray singleCards = new JSONArray();
             JSONArray enterpriseCards = new JSONArray();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamUser.db_id = :teamUserId");
+            hibernateQuery.setParameter("teamUserId", team_user_id);
+            hibernateQuery.executeUpdate();
             for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
                 App app = teamCardReceiver.getApp();
                 hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");
                 hibernateQuery.setParameter("app_id", app.getDb_id());
                 hibernateQuery.executeUpdate();
+            }
+            for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
+                App app = teamCardReceiver.getApp();
                 TeamCard teamCard = teamCardReceiver.getTeamCard();
                 if (app.isWebsiteApp()) {
                     WebsiteApp websiteApp = (WebsiteApp) app;
@@ -161,9 +167,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
                 MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
                 mailjetContactWrapper.updateUserContactLists(user);
             }
-            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamUser.db_id = :teamUserId");
-            hibernateQuery.setParameter("teamUserId", team_user_id);
-            hibernateQuery.executeUpdate();
             sm.deleteObject(teamUser_to_delete);
             JSONObject ws_obj = new JSONObject();
             ws_obj.put("team_id", team_id);
