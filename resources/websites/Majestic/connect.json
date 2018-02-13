@@ -1,0 +1,55 @@
+{
+  "name": "Majestic",
+  "lastlogin": "",
+  "home": "https://majestic.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#login_header_dropdown"
+      },
+      {
+        "action": "waitfor",
+        "search": "#signin input[name='EmailAddress']"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#signin input[name='EmailAddress']",
+        "grave": "true"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#signin input[name='Password']",
+        "grave": "true"
+      },
+      {
+        "action": "trueClick",
+        "search": "#signin_submit",
+        "grave": "true"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a.logout_header_link"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login_header_dropdown"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a.logout_header_link, #login_header_dropdown"
+    },
+    {
+      "search": "a.logout_header_link"
+    }
+  ]
+}
