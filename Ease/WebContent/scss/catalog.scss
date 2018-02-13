@@ -189,6 +189,10 @@
           top: 40%;
           right: 0;
           color: #d2dae4;
+          &.trash {
+            cursor: pointer;
+            color: #949EB7;
+          }
         }
       }
       &.update {

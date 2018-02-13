@@ -44,6 +44,9 @@ public class ServletDeleteChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             for (TeamCard teamCard : channel.getTeamCardSet()) {
+                hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
+                hibernateQuery.setParameter("card_id", teamCard.getDb_id());
+                hibernateQuery.executeUpdate();
                 for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                     App app = teamCardReceiver.getApp();
                     if (app.isWebsiteApp()) {
@@ -69,14 +72,13 @@ public class ServletDeleteChannel extends HttpServlet {
                             }
                         }
                     }
+                    TeamUser teamUser1 = teamCardReceiver.getTeamUser();
+                    teamUser1.removeTeamCardReceiver(teamCardReceiver);
                     Profile profile = teamCardReceiver.getApp().getProfile();
                     if (profile != null)
                         profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 }
             }
-            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.channel.db_id = :channel_id");
-            hibernateQuery.setParameter("channel_id", channel_id);
-            hibernateQuery.executeUpdate();
             channel.getTeamUsers().forEach(teamUser1 -> teamUser1.getChannels().remove(channel));
             channel.getTeamCardSet().clear();
             channel.getPending_teamUsers().forEach(teamUser1 -> teamUser1.getPending_channels().remove(channel));

@@ -133,7 +133,7 @@ class UpdatesContainer extends React.Component {
         team,
         room,
       ).then(response => {
-        this.confirmAccountUpdate({response, item, app, team, account_information})
+        response && this.confirmAccountUpdate({response, item, app, team, account_information})
       });
     else if (this.state.type[item.id] === 'new')
       newAccountUpdateModal(
@@ -151,7 +151,7 @@ class UpdatesContainer extends React.Component {
         team,
         room,
       ).then(response => {
-        this.confirmPasswordUpdate({response, item, app, team})
+        response && this.confirmPasswordUpdate({response, item, app, team});
       });
   };
   typeUpdate = (item, card, app, meId) => {

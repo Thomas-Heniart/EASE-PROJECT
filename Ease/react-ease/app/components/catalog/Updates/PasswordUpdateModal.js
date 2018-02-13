@@ -16,6 +16,7 @@ class PasswordUpdateModal extends React.Component {
       error: '',
       check: '',
       loading: false,
+      seePassword: false,
       website: this.props.modal.website,
       account_information: this.props.modal.account_information
     }
@@ -35,6 +36,9 @@ class PasswordUpdateModal extends React.Component {
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  toggleSeePassword = () => {
+    this.setState({seePassword: !this.state.seePassword});
   };
   testConnection = () => {
     this.props.dispatch(testCredentials({
@@ -63,7 +67,9 @@ class PasswordUpdateModal extends React.Component {
           <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
             <CredentialInputs
               toggle={this.toggleCredentialEdit}
+              seePassword={this.state.seePassword}
               handleChange={this.handleCredentialsInput}
+              toggleSeePassword={this.toggleSeePassword}
               information={this.state.website.information}
               account_information={this.state.account_information}/>
             <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>

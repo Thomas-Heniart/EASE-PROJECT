@@ -7,6 +7,7 @@ import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamUser;
 import com.Ease.Update.Update;
 import com.Ease.Update.UpdateFactory;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -41,6 +42,13 @@ public class ServletSendUpdateToAdmin extends HttpServlet {
             Update new_update = UpdateFactory.getInstance().createUpdate(roomManager.getUser(), update.getAccountInformation(), (TeamSingleCard) teamCard, teamUser);
             hibernateQuery.saveOrUpdateObject(new_update);
             hibernateQuery.deleteObject(update);
+            NotificationFactory.getInstance().createUpdateTeamCardNotification(teamUser, teamCard, sm.getUserWebSocketManager(roomManager.getUser().getDb_id()), sm.getHibernateQuery());
+            /* MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.addTo(roomManager.getEmail());
+            mailJetBuilder.setTemplateId(0);
+
+            mailJetBuilder.sendEmail(); */
             sm.setSuccess(new_update.getJson());
         } catch (Exception e) {
             sm.setError(e);
