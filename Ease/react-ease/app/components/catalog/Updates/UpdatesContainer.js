@@ -38,16 +38,36 @@ class UpdatesContainer extends React.Component {
         room,
       ).then(response => {
         if (response.check === 'Simple') {
-          this.props.dispatch(teamEditEnterpriseCardReceiver({
-            team_id: item.team_id,
-            team_card_id: item.team_card_id,
-            team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(item => {
-              return team.my_team_user_id === item.team_user_id
-            })[0].id,
-            account_information: response.account_information
-          })).then(response => {
-            this.props.dispatch(deleteUpdate({id: item.id}));
-          })
+          if (item.team_card_id !== -1) {
+            if (app.type === 'teamEnterpriseApp') {
+              this.props.dispatch(teamEditEnterpriseCardReceiver({
+                team_id: item.team_id,
+                team_card_id: item.team_card_id,
+                team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(item => {
+                  return team.my_team_user_id === item.team_user_id
+                })[0].id,
+                account_information: response.account_information
+              })).then(response => {
+                this.props.dispatch(deleteUpdate({id: item.id}));
+              });
+            }
+            else {
+              this.props.dispatch(teamEditSingleCardCredentials({
+                team_card: this.props.team_apps[item.team_card_id],
+                account_information: response.account_information
+              })).then(response => {
+                this.props.dispatch(deleteUpdate({id: item.id}));
+              });
+            }
+          }
+          else {
+            this.props.dispatch(editAppCredentials({
+              app: app,
+              account_information: response.account_information
+            })).then(response => {
+              this.props.dispatch(deleteUpdate({id: item.id}));
+            });
+          }
         }
         else
           newAccountUpdateModal(
@@ -71,7 +91,7 @@ class UpdatesContainer extends React.Component {
         room,
       ).then(response => {
         if (item.team_card_id !== -1) {
-          if (app.type === 'teamEnterpriseApp')
+          if (app.type === 'teamEnterpriseApp') {
             this.props.dispatch(teamEditEnterpriseCardReceiver({
               team_id: item.team_id,
               team_card_id: item.team_card_id,
@@ -82,13 +102,15 @@ class UpdatesContainer extends React.Component {
             })).then(response => {
               this.props.dispatch(deleteUpdate({id: item.id}));
             });
-          else
+          }
+          else {
             this.props.dispatch(teamEditSingleCardCredentials({
               team_card: this.props.team_apps[item.team_card_id],
               account_information: response.account_information
             })).then(response => {
               this.props.dispatch(deleteUpdate({id: item.id}));
             });
+          }
         }
         else {
           this.props.dispatch(editAppCredentials({
