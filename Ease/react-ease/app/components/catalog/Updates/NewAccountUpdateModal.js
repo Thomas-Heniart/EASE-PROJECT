@@ -47,7 +47,7 @@ class NewAccountUpdateModal extends React.Component {
     testConnection = () => {
         this.props.dispatch(testCredentials({
             account_information: this.state.account_information,
-            website_id: this.state.website.id
+            website_id: this.state.website.id,
         }));
     };
     close = () => {
@@ -55,12 +55,16 @@ class NewAccountUpdateModal extends React.Component {
     };
     edit = () => {
         console.log('submit');
-        this.props.modal.resolve();
+        this.props.modal.resolve({
+            account_information: this.state.account_information,
+            website: this.state.website,
+            appName: this.state.appName,
+            check: this.state.check
+        });
     };
     handleAppName = e => {
         this.setState({appName: e.target.value});
     };
-
     componentWillMount() {
         let teamName = [];
         Object.keys(this.props.teams).map(team => {
@@ -104,6 +108,7 @@ class NewAccountUpdateModal extends React.Component {
                         {
                             this.state.teamName.map(team => {
                                 return <Checkbox radio
+                                                 key={team.id}
                                                  style={{margin: "0 0 10px 0"}}
                                                  name='check'
                                                  value={team.id}
