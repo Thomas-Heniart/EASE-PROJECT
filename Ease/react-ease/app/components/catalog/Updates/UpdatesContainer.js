@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from "react-redux";
+import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
-import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
-import {getLogo} from "../../../utils/api";
+import {editAppCredentials} from "../../../actions/dashboardActions";
 import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
-import {editAppCredentials, editClassicApp} from "../../../actions/dashboardActions";
+import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
