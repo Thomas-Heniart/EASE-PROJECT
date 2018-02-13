@@ -12,6 +12,7 @@ import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.Utils.Servlets.ServletManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -82,7 +83,7 @@ public class ServletUpdate extends HttpServlet {
                 update.decipher(privateKey);
             updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
             if (updates.isEmpty())
-                populateResponse(res, user, account_information, website, url, hibernateQuery);
+                populateResponse(res, user, account_information, website, url, hibernateQuery, sm);
             else {
                 updates = updates.stream().filter(update -> !update.passwordMatch(account_information)).collect(Collectors.toList());
                 for (Update update : updates) {
@@ -97,7 +98,7 @@ public class ServletUpdate extends HttpServlet {
         sm.sendResponse();
     }
 
-    private void populateResponse(JSONArray res, User user, JSONObject account_information, Website website, String url, HibernateQuery hibernateQuery) throws HttpServletException {
+    private void populateResponse(JSONArray res, User user, JSONObject account_information, Website website, String url, HibernateQuery hibernateQuery, ServletManager sm) throws HttpServletException {
         if (website != null) {
             hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.db_id = :website_id AND w.profile.user.db_id = :user_id");
             hibernateQuery.setParameter("website_id", website.getDb_id());
@@ -109,6 +110,13 @@ public class ServletUpdate extends HttpServlet {
                 res.put(tmp.getJson());
             } else
                 for (WebsiteApp websiteApp : websiteApps) {
+                    String teamKey = null;
+                    String keyUser = sm.getKeyUser();
+                    if (websiteApp.getTeamCardReceiver() != null)
+                        teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
+                    websiteApp.decipher(keyUser, teamKey);
+                    if (websiteApp.getAccount() != null && websiteApp.getAccount().match(account_information))
+                        continue;
                     Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                     hibernateQuery.saveOrUpdateObject(tmp);
                     res.put(tmp.getJson());

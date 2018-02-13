@@ -80,6 +80,9 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             Profile profile = app.getProfile();
             if (profile != null)
                 profile.removeAppAndUpdatePositions(app, sm.getHibernateQuery());
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");
+            hibernateQuery.setParameter("app_id", app.getDb_id());
+            hibernateQuery.executeUpdate();
             sm.saveOrUpdate(teamCard);
             if (!teamUser.equals(teamUser_connected))
                 NotificationFactory.getInstance().createRemovedFromTeamCardNotification(teamUser, teamUser_connected, teamCard.getName(), teamCard.getLogo(), teamCard.getChannel(), sm.getUserIdMap(), sm.getHibernateQuery());

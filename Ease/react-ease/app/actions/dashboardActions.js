@@ -496,6 +496,30 @@ export function removeProfile({profile_id}){
   }
 }
 
+export function editAppCredentials({account_information, app}) {
+  if (app.type === 'classicApp')
+    return editClassicApp({
+      app_id: app.id,
+      name: app.name,
+      account_information: account_information
+    });
+  else if (app.type === 'softwareApp')
+    return editSoftwareApp({
+      app_id: app.id,
+      name: app.name,
+      account_information: account_information
+    });
+  else
+    return editAnyApp({
+      app_id: app.id,
+      name: app.name,
+      url: app.website.url,
+      img_url: app.website.logo,
+      account_information: account_information,
+      connection_information: app.website.information
+    })
+}
+
 export function editClassicApp({app_id, name, account_information}){
   return (dispatch, getState) => {
     return post_api.dashboard.editClassicApp({

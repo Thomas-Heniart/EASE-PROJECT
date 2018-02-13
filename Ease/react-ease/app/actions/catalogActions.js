@@ -459,7 +459,8 @@ export function accountUpdateModal(dispatch, website, account_information, team,
       reject: reject
     }));
   }).then(response => {
-    console.log('resolve')
+    dispatch(showAccountUpdateModal({state: false}));
+    return response;
   }).catch(err => {
     dispatch(showAccountUpdateModal({state: false}));
   });
@@ -492,7 +493,8 @@ export function passwordUpdateModal(dispatch, website, account_information, team
       reject: reject
     }));
   }).then(response => {
-    console.log('resolve')
+    dispatch(showPasswordUpdateModal({state: false}));
+    return response;
   }).catch(err => {
     dispatch(showPasswordUpdateModal({state: false}));
   });

@@ -276,4 +276,13 @@ public class Account {
         }
         return true;
     }
+
+    public boolean match(JSONObject account_information) {
+        for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            String value = account_information.optString(accountInformation.getInformation_name());
+            if (value.equals("") || !value.equals(accountInformation.getDeciphered_information_value()))
+                return false;
+        }
+        return true;
+    }
 }

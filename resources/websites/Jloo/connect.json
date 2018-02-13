@@ -1,0 +1,47 @@
+{
+  "name": "Jloo",
+  "lastlogin": "",
+  "home": "https://www.jloo.com/app/jloo/httpdocs/index.php",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": ".login-form input[name='email']",
+        "grave": "true"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": ".login-form input[name='password']",
+        "grave": "true"
+      },
+      {
+        "action": "trueClick",
+        "search": ".login-form button[name='account_login']",
+        "grave": "true"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "a[href*='logout']"
+      },
+      {
+        "action": "waitfor",
+        "search": ".login-form input[name='email']"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "a[href*='logout'], .login-form input[name='email']"
+    },
+    {
+      "search": "a[href*='logout']"
+    }
+  ]
+}
