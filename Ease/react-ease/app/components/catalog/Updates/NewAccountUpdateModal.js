@@ -8,6 +8,7 @@ import {Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-rea
 
 @connect(store => ({
     modal: store.modals.newAccountUpdate,
+    teams: store.teams,
 }))
 class NewAccountUpdateModal extends React.Component {
     constructor(props){
@@ -50,6 +51,13 @@ class NewAccountUpdateModal extends React.Component {
         console.log('submit');
         this.props.modal.resolve();
     };
+    componentWillMount() {
+        const teamName = [];
+        Object.keys(this.props.teams).map(team => {
+            return teamName.push(this.props.teams[team]);
+        });
+        console.log('result mapping',teamName);
+    }
     render() {
         return (
             <SimpleModalTemplate
@@ -83,7 +91,9 @@ class NewAccountUpdateModal extends React.Component {
                                       name='check'
                                       value='Simple'
                                       onChange={this.handleChange}
-                                      label={this.state.website.name}
+                                      label={this.teamName.map(team => {
+                                          return team.name + ' ,';
+                                      })}
                                       checked={this.state.check === 'Simple'}/>
                             <Checkbox radio
                                       name='check'
