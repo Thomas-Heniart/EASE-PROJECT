@@ -111,7 +111,7 @@
         color: #949eb7; }
   #catalog .logoCatalog {
     padding-left: 20px; }
-    #catalog .logoCatalog img {
+    #catalog .logoCatalog img, #catalog .logoCatalog .div_wait_logo {
       width: 50px;
       height: 50px;
       margin: 10px;
@@ -146,7 +146,7 @@
         transition: all .5s ease; }
         #catalog .logoCatalog .showSegment:hover p {
           max-width: 80px; }
-        #catalog .logoCatalog .showSegment:hover img {
+        #catalog .logoCatalog .showSegment:hover img, #catalog .logoCatalog .showSegment:hover .div_wait_logo {
           box-shadow: none; }
         #catalog .logoCatalog .showSegment:hover i {
           position: absolute;
@@ -209,6 +209,27 @@
               color: #414141;
               font-size: 15px;
               text-decoration: none; }
+      #catalog .logoCatalog .showSegment .logo {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        max-width: 100%;
+        background-color: transparent; }
+        #catalog .logoCatalog .showSegment .logo .div_wait_logo {
+          background-color: white;
+          color: #dededf; }
+          #catalog .logoCatalog .showSegment .logo .div_wait_logo i {
+            display: block;
+            margin: auto;
+            position: unset;
+            font-size: 20px;
+            color: #d2dae4; }
+        #catalog .logoCatalog .showSegment .logo i.close {
+          position: absolute;
+          top: 72px;
+          left: 19px;
+          font-size: 18px;
+          text-shadow: 0 0 2px #fff; }
   #catalog .requestAnApp {
     border: 1px solid rgba(34, 36, 38, 0.15);
     border-radius: 7px;
