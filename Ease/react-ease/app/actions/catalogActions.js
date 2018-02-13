@@ -527,7 +527,10 @@ export function newAccountUpdateModal(dispatch, website, account_information){
             reject: reject
         }));
     }).then(response => {
-        console.log('resolve')
+        console.log('resolve');
+        dispatch(showNewAccountUpdateModal({state: false}));
+        console.log('la réponse :',response);
+        return response;
     }).catch(err => {
         dispatch(showNewAccountUpdateModal({state: false}));
     });
@@ -543,6 +546,7 @@ export function showNewAccountUpdateModal({state, resolve, reject, website, acco
             resolve: resolve,
             reject: reject
         }
+
     }
 }
 
