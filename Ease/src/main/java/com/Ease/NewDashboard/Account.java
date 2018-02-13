@@ -278,6 +278,8 @@ public class Account {
     }
 
     public boolean match(JSONObject account_information) {
+        if (this.getAccountInformationSet().isEmpty())
+            return false;
         for (AccountInformation accountInformation : this.getAccountInformationSet()) {
             String value = account_information.optString(accountInformation.getInformation_name());
             if (value.equals("") || !value.equals(accountInformation.getDeciphered_information_value()))
