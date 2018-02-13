@@ -4,7 +4,8 @@ import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
 import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
 import {getLogo} from "../../../utils/api";
-import {teamEditAnyEnterpriseCard, teamEditEnterpriseCardReceiver} from "../../../actions/appsActions";
+import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
+import {editAppCredentials, editClassicApp} from "../../../actions/dashboardActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -27,7 +28,7 @@ class UpdatesContainer extends React.Component {
         return '';
     });
   };
-  openModal = ({item, website, account_information, team, room}) => {
+  openModal = ({app, item, website, account_information, team, room}) => {
     if (this.state.type[item.id] === 'account')
       accountUpdateModal(
         this.props.dispatch,
@@ -68,7 +69,36 @@ class UpdatesContainer extends React.Component {
         account_information,
         team,
         room,
-      );
+      ).then(response => {
+        if (item.team_card_id !== -1) {
+          if (app.type === 'teamEnterpriseApp')
+            this.props.dispatch(teamEditEnterpriseCardReceiver({
+              team_id: item.team_id,
+              team_card_id: item.team_card_id,
+              team_card_receiver_id: this.props.team_apps[item.team_card_id].receivers.filter(item => {
+                return team.my_team_user_id === item.team_user_id
+              })[0].id,
+              account_information: response.account_information
+            })).then(response => {
+              this.props.dispatch(deleteUpdate({id: item.id}));
+            });
+          else
+            this.props.dispatch(teamEditSingleCardCredentials({
+              team_card: this.props.team_apps[item.team_card_id],
+              account_information: response.account_information
+            })).then(response => {
+              this.props.dispatch(deleteUpdate({id: item.id}));
+            });
+        }
+        else {
+          this.props.dispatch(editAppCredentials({
+            app: app,
+            account_information: response.account_information
+          })).then(response => {
+            this.props.dispatch(deleteUpdate({id: item.id}));
+          });
+        }
+      });
   };
   typeUpdate = (item, card, app, meId) => {
     if ((item.app_id === -1 && item.team_card_id === -1) || (item.team_card_id !== -1 && (card.type !== "teamEnterpriseCard"
@@ -129,7 +159,7 @@ class UpdatesContainer extends React.Component {
             return (
               <Grid.Column key={item.id} className="showSegment update">
                 {website.logo && website.logo !== '' ?
-                <Image src="/resources/icons/link_app.png" label={<NewAppLabel/>}/>
+                <Image src={website.logo} label={<NewAppLabel/>}/>
                 :
                   <div className="logo">
                     <div className='div_wait_logo'>
@@ -147,6 +177,7 @@ class UpdatesContainer extends React.Component {
                 </div>
                 <Icon name="trash" onClick={() => this.props.dispatch(deleteUpdate({id: item.id}))}/>
                 <a onClick={() => this.openModal({
+                  app: app,
                   item: item,
                   website: website,
                   account_information: item.account_information,
