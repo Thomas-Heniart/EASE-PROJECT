@@ -277,6 +277,10 @@ public class Account {
         return true;
     }
 
+    /**
+     * @param account_information
+     * @return true if all information are identical
+     */
     public boolean sameAs(JSONObject account_information) {
         if (this.getAccountInformationSet().isEmpty())
             return false;
@@ -288,6 +292,10 @@ public class Account {
         return true;
     }
 
+    /**
+     * @param account_information
+     * @return true if information are identical, password squizzed
+     */
     public boolean matchExceptPassword(JSONObject account_information) {
         if (this.getAccountInformationSet().isEmpty())
             return false;
