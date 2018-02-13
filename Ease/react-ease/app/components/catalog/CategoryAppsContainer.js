@@ -25,9 +25,9 @@ class CategoryAppsContainer extends Component {
     return (
         <Container fluid>
           {category && websites.length > 0 &&
-          <AppsContainer title={category.name} websites={websites} openModal={this.props.openModal}/>}
+          <AppsContainer {...this.props} title={category.name} websites={websites} openModal={this.props.openModal}/>}
           {others.length > 0 &&
-          <AppsContainer title={'Other results'} websites={others} openModal={this.props.openModal}/>}
+          <AppsContainer {...this.props} title={'Other results'} websites={others} openModal={this.props.openModal}/>}
         </Container>
     )
   }
