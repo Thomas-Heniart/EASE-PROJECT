@@ -81,17 +81,23 @@ class UpdatesContainer extends React.Component {
       });
   };
   typeUpdate = (item, card, app, meId) => {
+    const sso_group = app.sso_group_id ? this.props.dashboard.sso_groups[app.sso_group_id] : -1;
     if ((item.app_id === -1 && item.team_card_id === -1) || (item.team_card_id !== -1 && (card.type !== "teamEnterpriseCard"
       && card.team_user_filler_id !== meId && card.team_user_filler_id !== -1))) {
       this.state.type[item.id] = 'new';
       return <span>New Account</span>;
     }
-    else if (item.app_id !== -1 && (Object.keys(app.account_information).length > 0 && app.account_information.login !== '')) {
+    else if (item.app_id !== -1 &&
+      ((!app.sso_group_id && Object.keys(app.account_information).length > 0 && app.account_information.login !== '')
+      || (app.sso_group_id &&
+          Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== ''))) {
       this.state.type[item.id] = 'password';
       return <span>Password update</span>;
     }
     else if (item.app_id !== -1 &&
-      (Object.keys(app.account_information).length === 0 || app.account_information.login === '')
+      ((!app.sso_group_id && Object.keys(app.account_information).length === 0 || app.account_information.login === '')
+        || (app.sso_group_id && Object.keys(sso_group.account_information).length > 0
+          && sso_group.account_information.login !== ''))
       && (item.team_card_id !== -1 && (card.type === "teamEnterpriseCard"
         || card.team_user_filler_id === meId || card.team_user_filler_id === -1))) {
       this.state.type[item.id] = 'account';
