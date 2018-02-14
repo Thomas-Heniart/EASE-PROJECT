@@ -78,7 +78,6 @@ public class ServletRegistration extends HttpServlet {
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);
             newUser.addUserEmail(userEmail);
-            newUser.getUserStatus().setNew_feature_seen(true);
             sm.setUser(newUser);
             String keyUser = newUser.getUserKeys().getDecipheredKeyUser(password);
             String privateKey = newUser.getUserKeys().getDecipheredPrivateKey(keyUser);
