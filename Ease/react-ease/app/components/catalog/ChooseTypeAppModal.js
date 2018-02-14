@@ -42,7 +42,7 @@ class ChooseTypeAppModal extends React.Component {
     return (
       <Form class="container" id="add_bookmark_form" onSubmit={e => this.catalogToTeamSpace(e, team_id, room_id)}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-            {website.logo ?
+            {website.logo && website.logo !== '' ?
               <div className="squared_image_handler">
                 <img src={website.logo} alt="Website logo"/>
               </div>
