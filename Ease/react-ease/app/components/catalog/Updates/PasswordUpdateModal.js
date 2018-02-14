@@ -74,7 +74,7 @@ class PasswordUpdateModal extends React.Component {
   };
   edit = () => {
     this.setState({loading: true});
-    if (this.props.modal.item.team_card_id) {
+    if (this.props.modal.item.team_card_id !== -1) {
       if (this.state.app.type === 'teamEnterpriseApp') {
         this.props.dispatch(teamEditEnterpriseCardReceiver({
           team_id: this.state.team.id,

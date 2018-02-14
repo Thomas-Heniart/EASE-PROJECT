@@ -497,7 +497,12 @@ export function removeProfile({profile_id}){
 }
 
 export function editAppCredentials({account_information, app}) {
-  if (app.type === 'classicApp')
+  if (app.sso_group_id)
+    return editSsoGroup({
+      sso_group_id: app.sso_group_id,
+      account_information: account_information
+    });
+  else if (app.type === 'classicApp')
     return editClassicApp({
       app_id: app.id,
       name: app.name,
