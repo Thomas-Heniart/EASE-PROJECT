@@ -55,6 +55,7 @@ import FillSimpleCardCredentialsModal from "../teamModals/FillSimpleCardCredenti
 import AccountUpdateModal from "../catalog/Updates/AccountUpdateModal";
 import NewAccountUpdateModal from "../catalog/Updates/NewAccountUpdateModal";
 import PasswordUpdateModal from "../catalog/Updates/PasswordUpdateModal";
+import NewAccountUpdateLocationModal from "../catalog/Updates/NewAccountUpdateLocationModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -208,6 +209,8 @@ class ModalsContainer extends Component{
           <AccountUpdateModal/>}
           {this.props.modals.newAccountUpdate.active &&
           <NewAccountUpdateModal/>}
+          {this.props.modals.newAccountUpdateLocation.active &&
+          <NewAccountUpdateLocationModal/>}
           {this.props.modals.passwordUpdate.active &&
           <PasswordUpdateModal/>}
         </div>
