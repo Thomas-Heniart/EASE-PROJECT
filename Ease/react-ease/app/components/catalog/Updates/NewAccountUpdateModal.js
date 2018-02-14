@@ -21,7 +21,8 @@ class NewAccountUpdateModal extends React.Component {
             loading: false,
             seePassword: false,
             website: this.props.modal.website,
-            account_information: this.props.modal.account_information
+            account_information: this.props.modal.account_information,
+            editCredentials: {}
         }
     }
     handleInput = handleSemanticInput.bind(this);
@@ -31,16 +32,16 @@ class NewAccountUpdateModal extends React.Component {
         account_information[name] = value;
         this.setState({account_information: account_information});
     };
-    toggleCredentialEdit = (name) => {
-        const credentials = this.state.credentials.map(item => {
-            if (item.name === name)
-                item.edit = !item.edit;
-            if (!item.edit)
-                item.value = this.props.app.account_information[item.name];
-            return item;
-        });
-        this.setState({credentials: credentials});
-    };
+  toggleCredentialEdit = (name) => {
+    const editCredentials = {};
+    Object.keys(this.state.editCredentials).map(item => {
+      if (item === name)
+        editCredentials[item] = !this.state.editCredentials[item];
+      else
+        editCredentials[item] = this.state.editCredentials[item];
+    });
+    this.setState({editCredentials: editCredentials});
+  };
     toggleSeePassword = () => {
         this.setState({seePassword: !this.state.seePassword});
     };
@@ -71,8 +72,12 @@ class NewAccountUpdateModal extends React.Component {
             teamName.push(this.props.teams[team]);
         });
         this.setState({teamName: teamName});
+        let edit = {};
+        Object.keys(this.state.account_information).map(item => {
+            edit[item] = false
+        });
+        this.setState({editCredentials: edit});
     }
-
     render() {
         return (
             <SimpleModalTemplate
@@ -94,6 +99,7 @@ class NewAccountUpdateModal extends React.Component {
                             </div>
                         </div>
                         <CredentialInputs
+                            edit={this.state.editCredentials}
                             toggle={this.toggleCredentialEdit}
                             seePassword={this.state.seePassword}
                             handleChange={this.handleCredentialsInput}

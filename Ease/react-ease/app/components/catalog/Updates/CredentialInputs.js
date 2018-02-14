@@ -2,7 +2,7 @@ import React from 'react';
 import {credentialIconType} from "../../../utils/utils";
 import { Input, Icon, Form, Label } from 'semantic-ui-react';
 
-const CredentialInputs = ({information, account_information, handleChange, toggle, seePassword, toggleSeePassword}) => {
+const CredentialInputs = ({information, account_information, handleChange, toggle, seePassword, toggleSeePassword, edit}) => {
   return (Object.keys(information).sort((a, b) => {
     return information[a].priority - information[b].priority;
   }).map(item => {
@@ -13,15 +13,15 @@ const CredentialInputs = ({information, account_information, handleChange, toggl
           <Input
             fluid
             icon
+            required
             name={item}
             size='large'
             labelPosition='left'
-            // required={this.state.isEmpty}
-            placeholder={information[item].placeholder}
-            className="modalInput team-app-input"
+            disabled={!edit[item]}
             onChange={handleChange}
-            // disabled={!item.edit && !this.state.isEmpty}
             value={account_information[item]}
+            className="modalInput team-app-input"
+            placeholder={information[item].placeholder}
             type={information[item].type === 'password' && seePassword === false ? 'password' : 'text'}>
             <Label><Icon name={credentialIconType[item]}/></Label>
             <input />
@@ -30,11 +30,12 @@ const CredentialInputs = ({information, account_information, handleChange, toggl
             {(information[item].type === 'password' && seePassword === false) &&
               <Icon name='hide' link onClick={toggleSeePassword}/>}
           </Input>
+          {(edit[item] !== undefined) &&
           <Icon
             fitted link
             name="pencil"
             onClick={toggle.bind(null, item)}
-            style={{paddingLeft: '15px'}}/>
+            style={{paddingLeft: '15px'}}/>}
         </div>
       </Form.Field>)
   }));
