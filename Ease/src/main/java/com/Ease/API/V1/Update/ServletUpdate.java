@@ -129,6 +129,8 @@ public class ServletUpdate extends HttpServlet {
                             }
                         }
                     }
+                    if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information))
+                        continue;
                     if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
                         Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                         hibernateQuery.saveOrUpdateObject(tmp);
