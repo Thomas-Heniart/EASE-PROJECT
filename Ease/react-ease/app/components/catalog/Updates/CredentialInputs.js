@@ -11,8 +11,8 @@ const CredentialInputs = ({information, account_information, handleChange, toggl
         <label>{information[item].placeholder}</label>
         <div className="display_flex align_items_center">
           <Input
-            fluid
             icon
+            fluid
             required
             name={item}
             size='large'

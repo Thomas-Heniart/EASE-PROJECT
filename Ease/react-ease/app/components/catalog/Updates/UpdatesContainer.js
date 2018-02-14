@@ -3,8 +3,6 @@ import {connect} from "react-redux";
 import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container } from 'semantic-ui-react';
-import {editAppCredentials} from "../../../actions/dashboardActions";
-import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
 import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
 
 @connect(store => ({
@@ -17,43 +15,45 @@ class UpdatesContainer extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      type: {}
+      type: {},
+      loading: false,
+      websites: {}
     }
   }
-  getLogoAny = (url) => {
-    getLogo({url: url}).then(response => {
-      if (response !== '/resources/icons/link_app.png')
-        return response;
-      else
-        return '';
+  componentWillMount() {
+    let stateWebsites = {};
+    this.props.updates.map((item, idx) => {
+      let website = {};
+      this.props.websites.filter(site => {
+        if (site.id === item.website_id)
+          website = site;
+        return site;
+      });
+      if (item.app_id !== -1) {
+        website = this.props.dashboard.apps[item.app_id].website;
+        website.app_name = this.props.dashboard.apps[item.app_id].name;
+        if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
+          website.name = this.props.dashboard.apps[item.app_id].name
+      }
+      if (item.website_id === -1) {
+        getLogo({url: item.url}).then(response => {
+          website = {
+            name: item.url,
+            url: item.url,
+            logo: response !== '/resources/icons/link_app.png' ? response : '',
+            information: {
+              login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
+              password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
+            }
+          };
+          stateWebsites[idx] = website;
+          this.setState({websites: stateWebsites});
+        });
+      }
+      stateWebsites[idx] = website;
     });
-  };
-  getWebsite = ({websites, item, app}) => {
-    let website = {};
-    websites.filter(site => {
-      if (site.id === item.website_id)
-        website = site;
-      return site;
-    });
-    if (item.app_id !== -1) {
-      website = app.website;
-      website.app_name = app.name;
-      if (app.sub_type === 'any')
-        website.name = app.name
-    }
-    if (item.website_id === -1) {
-      website = {
-        name: item.url,
-        url: item.url,
-        logo: this.getLogoAny(item.url),
-        information: {
-          login: {placeholder: "Login",priority:0,type:"text"},
-          password: {placeholder:"Password",priority:1,type:"password"}
-        }
-      };
-    }
-    return website;
-  };
+    this.setState({websites: stateWebsites});
+  }
   openModal = ({item, website, account_information}) => {
     if (this.state.type[item.id] === 'account')
       accountUpdateModal(
@@ -97,8 +97,7 @@ class UpdatesContainer extends React.Component {
   };
   render() {
     const {
-      title,
-      websites,
+      title
     } = this.props;
     return (
       <Container fluid>
@@ -106,11 +105,11 @@ class UpdatesContainer extends React.Component {
           {title}
         </h3>
         <Grid columns={4} className="logoCatalog">
-          {this.props.updates.map((item) => {
+          {this.props.updates.map((item, idx) => {
             const meId = item.team_id !== -1 ? this.props.teams[item.team_id].my_team_user_id : -1;
             const card = item.team_card_id !== -1 ? this.props.team_apps[item.team_card_id] : -1;
             const app = item.app_id !== -1 ? this.props.dashboard.apps[item.app_id] : -1;
-            const website = this.getWebsite({websites, item, app});
+            const website = this.state.websites[idx];
             return (
               <Grid.Column key={item.id} className="showSegment update">
                 {website.logo && website.logo !== '' ?
