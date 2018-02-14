@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Checkbox, Button, Icon } from 'semantic-ui-react';
-import { withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 
