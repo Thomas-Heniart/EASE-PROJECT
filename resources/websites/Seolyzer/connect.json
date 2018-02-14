@@ -1,0 +1,25 @@
+{
+    "name":"Seolyzer",
+    "lastLogin":"",
+    "home":"https://seolyzer.io",
+    "connect":{
+      "todo":[
+        {"action":"aclick", "search":"a[href*='https://seolyzer.io/login/']"},
+        {"action":"waitfor", "search":"#login-form > form > div > div:nth-child(2) > span > input"},
+        {"action":"fill", "what":"login", "search":"#login-form > form > div > div:nth-child(2) > span > input"},
+        {"action":"fill", "what":"password", "search":"#login-form > form > div > div:nth-child(3) > span > input"},
+        {"action":"trueClick", "search":"#login-form > form > div > div:nth-child(5) > input"}
+      ]
+    },
+    "logout":{
+      "todo":[
+        {"action":"aclick", "search":"#menu-demo-menu > li > a"},
+        {"action":"waitfor", "search":"a[href*='/logout.php']"},
+        {"action":"aclick", "search":"a[href*='/logout.php']"}
+      ]
+    },
+    "checkAlreadyLogged":[
+      {"action":"waitfor", "search":"#menu-demo-menu > li > a, a[href*='https://seolyzer.io/login/']"},
+      {"search":"#menu-demo-menu > li > a"}
+    ]
+  }
