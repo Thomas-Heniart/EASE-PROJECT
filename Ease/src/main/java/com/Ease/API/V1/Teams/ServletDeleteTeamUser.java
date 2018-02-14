@@ -160,9 +160,9 @@ public class ServletDeleteTeamUser extends HttpServlet {
             });
             team.removeTeamUser(teamUser_to_delete);
             User user = teamUser_to_delete.getUser();
-            if (user != null) {
-                if (teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0)
-                    MailjetMessageWrapper.deleteTeamUserMail(teamUser_connected.getEmail(), teamUser_to_delete.getUser().getPersonalInformation().getFirst_name(), teamUser_to_delete.getUser().getPersonalInformation().getLast_name(), team.getName(), singleCards, enterpriseCards);
+            if (teamUser_to_delete.isRegistered()) {
+                if (teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0 && (singleCards.length() != 0 || enterpriseCards.length() != 0))
+                    MailjetMessageWrapper.deleteTeamUserMail(teamUser_connected.getEmail(), user.getPersonalInformation().getFirst_name(), user.getPersonalInformation().getLast_name(), team.getName(), singleCards, enterpriseCards);
                 user.removeTeamUser(teamUser_to_delete);
                 MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
                 mailjetContactWrapper.updateUserContactLists(user);
