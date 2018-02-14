@@ -89,6 +89,11 @@ export const modals = createReducer({
     resolve: null,
     reject: null
   },
+  newAccountUpdateLocation: {
+      active: false,
+      resolve: null,
+      reject: null
+  },
   newAccountUpdate: {
     active: false,
     resolve: null,
@@ -232,6 +237,12 @@ export const modals = createReducer({
       ...state,
       passwordUpdate: action.payload
     }
+  },
+  ['SHOW_NEW_ACCOUNT_UPDATE_LOCATION_MODAL'](state, action){
+      return {
+          ...state,
+          newAccountUpdateLocation: action.payload
+      }
   },
   ['SHOW_NEW_ACCOUNT_UPDATE_MODAL'](state, action){
     return {

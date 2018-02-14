@@ -2074,7 +2074,10 @@ button.only-text-button {
     #add_bookmark_form .choose_type_app .checkbox label {
       color: #939eb7;
       font-size: 14px;
-      font-weight: bold; }
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
     #add_bookmark_form .choose_type_app .checkbox.checked label {
       color: #45c997; }
 #add_bookmark_form .create_profile_input input {
