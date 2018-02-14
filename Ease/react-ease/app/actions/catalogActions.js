@@ -519,7 +519,7 @@ export function newAccountUpdateModal(dispatch, website, account_information){
     }).then(response => {
         console.log('resolve');
         dispatch(showNewAccountUpdateModal({state: false}));
-        console.log('la réponse :',response);
+        accountUpdateLocationModal(dispatch, website, response.account_information, response.teamId, response.appName);
         return response;
     }).catch(err => {
         dispatch(showNewAccountUpdateModal({state: false}));
@@ -536,9 +536,43 @@ export function showNewAccountUpdateModal({state, resolve, reject, website, acco
             resolve: resolve,
             reject: reject
         }
-
     }
 }
+
+export function accountUpdateLocationModal(dispatch, website, account_information, team, appName){
+    return new Promise((resolve, reject) => {
+        dispatch(showNewAccountLocationUpdateModal({
+            state: true,
+            website: website,
+            account_information: account_information,
+            team: team,
+            appName: appName,
+            resolve: resolve,
+            reject: reject
+        }));
+    }).then(response => {
+        console.log('resolve');
+    }).catch(err => {
+        dispatch(showNewAccountLocationUpdateModal({state: false}));
+    });
+}
+
+export function showNewAccountLocationUpdateModal({state, resolve, reject, website, account_information, team, appName}){
+    return {
+        type: 'SHOW_NEW_ACCOUNT_UPDATE_LOCATION_MODAL',
+        payload: {
+            active: state,
+            website: website,
+            team: team,
+            appName: appName,
+            account_information: account_information,
+            resolve: resolve,
+            reject: reject
+        }
+    }
+}
+
+
 
 export function deleteUpdate({id}){
   return (dispatch, getState) => {
