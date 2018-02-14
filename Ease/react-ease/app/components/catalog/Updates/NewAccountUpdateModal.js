@@ -115,6 +115,23 @@ class NewAccountUpdateModal extends React.Component {
       check: this.state.check
     });
   };
+  logoLetter = () => {
+    let first = '';
+    let second = '';
+    let space = false;
+    for (let letter = 0; letter < this.state.appName.length; letter++) {
+      if (first.length < 1 && this.state.appName[letter] !== ' ')
+        first = this.state.appName[letter];
+      else if (first.length > 0 && second.length < 1 && this.state.appName[letter] !== ' ' && space === true)
+        second = this.state.appName[letter];
+      else if (this.state.appName[letter] === ' ')
+        space = true;
+    }
+    if (second !== '')
+      return first.toUpperCase() + second.toUpperCase();
+    else
+      return first.toUpperCase();
+  };
 
   componentWillMount() {
     let teamName = [];
@@ -141,9 +158,16 @@ class NewAccountUpdateModal extends React.Component {
         <Container className="app_settings_modal">
           <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
             <div className="app_name_container display-flex align_items_center">
-              <div className="squared_image_handler">
-                <img src="/resources/icons/link_app.png" alt="Website Logo"/>
-              </div>
+              {this.state.website.logo && this.state.website.logo !== '' ?
+                <div className="squared_image_handler">
+                  <img src={this.state.website.logo} alt="Website logo"/>
+                </div>
+                :
+                <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
+                  <div style={{margin:'auto'}}>
+                    <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                  </div>
+                </div>}
               <Input
                 placeholder="Name your App"
                 size='large'
