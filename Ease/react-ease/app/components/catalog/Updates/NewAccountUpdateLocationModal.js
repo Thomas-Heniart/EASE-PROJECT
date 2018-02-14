@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import {handleSemanticInput} from "../../../utils/utils";
 import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
+import ChooseTypeAppModal from '../ChooseTypeAppModal';
 
 @connect(store => ({
     teams: store.teams,
@@ -15,6 +16,7 @@ class NewAccountUpdateLocationModal extends React.Component {
       error: '',
       check: '',
       roomName: [],
+      view: 1,
       loading: false,
       seePassword: false,
       website: this.props.modal.website,
@@ -33,11 +35,14 @@ class NewAccountUpdateLocationModal extends React.Component {
     this.props.modal.resolve();
   };
 
+  changView = () => {
+    this.setState({view: 2});
+  };
+
   componentWillMount() {
     let roomName = [];
     Object.keys(this.props.teams[this.props.modal.team].rooms).map(room => {
       roomName.push(this.props.teams[this.props.modal.team].rooms[room]);
-      console.log(roomName);
     });
     this.setState({roomName: roomName});
     console.log('STATE : ', this.state);
@@ -50,7 +55,8 @@ class NewAccountUpdateLocationModal extends React.Component {
         onClose={this.close}
         headerContent={"Choose App location"}>
         <Container className="app_settings_modal">
-          <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
+          {this.state.view === 1 &&
+          <Form onSubmit={this.changView} error={this.state.error.length > 0} id='add_bookmark_form'>
             <div className="app_name_container display-flex align_items_center">
               <div className="squared_image_handler">
                 <img src="/resources/icons/link_app.png" alt="Website Logo"/>
@@ -89,6 +95,18 @@ class NewAccountUpdateLocationModal extends React.Component {
               loading={this.state.loading}
               disabled={this.state.loading}/>
           </Form>
+          }{this.state.view === 2 &&
+            <ChooseTypeAppModal
+              {...this.props}
+              // website={this.state.}
+              appName={this.props.modal.appName}
+              team_id={this.props.modal.team}
+              room_id={this.state.check}
+              close={this.close}/>
+          }
+
+
+
         </Container>
       </SimpleModalTemplate>
     )

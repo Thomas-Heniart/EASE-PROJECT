@@ -112,7 +112,7 @@ class NewAccountUpdateModal extends React.Component {
       account_information: this.state.account_information,
       website: this.state.website,
       appName: this.state.appName,
-      check: this.state.check
+      teamId: this.state.check
     });
   };
 
