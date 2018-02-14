@@ -50,6 +50,7 @@ class NewAccountUpdateLocationModal extends React.Component {
   }
 
   render() {
+    console.log(this.props.modal.appName);
     return (
       <SimpleModalTemplate
         onClose={this.close}
@@ -80,10 +81,10 @@ class NewAccountUpdateLocationModal extends React.Component {
                                  style={{margin: "0 0 10px 0"}}
                                  name={room.id}
                                  key={room.id}
-                                 value={room.name}
+                                 value={room.id}
                                  onChange={this.handleChange}
                                  label={"#" + room.name}
-                                 checked={this.state.check === room.name}/>
+                                 checked={this.state.check === room.id}/>
               })}
             </Form.Field>
             <Message error content={this.state.error}/>
@@ -95,19 +96,17 @@ class NewAccountUpdateLocationModal extends React.Component {
               loading={this.state.loading}
               disabled={this.state.loading}/>
           </Form>
-          }{this.state.view === 2 &&
-            <ChooseTypeAppModal
-              {...this.props}
-              // website={this.state.}
-              appName={this.props.modal.appName}
-              team_id={this.props.modal.team}
-              room_id={this.state.check}
-              close={this.close}/>
           }
-
-
-
         </Container>
+        {this.state.view === 2 &&
+        <ChooseTypeAppModal
+          {...this.props}
+          website={this.props.modal.website.logo}
+          appName={this.props.modal.appName}
+          team_id={this.props.modal.team}
+          room_id={this.state.check}
+          close={this.close}/>
+        }
       </SimpleModalTemplate>
     )
   }
