@@ -4,6 +4,7 @@ import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.SsoApp;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,9 +75,14 @@ public class ServletUpdate extends HttpServlet {
                 /* Hack for websites with more than 2 fields */
                 populateAccountInformation(website, url, account_information);
                 /* Find update(s) with this website */
-                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
+                if (website.getSso() == null) {
+                    hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
+                    hibernateQuery.setParameter("website_id", website.getDb_id());
+                } else {
+                    hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.sso.db_id = :sso_id");
+                    hibernateQuery.setParameter("sso_id", website.getSso().getDb_id());
+                }
                 hibernateQuery.setParameter("user_id", user.getDb_id());
-                hibernateQuery.setParameter("website_id", website.getDb_id());
             } else {
                 /* Find update(s) with same URL */
                 hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.url = :url");
@@ -131,7 +138,7 @@ public class ServletUpdate extends HttpServlet {
     private void populateResponse(JSONArray res, User user, JSONObject account_information, Website website, String url, HibernateQuery hibernateQuery, ServletManager sm) throws HttpServletException {
         if (website != null) {
             if (website.getSso() != null) {
-                hibernateQuery.queryString("SELECT w FROM SsoApp w WHERE w.sso.db_id = :sso_id AND w.profile.user.db_id = :user_id");
+                hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.sso.db_id = :sso_id AND w.profile.user.db_id = :user_id");
                 hibernateQuery.setParameter("sso_id", website.getSso().getDb_id());
             } else {
                 hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.db_id = :website_id AND w.profile.user.db_id = :user_id");
@@ -143,37 +150,47 @@ public class ServletUpdate extends HttpServlet {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
                 res.put(tmp.getJson());
-            } else
-                for (WebsiteApp websiteApp : websiteApps) {
-                    String teamKey = null;
-                    String keyUser = sm.getKeyUser();
-                    if (websiteApp.getTeamCardReceiver() != null)
-                        teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
-                    websiteApp.decipher(keyUser, teamKey);
-                    if (websiteApp.getTeamCardReceiver() != null && websiteApp.isEmpty()) {
-                        TeamCard teamCard = websiteApp.getTeamCardReceiver().getTeamCard();
-                        if (teamCard.isTeamSingleCard()) {
-                            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
-                            if (teamSingleCard.getTeamUser_filler() != null && teamSingleCard.getTeamUser_filler().equals(sm.getTeamUser(teamCard.getTeam()))) {
-                                Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
-                                hibernateQuery.saveOrUpdateObject(tmp);
-                                res.put(tmp.getJson());
-                                continue;
-                            }
+            } else if (website.getSso() != null) {
+                Iterator<WebsiteApp> iterator = websiteApps.iterator();
+                while (iterator.hasNext()) {
+                    WebsiteApp websiteApp = iterator.next();
+                    if (!websiteApp.isSsoApp())
+                        continue;
+                    SsoApp ssoApp = (SsoApp) websiteApp;
+                    if (websiteApps.stream().filter(websiteApp1 -> websiteApp1.isSsoApp() && !websiteApp1.equals(websiteApp) && ssoApp.getSsoGroup().equals(((SsoApp) websiteApp1).getSsoGroup())).count() > 0)
+                        iterator.remove();
+                }
+            }
+            for (WebsiteApp websiteApp : websiteApps) {
+                String teamKey = null;
+                String keyUser = sm.getKeyUser();
+                if (websiteApp.getTeamCardReceiver() != null)
+                    teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
+                websiteApp.decipher(keyUser, teamKey);
+                if (websiteApp.getTeamCardReceiver() != null && websiteApp.isEmpty()) {
+                    TeamCard teamCard = websiteApp.getTeamCardReceiver().getTeamCard();
+                    if (teamCard.isTeamSingleCard()) {
+                        TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                        if (teamSingleCard.getTeamUser_filler() != null && teamSingleCard.getTeamUser_filler().equals(sm.getTeamUser(teamCard.getTeam()))) {
+                            Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                            hibernateQuery.saveOrUpdateObject(tmp);
+                            res.put(tmp.getJson());
+                            continue;
                         }
                     }
-                    if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information))
-                        continue;
-                    if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
-                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
-                        hibernateQuery.saveOrUpdateObject(tmp);
-                        res.put(tmp.getJson());
-                    } else {
-                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
-                        hibernateQuery.saveOrUpdateObject(tmp);
-                        res.put(tmp.getJson());
-                    }
                 }
+                if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information))
+                    continue;
+                if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
+                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                    hibernateQuery.saveOrUpdateObject(tmp);
+                    res.put(tmp.getJson());
+                } else {
+                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                    hibernateQuery.saveOrUpdateObject(tmp);
+                    res.put(tmp.getJson());
+                }
+            }
         } else {
             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
             hibernateQuery.saveOrUpdateObject(tmp);
@@ -188,10 +205,10 @@ public class ServletUpdate extends HttpServlet {
             sm.needToBeConnected();
             Long id = sm.getLongParam("id", true, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("DELETE FROM Update u WHERE u.id = :id AND u.user.db_id = :user_id");
-            hibernateQuery.setParameter("id", id);
-            hibernateQuery.setParameter("user_id", sm.getUser().getDb_id());
-            hibernateQuery.executeUpdate();
+            Update update = (Update) hibernateQuery.get(Update.class, id);
+            if (update == null || !update.getUser().equals(sm.getUser()))
+                throw new HttpServletException(HttpStatus.BadRequest, "This update does not exist");
+            sm.deleteObject(update);
             sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);
