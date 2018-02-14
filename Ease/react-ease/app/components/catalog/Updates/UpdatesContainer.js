@@ -47,8 +47,8 @@ class UpdatesContainer extends React.Component {
         url: item.url,
         logo: this.getLogoAny(item.url),
         information: {
-          login: {placeholder: "Login",priority:0,type:"text"},
-          password: {placeholder:"Password",priority:1,type:"password"}
+          login: {name:'login',placeholder:"Login",priority:0,type:"text"},
+          password: {name:'password',placeholder:"Password",priority:1,type:"password"}
         }
       };
     }

@@ -513,7 +513,7 @@ export function editAppCredentials({account_information, app}) {
     return editAnyApp({
       app_id: app.id,
       name: app.name,
-      url: app.website.url,
+      url: app.website.login_url,
       img_url: app.website.logo,
       account_information: account_information,
       connection_information: app.website.information
