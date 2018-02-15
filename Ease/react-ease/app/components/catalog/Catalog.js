@@ -12,6 +12,7 @@ import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import { NavLink } from 'react-router-dom';
 import { Switch, Route } from 'react-router-dom';
+import {getUpdates} from "../../actions/catalogActions";
 
 @connect(store => ({
   catalog: store.catalog
@@ -21,12 +22,16 @@ class Catalog extends Component {
     super(props);
     this.state = {
       query: '',
-      mounted: false
+      mounted: false,
+      updatesFetched: false,
     }
   }
   handleInput = handleSemanticInput.bind(this);
   componentWillMount() {
-    document.title = "Apps Catalogue"
+    document.title = "Apps Catalogue";
+    this.props.dispatch(getUpdates()).then(() => {
+      this.setState({updatesFetched: true});
+    });
   }
   componentDidMount() {
     if (!this.props.catalog.loaded)
@@ -81,7 +86,7 @@ class Catalog extends Component {
                   </div>}
                 </Grid.Column>
                 <Grid.Column width={10}>
-                  {this.state.mounted &&
+                  {(this.state.mounted && this.state.updatesFetched) &&
                     <Switch>
                       <Route path={`${this.props.match.path}/importations`} component={Importations}/>
                       <Route path={`${this.props.match.path}/onBoardingImportation`} component={OnBoardingImportation}/>

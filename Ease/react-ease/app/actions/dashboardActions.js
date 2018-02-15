@@ -3,6 +3,7 @@ import post_api from "../utils/post_api";
 import extension from "../utils/extension_api";
 import {fetchTeamApp} from "./teamActions";
 import {showExtensionDownloadModal} from "./modalActions";
+import {deleteUpdate} from "./catalogActions";
 
 export function fetchDashboard(){
   return (dispatch, getState) => {
@@ -229,12 +230,22 @@ export function validateApp({app_id}) {
   }
 }
 
+export function deleteUpdateRelated({card_id, app_id}){
+  return (dispatch, getState) => {
+    getState().catalog.updates.map(item => {
+      if ((card_id !== -1 && item.team_card_id === card_id) || (app_id !== -1 && item.app_id === app_id))
+        dispatch({type: 'DELETE_UPDATE', payload: {update_id: item.id}});
+    });
+  }
+}
+
 export function deleteApp({app_id}){
   return (dispatch, getState) => {
     return post_api.dashboard.deleteApp({
       app_id: app_id,
       ws_id: getState().common.ws_id
     }).then(response => {
+      dispatch(deleteUpdateRelated({app_id, card_id: -1}));
       dispatch(deleteAppAction({
         app_id: app_id
       }));

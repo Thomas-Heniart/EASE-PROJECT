@@ -12,7 +12,6 @@ export function fetchCatalog(){
       api.catalog.getCategories(),
       api.catalog.getSsoList(),
       api.catalog.getRequestsNumber(),
-      api.catalog.getUpdates()
     ]).then(values => {
       const websites = values[0].websites;
       const categories = values[1].categories.sort((a, b) => {
@@ -20,19 +19,29 @@ export function fetchCatalog(){
       });
       const sso_list = values[2].ssoList;
       const requestsNumber = values[3].request_number;
-      const updates = values[4];
       dispatch({type: 'FETCH_CATALOG_FULFILLED', payload:{
         websites : websites,
         categories: categories,
         sso_list: sso_list,
         requests_number: requestsNumber,
-        updates: updates
       }});
       return values;
     }).catch(err => {
       dispatch({type: 'FETCH_CATALOG_REJECTED', payload: err});
       throw err;
     })
+  }
+}
+
+export function getUpdates() {
+  return (dispatch, getState) => {
+    return api.catalog.getUpdates()
+      .then(response => {
+        dispatch({type: 'FETCH_UPDATES', payload: response});
+        return response;
+      }).catch(err => {
+        throw err;
+      })
   }
 }
 
