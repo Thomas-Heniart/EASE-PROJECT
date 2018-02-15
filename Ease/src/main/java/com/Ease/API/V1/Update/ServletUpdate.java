@@ -74,6 +74,7 @@ public class ServletUpdate extends HttpServlet {
             if (website != null) {
                 /* Hack for websites with more than 2 fields */
                 populateAccountInformation(website, url, account_information);
+                System.out.println(website.getName());
                 /* Find update(s) with this website */
                 if (website.getSso() == null) {
                     hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
@@ -185,13 +186,14 @@ public class ServletUpdate extends HttpServlet {
                     Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                     hibernateQuery.saveOrUpdateObject(tmp);
                     res.put(tmp.getJson());
-                } else {
-                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
-                    hibernateQuery.saveOrUpdateObject(tmp);
-                    res.put(tmp.getJson());
                 }
             }
-        } else {
+            if (res.length() == 0 && !url.startsWith("https://accounts.google.com")) {
+                Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
+                hibernateQuery.saveOrUpdateObject(tmp);
+                res.put(tmp.getJson());
+            }
+        } else if (!url.startsWith("https://accounts.google.com")) {
             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
             hibernateQuery.saveOrUpdateObject(tmp);
             res.put(tmp.getJson());

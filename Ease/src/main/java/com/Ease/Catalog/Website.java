@@ -496,11 +496,12 @@ public class Website {
                         login_subdomain = "";
                 }
                 if (login_domain.equals(domain)) {
+                    System.out.println("DB subdomain: " + login_subdomain + " and subdomain: " + subdomain);
                     if (login_subdomain.equals(subdomain)) {
                         if (login_path.equals(path))
                             return 3;
                         max_val = 2;
-                    } else
+                    } else if (max_val < 2)
                         max_val = 1;
                 }
             }
