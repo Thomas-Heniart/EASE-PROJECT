@@ -227,8 +227,8 @@ public class ServletUpdate extends HttpServlet {
                 TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
                 teamSingleCard.decipher(sm.getTeamKey(team));
                 if (!teamSingleCard.getAccount().sameAs(update.getAccountInformation()))
-                    for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
-                        teamCardReceiver.getApp().getAccount().edit(teamCardReceiver.getApp().getAccount().getAccountInformationJson(), sm.getHibernateQuery());
+                    for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values())
+                        teamCardReceiver.getApp().getAccount().edit(teamSingleCard.getAccount().getAccountInformationJson(), sm.getHibernateQuery());
             }
             sm.deleteObject(update);
             sm.setSuccess("Done");
