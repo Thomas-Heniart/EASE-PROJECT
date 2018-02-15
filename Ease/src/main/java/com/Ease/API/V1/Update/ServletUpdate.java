@@ -166,6 +166,7 @@ public class ServletUpdate extends HttpServlet {
                         iterator.remove();
                 }
             }
+            boolean create_update = true;
             for (WebsiteApp websiteApp : websiteApps) {
                 String teamKey = null;
                 String keyUser = sm.getKeyUser();
@@ -184,15 +185,17 @@ public class ServletUpdate extends HttpServlet {
                         }
                     }
                 }
-                if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information))
+                if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information)) {
+                    create_update = false;
                     continue;
+                }
                 if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
                     Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                     hibernateQuery.saveOrUpdateObject(tmp);
                     res.put(tmp.getJson());
                 }
             }
-            if (res.length() == 0 && !url.startsWith("https://accounts.google.com")) {
+            if (res.length() == 0 && create_update && !url.startsWith("https://accounts.google.com")) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
                 res.put(tmp.getJson());
