@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Update;
 
+import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
@@ -53,12 +55,14 @@ public class ServletSendUpdateToAdmin extends HttpServlet {
             hibernateQuery.saveOrUpdateObject(new_update);
             hibernateQuery.deleteObject(update);
             NotificationFactory.getInstance().createUpdateTeamCardNotification(teamUser, teamCard, sm.getUserWebSocketManager(roomManager.getUser().getDb_id()), sm.getHibernateQuery());
-            /* MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
             mailJetBuilder.addTo(roomManager.getEmail());
-            mailJetBuilder.setTemplateId(0);
-
-            mailJetBuilder.sendEmail(); */
+            mailJetBuilder.setTemplateId(315991);
+            mailJetBuilder.addVariable("username", teamUser.getUsername());
+            mailJetBuilder.addVariable("app_name", teamCard.getName());
+            mailJetBuilder.addVariable("link", Variables.URL_PATH + "#/main/catalog/website");
+            mailJetBuilder.sendEmail();
             sm.setSuccess(new_update.getJson());
         } catch (Exception e) {
             sm.setError(e);
