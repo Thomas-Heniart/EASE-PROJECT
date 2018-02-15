@@ -97,9 +97,10 @@ class PasswordUpdateModal extends React.Component {
             this.finish();
           });
         }
-        else {
-          this.props.dispatch(sendUpdateToAdmin({id: this.props.modal.item.id}));
-        }
+        else
+          this.props.dispatch(sendUpdateToAdmin({id: this.props.modal.item.id})).then(() => {
+            this.finish();
+          });
       }
     }
     else {
@@ -115,7 +116,7 @@ class PasswordUpdateModal extends React.Component {
     return (
       <SimpleModalTemplate
         onClose={this.close}
-        headerContent={"Password Update"}>
+        headerContent={"Password Update detected"}>
         <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
@@ -133,9 +134,9 @@ class PasswordUpdateModal extends React.Component {
             </div>
           </div>
           {this.props.modal.item.team_user_id !== -1 &&
-            <div>
-              <p>Password suggested by: </p>
-              <div>{this.state.team.team_users[this.props.modal.item.team_user_id].name}</div>
+            <div className='ui labels' style={{display:'inline-flex'}}>
+              <p style={{marginTop:'4px', fontWeight:'bold'}}>Password suggested by: </p>
+              <Label className='user-label'>{this.state.team.team_users[this.props.modal.item.team_user_id].username}</Label>
             </div>}
           {this.state.team !== -1 && this.state.team.team_users[this.state.team.my_team_user_id].role > 1 &&
           <p>Modifications will be applied to your Team.</p>}

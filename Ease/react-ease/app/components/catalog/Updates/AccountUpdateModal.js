@@ -90,24 +90,12 @@ class AccountUpdateModal extends React.Component {
           });
         }
         else {
-          if (this.state.team.team_users[this.state.team.my_team_user_id].role > 1
-            || this.props.team_apps[this.state.app.team_card_id].team_user_filler_id === this.state.team.my_team_user_id) {
-            this.props.dispatch(teamEditSingleCardCredentials({
-              team_card: this.props.team_apps[this.props.modal.item.team_card_id],
-              account_information: this.state.account_information
-            })).then(response => {
-              this.finish();
-            });
-          }
-          else {
-            // suggestion to Admin
-            this.props.dispatch(editAppCredentials({
-              app: this.state.app,
-              account_information: this.state.account_information
-            })).then(() => {
-              this.finish();
-            });
-          }
+          this.props.dispatch(teamEditSingleCardCredentials({
+            team_card: this.props.team_apps[this.props.modal.item.team_card_id],
+            account_information: this.state.account_information
+          })).then(response => {
+            this.finish();
+          });
         }
       }
       else {

@@ -107,7 +107,6 @@ class NewAccountUpdateModal extends React.Component {
     this.props.modal.reject();
   };
   edit = () => {
-    console.log('submit');
     this.props.modal.resolve({
       account_information: this.state.account_information,
       website: this.state.website,

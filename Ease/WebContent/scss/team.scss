@@ -1075,6 +1075,14 @@ button.action_text_button {
       font-size: 1em;
     }
   }
+  .ui.label.user-label {
+    //height: min-content;
+    font-size: .85714286rem;
+    box-shadow: 0 0 0 1px rgba(34, 36, 38, .15) inset;
+    background-color: #2185d0;
+    color: $themeWhiteColor;
+    font-weight: normal;
+  }
 }
 
 .ease_popup.ease_new_feature_popup {

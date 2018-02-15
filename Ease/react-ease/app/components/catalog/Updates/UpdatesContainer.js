@@ -98,11 +98,11 @@ class UpdatesContainer extends React.Component {
       this.state.type[item.id] = 'new';
       return <span>New Account</span>;
     }
-    else if (item.app_id !== -1 &&
+    else if (item.team_user_id !== -1 || (item.app_id !== -1 &&
       ((!app.sso_group_id && Object.keys(app.account_information).length > 0 && app.account_information.login !== '')
         || (!app.sso_group_id && Object.keys(card.account_information).length > 0 && card.account_information.login !== '')
       || (app.sso_group_id &&
-          Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== ''))) {
+          Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '')))) {
       this.state.type[item.id] = 'password';
       return <span>Password update</span>;
     }
