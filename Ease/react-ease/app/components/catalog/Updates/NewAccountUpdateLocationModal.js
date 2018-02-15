@@ -31,7 +31,6 @@ class NewAccountUpdateLocationModal extends React.Component {
     this.props.modal.reject();
   };
   edit = () => {
-    console.log('submit');
     this.props.modal.resolve();
   };
 

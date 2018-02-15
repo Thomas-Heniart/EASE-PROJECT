@@ -100,6 +100,7 @@ class UpdatesContainer extends React.Component {
     }
     else if (item.app_id !== -1 &&
       ((!app.sso_group_id && Object.keys(app.account_information).length > 0 && app.account_information.login !== '')
+        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 && card.account_information.login !== '')
       || (app.sso_group_id &&
           Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== ''))) {
       this.state.type[item.id] = 'password';
@@ -107,6 +108,7 @@ class UpdatesContainer extends React.Component {
     }
     else if (item.app_id !== -1 &&
       ((!app.sso_group_id && Object.keys(app.account_information).length === 0 || app.account_information.login === '')
+        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 || card.account_information.login === '')
         || (app.sso_group_id && Object.keys(sso_group.account_information).length > 0
           && sso_group.account_information.login !== ''))
       && (item.team_card_id !== -1 && (card.type === "teamEnterpriseCard"
