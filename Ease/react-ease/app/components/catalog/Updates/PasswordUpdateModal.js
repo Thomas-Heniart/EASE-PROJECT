@@ -102,7 +102,8 @@ class PasswordUpdateModal extends React.Component {
             id: this.props.modal.item.id,
             account_information: this.state.account_information
           })).then(() => {
-            this.finish();
+            this.setState({loading: false});
+            this.props.modal.resolve();
           });
       }
     }
