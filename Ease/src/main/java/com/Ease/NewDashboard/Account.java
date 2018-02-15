@@ -308,4 +308,10 @@ public class Account {
         }
         return true;
     }
+
+    public JSONObject getAccountInformationJson() {
+        JSONObject res = new JSONObject();
+        this.getAccountInformationSet().forEach(accountInformation -> res.put(accountInformation.getInformation_name(), accountInformation.getDeciphered_information_value()));
+        return res;
+    }
 }

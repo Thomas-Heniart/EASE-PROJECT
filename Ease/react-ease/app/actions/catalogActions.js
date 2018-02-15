@@ -3,6 +3,7 @@ import post_api from "../utils/post_api";
 import delete_api from "../utils/delete_api";
 import {addNotification} from "./notificationBoxActions";
 import extension from "../utils/extension_api";
+import {editAppCredentials} from "./dashboardActions";
 
 export function fetchCatalog(){
   return (dispatch,getState) => {
@@ -12,7 +13,6 @@ export function fetchCatalog(){
       api.catalog.getCategories(),
       api.catalog.getSsoList(),
       api.catalog.getRequestsNumber(),
-      api.catalog.getUpdates()
     ]).then(values => {
       const websites = values[0].websites;
       const categories = values[1].categories.sort((a, b) => {
@@ -20,19 +20,29 @@ export function fetchCatalog(){
       });
       const sso_list = values[2].ssoList;
       const requestsNumber = values[3].request_number;
-      const updates = values[4];
       dispatch({type: 'FETCH_CATALOG_FULFILLED', payload:{
         websites : websites,
         categories: categories,
         sso_list: sso_list,
         requests_number: requestsNumber,
-        updates: updates
       }});
       return values;
     }).catch(err => {
       dispatch({type: 'FETCH_CATALOG_REJECTED', payload: err});
       throw err;
     })
+  }
+}
+
+export function getUpdates() {
+  return (dispatch, getState) => {
+    return api.catalog.getUpdates()
+      .then(response => {
+        dispatch({type: 'FETCH_UPDATES', payload: response});
+        return response;
+      }).catch(err => {
+        throw err;
+      })
   }
 }
 
@@ -61,6 +71,17 @@ export function testCredentials({account_information, website_id}) {
         console.log(err);
     });
   }
+}
+
+export function catalogAddApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided, website_id, sso_group_id}){
+  if (website_id !== -1) {
+    if (sso_group_id === -1)
+      return catalogAddClassicApp({name, website_id, profile_id, account_information});
+    else
+      return catalogAddSsoApp({name, profile_id, sso_group_id, website_id})
+  }
+  else
+    return catalogAddAnyApp({name, url, img_url, profile_id,account_information,connection_information,credentials_provided});
 }
 
 export function catalogAddAnyApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided}){
@@ -507,36 +528,40 @@ export function showPasswordUpdateModal({state, resolve, reject, website, item})
   }
 }
 
-export function newAccountUpdateModal(dispatch, website, account_information){
-    return new Promise((resolve, reject) => {
-        dispatch(showNewAccountUpdateModal({
-            state: true,
-            website: website,
-            account_information: account_information,
-            resolve: resolve,
-            reject: reject
-        }));
-    }).then(response => {
-        console.log('resolve');
-        dispatch(showNewAccountUpdateModal({state: false}));
-        accountUpdateLocationModal(dispatch, website, response.account_information, response.teamId, response.appName);
-        return response;
-    }).catch(err => {
-        dispatch(showNewAccountUpdateModal({state: false}));
-    });
+export function newAccountUpdateModal(dispatch, website, update_id, account_information) {
+  return new Promise((resolve, reject) => {
+    dispatch(showNewAccountUpdateModal({
+      state: true,
+      website: website,
+      update_id: update_id,
+      account_information: account_information,
+      resolve: resolve,
+      reject: reject
+    }));
+  }).then(response => {
+    dispatch(showNewAccountUpdateModal({state: false}));
+    if (response.teamId)
+      accountUpdateLocationModal(dispatch, website, response.account_information, response.teamId, response.appName);
+    else
+      dispatch(showNewAccountUpdateModal({state: false}));
+    return response;
+  }).catch(err => {
+    dispatch(showNewAccountUpdateModal({state: false}));
+  });
 }
 
-export function showNewAccountUpdateModal({state, resolve, reject, website, account_information}){
-    return {
-        type: 'SHOW_NEW_ACCOUNT_UPDATE_MODAL',
-        payload: {
-            active: state,
-            website: website,
-            account_information: account_information,
-            resolve: resolve,
-            reject: reject
-        }
+export function showNewAccountUpdateModal({state, resolve, reject, website, update_id, account_information}) {
+  return {
+    type: 'SHOW_NEW_ACCOUNT_UPDATE_MODAL',
+    payload: {
+      active: state,
+      website: website,
+      update_id: update_id,
+      account_information: account_information,
+      resolve: resolve,
+      reject: reject
     }
+  }
 }
 
 export function accountUpdateLocationModal(dispatch, website, account_information, team, appName){
@@ -572,7 +597,20 @@ export function showNewAccountLocationUpdateModal({state, resolve, reject, websi
     }
 }
 
-
+export function sendUpdateToAdmin({id, account_information}){
+  return (dispatch, getState) => {
+    return post_api.catalog.sendUpdateToAdmin({
+      id: id,
+      account_information: account_information,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({type: 'DELETE_UPDATE', payload: {update_id: id}});
+      return response;
+    }).catch(err => {
+      throw err;
+    })
+  }
+}
 
 export function deleteUpdate({id}){
   return (dispatch, getState) => {

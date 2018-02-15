@@ -4,7 +4,7 @@ import CredentialInputs from "./CredentialInputs";
 import {handleSemanticInput} from "../../../utils/utils";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import {editAppCredentials} from "../../../actions/dashboardActions";
-import {deleteUpdate, testCredentials} from "../../../actions/catalogActions";
+import {deleteUpdate, sendUpdateToAdmin, testCredentials} from "../../../actions/catalogActions";
 import { Container, Icon, Form, Message, Button, Label } from 'semantic-ui-react';
 import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
 
@@ -74,7 +74,7 @@ class PasswordUpdateModal extends React.Component {
   };
   edit = () => {
     this.setState({loading: true});
-    if (this.props.modal.item.team_card_id) {
+    if (this.props.modal.item.team_card_id !== -1) {
       if (this.state.app.type === 'teamEnterpriseApp') {
         this.props.dispatch(teamEditEnterpriseCardReceiver({
           team_id: this.state.team.id,
@@ -97,15 +97,13 @@ class PasswordUpdateModal extends React.Component {
             this.finish();
           });
         }
-        else {
-          // suggestion to Admin
-          this.props.dispatch(editAppCredentials({
-            app: this.state.app,
+        else
+          this.props.dispatch(sendUpdateToAdmin({
+            id: this.props.modal.item.id,
             account_information: this.state.account_information
           })).then(() => {
             this.finish();
           });
-        }
       }
     }
     else {
@@ -121,7 +119,7 @@ class PasswordUpdateModal extends React.Component {
     return (
       <SimpleModalTemplate
         onClose={this.close}
-        headerContent={"Password Update"}>
+        headerContent={"Password Update detected"}>
         <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
@@ -139,9 +137,9 @@ class PasswordUpdateModal extends React.Component {
             </div>
           </div>
           {this.props.modal.item.team_user_id !== -1 &&
-            <div>
-              <p>Password suggested by: </p>
-              <div>{this.state.team.team_users[this.props.modal.item.team_user_id].name}</div>
+            <div className='ui labels' style={{display:'inline-flex'}}>
+              <p style={{marginTop:'4px', fontWeight:'bold'}}>Password suggested by: </p>
+              <Label className='user-label'>{this.state.team.team_users[this.props.modal.item.team_user_id].username}</Label>
             </div>}
           {this.state.team !== -1 && this.state.team.team_users[this.state.team.my_team_user_id].role > 1 &&
           <p>Modifications will be applied to your Team.</p>}

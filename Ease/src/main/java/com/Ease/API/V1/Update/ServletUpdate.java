@@ -6,8 +6,10 @@ import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.SsoApp;
 import com.Ease.NewDashboard.WebsiteApp;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Update.Update;
 import com.Ease.Update.UpdateFactory;
 import com.Ease.User.User;
@@ -17,6 +19,8 @@ import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.Utils.Servlets.ServletManager;
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -74,6 +78,7 @@ public class ServletUpdate extends HttpServlet {
             if (website != null) {
                 /* Hack for websites with more than 2 fields */
                 populateAccountInformation(website, url, account_information);
+                System.out.println(website.getName());
                 /* Find update(s) with this website */
                 if (website.getSso() == null) {
                     hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
@@ -185,13 +190,14 @@ public class ServletUpdate extends HttpServlet {
                     Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                     hibernateQuery.saveOrUpdateObject(tmp);
                     res.put(tmp.getJson());
-                } else {
-                    Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
-                    hibernateQuery.saveOrUpdateObject(tmp);
-                    res.put(tmp.getJson());
                 }
             }
-        } else {
+            if (res.length() == 0 && !url.startsWith("https://accounts.google.com")) {
+                Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
+                hibernateQuery.saveOrUpdateObject(tmp);
+                res.put(tmp.getJson());
+            }
+        } else if (!url.startsWith("https://accounts.google.com")) {
             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
             hibernateQuery.saveOrUpdateObject(tmp);
             res.put(tmp.getJson());
@@ -208,6 +214,19 @@ public class ServletUpdate extends HttpServlet {
             Update update = (Update) hibernateQuery.get(Update.class, id);
             if (update == null || !update.getUser().equals(sm.getUser()))
                 throw new HttpServletException(HttpStatus.BadRequest, "This update does not exist");
+            if (update.getTeamUser() != null) {
+                TeamCard teamCard = update.getTeamCard();
+                Team team = teamCard.getTeam();
+                sm.needToBeAdminOfTeam(team);
+                Hibernate.initialize(teamCard);
+                if (teamCard instanceof HibernateProxy)
+                    teamCard = (TeamCard) ((HibernateProxy) teamCard).getHibernateLazyInitializer().getImplementation();
+                TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                teamSingleCard.decipher(sm.getTeamKey(team));
+                if (!teamSingleCard.getAccount().sameAs(update.getAccountInformation()))
+                    for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
+                        teamCardReceiver.getApp().getAccount().edit(teamCardReceiver.getApp().getAccount().getAccountInformationJson(), sm.getHibernateQuery());
+            }
             sm.deleteObject(update);
             sm.setSuccess("Done");
         } catch (Exception e) {

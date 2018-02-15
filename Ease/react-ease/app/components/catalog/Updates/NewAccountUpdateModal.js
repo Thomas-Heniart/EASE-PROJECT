@@ -1,15 +1,17 @@
 import React from 'react';
 import {connect} from "react-redux";
 import CredentialInputs from "./CredentialInputs";
-import {testCredentials} from "../../../actions/catalogActions";
-import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import {handleSemanticInput} from "../../../utils/utils";
-import {Container, Icon, Form, Message, Button, Checkbox, Input } from 'semantic-ui-react';
+import {createProfile} from "../../../actions/dashboardActions";
+import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import NewAccountAnyCredentialInputs from "./NewAccountAnyCredentialInputs";
+import {Container, Icon, Form, Message, Button, Checkbox, Input } from 'semantic-ui-react';
+import {catalogAddApp, deleteUpdate, testCredentials} from "../../../actions/catalogActions";
 
 @connect(store => ({
-    modal: store.modals.newAccountUpdate,
-    teams: store.teams,
+  modal: store.modals.newAccountUpdate,
+  teams: store.teams,
+  profiles: store.dashboard.profiles
 }))
 class NewAccountUpdateModal extends React.Component {
   constructor(props) {
@@ -27,7 +29,6 @@ class NewAccountUpdateModal extends React.Component {
       priority: 2
     }
   }
-
   handleInput = handleSemanticInput.bind(this);
   handleFocus = (e) => {
     e.target.select();
@@ -106,14 +107,64 @@ class NewAccountUpdateModal extends React.Component {
   close = () => {
     this.props.modal.reject();
   };
-  edit = () => {
-    console.log('submit');
-    this.props.modal.resolve({
-      account_information: this.state.account_information,
-      website: this.state.website,
-      appName: this.state.appName,
-      teamId: this.state.check
+  finish = () => {
+    this.props.dispatch(deleteUpdate({id: this.props.modal.update_id})).then(() => {
+      this.setState({loading: false});
+      this.props.modal.resolve();
     });
+  };
+  edit = () => {
+    this.setState({loading: true});
+    if (this.state.check !== 'newApp') {
+      this.props.modal.resolve({
+        account_information: this.state.account_information,
+        website: this.state.website,
+        appName: this.state.appName,
+        teamId: this.state.check
+      });
+    }
+    else {
+      let profileChoose = null;
+      Object.keys(this.props.profiles).map(item => {
+        if (profileChoose === null && this.props.profiles[item].team_id === -1)
+          profileChoose = this.props.profiles[item].id;
+      });
+      if (profileChoose !== null) {
+        this.props.dispatch(catalogAddApp({
+          name: this.state.appName,
+          url: this.state.website.url,
+          img_url: this.state.website.logo,
+          profile_id: profileChoose,
+          account_information: this.state.account_information,
+          connection_information: this.state.website.information,
+          credentials_provided: false,
+          website_id: this.state.website.id ? this.state.website.id : -1,
+          sso_group_id: this.state.website.sso_group_id ? this.state.website.sso_group_id : -1
+        })).then(() => {
+          this.finish();
+        });
+      }
+      else {
+        this.props.dispatch(createProfile({
+          name: 'Me',
+          column_index: 1
+        })).then(response => {
+          this.props.dispatch(catalogAddApp({
+            name: this.state.appName,
+            url: this.state.website.url,
+            img_url: this.state.website.logo,
+            profile_id: response.id,
+            account_information: this.state.account_information,
+            connection_information: this.state.website.information,
+            credentials_provided: false,
+            website_id: this.state.website.id ? this.state.website.id : -1,
+            sso_group_id: this.state.website.sso_group_id ? this.state.website.sso_group_id : -1
+          })).then(() => {
+            this.finish();
+          });
+        });
+      }
+    }
   };
   logoLetter = () => {
     let first = '';
@@ -132,7 +183,6 @@ class NewAccountUpdateModal extends React.Component {
     else
       return first.toUpperCase();
   };
-
   componentWillMount() {
     let teamName = [];
     let edit = {};
@@ -149,7 +199,6 @@ class NewAccountUpdateModal extends React.Component {
     });
     this.setState({editCredentials: edit, teamName: teamName, website: website});
   }
-
   render() {
     return (
       <SimpleModalTemplate

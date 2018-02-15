@@ -3,13 +3,14 @@ import {connect} from "react-redux";
 import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container, Loader } from 'semantic-ui-react';
-import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
+import {accountUpdateModal, deleteUpdate, newAccountUpdateModal, passwordUpdateModal} from "../../../actions/catalogActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
   teams: store.teams,
   team_apps: store.team_apps,
-  updates: store.catalog.updates
+  updates: store.catalog.updates,
+  sso_list: store.catalog.sso_list
 }))
 class UpdatesContainer extends React.Component {
   constructor(props){
@@ -26,32 +27,43 @@ class UpdatesContainer extends React.Component {
     this.props.updates.map(item => {
       let website = {};
       loading[item.id] = false;
-      this.setState({loadingDelete: loading});
-      this.props.websites.filter(site => {
-        if (site.id === item.website_id)
-          website = site;
-        return site;
-      });
-      if (item.app_id !== -1) {
-        website = this.props.dashboard.apps[item.app_id].website;
-        website.app_name = this.props.dashboard.apps[item.app_id].name;
-        if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
-          website.name = this.props.dashboard.apps[item.app_id].name
+      if (item.app_id !== -1 && this.props.dashboard.apps[item.app_id].sso_group_id) {
+        website = this.props.sso_list[0];
+        website.sso_group_id = this.props.sso_list[0].id;
+        website.logo = '/resources/other/google-logo.png';
+        website.information = {
+          login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
+          password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
+        };
+        website.app_name = website.name;
       }
-      if (item.website_id === -1) {
-        getLogo({url: item.url}).then(response => {
-          website = {
-            name: item.url,
-            url: item.url,
-            logo: response !== '/resources/icons/link_app.png' ? response : '',
-            information: {
-              login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
-              password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
-            }
-          };
-          stateWebsites[item.id] = website;
-          this.setState({websites: stateWebsites});
+      else {
+        this.props.websites.filter(site => {
+          if (site.id === item.website_id)
+            website = site;
+          return site;
         });
+        if (item.app_id !== -1) {
+          website = this.props.dashboard.apps[item.app_id].website;
+          website.app_name = this.props.dashboard.apps[item.app_id].name;
+          if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
+            website.name = this.props.dashboard.apps[item.app_id].name
+        }
+        if (item.website_id === -1) {
+          getLogo({url: item.url}).then(response => {
+            website = {
+              name: item.url,
+              url: item.url,
+              logo: response !== '/resources/icons/link_app.png' ? response : '',
+              information: {
+                login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
+                password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
+              }
+            };
+            stateWebsites[item.id] = website;
+            this.setState({websites: stateWebsites});
+          });
+        }
       }
       stateWebsites[item.id] = website;
     });
@@ -69,6 +81,7 @@ class UpdatesContainer extends React.Component {
       newAccountUpdateModal(
         this.props.dispatch,
         website,
+        item.id,
         account_information
       ).then(response => {
       });
@@ -87,15 +100,17 @@ class UpdatesContainer extends React.Component {
       this.state.type[item.id] = 'new';
       return <span>New Account</span>;
     }
-    else if (item.app_id !== -1 &&
+    else if (item.team_user_id !== -1 || (item.app_id !== -1 &&
       ((!app.sso_group_id && Object.keys(app.account_information).length > 0 && app.account_information.login !== '')
+        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 && card.account_information.login !== '')
       || (app.sso_group_id &&
-          Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== ''))) {
+          Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '')))) {
       this.state.type[item.id] = 'password';
       return <span>Password update</span>;
     }
     else if (item.app_id !== -1 &&
       ((!app.sso_group_id && Object.keys(app.account_information).length === 0 || app.account_information.login === '')
+        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 || card.account_information.login === '')
         || (app.sso_group_id && Object.keys(sso_group.account_information).length > 0
           && sso_group.account_information.login !== ''))
       && (item.team_card_id !== -1 && (card.type === "teamEnterpriseCard"
@@ -104,11 +119,10 @@ class UpdatesContainer extends React.Component {
       return <span>Account update</span>;
     }
   };
-  deleteUpdate = (id) => {
+  removeUpdate = (id) => {
     let loading = {...this.state.loadingDelete};
     loading[id] = true;
     this.setState({loadingDelete: loading});
-    this.setState({loading: true});
     this.props.dispatch(deleteUpdate({id: id})
     ).then(() => {
       loading[id] = false;
@@ -152,7 +166,7 @@ class UpdatesContainer extends React.Component {
                           || (card.team_user_filler_id === meId || card.team_user_filler_id === -1))) &&
                       <span className='room'>#{this.props.teams[item.team_id].rooms[card.channel_id].name}</span>}
                     </div>
-                    <Icon name="trash" onClick={() => this.deleteUpdate(item.id)}/>
+                    <Icon name="trash" onClick={() => this.removeUpdate(item.id)}/>
                     <a onClick={() => this.openModal({
                       item: item,
                       website: website,

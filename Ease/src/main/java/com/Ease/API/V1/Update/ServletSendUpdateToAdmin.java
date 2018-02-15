@@ -11,6 +11,9 @@ import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -31,15 +34,22 @@ public class ServletSendUpdateToAdmin extends HttpServlet {
             if (update == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This update does not exist");
             TeamCard teamCard = update.getTeamCard();
-            if (teamCard == null || !teamCard.isTeamSingleCard() || !teamCard.isTeamWebsiteCard())
+            if (teamCard == null || !teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot send this update to an admin");
+            JSONObject account_information = sm.getJsonParam("account_information", false, false);
+            if (account_information.length() == 0)
+                throw new HttpServletException(HttpStatus.BadRequest, "Empty account information");
             Team team = sm.getTeam(teamCard.getTeam().getDb_id());
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
             update.decipher(sm.getUserPrivateKey());
             update.getApp().getAccount().edit(update.getAccountInformation(), hibernateQuery);
             TeamUser roomManager = teamCard.getChannel().getRoom_manager();
-            Update new_update = UpdateFactory.getInstance().createUpdate(roomManager.getUser(), update.getAccountInformation(), (TeamSingleCard) teamCard, teamUser);
+            Hibernate.initialize(teamCard);
+            if (teamCard instanceof HibernateProxy)
+                teamCard = (TeamCard) ((HibernateProxy) teamCard).getHibernateLazyInitializer().getImplementation();
+            TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+            Update new_update = UpdateFactory.getInstance().createUpdate(roomManager.getUser(), account_information, teamSingleCard, teamUser);
             hibernateQuery.saveOrUpdateObject(new_update);
             hibernateQuery.deleteObject(update);
             NotificationFactory.getInstance().createUpdateTeamCardNotification(teamUser, teamCard, sm.getUserWebSocketManager(roomManager.getUser().getDb_id()), sm.getHibernateQuery());
