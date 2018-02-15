@@ -73,6 +73,17 @@ export function testCredentials({account_information, website_id}) {
   }
 }
 
+export function catalogAddApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided, website_id, sso_group_id}){
+  if (website_id !== -1) {
+    if (sso_group_id === -1)
+      return catalogAddClassicApp({name, website_id, profile_id, account_information});
+    else
+      return catalogAddSsoApp({name, profile_id, sso_group_id, website_id})
+  }
+  else
+    return catalogAddAnyApp({name, url, img_url, profile_id,account_information,connection_information,credentials_provided});
+}
+
 export function catalogAddAnyApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided}){
   return (dispatch, getState) => {
     return post_api.catalog.addAnyApp({
@@ -517,36 +528,40 @@ export function showPasswordUpdateModal({state, resolve, reject, website, item})
   }
 }
 
-export function newAccountUpdateModal(dispatch, website, account_information){
-    return new Promise((resolve, reject) => {
-        dispatch(showNewAccountUpdateModal({
-            state: true,
-            website: website,
-            account_information: account_information,
-            resolve: resolve,
-            reject: reject
-        }));
-    }).then(response => {
-        console.log('resolve');
-        dispatch(showNewAccountUpdateModal({state: false}));
-        accountUpdateLocationModal(dispatch, website, response.account_information, response.teamId, response.appName);
-        return response;
-    }).catch(err => {
-        dispatch(showNewAccountUpdateModal({state: false}));
-    });
+export function newAccountUpdateModal(dispatch, website, update_id, account_information) {
+  return new Promise((resolve, reject) => {
+    dispatch(showNewAccountUpdateModal({
+      state: true,
+      website: website,
+      update_id: update_id,
+      account_information: account_information,
+      resolve: resolve,
+      reject: reject
+    }));
+  }).then(response => {
+    dispatch(showNewAccountUpdateModal({state: false}));
+    if (response.teamId)
+      accountUpdateLocationModal(dispatch, website, response.account_information, response.teamId, response.appName);
+    else
+      dispatch(showNewAccountUpdateModal({state: false}));
+    return response;
+  }).catch(err => {
+    dispatch(showNewAccountUpdateModal({state: false}));
+  });
 }
 
-export function showNewAccountUpdateModal({state, resolve, reject, website, account_information}){
-    return {
-        type: 'SHOW_NEW_ACCOUNT_UPDATE_MODAL',
-        payload: {
-            active: state,
-            website: website,
-            account_information: account_information,
-            resolve: resolve,
-            reject: reject
-        }
+export function showNewAccountUpdateModal({state, resolve, reject, website, update_id, account_information}) {
+  return {
+    type: 'SHOW_NEW_ACCOUNT_UPDATE_MODAL',
+    payload: {
+      active: state,
+      website: website,
+      update_id: update_id,
+      account_information: account_information,
+      resolve: resolve,
+      reject: reject
     }
+  }
 }
 
 export function accountUpdateLocationModal(dispatch, website, account_information, team, appName){

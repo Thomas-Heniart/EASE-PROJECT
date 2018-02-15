@@ -111,6 +111,7 @@ class AccountUpdateModal extends React.Component {
       newAccountUpdateModal(
         this.props.dispatch,
         this.props.modal.website,
+        this.props.modal.item.id,
         this.state.account_information
       );
     }

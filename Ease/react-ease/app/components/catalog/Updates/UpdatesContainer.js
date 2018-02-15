@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container, Loader } from 'semantic-ui-react';
-import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUpdate} from "../../../actions/catalogActions";
+import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal} from "../../../actions/catalogActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -29,6 +29,7 @@ class UpdatesContainer extends React.Component {
       loading[item.id] = false;
       if (item.app_id !== -1 && this.props.dashboard.apps[item.app_id].sso_group_id) {
         website = this.props.sso_list[0];
+        website.sso_group_id = this.props.sso_list[0].id;
         website.logo = '/resources/other/google-logo.png';
         website.information = {
           login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
@@ -80,6 +81,7 @@ class UpdatesContainer extends React.Component {
       newAccountUpdateModal(
         this.props.dispatch,
         website,
+        item.id,
         account_information
       ).then(response => {
       });
