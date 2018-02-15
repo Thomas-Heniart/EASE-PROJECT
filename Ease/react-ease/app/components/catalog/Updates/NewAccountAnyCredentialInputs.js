@@ -73,33 +73,61 @@ const OtherInput = ({item, onChange, onChangePlaceholder, onFocus, removeField, 
   )
 };
 
-const NewAccountAnyCredentialInputs = ({information, account_information, handleChange, toggle, edit, seePassword, toggleSeePassword, removeField, handleFocus, handlePlaceholder}) => {
-  return Object.keys(information).sort((a, b) => {
-    return information[a].priority - information[b].priority;
-  }).map(item => {
-    if (information[item].name !== 'login' && information[item].name !== 'password')
-      return <OtherInput
-        edit={edit}
-        toggle={toggle}
-        onChange={handleChange}
-        item={information[item]}
-        onFocus={handleFocus}
-        removeField={removeField}
-        key={information[item].priority}
-        account_information={account_information}
-        onChangePlaceholder={handlePlaceholder}/>;
-    else
-      return <CredentialInput
-        edit={edit}
-        toggle={toggle}
-        item={information[item]}
-        seePassword={seePassword}
-        onChange={handleChange}
-        removeField={removeField}
-        key={information[item].priority}
-        toggleSeePassword={toggleSeePassword}
-        account_information={account_information}/>;
-  });
+const UrlInput = ({url}) => {
+  return (
+    <Form.Field>
+      <label style={{fontSize: '16px', fontWeight: '300', color: '#424242',display:'inline-flex',width:'120px'}}>URL</label>
+      <div className="display_flex align_items_center" style={{position:'relative'}}>
+        <Input
+          icon
+          fluid
+          disabled
+          required
+          name='url'
+          type='text'
+          value={url}
+          size="large"
+          placeholder='url'
+          labelPosition="left"
+          className="modalInput team-app-input"
+          label={<Label><Icon name='linkify'/></Label>}/>
+      </div>
+    </Form.Field>
+  )
+};
+
+const NewAccountAnyCredentialInputs = ({url, information, account_information, handleChange, toggle, edit, seePassword, toggleSeePassword, removeField, handleFocus, handlePlaceholder}) => {
+  return (
+    <React.Fragment>
+      <UrlInput url={url}/>
+      {Object.keys(information).sort((a, b) => {
+      return information[a].priority - information[b].priority;
+        }).map(item => {
+      if (information[item].name !== 'login' && information[item].name !== 'password')
+        return <OtherInput
+          edit={edit}
+          toggle={toggle}
+          onChange={handleChange}
+          item={information[item]}
+          onFocus={handleFocus}
+          removeField={removeField}
+          key={information[item].priority}
+          account_information={account_information}
+          onChangePlaceholder={handlePlaceholder}/>;
+      else
+        return <CredentialInput
+          edit={edit}
+          toggle={toggle}
+          item={information[item]}
+          seePassword={seePassword}
+          onChange={handleChange}
+          removeField={removeField}
+          key={information[item].priority}
+          toggleSeePassword={toggleSeePassword}
+          account_information={account_information}/>;
+      })}
+    </React.Fragment>
+  )
 };
 
 export default NewAccountAnyCredentialInputs;

@@ -224,6 +224,7 @@ class NewAccountUpdateModal extends React.Component {
             {this.state.website.url &&
             <React.Fragment>
               <NewAccountAnyCredentialInputs
+                url={this.state.website.url}
                 handleFocus={this.handleFocus}
                 removeField={this.removeField}
                 edit={this.state.editCredentials}
