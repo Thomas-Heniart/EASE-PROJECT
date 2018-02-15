@@ -51,7 +51,16 @@ public class ServletSendUpdateToAdmin extends HttpServlet {
             if (teamCard instanceof HibernateProxy)
                 teamCard = (TeamCard) ((HibernateProxy) teamCard).getHibernateLazyInitializer().getImplementation();
             TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
-            Update new_update = UpdateFactory.getInstance().createUpdate(roomManager.getUser(), account_information, teamSingleCard, teamUser);
+            hibernateQuery.queryString("SELECT Update u WHERE u.teamCard.db_id = :card_id AND u.user.db_id = :user_id");
+            hibernateQuery.setParameter("user_id", roomManager.getUser().getDb_id());
+            hibernateQuery.setParameter("card_id", teamCard.getDb_id());
+            Update new_update = (Update) hibernateQuery.getSingleResult();
+            if (new_update == null)
+                new_update = UpdateFactory.getInstance().createUpdate(roomManager.getUser(), account_information, teamSingleCard, teamUser);
+            else {
+                new_update.setTeamUser(teamUser);
+                new_update.edit(account_information, roomManager.getUser().getUserKeys().getPublicKey());
+            }
             hibernateQuery.saveOrUpdateObject(new_update);
             hibernateQuery.deleteObject(update);
             NotificationFactory.getInstance().createUpdateTeamCardNotification(teamUser, teamCard, sm.getUserWebSocketManager(roomManager.getUser().getDb_id()), sm.getHibernateQuery());
