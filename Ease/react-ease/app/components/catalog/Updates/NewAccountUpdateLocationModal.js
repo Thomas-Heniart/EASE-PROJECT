@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
+import {logoLetter} from "../../../utils/utils";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import {handleSemanticInput} from "../../../utils/utils";
 import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
@@ -58,9 +59,16 @@ class NewAccountUpdateLocationModal extends React.Component {
           {this.state.view === 1 &&
           <Form onSubmit={this.changView} error={this.state.error.length > 0} id='add_bookmark_form'>
             <div className="app_name_container display-flex align_items_center">
-              <div className="squared_image_handler">
-                <img src="/resources/icons/link_app.png" alt="Website Logo"/>
-              </div>
+              {this.state.website.logo && this.state.website.logo !== '' ?
+                <div className="squared_image_handler">
+                  <img src={this.state.website.logo} alt="Website logo"/>
+                </div>
+                :
+                <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
+                  <div style={{margin:'auto'}}>
+                    <p style={{margin:'auto'}}>{logoLetter(this.props.modal.appName)}</p>
+                  </div>
+                </div>}
               <div className="team_app_settings_name">
                 <div>
                   <span className="app_name">{this.props.modal.appName}</span>

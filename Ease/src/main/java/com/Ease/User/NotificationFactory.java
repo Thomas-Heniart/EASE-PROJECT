@@ -304,7 +304,7 @@ public class NotificationFactory {
 
     public void createUpdateTeamCardNotification(TeamUser teamUser, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         String content = teamUser.getUsername() + " suggests you a new password for " + teamCard.getName();
-        String url = "#/teams" + teamCard.getTeam().getDb_id() + "/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
+        String url = "#/main/catalog/website";
         Notification notification = this.createNotification(teamCard.getChannel().getRoom_manager().getUser(), content, teamCard.getLogo(), url);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));

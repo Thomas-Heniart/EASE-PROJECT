@@ -461,7 +461,6 @@ public class TeamUser {
     }
 
     public boolean isRegistered() {
-        System.out.println(this.getUser().getUserStatus().isRegistered());
         return this.getUser() != null && this.getUser().getUserStatus().isRegistered();
     }
 

@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {logoLetter} from "../../utils/utils";
 import {fetchWebsiteInfo, getDashboardApp, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
 import {credentialIconType, handleSemanticInput, transformWebsiteInfoIntoList} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
@@ -109,23 +110,6 @@ class SimpleTeamUpdateAppAdder extends Component {
     e.preventDefault();
     this.setState({img_url:''});
   };
-  logoLetter = () => {
-    let first = '';
-    let second = '';
-    let space = false;
-    for (let letter = 0; letter < this.state.app_name.length; letter++) {
-      if (first.length < 1 && this.state.app_name[letter] !== ' ')
-        first = this.state.app_name[letter];
-      else if (first.length > 0 && second.length < 1 && this.state.app_name[letter] !== ' ' && space === true)
-        second = this.state.app_name[letter];
-      else if (this.state.app_name[letter] === ' ')
-        space = true;
-    }
-    if (second !== '')
-      return first.toUpperCase() + second.toUpperCase();
-    else
-      return first.toUpperCase();
-  };
   chooseAllUsers = () => {
     let selected = [];
     this.state.users.map(user => {
@@ -232,7 +216,7 @@ class SimpleTeamUpdateAppAdder extends Component {
                       </div>
                       : this.state.app_name ?
                         <div style={{backgroundColor:'#373b60',color:'white'}}>
-                          <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                          <p style={{margin:'auto'}}>{logoLetter(this.state.app_name)}</p>
                         </div>
                         :
                         <div style={{backgroundColor:'white',color: '#dededf'}}>
