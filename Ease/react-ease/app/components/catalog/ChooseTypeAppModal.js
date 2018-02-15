@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Checkbox, Button, Icon } from 'semantic-ui-react';
+import {logoLetter} from "../../utils/utils";
 import {withRouter} from 'react-router-dom';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
@@ -49,7 +50,7 @@ class ChooseTypeAppModal extends React.Component {
               :
               <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
                 <div style={{margin:'auto'}}>
-                  <p style={{margin:'auto'}}>{this.props.logoLetter}</p>
+                  <p style={{margin:'auto'}}>{logoLetter(appName)}</p>
                 </div>
               </div>}
               <div className='show_team'>

@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
+import {logoLetter} from "../../../utils/utils";
 import CredentialInputs from "./CredentialInputs";
 import {handleSemanticInput} from "../../../utils/utils";
 import {createProfile} from "../../../actions/dashboardActions";
@@ -166,23 +167,6 @@ class NewAccountUpdateModal extends React.Component {
       }
     }
   };
-  logoLetter = () => {
-    let first = '';
-    let second = '';
-    let space = false;
-    for (let letter = 0; letter < this.state.appName.length; letter++) {
-      if (first.length < 1 && this.state.appName[letter] !== ' ')
-        first = this.state.appName[letter];
-      else if (first.length > 0 && second.length < 1 && this.state.appName[letter] !== ' ' && space === true)
-        second = this.state.appName[letter];
-      else if (this.state.appName[letter] === ' ')
-        space = true;
-    }
-    if (second !== '')
-      return first.toUpperCase() + second.toUpperCase();
-    else
-      return first.toUpperCase();
-  };
   componentWillMount() {
     let teamName = [];
     let edit = {};
@@ -214,7 +198,7 @@ class NewAccountUpdateModal extends React.Component {
                 :
                 <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
                   <div style={{margin:'auto'}}>
-                    <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                    <p style={{margin:'auto'}}>{logoLetter(this.state.appName)}</p>
                   </div>
                 </div>}
               <Input
