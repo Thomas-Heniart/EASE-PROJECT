@@ -295,6 +295,12 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       })
+    },
+    sendUpdateToAdmin: ({id, ws_id}) => {
+      return basic_post('/api/v1/updates/SendUpdateToAdmin', {
+        update_id: id,
+        ws_id: ws_id
+      });
     }
   },
   teamChannel: {
