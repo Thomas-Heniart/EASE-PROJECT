@@ -23,7 +23,7 @@ class PasswordUpdateModal extends React.Component {
       loading: false,
       seePassword: false,
       website: this.props.modal.website,
-      account_information: this.props.modal.item.account_information,
+      account_information: {},
       app: this.props.dashboard.apps[this.props.modal.item.app_id],
       team: this.props.modal.item.team_id !== -1 ? this.props.teams[this.props.modal.item.team_id] : -1,
       room: this.props.modal.item.team_id !== -1 ? this.props.teams[this.props.modal.item.team_id].rooms[this.props.team_apps[this.props.modal.item.team_card_id].channel_id] : -1,
@@ -32,11 +32,15 @@ class PasswordUpdateModal extends React.Component {
   }
   componentWillMount() {
     let edit = {};
-    Object.keys(this.state.account_information).map(item => {
+    let acc_info = {};
+    Object.keys(this.props.modal.item.account_information).map(item => {
+      acc_info[item] = this.props.modal.item.account_information[item];
+    });
+    Object.keys(acc_info).map(item => {
       if (item !== 'login')
         edit[item] = false
     });
-    this.setState({editCredentials: edit});
+    this.setState({editCredentials: edit, account_information: acc_info});
   }
   handleInput = handleSemanticInput.bind(this);
   handleCredentialsInput = (e, {name, value}) => {
@@ -69,7 +73,7 @@ class PasswordUpdateModal extends React.Component {
   finish = () => {
     this.props.dispatch(deleteUpdate({id: this.props.modal.item.id})).then(() => {
       this.setState({loading: false});
-      this.props.modal.resolve();
+      // this.props.modal.resolve();
     });
   };
   edit = () => {

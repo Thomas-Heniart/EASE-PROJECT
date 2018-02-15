@@ -114,6 +114,7 @@ class AccountUpdateModal extends React.Component {
         this.props.modal.item.id,
         this.state.account_information
       );
+      this.props.modal.reject();
     }
   };
   render() {

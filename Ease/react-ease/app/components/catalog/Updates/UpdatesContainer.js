@@ -94,27 +94,27 @@ class UpdatesContainer extends React.Component {
       });
   };
   typeUpdate = (item, card, app, meId) => {
+    const appExist = item.app_id !== -1 || item.team_card_id !== -1;
+    const isEnterprise = item.team_card_id !== -1 && card.type === "teamEnterpriseCard";
+    const accountInfoEnterprise = isEnterprise && card.receivers.filter(receiver => {
+      return meId === receiver.team_user_id && Object.keys(receiver.account_information).length > 0 && receiver.account_information.login !== '';
+    }).length > 0;
     const sso_group = app.sso_group_id ? this.props.dashboard.sso_groups[app.sso_group_id] : -1;
-    if ((item.app_id === -1 && item.team_card_id === -1) || (item.team_card_id !== -1 && (card.type !== "teamEnterpriseCard"
-      && card.team_user_filler_id !== meId && card.team_user_filler_id !== -1))) {
+    const noFillerId = card.team_user_filler_id !== meId && card.team_user_filler_id !== -1;
+    const appAccountInfo = !isEnterprise && (item.app_id !== -1 && Object.keys(app.account_information).length > 0 && app.account_information.login !== '');
+    const cardAccountInfo = !isEnterprise && (item.team_card_id !== -1 && Object.keys(card.account_information).length > 0 && card.account_information.login !== '');
+    const ssoAccountInfo = app.sso_group_id && Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '';
+    if (!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId)) {
       this.state.type[item.id] = 'new';
       return <span>New Account</span>;
     }
     else if (item.team_user_id !== -1 || (item.app_id !== -1 &&
-      ((!app.sso_group_id && Object.keys(app.account_information).length > 0 && app.account_information.login !== '')
-        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 && card.account_information.login !== '')
-      || (app.sso_group_id &&
-          Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '')))) {
+      ((!app.sso_group_id && (appAccountInfo || cardAccountInfo || accountInfoEnterprise)) || ssoAccountInfo))) {
       this.state.type[item.id] = 'password';
       return <span>Password update</span>;
     }
-    else if (item.app_id !== -1 &&
-      ((!app.sso_group_id && Object.keys(app.account_information).length === 0 || app.account_information.login === '')
-        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 || card.account_information.login === '')
-        || (app.sso_group_id && Object.keys(sso_group.account_information).length > 0
-          && sso_group.account_information.login !== ''))
-      && (item.team_card_id !== -1 && (card.type === "teamEnterpriseCard"
-        || card.team_user_filler_id === meId || card.team_user_filler_id === -1))) {
+    else if (item.app_id !== -1 && ((!app.sso_group_id && (!appAccountInfo || !cardAccountInfo)) || (!ssoAccountInfo))
+      && (item.team_card_id !== -1 && (isEnterprise && !accountInfoEnterprise || !noFillerId))) {
       this.state.type[item.id] = 'account';
       return <span>Account update</span>;
     }
