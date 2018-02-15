@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container, Loader } from 'semantic-ui-react';
-import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal} from "../../../actions/catalogActions";
+import {accountUpdateModal, deleteUpdate, newAccountUpdateModal, passwordUpdateModal} from "../../../actions/catalogActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -119,11 +119,10 @@ class UpdatesContainer extends React.Component {
       return <span>Account update</span>;
     }
   };
-  deleteUpdate = (id) => {
+  removeUpdate = (id) => {
     let loading = {...this.state.loadingDelete};
     loading[id] = true;
     this.setState({loadingDelete: loading});
-    this.setState({loading: true});
     this.props.dispatch(deleteUpdate({id: id})
     ).then(() => {
       loading[id] = false;
@@ -167,7 +166,7 @@ class UpdatesContainer extends React.Component {
                           || (card.team_user_filler_id === meId || card.team_user_filler_id === -1))) &&
                       <span className='room'>#{this.props.teams[item.team_id].rooms[card.channel_id].name}</span>}
                     </div>
-                    <Icon name="trash" onClick={() => this.deleteUpdate(item.id)}/>
+                    <Icon name="trash" onClick={() => this.removeUpdate(item.id)}/>
                     <a onClick={() => this.openModal({
                       item: item,
                       website: website,
