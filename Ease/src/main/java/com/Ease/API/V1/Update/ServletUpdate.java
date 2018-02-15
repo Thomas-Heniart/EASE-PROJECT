@@ -183,6 +183,11 @@ public class ServletUpdate extends HttpServlet {
                             res.put(tmp.getJson());
                             continue;
                         }
+                    } else {
+                        Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
+                        hibernateQuery.saveOrUpdateObject(tmp);
+                        res.put(tmp.getJson());
+                        continue;
                     }
                 }
                 if (websiteApp.getAccount() != null && websiteApp.getAccount().sameAs(account_information)) {
