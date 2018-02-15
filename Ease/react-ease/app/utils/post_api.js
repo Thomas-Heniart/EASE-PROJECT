@@ -296,9 +296,10 @@ module.exports = {
         throw err.response.data;
       })
     },
-    sendUpdateToAdmin: ({id, ws_id}) => {
+    sendUpdateToAdmin: ({id, account_information, ws_id}) => {
       return basic_post('/api/v1/updates/SendUpdateToAdmin', {
         update_id: id,
+        account_information: account_information,
         ws_id: ws_id
       });
     }
