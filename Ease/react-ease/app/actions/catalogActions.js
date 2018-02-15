@@ -582,10 +582,11 @@ export function showNewAccountLocationUpdateModal({state, resolve, reject, websi
     }
 }
 
-export function sendUpdateToAdmin({id}){
+export function sendUpdateToAdmin({id, account_information}){
   return (dispatch, getState) => {
     return post_api.catalog.sendUpdateToAdmin({
       id: id,
+      account_information: account_information,
       ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({type: 'DELETE_UPDATE', payload: {update_id: id}});

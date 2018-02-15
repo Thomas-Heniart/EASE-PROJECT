@@ -98,7 +98,10 @@ class PasswordUpdateModal extends React.Component {
           });
         }
         else
-          this.props.dispatch(sendUpdateToAdmin({id: this.props.modal.item.id})).then(() => {
+          this.props.dispatch(sendUpdateToAdmin({
+            id: this.props.modal.item.id,
+            account_information: this.state.account_information
+          })).then(() => {
             this.finish();
           });
       }
