@@ -280,6 +280,13 @@
     input {
       padding: 0 10px;
     }
+    .app_name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: block;
+      max-width: 36%;
+    }
   }
   .team_name {
     background-color: $themeColor;

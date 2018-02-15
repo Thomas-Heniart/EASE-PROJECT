@@ -1,4 +1,4 @@
-export function createTeamCard({team_id, channel_id, website, type, name, url, subtype}) {
+export function createTeamCard({team_id, channel_id, website, type, name, url, subtype, account_information}) {
   return (dispatch) => {
     dispatch({
       type: 'ADD_TEAM_CARD', payload: {
@@ -8,7 +8,8 @@ export function createTeamCard({team_id, channel_id, website, type, name, url, s
         name: name,
         url: url,
         type: type,
-        subtype: subtype
+        subtype: subtype,
+        account_information: account_information
       }
     });
   }
