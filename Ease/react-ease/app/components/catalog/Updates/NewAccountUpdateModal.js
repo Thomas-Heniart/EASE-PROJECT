@@ -212,6 +212,7 @@ class NewAccountUpdateModal extends React.Component {
             {!this.state.website.url &&
             <React.Fragment>
               <CredentialInputs
+                url={this.state.website.url ? this.state.website.url : -1}
                 edit={this.state.editCredentials}
                 toggle={this.toggleCredentialEdit}
                 seePassword={this.state.seePassword}

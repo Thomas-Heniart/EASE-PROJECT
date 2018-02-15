@@ -118,6 +118,8 @@ class AccountUpdateModal extends React.Component {
     }
   };
   render() {
+    const item = this.props.modal.item;
+    const website = this.state.website;
     return (
       <SimpleModalTemplate
           onClose={this.close}
@@ -125,18 +127,21 @@ class AccountUpdateModal extends React.Component {
         <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
-              <img src={this.state.website.logo} alt="Website logo"/>
+              <img src={website.logo} alt="Website logo"/>
             </div>
-            <span className="app_name">{this.state.website.app_name}</span>
+            <span className="app_name">{website.app_name}</span>
           </div>
           <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
             <CredentialInputs
+              url={(item.app_id !== -1 && this.state.app.type === 'anyApp')
+              || (item.team_card_id !== -1
+                && this.props.team_apps[item.team_card_id].sub_type === 'any') ? website.login_url : -1}
               edit={this.state.editCredentials}
               toggle={this.toggleCredentialEdit}
               seePassword={this.state.seePassword}
               handleChange={this.handleCredentialsInput}
               toggleSeePassword={this.toggleSeePassword}
-              information={this.state.website.information}
+              information={website.information}
               account_information={this.state.account_information}/>
             <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>
             <Form.Field>
@@ -147,7 +152,7 @@ class AccountUpdateModal extends React.Component {
                         name='check'
                         value='Simple'
                         onChange={this.handleChange}
-                        label={this.state.website.app_name + ', ' + this.state.team.name + ', #' + this.state.room.name}
+                        label={website.app_name + ', ' + this.state.team.name + ', #' + this.state.room.name}
                         checked={this.state.check === 'Simple'}/>
               <Checkbox radio
                         name='check'

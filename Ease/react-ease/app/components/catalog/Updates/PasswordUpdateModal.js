@@ -121,6 +121,8 @@ class PasswordUpdateModal extends React.Component {
     }
   };
   render() {
+    const item = this.props.modal.item;
+    const website = this.state.website;
     return (
       <SimpleModalTemplate
         onClose={this.close}
@@ -128,10 +130,10 @@ class PasswordUpdateModal extends React.Component {
         <Container className="app_settings_modal">
           <div className="app_name_container display-flex align_items_center">
             <div className="squared_image_handler">
-              <img src={this.state.website.logo} alt="Website logo"/>
+              <img src={website.logo} alt="Website logo"/>
             </div>
             <div className="display_flex flex_direction_column team_app_settings_name">
-              <span className="app_name">{this.state.website.app_name}</span>
+              <span className="app_name">{website.app_name}</span>
               {this.state.team !== -1 &&
                 <React.Fragment>
                   <div>
@@ -141,23 +143,26 @@ class PasswordUpdateModal extends React.Component {
                 </React.Fragment>}
             </div>
           </div>
-          {this.props.modal.item.team_user_id !== -1 &&
+          {item.team_user_id !== -1 &&
             <div className='ui labels' style={{display:'inline-flex'}}>
               <p style={{marginTop:'4px', fontWeight:'bold'}}>Password suggested by: </p>
-              <Label className='user-label'>{this.state.team.team_users[this.props.modal.item.team_user_id].username}</Label>
+              <Label className='user-label'>{this.state.team.team_users[item.team_user_id].username}</Label>
             </div>}
           {this.state.team !== -1 && this.state.team.team_users[this.state.team.my_team_user_id].role > 1 &&
           <p>Modifications will be applied to your Team.</p>}
           {this.state.team !== -1 && this.state.team.team_users[this.state.team.my_team_user_id].role < 2 &&
-          <p>Modifications will be applied to you and suggested to the Admin of {this.state.website.app_name}.</p>}
+          <p>Modifications will be applied to you and suggested to the Admin of {website.app_name}.</p>}
           <Form onSubmit={this.edit} error={this.state.error.length > 0} id='add_bookmark_form'>
             <CredentialInputs
+              url={(item.app_id !== -1 && this.state.app.type === 'anyApp')
+              || (item.team_card_id !== -1
+                && this.props.team_apps[item.team_card_id].sub_type === 'any') ? website.login_url : -1}
               edit={this.state.editCredentials}
               toggle={this.toggleCredentialEdit}
               seePassword={this.state.seePassword}
               handleChange={this.handleCredentialsInput}
               toggleSeePassword={this.toggleSeePassword}
-              information={this.state.website.information}
+              information={website.information}
               account_information={this.state.account_information}/>
             <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>
             <Message error content={this.state.error}/>
