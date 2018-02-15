@@ -1,9 +1,8 @@
 import React, {Component} from "react";
 import {fetchWebsiteInfo, getDashboardApp, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
-import {handleSemanticInput, transformWebsiteInfoIntoList} from "../../utils/utils";
+import {credentialIconType, handleSemanticInput, transformWebsiteInfoIntoList} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite} from "../../actions/teamModalActions";
-import {showChooseAppCredentialsModal, showChooseAnyAppCredentialsModal, showChooseSoftwareAppCredentialsModal} from "../../actions/modalActions";
 import {connect} from "react-redux";
 import { setUserDropdownText, PasswordChangeDropdown, renderSimpleAppAddUserLabel} from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
@@ -105,6 +104,7 @@ class SimpleTeamUpdateAppAdder extends Component {
       this.setState({app: app, credentials: credentials});
     });
   };
+
   imgNone = (e) => {
     e.preventDefault();
     this.setState({img_url:''});
@@ -177,42 +177,9 @@ class SimpleTeamUpdateAppAdder extends Component {
     this.chooseAllUsers();
   }
   send = (e) => {
-    e.preventDefault();
-    const receivers = this.state.users
-      .filter(item => (this.state.selected_users.indexOf(item.id) !== -1));
-    if (this.props.card.subtype !== 'softwareApp' && this.props.card.subtype !== 'AnyApp')
-      this.props.dispatch(showChooseAppCredentialsModal({
-        active: true,
-        card_name: this.state.app_name,
-        receivers: receivers,
-        description: this.state.description,
-        password_reminder_interval: this.state.password_reminder_interval
-      }));
-    else if (this.props.card.subtype === 'AnyApp')
-      this.props.dispatch(showChooseAnyAppCredentialsModal({
-        active: true,
-        card_name: this.state.app_name,
-        receivers: receivers,
-        description: this.state.description,
-        url: this.state.app_url,
-        img_url: this.state.img_url,
-        subtype: this.props.card.subtype,
-        logoLetter: this.logoLetter(),
-        password_reminder_interval: this.state.password_reminder_interval
-      }));
-    else
-      this.props.dispatch(showChooseSoftwareAppCredentialsModal({
-        active: true,
-        card_name: this.state.app_name,
-        receivers: receivers,
-        description: this.state.description,
-        url: this.state.app_url,
-        img_url: this.state.img_url,
-        subtype: this.props.card.subtype,
-        logoLetter: this.logoLetter(),
-        password_reminder_interval: this.state.password_reminder_interval
-      }));
+    console.log('nope');
   };
+  
   close = () => {
     this.props.resetTeamCard();
     // this.props.dispatch(closeAppAddUI());
@@ -222,6 +189,14 @@ class SimpleTeamUpdateAppAdder extends Component {
     const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id];
     const team = this.props.teams[this.props.item.team_id];
 
+    console.log('*******************************************');
+    console.log('*******************************************');
+    console.log('*******************************************');
+    console.log('PROPS', this.props);
+    console.log('STATE', this.state);
+    console.log('*******************************************');
+    console.log('*******************************************');
+    console.log('*******************************************');
     return (
       <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
         <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
@@ -279,6 +254,20 @@ class SimpleTeamUpdateAppAdder extends Component {
                              label={<Label><Icon name="home"/></Label>}
                              labelPosition="left"
                              required/>}
+
+                      {/*<Input size="mini"*/}
+                             {/*class="team-app-input"*/}
+                             {/*required={item.name !== 'password'}*/}
+                             {/*readOnly={readOnly}*/}
+                             {/*disabled={disabled}*/}
+                             {/*name={item.name}*/}
+                             {/*onChange={onChange}*/}
+                             {/*label={<Label><Icon name={credentialIconType[item.name]}/></Label>}*/}
+                             {/*labelPosition="left"*/}
+                             {/*placeholder={item.name === 'password' ? '••••••••' : item.placeholder}*/}
+                             {/*value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}*/}
+                             {/*type={item.type}>*/}
+                      {/*</Input>*/}
                       <PasswordChangeDropdown
                         team={team}
                         dispatch={this.props.dispatch}
@@ -288,6 +277,7 @@ class SimpleTeamUpdateAppAdder extends Component {
                     </div>
                   </div>
                   <div>
+
                     <Dropdown
                       class="mini"
                       search
