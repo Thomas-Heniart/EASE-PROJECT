@@ -9,7 +9,8 @@ import {accountUpdateModal, newAccountUpdateModal, passwordUpdateModal, deleteUp
   dashboard: store.dashboard,
   teams: store.teams,
   team_apps: store.team_apps,
-  updates: store.catalog.updates
+  updates: store.catalog.updates,
+  sso_list: store.catalog.sso_list
 }))
 class UpdatesContainer extends React.Component {
   constructor(props){
@@ -26,32 +27,42 @@ class UpdatesContainer extends React.Component {
     this.props.updates.map(item => {
       let website = {};
       loading[item.id] = false;
-      this.setState({loadingDelete: loading});
-      this.props.websites.filter(site => {
-        if (site.id === item.website_id)
-          website = site;
-        return site;
-      });
-      if (item.app_id !== -1) {
-        website = this.props.dashboard.apps[item.app_id].website;
-        website.app_name = this.props.dashboard.apps[item.app_id].name;
-        if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
-          website.name = this.props.dashboard.apps[item.app_id].name
+      if (item.app_id !== -1 && this.props.dashboard.apps[item.app_id].sso_group_id) {
+        website = this.props.sso_list[0];
+        website.logo = '/resources/other/google-logo.png';
+        website.information = {
+          login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
+          password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
+        };
+        website.app_name = website.name;
       }
-      if (item.website_id === -1) {
-        getLogo({url: item.url}).then(response => {
-          website = {
-            name: item.url,
-            url: item.url,
-            logo: response !== '/resources/icons/link_app.png' ? response : '',
-            information: {
-              login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
-              password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
-            }
-          };
-          stateWebsites[item.id] = website;
-          this.setState({websites: stateWebsites});
+      else {
+        this.props.websites.filter(site => {
+          if (site.id === item.website_id)
+            website = site;
+          return site;
         });
+        if (item.app_id !== -1) {
+          website = this.props.dashboard.apps[item.app_id].website;
+          website.app_name = this.props.dashboard.apps[item.app_id].name;
+          if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
+            website.name = this.props.dashboard.apps[item.app_id].name
+        }
+        if (item.website_id === -1) {
+          getLogo({url: item.url}).then(response => {
+            website = {
+              name: item.url,
+              url: item.url,
+              logo: response !== '/resources/icons/link_app.png' ? response : '',
+              information: {
+                login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
+                password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
+              }
+            };
+            stateWebsites[item.id] = website;
+            this.setState({websites: stateWebsites});
+          });
+        }
       }
       stateWebsites[item.id] = website;
     });
