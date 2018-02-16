@@ -12,6 +12,7 @@ import {connect} from "react-redux";
 import {setUserDropdownText, PasswordChangeDropdownEnterprise} from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
+import {deleteUpdate} from "../../actions/catalogActions";
 
 const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, first}) => {
   return (
@@ -270,6 +271,20 @@ class EnterpriseTeamAppAdder extends Component {
     });
     this.setState({users: users});
   };
+  finish = () => {
+    if (this.props.card.app.update_id) {
+      this.props.dispatch(deleteUpdate({id: this.props.card.app.update_id})).then(() => {
+        this.setState({loading: false});
+        this.close();
+        this.props.resetTeamCard();
+      });
+    }
+    else {
+      this.setState({loading: false});
+      this.close();
+      this.props.resetTeamCard();
+    }
+  };
   send = (e) => {
     e.preventDefault();
     this.setState({loading: true});
@@ -297,9 +312,7 @@ class EnterpriseTeamAppAdder extends Component {
         connection_information: connection_information,
         receivers: newReceivers
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
-        this.props.resetTeamCard();
+        this.finish();
       });
     else if (this.props.card.subtype === 'softwareApp')
       this.props.dispatch(teamCreateSoftwareEnterpriseCard({
@@ -312,9 +325,7 @@ class EnterpriseTeamAppAdder extends Component {
         connection_information: connection_information,
         receivers: newReceivers
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
-        this.props.resetTeamCard();
+        this.finish();
       });
     else
       this.props.dispatch(teamCreateEnterpriseCard({
@@ -326,9 +337,7 @@ class EnterpriseTeamAppAdder extends Component {
         password_reminder_interval: this.state.password_reminder_interval,
         receivers: newReceivers
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
-        this.props.resetTeamCard();
+        this.finish();
       });
   };
   close = () => {

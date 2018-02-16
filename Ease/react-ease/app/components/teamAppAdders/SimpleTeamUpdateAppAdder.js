@@ -9,6 +9,7 @@ import { setUserDropdownText, PasswordChangeDropdown, renderSimpleAppAddUserLabe
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {teamCreateAnySingleCard, teamCreateSingleApp} from "../../actions/appsActions";
+import {deleteUpdate} from "../../actions/catalogActions";
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
   return <Input size="mini"
                 class="team-app-input"
@@ -177,6 +178,13 @@ class SimpleTeamUpdateAppAdder extends Component {
       console.log('TEST :', credentials);
     });
   }
+  finish = () => {
+    this.props.dispatch(deleteUpdate({id: this.props.card.app.update_id})).then(() => {
+      this.setState({loading: false});
+      this.close();
+      this.props.resetTeamCard();
+    });
+  };
   send = (e) => {
     e.preventDefault();
     const receivers = this.state.users
@@ -199,9 +207,7 @@ class SimpleTeamUpdateAppAdder extends Component {
         account_information: transformCredentialsListIntoObject(this.state.credentials),
         receivers: newReceivers
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
-        this.props.resetTeamCard();
+        this.finish();
       });
     } else {
       const connection_information = this.state.credentials.reduce((prev, curr) => {
@@ -220,9 +226,7 @@ class SimpleTeamUpdateAppAdder extends Component {
         credentials_provided: false,
         receivers: newReceivers
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
-        this.props.resetTeamCard();
+        this.finish();
       });
     }
   };
