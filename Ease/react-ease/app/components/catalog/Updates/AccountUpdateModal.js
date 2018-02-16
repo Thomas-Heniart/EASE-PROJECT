@@ -168,7 +168,7 @@ class AccountUpdateModal extends React.Component {
               className="modal-button"
               content="SAVE ACCOUNT..."
               loading={this.state.loading}
-              disabled={this.state.loading}/>
+              disabled={this.state.loading || this.state.check === ''}/>
           </Form>
         </Container>
       </SimpleModalTemplate>
