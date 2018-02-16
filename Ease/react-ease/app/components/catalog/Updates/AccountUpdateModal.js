@@ -143,7 +143,9 @@ class AccountUpdateModal extends React.Component {
               toggleSeePassword={this.toggleSeePassword}
               information={website.information}
               account_information={this.state.account_information}/>
-            <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>
+            {((item.app_id !== -1 && this.state.app.type !== 'anyApp')
+            || (item.team_card_id !== -1 && this.props.team_apps[item.team_card_id].sub_type !== 'any')) &&
+            <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
             <Form.Field>
               <div style={{fontWeight:'bold'}}>Which App do you want to update with this account?</div>
             </Form.Field>

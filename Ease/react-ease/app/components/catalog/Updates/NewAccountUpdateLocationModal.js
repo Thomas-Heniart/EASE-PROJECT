@@ -106,7 +106,7 @@ class NewAccountUpdateLocationModal extends React.Component {
         <ChooseTypeAppModal
           {...this.props}
           account_information={this.props.modal.account_information}
-          subType={this.props.modal.website.url ? 'AnyApp' : 'Simple'}
+          subtype={this.props.modal.website.url ? 'AnyApp' : 'classic'}
           website={this.props.modal.website}
           appName={this.props.modal.appName}
           team_id={this.props.modal.team}

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {logoLetter} from "../../utils/utils";
+import {logoLetter, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {fetchWebsiteInfo, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
 import {handleSemanticInput,
   transformCredentialsListIntoObject,
@@ -126,7 +126,7 @@ class EnterpriseTeamAppAdder extends Component {
     this.state = {
       loading: false,
       app: this.props.card.app,
-      app_url: this.props.card.url,
+      app_url: this.props.card.app.url ? this.props.card.app.url : this.props.card.url,
       app_name: this.props.card.name,
       password_reminder_interval: 0,
       description: '',
@@ -234,6 +234,7 @@ class EnterpriseTeamAppAdder extends Component {
     });
   };
   componentWillMount(){
+    const meId = this.props.teams[this.props.card.team_id].my_team_user_id;
     let users = this.props.item.team_user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
       return {
@@ -241,7 +242,9 @@ class EnterpriseTeamAppAdder extends Component {
         text: setUserDropdownText(user),
         value: item,
         id: item,
-        credentials: transformWebsiteInfoIntoList(this.props.card.app.information),
+        credentials: item === meId && this.props.card.account_information !== -1 ?
+          transformWebsiteInfoIntoListAndSetValues(this.props.card.app.information, this.props.card.account_information)
+          : transformWebsiteInfoIntoList(this.props.card.app.information),
         username: user.username
       }
     });
@@ -251,6 +254,7 @@ class EnterpriseTeamAppAdder extends Component {
     this.chooseAllUsers();
   };
   setUsers = (app) => {
+    const meId = this.props.teams[this.props.card.team_id].my_team_user_id;
     let users = this.props.item.user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
       return {
@@ -258,7 +262,9 @@ class EnterpriseTeamAppAdder extends Component {
         text: setUserDropdownText(user),
         value: item,
         id: item,
-        credentials: transformWebsiteInfoIntoList(app.information),
+        credentials: item === meId && this.props.card.account_information !== -1 ?
+          transformWebsiteInfoIntoListAndSetValues(app.information, this.props.card.account_information)
+          : transformWebsiteInfoIntoList(app.information),
         username: user.username
       }
     });
