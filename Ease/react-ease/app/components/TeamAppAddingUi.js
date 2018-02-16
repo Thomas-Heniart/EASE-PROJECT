@@ -18,8 +18,8 @@ class TeamAppAddingUi extends React.Component {
     return (
         <div className="add_actions_container" id="app_add_actions">
           {this.props.card.account_information !== -1 && view === 'Simple' &&
-          <SimpleTeamUpdateAppAdder item={item} accountInformation={this.props.account_information}/>}
-          {view === 'Simple' && this.props.account_information === -1 &&
+          <SimpleTeamUpdateAppAdder item={item} accountInformation={this.props.card.account_information}/>}
+          {view === 'Simple' && this.props.card.account_information === -1 &&
           <SimpleTeamAppAdder item={item} />}
           {view === 'Link' &&
           <LinkTeamAppAdder item={item} dispatch={this.props.dispatch} />}
