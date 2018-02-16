@@ -19,7 +19,7 @@ class NewAccountUpdateModal extends React.Component {
     super(props);
     this.state = {
       error: '',
-      appName: '',
+      appName: !this.props.modal.website.url ? this.props.modal.website.name : '',
       teamName: [],
       check: '',
       loading: false,
@@ -207,11 +207,13 @@ class NewAccountUpdateModal extends React.Component {
                 name='appName'
                 className="modalInput team-app-input"
                 onChange={this.handleInput}
+                value={this.state.appName}
                 required/>
             </div>
             {!this.state.website.url &&
             <React.Fragment>
               <CredentialInputs
+                url={this.state.website.url ? this.state.website.url : -1}
                 edit={this.state.editCredentials}
                 toggle={this.toggleCredentialEdit}
                 seePassword={this.state.seePassword}
@@ -224,6 +226,7 @@ class NewAccountUpdateModal extends React.Component {
             {this.state.website.url &&
             <React.Fragment>
               <NewAccountAnyCredentialInputs
+                url={this.state.website.url}
                 handleFocus={this.handleFocus}
                 removeField={this.removeField}
                 edit={this.state.editCredentials}

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Segment, Button, Icon, Dropdown, Message, Input, Grid} from 'semantic-ui-react';
+import {Segment, Button, Icon, Dropdown, Message, Input, Grid, Loader} from 'semantic-ui-react';
 import Joyride from "react-joyride";
 import {setTipSeen} from "../../../actions/commonActions";
+import {logoLetter} from "../../../utils/utils";
 
 class DisplayAccounts extends React.Component {
   constructor(props) {
@@ -45,26 +46,10 @@ class DisplayAccounts extends React.Component {
       seePassword[id] = 'password';
     this.setState({seePassword: seePassword});
   };
-  logoLetter = (name) => {
-    let first = '';
-    let second = '';
-    let space = false;
-    for (let letter = 0; letter < name.length; letter++) {
-      if (first.length < 1 && name[letter] !== ' ')
-        first = name[letter];
-      else if (first.length > 0 && second.length < 1 && name[letter] !== ' ' && space === true)
-        second = name[letter];
-      else if (name[letter] === ' ')
-        space = true;
-    }
-    if (second !== '')
-      return first.toUpperCase() + second.toUpperCase();
-    else
-      return first.toUpperCase();
-  };
   render() {
     const {
       onChange,
+      loadingLogo,
       onChangeRoomName,
       roomName,
       toPending,
@@ -136,26 +121,31 @@ class DisplayAccounts extends React.Component {
     ));
     const accounts = importedAccounts.map(item => (
       <div key={item.id} className='account'>
-        <Icon name='remove circle' onClick={e => deleteAccount(item.id)}/>
-        {(item.logo && item.logo.length > 0) && <img src={item.logo}/>}
-        {(!item.logo || item.logo.length < 1) &&
-        <div className='logo_letter'>
-          <p style={{margin: 'auto'}}>{this.logoLetter(item.name)}</p>
-        </div>}
-        {Object.keys(fields).map(field => (
-          <Input idapp={item.id}
-                 key={fields[field]}
-                 size='mini'
-                 name={fields[field]}
-                 error={this.props.fieldProblem.id === item.id && this.props.fieldProblem.name === fields[field]}
-                 value={item[fields[field]]}
-                 onChange={this.props.handleAppInfo}
-                 disabled={fields[field] === 'url' && item.website_id !== -1}
-                 icon={fields[field] === 'password' && <Icon name='eye' link onClick={e => this.seePassword(item.id)}/>}
-                 type={fields[field] === 'password' ? this.state.seePassword[item.id] : 'text'} />
-        ))}
-        <Icon name='arrow circle right' size='large' onClick={e => toPending(item.id)}/>
-      </div>
+        <Loader active={loadingLogo[item.id]} inline='centered' size='tiny'/>
+          {!loadingLogo[item.id] &&
+            <React.Fragment>
+              <Icon name='remove circle' onClick={e => deleteAccount(item.id)}/>
+              {(item.logo && item.logo.length > 0) && <img src={item.logo}/>}
+              {(!item.logo || item.logo.length < 1) &&
+                <div className='logo_letter'>
+                  <p style={{margin: 'auto'}}>{logoLetter(item.name)}</p>
+                </div>}
+                {Object.keys(fields).map(field => (
+                  <Input idapp={item.id}
+                         key={fields[field]}
+                          size='mini'
+                         name={fields[field]}
+                         error={this.props.fieldProblem.id === item.id && this.props.fieldProblem.name === fields[field]}
+                         value={item[fields[field]]}
+                         onChange={this.props.handleAppInfo}
+                         disabled={fields[field] === 'url' && item.website_id !== -1}
+                         icon={fields[field] === 'password' &&
+                         <Icon name='eye' link onClick={e => this.seePassword(item.id)}/>}
+                         type={fields[field] === 'password' ? this.state.seePassword[item.id] : 'text'}/>
+                ))}
+                <Icon name='arrow circle right' size='large' onClick={e => toPending(item.id)}/>
+              </React.Fragment>}
+        </div>
     ));
     const listPending = accountsPending.map(item => (
       <div key={item.id} className='div_account'>
@@ -163,7 +153,7 @@ class DisplayAccounts extends React.Component {
         {(item.logo && item.logo.length > 0) && <img src={item.logo}/>}
         {(!item.logo || item.logo.length < 1) &&
         <div className='logo_letter pending'>
-          <p>{this.logoLetter(item.name)}</p>
+          <p>{logoLetter(item.name)}</p>
         </div>}
         <p>{item.name} - {item.login && item.password ? item.login : 'Add as a bookmark'}</p>
       </div>

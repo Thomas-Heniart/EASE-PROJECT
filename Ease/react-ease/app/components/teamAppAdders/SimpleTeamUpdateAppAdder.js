@@ -56,7 +56,6 @@ class SimpleTeamUpdateAppAdder extends Component {
     });
     this.setState({users: users});
   };
-
   getLogo = () => {
     if (this.props.card.subtype === 'AnyApp')
       getClearbitLogo(this.state.app_url).then(response => {
@@ -102,7 +101,6 @@ class SimpleTeamUpdateAppAdder extends Component {
       });
     });
   };
-
   setApp = (app) => {
     if (app.login !== undefined) {
       this.setDashboardApp(app);
@@ -120,7 +118,6 @@ class SimpleTeamUpdateAppAdder extends Component {
       this.setState({app: app, credentials: credentials});
     });
   };
-
   imgNone = (e) => {
     e.preventDefault();
     this.setState({img_url:''});
@@ -142,32 +139,32 @@ class SimpleTeamUpdateAppAdder extends Component {
     selected.splice(selected.length + 1, 0, user.id);
     this.setState({ selected_users: selected });
   };
-
-  componentWillMount() {
-      let users = this.props.item.team_user_ids.map(item => {
-        const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
-        if (user.role > 1 || this.props.card.subtype === 'softwareApp' || this.props.card.subtype === 'AnyApp') {
-          return {
-            key: item,
-            text: setUserDropdownText(user),
-            value: item,
-            id: item,
-            role: user.role,
-            username: user.username,
-            can_see_information: true
-          }
-        }else {
-          return {
-            key: item,
-            text: setUserDropdownText(user),
-            value: item,
-            id: item,
-            role: user.role,
-            username: user.username,
-            can_see_information: false,
-            toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
-          }
+  componentWillMount(){
+    let users = this.props.item.team_user_ids.map(item => {
+      const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
+      if (user.role > 1 || this.props.card.subtype === 'softwareApp' || this.props.card.subtype === 'AnyApp') {
+        return {
+          key: item,
+          text: setUserDropdownText(user),
+          value: item,
+          id: item,
+          role: user.role,
+          username: user.username,
+          can_see_information: true
         }
+      }
+      else {
+        return {
+          key: item,
+          text: setUserDropdownText(user),
+          value: item,
+          id: item,
+          role: user.role,
+          username: user.username,
+          can_see_information: false,
+          toggleCanSeeInformation: this.toggleCanSeeInformation.bind(null, item)
+        }
+      }
     });
     const room_manager_name = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id].username;
     this.setState({users: users, room_manager_name: room_manager_name});
@@ -180,7 +177,6 @@ class SimpleTeamUpdateAppAdder extends Component {
       console.log('TEST :', credentials);
     });
   }
-
   send = (e) => {
     e.preventDefault();
     const receivers = this.state.users
@@ -230,13 +226,11 @@ class SimpleTeamUpdateAppAdder extends Component {
       });
     }
   };
-
   close = () => {
     this.props.resetTeamCard();
     // this.props.dispatch(closeAppAddUI());
   };
   render(){
-  console.log("yo", this.state.credentials);
    const credentials = this.state.credentials.map(item => {
       return <TeamAppCredentialInput key={item}
                                      onChange={this.handleCredentialInput}
@@ -247,10 +241,6 @@ class SimpleTeamUpdateAppAdder extends Component {
     const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id];
     const team = this.props.teams[this.props.item.team_id];
 
-
-    console.log('*******************************************');
-    console.log('PROPS', this.props);
-    console.log('STATE', this.state);
     return (
       <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
         <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>

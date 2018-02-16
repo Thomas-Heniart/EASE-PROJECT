@@ -48,7 +48,6 @@ class NewAccountUpdateLocationModal extends React.Component {
   }
 
   render() {
-
     return (
       <SimpleModalTemplate
         onClose={this.close}

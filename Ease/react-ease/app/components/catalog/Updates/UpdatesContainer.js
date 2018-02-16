@@ -4,6 +4,7 @@ import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
 import { Grid, Image, Icon, Container, Loader } from 'semantic-ui-react';
 import {accountUpdateModal, deleteUpdate, newAccountUpdateModal, passwordUpdateModal} from "../../../actions/catalogActions";
+import {fetchTeamApp} from "../../../actions/teamActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -46,10 +47,31 @@ class UpdatesContainer extends React.Component {
         if (item.app_id !== -1) {
           website = this.props.dashboard.apps[item.app_id].website;
           website.app_name = this.props.dashboard.apps[item.app_id].name;
-          if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
-            website.name = this.props.dashboard.apps[item.app_id].name
+          if (this.props.dashboard.apps[item.app_id].sub_type === 'any') {
+            website.app_name = this.props.team_apps[item.team_card_id].name;
+            website.name = this.props.team_apps[item.team_card_id].name;
+          }
+          if (item.team_card_id === -1 && this.props.dashboard.apps[item.app_id].type === 'anyApp')
+            website.name = this.props.dashboard.apps[item.app_id].name;
+        }
+        else if (item.app_id === -1 && item.team_card_id !== -1) {
+          loading[item.id] = true;
+          this.setState({loadingDelete: loading});
+          this.props.dispatch(fetchTeamApp({
+            team_id: item.team_id,
+            app_id: item.team_card_id
+          })).then(response => {
+            website = response.website;
+            website.app_name = response.name;
+            website.name = response.name;
+            stateWebsites[item.id] = website;
+            loading[item.id] = false;
+            this.setState({websites: stateWebsites, loadingDelete: loading});
+          });
         }
         if (item.website_id === -1) {
+          loading[item.id] = true;
+          this.setState({loadingDelete: loading});
           getLogo({url: item.url}).then(response => {
             website = {
               name: item.url,
@@ -61,7 +83,8 @@ class UpdatesContainer extends React.Component {
               }
             };
             stateWebsites[item.id] = website;
-            this.setState({websites: stateWebsites});
+            loading[item.id] = false;
+            this.setState({websites: stateWebsites, loadingDelete: loading});
           });
         }
       }
@@ -94,27 +117,27 @@ class UpdatesContainer extends React.Component {
       });
   };
   typeUpdate = (item, card, app, meId) => {
+    const appExist = item.app_id !== -1 || item.team_card_id !== -1;
+    const isEnterprise = item.team_card_id !== -1 && card.type === "teamEnterpriseCard";
+    const accountInfoEnterprise = isEnterprise && card.receivers.filter(receiver => {
+      return meId === receiver.team_user_id && Object.keys(receiver.account_information).length > 0 && receiver.account_information.login !== '';
+    }).length > 0;
     const sso_group = app.sso_group_id ? this.props.dashboard.sso_groups[app.sso_group_id] : -1;
-    if ((item.app_id === -1 && item.team_card_id === -1) || (item.team_card_id !== -1 && (card.type !== "teamEnterpriseCard"
-      && card.team_user_filler_id !== meId && card.team_user_filler_id !== -1))) {
+    const noFillerId = card.team_user_filler_id !== meId && card.team_user_filler_id !== -1;
+    const appAccountInfo = !isEnterprise && (item.app_id !== -1 && Object.keys(app.account_information).length > 0 && app.account_information.login !== '');
+    const cardAccountInfo = !isEnterprise && (item.team_card_id !== -1 && Object.keys(card.account_information).length > 0 && card.account_information.login !== '');
+    const ssoAccountInfo = app.sso_group_id && Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '';
+    if (!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId)) {
       this.state.type[item.id] = 'new';
       return <span>New Account</span>;
     }
     else if (item.team_user_id !== -1 || (item.app_id !== -1 &&
-      ((!app.sso_group_id && Object.keys(app.account_information).length > 0 && app.account_information.login !== '')
-        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 && card.account_information.login !== '')
-      || (app.sso_group_id &&
-          Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '')))) {
+      ((!app.sso_group_id && (appAccountInfo || cardAccountInfo || accountInfoEnterprise)) || ssoAccountInfo))) {
       this.state.type[item.id] = 'password';
       return <span>Password update</span>;
     }
-    else if (item.app_id !== -1 &&
-      ((!app.sso_group_id && Object.keys(app.account_information).length === 0 || app.account_information.login === '')
-        || (!app.sso_group_id && Object.keys(card.account_information).length > 0 || card.account_information.login === '')
-        || (app.sso_group_id && Object.keys(sso_group.account_information).length > 0
-          && sso_group.account_information.login !== ''))
-      && (item.team_card_id !== -1 && (card.type === "teamEnterpriseCard"
-        || card.team_user_filler_id === meId || card.team_user_filler_id === -1))) {
+    else if (item.app_id !== -1 && ((!app.sso_group_id && (!appAccountInfo || !cardAccountInfo)) || (!ssoAccountInfo))
+      && (item.team_card_id !== -1 && (isEnterprise && !accountInfoEnterprise || !noFillerId))) {
       this.state.type[item.id] = 'account';
       return <span>Account update</span>;
     }
@@ -146,7 +169,9 @@ class UpdatesContainer extends React.Component {
             const website = this.state.websites[item.id];
             return (
               <Grid.Column key={item.id} className="showSegment update">
-                <Loader size='small' active={this.state.loadingDelete[item.id]} inline='centered'/>
+                <Loader size='small'
+                        active={this.state.loadingDelete[item.id]}
+                        className='loader_centered'/>
                 {!this.state.loadingDelete[item.id] &&
                   <React.Fragment>
                     {website.logo && website.logo !== '' ?

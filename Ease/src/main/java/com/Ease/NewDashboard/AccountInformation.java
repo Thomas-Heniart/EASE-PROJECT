@@ -80,14 +80,7 @@ public class AccountInformation {
     }
 
     public void decipher(String private_key) throws HttpServletException {
-        try {
-            this.setDeciphered_information_value(RSA.Decrypt(this.getInformation_value(), private_key));
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(this.getDb_id());
-            System.out.println(private_key);
-            System.out.println(this.getInformation_value());
-        }
+        this.setDeciphered_information_value(RSA.Decrypt(this.getInformation_value(), private_key));
     }
 
     @Override
