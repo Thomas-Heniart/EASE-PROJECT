@@ -12,13 +12,13 @@ import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Update.Update;
 import com.Ease.Update.UpdateFactory;
+import com.Ease.User.NotificationFactory;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.Utils.Servlets.PostServletManager;
-import com.Ease.Utils.Servlets.ServletManager;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.json.JSONArray;
@@ -78,7 +78,6 @@ public class ServletUpdate extends HttpServlet {
             if (website != null) {
                 /* Hack for websites with more than 2 fields */
                 populateAccountInformation(website, url, account_information);
-                System.out.println(website.getName());
                 /* Find update(s) with this website */
                 if (website.getSso() == null) {
                     hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
@@ -101,15 +100,12 @@ public class ServletUpdate extends HttpServlet {
             for (Update update : updates)
                 update.decipher(privateKey);
             updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
-            if (updates.isEmpty())
-                populateResponse(res, user, account_information, website, url, hibernateQuery, sm);
-            else {
-                updates = updates.stream().filter(update -> !update.passwordMatch(account_information)).collect(Collectors.toList());
-                for (Update update : updates) {
-                    update.edit(account_information, user.getUserKeys().getPublicKey());
-                    res.put(update.getJson());
-                }
+            updates = updates.stream().filter(update -> !update.passwordMatch(account_information)).collect(Collectors.toList());
+            for (Update update : updates) {
+                update.edit(account_information, user.getUserKeys().getPublicKey());
+                res.put(update.getJson());
             }
+            populateResponse(res, user, account_information, website, url, hibernateQuery, sm, updates);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
@@ -140,7 +136,7 @@ public class ServletUpdate extends HttpServlet {
         }
     }
 
-    private void populateResponse(JSONArray res, User user, JSONObject account_information, Website website, String url, HibernateQuery hibernateQuery, ServletManager sm) throws HttpServletException {
+    private void populateResponse(JSONArray res, User user, JSONObject account_information, Website website, String url, HibernateQuery hibernateQuery, PostServletManager sm, List<Update> updates) throws HttpServletException {
         if (website != null) {
             if (website.getSso() != null) {
                 hibernateQuery.queryString("SELECT w FROM WebsiteApp w WHERE w.website.sso.db_id = :sso_id AND w.profile.user.db_id = :user_id");
@@ -151,10 +147,11 @@ public class ServletUpdate extends HttpServlet {
             }
             hibernateQuery.setParameter("user_id", user.getDb_id());
             List<WebsiteApp> websiteApps = hibernateQuery.list();
-            if (websiteApps.isEmpty()) {
+            if (websiteApps.isEmpty() && updates.isEmpty()) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
                 res.put(tmp.getJson());
+                NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
             } else if (website.getSso() != null) {
                 Iterator<WebsiteApp> iterator = websiteApps.iterator();
                 while (iterator.hasNext()) {
@@ -170,6 +167,8 @@ public class ServletUpdate extends HttpServlet {
             for (WebsiteApp websiteApp : websiteApps) {
                 String teamKey = null;
                 String keyUser = sm.getKeyUser();
+                if (updates.stream().filter(update -> update.getApp() != null && update.getApp().equals(websiteApp)).count() > 0)
+                    continue;
                 if (websiteApp.getTeamCardReceiver() != null)
                     teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
                 websiteApp.decipher(keyUser, teamKey);
@@ -181,12 +180,14 @@ public class ServletUpdate extends HttpServlet {
                             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                             hibernateQuery.saveOrUpdateObject(tmp);
                             res.put(tmp.getJson());
+                            NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
                             continue;
                         }
                     } else {
                         Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                         hibernateQuery.saveOrUpdateObject(tmp);
                         res.put(tmp.getJson());
+                        NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
                         continue;
                     }
                 }
@@ -197,17 +198,22 @@ public class ServletUpdate extends HttpServlet {
                 if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
                     Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                     hibernateQuery.saveOrUpdateObject(tmp);
+                    NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
                     res.put(tmp.getJson());
                 }
             }
             if (res.length() == 0 && create_update && !url.startsWith("https://accounts.google.com")) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
+                NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
                 res.put(tmp.getJson());
             }
         } else if (!url.startsWith("https://accounts.google.com")) {
+            if (updates.stream().filter(update -> update.getUrl() != null && update.getUrl().equals(url)).count() > 0)
+                return;
             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
             hibernateQuery.saveOrUpdateObject(tmp);
+            NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
             res.put(tmp.getJson());
         }
     }
