@@ -47,7 +47,9 @@ class UpdatesContainer extends React.Component {
           website = this.props.dashboard.apps[item.app_id].website;
           website.app_name = this.props.dashboard.apps[item.app_id].name;
           if (this.props.dashboard.apps[item.app_id].sub_type === 'any')
-            website.name = this.props.dashboard.apps[item.app_id].name
+            website.name = this.props.team_apps[item.team_card_id].name;
+          if (item.team_card_id === -1 && this.props.dashboard.apps[item.app_id].type === 'anyApp')
+            website.name = this.props.dashboard.apps[item.app_id].name;
         }
         if (item.website_id === -1) {
           getLogo({url: item.url}).then(response => {

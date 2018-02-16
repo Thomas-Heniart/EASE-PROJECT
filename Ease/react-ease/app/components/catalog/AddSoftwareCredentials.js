@@ -42,7 +42,7 @@ class AddSoftwareCredentials extends React.Component {
       active: true,
       name: this.state.name,
       img_url: this.state.img_url,
-      logoLetter: this.logoLetter()
+      logoLetter: logoLetter(this.state.name)
     }).then(app => {
       this.setState({name: '', url: '', img_url:''});
     }).catch(() => {
