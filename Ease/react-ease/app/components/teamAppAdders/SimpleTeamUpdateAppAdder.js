@@ -175,7 +175,6 @@ class SimpleTeamUpdateAppAdder extends Component {
     let credentials = transformWebsiteInfoIntoListAndSetValues(this.props.card.app.information, this.props.card.account_information);
       credentials.map(item => {
       this.state.credentials.push(item);
-      console.log('TEST :', credentials);
     });
   }
   finish = () => {
