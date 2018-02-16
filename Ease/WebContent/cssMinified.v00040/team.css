@@ -249,18 +249,19 @@
 
 .team_app_settings_name .name_input input {
   padding: 0 10px; }
-.team_app_settings_name .name_input .app_name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block;
-  max-width: 36%; }
 .team_app_settings_name .team_name {
   background-color: #373b60;
   color: white;
   margin-top: 5px; }
 .team_app_settings_name .room_name {
   margin-top: 5px; }
+
+#add_bookmark_form > div.app_name_container.display-flex.align_items_center > div.team_app_settings_name > div:nth-child(1) > span {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 265px; }
 
 .app_overlay_indicator {
   display: -webkit-box;
@@ -1349,7 +1350,8 @@
             cursor: pointer;
             color: #949EB7; }
       #catalog .logoCatalog .showSegment.update {
-        padding: 7px 0 12px 0; }
+        padding: 7px 0 12px 0;
+        min-height: 91px; }
         #catalog .logoCatalog .showSegment.update .loader_centered {
           position: absolute;
           left: 50%;
@@ -1766,7 +1768,12 @@ button.only-text-button {
       text-decoration: none; }
 
 .show_team .app {
-  margin-bottom: 7px; }
+  margin-bottom: 7px;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 265px; }
 .show_team .team {
   margin-bottom: 4px;
   font-size: 16px;
