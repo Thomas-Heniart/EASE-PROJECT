@@ -73,7 +73,7 @@ class PasswordUpdateModal extends React.Component {
   finish = () => {
     this.props.dispatch(deleteUpdate({id: this.props.modal.item.id})).then(() => {
       this.setState({loading: false});
-      // this.props.modal.resolve();
+      this.props.modal.resolve();
     });
   };
   edit = () => {
