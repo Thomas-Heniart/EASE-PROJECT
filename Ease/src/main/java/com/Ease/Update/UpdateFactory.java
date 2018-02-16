@@ -35,7 +35,10 @@ public class UpdateFactory {
 
     public Update createUpdate(User user, JSONObject account_information, Website website) throws HttpServletException {
         Update update = this.createUpdate(user, account_information);
-        update.setWebsite(website);
+        if (website.getWebsiteAttributes().isIntegrated())
+            update.setWebsite(website);
+        else
+            update.setUrl(website.getLogin_url());
         return update;
     }
 
