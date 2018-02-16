@@ -45,6 +45,11 @@ button.only-text-button {
 .show_team {
   .app {
     margin-bottom: 7px;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 265px;
   }
   .team {
     margin-bottom: 4px;
