@@ -160,6 +160,11 @@
             color: #949EB7; }
       #catalog .logoCatalog .showSegment.update {
         padding: 7px 0 12px 0; }
+        #catalog .logoCatalog .showSegment.update .loader_centered {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translateX(-50%) translateY(-50%); }
         #catalog .logoCatalog .showSegment.update .app_corner_indicator {
           top: -1px;
           right: 0;
@@ -432,6 +437,7 @@
           margin-bottom: 0;
           padding-top: 10px; }
       #catalog #importations #accounts .account {
+        width: 700px;
         display: inline-flex;
         margin: 7px 0 7px 42px; }
         #catalog #importations #accounts .account .input {

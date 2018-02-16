@@ -46,7 +46,7 @@ class AddAnyApp extends React.Component {
       name: this.state.name,
       url: this.state.url,
       img_url: this.state.img_url,
-      logoLetter: this.logoLetter()
+      logoLetter: logoLetter(this.state.name)
     }).then(app => {
       this.setState({name: '', url: '', img_url:''});
     }).catch(() => {

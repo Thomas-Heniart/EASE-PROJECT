@@ -181,7 +181,7 @@ class SimpleTeamUpdateAppAdder extends Component {
         url: this.state.app_url,
         img_url: this.state.img_url,
         subtype: this.props.card.subtype,
-        logoLetter: this.logoLetter(),
+        logoLetter: logoLetter(this.state.app_name),
         password_reminder_interval: this.state.password_reminder_interval
       }));
     else
@@ -193,7 +193,7 @@ class SimpleTeamUpdateAppAdder extends Component {
         url: this.state.app_url,
         img_url: this.state.img_url,
         subtype: this.props.card.subtype,
-        logoLetter: this.logoLetter(),
+        logoLetter: logoLetter(this.state.app_name),
         password_reminder_interval: this.state.password_reminder_interval
       }));
   };

@@ -19,7 +19,7 @@ class NewAccountUpdateModal extends React.Component {
     super(props);
     this.state = {
       error: '',
-      appName: '',
+      appName: !this.props.modal.website.url ? this.props.modal.website.name : '',
       teamName: [],
       check: '',
       loading: false,
@@ -207,6 +207,7 @@ class NewAccountUpdateModal extends React.Component {
                 name='appName'
                 className="modalInput team-app-input"
                 onChange={this.handleInput}
+                value={this.state.appName}
                 required/>
             </div>
             {!this.state.website.url &&
