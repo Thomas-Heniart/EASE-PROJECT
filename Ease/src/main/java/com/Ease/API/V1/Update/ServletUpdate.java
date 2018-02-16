@@ -89,7 +89,7 @@ public class ServletUpdate extends HttpServlet {
                 hibernateQuery.setParameter("user_id", user.getDb_id());
             } else {
                 /* Find update(s) with same URL */
-                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.url = :url");
+                hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.url LIKE :url");
                 hibernateQuery.setParameter("user_id", user.getDb_id());
                 hibernateQuery.setParameter("url", url);
             }
@@ -147,13 +147,23 @@ public class ServletUpdate extends HttpServlet {
             }
             hibernateQuery.setParameter("user_id", user.getDb_id());
             List<WebsiteApp> websiteApps = hibernateQuery.list();
+            Iterator<WebsiteApp> iterator = websiteApps.iterator();
+            while (iterator.hasNext()) {
+                WebsiteApp websiteApp = iterator.next();
+                String teamKey = null;
+                if (websiteApp.getTeamCardReceiver() != null)
+                    teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
+                websiteApp.decipher(sm.getKeyUser(), teamKey);
+                if (websiteApp.isEmpty() && !websiteApp.getWebsite().equals(website))
+                    iterator.remove();
+            }
             if (websiteApps.isEmpty() && updates.isEmpty()) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
                 res.put(tmp.getJson());
                 NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
             } else if (website.getSso() != null) {
-                Iterator<WebsiteApp> iterator = websiteApps.iterator();
+                iterator = websiteApps.iterator();
                 while (iterator.hasNext()) {
                     WebsiteApp websiteApp = iterator.next();
                     if (!websiteApp.isSsoApp())
