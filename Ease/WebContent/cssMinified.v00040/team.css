@@ -249,6 +249,12 @@
 
 .team_app_settings_name .name_input input {
   padding: 0 10px; }
+.team_app_settings_name .name_input .app_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  max-width: 36%; }
 .team_app_settings_name .team_name {
   background-color: #373b60;
   color: white;
@@ -1344,6 +1350,11 @@
             color: #949EB7; }
       #catalog .logoCatalog .showSegment.update {
         padding: 7px 0 12px 0; }
+        #catalog .logoCatalog .showSegment.update .loader_centered {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translateX(-50%) translateY(-50%); }
         #catalog .logoCatalog .showSegment.update .app_corner_indicator {
           top: -1px;
           right: 0;

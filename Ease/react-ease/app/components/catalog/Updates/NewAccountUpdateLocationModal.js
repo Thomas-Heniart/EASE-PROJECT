@@ -108,7 +108,7 @@ class NewAccountUpdateLocationModal extends React.Component {
         {this.state.view === 2 &&
         <ChooseTypeAppModal
           {...this.props}
-          website={this.props.modal.website.logo}
+          website={this.props.modal.website}
           appName={this.props.modal.appName}
           team_id={this.props.modal.team}
           room_id={this.state.check}
