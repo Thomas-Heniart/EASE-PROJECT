@@ -151,7 +151,7 @@ public class ServletUpdate extends HttpServlet {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
                 res.put(tmp.getJson());
-                NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
+                NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
             } else if (website.getSso() != null) {
                 Iterator<WebsiteApp> iterator = websiteApps.iterator();
                 while (iterator.hasNext()) {
@@ -180,14 +180,14 @@ public class ServletUpdate extends HttpServlet {
                             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                             hibernateQuery.saveOrUpdateObject(tmp);
                             res.put(tmp.getJson());
-                            NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
+                            NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                             continue;
                         }
                     } else {
                         Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                         hibernateQuery.saveOrUpdateObject(tmp);
                         res.put(tmp.getJson());
-                        NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
+                        NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                         continue;
                     }
                 }
@@ -198,14 +198,14 @@ public class ServletUpdate extends HttpServlet {
                 if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
                     Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                     hibernateQuery.saveOrUpdateObject(tmp);
-                    NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
+                    NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                     res.put(tmp.getJson());
                 }
             }
             if (res.length() == 0 && create_update && !url.startsWith("https://accounts.google.com")) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
-                NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
+                NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                 res.put(tmp.getJson());
             }
         } else if (!url.startsWith("https://accounts.google.com")) {
@@ -213,7 +213,7 @@ public class ServletUpdate extends HttpServlet {
                 return;
             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, url);
             hibernateQuery.saveOrUpdateObject(tmp);
-            NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getSessionWebSocketManager(), hibernateQuery);
+            NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
             res.put(tmp.getJson());
         }
     }
