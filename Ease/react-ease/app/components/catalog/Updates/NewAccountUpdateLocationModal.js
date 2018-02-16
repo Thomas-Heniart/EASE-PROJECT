@@ -24,21 +24,17 @@ class NewAccountUpdateLocationModal extends React.Component {
       account_information: this.props.modal.account_information
     }
   }
-
   handleInput = handleSemanticInput.bind(this);
   handleChange = (e, {value}) => this.setState({check: value});
-
   close = () => {
     this.props.modal.reject();
   };
   edit = () => {
     this.props.modal.resolve();
   };
-
   changView = () => {
     this.setState({view: 2});
   };
-
   componentWillMount() {
     let roomName = [];
     Object.keys(this.props.teams[this.props.modal.team].rooms).map(room => {
@@ -46,7 +42,6 @@ class NewAccountUpdateLocationModal extends React.Component {
     });
     this.setState({roomName: roomName});
   }
-
   render() {
     return (
       <SimpleModalTemplate
@@ -81,14 +76,15 @@ class NewAccountUpdateLocationModal extends React.Component {
             </Form.Field>
             <Form.Field className='choose_type_app'>
               {this.state.roomName.map(room => {
-                return <Checkbox radio
-                                 style={{margin: "0 0 10px 0"}}
-                                 name={room.id}
-                                 key={room.id}
-                                 value={room.id}
-                                 onChange={this.handleChange}
-                                 label={"#" + room.name}
-                                 checked={this.state.check === room.id}/>
+                if (room.id && room.team_user_ids.filter(id => (id === this.props.teams[this.props.modal.team].my_team_user_id)).length > 0)
+                  return <Checkbox radio
+                                   style={{margin: "0 0 10px 0"}}
+                                   name={room.id}
+                                   key={room.id}
+                                   value={room.id}
+                                   onChange={this.handleChange}
+                                   label={"#" + room.name}
+                                   checked={this.state.check === room.id}/>
               })}
             </Form.Field>
             <Message error content={this.state.error}/>
@@ -106,6 +102,7 @@ class NewAccountUpdateLocationModal extends React.Component {
         <ChooseTypeAppModal
           {...this.props}
           account_information={this.props.modal.account_information}
+          subtype={this.props.modal.website.url ? 'AnyApp' : 'classic'}
           website={this.props.modal.website}
           appName={this.props.modal.appName}
           team_id={this.props.modal.team}

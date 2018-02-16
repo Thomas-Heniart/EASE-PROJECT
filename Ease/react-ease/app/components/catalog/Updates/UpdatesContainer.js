@@ -30,6 +30,7 @@ class UpdatesContainer extends React.Component {
       loading[item.id] = false;
       if (item.app_id !== -1 && this.props.dashboard.apps[item.app_id].sso_group_id) {
         website = this.props.sso_list[0];
+        website.update_id = item.id;
         website.sso_group_id = this.props.sso_list[0].id;
         website.logo = '/resources/other/google-logo.png';
         website.information = {
@@ -44,8 +45,10 @@ class UpdatesContainer extends React.Component {
             website = site;
           return site;
         });
+        website.update_id = item.id;
         if (item.app_id !== -1) {
           website = this.props.dashboard.apps[item.app_id].website;
+          website.update_id = item.id;
           website.app_name = this.props.dashboard.apps[item.app_id].name;
           if (this.props.dashboard.apps[item.app_id].sub_type === 'any') {
             website.app_name = this.props.team_apps[item.team_card_id].name;
@@ -62,6 +65,7 @@ class UpdatesContainer extends React.Component {
             app_id: item.team_card_id
           })).then(response => {
             website = response.website;
+            website.update_id = item.id;
             website.app_name = response.name;
             website.name = response.name;
             stateWebsites[item.id] = website;
@@ -74,6 +78,7 @@ class UpdatesContainer extends React.Component {
           this.setState({loadingDelete: loading});
           getLogo({url: item.url}).then(response => {
             website = {
+              update_id: item.id,
               name: item.url,
               url: item.url,
               logo: response !== '/resources/icons/link_app.png' ? response : '',
