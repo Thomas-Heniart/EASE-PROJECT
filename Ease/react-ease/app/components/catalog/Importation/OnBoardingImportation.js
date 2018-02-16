@@ -80,6 +80,7 @@ class OnBoardingImportation extends React.Component {
     super(props);
     this.state = {
       view: 2,
+      loadingLogo: {},
       passwordManager: 0,
       chromeLogin: '',
       chromePassword: '',
@@ -175,7 +176,10 @@ class OnBoardingImportation extends React.Component {
     });
   }
   getLogo = () => {
+    let loading = {};
     const importedAccounts = this.state.importedAccounts.map(item => {
+      loading[item.id] = true;
+      this.setState({loadingLogo: loading});
       if (item.website_id === -1) {
         getLogo({url: item.url}).then(response => {
           if (response !== '/resources/icons/link_app.png')
@@ -184,6 +188,8 @@ class OnBoardingImportation extends React.Component {
             item.logo = '';
           else
             item.logo = response;
+          loading[item.id] = false;
+          this.setState({loadingLogo: loading});
           return item;
         });
       }
@@ -194,6 +200,8 @@ class OnBoardingImportation extends React.Component {
         }).map(website => {
           return website.logo;
         })[0];
+        loading[item.id] = false;
+        this.setState({loadingLogo: loading});
       }
       return item;
     });
@@ -968,6 +976,7 @@ class OnBoardingImportation extends React.Component {
         <DisplayAccounts
           {...this.props}
           getLogo={this.getLogo}
+          loadingLogo={this.state.loadingLogo}
           onChange={this.handleInput}
           onChangeRoomName={this.handleRoomName}
           handleAppInfo={this.handleAppInfo}
