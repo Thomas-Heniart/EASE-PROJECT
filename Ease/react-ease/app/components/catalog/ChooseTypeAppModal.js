@@ -28,9 +28,10 @@ class ChooseTypeAppModal extends React.Component {
       channel_id: room_id,
       website: this.state.website,
       type: this.state.value,
-      name: this.state.website.name && !this.state.website.url ? this.state.website.name : this.props.appName,
+      name: this.state.website.name && !this.props.account_information ? this.state.website.name : this.props.appName,
       url: this.props.url,
-      subtype: this.state.subtype
+      subtype: this.state.subtype,
+      account_information: this.props.account_information ? this.props.account_information : -1
     });
     this.props.history.push(`/teams/${team_id}/${room_id}`);
   };
