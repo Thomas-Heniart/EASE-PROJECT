@@ -45,12 +45,10 @@ class NewAccountUpdateLocationModal extends React.Component {
       roomName.push(this.props.teams[this.props.modal.team].rooms[room]);
     });
     this.setState({roomName: roomName});
-    console.log('STATE : ', this.state);
-    console.log('PROPS :', this.props);
   }
 
   render() {
-    console.log(this.props.modal.appName);
+
     return (
       <SimpleModalTemplate
         onClose={this.close}
@@ -101,14 +99,15 @@ class NewAccountUpdateLocationModal extends React.Component {
               className="modal-button"
               content="NEXT"
               loading={this.state.loading}
-              disabled={this.state.loading}/>
+              disabled={this.state.loading || this.state.check === ''}/>
           </Form>
           }
         </Container>
         {this.state.view === 2 &&
         <ChooseTypeAppModal
           {...this.props}
-          website={this.props.modal.website.logo}
+          account_information={this.props.modal.account_information}
+          website={this.props.modal.website}
           appName={this.props.modal.appName}
           team_id={this.props.modal.team}
           room_id={this.state.check}
