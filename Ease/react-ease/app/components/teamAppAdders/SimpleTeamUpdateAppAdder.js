@@ -294,20 +294,9 @@ class SimpleTeamUpdateAppAdder extends Component {
                          name={this.props.card.app.url}
                          label={<Label><Icon name="home"/></Label>}
                          labelPosition="left"
-                         value={this.props.card.app.url} />
-                  }
+                         value={this.props.card.app.url} />}
                   <div class="credentials">
                     <div class="display-inline-flex">
-                      {this.props.card.subtype === 'AnyApp' &&
-                      <Input className="team-app-input any_app"
-                             placeholder="Website URL"
-                             name="app_url"
-                             value={this.state.app_url}
-                             autoComplete="off"
-                             size="mini"
-                             label={<Label><Icon name="home"/></Label>}
-                             labelPosition="left"
-                             required/>}
                         {credentials}
                       <PasswordChangeDropdown
                         team={team}

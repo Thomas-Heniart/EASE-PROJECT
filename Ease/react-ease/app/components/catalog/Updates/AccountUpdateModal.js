@@ -12,7 +12,8 @@ import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../
   modal: store.modals.accountUpdate,
   dashboard: store.dashboard,
   teams: store.teams,
-  team_apps: store.team_apps
+  team_apps: store.team_apps,
+  sso_list: store.catalog.sso_list
 }))
 class AccountUpdateModal extends React.Component {
   constructor(props){
@@ -74,6 +75,8 @@ class AccountUpdateModal extends React.Component {
     });
   };
   edit = () => {
+    let website = this.props.modal.website;
+    const item = this.props.modal.item;
     this.setState({loading: true});
     if (this.state.check === 'Simple') {
       if (this.props.modal.item.team_card_id !== -1) {
@@ -108,10 +111,23 @@ class AccountUpdateModal extends React.Component {
       }
     }
     else {
+      if (this.props.sso_list[0].websites[0].filter(website_id => (website_id === item.website_id)).length > 0) {
+        website = {...this.props.sso_list[0]};
+        website.id = item.website_id;
+        website.update_id = item.id;
+        website.sso_id = this.props.sso_list[0].id;
+        website.sso_group_id = -1;
+        website.logo = '/resources/other/google-logo.png';
+        website.information = {
+          login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
+          password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
+        };
+        website.app_name = website.name;
+      }
       newAccountUpdateModal(
         this.props.dispatch,
-        this.props.modal.website,
-        this.props.modal.item.id,
+        website,
+        item.id,
         this.state.account_information
       );
       this.props.modal.reject();

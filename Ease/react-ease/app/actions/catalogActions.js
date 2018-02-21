@@ -3,7 +3,7 @@ import post_api from "../utils/post_api";
 import delete_api from "../utils/delete_api";
 import {addNotification} from "./notificationBoxActions";
 import extension from "../utils/extension_api";
-import {editAppCredentials} from "./dashboardActions";
+import {createSsoGroup, editAppCredentials} from "./dashboardActions";
 
 export function fetchCatalog(){
   return (dispatch,getState) => {
@@ -73,12 +73,23 @@ export function testCredentials({account_information, website_id}) {
   }
 }
 
-export function catalogAddApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided, website_id, sso_group_id}){
+export function catalogCreateSsoGroupWithApp({sso_id, name, profile_id, website_id, account_information}){
+  return (dispatch, getState) => {
+    return dispatch(createSsoGroup({
+      sso_id: sso_id,
+      account_information: account_information
+    })).then(response => {
+      dispatch(catalogAddSsoApp({name, profile_id, sso_group_id: response.id, website_id}));
+    });
+  }
+}
+
+export function catalogAddApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided, website_id, sso_id}){
   if (website_id !== -1) {
-    if (sso_group_id === -1)
+    if (sso_id === -1)
       return catalogAddClassicApp({name, website_id, profile_id, account_information});
     else
-      return catalogAddSsoApp({name, profile_id, sso_group_id, website_id})
+      return catalogCreateSsoGroupWithApp({sso_id, name, profile_id, website_id, account_information});
   }
   else
     return catalogAddAnyApp({name, url, img_url, profile_id,account_information,connection_information,credentials_provided});
@@ -541,7 +552,7 @@ export function newAccountUpdateModal(dispatch, website, update_id, account_info
   }).then(response => {
     dispatch(showNewAccountUpdateModal({state: false}));
     if (response.teamId)
-      accountUpdateLocationModal(dispatch, website, response.account_information, response.teamId, response.appName);
+      accountUpdateLocationModal(dispatch, response.website, response.account_information, response.teamId, response.appName);
     else
       dispatch(showNewAccountUpdateModal({state: false}));
     return response;

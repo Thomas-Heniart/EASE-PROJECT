@@ -28,16 +28,18 @@ class UpdatesContainer extends React.Component {
     this.props.updates.map(item => {
       let website = {};
       loading[item.id] = false;
-      if (item.app_id !== -1 && this.props.dashboard.apps[item.app_id].sso_group_id) {
-        website = this.props.sso_list[0];
+      if (this.props.sso_list[0].websites[0].filter(website_id => (website_id === item.website_id)).length > 0 && item.team_card_id === -1) {
+        website = {...this.props.sso_list[0]};
         website.update_id = item.id;
-        website.sso_group_id = this.props.sso_list[0].id;
+        website.sso_id = this.props.sso_list[0].id;
+        website.sso_group_id = item.app_id !== -1 && this.props.dashboard.apps[item.app_id].type === 'ssoApp' ? this.props.dashboard.apps[item.app_id].sso_group_id : -1;
         website.logo = '/resources/other/google-logo.png';
         website.information = {
           login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
           password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
         };
         website.app_name = website.name;
+        website.id = item.website_id;
       }
       else {
         this.props.websites.filter(site => {
@@ -129,7 +131,7 @@ class UpdatesContainer extends React.Component {
     }).length > 0;
     const sso_group = app.sso_group_id ? this.props.dashboard.sso_groups[app.sso_group_id] : -1;
     const noFillerId = card.team_user_filler_id !== meId && card.team_user_filler_id !== -1;
-    const appAccountInfo = !isEnterprise && (item.app_id !== -1 && Object.keys(app.account_information).length > 0 && app.account_information.login !== '');
+    const appAccountInfo = !isEnterprise && sso_group === -1 && (item.app_id !== -1 && Object.keys(app.account_information).length > 0 && app.account_information.login !== '');
     const cardAccountInfo = !isEnterprise && (item.team_card_id !== -1 && Object.keys(card.account_information).length > 0 && card.account_information.login !== '');
     const ssoAccountInfo = app.sso_group_id && Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '';
     if (!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId)) {

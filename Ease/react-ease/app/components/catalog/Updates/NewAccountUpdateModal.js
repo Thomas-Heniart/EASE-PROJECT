@@ -12,7 +12,8 @@ import {catalogAddApp, deleteUpdate, testCredentials} from "../../../actions/cat
 @connect(store => ({
   modal: store.modals.newAccountUpdate,
   teams: store.teams,
-  profiles: store.dashboard.profiles
+  profiles: store.dashboard.profiles,
+  websites: store.catalog.websites
 }))
 class NewAccountUpdateModal extends React.Component {
   constructor(props) {
@@ -117,9 +118,18 @@ class NewAccountUpdateModal extends React.Component {
   edit = () => {
     this.setState({loading: true});
     if (this.state.check !== 'newApp') {
+      let website = this.state.website;
+      if (website.sso_id) {
+        this.props.websites.filter(site => {
+          if (site.id === this.state.website.id)
+            website = site;
+          return site;
+        });
+        website.update_id = this.state.website.update_id;
+      }
       this.props.modal.resolve({
         account_information: this.state.account_information,
-        website: this.state.website,
+        website: website,
         appName: this.state.appName,
         teamId: this.state.check
       });
@@ -140,7 +150,7 @@ class NewAccountUpdateModal extends React.Component {
           connection_information: this.state.website.information,
           credentials_provided: false,
           website_id: this.state.website.id ? this.state.website.id : -1,
-          sso_group_id: this.state.website.sso_group_id ? this.state.website.sso_group_id : -1
+          sso_id: this.state.website.sso_id ? this.state.website.sso_id : -1
         })).then(() => {
           this.finish();
         });
@@ -159,7 +169,7 @@ class NewAccountUpdateModal extends React.Component {
             connection_information: this.state.website.information,
             credentials_provided: false,
             website_id: this.state.website.id ? this.state.website.id : -1,
-            sso_group_id: this.state.website.sso_group_id ? this.state.website.sso_group_id : -1
+            sso_id: this.state.website.sso_id ? this.state.website.sso_id : -1
           })).then(() => {
             this.finish();
           });
