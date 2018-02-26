@@ -42,14 +42,15 @@ class NewAccountUpdateLocationModal extends React.Component {
     });
     this.setState({roomName: roomName});
   }
-  previousModal = (website, item) => {
+  previousModal = () => {
     console.log(this.props);
-    accountUpdateModal(
+    newAccountUpdateModal(
       this.props.dispatch,
-      website,
-      item
+       this.props.modal.website,
+      this.props.modal.account_information
     ).then(response => {
     });
+    this.props.modal.reject();
   };
   render() {
     return (
@@ -81,11 +82,9 @@ class NewAccountUpdateLocationModal extends React.Component {
               </div>
             </div>
             <div>
-              <p onClick={() => this.previousModal({
-                item: item,
-                website: this.props.modal})}
+              <p onClick={() => this.previousModal}
                  className="back_modal">
-                <Icon name="long arrow left" />Back</p>
+                <Icon name="arrow left" />Back</p>
             </div>
             <Form.Field>
               <div style={{fontWeight: 'bold'}}>Where would you like to send this app?</div>
