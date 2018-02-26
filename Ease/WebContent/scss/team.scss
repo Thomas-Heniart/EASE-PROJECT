@@ -1093,6 +1093,10 @@ button.action_text_button {
     background-color: #2185d0;
     color: $themeWhiteColor;
     font-weight: normal;
+    &.update {
+      margin: auto;
+      margin-left: 10px;
+    }
   }
 }
 

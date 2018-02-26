@@ -153,8 +153,8 @@ class PasswordUpdateModal extends React.Component {
           </div>
           {item.team_user_id !== -1 &&
             <div className='ui labels' style={{display:'inline-flex'}}>
-              <p style={{marginTop:'4px', fontWeight:'bold'}}>Password suggested by: </p>
-              <Label className='user-label'>{this.state.team.team_users[item.team_user_id].username}</Label>
+              <p style={{marginTop:'14px', fontWeight:'bold'}}>Password suggested by: </p>
+              <Label className='user-label update'>{this.state.team.team_users[item.team_user_id].username}</Label>
             </div>}
           {this.state.team !== -1 && this.state.team.team_users[this.state.team.my_team_user_id].role > 1 &&
           <p>Modifications will be applied to your Team.</p>}
