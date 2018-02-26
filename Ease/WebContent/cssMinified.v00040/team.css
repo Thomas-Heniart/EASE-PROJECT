@@ -2081,6 +2081,11 @@ button.only-text-button {
   font-size: 20px;
   color: #949EB7; }
 
+#add_bookmark_form .back_modal {
+  font-weight: bold;
+  margin-bottom: 3%;
+  cursor: pointer;
+  font-size: 14px; }
 #add_bookmark_form .choose_type_app {
   border: solid 1px #45c997;
   border-radius: 5px;

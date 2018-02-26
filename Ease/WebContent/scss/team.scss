@@ -467,6 +467,12 @@ button.only-text-button {
 }
 
 #add_bookmark_form {
+  .back_modal{
+    font-weight: bold;
+    margin-bottom: 3%;
+    cursor: pointer;
+    font-size: 14px;
+  }
   .choose_type_app {
     border: solid 1px #45c997;
     border-radius: 5px;

@@ -5,6 +5,7 @@ import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import {handleSemanticInput} from "../../../utils/utils";
 import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
 import ChooseTypeAppModal from '../ChooseTypeAppModal';
+import {accountUpdateModal} from "../../../actions/catalogActions";
 
 @connect(store => ({
     teams: store.teams,
@@ -42,6 +43,15 @@ class NewAccountUpdateLocationModal extends React.Component {
     });
     this.setState({roomName: roomName});
   }
+  previousModal = (website, item) => {
+    console.log(this.props);
+    accountUpdateModal(
+      this.props.dispatch,
+      website,
+      item
+    ).then(response => {
+    });
+  };
   render() {
     return (
       <SimpleModalTemplate
@@ -70,6 +80,13 @@ class NewAccountUpdateLocationModal extends React.Component {
                          content={this.props.teams[this.props.modal.team].name}/>
                 </div>
               </div>
+            </div>
+            <div>
+              <p onClick={() => this.previousModal({
+                item: item,
+                website: this.props.modal})}
+                 className="back_modal">
+                <Icon name="long arrow left" />Back</p>
             </div>
             <Form.Field>
               <div style={{fontWeight: 'bold'}}>Where would you like to send this app?</div>
