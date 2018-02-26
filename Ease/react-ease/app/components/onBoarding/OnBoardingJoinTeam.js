@@ -2,22 +2,11 @@ import React from 'react';
 import {connect} from "react-redux";
 import queryString from "query-string";
 import { Menu, Form, Icon, Button, Checkbox, Input, Header, Message } from 'semantic-ui-react';
-import {handleSemanticInput, isEmail, reflect} from "../../utils/utils";
-import {withRouter, Switch, Route, NavLink} from "react-router-dom";
-import {
-  askRegistration, changeStep, checkAskRegistration, createTeam, createTeamProfile, editFirstNameAndLastName,
-  fetchOnBoardingRooms,
-  getInfoClearbit, joinTeamRegistration,
-  newRegistration, onBoardingImportation, resetOnBoardingImportation
-} from "../../actions/onBoardingActions";
-import {addTeamUserToChannel, createTeamChannel} from "../../actions/channelActions";
-import {teamCreateEnterpriseCard, teamCreateSingleApp} from "../../actions/appsActions";
-import {processConnection, processLogout, setLoginRedirectUrl} from "../../actions/commonActions";
-import {testCredentials} from "../../actions/catalogActions";
-import {createTeamUser} from "../../actions/userActions";
+import {handleSemanticInput} from "../../utils/utils";
+import {joinTeamRegistration} from "../../actions/onBoardingActions";
+import {processLogout, setLoginRedirectUrl} from "../../actions/commonActions";
 import * as api from '../../utils/api';
 import * as post_api from '../../utils/post_api';
-import Password from "../settings/Password";
 
 class PasswordAndPhone extends React.Component {
   render() {

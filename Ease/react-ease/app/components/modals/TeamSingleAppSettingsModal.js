@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import TeamAppSettingsNameInput from "./TeamAppSettingsNameInput";
 import {handleSemanticInput} from "../../utils/utils";
-import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Message, Input, Label,Form, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamSingleAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput, TestCredentialsButton} from "./utils";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection} from "./utils";
 import {isAdmin} from "../../utils/helperFunctions";
-import {isCredentialsMatch, isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
+import {isCredentialsMatch, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {teamEditSingleApp, removeTeamCardReceiver} from "../../actions/appsActions";
 import {editAppName, validateApp} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";

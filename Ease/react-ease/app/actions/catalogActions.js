@@ -539,12 +539,11 @@ export function showPasswordUpdateModal({state, resolve, reject, website, item})
   }
 }
 
-export function newAccountUpdateModal(dispatch, website, update_id, account_information) {
+export function newAccountUpdateModal(dispatch, website, account_information) {
   return new Promise((resolve, reject) => {
     dispatch(showNewAccountUpdateModal({
       state: true,
       website: website,
-      update_id: update_id,
       account_information: account_information,
       resolve: resolve,
       reject: reject
@@ -561,13 +560,12 @@ export function newAccountUpdateModal(dispatch, website, update_id, account_info
   });
 }
 
-export function showNewAccountUpdateModal({state, resolve, reject, website, update_id, account_information}) {
+export function showNewAccountUpdateModal({state, resolve, reject, website, account_information}) {
   return {
     type: 'SHOW_NEW_ACCOUNT_UPDATE_MODAL',
     payload: {
       active: state,
       website: website,
-      update_id: update_id,
       account_information: account_information,
       resolve: resolve,
       reject: reject

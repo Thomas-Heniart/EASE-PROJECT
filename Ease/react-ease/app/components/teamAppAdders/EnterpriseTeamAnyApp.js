@@ -2,32 +2,19 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import {
-  EmptyCredentialsEnterpriseAppIndicator,
-  PasswordChangeDropdownEnterprise,
-  PasswordChangeHolderEnterprise,
-  setUserDropdownText,
-  SharingRequestButton,
-  TeamAppActionButton
+  EmptyCredentialsEnterpriseAppIndicator, PasswordChangeDropdownEnterprise, PasswordChangeHolderEnterprise,
+  setUserDropdownText, SharingRequestButton, TeamAppActionButton
 } from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {
-  teamEditAnyEnterpriseCard,
-  teamEditEnterpriseCardReceiver,
-  teamShareEnterpriseCard,
-  removeTeamCardReceiver
+  teamEditAnyEnterpriseCard, teamEditEnterpriseCardReceiver, teamShareEnterpriseCard, removeTeamCardReceiver
 } from "../../actions/appsActions";
 import {
-  copyTextToClipboard,
-  credentialIconType,
-  handleSemanticInput,
-  reflect,
-  transformCredentialsListIntoObject,
-  transformWebsiteInfoIntoList,
-  transformWebsiteInfoIntoListAndSetValues,
-  needPasswordUpdate
+  copyTextToClipboard, credentialIconType, handleSemanticInput, reflect, transformCredentialsListIntoObject,
+  transformWebsiteInfoIntoList, transformWebsiteInfoIntoListAndSetValues, needPasswordUpdate
 } from "../../utils/utils";
-import {getReceiverInList, isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
+import {isAdmin, selectItemFromListById} from "../../utils/helperFunctions";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
@@ -495,7 +482,6 @@ class EnterpriseTeamAnyApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
-    const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.website;
     const users = this.getUsers();
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];

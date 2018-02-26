@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Loader, Image, Icon,Dropdown, Label, Form, Button, Message, Checkbox, Divider, Segment, List, Container, Input } from 'semantic-ui-react';
+import { Icon, Label, Form, Button, Message, Checkbox, Divider, Segment, List, Input } from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {dashboard} from "../../utils/post_api";
 import {handleSemanticInput,

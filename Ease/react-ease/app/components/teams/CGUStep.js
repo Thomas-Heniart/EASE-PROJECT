@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Container, Segment, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
+import { Header, Container, Segment, Divider, Button } from 'semantic-ui-react';
 
 class CGUStep extends React.Component{
   constructor(props){

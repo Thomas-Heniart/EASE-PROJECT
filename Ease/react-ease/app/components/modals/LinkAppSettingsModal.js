@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {connect} from "react-redux";
 import {getLogo} from "../../utils/api";
-import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Message, Form, Icon, Container, Button} from 'semantic-ui-react';
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {handleSemanticInput} from "../../utils/utils";
 import {editLinkApp, validateApp, deleteApp} from "../../actions/dashboardActions";

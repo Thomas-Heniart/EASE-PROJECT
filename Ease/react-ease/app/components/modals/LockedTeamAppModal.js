@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {connect} from "react-redux";
 import post_api from "../../utils/post_api";
-import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Form, Button} from 'semantic-ui-react';
 import {showLockedTeamAppModal} from "../../actions/modalActions";
 
 @connect(store => ({

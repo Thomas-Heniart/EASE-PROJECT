@@ -32,7 +32,6 @@ import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
 import * as api from "../../utils/api";
-import * as post_api from "../../utils/post_api";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));

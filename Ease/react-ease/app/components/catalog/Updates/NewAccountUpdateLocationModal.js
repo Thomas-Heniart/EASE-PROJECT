@@ -1,11 +1,10 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {logoLetter} from "../../../utils/utils";
-import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import {handleSemanticInput} from "../../../utils/utils";
-import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
 import ChooseTypeAppModal from '../ChooseTypeAppModal';
-import {accountUpdateModal} from "../../../actions/catalogActions";
+import {handleSemanticInput} from "../../../utils/utils";
+import SimpleModalTemplate from "../../common/SimpleModalTemplate";
+import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
 
 @connect(store => ({
     teams: store.teams,

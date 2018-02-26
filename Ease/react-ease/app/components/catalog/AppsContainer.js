@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import AddAnyApp from './AddAnyApp';
 import UpdatesContainer from './Updates/UpdatesContainer';
-import { Grid, Image, Icon, Header, Input, Container, Loader } from 'semantic-ui-react';
+import { Grid, Image, Icon, Container } from 'semantic-ui-react';
 
 const AppsContainer  = ({match, websites, updates, title, openModal}) => {
   return (

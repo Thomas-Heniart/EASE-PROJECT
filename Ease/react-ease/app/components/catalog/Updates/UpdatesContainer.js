@@ -2,9 +2,9 @@ import React from 'react';
 import {connect} from "react-redux";
 import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
+import {fetchTeamApp} from "../../../actions/teamActions";
 import { Grid, Image, Icon, Container, Loader } from 'semantic-ui-react';
 import {accountUpdateModal, deleteUpdate, newAccountUpdateModal, passwordUpdateModal} from "../../../actions/catalogActions";
-import {fetchTeamApp} from "../../../actions/teamActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -81,7 +81,8 @@ class UpdatesContainer extends React.Component {
           getLogo({url: item.url}).then(response => {
             website = {
               update_id: item.id,
-              name: item.url,
+              name: item.url.startsWith('https://') ? item.url.substr(8, item.url.length)
+                : item.url.startsWith('http://') ? item.url.substr(7, item.url.length) : item.url,
               url: item.url,
               logo: response !== '/resources/icons/link_app.png' ? response : '',
               information: {
@@ -111,7 +112,6 @@ class UpdatesContainer extends React.Component {
       newAccountUpdateModal(
         this.props.dispatch,
         website,
-        item.id,
         account_information
       ).then(response => {
       });

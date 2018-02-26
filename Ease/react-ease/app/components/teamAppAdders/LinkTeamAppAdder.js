@@ -1,13 +1,8 @@
 import React from "react";
-import {getClearbitLogo, dashboardAndTeamAppSearch, fetchWebsiteInfo} from "../../utils/api";
-import {handleSemanticInput,
-    transformWebsiteInfoIntoList,
-    passwordChangeOptions,
-    credentialIconType} from "../../utils/utils";
-import {selectUserFromListById, newSelectUserFromListById} from "../../utils/helperFunctions";
-import {closeAppAddUI} from "../../actions/teamAppsAddUIActions";
+import {getClearbitLogo} from "../../utils/api";
+import {handleSemanticInput} from "../../utils/utils";
+import {newSelectUserFromListById} from "../../utils/helperFunctions";
 import {teamCreateLinkCard} from "../../actions/appsActions";
-import {requestWebsite, showPinTeamAppToDashboardModal} from "../../actions/teamModalActions";
 import {connect} from "react-redux";
 import { Label, Container, Icon, Segment, Input, Button, Dropdown } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
@@ -95,7 +90,6 @@ class LinkTeamAppAdder extends React.Component {
   };
   close = () => {
     this.props.resetTeamCard();
-    // this.props.dispatch(closeAppAddUI());
   };
   handleComment(event) {
     this.setState({comment: event.target.value});

@@ -1,11 +1,7 @@
 import React, {Component} from "react";
-import {
-  EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator,
-  LoadingAppIndicator
-} from "./utils";
+import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator} from "./utils";
 import {showSsoAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection} from "../../actions/dashboardActions";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {connect} from "react-redux";
 
 @connect(store => ({

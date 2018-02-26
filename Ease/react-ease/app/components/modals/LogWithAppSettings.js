@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {connect} from "react-redux";
-import {List, Segment, Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {List, Segment, Message, Form, Icon, Container, Button} from 'semantic-ui-react';
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
-import {handleSemanticInput, isAppInformationEmpty} from "../../utils/utils";
+import {handleSemanticInput} from "../../utils/utils";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {editLogWithApp, deleteApp, validateApp} from "../../actions/dashboardActions";
-import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
+import {AppSettingsMenu, ShareSection, RemoveSection} from "./utils";
 import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({

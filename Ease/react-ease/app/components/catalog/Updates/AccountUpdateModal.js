@@ -68,16 +68,35 @@ class AccountUpdateModal extends React.Component {
   close = () => {
     this.props.modal.reject();
   };
-  finish = () => {
-    this.props.dispatch(deleteUpdate({id: this.props.modal.item.id})).then(() => {
-      this.setState({loading: false});
-      this.props.modal.resolve();
-    });
-  };
-  edit = () => {
+  newAccount = () => {
     let website = this.props.modal.website;
     const item = this.props.modal.item;
+    if (this.props.sso_list[0].websites[0].filter(website_id => (website_id === item.website_id)).length > 0) {
+      website = {...this.props.sso_list[0]};
+      website.id = item.website_id;
+      website.update_id = item.id;
+      website.sso_id = this.props.sso_list[0].id;
+      website.sso_group_id = -1;
+      website.logo = '/resources/other/google-logo.png';
+      website.information = {
+        login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
+        password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
+      };
+      website.app_name = website.name;
+    }
+    newAccountUpdateModal(
+      this.props.dispatch,
+      website,
+      this.state.account_information
+    );
+    this.props.modal.reject();
+  };
+  edit = () => {
     this.setState({loading: true});
+    let acc_info = {};
+    Object.keys(this.state.account_information).map(item => {
+      acc_info[item] = this.state.account_information[item];
+    });
     if (this.state.check === 'Simple') {
       if (this.props.modal.item.team_card_id !== -1) {
         if (this.state.app.type === 'teamEnterpriseApp') {
@@ -87,7 +106,7 @@ class AccountUpdateModal extends React.Component {
             team_card_receiver_id: this.props.team_apps[this.props.modal.item.team_card_id].receivers.filter(receiver => {
               return this.state.team.my_team_user_id === receiver.team_user_id
             })[0].id,
-            account_information: this.state.account_information
+            account_information: acc_info
           })).then(response => {
             this.finish();
           });
@@ -95,7 +114,7 @@ class AccountUpdateModal extends React.Component {
         else {
           this.props.dispatch(teamEditSingleCardCredentials({
             team_card: this.props.team_apps[this.props.modal.item.team_card_id],
-            account_information: this.state.account_information
+            account_information: acc_info
           })).then(response => {
             this.finish();
           });
@@ -104,34 +123,20 @@ class AccountUpdateModal extends React.Component {
       else {
         this.props.dispatch(editAppCredentials({
           app: this.state.app,
-          account_information: this.state.account_information
+          account_information: acc_info
         })).then(() => {
           this.finish();
         });
       }
     }
-    else {
-      if (this.props.sso_list[0].websites[0].filter(website_id => (website_id === item.website_id)).length > 0) {
-        website = {...this.props.sso_list[0]};
-        website.id = item.website_id;
-        website.update_id = item.id;
-        website.sso_id = this.props.sso_list[0].id;
-        website.sso_group_id = -1;
-        website.logo = '/resources/other/google-logo.png';
-        website.information = {
-          login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
-          password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}
-        };
-        website.app_name = website.name;
-      }
-      newAccountUpdateModal(
-        this.props.dispatch,
-        website,
-        item.id,
-        this.state.account_information
-      );
-      this.props.modal.reject();
-    }
+    else
+      this.newAccount();
+  };
+  finish = () => {
+    this.props.dispatch(deleteUpdate({id: this.props.modal.item.id})).then(() => {
+      this.setState({loading: false});
+      this.props.modal.resolve();
+    });
   };
   render() {
     const item = this.props.modal.item;

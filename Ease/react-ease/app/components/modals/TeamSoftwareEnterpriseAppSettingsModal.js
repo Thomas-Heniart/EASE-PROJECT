@@ -4,16 +4,13 @@ import {handleSemanticInput, isCredentialsMatch} from "../../utils/utils";
 import {Message, Input, Label,Form, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
-import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection} from "./utils";
+import {transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
+import {editAppName, validateApp} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {isAdmin, isOwner} from "../../utils/helperFunctions";
-import {
-  removeTeamCardReceiver, teamEditSoftwareEnterpriseCard,
-  teamEditEnterpriseCardReceiver
-} from "../../actions/appsActions";
+import {removeTeamCardReceiver, teamEditEnterpriseCardReceiver} from "../../actions/appsActions";
 import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
@@ -113,7 +110,6 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.software.connection_information, meReceiver.account_information).map(item => {
       return {
         ...item,
@@ -132,9 +128,7 @@ class TeamSoftwareEnterpriseAppSettingsModal extends Component {
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
-    const meAdmin = isAdmin(me.role);
     const meOwner = isOwner(me.role);
-    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
     const inputs = credentials.map((item, idx) => {
       if (item.name === 'password')

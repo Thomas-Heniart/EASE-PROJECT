@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {connect} from "react-redux";
-import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Checkbox, Form, Button} from 'semantic-ui-react';
 import {showPasswordLostInformationModal} from "../../actions/modalActions";
 import {handleSemanticInput} from "../../utils/utils";
 

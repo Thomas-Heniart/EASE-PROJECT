@@ -10,8 +10,7 @@ import {handleSemanticInput} from "../../utils/utils";
 import { Grid, Menu, Input, Icon } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
-import { NavLink } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
+import { NavLink, Switch, Route } from 'react-router-dom';
 import {getUpdates} from "../../actions/catalogActions";
 
 @connect(store => ({

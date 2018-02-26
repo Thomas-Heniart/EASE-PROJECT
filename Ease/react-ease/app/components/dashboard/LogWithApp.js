@@ -1,10 +1,6 @@
 import React, {Component} from "react";
-import {
-  EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator,
-  LoadingAppIndicator
-} from "./utils";
+import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator} from "./utils";
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {AppConnection} from "../../actions/dashboardActions";
 
 class LogWithApp extends Component {
