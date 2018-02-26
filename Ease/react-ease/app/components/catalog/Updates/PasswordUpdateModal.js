@@ -4,8 +4,8 @@ import CredentialInputs from "./CredentialInputs";
 import {handleSemanticInput} from "../../../utils/utils";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import {editAppCredentials} from "../../../actions/dashboardActions";
+import {Container, Icon, Form, Message, Button, Label} from 'semantic-ui-react';
 import {deleteUpdate, sendUpdateToAdmin, testCredentials} from "../../../actions/catalogActions";
-import { Container, Icon, Form, Message, Button, Label } from 'semantic-ui-react';
 import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
 
 @connect(store => ({
@@ -183,7 +183,7 @@ class PasswordUpdateModal extends React.Component {
               positive
               type="submit"
               className="modal-button"
-              content={(this.state.team.team_users[this.state.team.my_team_user_id].role > 1
+              content={(this.state.team === -1 || this.state.team.team_users[this.state.team.my_team_user_id].role > 1
                 || this.props.team_apps[this.state.app.team_card_id].team_user_filler_id === this.state.team.my_team_user_id) ? "SAVE NEW PASSWORD" : "SAVE AND SUGGEST NEW PASSWORD"}
               loading={this.state.loading}
               disabled={this.state.loading}/>
