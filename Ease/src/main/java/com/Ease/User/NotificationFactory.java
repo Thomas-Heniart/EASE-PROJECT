@@ -333,7 +333,7 @@ public class NotificationFactory {
         } else {
             try {
                 URL logoUrl = new URL(update.getUrl());
-                logo = "http://placehold.it/175x175/373b60/FFFFFF/&text=" + logoUrl.getHost().substring(0, 1);
+                logo = "https://placehold.it/175x175/373b60/FFFFFF/&text=" + logoUrl.getHost().substring(0, 1);
                 content.append("New Account");
                 contentAppName = logoUrl.getHost();
             } catch (MalformedURLException e) {
