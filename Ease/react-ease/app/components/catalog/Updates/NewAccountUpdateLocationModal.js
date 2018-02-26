@@ -4,6 +4,7 @@ import {logoLetter} from "../../../utils/utils";
 import ChooseTypeAppModal from '../ChooseTypeAppModal';
 import {handleSemanticInput} from "../../../utils/utils";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
+import {newAccountUpdateModal} from "../../../actions/catalogActions";
 import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
 
 @connect(store => ({
@@ -82,7 +83,7 @@ class NewAccountUpdateLocationModal extends React.Component {
               </div>
             </div>
             <div>
-              <p onClick={() => this.previousModal}
+              <p onClick={this.previousModal}
                  className="back_modal">
                 <Icon name="arrow left" />Back</p>
             </div>
