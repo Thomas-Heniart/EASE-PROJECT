@@ -181,6 +181,14 @@
         <servlet-name>new_admin.jsp</servlet-name>
         <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>rgpd</servlet-name>
+        <jsp-file>/rgpd.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rgpd</servlet-name>
+        <url-pattern>/rgpd/*</url-pattern>
+    </servlet-mapping>
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Viewpoint Secure URLs</web-resource-name>
