@@ -73,7 +73,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/gpdr">
+                    <a href="/rgpd">
                         <fmt:message key="landing.header.gdpr" />
                     </a>
                 </li>
