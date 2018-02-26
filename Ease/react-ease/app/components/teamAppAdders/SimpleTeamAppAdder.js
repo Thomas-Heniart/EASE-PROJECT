@@ -1,19 +1,12 @@
 import React, {Component} from "react";
 import {logoLetter} from "../../utils/utils";
-import {dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
-import {handleSemanticInput,
-  transformCredentialsListIntoObject,
-  transformWebsiteInfoIntoList,
-  credentialIconType} from "../../utils/utils";
+import {fetchWebsiteInfo, getDashboardApp, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
+import {handleSemanticInput, transformWebsiteInfoIntoList} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite} from "../../actions/teamModalActions";
 import {showChooseAppCredentialsModal, showChooseAnyAppCredentialsModal, showChooseSoftwareAppCredentialsModal} from "../../actions/modalActions";
-import {teamCreateSingleApp} from "../../actions/appsActions";
 import {connect} from "react-redux";
-import {
-  setUserDropdownText, PasswordChangeDropdown, PasswordChangeManagerLabel,
-  renderSimpleAppAddUserLabel
-} from "./common";
+import {setUserDropdownText, PasswordChangeDropdown, renderSimpleAppAddUserLabel} from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 
@@ -206,7 +199,6 @@ class SimpleTeamAppAdder extends Component {
   };
   close = () => {
     this.props.resetTeamCard();
-    // this.props.dispatch(closeAppAddUI());
   };
   render(){
     const app = this.state.app;
@@ -215,8 +207,8 @@ class SimpleTeamAppAdder extends Component {
 
     return (
         <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
-          <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
-            {this.state.app !== null &&
+          <Transition visible={app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
+            {app !== null &&
             <div>
               <Segment>
                 <Header as="h5">

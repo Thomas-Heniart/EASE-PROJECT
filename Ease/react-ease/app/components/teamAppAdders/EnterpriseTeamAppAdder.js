@@ -350,8 +350,8 @@ class EnterpriseTeamAppAdder extends Component {
     const room_manager = team.team_users[team.rooms[this.props.card.channel_id].room_manager_id];
     return (
         <Container fluid id='enterprise-app-adder' class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
-          <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
-            {this.state.app !== null &&
+          <Transition visible={app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
+            {app !== null &&
             <div>
               <Segment>
                 <Header as="h5">

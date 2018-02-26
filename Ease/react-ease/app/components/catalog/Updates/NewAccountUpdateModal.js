@@ -106,17 +106,12 @@ class NewAccountUpdateModal extends React.Component {
       website_id: this.state.website.id,
     }));
   };
-  close = () => {
-    this.props.modal.reject();
-  };
-  finish = () => {
-    this.props.dispatch(deleteUpdate({id: this.props.modal.update_id})).then(() => {
-      this.setState({loading: false});
-      this.props.modal.resolve();
-    });
-  };
   edit = () => {
     this.setState({loading: true});
+    let acc_info = {};
+    Object.keys(this.state.account_information).map(item => {
+      acc_info[item] = this.state.account_information[item];
+    });
     if (this.state.check !== 'newApp') {
       let website = this.state.website;
       if (website.sso_id) {
@@ -128,7 +123,7 @@ class NewAccountUpdateModal extends React.Component {
         website.update_id = this.state.website.update_id;
       }
       this.props.modal.resolve({
-        account_information: this.state.account_information,
+        account_information: acc_info,
         website: website,
         appName: this.state.appName,
         teamId: this.state.check
@@ -146,7 +141,7 @@ class NewAccountUpdateModal extends React.Component {
           url: this.state.website.url,
           img_url: this.state.website.logo,
           profile_id: profileChoose,
-          account_information: this.state.account_information,
+          account_information: acc_info,
           connection_information: this.state.website.information,
           credentials_provided: false,
           website_id: this.state.website.id ? this.state.website.id : -1,
@@ -165,7 +160,7 @@ class NewAccountUpdateModal extends React.Component {
             url: this.state.website.url,
             img_url: this.state.website.logo,
             profile_id: response.id,
-            account_information: this.state.account_information,
+            account_information: acc_info,
             connection_information: this.state.website.information,
             credentials_provided: false,
             website_id: this.state.website.id ? this.state.website.id : -1,
@@ -176,6 +171,15 @@ class NewAccountUpdateModal extends React.Component {
         });
       }
     }
+  };
+  close = () => {
+    this.props.modal.reject();
+  };
+  finish = () => {
+    this.props.dispatch(deleteUpdate({id: this.state.website.update_id})).then(() => {
+      this.setState({loading: false});
+      this.props.modal.resolve();
+    });
   };
   componentWillMount() {
     let teamName = [];

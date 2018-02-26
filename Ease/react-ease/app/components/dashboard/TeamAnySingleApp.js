@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {
-  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel,
+  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
   DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator
 } from "./utils";
 import {showTeamAnySingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
@@ -71,8 +71,6 @@ class TeamAnySingleApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const filler = team.team_users[team_app.team_user_filler_id];
-    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-    const room = team.rooms[team_app.channel_id];
     const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, team_app.account_information);
     const inputs = credentials.map((item,idx) => {

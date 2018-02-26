@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import TeamAppSettingsNameInput from "./TeamAppSettingsNameInput";
 import {handleSemanticInput, isCredentialsMatch} from "../../utils/utils";
-import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamAnyEnterpriseAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput, TestCredentialsButton} from "./utils";
-import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editAppName, editClassicApp, validateApp} from "../../actions/dashboardActions";
+import {AppSettingsMenu, ShareSection, TeamAppRemoveSection} from "./utils";
+import {transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
+import {editAppName, validateApp} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 import { getClearbitLogo } from "../../utils/api";
 import {CopyPasswordIcon} from "../dashboard/utils";
@@ -156,7 +156,6 @@ class TeamAnyEnterpriseAppSettingsModal extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meAdmin = isAdmin(me.role);
     const meOwner = isOwner(me.role);
-    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
     const inputs = credentials.map((item, idx) => {
       if (item.name === 'password')

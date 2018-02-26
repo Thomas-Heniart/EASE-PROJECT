@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import post_api from "../../utils/post_api";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {

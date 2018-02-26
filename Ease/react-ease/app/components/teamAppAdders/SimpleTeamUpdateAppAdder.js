@@ -10,6 +10,7 @@ import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, B
 import {reduxActionBinder} from "../../actions/index";
 import {teamCreateAnySingleCard, teamCreateSingleApp} from "../../actions/appsActions";
 import {deleteUpdate} from "../../actions/catalogActions";
+
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
   return <Input size="mini"
                 class="team-app-input"
@@ -25,6 +26,7 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
                 type={item.type}>
   </Input>
 };
+
 @connect(store => ({
   teams: store.teams,
   card: store.teamCard,
@@ -76,7 +78,6 @@ class SimpleTeamUpdateAppAdder extends Component {
         });
     }
   };
-
   handleInputName = (e, {value}) => {
     this.setState({app_name: value});
   };
@@ -135,11 +136,6 @@ class SimpleTeamUpdateAppAdder extends Component {
     });
     this.setState({ selected_users: selected });
   };
-  chooseUser = (user) => {
-    let selected = this.state.selected_users;
-    selected.splice(selected.length + 1, 0, user.id);
-    this.setState({ selected_users: selected });
-  };
   componentWillMount(){
     let users = this.props.item.team_user_ids.map(item => {
       const user = newSelectUserFromListById(this.props.teams[this.props.card.team_id].team_users, item);
@@ -177,13 +173,6 @@ class SimpleTeamUpdateAppAdder extends Component {
       this.state.credentials.push(item);
     });
   }
-  finish = () => {
-    this.props.dispatch(deleteUpdate({id: this.props.card.app.update_id})).then(() => {
-      this.setState({loading: false});
-      this.close();
-      this.props.resetTeamCard();
-    });
-  };
   send = (e) => {
     e.preventDefault();
     const receivers = this.state.users
@@ -229,9 +218,15 @@ class SimpleTeamUpdateAppAdder extends Component {
       });
     }
   };
+  finish = () => {
+    this.props.dispatch(deleteUpdate({id: this.props.card.app.update_id})).then(() => {
+      this.setState({loading: false});
+      this.close();
+      this.props.resetTeamCard();
+    });
+  };
   close = () => {
     this.props.resetTeamCard();
-    // this.props.dispatch(closeAppAddUI());
   };
   render(){
    const credentials = this.state.credentials.map(item => {
@@ -239,15 +234,13 @@ class SimpleTeamUpdateAppAdder extends Component {
                                      onChange={this.handleCredentialInput}
                                      item={item}/>
     });
-
     const app = this.state.app;
     const room_manager = this.props.teams[this.props.card.team_id].team_users[this.props.item.room_manager_id];
     const team = this.props.teams[this.props.item.team_id];
-
     return (
       <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
-        <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
-          {this.state.app !== null &&
+        <Transition visible={app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
+          {app !== null &&
           <div>
             <Segment>
               <Header as="h5">

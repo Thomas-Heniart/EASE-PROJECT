@@ -8,16 +8,14 @@ import OnBoardingAccounts from "./OnBoardingAccounts";
 import OnBoardingInformations from "./OnBoardingInformation";
 import { Menu, Form, Icon, Button } from 'semantic-ui-react';
 import {handleSemanticInput, isEmail, reflect} from "../../utils/utils";
-import {withRouter, Switch, Route, NavLink} from "react-router-dom";
+import {Switch, Route} from "react-router-dom";
 import {
   askRegistration, changeStep, checkAskRegistration, createTeam, createTeamProfile, editFirstNameAndLastName,
-  fetchOnBoardingRooms,
-  getInfoClearbit,
-  newRegistration, onBoardingImportation, resetOnBoardingImportation
+  fetchOnBoardingRooms, getInfoClearbit, newRegistration, onBoardingImportation
 } from "../../actions/onBoardingActions";
 import {addTeamUserToChannel, createTeamChannel} from "../../actions/channelActions";
 import {teamCreateEnterpriseCard, teamCreateSingleApp} from "../../actions/appsActions";
-import {processConnection, setLoginRedirectUrl} from "../../actions/commonActions";
+import {processConnection} from "../../actions/commonActions";
 import {testCredentials} from "../../actions/catalogActions";
 import {createTeamUser} from "../../actions/userActions";
 import * as api from '../../utils/api';
@@ -68,12 +66,6 @@ class NewTeamCreationView extends React.Component {
       allAppIdsSelected: []
     };
   }
-
-  componentWillMount() {
-    // get step if not let view 1
-    // get Rooms
-  }
-
   componentDidMount() {
     const query = queryString.parse(this.props.location.search);
     if ((query.plan_id !== undefined && query.plan_id.length !== 0))
@@ -87,7 +79,6 @@ class NewTeamCreationView extends React.Component {
     if (this.props.authenticated && (query.team !== undefined && query.team.length !== 0))
       this.props.history.replace(`/main/simpleTeamCreation?plan_id=${this.state.plan_id}&team=${query.team}`);
   }
-
   handleInput = handleSemanticInput.bind(this);
   handleConfirmationCode = (e, {name, value}) => {
     if (value.match(/^[0-9]{0,6}$/g))
@@ -341,7 +332,6 @@ class NewTeamCreationView extends React.Component {
           email: this.state.email,
           password: this.state.password
         })).then(res => {
-          // this.props.dispatch(setLoginRedirectUrl('/main/simpleTeamCreation'));
           this.props.dispatch(getInfoClearbit({email: this.state.email})).then(response => {
             if (response.success)
               this.setState({

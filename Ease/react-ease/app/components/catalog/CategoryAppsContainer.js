@@ -1,6 +1,5 @@
 import React, {Component} from "react";
-import { Grid, Image, Icon, Modal, Header, Input, Container, Loader } from 'semantic-ui-react';
-import AddAnyApp from './AddAnyApp'
+import { Container } from 'semantic-ui-react';
 import AppsContainer from "./AppsContainer";
 import {selectItemFromListById} from "../../utils/helperFunctions";
 import {connect} from "react-redux";
