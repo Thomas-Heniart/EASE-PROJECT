@@ -12,7 +12,7 @@ const CarouselContent = createReactClass({
       component: createReactClass({
         render(){
           return (
-              <Icon size="big" class="mrgn0" name="chevron circle left" link onClick={this.props.previousSlide}/>
+              <Icon style={{display:'none'}} size="big" class="mrgn0" name="chevron circle left" link onClick={this.props.previousSlide}/>
           )
         }
       }),
@@ -21,7 +21,7 @@ const CarouselContent = createReactClass({
       component: createReactClass({
         render(){
           return (
-              <Icon size="big" class="mrgn0" name="chevron circle right" link onClick={this.props.nextSlide}/>
+              <Icon style={{display:'none'}} size="big" class="mrgn0" name="chevron circle right" link onClick={this.props.nextSlide}/>
           )
         }
       }),
@@ -72,6 +72,7 @@ const CarouselContent = createReactClass({
         },
         getButtonStyles(active) {
           return {
+            display: 'none',
             border: 0,
             background: 'transparent',
             color: 'black',
@@ -88,11 +89,11 @@ const CarouselContent = createReactClass({
     ];
     return (
         <Carousel
-            decorators={decorators}
+          // autoplayInterval={10000}
+          // autoplay={true}
             wrapAround={true}
-            autoplay={true}
-            autoplayInterval={10000}>
-          <img src="/resources/images/chrome_import.jpg" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
+            decorators={decorators}>
+          <img src="/resources/images/newFeatureUpdates.png" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
           <img src="/resources/images/extension_popup.jpg"/>
           <img src="/resources/images/google_accounts.jpg"/>
         </Carousel>
@@ -114,7 +115,7 @@ class NewFeatureModal extends React.Component {
           <div className="popover_mask"/>
           <div className="ease_popup ease_new_feature_popup">
             <Header as="h3" attached="top" style={{padding: '20px'}}>
-              <p>Want to check the last features we made for you?</p>
+              <p>Magic is happening for your accounts and passwords 🔐</p>
             </Header>
             <div className='popup_content'>
               <CarouselContent/>
@@ -122,7 +123,7 @@ class NewFeatureModal extends React.Component {
                 <p className='no_margin'>
               <span>
                 {/*<strong>If you wanna try and give us your <a href='mailto:victor@ease.space' target="_top" style={{color: 'black'}}><u>feedbacks</u></a>, it helps us a lot <Icon name="heart"/></strong><br/>*/}
-                <strong>If you love Ease.space, share it with us on <a href='https://twitter.com/intent/tweet?text=%40ease_space%20%23thiseaselove' target="_blank" style={{color: 'black'}}><u>Twitter</u></a> <Icon name="heart"/></strong>
+                <strong>Help us develop Ease.space by sharing your opinion on <a href='https://twitter.com/intent/tweet?text=%40ease_space%20%23thiseaselove' target="_blank" style={{color: 'black'}}><u>Twitter</u></a></strong>
               </span>
                 </p>
                 <Button positive content='Okay cheers!' onClick={this.close}/>
