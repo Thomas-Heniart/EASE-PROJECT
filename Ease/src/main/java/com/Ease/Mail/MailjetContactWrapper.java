@@ -29,7 +29,7 @@ public class MailjetContactWrapper {
         mailjetClient.put(new MailjetRequest(Contactdata.resource, user.getEmail()).property("Data", new JSONArray()
                 .put(new JSONObject()
                         .put("Name", "prénom")
-                        .put("Value", user.getPersonalInformation().getFirst_name().equals("") ?  StringUtils.capitalize(user.getUsername().toLowerCase()) : user.getPersonalInformation().getFirst_name()))));
+                        .put("Value", user.getPersonalInformation().getFirst_name().equals("") ? StringUtils.capitalize(user.getUsername().toLowerCase()) : user.getPersonalInformation().getFirst_name()))));
     }
 
     public void updateUserContactLists(User user) throws MailjetSocketTimeoutException, MailjetException {
@@ -86,6 +86,15 @@ public class MailjetContactWrapper {
         lists.put(new JSONObject()
                 .put("ListId", "34722")
                 .put("Action", "addnoforce"));
+        mailjetResponse = mailjetClient.post(new MailjetRequest(ContactManagecontactslists.resource, email)
+                .property(ContactManagecontactslists.CONTACTSLISTS, lists));
+    }
+
+    public void addEmailToList(String email, String listId) throws MailjetSocketTimeoutException, MailjetException {
+        JSONArray lists = new JSONArray()
+                .put(new JSONObject()
+                        .put("ListId", listId)
+                        .put("Action", "addnoforce"));
         mailjetResponse = mailjetClient.post(new MailjetRequest(ContactManagecontactslists.resource, email)
                 .property(ContactManagecontactslists.CONTACTSLISTS, lists));
     }
