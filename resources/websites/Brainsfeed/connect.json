@@ -4,27 +4,24 @@
   "home":"https://www.brainsfeed.com/#/home",
   "connect":{
     "todo":[
-      {"action":"trueClick", "search":".button.green.standard"},
-      {"action":"fill", "what":"login", "search":".login-panel input[type='email']"},
-      {"action":"fill", "what":"password", "search":".login-panel input[type='password']"},
-      {"action":"trueClick", "search":".login-panel .text-center button[type='button']"}
+      {"action":"trueClick", "search":".btn.green.sidenav-close"},
+      {"action":"fill", "what":"login", "search":".login-panel input[type='email']", "grave": "true"},
+      {"action":"fill", "what":"password", "search":".login-panel input[type='password']", "grave": "true"},
+      {"action":"trueClick", "search":".login-panel .card-actions > .row button", "grave": "true"}
     ]
   },
   "logout":{
     "todo":[
-      {"action":"trueClick", "search":".desktop-app-bar div:last-child() div:last-child() button"},
-      {"action":"waitfor", "search":".fa-sign-out"},
-      {"action":"trueClick", "search":".fa-sign-out"},
-      {"action":"waitfor", "search":".login-panel .text-center button[type='button']"}
+      {"action":"click", "search":"#main-header > li:last-child > ul > li:last-child a"}
     ]
   },
   "checkAlreadyLogged":[
-    {"action":"waitfor", "search":".desktop-app-bar, .login-panel .text-center button[type='button']"},
-    {"search":".desktop-app-bar"}
+    {"action":"waitfor", "search":".in-app-layout, .login-panel"},
+    {"search":".in-app-layout"}
   ],
   "Facebook":{
     "todo":[
-      {"action":"trueClick", "search":".button.green.standard"},
+      {"action":"trueClick", "search":".btn.green.sidenav-close"},
       {"action":"trueClick", "search":".fb-login-button"}
     ]
   }
