@@ -14,11 +14,14 @@
 						<a href="pricing">
 							<fmt:message key="landing.header.price-link"/>
 						</a>
-						<a href="/?skipLanding=true">
-							<fmt:message key="landing.header.connexion-link"/>
-						</a>
 						<a href="/rgpd">
 							<fmt:message key="landing.header.gdpr"/>
+						</a>
+						<a href="https://easespace.welcomekit.co" target="_blank">
+							<fmt:message key="landing.footer.hiring"/>
+						</a>
+						<a href="/?skipLanding=true">
+							<fmt:message key="landing.header.connexion-link"/>
 						</a>
 					</div>
 				</div>
