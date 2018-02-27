@@ -89,10 +89,10 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00040/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00042/lib/fonts/museo-font.css"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00040/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/bootstrap.css"/>
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript">
       (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")

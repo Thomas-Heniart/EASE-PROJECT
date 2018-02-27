@@ -37,7 +37,7 @@ public class UserFactory {
         user.getPersonalInformation().setFirst_name(first_name);
         user.getPersonalInformation().setLast_name(last_name);
         user.getPersonalInformation().setPhone_number(phone_number);
-        user.getUserStatus().setNew_feature_seen(false);
+        user.getUserStatus().setNew_feature_seen(true);
         user.getUserStatus().setOnboarding_step(1);
         user.getUserStatus().setRegistered(true);
         return user;

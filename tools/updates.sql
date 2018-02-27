@@ -36,3 +36,4 @@ CREATE TABLE EASE_UPDATE (
 );
 
 UPDATE notifications SET icon = CONCAT ('https', SUBSTRING(icon, 5)) WHERE icon LIKE 'http://%';
+UPDATE status SET new_feature_seen = 0;

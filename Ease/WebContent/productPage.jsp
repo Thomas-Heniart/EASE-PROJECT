@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00040/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/securityPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00042/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00042/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 

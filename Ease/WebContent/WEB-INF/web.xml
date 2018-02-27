@@ -189,6 +189,7 @@
         <servlet-name>rgpd</servlet-name>
         <url-pattern>/rgpd/*</url-pattern>
     </servlet-mapping>
+    <!--
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Viewpoint Secure URLs</web-resource-name>
@@ -198,4 +199,5 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
+    -->
 </web-app>
