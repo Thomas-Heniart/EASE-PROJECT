@@ -133,8 +133,9 @@
                 <li><fmt:message key="gdpr.content.text.9"/></li>
             </ol>
         </div>
+
         <div class="five wide column" style="border: 1px solid #d4d4d5; border-radius: 4px; background-color: #f8f8f8;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);">
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);height: fit-content;">
             <h3 style="margin-top: 3%;"><fmt:message key="gdpr.segment.title"/></h3>
             <form id="submitEmailEbook" class="ui form" style="margin-top: 10%;">
                 <div class="field">
