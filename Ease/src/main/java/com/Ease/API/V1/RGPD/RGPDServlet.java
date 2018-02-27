@@ -28,7 +28,7 @@ public class RGPDServlet extends HttpServlet {
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
             mailJetBuilder.addTo(email);
-            mailJetBuilder.setTemplateId(324070);
+            mailJetBuilder.setTemplateId(324084);
             mailJetBuilder.addVariable("url", Variables.URL_PATH + "/resources/rgpd.pdf");
             mailJetBuilder.sendEmail();
             sm.setSuccess("Done");
