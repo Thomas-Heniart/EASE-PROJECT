@@ -32,8 +32,10 @@ class UpdatesContainer extends React.Component {
         website = {...this.props.sso_list[0]};
         if (item.app_id === -1 || item.team_card_id !== -1)
           this.props.websites.filter(site => {
-            if (site.id === item.website_id)
+            if (site.id === item.website_id) {
+              website.name = site.name;
               website.logo = site.logo;
+            }
           });
         else
           website.logo = '/resources/other/google-logo.png';
