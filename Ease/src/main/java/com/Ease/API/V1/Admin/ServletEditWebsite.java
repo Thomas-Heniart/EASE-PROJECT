@@ -42,6 +42,7 @@ public class ServletEditWebsite extends HttpServlet {
             Website website = catalog.getWebsiteWithId(id, hibernateQuery);
             website.setName(name);
             website.setFolder(folder);
+            String old_url = website.getLogin_url();
             website.setLogin_url(login_url);
             website.setWebsite_homepage(landing_url);
             website.getWebsiteAttributes().setIntegrated(integrated);
@@ -121,6 +122,12 @@ public class ServletEditWebsite extends HttpServlet {
                     /* @TODO WebSocket message here */
                 }
             });
+            if (integrated) {
+                hibernateQuery.queryString("UPDATE Update u SET u.url = NULL, u.website = :website WHERE u.url LIKE :url");
+                hibernateQuery.setParameter("url", old_url);
+                hibernateQuery.setParameter("website", website);
+                hibernateQuery.executeUpdate();
+            }
             website.getWebsiteAppSet().removeAll(websiteAppToRemoveSet);
             sm.setSuccess("Catalog edited");
         } catch (Exception e) {
