@@ -106,11 +106,11 @@
 <header>
     <div style="margin:0;padding-left:0;padding-right:0;width:100%;">
         <div class="intro-text" >
-            <div class="intro-heading">
+            <div class="intro-heading" style="font-size: 54px;font-family: Raleway, sans-serif !important;font-weight: bold">
                 <fmt:message key="gdpr.title"/>
             </div>
             <div class="col-xs-offset-1 col-xs-10 text-center">
-                <p style="font-size: 24px; letter-spacing: 1.5px;line-height: 38px;">
+                <p style="font-size: 24px;line-height: 38px;font-family: Raleway, sans-serif !important;">
                     <fmt:message key="gdpr.sub-title"/>
                 </p>
             </div>
