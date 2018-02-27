@@ -33,12 +33,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00040/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00044/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -106,11 +106,11 @@
 <header>
     <div style="margin:0;padding-left:0;padding-right:0;width:100%;">
         <div class="intro-text" >
-            <div class="intro-heading">
+            <div class="intro-heading" style="font-size: 54px;font-family: Raleway, sans-serif !important;font-weight: bold">
                 <fmt:message key="gdpr.title"/>
             </div>
             <div class="col-xs-offset-1 col-xs-10 text-center">
-                <p style="font-size: 24px; letter-spacing: 1.5px;line-height: 38px;">
+                <p style="font-size: 24px;line-height: 38px;font-family: Raleway, sans-serif !important;">
                     <fmt:message key="gdpr.sub-title"/>
                 </p>
             </div>
@@ -133,8 +133,9 @@
                 <li><fmt:message key="gdpr.content.text.9"/></li>
             </ol>
         </div>
+
         <div class="five wide column" style="border: 1px solid #d4d4d5; border-radius: 4px; background-color: #f8f8f8;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);">
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);height: fit-content;">
             <h3 style="margin-top: 3%;"><fmt:message key="gdpr.segment.title"/></h3>
             <form id="submitEmailEbook" class="ui form" style="margin-top: 10%;">
                 <div class="field">
@@ -149,7 +150,7 @@
                 </button>
                 <div id="succesMessageSendEbook" style="display:none;">
                     <p style="color:#44CA70;" class="text-center"><fmt:message key="gdpr.segment.sent"/></p>
-                    <p style="font-size:20px;color:#414141;font-weight: 500;"><fmt:message key="gdpr.segment.message"/></p>
+                    <p style="font-size:16px;color:#414141;font-weight: 500;"><fmt:message key="gdpr.segment.message"/></p>
                 </div>
             </form>
         </div>
