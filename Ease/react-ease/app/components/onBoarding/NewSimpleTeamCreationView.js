@@ -8,12 +8,9 @@ import OnBoardingGroups from "./OnBoardingGroups";
 import OnBoardingAccounts from "./OnBoardingAccounts";
 import { Menu, Form, Icon, Button } from 'semantic-ui-react';
 import {handleSemanticInput, isEmail, reflect} from "../../utils/utils";
-import {withRouter, Switch, Route, NavLink} from "react-router-dom";
+import {Switch, Route} from "react-router-dom";
 import {
-  askRegistration, changeStep, checkAskRegistration, createTeam, createTeamProfile, editFirstNameAndLastName,
-  fetchOnBoardingRooms,
-  getInfoClearbit, goToOnBoarding,
-  newRegistration, onBoardingImportation
+  changeStep, createTeam, createTeamProfile, fetchOnBoardingRooms, goToOnBoarding, onBoardingImportation
 } from "../../actions/onBoardingActions";
 import {addTeamUserToChannel, createTeamChannel} from "../../actions/channelActions";
 import {teamCreateEnterpriseCard, teamCreateSingleApp} from "../../actions/appsActions";

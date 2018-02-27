@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
+import {Icon} from 'semantic-ui-react';
 import { DropTarget, DragSource } from 'react-dnd';
 import flow from 'lodash/flow';
 import classnames from "classnames";

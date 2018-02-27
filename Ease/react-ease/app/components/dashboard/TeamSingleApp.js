@@ -1,13 +1,12 @@
 import React, {Component} from "react";
 import {
-  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel,
+  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
   DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator
 } from "./utils";
 import {
   showTeamSingleAppSettingsModal, showLockedTeamAppModal,
   showUpdateAppPasswordModal
 } from "../../actions/modalActions";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
 import {connect} from "react-redux";
 import {AppConnection} from "../../actions/dashboardActions";
@@ -46,11 +45,9 @@ class TeamSingleApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const filler = team.team_users[team_app.team_user_filler_id];
-    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const room = team.rooms[team_app.channel_id];
     const roomManager = team.team_users[room.room_manager_id];
     const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
-
     return (
       <div class='app classic'>
         <div class="logo_area">

@@ -1,18 +1,12 @@
 import React, {Component} from "react";
-import {dashboardAndTeamAppSearch, fetchWebsiteInfo, getDashboardApp, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
-import {handleSemanticInput,
-  transformCredentialsListIntoObject,
-  transformWebsiteInfoIntoList,
-  credentialIconType} from "../../utils/utils";
+import {logoLetter} from "../../utils/utils";
+import {fetchWebsiteInfo, getDashboardApp, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
+import {handleSemanticInput, transformWebsiteInfoIntoList} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
 import {requestWebsite} from "../../actions/teamModalActions";
 import {showChooseAppCredentialsModal, showChooseAnyAppCredentialsModal, showChooseSoftwareAppCredentialsModal} from "../../actions/modalActions";
-import {teamCreateSingleApp} from "../../actions/appsActions";
 import {connect} from "react-redux";
-import {
-  setUserDropdownText, PasswordChangeDropdown, PasswordChangeManagerLabel,
-  renderSimpleAppAddUserLabel
-} from "./common";
+import {setUserDropdownText, PasswordChangeDropdown, renderSimpleAppAddUserLabel} from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 
@@ -116,23 +110,6 @@ class SimpleTeamAppAdder extends Component {
     e.preventDefault();
     this.setState({img_url:''});
   };
-  logoLetter = () => {
-    let first = '';
-    let second = '';
-    let space = false;
-    for (let letter = 0; letter < this.state.app_name.length; letter++) {
-      if (first.length < 1 && this.state.app_name[letter] !== ' ')
-        first = this.state.app_name[letter];
-      else if (first.length > 0 && second.length < 1 && this.state.app_name[letter] !== ' ' && space === true)
-        second = this.state.app_name[letter];
-      else if (this.state.app_name[letter] === ' ')
-        space = true;
-    }
-    if (second !== '')
-      return first.toUpperCase() + second.toUpperCase();
-    else
-      return first.toUpperCase();
-  };
   chooseAllUsers = () => {
     let selected = [];
     this.state.users.map(user => {
@@ -204,7 +181,7 @@ class SimpleTeamAppAdder extends Component {
         url: this.state.app_url,
         img_url: this.state.img_url,
         subtype: this.props.card.subtype,
-        logoLetter: this.logoLetter(),
+        logoLetter: logoLetter(this.state.app_name),
         password_reminder_interval: this.state.password_reminder_interval
       }));
     else
@@ -216,13 +193,12 @@ class SimpleTeamAppAdder extends Component {
         url: this.state.app_url,
         img_url: this.state.img_url,
         subtype: this.props.card.subtype,
-        logoLetter: this.logoLetter(),
+        logoLetter: logoLetter(this.state.app_name),
         password_reminder_interval: this.state.password_reminder_interval
       }));
   };
   close = () => {
     this.props.resetTeamCard();
-    // this.props.dispatch(closeAppAddUI());
   };
   render(){
     const app = this.state.app;
@@ -231,8 +207,8 @@ class SimpleTeamAppAdder extends Component {
 
     return (
         <Container fluid class="team-app team-app-adder mrgn0" as="form" onSubmit={this.send}>
-          <Transition visible={this.state.app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
-            {this.state.app !== null &&
+          <Transition visible={app !== null} unmountOnHide={true} mountOnShow={true} animation='scale' duration={300}>
+            {app !== null &&
             <div>
               <Segment>
                 <Header as="h5">
@@ -264,7 +240,7 @@ class SimpleTeamAppAdder extends Component {
                           </div>
                           : this.state.app_name ?
                               <div style={{backgroundColor:'#373b60',color:'white'}}>
-                                <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                                <p style={{margin:'auto'}}>{logoLetter(this.state.app_name)}</p>
                               </div>
                               :
                               <div style={{backgroundColor:'white',color: '#dededf'}}>

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { findDOMNode } from 'react-dom';
 import classnames from "classnames";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
+import {Input, Icon} from 'semantic-ui-react';
 import { DropTarget, DragSource } from 'react-dnd';
 import {ItemTypes} from "./ItemTypes";
 import {handleSemanticInput} from "../../utils/utils";

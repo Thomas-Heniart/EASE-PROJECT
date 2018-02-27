@@ -1,0 +1,20 @@
+{
+	"name":"PublisuitesAdvertisers",
+	"lastLogin":"",
+	"home":"https://www.publisuites.com/advertisers/",
+	"connect":{
+		"todo":[
+			{"action":"fill", "what":"login", "search":"#user-signup input[name=email]"},
+			{"action":"fill", "what":"password", "search":"#user-signup input[name=password]"},
+			{"action":"click", "search":"#user-signup .submitbutton"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action": "goto", "url": "https://www.publisuites.com/advertisers/user/logout/"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#app-navbar-collapse"}
+	]
+}

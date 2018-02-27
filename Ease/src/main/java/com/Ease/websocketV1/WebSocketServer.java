@@ -39,12 +39,12 @@ public class WebSocketServer {
             ServletContext servletContext = httpSession.getServletContext();
             System.out.println("connection opened by websocket. id = " + session.getId());
             System.out.println("is secure ? " + session.isSecure());
-            if (!session.isSecure()) {
+            /* if (!session.isSecure()) {
                 session.close();
                 System.out.println("webSocketSession closed");
                 hibernateQuery.commit();
                 return;
-            }
+            } */
             session.getBasicRemote().sendText(new WebSocketMessage("CONNECTION_ID", session.getId()).toJSONObject().toString());
             WebSocketSession webSocketSession = new WebSocketSession(session);
             if (user_id == null) {

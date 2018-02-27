@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {reduxActionBinder} from "../../actions/index";
-import { List, Loader } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
 import {withRouter} from "react-router-dom";
 

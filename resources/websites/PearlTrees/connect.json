@@ -1,0 +1,23 @@
+{
+	"name":"PearlTrees",
+	"lastLogin":"",
+	"home":"https://www.pearltrees.com/",
+	"connect":{
+		"todo":[
+			{"action": "click", "search": ".from_button_container_right .form_change"},
+			{"action":"fill", "what":"login", "search":"#log_username"},
+			{"action":"fill", "what":"password", "search":"#log_password"},
+			{"action":"click", "search":"#signin-button"}
+		]
+	},
+	"logout":{
+		"todo":[
+			{"action": "click", "search": "#settings-button"},
+			{"action": "waitfor", "search": "#settings > ul > li:last-child > ul > li:last-child > div"},
+			{"action":"click", "search":"#settings > ul > li:last-child > ul > li:last-child > div"}
+		]
+	},
+	"checkAlreadyLogged":[
+		{"search":"#full-container"}
+	]
+}

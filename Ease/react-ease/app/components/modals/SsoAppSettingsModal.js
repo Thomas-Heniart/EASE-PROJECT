@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {handleSemanticInput, isCredentialsMatch} from "../../utils/utils";
-import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Segment, Grid, Message, Input, Label,Form, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showSsoAppSettingsModal} from "../../actions/modalActions";
-import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput, TestCredentialsButton} from "./utils";
-import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {editClassicApp, deleteSsoApp, validateApp, editAppName, editSsoGroup} from "../../actions/dashboardActions";
+import {AppSettingsMenu, ShareSection, RemoveSection} from "./utils";
+import {transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
+import {deleteSsoApp, validateApp, editAppName, editSsoGroup} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";

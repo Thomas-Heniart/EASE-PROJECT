@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
+import {logoLetter} from "../../utils/utils";
 import { getClearbitLogoAutoComplete } from "../../utils/api";
 import {handleSemanticInput} from "../../utils/utils";
 import { Input, Container, Button, Icon, Segment } from 'semantic-ui-react';
@@ -35,30 +36,13 @@ class AddSoftwareCredentials extends React.Component {
     e.preventDefault();
     this.setState({img_url:''});
   };
-  logoLetter = () => {
-    let first = '';
-    let second = '';
-    let space = false;
-    for (let letter = 0; letter < this.state.name.length; letter++) {
-      if (first.length < 1 && this.state.name[letter] !== ' ')
-        first = this.state.name[letter];
-      else if (first.length > 0 && second.length < 1 && this.state.name[letter] !== ' ' && space === true)
-        second = this.state.name[letter];
-      else if (this.state.name[letter] === ' ')
-        space = true;
-    }
-    if (second !== '')
-      return first.toUpperCase() + second.toUpperCase();
-    else
-      return first.toUpperCase();
-  };
   send = (e) => {
     e.preventDefault();
     this.props.catalogAddSoftwareAppModal({
       active: true,
       name: this.state.name,
       img_url: this.state.img_url,
-      logoLetter: this.logoLetter()
+      logoLetter: logoLetter(this.state.name)
     }).then(app => {
       this.setState({name: '', url: '', img_url:''});
     }).catch(() => {
@@ -79,7 +63,7 @@ class AddSoftwareCredentials extends React.Component {
                 </div>
                 : this.state.name ?
                 <div style={{backgroundColor:'#373b60',color:'white'}}>
-                  <p style={{margin:'auto'}}>{this.logoLetter()}</p>
+                  <p style={{margin:'auto'}}>{logoLetter(this.state.name)}</p>
                 </div>
                 :
                   <div style={{backgroundColor:'white',color: '#dededf'}}>

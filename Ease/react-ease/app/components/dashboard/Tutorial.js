@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import classnames from "classnames";
 import {validateTutorial} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 import Joyride from "react-joyride";

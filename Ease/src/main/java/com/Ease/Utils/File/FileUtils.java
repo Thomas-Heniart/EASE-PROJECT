@@ -23,7 +23,7 @@ public class FileUtils {
             icon = name_splitted[0].substring(0, 1).replaceAll("\\W", "_");
             if (name_splitted.length > 1)
                 icon += name_splitted[1].substring(0, 1).replaceAll("\\W", "_");
-            byte[] file = download(new URL("http://placehold.it/175x175/373b60/FFFFFF/&text=" + icon.toUpperCase()));
+            byte[] file = download(new URL("https://placehold.it/175x175/373b60/FFFFFF/&text=" + icon.toUpperCase()));
             IOUtils.write(file, outputStream);
         } catch (Exception e) {
             throw new HttpServletException(HttpStatus.InternError, e);

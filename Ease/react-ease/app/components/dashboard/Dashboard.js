@@ -1,16 +1,10 @@
 import React, {Component} from "react";
 import classnames from "classnames";
 import queryString from "query-string";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
-import {showLogWithAppSettingsModal, showLinkAppSettingsModal, showSimpleAppSettingsModal, showExtensionDownloadModal} from "../../actions/modalActions";
-import Profile from "./Profile";
+import {showSimpleAppSettingsModal} from "../../actions/modalActions";
 import Tutorial from "./Tutorial";
 import DashboardColumn from "./DashboardColumn";
 import {connect} from "react-redux";
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
-import CustomDragLayer from "./CustomDragLayer";
-import { DropTarget, DragSource } from 'react-dnd';
 import withScrolling from 'react-dnd-scrollzone';
 const ScrollingComponent = withScrolling('div');
 
@@ -75,15 +69,6 @@ class Dashboard extends Component {
   }
   render(){
     const {columns} = this.props.dashboard;
-    const {
-      isReady,
-      isRunning,
-      joyrideOverlay,
-      joyrideType,
-      selector,
-      stepIndex,
-      steps,
-    } = this.state;
     return (
         <div id="dashboard" class={classnames(this.props.background_picture ? 'ease-background' : null, this.state.scrolling ? 'scrolling': null, 'lite_scrollbar')}>
           <ScrollingComponent onScroll={this.onScroll} class="ui container fluid full_flex display_flex">

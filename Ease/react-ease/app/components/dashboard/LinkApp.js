@@ -1,7 +1,6 @@
 import React, {Component} from "react";
-import {EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {NewAppLabel} from "./utils";
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 import {validateApp, clickOnAppMetric} from "../../actions/dashboardActions";
 
 class LinkApp extends Component {

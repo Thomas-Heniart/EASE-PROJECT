@@ -78,6 +78,7 @@ class Importations extends React.Component {
     super(props);
     this.state = {
       view: 1,
+      loadingLogo: {},
       passwordManager: 0,
       chromeLogin: '',
       chromePassword: '',
@@ -149,7 +150,10 @@ class Importations extends React.Component {
     });
   }
   getLogo = () => {
+    let loading = {};
     const importedAccounts = this.state.importedAccounts.map(item => {
+      loading[item.id] = true;
+      this.setState({loadingLogo: loading});
       if (item.website_id === -1) {
         getLogo({url: item.url}).then(response => {
           if (response !== '/resources/icons/link_app.png')
@@ -158,6 +162,8 @@ class Importations extends React.Component {
             item.logo = '';
           else
             item.logo = response;
+          loading[item.id] = false;
+          this.setState({loadingLogo: loading});
           return item;
         });
       }
@@ -168,6 +174,8 @@ class Importations extends React.Component {
         }).map(website => {
           return website.logo;
         })[0];
+        loading[item.id] = false;
+        this.setState({loadingLogo: loading});
       }
       return item;
     });
@@ -989,6 +997,7 @@ class Importations extends React.Component {
         {(this.state.view === 4 && this.state.importedAccounts && !this.props.fetching && this.state.loading === false) &&
           <DisplayAccounts
             {...this.props}
+            loadingLogo={this.state.loadingLogo}
             getLogo={this.getLogo}
             onChange={this.handleInput}
             onChangeRoomName={this.handleRoomName}
