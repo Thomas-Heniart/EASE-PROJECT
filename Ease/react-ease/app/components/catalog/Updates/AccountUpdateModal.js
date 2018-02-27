@@ -73,11 +73,11 @@ class AccountUpdateModal extends React.Component {
     const item = this.props.modal.item;
     if (this.props.sso_list[0].websites[0].filter(website_id => (website_id === item.website_id)).length > 0) {
       website = {...this.props.sso_list[0]};
+      website.logo = this.state.website.logo;
       website.id = item.website_id;
       website.update_id = item.id;
       website.sso_id = this.props.sso_list[0].id;
       website.sso_group_id = -1;
-      website.logo = '/resources/other/google-logo.png';
       website.information = {
         login: {name: 'login', placeholder: "Login", priority: 0, type: "text"},
         password: {name: 'password', placeholder: "Password", priority: 1, type: "password"}

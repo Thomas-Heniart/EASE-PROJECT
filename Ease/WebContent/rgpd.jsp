@@ -45,6 +45,9 @@
 
     <link rel="manifest" href="manifest.json">
     <title>Ease.space R.G.P.D</title>
+    <style>
+
+    </style>
 </head>
 
 <body id="landingBody" style="margin:0;">
@@ -119,20 +122,27 @@
             </ol>
         </div>
         <div class="five wide column" style="border: 1px solid #d4d4d5; border-radius: 4px; background-color: #f8f8f8;
-                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);height: 310px;">
-            <h3 style="margin-top: 3%;"><fmt:message key="gdpr.segment.title"/></h3>
-            <form id="submitEmailEbook" class="ui form" style="margin-top: 10%;">
-                <div class="field">
-                    <label>Email professionnel</label>
-                    <input required type="text" name="email" placeholder="barack@obama.com">
-                    <div class="ui error message">
-                        <div class="header">Ceci n'est pas un email pro.</div>
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);">
+                <h3 style="margin-top: 3%;"><fmt:message key="gdpr.segment.title"/></h3>
+                <form id="submitEmailEbook" class="ui form" style="margin-top: 10%;">
+                    <div class="field">
+                        <label>Email professionnel</label>
+                        <input required type="email" name="email" placeholder="barack@obama.com">
+                        <div class="ui error message">
+                            <div class="header">Ceci n'est pas un email pro.</div>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" style="background-color: #4fcb6c;height: 72px;width: 100%;"
-                        class="positive ui button center aligned segment"><fmt:message key="gdpr.segment.button"/></button>
-            </form>
+                    <button id="submitButtonGetRgpd" type="submit" style="background-color: #4fcb6c;height: 72px;width: 100%;"
+                            class="positive ui button center aligned segment"><fmt:message key="gdpr.segment.button"/>
+                    </button>
+                    <div id="succesMessageSendEbook">
+                        <p style="font-size:20px;color:#414141;font-weight: 500;">Si vous ne trouvez pas notre email, verifiez dans vos spams</p>
+                    </div>
+                </form>
         </div>
+        coucoucou
+        coucoucou
+        coucoucou
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
@@ -149,20 +159,32 @@
 <script src="semantic/dist/semantic.min.js"></script>
 
 <script type="text/javascript">
+  const blacklistInviteTeamUsersEmails = [
+    'gmail.com',
+    'yahoo.com',
+    'hotmail.com'
+  ];
+
   $('#submitEmailEbook').submit(function (e) {
     let self = $(this);
     e.preventDefault();
-    let button = $("button.positive", self);
-    button.addClass("loading");
-    $(".message.negative").hide();
-    $(".message.positive").hide();
-    ajaxHandler.post(
-      "/api/v1/rgpd",
-      {
-        email: self.find("input[name='email']").val(),
-      });
+    if (blacklistInviteTeamUsersEmails.indexOf(self.find("input[name='email']").val().split('@')[1]) !== -1) {
+      console.log('ce n est pas un email pro');
+    } else {
+      console.log('email pro');
+      $(this).find('input[name=\'email\']').attr('disabled','disabled');
+      $('#submitButtonGetRgpd').attr('disabled', 'disabled');
+      ajaxHandler.post(
+        "/api/v1/rgpd",
+        {
+          email: self.find("input[name='email']").val(),
+        });
+      $('#succesMessageSendEbook').show(1000);
+     }
   });
+
 </script>
+
 <script type="text/javascript">
   $(document).ready(function () {
     var AFFIX_TOP_LIMIT = 560;

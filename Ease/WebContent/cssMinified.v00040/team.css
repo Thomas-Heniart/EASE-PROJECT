@@ -2571,6 +2571,9 @@ button.action_text_button {
   background-color: #2185d0;
   color: #F9F7F7;
   font-weight: normal; }
+  .ease_popup.ease_team_popup .ui.label.user-label.update {
+    margin: auto;
+    margin-left: 10px; }
 
 .ease_popup.ease_new_feature_popup {
   width: 830px;
