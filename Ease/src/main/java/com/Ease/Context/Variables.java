@@ -11,6 +11,7 @@ public class Variables {
     public static final String WEBSITES_FOLDER_PATH = System.getenv("EASE_RESOURCES_FOLDER") + "websites/";
     public static final String SOFTWARE_FOLDER_PATH = System.getenv("EASE_RESOURCES_FOLDER") + "software/";
     public static final String BACKGROUND_PATH = System.getenv("BACKGROUND_PATH");
+    public static final String RGDP_EBOOK_PATH = System.getenv("EASE_RESOURCES_FOLDER");
 
     //Prod
     /*
@@ -22,6 +23,15 @@ public class Variables {
     public static final String WEBSITES_FOLDER_PATH = "/var/lib/tomcat8/resources/websites/";
     public static final String SOFTWARE_FOLDER_PATH = "/var/lib/tomcat8/resources/software/";
     public static final String BACKGROUND_PATH = "/var/lib/tomcat8/webapps/backgrounds/";
+    public static final String RGDP_EBOOK_PATH = "/var/lib/tomcat8/resources/";
+    */
+    //NewProd
+    /*
+    public static final String ENVIRONNEMENT = "Prod";
+    public static final String KEYS_PATH = "/opt/tomcat/webapps/ROOT/WEB-INF/classes/com/Ease/Utils/Crypto/privateKeys.txt";
+    public static final String URL_PATH = "https://ease.space/";
+    public static final String DATABASE_IP = "127.0.0.1";
+    public static final String STRIPE_API_KEY = "sk_live_P9qlj7iut6cpNkb8hfY4S43M";
     */
     //Préprod
     /*
@@ -31,7 +41,6 @@ public class Variables {
     public static final String DATABASE_IP = "127.0.0.1";
     public static final String STRIPE_API_KEY = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
     */
-
     //Fifi
     /*
     public static final String ENVIRONNEMENT = "PC de Fifi";
@@ -46,5 +55,4 @@ public class Variables {
     public static final String URL_PATH = "https://localhost:8443/";
     public static final String DATABASE_IP = "127.0.0.1";
     public static final String STRIPE_API_KEY = "sk_test_4Qqw6xcv7VQDmXBS5CZ9rz5T";
-    public static final String RGDP_EBOOK_PATH = "";
 }

@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import Categories from "./Categories";
 import WebsitesContainer from "./WebsitesContainer";
 import AddBookmark from './AddBookmark';
-import AddAnyApp from './AddAnyApp'
+import AddAnyApp from './AddAnyApp';
 import AddSoftwareCredentials from './AddSoftwareCredentials';
-import Importations from './Importation/Importations'
+import Importations from './Importation/Importations';
 import OnBoardingImportation from './Importation/OnBoardingImportation';
 import {handleSemanticInput} from "../../utils/utils";
 import { Grid, Menu, Input, Icon } from 'semantic-ui-react';

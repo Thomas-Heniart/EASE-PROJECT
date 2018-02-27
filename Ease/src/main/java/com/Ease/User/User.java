@@ -503,7 +503,7 @@ public class User {
         this.getUserKeys().setKeyUser(AES.encryptUserKey(this.getUserKeys().getDecipheredKeyUser(access_code), password, this.getUserKeys().getSaltPerso()));
         this.getUserKeys().setAccess_code_hash(null);
         this.getUserStatus().setRegistered(true);
-        this.getUserStatus().setNew_feature_seen(false);
+        this.getUserStatus().setNew_feature_seen(true);
         this.getUserStatus().setOnboarding_step(1);
         this.getPersonalInformation().setFirst_name(first_name);
         this.getPersonalInformation().setLast_name(last_name);
