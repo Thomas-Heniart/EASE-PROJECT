@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
     <title>Ease.space</title>
-    <meta name="theme-color" content="#317EFB"/>
+    <meta name="theme-color" content="#373B60"/>
     <!-- Description shown in Google -->
     <!-- Facebook metadata -->
     <meta name="description"
