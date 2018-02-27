@@ -111,7 +111,7 @@ public class MailjetMessageWrapper {
                                 .put(Emailv31.Message.VARIABLES, new JSONObject()
                                         .put("apps", apps)
                                         .put("number_of_apps", number_of_apps)
-                                        .put("link", (teamUser.getUser() == null) ? Variables.URL_PATH : (Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code()))
+                                        .put("link", (teamUser.isRegistered()) ? Variables.URL_PATH : (Variables.URL_PATH + "#/teamJoin/" + teamUser.getInvitation_code()))
                                         .put("link_name", teamUser.isVerified() ? "Check your new apps" : "Activate account & check new apps"))
                                 .put(Emailv31.Message.TEMPLATELANGUAGE, true)
                                 .put(Emailv31.Message.TEMPLATEERROR_DELIVERY, true)
