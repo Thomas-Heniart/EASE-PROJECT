@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Container, Loader } from 'semantic-ui-react';
 import {handleSemanticInput} from "../../utils/utils";
 import AppsContainer from "./AppsContainer";
-import AddAnyApp from './AddAnyApp'
+import AddAnyApp from './AddAnyApp';
 import {connect} from "react-redux";
 import { Switch, Route } from 'react-router-dom';
 import CategoryAppsContainer from "./CategoryAppsContainer";
