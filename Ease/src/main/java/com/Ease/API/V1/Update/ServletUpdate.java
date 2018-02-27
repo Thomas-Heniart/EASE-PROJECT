@@ -160,8 +160,6 @@ public class ServletUpdate extends HttpServlet {
                 if (websiteApp.getTeamCardReceiver() != null)
                     teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
                 websiteApp.decipher(sm.getKeyUser(), teamKey);
-                if (websiteApp.isEmpty() && !websiteApp.getWebsite().equals(website))
-                    iterator.remove();
             }
             if (websiteApps.isEmpty() && updates.isEmpty()) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
