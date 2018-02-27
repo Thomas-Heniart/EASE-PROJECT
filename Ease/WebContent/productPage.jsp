@@ -42,6 +42,16 @@
     <link rel="stylesheet" href="/cssMinified.v00039/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-75916041-5');
+    </script>
+
 
     <link rel="manifest" href="manifest.json">
 </head>
