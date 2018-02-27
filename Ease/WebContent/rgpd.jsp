@@ -38,7 +38,6 @@
     <link rel="stylesheet" href="/cssMinified.v00040/bootstrap.css"/>
     <link rel="stylesheet" href="/cssMinified.v00040/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/cssMinified.v00040/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00040/securityPage.css"/>
     <link rel="stylesheet" href="/cssMinified.v00040/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
@@ -46,7 +45,21 @@
     <link rel="manifest" href="manifest.json">
     <title>Ease.space R.G.P.D</title>
     <style>
-
+        @media (min-width: 823px) {
+            header {
+                height: auto;
+            }
+        }
+        @media (max-width: 822px) {
+            header {
+                height: 550px;
+            }
+        }
+        @media (max-width: 484px) {
+            header {
+                height: 670px;
+            }
+        }
     </style>
 </head>
 
@@ -56,7 +69,6 @@
         <div class="navbar-header page-scroll">
             <a id="ease-logo" class="navbar-brand page-scroll" href="/discover"></a>
         </div>
-
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
@@ -91,7 +103,7 @@
         </div>
     </div>
 </nav>
-<header style="height: auto;">
+<header>
     <div style="margin:0;padding-left:0;padding-right:0;width:100%;">
         <div class="intro-text" >
             <div class="intro-heading">
@@ -106,43 +118,41 @@
     </div>
 </header>
 <section class="container" style="margin-bottom: 100px;">
-    <div class="ui grid">
-        <div class="nine wide column">
-            <h3 style="color: #373b60;font-size: 34px;font-weight: 300;"><fmt:message key="gdpr.content.2.title"/></h3>
+    <div class="ui stackable two column grid" style="width:100%">
+        <div class="nine wide column" style="margin-right: 6%;">
+            <h3 style="color: #373b60;font-size: 34px;font-weight: 300;"><fmt:message key="gdpr.content.title"/></h3>
             <ol style="color: #939eb7;line-height: 1.75;font-weight: 300;font-size: 16px;">
-                <li><fmt:message key="gdpr.content.2.text.1"/></li>
-                <li><fmt:message key="gdpr.content.2.text.2"/></li>
-                <li><fmt:message key="gdpr.content.2.text.3"/></li>
-                <li><fmt:message key="gdpr.content.2.text.4"/></li>
-                <li><fmt:message key="gdpr.content.2.text.5"/></li>
-                <li><fmt:message key="gdpr.content.2.text.6"/></li>
-                <li><fmt:message key="gdpr.content.2.text.7"/></li>
-                <li><fmt:message key="gdpr.content.2.text.8"/></li>
-                <li><fmt:message key="gdpr.content.2.text.9"/></li>
+                <li><fmt:message key="gdpr.content.text.1"/></li>
+                <li><fmt:message key="gdpr.content.text.2"/></li>
+                <li><fmt:message key="gdpr.content.text.3"/></li>
+                <li><fmt:message key="gdpr.content.text.4"/></li>
+                <li><fmt:message key="gdpr.content.text.5"/></li>
+                <li><fmt:message key="gdpr.content.text.6"/></li>
+                <li><fmt:message key="gdpr.content.text.7"/></li>
+                <li><fmt:message key="gdpr.content.text.8"/></li>
+                <li><fmt:message key="gdpr.content.text.9"/></li>
             </ol>
         </div>
         <div class="five wide column" style="border: 1px solid #d4d4d5; border-radius: 4px; background-color: #f8f8f8;
-                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);">
-                <h3 style="margin-top: 3%;"><fmt:message key="gdpr.segment.title"/></h3>
-                <form id="submitEmailEbook" class="ui form" style="margin-top: 10%;">
-                    <div class="field">
-                        <label>Email professionnel</label>
-                        <input required type="email" name="email" placeholder="barack@obama.com">
-                        <div class="ui error message">
-                            <div class="header">Ceci n'est pas un email pro.</div>
-                        </div>
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);">
+            <h3 style="margin-top: 3%;"><fmt:message key="gdpr.segment.title"/></h3>
+            <form id="submitEmailEbook" class="ui form" style="margin-top: 10%;">
+                <div class="field">
+                    <label><fmt:message key="gdpr.segment.email"/></label>
+                    <input required type="email" name="email" placeholder="barack@obama.com">
+                    <div id="ebookErrorMessage" style="display:none;color:red;margin-top: 2%;">
+                        <div class="header"><fmt:message key="gdpr.segment.error"/></div>
                     </div>
-                    <button id="submitButtonGetRgpd" type="submit" style="background-color: #4fcb6c;height: 72px;width: 100%;"
-                            class="positive ui button center aligned segment"><fmt:message key="gdpr.segment.button"/>
-                    </button>
-                    <div id="succesMessageSendEbook">
-                        <p style="font-size:20px;color:#414141;font-weight: 500;">Si vous ne trouvez pas notre email, verifiez dans vos spams</p>
-                    </div>
-                </form>
+                </div>
+                <button id="submitButtonGetRgpd" type="submit" style="background-color: #4fcb6c;height: 72px;width: 100%;"
+                        class="positive ui button center aligned segment"><fmt:message key="gdpr.segment.button"/>
+                </button>
+                <div id="succesMessageSendEbook" style="display:none;">
+                    <p style="color:#44CA70;" class="text-center"><fmt:message key="gdpr.segment.sent"/></p>
+                    <p style="font-size:20px;color:#414141;font-weight: 500;"><fmt:message key="gdpr.segment.message"/></p>
+                </div>
+            </form>
         </div>
-        coucoucou
-        coucoucou
-        coucoucou
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
@@ -169,7 +179,7 @@
     let self = $(this);
     e.preventDefault();
     if (blacklistInviteTeamUsersEmails.indexOf(self.find("input[name='email']").val().split('@')[1]) !== -1) {
-      console.log('ce n est pas un email pro');
+      $('#ebookErrorMessage').show(300, 'swing');
     } else {
       console.log('email pro');
       $(this).find('input[name=\'email\']').attr('disabled','disabled');
@@ -180,6 +190,7 @@
           email: self.find("input[name='email']").val(),
         });
       $('#succesMessageSendEbook').show(1000);
+      $('#ebookErrorMessage').hide();
      }
   });
 

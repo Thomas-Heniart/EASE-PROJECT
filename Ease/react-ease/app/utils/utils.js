@@ -228,3 +228,9 @@ export const teamUserRoleValues = [
   {key: 2, text: 'admin', value:2},
   {key: 3, text: 'owner', value:3}
 ];
+
+ export const blacklistInviteTeamUsersEmails = [
+  'gmail.com',
+  'yahoo.com',
+  'hotmail.com'
+];
