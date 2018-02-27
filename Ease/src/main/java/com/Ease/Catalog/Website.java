@@ -497,9 +497,17 @@ public class Website {
                 }
                 if (login_domain.equals(domain)) {
                     if (login_subdomain.equals(subdomain)) {
-                        if (login_path.equals(path))
-                            return 3;
-                        max_val = 2;
+                        if (login_path.equals(path)) {
+                            if (this.getWebsiteAttributes().isIntegrated())
+                                return 4;
+                            else
+                                max_val = 3;
+                        } else {
+                            if (this.getWebsiteAttributes().isIntegrated())
+                                max_val = 3;
+                            else if (max_val < 3)
+                                max_val = 2;
+                        }
                     } else if (max_val < 2)
                         max_val = 1;
                 }

@@ -79,12 +79,18 @@ public class ServletUpdate extends HttpServlet {
                 /* Hack for websites with more than 2 fields */
                 populateAccountInformation(website, url, account_information);
                 /* Find update(s) with this website */
-                if (website.getSso() == null) {
-                    hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
-                    hibernateQuery.setParameter("website_id", website.getDb_id());
+                if (!website.getWebsiteAttributes().isIntegrated()) {
+                    hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.url LIKE :url");
+                    hibernateQuery.setParameter("url", website.getLogin_url());
                 } else {
-                    hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.sso.db_id = :sso_id");
-                    hibernateQuery.setParameter("sso_id", website.getSso().getDb_id());
+                    if (website.getSso() == null) {
+                        hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.db_id = :website_id");
+                        hibernateQuery.setParameter("website_id", website.getDb_id());
+                    } else {
+                        hibernateQuery.queryString("SELECT u FROM Update u WHERE u.user.db_id = :user_id AND u.website.sso.db_id = :sso_id");
+                        hibernateQuery.setParameter("sso_id", website.getSso().getDb_id());
+                    }
+
                 }
                 hibernateQuery.setParameter("user_id", user.getDb_id());
             } else {
@@ -154,8 +160,6 @@ public class ServletUpdate extends HttpServlet {
                 if (websiteApp.getTeamCardReceiver() != null)
                     teamKey = sm.getTeamKey(websiteApp.getTeamCardReceiver().getTeamCard().getTeam());
                 websiteApp.decipher(sm.getKeyUser(), teamKey);
-                if (websiteApp.isEmpty() && !websiteApp.getWebsite().equals(website))
-                    iterator.remove();
             }
             if (websiteApps.isEmpty() && updates.isEmpty()) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);

@@ -1,0 +1,20 @@
+{
+  "name":"CloudXLS",
+  "lastLogin":"",
+  "home":"https://www.cloudxls.com/login",
+  "connect":{
+    "todo":[
+      {"action":"fill", "what":"login", "search":"#account_email", "grave": true},
+      {"action":"fill", "what":"password", "search":"#account_password", "grave": true},
+      {"action":"click", "search":"#new_account input[type=submit]", "grave": true}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"aclick", "search":"a[href*=logout]"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"search":"a[href*=logout]"}
+  ]
+}

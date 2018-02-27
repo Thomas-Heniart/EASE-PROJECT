@@ -189,7 +189,7 @@ public class Catalog {
             Website last_website = null;
             for (Website website : websites) {
                 int match_value = website.matchUrl(subdomain, domain, path);
-                if (match_value == 3) {
+                if (match_value == 4) {
                     if (website.matchInformationSet(information_names))
                         return website;
                 } else if (match_value > 0 && match_value > last_value) {
