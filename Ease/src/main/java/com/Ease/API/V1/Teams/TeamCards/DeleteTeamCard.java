@@ -37,6 +37,10 @@ public class DeleteTeamCard extends HttpServlet {
             sm.needToBeAdminOfTeam(teamCard.getTeam());
             TeamUser teamUser_admin = sm.getTeamUser(team);
             Channel channel = teamCard.getChannel();
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
+            hibernateQuery.setParameter("card_id", team_card_id);
+            hibernateQuery.executeUpdate();
             for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                 App app = teamCardReceiver.getApp();
                 if (app.isWebsiteApp()) {
@@ -55,7 +59,6 @@ public class DeleteTeamCard extends HttpServlet {
                         if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
                             LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
                             sm.saveOrUpdate(linkAppInformation);
-                            HibernateQuery hibernateQuery = sm.getHibernateQuery();
                             hibernateQuery.queryString("UPDATE LinkApp l SET l.linkAppInformation = :info WHERE l.db_id = :id");
                             hibernateQuery.setParameter("info", linkAppInformation);
                             hibernateQuery.setParameter("id", linkApp.getDb_id());

@@ -276,4 +276,42 @@ public class Account {
         }
         return true;
     }
+
+    /**
+     * @param account_information
+     * @return true if all information are identical
+     */
+    public boolean sameAs(JSONObject account_information) {
+        if (this.getAccountInformationSet().isEmpty())
+            return false;
+        for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            String value = account_information.optString(accountInformation.getInformation_name());
+            if (value.equals("") || !value.equals(accountInformation.getDeciphered_information_value()))
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param account_information
+     * @return true if information are identical, password squizzed
+     */
+    public boolean matchExceptPassword(JSONObject account_information) {
+        if (this.getAccountInformationSet().isEmpty())
+            return false;
+        for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            if (accountInformation.getInformation_name().equals("password"))
+                continue;
+            String value = account_information.optString(accountInformation.getInformation_name());
+            if (value.equals("") || !value.equals(accountInformation.getDeciphered_information_value()))
+                return false;
+        }
+        return true;
+    }
+
+    public JSONObject getAccountInformationJson() {
+        JSONObject res = new JSONObject();
+        this.getAccountInformationSet().forEach(accountInformation -> res.put(accountInformation.getInformation_name(), accountInformation.getDeciphered_information_value()));
+        return res;
+    }
 }

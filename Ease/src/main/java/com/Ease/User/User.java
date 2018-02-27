@@ -8,6 +8,8 @@ import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.SsoGroup;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.apache.commons.codec.binary.Base64;
@@ -494,5 +496,17 @@ public class User {
             calendar.add(Calendar.DAY_OF_YEAR, 1);
         }
         return was_connected >= days_connected;
+    }
+
+    public void finalizeRegistration(String password, String access_code, String first_name, String last_name, String phone_number) throws HttpServletException {
+        this.getUserKeys().setHashed_password(Hashing.hash(password));
+        this.getUserKeys().setKeyUser(AES.encryptUserKey(this.getUserKeys().getDecipheredKeyUser(access_code), password, this.getUserKeys().getSaltPerso()));
+        this.getUserKeys().setAccess_code_hash(null);
+        this.getUserStatus().setRegistered(true);
+        this.getUserStatus().setNew_feature_seen(true);
+        this.getUserStatus().setOnboarding_step(1);
+        this.getPersonalInformation().setFirst_name(first_name);
+        this.getPersonalInformation().setLast_name(last_name);
+        this.getPersonalInformation().setPhone_number(phone_number);
     }
 }

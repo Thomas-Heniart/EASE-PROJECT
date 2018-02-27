@@ -45,6 +45,11 @@ button.only-text-button {
 .show_team {
   .app {
     margin-bottom: 7px;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 265px;
   }
   .team {
     margin-bottom: 4px;
@@ -462,6 +467,12 @@ button.only-text-button {
 }
 
 #add_bookmark_form {
+  .back_modal{
+    font-weight: bold;
+    margin-bottom: 3%;
+    cursor: pointer;
+    font-size: 14px;
+  }
   .choose_type_app {
     border: solid 1px #45c997;
     border-radius: 5px;
@@ -476,6 +487,9 @@ button.only-text-button {
         color: #939eb7;
         font-size: 14px;
         font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       &.checked {
         label {
@@ -483,7 +497,6 @@ button.only-text-button {
         }
       }
     }
-
   }
   .create_profile_input {
     input {
@@ -1071,6 +1084,18 @@ button.action_text_button {
     margin-bottom: 0;
     & > * {
       font-size: 1em;
+    }
+  }
+  .ui.label.user-label {
+    //height: min-content;
+    font-size: .85714286rem;
+    box-shadow: 0 0 0 1px rgba(34, 36, 38, .15) inset;
+    background-color: #2185d0;
+    color: $themeWhiteColor;
+    font-weight: normal;
+    &.update {
+      margin: auto;
+      margin-left: 10px;
     }
   }
 }

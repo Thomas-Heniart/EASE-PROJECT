@@ -34,3 +34,6 @@ CREATE TABLE EASE_UPDATE (
   FOREIGN KEY (team_card_id) REFERENCES teamCards(id),
   FOREIGN KEY (team_user_id) REFERENCES teamUsers(id)
 );
+
+UPDATE notifications SET icon = CONCAT ('https', SUBSTRING(icon, 5)) WHERE icon LIKE 'http://%';
+UPDATE status SET new_feature_seen = 0;

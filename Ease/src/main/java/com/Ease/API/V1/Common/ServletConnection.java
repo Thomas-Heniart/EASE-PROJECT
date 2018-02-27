@@ -69,6 +69,7 @@ public class ServletConnection extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
             String keyUser = user.getUserKeys().getDecipheredKeyUser(password);
             sm.getUserProperties(user.getDb_id()).put("keyUser", keyUser);
+            sm.getUserProperties(user.getDb_id()).put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
             Key secret = (Key) sm.getContextAttr("secret");
             if (user.getJsonWebToken() == null) {
                 user.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(user.getDb_id(), keyUser, secret));
@@ -100,11 +101,19 @@ public class ServletConnection extends HttpServlet {
                 if (!team.isActive())
                     continue;
                 sm.initializeTeamWithContext(team);
-                if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
-                    continue;
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
+                    if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                        break;
                     if (teamUser.getArrival_date() != null && !teamUser.getTeamUserStatus().isInvitation_sent() && teamUser.getArrival_date().getTime() < now)
                         sendTeamUserInvitation(teamUser, team, sm);
+                }
+            }
+            for (TeamUser teamUser : user.getTeamUsers()) {
+                if (teamUser.getState() == 1 && teamUser.getTeamKey() != null && !teamUser.getTeamKey().isEmpty()) {
+                    teamUser.setTeamKey(AES.encrypt(RSA.Decrypt(teamUser.getTeamKey(), sm.getPrivateKey()), keyUser));
+                    teamUser.setState(2);
+                    teamUser.setDisabled(false);
+                    sm.saveOrUpdate(teamUser);
                 }
             }
             JSONObject res = user.getJson();

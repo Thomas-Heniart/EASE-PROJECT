@@ -94,6 +94,24 @@ export function isCredentialsMatch(prev, next){
   return match;
 }
 
+export function logoLetter(name) {
+  let first = '';
+  let second = '';
+  let space = false;
+  for (let letter = 0; letter < name.length; letter++) {
+    if (first.length < 1 && name[letter] !== ' ')
+      first = name[letter];
+    else if (first.length > 0 && second.length < 1 && name[letter] !== ' ' && space === true)
+      second = name[letter];
+    else if (name[letter] === ' ')
+      space = true;
+  }
+  if (second !== '')
+    return first.toUpperCase() + second.toUpperCase();
+  else
+    return first.toUpperCase();
+}
+
 export function getTeamAppPasswordAndCopyToClipboard({team_id, shared_app_id}){
   let loading = true;
   let password = '';

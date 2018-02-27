@@ -44,8 +44,9 @@ public class ServletReactivateTeamUser extends HttpServlet {
                 teamUser.setTeamKey(RSA.Encrypt(teamKey, publicKey));
             } else {
                 teamUser.setTeamKey(AES.encrypt(teamKey, keyUser));
-                teamUser.setDisabled(false);
+                teamUser.setState(2);
             }
+            teamUser.setDisabled(false);
             Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " validated again your access to " + team.getName(), "/resources/notifications/flag.png", "#/teams" + team.getDb_id().toString());
             sm.saveOrUpdate(notification);
             WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());

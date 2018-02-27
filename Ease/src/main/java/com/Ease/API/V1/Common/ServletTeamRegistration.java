@@ -9,8 +9,6 @@ import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
 import com.Ease.User.UserEmail;
 import com.Ease.User.UserFactory;
-import com.Ease.Utils.Crypto.AES;
-import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -78,30 +76,18 @@ public class ServletTeamRegistration extends HttpServlet {
             if (newUser != null) {
                 if (!newUser.getUserKeys().isGoodAccessCode(access_code))
                     throw new HttpServletException(HttpStatus.BadRequest, "This link is no longer valid");
-                newUser.getUserKeys().setHashed_password(Hashing.hash(password));
-                newUser.getUserKeys().setKeyUser(AES.encryptUserKey(newUser.getUserKeys().getDecipheredKeyUser(access_code), password, newUser.getUserKeys().getSaltPerso()));
-                newUser.getUserKeys().setAccess_code_hash(null);
-                newUser.getUserStatus().setRegistered(true);
-                newUser.getUserStatus().setOnboarding_step(1);
-                newUser.getPersonalInformation().setFirst_name(first_name);
-                newUser.getPersonalInformation().setLast_name(last_name);
-                newUser.getPersonalInformation().setPhone_number(phone_number);
-                sm.saveOrUpdate(newUser);
-                UserEmail userEmail = new UserEmail(email, true, newUser);
-                sm.saveOrUpdate(userEmail);
-                newUser.addUserEmail(userEmail);
+                newUser.finalizeRegistration(password, access_code, first_name, last_name, phone_number);
                 teamUser.setState(1);
             } else {
                 String username = sm.getStringParam("username", true, false);
                 username = username.toLowerCase();
                 checkUsernameIntegrity(username);
                 newUser = UserFactory.getInstance().createUser(email, username, password, first_name, last_name, phone_number);
-                newUser.getUserStatus().setRegistered(true);
-                sm.saveOrUpdate(newUser);
-                UserEmail userEmail = new UserEmail(email, true, newUser);
-                sm.saveOrUpdate(userEmail);
-                newUser.addUserEmail(userEmail);
             }
+            sm.saveOrUpdate(newUser);
+            UserEmail userEmail = new UserEmail(email, true, newUser);
+            sm.saveOrUpdate(userEmail);
+            newUser.addUserEmail(userEmail);
             sm.setUser(newUser);
             String keyUser = newUser.getUserKeys().getDecipheredKeyUser(password);
             String privateKey = newUser.getUserKeys().getDecipheredPrivateKey(keyUser);

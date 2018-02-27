@@ -70,7 +70,13 @@ public class UpdateAccount {
         return res;
     }
 
+    /**
+     * @param account_information
+     * @return true if all information are identical except for password
+     */
     public boolean match(JSONObject account_information) {
+        if (this.getUpdateAccountInformationSet().size() == 0 || account_information.length() == 0)
+            return false;
         for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
             String value = account_information.optString(updateAccountInformation.getName());
             if (value.equals("") || !updateAccountInformation.getName().equals("password") && !updateAccountInformation.getDeciphered_value().equals(value))
@@ -84,6 +90,11 @@ public class UpdateAccount {
             updateAccountInformation.edit(account_information.getString(updateAccountInformation.getName()), publicKey);
     }
 
+
+    /**
+     * @param account_information
+     * @return true if passwords are identical
+     */
     public boolean passwordMatch(JSONObject account_information) {
         for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet()) {
             if (!updateAccountInformation.getName().equals("password"))
@@ -91,6 +102,13 @@ public class UpdateAccount {
             String value = account_information.optString(updateAccountInformation.getName());
             return value.equals(updateAccountInformation.getDeciphered_value());
         }
-        return true;
+        return false;
+    }
+
+    public JSONObject getAccountInformation() {
+        JSONObject res = new JSONObject();
+        for (UpdateAccountInformation updateAccountInformation : this.getUpdateAccountInformationSet())
+            res.put(updateAccountInformation.getName(), updateAccountInformation.getDeciphered_value());
+        return res;
     }
 }

@@ -22,7 +22,6 @@ export const catalog = createReducer({
       categories: action.payload.categories,
       sso_list: action.payload.sso_list,
       requests_number: action.payload.requests_number,
-      updates: action.payload.updates,
       fetching: false,
       loaded: true
     }
@@ -31,6 +30,12 @@ export const catalog = createReducer({
     return {
       ...state,
       fetching: false
+    }
+  },
+  ['FETCH_UPDATES'](state, action){
+    return {
+      ...state,
+      updates: action.payload,
     }
   },
   ['CATALOG_REQUEST_WEBSITE_FULFILLED'](state, action){

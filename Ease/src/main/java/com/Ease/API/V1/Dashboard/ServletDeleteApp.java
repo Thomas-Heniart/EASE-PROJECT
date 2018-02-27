@@ -29,6 +29,9 @@ public class ServletDeleteApp extends HttpServlet {
             Integer app_id = sm.getIntParam("app_id", true, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             App app = user.getApp(app_id, hibernateQuery);
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");
+            hibernateQuery.setParameter("app_id", app.getDb_id());
+            hibernateQuery.executeUpdate();
             Profile profile = app.getProfile();
             if (app.getTeamCardReceiver() != null)
                 throw new HttpServletException(HttpStatus.Forbidden);

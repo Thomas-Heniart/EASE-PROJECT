@@ -30,9 +30,6 @@ public class SerlverStripeWebhook extends HttpServlet {
             Event eventJson = APIResource.GSON.fromJson(sm.getBody(), Event.class);
             String type = new JSONObject(eventJson.toJson()).getString("type");
             JSONObject jsonObject = new JSONObject(eventJson.getData().getObject().toJson());
-            System.out.println(eventJson.getData().toJson());
-            System.out.println(jsonObject.toString());
-            //String type = jsonObject.getString("type");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             JSONObject data = null;
             String subscription_id = null;
@@ -52,7 +49,6 @@ public class SerlverStripeWebhook extends HttpServlet {
                         mailJetBuilder.setTemplateId(308436);
                         mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
                         mailJetBuilder.addTo("thomas@ease.space");
-                        mailJetBuilder.addTo("benjamin@ease.space");
                         mailJetBuilder.addVariable("sub_id", subscription_id);
                         mailJetBuilder.addVariable("state", "success");
                         mailJetBuilder.sendEmail();
@@ -72,7 +68,6 @@ public class SerlverStripeWebhook extends HttpServlet {
                         mailJetBuilder.setTemplateId(308436);
                         mailJetBuilder.setFrom("contact@ease.space", "Ease.Space");
                         mailJetBuilder.addTo("thomas@ease.space");
-                        mailJetBuilder.addTo("benjamin@ease.space");
                         mailJetBuilder.addVariable("sub_id", subscription_id);
                         mailJetBuilder.addVariable("state", "false");
                         mailJetBuilder.sendEmail();

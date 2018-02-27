@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
-import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, CopyPasswordIcon} from "./utils";
+import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
+import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
 import {clickOnAppMetric, validateApp} from '../../actions/dashboardActions';
 import {showAnyAppSettingsModal} from "../../actions/modalActions";
 import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"

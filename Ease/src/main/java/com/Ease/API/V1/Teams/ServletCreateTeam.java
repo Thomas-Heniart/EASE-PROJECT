@@ -2,6 +2,7 @@ package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
+import com.Ease.Mail.NewTeamMailThread;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
@@ -140,6 +141,7 @@ public class ServletCreateTeam extends HttpServlet {
             }
             JSONObject tmp = team.getJson();
             tmp.put("my_team_user_id", owner.getDb_id());
+            new NewTeamMailThread(team).start();
             sm.setSuccess(tmp);
         } catch (StripeException e) {
             sm.setError(e);

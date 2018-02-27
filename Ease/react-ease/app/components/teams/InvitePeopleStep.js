@@ -1,7 +1,7 @@
 import React from "react";
 import {handleSemanticInput, reflect, isEmail} from "../../utils/utils";
 import { Header, Label, Divider, Icon, TextArea, Segment, Form, Button } from 'semantic-ui-react';
-import {sendTeamUserInvitation, createTeamUserNow, createTeamUser} from "../../actions/userActions";
+import {createTeamUserNow, createTeamUser} from "../../actions/userActions";
 
 class PreviewStep extends React.Component {
   constructor(props){

@@ -75,6 +75,16 @@ public class ServletDeleteTeamUser extends HttpServlet {
             }
             JSONArray singleCards = new JSONArray();
             JSONArray enterpriseCards = new JSONArray();
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamUser.db_id = :teamUserId");
+            hibernateQuery.setParameter("teamUserId", team_user_id);
+            hibernateQuery.executeUpdate();
+            for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
+                App app = teamCardReceiver.getApp();
+                hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");
+                hibernateQuery.setParameter("app_id", app.getDb_id());
+                hibernateQuery.executeUpdate();
+            }
             for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
                 App app = teamCardReceiver.getApp();
                 TeamCard teamCard = teamCardReceiver.getTeamCard();
@@ -94,7 +104,6 @@ public class ServletDeleteTeamUser extends HttpServlet {
                         if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
                             LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
                             sm.saveOrUpdate(linkAppInformation);
-                            HibernateQuery hibernateQuery = sm.getHibernateQuery();
                             hibernateQuery.queryString("UPDATE LinkApp l SET l.linkAppInformation = :info WHERE l.db_id = :id");
                             hibernateQuery.setParameter("info", linkAppInformation);
                             hibernateQuery.setParameter("id", linkApp.getDb_id());
@@ -151,9 +160,9 @@ public class ServletDeleteTeamUser extends HttpServlet {
             });
             team.removeTeamUser(teamUser_to_delete);
             User user = teamUser_to_delete.getUser();
-            if (user != null) {
-                if (teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0)
-                    MailjetMessageWrapper.deleteTeamUserMail(teamUser_connected.getEmail(), teamUser_to_delete.getUser().getPersonalInformation().getFirst_name(), teamUser_to_delete.getUser().getPersonalInformation().getLast_name(), team.getName(), singleCards, enterpriseCards);
+            if (teamUser_to_delete.isRegistered()) {
+                if (teamUser_to_delete.getAdmin_id() != null && teamUser_to_delete.getAdmin_id() > 0 && (singleCards.length() != 0 || enterpriseCards.length() != 0))
+                    MailjetMessageWrapper.deleteTeamUserMail(teamUser_connected.getEmail(), user.getPersonalInformation().getFirst_name(), user.getPersonalInformation().getLast_name(), team.getName(), singleCards, enterpriseCards);
                 user.removeTeamUser(teamUser_to_delete);
                 MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
                 mailjetContactWrapper.updateUserContactLists(user);

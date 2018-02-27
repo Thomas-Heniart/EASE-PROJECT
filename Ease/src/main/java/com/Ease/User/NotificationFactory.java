@@ -7,10 +7,13 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.Update.Update;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.websocketV1.WebSocketManager;
 import com.Ease.websocketV1.WebSocketMessageFactory;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -300,5 +303,47 @@ public class NotificationFactory {
                 }
             }
         });
+    }
+
+    public void createUpdateTeamCardNotification(TeamUser teamUser, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        String content = teamUser.getUsername() + " suggests you a new password for " + teamCard.getName();
+        String url = "#/main/catalog/website";
+        Notification notification = this.createNotification(teamCard.getChannel().getRoom_manager().getUser(), content, teamCard.getLogo(), url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createNewUpdateNotification(Update update, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        StringBuilder content = new StringBuilder();
+        String url = "#/main/catalog/website";
+        String logo;
+        String contentAppName;
+        if (update.getWebsite() != null) {
+            logo = update.getWebsite().getLogo();
+            if (update.getApp() == null) {
+                content.append("New Account");
+                contentAppName = update.getWebsite().getName();
+            } else {
+                if (!update.getApp().isEmpty())
+                    content.append("New Password");
+                else
+                    content.append("Account Update");
+                contentAppName = update.getApp().getAppInformation().getName();
+            }
+        } else {
+            try {
+                URL logoUrl = new URL(update.getUrl());
+                logo = "https://placehold.it/175x175/373b60/FFFFFF/&text=" + logoUrl.getHost().substring(0, 1);
+                content.append("New Account");
+                contentAppName = logoUrl.getHost();
+            } catch (MalformedURLException e) {
+                logo = "E";
+                contentAppName = "an app";
+            }
+        }
+        content.append(" detected for ").append(contentAppName).append(". Manage now.");
+        Notification notification = this.createNotification(update.getUser(), content.toString(), logo, url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 }

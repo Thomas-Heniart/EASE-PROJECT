@@ -189,10 +189,21 @@
           top: 40%;
           right: 0;
           color: #d2dae4;
+          &.trash {
+            cursor: pointer;
+            color: #949EB7;
+          }
         }
       }
       &.update {
         padding: 7px 0 12px 0;
+        min-height: 91px;
+        .loader_centered {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translateX(-50%) translateY(-50%);
+        }
         .app_corner_indicator {
           top: -1px;
           right: 0;
@@ -541,6 +552,7 @@
         }
       }
       .account {
+        width: 700px;
         display: inline-flex;
         margin: 7px 0 7px 42px;
         .input {

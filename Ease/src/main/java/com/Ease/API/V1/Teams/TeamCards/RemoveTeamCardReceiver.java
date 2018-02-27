@@ -51,9 +51,12 @@ public class RemoveTeamCardReceiver extends HttpServlet {
                 if (filler != null && filler.equals(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "You cannot remove the filler");
             }
+            App app = teamCardReceiver.getApp();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");
+            hibernateQuery.setParameter("app_id", app.getDb_id());
+            hibernateQuery.executeUpdate();
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             teamUser.removeTeamCardReceiver(teamCardReceiver);
-            App app = teamCardReceiver.getApp();
             if (app.isWebsiteApp()) {
                 WebsiteApp websiteApp = (WebsiteApp) app;
                 websiteApp.getLogWithAppSet().forEach(logWithApp -> {

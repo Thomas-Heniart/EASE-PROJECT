@@ -26,11 +26,11 @@ public class ServletDeleteAccount extends HttpServlet {
             sm.needToBeConnected();
             String password = sm.getStringParam("password", false, false);
             if (password == null || password.equals(""))
-                throw new HttpServletException(HttpStatus.BadRequest, "Password does not not match.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Password does not not sameAs.");
             password = sm.decipher(password);
             User user = sm.getUser();
             if (!user.getUserKeys().isGoodPassword(password))
-                throw new HttpServletException(HttpStatus.BadRequest, "Password does not match.");
+                throw new HttpServletException(HttpStatus.BadRequest, "Password does not sameAs.");
             for (TeamUser teamUser : user.getTeamUsers()) {
                 Team team = teamUser.getTeam();
                 if (team.isActive())
@@ -39,6 +39,9 @@ public class ServletDeleteAccount extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.querySQLString("DELETE FROM passwordLost WHERE user_id = :id");
             hibernateQuery.setParameter("id", user.getDb_id());
+            hibernateQuery.executeUpdate();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.user.db_id = :user_id");
+            hibernateQuery.setParameter("user_id", user.getDb_id());
             hibernateQuery.executeUpdate();
             user.getApps().forEach(app -> {
                 if (app.isLogWithApp()) {

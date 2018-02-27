@@ -373,7 +373,7 @@ public class TeamUser {
         res.put("arrival_date", this.getArrival_date() == null ? JSONObject.NULL : this.getArrival_date().getTime());
         res.put("first_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getFirst_name());
         res.put("last_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getLast_name());
-        res.putOpt("departure_date", this.getDepartureDate() == null ? JSONObject.NULL : this.getDepartureDate().getTime());
+        res.put("departure_date", this.getDepartureDate() == null ? JSONObject.NULL : this.getDepartureDate().getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("state", this.getState());
         JSONArray channel_ids = new JSONArray();
@@ -461,7 +461,6 @@ public class TeamUser {
     }
 
     public boolean isRegistered() {
-        System.out.println(this.getUser().getUserStatus().isRegistered());
         return this.getUser() != null && this.getUser().getUserStatus().isRegistered();
     }
 

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showExtensionDownloadModal} from "../../actions/modalActions";
-import {Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Message,Form,Button} from 'semantic-ui-react';
 import {connect} from "react-redux";
 
 class MainView extends Component {

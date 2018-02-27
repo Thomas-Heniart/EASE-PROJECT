@@ -59,10 +59,6 @@ class TeamsList extends React.Component {
   }
 }
 
-const newNotificationIcon = () => (
-    <Icon.Group><Icon name="bell" data-tip="Notifications"/><Icon corner color="red" size="massive"
-                                                                  name='circle'/></Icon.Group>);
-
 @connect(store => ({
   notifications: store.notifications
 }))
@@ -94,7 +90,7 @@ class NotificationList extends React.Component {
     const newNotifs = checkForNewNotifications(this.props.notifications.notifications);
     return (
         <Dropdown class="bordered_scrollbar"
-                  icon={newNotifs ? newNotificationIcon() : <Icon name="bell" data-tip="Notifications"/>} item
+                  icon={newNotifs ? <Icon name="bell" color="red" data-tip="Notifications"/> : <Icon name="bell" data-tip="Notifications"/>} item
                   floating scrolling onClose={this.onClose} id="notifications_menu"
                   onOpen={this.onOpen}>
           <Dropdown.Menu onScroll={this.onScroll}>
