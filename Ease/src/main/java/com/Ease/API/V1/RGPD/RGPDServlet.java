@@ -1,5 +1,7 @@
 package com.Ease.API.V1.RGPD;
 
+import com.Ease.Context.Variables;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -23,6 +25,12 @@ public class RGPDServlet extends HttpServlet {
             if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             new MailjetContactWrapper().addEmailToList(email, "36180");
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
+            mailJetBuilder.addTo(email);
+            mailJetBuilder.setTemplateId(324070);
+            mailJetBuilder.addVariable("url", Variables.URL_PATH + "/resources/rgpd.pdf");
+            mailJetBuilder.sendEmail();
             sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);
