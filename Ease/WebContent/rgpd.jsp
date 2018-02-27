@@ -149,7 +149,7 @@
                 </button>
                 <div id="succesMessageSendEbook" style="display:none;">
                     <p style="color:#44CA70;" class="text-center"><fmt:message key="gdpr.segment.sent"/></p>
-                    <p style="font-size:20px;color:#414141;font-weight: 500;"><fmt:message key="gdpr.segment.message"/></p>
+                    <p style="font-size:16px;color:#414141;font-weight: 500;"><fmt:message key="gdpr.segment.message"/></p>
                 </div>
             </form>
         </div>
