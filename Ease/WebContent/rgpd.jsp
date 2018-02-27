@@ -181,7 +181,6 @@
     if (blacklistInviteTeamUsersEmails.indexOf(self.find("input[name='email']").val().split('@')[1]) !== -1) {
       $('#ebookErrorMessage').show(300, 'swing');
     } else {
-      console.log('email pro');
       $(this).find('input[name=\'email\']').attr('disabled','disabled');
       $('#submitButtonGetRgpd').attr('disabled', 'disabled');
       ajaxHandler.post(
