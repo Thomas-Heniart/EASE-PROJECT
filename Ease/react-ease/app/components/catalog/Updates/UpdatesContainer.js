@@ -30,10 +30,13 @@ class UpdatesContainer extends React.Component {
       loading[item.id] = false;
       if (this.props.sso_list[0].websites[0].filter(website_id => (website_id === item.website_id)).length > 0 && item.team_card_id === -1) {
         website = {...this.props.sso_list[0]};
-        this.props.websites.filter(site => {
-          if (site.id === item.website_id)
-            website.logo = site.logo;
-        });
+        if (item.app_id === -1 || item.team_card_id !== -1)
+          this.props.websites.filter(site => {
+            if (site.id === item.website_id)
+              website.logo = site.logo;
+          });
+        else
+          website.logo = '/resources/other/google-logo.png';
         website.update_id = item.id;
         website.sso_id = this.props.sso_list[0].id;
         website.sso_group_id = item.app_id !== -1 && this.props.dashboard.apps[item.app_id].type === 'ssoApp' ? this.props.dashboard.apps[item.app_id].sso_group_id : -1;
