@@ -7,29 +7,29 @@
 </c:if>
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="languages/text" />
-<html>
+<!DOCTYPE html>
 <head>
-    <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+    <title> Ease.space | RGPD</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
     <!-- Description shown in Google -->
+    <meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
     <!-- Facebook metadata -->
-    <meta name="description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
-    <meta property="og:url" content="https://ease.space/"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:title" content="Ease.space"/>
-    <meta property="og:logo" content="https://ease.space/resources/icons/APPEASE.png"/>
-    <meta property="og:description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
-    <meta property="og:image" content="https://ease.space/resources/images/fbmeta-fr.png"/>
+    <meta property="og:url" content="https://ease.space/" />
+    <meta property="og:title" content="Ease.space | Le meilleur moyen de se connecter à ses sites préférés." />
+    <meta property="og:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
+    <meta property="og:image" content="https://ease.space/resources/images/fbmeta-fr.png" />
+    <meta property="og:type" content="website" />
     <!-- Twitter metadata -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:site" content="@Ease_app"/>
-    <meta name="twitter:creator" content="@Ease_app"/>
-    <meta name="twitter:title" content="Ease.space"/>
-    <meta name="twitter:description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
-    <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Ease_app" />
+    <meta name="twitter:creator" content="@Ease_app" />
+    <meta name="twitter:title" content="Ease.space | Le meilleur moyen de se connecter à ses sites préférés." />
+    <meta name="twitter:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement." />
+    <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png" />
+    <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
+    <meta property="og:image"
+          content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
@@ -38,37 +38,20 @@
     <link rel="stylesheet" href="/cssMinified.v00040/bootstrap.css"/>
     <link rel="stylesheet" href="/cssMinified.v00040/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/cssMinified.v00040/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00040/securityPage.css"/>
     <link rel="stylesheet" href="/cssMinified.v00040/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
     <link rel="manifest" href="manifest.json">
-    <title>Ease.space R.G.P.D</title>
-    <style>
-        @media (min-width: 823px) {
-            header {
-                height: auto;
-            }
-        }
-        @media (max-width: 822px) {
-            header {
-                height: 550px;
-            }
-        }
-        @media (max-width: 484px) {
-            header {
-                height: 670px;
-            }
-        }
-    </style>
 </head>
-
 <body id="landingBody" style="margin:0;">
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top">
     <div class="container">
         <div class="navbar-header page-scroll">
             <a id="ease-logo" class="navbar-brand page-scroll" href="/discover"></a>
         </div>
+
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
@@ -90,11 +73,6 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/rgpd">
-                        <fmt:message key="landing.header.gdpr" />
-                    </a>
-                </li>
-                <li>
                     <a href="/?skipLanding=true" id="connexionButton">
                         <fmt:message key="landing.header.connexion-link" />
                     </a>
@@ -103,61 +81,8 @@
         </div>
     </div>
 </nav>
-<header>
-    <div style="margin:0;padding-left:0;padding-right:0;width:100%;">
-        <div class="intro-text" >
-            <div class="intro-heading">
-                <fmt:message key="gdpr.title"/>
-            </div>
-            <div class="col-xs-offset-1 col-xs-10 text-center">
-                <p style="font-size: 24px; letter-spacing: 1.5px;line-height: 38px;">
-                    <fmt:message key="gdpr.sub-title"/>
-                </p>
-            </div>
-        </div>
-    </div>
-</header>
-<section class="container" style="margin-bottom: 100px;">
-    <div class="ui stackable two column grid" style="width:100%">
-        <div class="nine wide column" style="margin-right: 6%;">
-            <h3 style="color: #373b60;font-size: 34px;font-weight: 300;"><fmt:message key="gdpr.content.title"/></h3>
-            <ol style="color: #939eb7;line-height: 1.75;font-weight: 300;font-size: 16px;">
-                <li><fmt:message key="gdpr.content.text.1"/></li>
-                <li><fmt:message key="gdpr.content.text.2"/></li>
-                <li><fmt:message key="gdpr.content.text.3"/></li>
-                <li><fmt:message key="gdpr.content.text.4"/></li>
-                <li><fmt:message key="gdpr.content.text.5"/></li>
-                <li><fmt:message key="gdpr.content.text.6"/></li>
-                <li><fmt:message key="gdpr.content.text.7"/></li>
-                <li><fmt:message key="gdpr.content.text.8"/></li>
-                <li><fmt:message key="gdpr.content.text.9"/></li>
-            </ol>
-        </div>
-        <div class="five wide column" style="border: 1px solid #d4d4d5; border-radius: 4px; background-color: #f8f8f8;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);">
-            <h3 style="margin-top: 3%;"><fmt:message key="gdpr.segment.title"/></h3>
-            <form id="submitEmailEbook" class="ui form" style="margin-top: 10%;">
-                <div class="field">
-                    <label><fmt:message key="gdpr.segment.email"/></label>
-                    <input required type="email" name="email" placeholder="barack@obama.com">
-                    <div id="ebookErrorMessage" style="display:none;color:red;margin-top: 2%;">
-                        <div class="header"><fmt:message key="gdpr.segment.error"/></div>
-                    </div>
-                </div>
-                <button id="submitButtonGetRgpd" type="submit" style="background-color: #4fcb6c;height: 72px;width: 100%;"
-                        class="positive ui button center aligned segment"><fmt:message key="gdpr.segment.button"/>
-                </button>
-                <div id="succesMessageSendEbook" style="display:none;">
-                    <p style="color:#44CA70;" class="text-center"><fmt:message key="gdpr.segment.sent"/></p>
-                    <p style="font-size:20px;color:#414141;font-weight: 500;"><fmt:message key="gdpr.segment.message"/></p>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
+
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-
-
 <script src="/jsMinified.v00023/jquery1.12.4.js"></script>
 <script src="/jsMinified.v00023/jquery.complexify.js"></script>
 <script src="/jsMinified.v00023/bootstrap.js" async></script>
@@ -167,34 +92,36 @@
 <script src="/jsMinified.v00023/languageChooser.js" async></script>
 <script src="/jsMinified.v00023/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
-
-<script type="text/javascript">
-  const blacklistInviteTeamUsersEmails = [
-    'gmail.com',
-    'yahoo.com',
-    'hotmail.com'
-  ];
-
-  $('#submitEmailEbook').submit(function (e) {
-    let self = $(this);
-    e.preventDefault();
-    if (blacklistInviteTeamUsersEmails.indexOf(self.find("input[name='email']").val().split('@')[1]) !== -1) {
-      $('#ebookErrorMessage').show(300, 'swing');
-    } else {
-      $(this).find('input[name=\'email\']').attr('disabled','disabled');
-      $('#submitButtonGetRgpd').attr('disabled', 'disabled');
-      ajaxHandler.post(
-        "/api/v1/rgpd",
-        {
-          email: self.find("input[name='email']").val(),
-        });
-      $('#succesMessageSendEbook').show(1000);
-      $('#ebookErrorMessage').hide();
-     }
-  });
-
+<script>
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    $('#tableHello').removeClass('product-tab');
+  }
 </script>
-
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.ui.menu').on('click', function() {
+      $('#more').toggleClass('hidden');
+      $('.ui.tab').toggleClass('active');
+      return false;
+    });
+    $('#table-general').popup({
+      on        : 'hover',
+      position  : 'bottom center',
+    });
+    $('#table-switch').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+    $('#table-notification').popup({
+      on        : 'hover',
+      position  : 'bottom center',
+    });
+    $('#table-activeUser').popup({
+      on        : 'hover',
+      position  : 'bottom center'
+    });
+  });
+</script>
 <script type="text/javascript">
   $(document).ready(function () {
     var AFFIX_TOP_LIMIT = 560;
@@ -207,7 +134,6 @@
       $menu.toggleClass("open");
       return false;
     });
-
     $(".docs-nav").each(function () {
       var $affixNav = $(this),
         $container = $affixNav.parent(),
@@ -222,6 +148,7 @@
         if (top < AFFIX_TOP_LIMIT) {
           return last;
         }
+
         for (var i = 0; i < $links.length; i++) {
           var $link = $links.eq(i),
             href = $link.attr("href");
@@ -242,6 +169,7 @@
         }
         return last;
       }
+
 
       $(window).on("scroll", function (evt) {
         var top = window.scrollY,

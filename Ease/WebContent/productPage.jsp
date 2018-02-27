@@ -73,6 +73,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/rgpd">
+                        <fmt:message key="landing.header.gdpr" />
+                    </a>
+                </li>
+                <li>
                     <a href="/?skipLanding=true" id="connexionButton">
                         <fmt:message key="landing.header.connexion-link" />
                     </a>

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+"/rgpd"<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top affix">
 	<div class="container">
 		<div class="navbar-header page-scroll">
@@ -23,6 +23,11 @@
 				<li>
 					<a href="/pricing">
 						<fmt:message key="landing.header.price-link" />
+					</a>
+				</li>
+				<li>
+					<a href="/rgpd">
+						<fmt:message key="landing.header.gdpr" />
 					</a>
 				</li>
 				<li>
