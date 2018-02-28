@@ -78,6 +78,26 @@ export const modals = createReducer({
   },
   newFeature: {
     active: false
+  },
+  accountUpdate: {
+    active: false,
+    resolve: null,
+    reject: null
+  },
+  passwordUpdate: {
+    active: false,
+    resolve: null,
+    reject: null
+  },
+  newAccountUpdateLocation: {
+      active: false,
+      resolve: null,
+      reject: null
+  },
+  newAccountUpdate: {
+    active: false,
+    resolve: null,
+    reject: null
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -204,6 +224,30 @@ export const modals = createReducer({
     return {
       ...state,
       newFeature: action.payload
+    }
+  },
+  ['SHOW_ACCOUNT_UPDATE_MODAL'](state, action){
+    return {
+      ...state,
+      accountUpdate: action.payload
+    }
+  },
+  ['SHOW_PASSWORD_UPDATE_MODAL'](state, action){
+    return {
+      ...state,
+      passwordUpdate: action.payload
+    }
+  },
+  ['SHOW_NEW_ACCOUNT_UPDATE_LOCATION_MODAL'](state, action){
+      return {
+          ...state,
+          newAccountUpdateLocation: action.payload
+      }
+  },
+  ['SHOW_NEW_ACCOUNT_UPDATE_MODAL'](state, action){
+    return {
+      ...state,
+      newAccountUpdate: action.payload
     }
   }
 });

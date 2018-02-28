@@ -1,0 +1,26 @@
+{
+    "name":"Seedingup",
+    "lastLogin":"",
+    "home":"https://www.seedingup.fr/",
+    "connect":{
+      "todo":[
+        {"action":"trueClick", "search":"a[href*='login']"},
+        {"action":"waitfor", "search":"#frm_strEmail"},
+        {"action":"fill", "what":"login", "search":"#frm_strEmail"},
+        {"action":"fill", "what":"password", "search":"#frm_strPassword"},
+        {"action": "trueClick", "search":"form > div.form-group > div > button"}
+      ]
+    },
+    "logout":{
+      "todo":[
+        {"action":"trueClick", "search":"a[href*='https://www.seedingup.fr/mon-seedingup/annonceurs/dashboard.html']"},
+        {"action":"waitfor", "search":"li.logout > a > div"},
+        {"action":"trueClick", "search":"li.logout > a > div"},
+      ]
+    },
+    "checkAlreadyLogged":[
+      {"action":"waitfor", "search":"a[href*='https://www.seedingup.fr/mon-seedingup/annonceurs/dashboard.html'], a[href*='login']"},
+      {"search":"a[href*='https://www.seedingup.fr/mon-seedingup/annonceurs/dashboard.html']"}
+    ]
+  }
+  

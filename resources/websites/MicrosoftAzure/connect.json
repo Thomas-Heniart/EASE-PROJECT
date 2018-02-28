@@ -1,0 +1,28 @@
+{
+  "name":"Microsoft Azure",
+  "lastLogin":"",
+  "home":"https://portal.azure.com/",
+  "connect":{
+    "todo":[
+      {"action":"trueClick", "search":"#otherTileText"},
+      {"action":"waitfor", "search":"form[name='f1'] input[name='loginfmt']"},
+      {"action":"fill", "what":"login", "search":"form[name='f1'] input[name='loginfmt']"},
+      {"action":"trueClick", "search":"form[name='f1'] input[type='submit']"},
+      {"action":"waitfor", "search":"form[name='f1'] input[name='passwd'][aria-required='true'], .fxs-avatarmenu-header"},
+      {"action":"fill", "what":"password", "search":"form[name='f1'] input[name='passwd'][aria-required='true']"},
+      {"action":"trueClick", "search":"form[name='f1'] input[type='submit']"}
+    ]
+  },
+  "logout":{
+    "todo":[
+      {"action":"trueClick", "search":".fxs-avatarmenu-header"},
+      {"action":"waitfor", "search":"a.fxs-avatarmenu-signout"},
+      {"action":"trueClick", "search":"a.fxs-avatarmenu-signout"},
+      {"action":"waitload"}
+    ]
+  },
+  "checkAlreadyLogged":[
+    {"action":"waitfor", "search":"#otherTileText, a.fxs-avatarmenu-signout, form[name='f1'] input[name='loginfmt']"},
+    {"search":"a.fxs-avatarmenu-signout"}
+  ]
+}

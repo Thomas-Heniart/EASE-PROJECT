@@ -2,16 +2,16 @@ import React, {Component} from 'react';
 import Categories from "./Categories";
 import WebsitesContainer from "./WebsitesContainer";
 import AddBookmark from './AddBookmark';
-import AddAnyApp from './AddAnyApp'
+import AddAnyApp from './AddAnyApp';
 import AddSoftwareCredentials from './AddSoftwareCredentials';
-import Importations from './Importation/Importations'
+import Importations from './Importation/Importations';
 import OnBoardingImportation from './Importation/OnBoardingImportation';
 import {handleSemanticInput} from "../../utils/utils";
 import { Grid, Menu, Input, Icon } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
-import { NavLink } from 'react-router-dom';
-import { Switch, Route } from 'react-router-dom';
+import { NavLink, Switch, Route } from 'react-router-dom';
+import {getUpdates} from "../../actions/catalogActions";
 
 @connect(store => ({
   catalog: store.catalog
@@ -21,12 +21,16 @@ class Catalog extends Component {
     super(props);
     this.state = {
       query: '',
-      mounted: false
+      mounted: false,
+      updatesFetched: false,
     }
   }
   handleInput = handleSemanticInput.bind(this);
   componentWillMount() {
-    document.title = "Apps Catalogue"
+    document.title = "Apps Catalogue";
+    this.props.dispatch(getUpdates()).then(() => {
+      this.setState({updatesFetched: true});
+    });
   }
   componentDidMount() {
     if (!this.props.catalog.loaded)
@@ -81,7 +85,7 @@ class Catalog extends Component {
                   </div>}
                 </Grid.Column>
                 <Grid.Column width={10}>
-                  {this.state.mounted &&
+                  {(this.state.mounted && this.state.updatesFetched) &&
                     <Switch>
                       <Route path={`${this.props.match.path}/importations`} component={Importations}/>
                       <Route path={`${this.props.match.path}/onBoardingImportation`} component={OnBoardingImportation}/>

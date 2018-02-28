@@ -1,0 +1,26 @@
+{
+    "name":"Alsacreation",
+    "lastLogin":"",
+    "home":"https://www.alsacreations.com/",
+    "connect":{
+      "todo":[
+        {"action":"trueClick", "search":"#ident > li.member.member-login > a"},
+        {"action":"waitfor", "search":"#identname"},
+        {"action":"fill", "what":"login", "search":"#identname"},
+        {"action":"fill", "what":"password", "search":"#identpassword"},
+        {"action": "trueClick", "search":"#page > div > form > p:nth-child(4) > input.awesome.green.large"}
+      ]
+    },
+    "logout":{
+      "todo":[
+        {"action":"trueClick", "search":"#menu > li.ident.nav-item.accessible-megamenu-top-nav-item > a"},
+        {"action":"waitfor", "search":"a[href*='logout]"},
+        {"action":"trueClick", "search":"a[href*='logout']"}
+      ]
+    },
+    "checkAlreadyLogged":[
+        {"action":"waitfor", "search":"#menu > li.ident.nav-item.accessible-megamenu-top-nav-item > a, #ident > li.member.member-login > a"},
+        {"search":"#menu > li.ident.nav-item.accessible-megamenu-top-nav-item > a"}
+    ]                                 
+  }
+  

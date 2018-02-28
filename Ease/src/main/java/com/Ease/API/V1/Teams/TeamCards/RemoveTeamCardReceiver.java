@@ -5,6 +5,8 @@ import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
@@ -40,9 +42,21 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.isTeamAdmin() && !teamUser.equals(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden);
+            if (teamCard.isTeamSingleCard()) {
+                TeamUser filler;
+                if (teamCard.isTeamSoftwareCard())
+                    filler = ((TeamSingleSoftwareCard) teamCard).getTeamUser_filler_test();
+                else
+                    filler = ((TeamSingleCard) teamCard).getTeamUser_filler();
+                if (filler != null && filler.equals(teamUser))
+                    throw new HttpServletException(HttpStatus.BadRequest, "You cannot remove the filler");
+            }
+            App app = teamCardReceiver.getApp();
+            hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");
+            hibernateQuery.setParameter("app_id", app.getDb_id());
+            hibernateQuery.executeUpdate();
             teamCard.removeTeamCardReceiver(teamCardReceiver);
             teamUser.removeTeamCardReceiver(teamCardReceiver);
-            App app = teamCardReceiver.getApp();
             if (app.isWebsiteApp()) {
                 WebsiteApp websiteApp = (WebsiteApp) app;
                 websiteApp.getLogWithAppSet().forEach(logWithApp -> {

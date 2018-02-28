@@ -3,7 +3,7 @@ import {editTeamName} from '../../actions/teamActions';
 import { Progress, Header, Container, Menu, Segment, Comment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
 import {StripeProvider} from 'react-stripe-elements';
 import {connect} from "react-redux";
-import {handleSemanticInput} from "../../utils/utils";
+import {handleSemanticInput, blacklistInviteTeamUsersEmails} from "../../utils/utils";
 import {isOwner} from "../../utils/helperFunctions";
 import {fetchTeamPaymentInformation, teamInviteFriends, teamUpdateBillingInformation, unsubscribe} from "../../actions/teamActions";
 import countryValues from "../../utils/countrySelectList";
@@ -549,11 +549,6 @@ function SettingsMenu(props){
   )
 }
 
-const blacklistEmails = [
-  'gmail.com',
-  'yahoo.com',
-  'hotmail.com'
-];
 
 @connect(store => ({
   teams: store.teams
@@ -578,7 +573,7 @@ class ReferralSection extends Component {
     const email = this.state.email;
 
     this.setState({errorMessage: ''});
-    if (blacklistEmails.indexOf(email.split('@')[1]) !== -1){
+    if (blacklistInviteTeamUsersEmails.indexOf(email.split('@')[1]) !== -1){
       this.setState({errorMessage: 'Please use a company email!'});
       return;
     }

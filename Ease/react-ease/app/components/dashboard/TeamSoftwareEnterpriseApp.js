@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {
-  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel,
-  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator
+  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
+  WaitingTeamApproveIndicator, LoadingAppIndicator
 } from "./utils";
-import {showLockedTeamAppModal, showUpdateAppPasswordModal, showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
+import {showLockedTeamAppModal, showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
 import {Input, Label, Icon, Segment, Popup} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {validateApp, clickOnAppMetric} from '../../actions/dashboardActions';
@@ -71,7 +71,6 @@ class TeamSoftwareEnterpriseApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-    const room = teams[team_app.team_id].rooms[team_app.channel_id];
     const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.software.connection_information, meReceiver.account_information);
     const inputs = credentials.map((item,idx) => {

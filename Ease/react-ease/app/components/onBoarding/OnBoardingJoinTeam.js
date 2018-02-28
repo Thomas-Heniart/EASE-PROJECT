@@ -2,22 +2,11 @@ import React from 'react';
 import {connect} from "react-redux";
 import queryString from "query-string";
 import { Menu, Form, Icon, Button, Checkbox, Input, Header, Message } from 'semantic-ui-react';
-import {handleSemanticInput, isEmail, reflect} from "../../utils/utils";
-import {withRouter, Switch, Route, NavLink} from "react-router-dom";
-import {
-  askRegistration, changeStep, checkAskRegistration, createTeam, createTeamProfile, editFirstNameAndLastName,
-  fetchOnBoardingRooms,
-  getInfoClearbit,
-  newRegistration, onBoardingImportation, resetOnBoardingImportation
-} from "../../actions/onBoardingActions";
-import {addTeamUserToChannel, createTeamChannel} from "../../actions/channelActions";
-import {teamCreateEnterpriseCard, teamCreateSingleApp} from "../../actions/appsActions";
-import {processConnection, processLogout, setLoginRedirectUrl} from "../../actions/commonActions";
-import {testCredentials} from "../../actions/catalogActions";
-import {createTeamUser} from "../../actions/userActions";
+import {handleSemanticInput} from "../../utils/utils";
+import {joinTeamRegistration} from "../../actions/onBoardingActions";
+import {processLogout, setLoginRedirectUrl} from "../../actions/commonActions";
 import * as api from '../../utils/api';
 import * as post_api from '../../utils/post_api';
-import Password from "../settings/Password";
 
 class PasswordAndPhone extends React.Component {
   render() {
@@ -185,6 +174,7 @@ class OnBoardingJoinTeam extends React.Component {
           const teamUser = info.teamUser;
           this.setState({
             code: this.props.match.params.code,
+            access_code: this.props.match.params.access_code,
             firstName: teamUser.first_name,
             lastName: teamUser.last_name,
             username: teamUser.username,
@@ -203,6 +193,7 @@ class OnBoardingJoinTeam extends React.Component {
         const teamUser = info.teamUser;
         this.setState({
           code: this.props.match.params.code,
+          access_code: this.props.match.params.access_code,
           firstName: teamUser.first_name,
           lastName: teamUser.last_name,
           username: teamUser.username,
@@ -243,16 +234,15 @@ class OnBoardingJoinTeam extends React.Component {
       this.setState({view: 2, loading: false});
     }
     else if (this.state.view === 2) {
-      this.props.dispatch(newRegistration({
-        username: this.state.email.split('@')[0],
+      this.props.dispatch(joinTeamRegistration({
         email: this.state.email,
         password: this.state.password,
-        digits: null,
         code: this.state.code,
         phone_number: this.state.phone,
         newsletter: this.state.checkEmail,
         first_name: this.state.firstName,
-        last_name: this.state.lastName
+        last_name: this.state.lastName,
+        access_code: this.state.access_code
       })).then(r => {
         post_api.teams.finalizeRegistration(this.props.common.ws_id, this.state.firstName, this.state.lastName, this.state.email.split('@')[0], this.state.code).then(response => {
           this.setState({loading: false});

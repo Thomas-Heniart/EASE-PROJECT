@@ -27,11 +27,29 @@ public class UserFactory {
         Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
         String saltPerso = AES.generateSalt();
         String keyUser = AES.keyGenerator();
-        UserKeys userKeys = new UserKeys(Hashing.hash(password), saltPerso, AES.encryptUserKey(keyUser, password, saltPerso), publicAndPrivateKey.getKey(), AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
+        UserKeys userKeys = new UserKeys();
+        userKeys.setHashed_password(Hashing.hash(password));
+        userKeys.setKeyUser(AES.encryptUserKey(keyUser, password, saltPerso));
+        userKeys.setPublicKey(publicAndPrivateKey.getKey());
+        userKeys.setPrivateKey(AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
+        userKeys.setSaltPerso(saltPerso);
         User user = new User(username, email, userKeys, new Options(), new UserStatus());
         user.getPersonalInformation().setFirst_name(first_name);
         user.getPersonalInformation().setLast_name(last_name);
         user.getPersonalInformation().setPhone_number(phone_number);
+        user.getUserStatus().setNew_feature_seen(false);
+        user.getUserStatus().setOnboarding_step(1);
+        user.getUserStatus().setRegistered(true);
+        return user;
+    }
+
+    public User createUser(String email, String access_code, String username) throws HttpServletException {
+        Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
+        String saltPerso = AES.generateSalt();
+        String keyUser = AES.keyGenerator();
+        UserKeys userKeys = new UserKeys(Hashing.hash(access_code), saltPerso, AES.encryptUserKey(keyUser, access_code, saltPerso), publicAndPrivateKey.getKey(), AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
+        User user = new User(username, email, userKeys, new Options(), new UserStatus());
+        user.getUserStatus().setNew_feature_seen(false);
         return user;
     }
 

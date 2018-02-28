@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import {
+  EmptyCredentialsEnterpriseAppIndicator,
   PasswordChangeDropdownEnterprise,
   PasswordChangeHolderEnterprise,
   setUserDropdownText,
@@ -172,7 +173,8 @@ class CopyPasswordButton extends Component {
   }
 };
 
-const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) => {
+const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch}) => {
+  const meAdmin = isAdmin(me.role);
   return (
       <div class="receivers">
         {receivers.map((receiver, idx) => {
@@ -183,19 +185,26 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval}) 
                 <EnterpriseAppReceiverLabel
                     receiver={receiver}
                     reminder_interval={password_reminder_interval}/>
-                {receiver.credentials.map(item => {
-                  return <Input size="mini"
-                                key={item.name}
-                                class="team-app-input"
-                                readOnly={true}
-                                name={item.name}
-                                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-                                labelPosition="left"
-                                placeholder={item.placeholder}
-                                value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
-                                type={item.type}/>;
-                })}
-                {receiver.user.id === me.id &&
+                {receiver.receiver.empty ?
+                    <EmptyCredentialsEnterpriseAppIndicator
+                        receiver={receiver.receiver}
+                        team_user={receiver.user}
+                        dispatch={dispatch}
+                        me={me}
+                        meAdmin={meAdmin}/> :
+                    receiver.credentials.map(item => {
+                      return <Input size="mini"
+                                    key={item.name}
+                                    class="team-app-input"
+                                    readOnly={true}
+                                    name={item.name}
+                                    label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+                                    labelPosition="left"
+                                    placeholder={item.placeholder}
+                                    value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
+                                    type={item.type}/>;
+                    })}
+                {receiver.user.id === me.id && !receiver.receiver.empty &&
                 <CopyPasswordButton app_id={receiver.receiver.app_id}/>}
               </div>
           );
@@ -227,7 +236,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
 
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, password_reminder_interval}) => {
   return (
-      <div class="receiver">
+      <div class={classnames('receiver', receiver.empty ? 'empty':null)}>
         <EnterpriseAppEditReceiverLabel
             receiver={receiver}
             reminder_interval={password_reminder_interval}
@@ -527,6 +536,7 @@ class EnterpriseTeamApp extends Component {
                 </div>
                 {!this.state.edit &&
                 <StaticReceivers receivers={users}
+                                 dispatch={this.props.dispatch}
                                  password_reminder_interval={app.password_reminder_interval}
                                  expanded={this.state.show_more}
                                  me={me}/>}

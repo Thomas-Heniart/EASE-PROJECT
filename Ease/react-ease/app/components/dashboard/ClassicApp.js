@@ -1,8 +1,7 @@
 import React, {Component} from "react";
-import {LoadingAppIndicator, EmptyAppIndicator, EmptyTeamAppIndicator, NewAppLabel, DisabledAppIndicator, WaitingTeamApproveIndicator} from "./utils";
+import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection} from "../../actions/dashboardActions";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
 
 class ClassicApp extends Component {
   constructor(props){

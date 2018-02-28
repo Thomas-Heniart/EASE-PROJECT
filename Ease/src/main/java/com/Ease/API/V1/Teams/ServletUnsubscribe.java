@@ -3,7 +3,7 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
-import com.Ease.Team.TeamUser;
+import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -32,9 +32,7 @@ public class ServletUnsubscribe extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            TeamUser teamUser = sm.getUser().getTeamUser(team);
-            if (!teamUser.isTeamOwner())
-                throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");
+            sm.needToBeOwnerOfTeam(team);
             String password = sm.getStringParam("password", false, false);
             if (!sm.getUser().getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
@@ -45,6 +43,11 @@ public class ServletUnsubscribe extends HttpServlet {
             if (default_source != null && !default_source.equals(""))
                 customer.getSources().retrieve(default_source).delete();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            for (TeamCard teamCard : team.getTeamCardSet()) {
+                hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
+                hibernateQuery.setParameter("card_id", teamCard.getDb_id());
+                hibernateQuery.executeUpdate();
+            }
             team.getTeamCardSet().stream().flatMap(teamCard -> teamCard.getTeamCardReceiverMap().values().stream()).forEach(teamCardReceiver -> {
                 Profile profile = teamCardReceiver.getApp().getProfile();
                 if (profile != null) {

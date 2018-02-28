@@ -21,6 +21,7 @@ public class WebSocketManager {
     public void sendObject(Object o) {
         removeClosedSesions();
         for (WebSocketSession ws : webSocketSessions) {
+            System.out.println("Send object");
             ws.sendObject(o);
         }
     }

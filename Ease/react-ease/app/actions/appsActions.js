@@ -1,6 +1,7 @@
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
+import {fetchTeamApp} from "../actions/teamActions";
 import {addNotification} from "./notificationBoxActions";
 
 export function teamCreateEnterpriseCard({team_id, channel_id, website_id, name, description, password_reminder_interval, receivers}){
@@ -265,6 +266,38 @@ export function teamCreateSoftwareSingleCard({team_id, channel_id, name, descrip
   }
 }
 
+export function teamEditSingleCardCredentials({account_information, team_card}) {
+  if (team_card.sub_type === 'any')
+    return teamEditAnySingleApp({
+      team_card_id: team_card.id,
+      description: team_card.description,
+      url: team_card.website.login_url,
+      img_url: team_card.website.logo,
+      connection_information: team_card.website.information,
+      account_information: account_information,
+      password_reminder_interval: team_card.password_reminder_interval,
+      name: team_card.name
+    });
+  else if (team_card.sub_type === 'software')
+    return teamEditSoftwareSingleApp({
+      team_card_id: team_card.id,
+      description: team_card.description,
+      connection_information: team_card.software.connection_information,
+      account_information: account_information,
+      password_reminder_interval: team_card.password_reminder_interval,
+      name: team_card.name
+    });
+  else
+    return teamEditSingleApp({
+      team_id: team_card.team_id,
+      team_card_id: team_card.id,
+      description: team_card.description,
+      account_information: account_information,
+      password_reminder_interval: team_card.password_reminder_interval,
+      name: team_card.name
+    })
+}
+
 export function teamEditSingleApp({team_id, team_card_id, description, account_information, password_reminder_interval, name}){
   return function (dispatch, getState){
     return post_api.teamApps.editSingleCard({
@@ -420,6 +453,24 @@ export function teamEditSingleCardReceiver({team_id, team_card_id, allowed_to_se
     }).catch(err => {
       throw err;
     });
+  }
+}
+
+export function teamEditSingleCardFiller({team_id, team_card_id, filler_id}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.editSingleCardFiller({
+      ws_id: getState().common.ws_id,
+      team_id:team_id,
+      team_card_id: team_card_id,
+      filler_id: filler_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    })
   }
 }
 
@@ -598,14 +649,30 @@ export function teamCardReceiverCreatedAction({receiver}) {
   return (dispatch, getState) => {
     const store = getState();
     const team = store.teams[receiver.team_id];
-    dispatch({
-      type: 'TEAM_CARD_RECEIVER_CREATED',
-      payload: {
-        receiver: receiver
+    const team_apps = store.team_apps;
+    if (!team_apps[receiver.team_card_id] && receiver.team_user_id === team.my_team_user_id){
+      dispatch(fetchTeamApp({
+        team_id: team.id,
+        app_id: receiver.team_card_id
+      })).then(response => {
+        dispatch({
+          type: 'TEAM_CARD_RECEIVER_CREATED',
+          payload: {
+            receiver: receiver
+          }
+        });
+        dispatch(fetchApp({app_id: receiver.app_id}));
+      })
+    }else {
+      dispatch({
+        type: 'TEAM_CARD_RECEIVER_CREATED',
+        payload: {
+          receiver: receiver
+        }
+      });
+      if (team.my_team_user_id === receiver.team_user_id) {
+        dispatch(fetchApp({app_id: receiver.app_id}));
       }
-    });
-    if (team.my_team_user_id === receiver.team_user_id){
-      dispatch(fetchApp({app_id: receiver.app_id}));
     }
   }
 }

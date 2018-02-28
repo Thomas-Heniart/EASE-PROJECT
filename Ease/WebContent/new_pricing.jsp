@@ -35,13 +35,13 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00039/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00044/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/pricingPage.css"/>
     <script type="text/javascript">
       (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
       ;r.type="text/javascript";r.async=true
@@ -66,6 +66,16 @@
           ;if(!n._iq.hasOwnProperty(e)){n._iq[e]={_q:[]};v(n._iq[e])}return n._iq[e]}
         ;e.amplitude=n})(window,document);
       amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
+    </script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-75916041-5');
     </script>
     <link rel="manifest" href="manifest.json">
 </head>

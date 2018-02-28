@@ -258,8 +258,6 @@ class ChooseAppCredentialsModal extends React.Component {
         account_information: transformCredentialsListIntoObject(this.state.credentials),
         receivers: newReceivers
       })).then(response => {
-        // if (meReceiver)
-        //     this.props.dispatch(showPinTeamAppToDashboardModal(true, response));
         this.setState({loading: false});
         this.close();
         this.props.resetTeamCard();

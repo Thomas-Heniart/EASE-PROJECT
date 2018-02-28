@@ -2,11 +2,10 @@ import React, {Component} from "react";
 import TeamAppSettingsNameInput from "./TeamAppSettingsNameInput";
 import {handleSemanticInput} from "../../utils/utils";
 import {getLogo} from "../../utils/api";
-import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Message, Form, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showTeamLinkAppSettingsModal} from "../../actions/modalActions";
 import {AppSettingsMenu, ShareSection, TeamAppRemoveSection, LabeledInput} from "./utils";
-import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {connect} from "react-redux";
 import {removeTeamCardReceiver, teamEditLinkCard} from "../../actions/appsActions";
 import {isAdmin} from "../../utils/helperFunctions";
@@ -102,7 +101,6 @@ class TeamLinkAppSettingsModal extends Component {
     const team_app = this.state.team_app;
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
-    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const meAdmin = isAdmin(me.role);
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
 

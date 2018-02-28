@@ -1,0 +1,95 @@
+{
+  "name": "Growthhacking.fr",
+  "lastlogin": "",
+  "home": "https://www.growthhacking.fr/",
+  "connect": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".login-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-account-name"
+      },
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#login-account-name",
+        "grave": "true"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#login-account-password",
+        "grave": "true"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[form='login-form']",
+        "grave": "true"
+      }
+    ]
+  },
+  "Facebook": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".login-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-buttons button.facebook"
+      },
+      {
+        "action": "trueClick",
+        "search": "#login-buttons button.facebook"
+      }
+    ]
+  },
+  "Twitter": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": ".login-button"
+      },
+      {
+        "action": "waitfor",
+        "search": "#login-buttons button.twitter"
+      },
+      {
+        "action": "trueClick",
+        "search": "#login-buttons button.twitter"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#current-user"
+      },
+      {
+        "action": "waitfor",
+        "search": "a.logout"
+      },
+      {
+        "action": "trueClick",
+        "search": "a.logout"
+      },
+      {
+        "action": "waitfor",
+        "search": ".login-button"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#current-user, .login-button"
+    },
+    {
+      "search": "#current-user"
+    }
+  ]
+}

@@ -42,7 +42,11 @@ public class ServletDeleteChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
             for (TeamCard teamCard : channel.getTeamCardSet()) {
+                hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
+                hibernateQuery.setParameter("card_id", teamCard.getDb_id());
+                hibernateQuery.executeUpdate();
                 for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                     App app = teamCardReceiver.getApp();
                     if (app.isWebsiteApp()) {
@@ -61,7 +65,6 @@ public class ServletDeleteChannel extends HttpServlet {
                             if (linkApp.getLinkAppInformation().equals(linkApp1.getLinkAppInformation())) {
                                 LinkAppInformation linkAppInformation = new LinkAppInformation(teamLinkCard.getUrl(), teamLinkCard.getImg_url());
                                 sm.saveOrUpdate(linkAppInformation);
-                                HibernateQuery hibernateQuery = sm.getHibernateQuery();
                                 hibernateQuery.queryString("UPDATE LinkApp l SET l.linkAppInformation = :info WHERE l.db_id = :id");
                                 hibernateQuery.setParameter("info", linkAppInformation);
                                 hibernateQuery.setParameter("id", linkApp.getDb_id());
@@ -69,6 +72,8 @@ public class ServletDeleteChannel extends HttpServlet {
                             }
                         }
                     }
+                    TeamUser teamUser1 = teamCardReceiver.getTeamUser();
+                    teamUser1.removeTeamCardReceiver(teamCardReceiver);
                     Profile profile = teamCardReceiver.getApp().getProfile();
                     if (profile != null)
                         profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());

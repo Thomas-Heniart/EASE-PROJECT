@@ -290,6 +290,13 @@
     margin-top: 5px;
   }
 }
+#add_bookmark_form > div.app_name_container.display-flex.align_items_center > div.team_app_settings_name > div:nth-child(1) > span {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 265px;
+}
 
 .app_overlay_indicator {
   @include display-flex();

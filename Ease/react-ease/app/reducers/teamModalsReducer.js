@@ -137,6 +137,14 @@ const initialState = {
     name: '',
     img_url: '',
     logoLetter: ''
+  },
+  simpleAppFillerChooserModal: {
+    active: false,
+    team_card: null
+  },
+  fillSimpleCardCredentialsModal: {
+    active: false,
+    team_card: null
   }
 };
 export default function reducer(state=initialState, action){
@@ -275,7 +283,7 @@ export default function reducer(state=initialState, action){
     }
     case 'SHOW_TEAM_USER_INVITE_LIMIT_REACHED_MODAL': {
       return {
-          ...state,
+        ...state,
         teamUserInviteLimitReachedModal: action.payload
       }
     }
@@ -293,7 +301,7 @@ export default function reducer(state=initialState, action){
     }
     case 'INVITE_TEAM_USERS_MODAL': {
       return {
-          ...state,
+        ...state,
         inviteTeamUsersModal: action.payload
       }
     }
@@ -311,7 +319,7 @@ export default function reducer(state=initialState, action){
     }
     case 'SHOW_CATALOG_ADD_SSO_APP_MODAL': {
       return {
-          ...state,
+        ...state,
         catalogAddSSOAppModal: action.payload
       }
     }
@@ -325,6 +333,18 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         catalogAddSoftwareAppModal: action.payload
+      }
+    }
+    case 'SHOW_SIMPLE_APP_FILLER_CHOOSER_MODAL': {
+      return {
+        ...state,
+        simpleAppFillerChooserModal: action.payload
+      }
+    }
+    case 'SHOW_FILL_SIMPLE_CARD_CREDENTIALS_MODAL': {
+      return {
+          ...state,
+        fillSimpleCardCredentialsModal: action.payload
       }
     }
   }

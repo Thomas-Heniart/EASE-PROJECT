@@ -1,9 +1,150 @@
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import classnames from "classnames";
 import api from "../../utils/api";
-import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
+import {showTeamEditEnterpriseAppModal, showFillSimpleCardCredentialsModal, showUpgradeTeamPlanModal, showSimpleAppFillerChooserModal} from "../../actions/teamModalActions";
 import {passwordChangeOptions, passwordChangeValues, copyTextToClipboard} from "../../utils/utils";
 import React, {Component} from "react";
+import post_api from "../../utils/post_api";
+import {isAdmin} from "../../utils/helperFunctions";
+import {connect} from "react-redux";
+
+export class EmptyCredentialsSimpleAppIndicator extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      reminderSent: false
+    }
+  }
+  sendReminder = () => {
+    const {team_card} = this.props;
+    if (this.state.reminderSent)
+      return;
+    this.setState({reminderSent: true});
+    post_api.teamApps.sendSingleCardFillerReminder({
+      team_card_id: team_card.id
+    }).then(response => {
+      setTimeout(() => {
+        this.setState({reminderSent: false});
+      }, 2000);
+    }).catch(err => {
+      setTimeout(() => {
+        this.setState({reminderSent: false});
+      }, 2000);
+    });
+  };
+  chooseMember = () => {
+    this.props.dispatch(showSimpleAppFillerChooserModal({
+      active: true,
+      team_card: this.props.team_card
+    }));
+  };
+  fillCredentials = () => {
+    this.props.dispatch(showFillSimpleCardCredentialsModal({
+      active: true,
+      team_card: this.props.team_card
+    }));
+  };
+  render(){
+    const {team_card, team_users, meReceiver, me} = this.props;
+
+    return (
+        <Button
+            as='div'
+            icon
+            class="empty_app_indicator"
+            size="mini"
+            labelPosition='left'>
+          <Icon name="user"/>
+          {team_card.team_user_filler_id === -1 &&
+          <u onClick={this.chooseMember}>
+            Choose a user to fill connection info.
+          </u>}
+          {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
+              <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
+          {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&
+              <span>
+                  Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
+                {this.props.actions_enabled &&
+                <React.Fragment>
+                  {(!!meReceiver || isAdmin(me.role)) &&
+                  <u onClick={this.sendReminder}>
+                    {this.state.reminderSent ?
+                        'Reminder sent!' :
+                        'Send reminder'}
+                  </u>}
+                  {isAdmin(me.role) &&
+                  <React.Fragment>
+                    &nbsp;or
+                    <u onClick={this.chooseMember}>
+                      choose another person
+                    </u>
+                  </React.Fragment>}
+                </React.Fragment>
+                }
+              </span>
+          }
+        </Button>
+    )
+  }
+}
+
+export class EmptyCredentialsEnterpriseAppIndicator extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      sent: false
+    }
+  }
+  sendReminder = () => {
+    const {receiver} = this.props;
+    if (this.state.sent)
+      return;
+    this.setState({sent: true});
+    post_api.teamApps.sendFillerEnterpriseCardReminder({
+      team_id: receiver.team_id,
+      team_card_id: receiver.team_card_id,
+      team_card_receiver_id: receiver.id
+    }).then(response => {
+      setTimeout(() => {
+        this.setState({sent: false});
+      }, 2000);
+    }).catch(err => {
+      setTimeout(() => {
+        this.setState({sent: false});
+      }, 2000);
+    });
+  };
+  fillCredentials = () => {
+    this.props.dispatch(showTeamEditEnterpriseAppModal({
+      active: true,
+      team_card_id: this.props.receiver.team_card_id
+    }));
+  };
+  render(){
+    const {team_user, meAdmin, me, receiver} = this.props;
+    return (
+        <Button
+            as='div'
+            icon
+            class="empty_app_indicator"
+            size="mini"
+            labelPosition='left'>
+          <Icon name="user"/>
+          {receiver.team_user_id === me.id ?
+              <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span> :
+              <span>
+              Waiting for {team_user.username} to fill info.
+                {meAdmin &&
+                <u onClick={this.sendReminder}>
+                  {this.state.sent ?
+                      'Reminder sent!' :
+                      'Send reminder'}
+                </u>}
+              </span>}
+        </Button>
+    )
+  }
+}
 
 export const setUserDropdownText = (user) => {
   return (user.username + (user.first_name.length > 0 || user.last_name > 0 ? ` - ${user.first_name} ${user.last_name}` : ''));

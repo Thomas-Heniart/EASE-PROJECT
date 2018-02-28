@@ -2,6 +2,7 @@
 @import 'mixins';
 @import 'dashboard';
 @import 'onBoarding';
+@import 'catalog';
 
 @keyframes blink {
   from, to {
@@ -44,6 +45,11 @@ button.only-text-button {
 .show_team {
   .app {
     margin-bottom: 7px;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 265px;
   }
   .team {
     margin-bottom: 4px;
@@ -268,611 +274,6 @@ button.only-text-button {
   }
 }
 
-#catalog {
-  margin-top: -60px;
-  height: 100%;
-  @include display-flex();
-  @include flex-direction(column);
-  & + #ease_header {
-    border:none;
-  }
-  & > .mainContainer {
-    padding-top: 20px;
-    overflow-x: auto;
-    overflow-y: scroll;
-    @include flex-grow(1);
-  }
-  #catalog-nav {
-    position: fixed;
-    z-index: 1;
-    height: 100%;
-    p {
-      font-size: 24px;
-      font-weight: bold;
-      color: #949eb7;
-      margin-bottom: 0;
-    }
-  }
-  .add_any {
-    margin-top: 20px !important;
-  }
-  header {
-    height: 118px;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    //background-image: radial-gradient(circle at 50% 0, #686d99, #636994 40%, #373b60);
-    background-image: radial-gradient(circle at 50% -1000%, #686d99 70%, #636994 80%, #373b60 90%);
-    //box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
-    p {
-      //font-size: 28px;
-      font-size: 26px;
-      font-weight: 300;
-      color: white;
-      text-align: center;
-      margin-top: 26px;
-      margin-bottom: 10px;
-    }
-    .menu {
-      height: 0;
-      font-size: 16px;
-      margin: 0;
-      border: none;
-      left: 50%;
-      transform: translateX(-50%);
-      position: relative;
-      display: inline-flex;
-      //margin-left: 14%;
-      .item {
-        background-color: rgba(255, 255, 255, 0.1);
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        color: white;
-        margin-right: 2px;
-        i {
-          margin-right: 5px;
-        }
-        &.active {
-          background-color: white;
-          font-weight: 300;
-          color: #949eb7;
-        }
-      }
-    }
-  }
-  input {
-    &:focus {
-      border-color: #373b60;
-      box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
-    }
-  }
-  .inputSearch {
-    margin-top: 30px;
-    margin-bottom: 5px;
-    //margin-bottom: 30px;
-    //margin-left: 18%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 700px;
-    //position: fixed;
-    //width: 700px;
-    input {
-      border-color: #949eb7;
-      &:focus {
-        border-color: #373b60;
-        box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
-      }
-    }
-  }
-  h3 {
-    font-size: 20px;
-    //font-weight: 300;
-    //color: #414141;
-    margin-top: 20px;
-    font-weight: bold;
-    color: #949eb7;
-    /* text-transform: uppercase; */
-  }
-  .bookmarkButton {
-    display: flex;
-    font-size: 16px;
-    padding: 10px 17px 10px 15px;
-    border-radius: 5px;
-    color: white;
-    background-color: rgba(89, 66, 173, 0.85);
-    i {
-      margin-top: -12px;
-      color: white;
-    }
-  }
-  .listCategory {
-    font-size: 14px;
-    font-weight: 300;
-    overflow-y: auto;
-    height: 55%;
-    a {
-      margin-bottom: 2px;
-      &:focus {
-        text-decoration: none;
-      }
-      &.active {
-        color: #949eb7;
-        font-weight: bold;
-      }
-      &:hover {
-        color: #949eb7;
-      }
-    }
-  }
-  .logoCatalog {
-    padding-left: 20px;
-    //margin-bottom: 20px;
-    img {
-      width: 50px;
-      height: 50px;
-      margin: 10px;
-      border-radius: 5px;
-      display: inline-flex;
-      box-shadow: -5px 5px 10px rgba(210, 218, 228, 0.97);
-    }
-
-    .showSegment {
-      padding: 0;
-      margin: 20px 0;
-      white-space: nowrap;
-      border:1px solid transparent;
-      p {
-        top: 37%;
-        position: absolute;
-        font-size: 14px;
-        font-weight: bold;
-        color: #373b60;
-        display: inline-block;
-        margin-bottom: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100px;
-      }
-      i {
-        display: none;
-      }
-      &:hover {
-        display: inline-block;
-        padding-left: 0;
-        padding-right: 0;
-        border-radius: 7px;
-        box-shadow: -3px 4px 4px 0 rgba(210, 218, 228, 0.77);
-        border: solid 1px #d2dae4;
-        transition: all .5s ease;
-        p {
-          max-width: 80px;
-        }
-        img {
-          box-shadow: none;
-        }
-        i {
-          position: absolute;
-          font-size: 20px;
-          display: inline-flex;
-          top: 40%;
-          right: 0;
-          color: #d2dae4;
-        }
-      }
-    }
-  }
-  .requestAnApp {
-    border: 1px solid rgba(34,36,38,.15);
-    border-radius: 7px;
-    box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
-    .ui.header {
-      font-size: 20px;
-      font-weight: normal;
-      .sub.header {
-        color: $themeBlue2Color;
-        margin-top: 5px;
-        font-size: 16px;
-      }
-    }
-    input {
-      margin-bottom: 20px;
-      margin-top: 5px;
-    }
-    span {
-      font-size: 14px;
-      font-weight: 300;
-      color: #414141;
-    }
-    .labelCheck {
-      display: inline-flex;
-      font-size: 14px;
-      font-weight: 300;
-      color: #414141;
-      margin-bottom: 20px;
-      .checkbox {
-        margin-right: 20px;
-        top: 22px;
-      }
-    }
-  }
-  .addBookmark {
-    border: 1px solid rgba(34,36,38,.15);
-    border-radius: 7px;
-    box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    .width50 {
-      width: 50%;
-    }
-    .closeButton {
-      position: absolute;
-      right: 5px;
-      top: 7px;
-      margin: 0;
-      opacity: .6;
-    }
-    .logo {
-      div {
-        width: 86px;
-        height: 86px;
-        font-size: 24px;
-        border: solid 1px #dededf;
-        border-radius: 5px;
-        background-size: 86px 86px;
-        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
-        display: flex;
-        i.close {
-          position: absolute;
-          top: 42px;
-          left: 42px;
-          font-size: 18px;
-          text-shadow: 0 0 2px #fff;
-        }
-      }
-      img {
-        box-shadow: -3px 5px 10px 0 rgba(0, 0, 0, 0.1);
-        border-radius: 7px;
-        width: 86px;
-        height: 86px;
-      }
-    }
-    input {
-      margin-bottom: 10px;
-      margin-left: 20px;
-    }
-    button {
-      padding: 10px;
-      i {
-        margin-left: 5px;
-        margin-right: 0;
-      }
-    }
-  }
-  #importations {
-    color: #949eb7;
-    font-size: 16px;
-    //text-align: center;
-    padding-top: 20px;
-    height: 80%;
-    &.step4 {
-      height: 100%;
-      position: fixed;
-      width: 100%;
-      left: 0;
-      background-color: $themeWhiteColor2;
-      //margin-left: -31.5%;
-    }
-    .no_margin {
-      margin-top: 1em;
-      margin-bottom: 0;
-    }
-    ul {
-      list-style: none;
-      margin: 0;
-      li:before {
-        content: "-";
-        margin-right: 5px;
-      }
-    }
-    .title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      img {
-        width: 24px;
-        height: 24px;
-        margin-right: 5px;
-      }
-    }
-    .center {
-      text-align: center;
-    }
-    .menu_fields {
-      font-size: 0;
-    }
-    .chromeForm {
-      position: inherit;
-    }
-    #chromeSteps {
-      height: 380px;
-      width: 430px;
-      padding: 20px;
-      transform: translateX(-50%);
-      left: 50%;
-      label {
-        font-size: 16px;
-        font-weight: 300;
-        color: #424242;
-      }
-      p.title {
-        font-size: 20px;
-        font-weight: bold;
-        img {
-          width: 20px;
-          height: 20px;
-          margin-right: 10px;
-        }
-      }
-      div.inline {
-        display: inline-flex;
-        img {
-          width: 130px;
-          height: 55px;
-        }
-      }
-    }
-    #step3 {
-      p {
-        font-size: 14px;
-        &.question {
-          font-weight: bold;
-        }
-        &.title {
-          font-size: 16px;
-          font-weight: bold;
-        }
-      }
-    }
-    #div_separator {
-      display: inline-flex;
-      p {
-        margin-bottom: 10px;
-        margin-top: 10px;
-        line-height: 1;
-      }
-      .dropdown {
-        margin-left: 15px;
-        line-height: 1;
-      }
-    }
-    .dropdown {
-      font-size: 14px;
-      width: 16.7%;
-      color: #949eb7 !important;
-      padding-top: 7px !important;
-      padding-bottom: 7px !important;
-      line-height: 0;
-      .item {
-        font-size: 14px;
-        color: #949eb7 !important;
-        padding: 7px 0 7px 30px !important;
-      }
-    }
-    .segments {
-      border-color: #949eb7;
-      max-width: 250px;
-      transform: translateX(-50%);
-      left: 50%;
-      .segment {
-        cursor: pointer;
-        text-align: left;
-        font-size: 14px;
-        border-color: #949eb7;
-        &.selected {
-          background-color: #e8ecf1;
-        }
-        img {
-          margin-right: 8px;
-          width: 17px;
-          height: 17px;
-        }
-      }
-    }
-    .text {
-      text-align: left;
-      line-height: 1.67;
-      a {
-        color: #949eb7;
-      }
-    }
-    .button {
-      font-size: 14px;
-      width: 130px;
-      &.right {
-        position: absolute;
-        top: 87%;
-        left: 83%;
-      }
-      &.left {
-        position: absolute;
-        top: 87%;
-        right: 83%;
-      }
-    }
-    #accounts {
-      overflow-y: scroll;
-      height: 70%;
-      .dropdown_fields {
-        display: flex;
-        margin: 7px 0 7px 70px;
-        div.dropdown {
-          margin-right: 10px;
-          width: 130px;
-        }
-        p.import {
-          width: 38px;
-          margin-right: 10px;
-          font-size: 14px;
-          margin-bottom: 0;
-          padding-top: 10px;
-        }
-      }
-      .account {
-        display: inline-flex;
-        margin: 7px 0 7px 42px;
-        .input {
-          font-size: 11px;
-          i {
-            margin-top: 0;
-            display: none;
-          }
-        }
-        &:hover {
-          .input {
-            i {
-              display: inline-block;
-            }
-          }
-          i.arrow.circle.right.large.icon {
-            color: $SemanticGreen;
-          }
-        }
-        .disabled {
-          input {
-            background-color: #E8ECF1;
-          }
-        }
-      }
-      .segment_pending {
-        height: 65%;
-        width: 32%;
-        margin-right: 30px;
-        position: fixed;
-        p {
-          display: inline-flex;
-          margin-bottom: 0;
-          font-size: 1.2em;
-          &.import {
-            font-weight: 700;
-          }
-        }
-        div.dropdown {
-          border: 1px solid rgba(34,36,38,.15);
-          border-radius: .28571429rem;
-          width: 40%;
-          margin-left: 6px;
-          //min-width: 14em;
-          //min-height: 2.71428571em;
-          word-wrap: break-word;
-          line-height: 1em;
-          white-space: normal;
-          outline: 0;
-          padding-left: 10px;
-          &.error {
-            border-color: #e0b4b4;
-          }
-          .menu {
-            overflow: auto;
-            min-height: 0;
-            max-height: 840%;
-            height: auto;
-            min-width: 100%;
-            max-width: 200%;
-            width: auto;
-            right:0;
-            left: auto;
-          }
-          .text {
-            width: 65%;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-          }
-          i {
-            //float: right;
-          }
-        }
-        .div_accounts {
-          overflow-y: auto;
-          height: 75%;
-          overflow-x: hidden;
-          .div_account {
-            display: flex;
-            margin: 7px 0 7px 10px;
-            width: 100%;
-            font-size: 13px;
-            img {
-              width: 30px;
-              height: 30px;
-            }
-            p {
-              white-space: nowrap;
-              width: 30px;
-              text-align: center;
-              margin-top: 4px;
-            }
-          }
-        }
-      }
-      .logo_letter {
-        width: 38px;
-        height: 38px;
-        font-size: 14px;
-        margin-right: 10px;
-        border: solid 1px #dededf;
-        border-radius: 5px;
-        background-size: 86px 86px;
-        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
-        display: flex;
-        background-color: #373b60;
-        color: white;
-        &.pending {
-          margin-right: 8px;
-          width: 30px;
-          height: 30px;
-          p {
-            margin: auto;
-            width: auto !important;
-          }
-        }
-      }
-      input {
-        margin-right: 10px;
-        color: #949eb7 !important;
-      }
-      img {
-        width: 38px;
-        height: 38px;
-        margin-right: 10px;
-        border-radius: 5px;
-        box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
-      }
-      i {
-        cursor: pointer;
-        margin-right: 10px;
-        margin-top: 5px;
-        &.remove {
-          color: #e8ecf1;
-          margin-top: 10px;
-        }
-      }
-      #import_button {
-        //position: absolute;
-        //left: 20px;
-        //width: 88%;
-        //bottom: 20px;
-        margin-top: 10px;
-        width: 100%;
-      }
-    }
-    textarea {
-      font-size: 14px;
-      height: 20%;
-      &.alone {
-        height: 55%;
-      }
-    }
-  }
-}
 .modalApp {
   width: 450px !important;
   height: 500px;
@@ -1066,6 +467,37 @@ button.only-text-button {
 }
 
 #add_bookmark_form {
+  .back_modal{
+    font-weight: bold;
+    margin-bottom: 3%;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .choose_type_app {
+    border: solid 1px #45c997;
+    border-radius: 5px;
+    padding: 15px 22px;
+    .checkbox {
+      display: flex;
+      margin: 0;
+      &:first-child {
+        margin: 0  0 15px 0;
+      }
+      label {
+        color: #939eb7;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      &.checked {
+        label {
+          color: #45c997;
+        }
+      }
+    }
+  }
   .create_profile_input {
     input {
       border:none;
@@ -1364,6 +796,21 @@ i.icon.pin_button {
         font-weight: 300;
         border: 1px solid #e0e1e2;
         background-color: transparent;
+        &.empty_app_indicator {
+          cursor: auto;
+          border: 1px solid $themeOrangeColor;
+          text-align: left;
+          color: $themeOrangeColor;
+          font-style: italic;
+          & > .icon {
+            background-color: $themeOrangeColor;
+          }
+          u {
+            margin-left: 5px;
+            cursor: pointer;
+            font-style: normal;
+          }
+        }
         i {
           background-color: #e0e1e2;
           color: white;
@@ -1449,6 +896,36 @@ i.icon.pin_button {
       margin-right: .5rem;
       &:last-child {
         margin-right: 0;
+      }
+    }
+    &.empty {
+      .team-app-input {
+        .label {
+          background-color: $themeOrangeColor;
+        }
+        input {
+          border: 1px solid $themeOrangeColor;
+        }
+      }
+    }
+    .empty_app_indicator {
+      cursor: auto;
+      border: 1px solid $themeOrangeColor;
+      background-color: transparent;
+      width: 450px;
+      font-weight: normal;
+      text-align: left;
+      color: $themeOrangeColor;
+      font-style: italic;
+      & > .icon {
+        background-color: $themeOrangeColor;
+        color: white;
+        border-radius: 0;
+      }
+      u {
+        margin-left: 5px;
+        cursor: pointer;
+        font-style: normal;
       }
     }
     .receiver-label {
@@ -1607,6 +1084,18 @@ button.action_text_button {
     margin-bottom: 0;
     & > * {
       font-size: 1em;
+    }
+  }
+  .ui.label.user-label {
+    //height: min-content;
+    font-size: .85714286rem;
+    box-shadow: 0 0 0 1px rgba(34, 36, 38, .15) inset;
+    background-color: #2185d0;
+    color: $themeWhiteColor;
+    font-weight: normal;
+    &.update {
+      margin: auto;
+      margin-left: 10px;
     }
   }
 }

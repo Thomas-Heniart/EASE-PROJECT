@@ -33,11 +33,11 @@
     <script src="/jsMinified.v00023/tracker.js"></script>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00039/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00039/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00044/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {
@@ -73,6 +73,16 @@
         amplitude.getInstance().init(window.location.hostname === "ease.space" ? "73264447f97c4623fb38d92b9e7eaeea": "5f012a5e604acb0283ed11ed8da5414f");
     </script>
     <script type="text/javascript" src="jsMinified.v00023/tracker.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-75916041-5');
+    </script>
 </head>
 
 <body>
