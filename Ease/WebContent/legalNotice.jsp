@@ -9,6 +9,17 @@
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:300,700"/>
         <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
         <link rel="manifest" href="manifest.json">
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-75916041-5');
+        </script>
+
         <style>
             img{
                 display: block;
