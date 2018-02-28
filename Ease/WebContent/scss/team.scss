@@ -938,6 +938,30 @@ i.icon.pin_button {
         text-overflow: ellipsis;
       }
     }
+    .test_connection {
+      position: absolute;
+      margin-top: 0;
+      color: #414141;
+      font-size: 14px;
+      margin-left: 5px;
+      cursor: pointer;
+      i {
+        color: #45c997;
+      }
+      &.disabled {
+        text-decoration: none;
+        cursor: auto;
+        color: #E8ECF1;
+      }
+      &.underline_hover {
+        &:hover {
+          text-decoration: underline;
+          i {
+            text-decoration: none;
+          }
+        }
+      }
+    }
   }
   .users-dropdown {
     .ui.label {

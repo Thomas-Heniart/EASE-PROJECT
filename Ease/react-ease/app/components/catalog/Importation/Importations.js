@@ -863,7 +863,6 @@ class Importations extends React.Component {
   importAccountsNewRoom = async () => {
     const receivers = {[this.props.teams[this.state.selectedTeam].my_team_user_id]: {allowed_to_see_password: true}};
     const receiversLink = [this.props.teams[this.state.selectedTeam].my_team_user_id];
-
     const response = await this.props.dispatch(createTeamChannel({
       team_id: this.state.selectedTeam,
       name: this.state.roomName[this.state.selectedTeam],
