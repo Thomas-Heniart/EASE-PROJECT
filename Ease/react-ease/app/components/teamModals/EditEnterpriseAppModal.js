@@ -1,15 +1,16 @@
 import React, {Component} from "react";
-import {showTeamEditEnterpriseAppModal, showPinTeamAppToDashboardModal} from '../../actions/teamModalActions';
+import {showTeamEditEnterpriseAppModal} from '../../actions/teamModalActions';
 import {teamEditEnterpriseCardReceiver} from "../../actions/appsActions";
 import api from "../../utils/api";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {Label, Container, Icon, Form, Input, Popup, Button, Message } from 'semantic-ui-react';
 import {
   credentialIconType,
   transformCredentialsListIntoObject,
   transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
 import {connect} from "react-redux";
+import {testCredentials} from "../../actions/catalogActions";
 
 const CredentialInput = ({item, onChange}) => {
   return (
@@ -56,6 +57,12 @@ class EditEnterpriseAppModal extends Component {
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  testConnection = () => {
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      website_id: this.props.team_card.website.id
+    }));
   };
   confirm = (e) => {
     e.preventDefault();
@@ -115,6 +122,8 @@ class EditEnterpriseAppModal extends Component {
             <Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
               {credentialsInputs}
               <Message error content={this.state.errorMessage}/>
+              {this.props.team_card.sub_type === 'classic' &&
+              <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
               <Button
                   type="submit"
                   disabled={this.state.loading}
