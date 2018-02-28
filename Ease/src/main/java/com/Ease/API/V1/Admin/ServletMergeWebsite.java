@@ -2,6 +2,7 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.AnyApp;
 import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.WebsiteApp;
@@ -27,6 +28,11 @@ public class ServletMergeWebsite extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             Website website = catalog.getWebsiteWithId(id, sm.getHibernateQuery());
             Website website_to_merge = catalog.getWebsiteWithId(id_to_merge, sm.getHibernateQuery());
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            hibernateQuery.querySQLString("UPDATE EASE_UPDATE SET website_id = :w1 WHERE website_id = :w2");
+            hibernateQuery.setParameter("w1", website.getDb_id());
+            hibernateQuery.setParameter("w2", website_to_merge.getDb_id());
+            hibernateQuery.executeUpdate();
             website_to_merge.getWebsiteAppSet().forEach(websiteApp -> {
                 if (websiteApp.isAnyApp() && website.getWebsiteAttributes().isIntegrated()) {
                     AnyApp anyApp = (AnyApp) websiteApp;

@@ -1,0 +1,17 @@
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 64, 'https://www.youtube.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 65, 'https://mail.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 68, 'https://drive.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 129, 'https://analytics.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 246, 'https://calendar.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 272, 'https://play.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 282, 'https://adwords.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 341, 'https://plus.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 342, 'https://docs.google.com/spreadsheets/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 378, 'https://photos.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 379, 'https://keep.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 380, 'https://hangouts.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 381, 'https://gsuite.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 421, 'https://docs.google.com/document/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 452, 'https://www.google.com/partners/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 536, 'https://console.firebase.google.com/');
+INSERT INTO WEBSITE_ALTERNATIVE_URL VALUES (NULL, 773, 'https://datastudio.google.com/');

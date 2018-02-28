@@ -2,6 +2,7 @@ import createReducer from  "./createReducer";
 
 export const catalog = createReducer({
   websites: [],
+  updates: [],
   categories: [],
   sso_list: [],
   requests_number: 0,
@@ -31,10 +32,22 @@ export const catalog = createReducer({
       fetching: false
     }
   },
+  ['FETCH_UPDATES'](state, action){
+    return {
+      ...state,
+      updates: action.payload,
+    }
+  },
   ['CATALOG_REQUEST_WEBSITE_FULFILLED'](state, action){
     return {
         ...state,
       requests_number: state.requests_number + 1
+    }
+  },
+  ['DELETE_UPDATE'](state, action){
+    return {
+      ...state,
+      updates: state.updates.filter(item => {return action.payload.update_id !== item.id})
     }
   }
 });

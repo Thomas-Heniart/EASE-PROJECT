@@ -14,16 +14,22 @@
 						<a href="pricing">
 							<fmt:message key="landing.header.price-link"/>
 						</a>
+						<a href="/rgpd">
+							<fmt:message key="landing.header.gdpr"/>
+						</a>
+						<a href="https://easespace.welcomekit.co" target="_blank">
+							<fmt:message key="landing.footer.hiring"/>
+						</a>
 						<a href="/?skipLanding=true">
 							<fmt:message key="landing.header.connexion-link"/>
-						</a>
-						<a href="/#/teamCreation?plan_id=0">
-							<fmt:message key="landing.footer.link.create-account"/>
 						</a>
 					</div>
 				</div>
 				<div class="right-menu ui row menu-column">
 					<div class="links">
+						<a href="/#/teamCreation?plan_id=0">
+							<fmt:message key="landing.footer.link.create-account"/>
+						</a>
 						<a href="contact">
 							<fmt:message key="landing.header.contact-link"/>
 						</a>

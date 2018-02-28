@@ -223,28 +223,6 @@ public abstract class ServletManager {
             String teamKey = this.getTeamKey(team);
             if (teamKey == null && teamUser.isVerified() && !teamUser.isDisabled())
                 teamProperties.put("teamKey", teamUser.getDecipheredTeamKey(keyUser));
-            if (teamUser.getUser() != null && !teamUser.isVerified()) {
-                TeamUser teamUser_admin = team.getTeamUserWithId(teamUser.getAdmin_id());
-                if (teamKey != null) {
-                    teamUser.lastRegistrationStep(keyUser, teamKey, this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
-                } else {
-                    if (teamUser.getTeamKey() != null) {
-                        teamUser.finalizeRegistration(keyUser, user.getUserKeys().getDecipheredPrivateKey(keyUser), this.getUserWebSocketManager(teamUser_admin.getUser().getDb_id()), this.getHibernateQuery());
-                        teamProperties.put("teamKey", teamUser.getDecipheredTeamKey(keyUser));
-                    }
-                }
-            }
-            if (teamKey != null) {
-                for (TeamUser teamUser1 : team.getTeamUsers().values()) {
-                    if (teamUser1.getUser() == null) {
-                        teamUser1.setTeamKey(null);
-                        this.saveOrUpdate(teamUser1);
-                    } else if (!teamUser1.isVerified() && !teamUser1.isDisabled()) {
-                        teamUser1.setTeamKey(RSA.Encrypt(teamKey, teamUser1.getUser().getUserKeys().getPublicKey()));
-                        this.saveOrUpdate(teamUser1);
-                    }
-                }
-            }
         }
         user.getCookies().forEach(cookie -> response.addCookie(cookie));
     }
@@ -575,8 +553,16 @@ public abstract class ServletManager {
         return (String) this.getUserProperties(this.getUser().getDb_id()).get("keyUser");
     }
 
+    public String getPrivateKey() {
+        return (String) this.getUserProperties(this.getUser().getDb_id()).get("privateKey");
+    }
+
     public String getTeamKey(Team team) {
         return (String) this.getTeamProperties(team.getDb_id()).get("teamKey");
+    }
+
+    public String getUserPrivateKey() {
+        return (String) this.getUserProperties(this.getUser().getDb_id()).get("privateKey");
     }
 
     public void decipher(JSONObject jsonObject) throws HttpServletException {

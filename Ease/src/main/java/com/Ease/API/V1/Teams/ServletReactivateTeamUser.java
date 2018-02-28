@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Teams;
 
-import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.Notification;
@@ -37,19 +36,17 @@ public class ServletReactivateTeamUser extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This user isn't disabled");
             TeamUser teamUser_connected = sm.getTeamUser(team);
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-            if (teamUser.getUser() == null)
+            if (teamUser.getUser() == null || !teamUser.getUser().getUserStatus().isRegistered())
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is not registered");
             String keyUser = (String) sm.getUserProperties(teamUser.getUser().getDb_id()).get("keyUser");
             if (keyUser == null) {
-                HibernateQuery hibernateQuery = sm.getHibernateQuery();
-                hibernateQuery.querySQLString("SELECT publicKey FROM userKeys JOIN users ON users.key_id = userKeys.id WHERE users.id = ?");
-                hibernateQuery.setParameter(1, teamUser.getUser().getDb_id());
-                String publicKey = (String) hibernateQuery.getSingleResult();
+                String publicKey = teamUser.getUser().getUserKeys().getPublicKey();
                 teamUser.setTeamKey(RSA.Encrypt(teamKey, publicKey));
             } else {
                 teamUser.setTeamKey(AES.encrypt(teamKey, keyUser));
-                teamUser.setDisabled(false);
+                teamUser.setState(2);
             }
+            teamUser.setDisabled(false);
             Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " validated again your access to " + team.getName(), "/resources/notifications/flag.png", "#/teams" + team.getDb_id().toString());
             sm.saveOrUpdate(notification);
             WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());

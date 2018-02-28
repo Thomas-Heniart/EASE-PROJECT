@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import { Input, Container, Loader } from 'semantic-ui-react';
+import { Container, Loader } from 'semantic-ui-react';
 import {handleSemanticInput} from "../../utils/utils";
 import AppsContainer from "./AppsContainer";
-import AddAnyApp from './AddAnyApp'
+import AddAnyApp from './AddAnyApp';
 import {connect} from "react-redux";
 import { Switch, Route } from 'react-router-dom';
 import CategoryAppsContainer from "./CategoryAppsContainer";
@@ -50,9 +50,9 @@ class WebsitesContainer extends Component{
           <Switch>
             <Route exact
                    path={`${this.props.match.path}`}
-                   render={(props) => <AppsContainer {...props} title={'Recently added'} websites={websites} openModal={this.openModal}/>}/>
+                   render={(props) => <AppsContainer {...props} title={'Recently added'} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
             <Route path={`${this.props.match.path}/:categoryId`}
-                   render={(props) => <CategoryAppsContainer {...props} websites={websites} openModal={this.openModal}/>}/>
+                   render={(props) => <CategoryAppsContainer {...props} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
           </Switch>}
           {websites.length === 0 && this.props.catalog.loaded &&
             <AddAnyApp query={query} focus={true}/>}

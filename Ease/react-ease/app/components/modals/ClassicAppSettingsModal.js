@@ -1,15 +1,14 @@
 import React, {Component} from "react";
 import AppSettingsNameInput from "./AppSettingsNameInput";
 import {handleSemanticInput} from "../../utils/utils";
-import {Image,List,Segment, Grid,Loader,Checkbox,Message, Input, Label,Form, Menu, Icon, Container, Button} from 'semantic-ui-react';
+import {Message, Input, Label,Form, Icon, Container, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
-import {TestCredentialsButton, AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./utils";
-import {isAppInformationEmpty, transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
+import {AppSettingsMenu, ShareSection, RemoveSection} from "./utils";
+import {transformCredentialsListIntoObject, transformWebsiteInfoIntoListAndSetValues, credentialIconType} from "../../utils/utils";
 import {editClassicApp, deleteApp, validateApp} from "../../actions/dashboardActions";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
-import * as api from "../../utils/api";
 import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
@@ -188,35 +187,5 @@ class ClassicAppSettingsModal extends Component {
     )
   }
 }
-
-const ssoSection = () => {
-  return (
-      <Form.Field>
-        <span>Modifications will also apply to:</span>
-        <Segment class="pushable ssoListSegment">
-          <Grid columns={2} class="ssoListGrid">
-            <Grid.Column class="showSegment">
-              <div class="display_flex align_items_center">
-                <img class="appLogo" src={'/resources/websites/Facebook/logo.png'}/>
-                <span class="overflow-ellipsis">Facebook</span>
-              </div>
-            </Grid.Column>
-            <Grid.Column class="showSegment">
-              <div class="display_flex align_items_center">
-                <img class="appLogo" src={'/resources/websites/Facebook/logo.png'}/>
-                <span class="overflow-ellipsis">Facebook</span>
-              </div>
-            </Grid.Column>
-            <Grid.Column class="showSegment">
-              <div class="display_flex align_items_center">
-                <img class="appLogo" src={'/resources/websites/Facebook/logo.png'}/>
-                <span class="overflow-ellipsis">Facebook</span>
-              </div>
-            </Grid.Column>
-          </Grid>
-        </Segment>
-      </Form.Field>
-  )
-};
 
 export default ClassicAppSettingsModal;

@@ -31,6 +31,9 @@ public class ServletDeleteWebsite extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Website website = catalog.getWebsiteWithId(website_id, hibernateQuery);
+            hibernateQuery.querySQLString("DELETE FROM Update u WHERE u.website.db_id = :website_id");
+            hibernateQuery.setParameter("website_id", website_id);
+            hibernateQuery.executeUpdate();
             for (Team team : website.getTeams())
                 team.removeTeamWebsite(website);
             for (App app : website.getWebsiteAppSet()) {

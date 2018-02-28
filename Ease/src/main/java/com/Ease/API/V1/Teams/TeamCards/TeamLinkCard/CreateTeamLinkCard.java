@@ -60,7 +60,7 @@ public class CreateTeamLinkCard extends HttpServlet {
                 TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
                 App app;
                 if (teamUser_receiver.isVerified()) {
-                    Profile profile = teamUser_receiver.getOrCreateProfile(sm.getUserWebSocketManager(teamUser_receiver.getUser().getDb_id()), sm.getHibernateQuery());
+                    Profile profile = teamUser_receiver.getOrCreateProfile(sm.getHibernateQuery());
                     app = AppFactory.getInstance().createLinkApp(teamCard.getName(), url, img_url, profile);
                     sm.saveOrUpdate(app);
                     profile.addApp(app);

@@ -75,7 +75,7 @@ public class PostServletManager extends ServletManager {
         try {
             return canBeNull ? params.optJSONObject(paramName) : params.getJSONObject(paramName);
         } catch (Exception e) {
-            return null;
+            throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected Object).");
         }
     }
 

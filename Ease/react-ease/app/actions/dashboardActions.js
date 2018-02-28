@@ -3,6 +3,7 @@ import post_api from "../utils/post_api";
 import extension from "../utils/extension_api";
 import {fetchTeamApp} from "./teamActions";
 import {showExtensionDownloadModal} from "./modalActions";
+import {deleteUpdate} from "./catalogActions";
 
 export function fetchDashboard(){
   return (dispatch, getState) => {
@@ -229,12 +230,22 @@ export function validateApp({app_id}) {
   }
 }
 
+export function deleteUpdateRelated({card_id, app_id}){
+  return (dispatch, getState) => {
+    getState().catalog.updates.map(item => {
+      if ((card_id !== -1 && item.team_card_id === card_id) || (app_id !== -1 && item.app_id === app_id))
+        dispatch({type: 'DELETE_UPDATE', payload: {update_id: item.id}});
+    });
+  }
+}
+
 export function deleteApp({app_id}){
   return (dispatch, getState) => {
     return post_api.dashboard.deleteApp({
       app_id: app_id,
       ws_id: getState().common.ws_id
     }).then(response => {
+      dispatch(deleteUpdateRelated({app_id, card_id: -1}));
       dispatch(deleteAppAction({
         app_id: app_id
       }));
@@ -494,6 +505,35 @@ export function removeProfile({profile_id}){
       profile_id: profile_id
     });
   }
+}
+
+export function editAppCredentials({account_information, app}) {
+  if (app.sso_group_id)
+    return editSsoGroup({
+      sso_group_id: app.sso_group_id,
+      account_information: account_information
+    });
+  else if (app.type === 'classicApp')
+    return editClassicApp({
+      app_id: app.id,
+      name: app.name,
+      account_information: account_information
+    });
+  else if (app.type === 'softwareApp')
+    return editSoftwareApp({
+      app_id: app.id,
+      name: app.name,
+      account_information: account_information
+    });
+  else
+    return editAnyApp({
+      app_id: app.id,
+      name: app.name,
+      url: app.website.login_url,
+      img_url: app.website.logo,
+      account_information: account_information,
+      connection_information: app.website.information
+    })
 }
 
 export function editClassicApp({app_id, name, account_information}){

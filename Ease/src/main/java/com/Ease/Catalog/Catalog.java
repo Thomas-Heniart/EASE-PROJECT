@@ -181,16 +181,15 @@ public class Catalog {
                 if (subdomain.equals("www"))
                     subdomain = "";
             }
-            hibernateQuery.queryString("SELECT w FROM Website w WHERE w.login_url LIKE :domain ORDER BY w.db_id ASC");
+            hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet wau WHERE w.login_url LIKE :domain OR wau IS NOT NULL AND wau.url LIKE :domain ORDER BY w.db_id ASC");
             hibernateQuery.setParameter("domain", "%" + domain + "%");
             hibernateQuery.cacheQuery();
             List<Website> websites = hibernateQuery.list();
             int last_value = 0;
             Website last_website = null;
             for (Website website : websites) {
-                System.out.println(website.getDb_id());
                 int match_value = website.matchUrl(subdomain, domain, path);
-                if (match_value == 3) {
+                if (match_value == 4) {
                     if (website.matchInformationSet(information_names))
                         return website;
                 } else if (match_value > 0 && match_value > last_value) {

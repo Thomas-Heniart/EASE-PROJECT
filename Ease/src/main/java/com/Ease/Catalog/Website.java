@@ -497,10 +497,19 @@ public class Website {
                 }
                 if (login_domain.equals(domain)) {
                     if (login_subdomain.equals(subdomain)) {
-                        if (login_path.equals(path))
-                            return 3;
-                        max_val = 2;
-                    }
+                        if (login_path.equals(path)) {
+                            if (this.getWebsiteAttributes().isIntegrated())
+                                return 4;
+                            else
+                                max_val = 3;
+                        } else {
+                            if (this.getWebsiteAttributes().isIntegrated())
+                                max_val = 3;
+                            else if (max_val < 3)
+                                max_val = 2;
+                        }
+                    } else if (max_val < 2)
+                        max_val = 1;
                 }
             }
             return max_val;
@@ -510,9 +519,11 @@ public class Website {
     }
 
     public boolean matchInformationSet(Set<String> informationSet) {
-        if (this.getWebsiteInformationList().size() != informationSet.size())
+        if (this.getWebsiteInformationList().size() < informationSet.size())
             return false;
         for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
+            if (!websiteInformation.getInformation_name().equals("login") && !websiteInformation.getInformation_name().equals("password"))
+                continue;
             if (!informationSet.contains(websiteInformation.getInformation_name()))
                 return false;
         }

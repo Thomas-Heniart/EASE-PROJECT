@@ -1,21 +1,52 @@
-{ 
-    "name":"PayFit", 
-    "lastLogin":"", 
-    "home":"https://app.payfit.com/login/", 
-    "connect":{ 
-        "todo":[ 
-            {"action":"fill", "what":"login", "search":"#email"},
-            {"action":"fill", "what":"password", "search":"#password"},
-            {"action":"trueClick", "search":"button[type='submit']"}
-        ] 
-    }, 
-    "logout":{ 
-        "todo":[ 
-            {"action":"trueClick", "search":"._yljwae div[aria-describedby*='tippy-tooltip-2'] div"},
-            {"action":"trueClick", "search":"#tippy-tooltip-2 .tippy-tooltip-content ._1d4d0pd"}
-        ] 
-    }, 
-    "checkAlreadyLogged":[
-        {"search":"._yljwae"}
-    ] 
+{
+  "name": "PayFit",
+  "lastLogin": "",
+  "home": "https://app.payfit.com/",
+  "connect": {
+    "todo": [
+      {
+        "action": "fill",
+        "what": "login",
+        "search": "#email"
+      },
+      {
+        "action": "fill",
+        "what": "password",
+        "search": "#password"
+      },
+      {
+        "action": "trueClick",
+        "search": "button[type='submit']"
+      }
+    ]
+  },
+  "logout": {
+    "todo": [
+      {
+        "action": "trueClick",
+        "search": "#root > div.container_9ddgll > div.container_1sts4uk > div.footer_1kmj4oi > div:nth-child(2) > div > div > div > div"
+      },
+      {
+        "action": "waitfor",
+        "search": "#tippy-tooltip-4 > div > div > div > div > div:nth-child(2)"
+      },
+      {
+        "action": "trueClick",
+        "search": "#tippy-tooltip-4 > div > div > div > div > div:nth-child(2)"
+      },
+      {
+        "action": "waitfor",
+        "search": "#email"
+      }
+    ]
+  },
+  "checkAlreadyLogged": [
+    {
+      "action": "waitfor",
+      "search": "#email, #root > div.container_9ddgll > div.container_1sts4uk > div.footer_1kmj4oi > div:nth-child(2) > div > div > div > div"
+    },
+    {
+      "search": "#root > div.container_9ddgll > div.container_1sts4uk > div.footer_1kmj4oi > div:nth-child(2) > div > div > div > div"
+    }
+  ]
 }

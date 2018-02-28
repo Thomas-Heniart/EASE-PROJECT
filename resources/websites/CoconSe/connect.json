@@ -1,0 +1,21 @@
+{
+  "name": "Cocon.Se",
+  "lastlogin": "",
+  "home":"https://self.cocon.se/login.php",
+  "connect": {
+    "todo": [
+      {"action": "fill", "what": "login", "search": "#inputUsername"},
+      {"action": "fill", "what": "password", "search": "#inputPassword"},
+      {"action": "trueClick", "search": "button[type='submit']"}
+    ]
+  },
+  "logout": {
+    "todo": [
+      {"action": "aclick", "search": "a[href*='logout']"}
+    ]
+  },
+  "checkAlreadyLogged": [
+    {"action": "waitfor", "search": "#inputUsername, a[href*='logout']"},
+    {"search": "a[href*='logout']"}
+  ]
+}

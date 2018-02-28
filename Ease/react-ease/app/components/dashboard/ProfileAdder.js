@@ -1,10 +1,8 @@
 import React, {Component} from "react";
 import { findDOMNode } from 'react-dom';
 import classnames from "classnames";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
-import { DropTarget, DragSource } from 'react-dnd';
+import { DropTarget } from 'react-dnd';
 import {ItemTypes} from "./ItemTypes";
-import {insertAppInProfile, createProfile, createProfileAndInsertApp} from "../../actions/dashboardActions";
 import flow from 'lodash/flow';
 import {connect} from "react-redux";
 

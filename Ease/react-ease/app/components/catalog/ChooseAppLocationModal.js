@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Button, Container, Form, Table, List, Loader, Icon } from 'semantic-ui-react';
+import { Input, Button, Container, Form, Table, List, Icon } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {dashboard} from "../../utils/post_api";

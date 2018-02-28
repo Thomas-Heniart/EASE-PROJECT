@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Checkbox, Button, Icon } from 'semantic-ui-react';
-import { withRouter} from 'react-router-dom';
+import {logoLetter} from "../../utils/utils";
+import {withRouter} from 'react-router-dom';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 
@@ -27,9 +28,10 @@ class ChooseTypeAppModal extends React.Component {
       channel_id: room_id,
       website: this.state.website,
       type: this.state.value,
-      name: this.state.website.name ? this.state.website.name : this.props.appName,
+      name: this.state.website.name && !this.props.account_information ? this.state.website.name : this.props.appName,
       url: this.props.url,
-      subtype: this.state.subtype
+      subtype: this.state.subtype,
+      account_information: this.props.account_information ? this.props.account_information : -1
     });
     this.props.history.push(`/teams/${team_id}/${room_id}`);
   };
@@ -42,14 +44,14 @@ class ChooseTypeAppModal extends React.Component {
     return (
       <Form class="container" id="add_bookmark_form" onSubmit={e => this.catalogToTeamSpace(e, team_id, room_id)}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-            {website.logo ?
+            {website.logo && website.logo !== '' ?
               <div className="squared_image_handler">
                 <img src={website.logo} alt="Website logo"/>
               </div>
               :
               <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
                 <div style={{margin:'auto'}}>
-                  <p style={{margin:'auto'}}>{this.props.logoLetter}</p>
+                  <p style={{margin:'auto'}}>{logoLetter(appName)}</p>
                 </div>
               </div>}
               <div className='show_team'>
@@ -59,25 +61,21 @@ class ChooseTypeAppModal extends React.Component {
               </div>
           </Form.Field>
           <Form.Field>
-              <div style={{marginBottom: '25px'}}>People who will access this app:</div>
+              <div style={{fontWeight:'bold'}}>People who will access this app:</div>
           </Form.Field>
-          <Form.Field>
+          <Form.Field className='choose_type_app'>
               <Checkbox radio
-                        label='Will share the same account'
+                        label='Share a common account together'
                         name='checkboxRadioGroup'
                         value='Simple'
                         checked={this.state.value === 'Simple'}
-                        onChange={this.handleChange}
-                        style={{margin: '0'}}/>
-          </Form.Field>
-          <Form.Field>
+                        onChange={this.handleChange}/>
               <Checkbox radio
-                        label='Each of them will have their own account'
+                        label='Each use their own nominative account'
                         name='checkboxRadioGroup'
                         value='Multi'
                         checked={this.state.value === 'Multi'}
-                        onChange={this.handleChange}
-                        style={{margin: '0'}}/>
+                        onChange={this.handleChange}/>
           </Form.Field>
           <Button
             attached='bottom'

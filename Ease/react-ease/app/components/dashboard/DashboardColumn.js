@@ -1,6 +1,5 @@
 import React, {Component} from "react";
-import {Loader, Input, Label,Icon} from 'semantic-ui-react';
-import {showLogWithAppSettingsModal, showLinkAppSettingsModal, showSimpleAppSettingsModal, showExtensionDownloadModal} from "../../actions/modalActions";
+import {showSimpleAppSettingsModal} from "../../actions/modalActions";
 import {insertProfileIntoColumn} from "../../actions/dashboardActions";
 import Profile from "./Profile";
 import ProfileAdder from "./ProfileAdder";
@@ -8,10 +7,7 @@ import classnames from "classnames";
 import {connect} from "react-redux";
 import flow from 'lodash/flow';
 import {ItemTypes} from "./ItemTypes";
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
-import CustomDragLayer from "./CustomDragLayer";
-import { DropTarget, DragSource } from 'react-dnd';
+import { DropTarget } from 'react-dnd';
 
 @connect(store => ({
   dashboard: store.dashboard,

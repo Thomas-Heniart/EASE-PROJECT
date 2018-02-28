@@ -17,9 +17,6 @@ import com.Ease.Utils.DatabaseRequest;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketManager;
-import com.Ease.websocketV1.WebSocketMessageAction;
-import com.Ease.websocketV1.WebSocketMessageFactory;
-import com.Ease.websocketV1.WebSocketMessageType;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -376,7 +373,7 @@ public class TeamUser {
         res.put("arrival_date", this.getArrival_date() == null ? JSONObject.NULL : this.getArrival_date().getTime());
         res.put("first_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getFirst_name());
         res.put("last_name", this.getUser() == null ? "" : this.getUser().getPersonalInformation().getLast_name());
-        res.putOpt("departure_date", this.getDepartureDate() == null ? JSONObject.NULL : this.getDepartureDate().getTime());
+        res.put("departure_date", this.getDepartureDate() == null ? JSONObject.NULL : this.getDepartureDate().getTime());
         res.put("team_id", this.getTeam().getDb_id());
         res.put("state", this.getState());
         JSONArray channel_ids = new JSONArray();
@@ -426,28 +423,11 @@ public class TeamUser {
         hibernateQuery.saveOrUpdateObject(this);
     }
 
-    public void finalizeRegistration(String userKey, String userPrivateKey, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
-        this.finalizeRegistration(userKey, userPrivateKey, hibernateQuery);
+    public void lastRegistrationStep(WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
         NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
         if (this.getTeamCardReceivers().isEmpty())
             return;
-        Profile profile = this.getOrCreateProfile(userWebSocketManager, hibernateQuery);
-        this.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
-            app.setProfile(profile);
-            app.setPosition(profile.getSize());
-            hibernateQuery.saveOrUpdateObject(app);
-            profile.addApp(app);
-        });
-    }
-
-    public void lastRegistrationStep(String keyUser, String teamKey, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
-        this.setTeamKey(AES.encrypt(teamKey, keyUser));
-        this.setState(2);
-        hibernateQuery.saveOrUpdateObject(this);
-        NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
-        if (this.getTeamCardReceivers().isEmpty())
-            return;
-        Profile profile = this.getOrCreateProfile(userWebSocketManager, hibernateQuery);
+        Profile profile = this.getOrCreateProfile(hibernateQuery);
         this.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
             app.setProfile(profile);
             app.setPosition(profile.getSize());
@@ -481,7 +461,7 @@ public class TeamUser {
     }
 
     public boolean isRegistered() {
-        return this.getUser() != null;
+        return this.getUser() != null && this.getUser().getUserStatus().isRegistered();
     }
 
     public boolean isSuperior(TeamUser teamUserToModify) {
@@ -524,11 +504,11 @@ public class TeamUser {
      * @return Profile profile
      * @throws HttpServletException
      */
-    public Profile getOrCreateProfile(WebSocketManager webSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
-        if (this.getUser() == null)
+    public Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+        if (this.getUser() == null || !this.getUser().getUserStatus().isRegistered())
             throw new HttpServletException(HttpStatus.InternError);
         Profile profile;
-        if (!this.getTeamUserStatus().isProfile_created()) {
+        if (this.getProfile() == null) {
             int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
             profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
             hibernateQuery.saveOrUpdateObject(profile);
@@ -537,46 +517,12 @@ public class TeamUser {
             this.setProfile(profile);
             this.getTeamUserStatus().setProfile_created(true);
             hibernateQuery.saveOrUpdateObject(this);
-            return this.getProfile();
-        } else {
-            if (this.getUser().getProfileSet().isEmpty()) {
-                profile = new Profile(this.getUser(), 2, 0, new ProfileInformation(this.getTeam().getName()));
-                hibernateQuery.saveOrUpdateObject(profile);
-                this.getUser().addProfile(profile);
-                this.setProfile(profile);
-                hibernateQuery.saveOrUpdateObject(this);
-                webSocketManager.sendObject(WebSocketMessageFactory.createUserWebSocketMessage(WebSocketMessageType.DASHBOARD_PROFILE, WebSocketMessageAction.CREATED, profile.getWebSocketJson()));
-                return this.getProfile();
-            } else if (this.getProfile() == null) {
-                return this.getUser().getProfileSet().stream().findAny().get();
-            } else
-                return this.getProfile();
         }
+        return this.getProfile();
     }
 
     public Profile createTeamProfile(HibernateQuery hibernateQuery) throws HttpServletException {
-        if (!this.isVerified())
-            return null;
-        Profile profile = null;
-        if (!this.getTeamUserStatus().isProfile_created()) {
-            int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
-            profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
-            hibernateQuery.saveOrUpdateObject(profile);
-            this.getUser().addProfile(profile);
-            this.getUser().moveProfile(profile.getDb_id(), 2, 0, hibernateQuery);
-            this.setProfile(profile);
-            this.getTeamUserStatus().setProfile_created(true);
-            hibernateQuery.saveOrUpdateObject(this);
-        } else {
-            if (this.getUser().getProfileSet().isEmpty()) {
-                profile = new Profile(this.getUser(), 2, 0, new ProfileInformation(this.getTeam().getName()));
-                hibernateQuery.saveOrUpdateObject(profile);
-                this.getUser().addProfile(profile);
-                this.setProfile(profile);
-                hibernateQuery.saveOrUpdateObject(this);
-            }
-        }
-        return profile;
+        return this.getOrCreateProfile(hibernateQuery);
     }
 
     @Override
@@ -616,5 +562,11 @@ public class TeamUser {
 
     public void addTeamSingleSoftwareCardToFill(TeamSingleSoftwareCard teamSingleSoftwareCard) {
         this.getTeamSingleSoftwareCardSet().add(teamSingleSoftwareCard);
+    }
+
+    public TeamUser getAdmin() throws HttpServletException {
+        if (this.getAdmin_id() == null)
+            throw new HttpServletException(HttpStatus.BadRequest, "This user does not have admin");
+        return this.getTeam().getTeamUserWithId(this.getAdmin_id());
     }
 }

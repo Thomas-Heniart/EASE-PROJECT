@@ -30,7 +30,8 @@ export const teamCard = createReducer({
       name: action.payload.name,
       url: action.payload.url,
       type: action.payload.type,
-      subtype: action.payload.subtype
+      subtype: action.payload.subtype,
+      account_information: action.payload.account_information
     }
   }
 });

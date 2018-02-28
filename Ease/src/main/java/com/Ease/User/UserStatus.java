@@ -33,7 +33,7 @@ public class UserStatus {
     private boolean homepage_email_sent = false;
 
     @Column(name = "terms_reviewed")
-    private boolean terms_reviewed = false;
+    private boolean terms_reviewed = true;
 
     @Column(name = "team_tuto_done")
     private boolean team_tuto_done = false;
@@ -58,6 +58,9 @@ public class UserStatus {
 
     @Column(name = "tip_importation_seen")
     private boolean tip_importation_seen = false;
+
+    @Column(name = "registered")
+    private boolean registered = false;
 
     public UserStatus() {
 
@@ -189,6 +192,14 @@ public class UserStatus {
 
     public void setTip_importation_seen(boolean tip_importation_seen) {
         this.tip_importation_seen = tip_importation_seen;
+    }
+
+    public boolean isRegistered() {
+        return registered;
+    }
+
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
     }
 
     @Override
