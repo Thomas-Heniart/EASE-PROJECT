@@ -91,6 +91,9 @@ public class MailjetContactWrapper {
     }
 
     public void addEmailToList(String email, String listId) throws MailjetSocketTimeoutException, MailjetException {
+        mailjetResponse = mailjetClient.get(new MailjetRequest(Contact.resource, email));
+        if (mailjetResponse.getData().length() == 0)
+            mailjetResponse = mailjetClient.post(new MailjetRequest(Contact.resource, email));
         JSONArray lists = new JSONArray()
                 .put(new JSONObject()
                         .put("ListId", listId)
