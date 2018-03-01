@@ -6,6 +6,7 @@ import {showFillSimpleCardCredentialsModal} from "../../actions/teamModalActions
 import {teamEditSingleCardFiller, teamEditSingleCardCredentials} from "../../actions/appsActions";
 import {teamUserRoles} from "../../utils/utils";
 import {connect} from "react-redux";
+import {testCredentials} from "../../actions/catalogActions";
 
 const CredentialInput = ({item, onChange}) => {
   return (
@@ -49,6 +50,12 @@ class FillSimpleCardCredentialsModal extends Component {
     });
     this.setState({credentials: credentials});
   };
+  testConnection = () => {
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      website_id: this.props.team_card.website.id
+    }));
+  };
   close = () => {
     this.props.dispatch(showFillSimpleCardCredentialsModal({
       active: false
@@ -87,6 +94,8 @@ class FillSimpleCardCredentialsModal extends Component {
             <Form onSubmit={this.submit} error={!!this.state.errorMessage.length}>
               {credentialsInputs}
               <Message error content={this.state.errorMessage}/>
+              {this.props.team_card.sub_type === 'classic' &&
+              <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
               <Button
                   type="submit"
                   disabled={this.state.loading}
