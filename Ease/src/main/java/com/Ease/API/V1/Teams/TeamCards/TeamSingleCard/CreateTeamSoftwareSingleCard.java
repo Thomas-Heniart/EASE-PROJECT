@@ -73,6 +73,11 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                     teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
                     teamSingleSoftwareCard.setTeamUser_filler_test(teamUser_filler);
                 }
+                Boolean generateMagicLink = sm.getBooleanParam("generate_magic_link", true, true);
+                if (generateMagicLink == null)
+                    generateMagicLink = false;
+                if (generateMagicLink)
+                    teamSingleSoftwareCard.generateMagicLink();
             } else {
                 account_information = software.getAllCredentialsFromJson(account_information);
                 account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, hibernateQuery);
