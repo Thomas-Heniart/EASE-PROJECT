@@ -121,6 +121,8 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
+        res.put("magic_link", this.getMagickLink() == null ? "" : this.getMagickLink());
+        res.put("magic_link_expiration_date", this.getMagicLinkExpirationDate() == null ? JSONObject.NULL : this.getMagicLinkExpirationDate().getTime());
         return res;
     }
 
