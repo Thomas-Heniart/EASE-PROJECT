@@ -1,6 +1,7 @@
 package com.Ease.Team.TeamCard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Context.Variables;
 import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -123,7 +124,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
     }
 
     public void generateMagicLink() {
-        this.magickLink = UUID.randomUUID().toString();
+        this.magickLink = Variables.URL_PATH + "fill/" + this.getDb_id() + "/" + UUID.randomUUID().toString();
         Calendar now = Calendar.getInstance();
         now.add(Calendar.DAY_OF_YEAR, 1);
         this.magicLinkExpirationDate = now.getTime();
