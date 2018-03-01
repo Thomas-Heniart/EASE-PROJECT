@@ -10,6 +10,7 @@ import {deleteSsoApp, validateApp, editAppName, editSsoGroup} from "../../action
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
+import {testCredentials} from "../../actions/catalogActions";
 
 @connect(store => ({
   app: store.modals.ssoAppSettings.app,
@@ -47,6 +48,12 @@ class SsoAppSettingsModal extends Component{
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  testConnection = () => {
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(this.state.credentials),
+      website_id: this.props.app.website.id
+    }));
   };
   close = () => {
     this.props.dispatch(showSsoAppSettingsModal({active: false}));
@@ -187,6 +194,8 @@ class SsoAppSettingsModal extends Component{
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
               {inputs}
+              {this.state.credentials.filter(item => {return item.edit}).length > 0 &&
+              <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
               {!!other_apps.length &&
               <Form.Field>
                 <span>Modifications will also apply to:</span>
