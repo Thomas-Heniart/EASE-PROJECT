@@ -125,6 +125,7 @@ class EaseMainNavbar extends React.Component {
   }
   processLogout = () => {
     this.props.dispatch(processLogout()).then(response => {
+      extension.easeLogout();
       this.props.history.push('/login');
     })
   };
@@ -134,6 +135,7 @@ class EaseMainNavbar extends React.Component {
     }));
     this.props.dispatch(processLogout()).then(response => {
       extension.general_logout();
+      extension.easeLogout();
       this.props.history.push('/login');
     });
   };
