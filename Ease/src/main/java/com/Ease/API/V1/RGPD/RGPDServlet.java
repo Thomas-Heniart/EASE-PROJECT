@@ -24,7 +24,7 @@ public class RGPDServlet extends HttpServlet {
             String email = sm.getStringParam("email", true, false);
             if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
-            new MailjetContactWrapper().addEmailToList(email, "36180");
+            new MailjetContactWrapper().addEmailToList(email, 36180L);
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
             mailJetBuilder.addTo(email);

@@ -11,6 +11,7 @@ import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import com.mailjet.client.resource.Contact;
 import com.mailjet.client.resource.ContactManagecontactslists;
 import com.mailjet.client.resource.Contactdata;
+import com.mailjet.client.resource.ContactslistManageContact;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -90,12 +91,11 @@ public class MailjetContactWrapper {
                 .property(ContactManagecontactslists.CONTACTSLISTS, lists));
     }
 
-    public void addEmailToList(String email, String listId) throws MailjetSocketTimeoutException, MailjetException {
-        JSONArray lists = new JSONArray()
-                .put(new JSONObject()
-                        .put("ListId", listId)
-                        .put("Action", "addnoforce"));
-        mailjetResponse = mailjetClient.post(new MailjetRequest(ContactManagecontactslists.resource, email)
-                .property(ContactManagecontactslists.CONTACTSLISTS, lists));
+    public void addEmailToList(String email, Long listId) throws MailjetSocketTimeoutException, MailjetException {
+        mailjetResponse = mailjetClient.post(new MailjetRequest(ContactslistManageContact.resource, listId).setBody(new JSONObject()
+                .put("Email", email)
+                .put("Action", "addnoforce")));
+        System.out.println(mailjetResponse.getStatus());
+        System.out.println(mailjetResponse.getData());
     }
 }
