@@ -66,6 +66,9 @@ public class CreateTeamAnySingleCard extends HttpServlet {
                 reminder_interval = 0;
             Integer teamUser_filler_id = sm.getIntParam("team_user_filler_id", true, true);
             TeamUser teamUser_filler = null;
+            Boolean generateMagicLink = sm.getBooleanParam("generate_magic_link", true, true);
+            if (generateMagicLink == null)
+                generateMagicLink = false;
             Map<String, String> account_information = new HashMap<>();
             if (account_information_obj.length() != 0) {
                 sm.decipher(account_information_obj);

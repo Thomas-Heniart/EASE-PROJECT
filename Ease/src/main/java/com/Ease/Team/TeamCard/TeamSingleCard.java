@@ -12,6 +12,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Cacheable
@@ -29,6 +32,13 @@ public class TeamSingleCard extends TeamWebsiteCard {
     @ManyToOne
     @JoinColumn(name = "teamUser_filler_id")
     private TeamUser teamUser_filler;
+
+    @Column(name = "magicLink")
+    private String magickLink;
+
+    @Column(name = "magicLinkExpirationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date magicLinkExpirationDate;
 
     public TeamSingleCard() {
 
@@ -55,6 +65,22 @@ public class TeamSingleCard extends TeamWebsiteCard {
 
     public void setTeamUser_filler(TeamUser teamUser_filler) {
         this.teamUser_filler = teamUser_filler;
+    }
+
+    public String getMagickLink() {
+        return magickLink;
+    }
+
+    public void setMagickLink(String magickLink) {
+        this.magickLink = magickLink;
+    }
+
+    public Date getMagicLinkExpirationDate() {
+        return magicLinkExpirationDate;
+    }
+
+    public void setMagicLinkExpirationDate(Date magicLinkExpirationDate) {
+        this.magicLinkExpirationDate = magicLinkExpirationDate;
     }
 
     public void decipherAccount(String symmetric_key) throws HttpServletException {
@@ -92,5 +118,12 @@ public class TeamSingleCard extends TeamWebsiteCard {
             return;
         this.getAccount().decipher(symmetric_key);
         super.decipher(symmetric_key);
+    }
+
+    public void generateMagicLink() {
+        this.magickLink = UUID.randomUUID().toString();
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR, 1);
+        this.magicLinkExpirationDate = now.getTime();
     }
 }
