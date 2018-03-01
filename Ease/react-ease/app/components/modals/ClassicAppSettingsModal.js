@@ -11,6 +11,7 @@ import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
 import {testCredentials} from "../../actions/catalogActions";
+import * as api from "../../utils/api";
 
 @connect(store => ({
   app: store.modals.classicAppSettings.app
@@ -47,10 +48,17 @@ class ClassicAppSettingsModal extends Component {
     this.setState({credentials: credentials});
   };
   testConnection = () => {
-    this.props.dispatch(testCredentials({
-      account_information: transformCredentialsListIntoObject(this.state.credentials),
-      website_id: this.props.app.website.id
-    }));
+    api.dashboard.getAppPassword({
+      app_id: this.props.app.id
+    }).then(response => {
+      let account_information = transformCredentialsListIntoObject(this.state.credentials);
+      if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
+        account_information.password = response.password;
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    });
   };
   close = () => {
     this.props.dispatch(showClassicAppSettingsModal({active: false}));
