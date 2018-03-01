@@ -160,7 +160,7 @@ class DisplayAccounts extends React.Component {
                           <Icon name='magic'/>Test this password
                         </p>}
                       content={item.website_id !== -1 ? 'We will open a new tab to test if the password works or not.'
-                        : 'Test this password is not available for this website'}/>}
+                        : 'Testing this password is not available for this website'}/>}
                   </div>
                 ))}
                 <Icon name='arrow circle right' size='large' onClick={e => toPending(item.id)}/>
