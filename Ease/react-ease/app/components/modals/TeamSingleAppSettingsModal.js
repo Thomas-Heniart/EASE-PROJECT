@@ -56,17 +56,25 @@ class TeamSingleAppSettingsModal extends Component{
     this.setState({credentials: credentials});
   };
   testConnection = () => {
-    api.dashboard.getAppPassword({
-      app_id: this.props.app.id
-    }).then(response => {
-      let account_information = transformCredentialsListIntoObject(this.state.credentials);
-      if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
-        account_information.password = response.password;
+    let account_information = transformCredentialsListIntoObject(this.state.credentials);
+    if (!this.state.isEmpty) {
+      api.dashboard.getAppPassword({
+        app_id: this.props.app.id
+      }).then(response => {
+        if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
+          account_information.password = response.password;
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
       this.props.dispatch(testCredentials({
         account_information: account_information,
         website_id: this.props.app.website.id
       }));
-    });
+    }
   };
   close = () => {
     this.props.dispatch(showTeamSingleAppSettingsModal({active: false}));
