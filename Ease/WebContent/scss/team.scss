@@ -609,6 +609,34 @@ button.team_app_requests {
   }
 }
 
+.credentials_single_card {
+  display: inline-block;
+  margin-right: 10px;
+  .test_connection {
+    position: absolute;
+    margin-top: 0;
+    color: #414141;
+    font-size: 14px;
+    margin-left: 5px;
+    cursor: pointer;
+    i {
+      color: #45c997;
+    }
+    &.disabled {
+      text-decoration: none;
+      cursor: auto;
+      color: #E8ECF1;
+    }
+    &.underline_hover {
+      &:hover {
+        text-decoration: underline;
+        i {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
 .ui.input.team-app-input {
   input[readonly] {
     background-color: transparent;
