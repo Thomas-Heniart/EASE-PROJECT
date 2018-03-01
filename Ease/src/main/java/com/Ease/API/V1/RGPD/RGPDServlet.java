@@ -24,13 +24,13 @@ public class RGPDServlet extends HttpServlet {
             String email = sm.getStringParam("email", true, false);
             if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
+            new MailjetContactWrapper().addEmailToList(email, 36180L);
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
             mailJetBuilder.addTo(email);
             mailJetBuilder.setTemplateId(324084);
             mailJetBuilder.addVariable("url", Variables.URL_PATH + "resources/rgpd.pdf");
             mailJetBuilder.sendEmail();
-            new MailjetContactWrapper().addEmailToList(email, "36180");
             sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);
