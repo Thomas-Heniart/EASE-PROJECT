@@ -240,7 +240,7 @@ class TeamEnterpriseAppSettingsModal extends Component {
               </Form.Field>}
               {inputs}
               <Message error content={this.state.errorMessage}/>
-              {this.state.credentials.filter(item => {return item.edit}).length > 0 &&
+              {(this.state.credentials.filter(item => {return item.edit}).length > 0 || this.state.isEmpty) &&
               <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
               <Button
                   type="submit"
