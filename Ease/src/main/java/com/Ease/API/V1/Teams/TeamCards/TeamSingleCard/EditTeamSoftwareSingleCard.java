@@ -5,6 +5,7 @@ import com.Ease.Catalog.SoftwareFactory;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountFactory;
+import com.Ease.NewDashboard.SoftwareApp;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
@@ -63,6 +64,8 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             if (software.isDifferentConnectionInformation(connection_information)) {
                 software = SoftwareFactory.getInstance().createSoftwareAndLogo(software.getName(), software.getFolder(), software.getLogo_url(), connection_information, hibernateQuery);
                 teamSingleSoftwareCard.setSoftware(software);
+                for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
+                    ((SoftwareApp)teamCardReceiver.getApp()).setSoftware(software);
             }
             account_information = software.getPresentCredentialsFromJson(account_information);
             Account account = teamSingleSoftwareCard.getAccount();

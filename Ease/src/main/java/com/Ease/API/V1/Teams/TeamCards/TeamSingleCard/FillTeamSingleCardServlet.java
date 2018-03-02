@@ -1,8 +1,6 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 
-import com.Ease.Catalog.Catalog;
-import com.Ease.Catalog.Website;
-import com.Ease.Catalog.WebsiteFactory;
+import com.Ease.Catalog.*;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.*;
@@ -75,6 +73,14 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                 teamSingleCard.setMagicLinkExpirationDate(null);
             } else {
                 TeamSingleSoftwareCard teamSingleSoftwareCard = (TeamSingleSoftwareCard) teamCard;
+                JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
+                Software software = teamSingleSoftwareCard.getSoftware();
+                if (software.isDifferentConnectionInformation(connection_information)) {
+                    software = SoftwareFactory.getInstance().createSoftwareAndLogo(software.getName(), software.getFolder(), software.getLogo_url(), connection_information, hibernateQuery);
+                    teamSingleSoftwareCard.setSoftware(software);
+                    for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
+                        ((SoftwareApp)teamCardReceiver.getApp()).setSoftware(software);
+                }
                 teamSingleSoftwareCard.getAccount().edit(account_information, teamSingleSoftwareCard.getPassword_reminder_interval(), hibernateQuery);
                 for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
                     teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
