@@ -4,6 +4,7 @@ import {withCookies, Cookies } from 'react-cookie';
 import post_api from '../../utils/post_api';
 import {connect} from "react-redux";
 import {setLoginRedirectUrl, fetchMyInformation, processConnection} from "../../actions/commonActions";
+import extension from "../../utils/extension_api";
 
 class UnknownUserForm extends React.Component{
   constructor(props){
@@ -256,6 +257,7 @@ class Login extends React.Component {
     document.title = "Ease.space";
   }
   finishLoggingIn = () => {
+    extension.easeLogin();
     if (this.state.redirect.length > 0)
       this.props.history.replace(this.state.redirect);
     else
