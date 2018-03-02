@@ -38,7 +38,6 @@ public class FillTeamSingleCardServlet extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamCard teamCard = this.getTeamCard(card_id, uuid, hibernateQuery);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            String url = sm.getStringParam("url", true, true);
             if (teamCard.isTeamWebsiteCard()) {
                 TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
                 teamSingleCard.getAccount().edit(account_information, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery());
@@ -46,6 +45,7 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                     teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
                 Website website = teamSingleCard.getWebsite();
                 if (!website.getWebsiteAttributes().isIntegrated()) {
+                    String url = sm.getStringParam("url", true, false);
                     JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
                     if (!Regex.isSimpleUrl(url) || url.length() > 2000)
                         throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter url");
@@ -54,7 +54,7 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                         website = catalog.getWebsiteWithUrl(url, connection_information, sm.getHibernateQuery());
                         if (website == null) {
                             String img_url = sm.getStringParam("img_url", false, true);
-                            website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, teamCard.getName(), img_url, connection_information, sm.getHibernateQuery());
+                            website = WebsiteFactory.getInstance().createWebsiteAndLogo("nobody@nobody.co", url, teamCard.getName(), img_url, connection_information, sm.getHibernateQuery());
                         }
                         if (website.getWebsiteAttributes().isIntegrated()) {
                             for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {
@@ -71,14 +71,14 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                         teamSingleCard.setWebsite(website);
                     }
                 }
-                teamSingleCard.setMagickLink(null);
+                teamSingleCard.setMagicLink(null);
                 teamSingleCard.setMagicLinkExpirationDate(null);
             } else {
                 TeamSingleSoftwareCard teamSingleSoftwareCard = (TeamSingleSoftwareCard) teamCard;
                 teamSingleSoftwareCard.getAccount().edit(account_information, teamSingleSoftwareCard.getPassword_reminder_interval(), hibernateQuery);
                 for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
                     teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
-                teamSingleSoftwareCard.setMagickLink(null);
+                teamSingleSoftwareCard.setMagicLink(null);
                 teamSingleSoftwareCard.setMagicLinkExpirationDate(null);
             }
             sm.saveOrUpdate(teamCard);
@@ -105,14 +105,14 @@ public class FillTeamSingleCardServlet extends HttpServlet {
     }
 
     private TeamCard getTeamCard(Integer card_id, String uuid, HibernateQuery hibernateQuery) throws HttpServletException {
-        hibernateQuery.queryString("SELECT TeamSingleCard t WHERE t.db_id = :id AND t.magicLink = :magicLink");
+        hibernateQuery.queryString("SELECT t FROM TeamSingleCard t WHERE t.db_id = :id AND t.magicLink LIKE :magicLink");
         hibernateQuery.setParameter("id", card_id);
-        hibernateQuery.setParameter("magicLink", Variables.URL_PATH + "fill/" + card_id + "/" + uuid);
+        hibernateQuery.setParameter("magicLink", Variables.URL_PATH + "fill?card_id=" + card_id + "&uuid=" + uuid);
         TeamCard teamCard = (TeamCard) hibernateQuery.getSingleResult();
         if (teamCard == null) {
-            hibernateQuery.queryString("SELECT TeamSoftwareSingleCard t WHERE t.db_id = :id AND t.magicLink = :magicLink");
+            hibernateQuery.queryString("SELECT t FROM TeamSingleSoftwareCard t WHERE t.db_id = :id AND t.magicLink LIKE :magicLink");
             hibernateQuery.setParameter("id", card_id);
-            hibernateQuery.setParameter("magicLink", Variables.URL_PATH + "fill/" + card_id + "/" + uuid);
+            hibernateQuery.setParameter("magicLink", Variables.URL_PATH + "fill?card_id=" + card_id + "&uuid=" + uuid);
             teamCard = (TeamCard) hibernateQuery.getSingleResult();
         }
         if (teamCard == null)

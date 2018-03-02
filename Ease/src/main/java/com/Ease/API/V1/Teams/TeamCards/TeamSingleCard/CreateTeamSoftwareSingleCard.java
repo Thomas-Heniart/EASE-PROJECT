@@ -78,8 +78,10 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 if (generateMagicLink == null)
                     generateMagicLink = false;
                 if (generateMagicLink) {
+                    sm.saveOrUpdate(teamSingleSoftwareCard);
                     teamSingleSoftwareCard.generateMagicLink();
                     account = AccountFactory.getInstance().createAccountFromMap(new HashMap<>(), teamKey, password_reminder_interval, sm.getHibernateQuery());
+                    teamSingleSoftwareCard.setAccount(account);
                 }
             } else {
                 account_information = software.getAllCredentialsFromJson(account_information);

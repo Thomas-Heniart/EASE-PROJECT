@@ -67,7 +67,7 @@ public class CreateTeamSingleCard extends HttpServlet {
             }
             if (teamUser_filler_id != null && !teamUser_filler_id.equals(-1))
                 teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
-            else if (account_information.isEmpty())
+            else if (account_information.isEmpty() && !generateMagicLink)
                 throw new HttpServletException(HttpStatus.BadRequest, "You must fill the or choose someone to fill it");
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             Account account = null;
@@ -75,8 +75,10 @@ public class CreateTeamSingleCard extends HttpServlet {
                 account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, reminder_interval, sm.getHibernateQuery());
             TeamCard teamCard = new TeamSingleCard(name, team, channel, description, website, reminder_interval, account, teamUser_filler);
             if (generateMagicLink && account == null) {
+                sm.saveOrUpdate(teamCard);
                 ((TeamSingleCard)teamCard).generateMagicLink();
                 account = AccountFactory.getInstance().createAccountFromMap(new HashMap<>(), teamKey, reminder_interval, sm.getHibernateQuery());
+                ((TeamSingleCard)teamCard).setAccount(account);
             }
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);

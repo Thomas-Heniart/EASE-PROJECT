@@ -35,7 +35,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
     private TeamUser teamUser_filler;
 
     @Column(name = "magicLink")
-    private String magickLink;
+    private String magicLink;
 
     @Column(name = "magicLinkExpirationDate")
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,12 +68,12 @@ public class TeamSingleCard extends TeamWebsiteCard {
         this.teamUser_filler = teamUser_filler;
     }
 
-    public String getMagickLink() {
-        return magickLink;
+    public String getMagicLink() {
+        return magicLink;
     }
 
-    public void setMagickLink(String magickLink) {
-        this.magickLink = magickLink;
+    public void setMagicLink(String magicLink) {
+        this.magicLink = magicLink;
     }
 
     public Date getMagicLinkExpirationDate() {
@@ -100,7 +100,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
-        res.put("magic_link", this.getMagickLink() == null ? "" : this.getMagickLink());
+        res.put("magic_link", this.getMagicLink() == null ? "" : this.getMagicLink());
         res.put("magic_link_expiration_date", this.getMagicLinkExpirationDate() == null ? JSONObject.NULL : this.getMagicLinkExpirationDate().getTime());
         return res;
     }
@@ -124,7 +124,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
     }
 
     public void generateMagicLink() {
-        this.magickLink = Variables.URL_PATH + "fill/" + this.getDb_id() + "/" + UUID.randomUUID().toString();
+        this.magicLink = Variables.URL_PATH + "fill?card_id=" + this.getDb_id() + "&uuid=" + UUID.randomUUID().toString();
         Calendar now = Calendar.getInstance();
         now.add(Calendar.DAY_OF_YEAR, 1);
         this.magicLinkExpirationDate = now.getTime();
