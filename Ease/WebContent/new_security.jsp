@@ -240,7 +240,7 @@
                 <p><fmt:message key="security.whitepaper.text"/></p>
             </div>
             <div style="text-align: center">
-                <a href="/#/registration" class="btn btn-xl signUpButton">
+                <a href="/#/teamCreation?plan_id=0" class="btn btn-xl signUpButton">
                     <fmt:message key="security.button.text"/>
                 </a>
             </div>
