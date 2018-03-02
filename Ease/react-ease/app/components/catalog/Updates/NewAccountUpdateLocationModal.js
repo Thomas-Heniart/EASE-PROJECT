@@ -8,8 +8,8 @@ import {newAccountUpdateModal} from "../../../actions/catalogActions";
 import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
 
 @connect(store => ({
-    teams: store.teams,
-    modal: store.modals.newAccountUpdateLocation
+  teams: store.teams,
+  modal: store.modals.newAccountUpdateLocation
 }))
 class NewAccountUpdateLocationModal extends React.Component {
   constructor(props) {
@@ -44,10 +44,9 @@ class NewAccountUpdateLocationModal extends React.Component {
     this.setState({roomName: roomName});
   }
   previousModal = () => {
-    console.log(this.props);
     newAccountUpdateModal(
       this.props.dispatch,
-       this.props.modal.website,
+      this.props.modal.website,
       this.props.modal.account_information
     ).then(response => {
     });
