@@ -41,7 +41,7 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
             sm.initializeTeamWithContext(team);
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
-            if (!teamUser.isTeamAdmin() && (teamSingleSoftwareCard.getTeamUser_filler_test() == null || !teamUser.equals(teamSingleSoftwareCard.getTeamUser_filler_test())))
+            if (!teamUser.isTeamAdmin() && (teamSingleSoftwareCard.getTeamUser_filler_test() == null || !teamUser.equals(teamSingleSoftwareCard.getTeamUser_filler_test())) && !teamUser.equals(teamSingleSoftwareCard.getTeamUser_sender()))
                 throw new HttpServletException(HttpStatus.Forbidden);
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)

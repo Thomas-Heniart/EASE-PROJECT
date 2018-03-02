@@ -11,6 +11,8 @@ import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -34,7 +36,10 @@ public class DeleteTeamCard extends HttpServlet {
             TeamCard teamCard = (TeamCard) sm.getHibernateQuery().get(TeamCard.class, team_card_id);
             Team team = teamCard.getTeam();
             sm.initializeTeamWithContext(team);
-            sm.needToBeAdminOfTeam(teamCard.getTeam());
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             TeamUser teamUser_admin = sm.getTeamUser(team);
             Channel channel = teamCard.getChannel();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();

@@ -41,8 +41,8 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
             sm.initializeTeamWithContext(team);
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser_connected = sm.getTeamUser(team);
-            if (!teamUser_connected.equals(teamEnterpriseCardReceiver.getTeamUser()) && !teamUser_connected.isTeamAdmin())
-                throw new HttpServletException(HttpStatus.Forbidden);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()) && !teamUser_connected.equals(teamEnterpriseCardReceiver.getTeamUser()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             sm.decipher(account_information);
             if (teamCard.isTeamWebsiteCard()) {

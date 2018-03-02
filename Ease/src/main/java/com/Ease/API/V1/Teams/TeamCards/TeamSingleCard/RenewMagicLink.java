@@ -4,6 +4,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -26,9 +27,12 @@ public class RenewMagicLink extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer teamCard_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(teamCard_id);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot generate a link for this card");
             if (teamCard.isTeamWebsiteCard())

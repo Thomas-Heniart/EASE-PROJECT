@@ -92,6 +92,7 @@ public class CreateTeamAnySingleCard extends HttpServlet {
             if (account_information != null && !account_information.isEmpty())
                 account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, reminder_interval, sm.getHibernateQuery());
             TeamCard teamCard = new TeamSingleCard(name, team, channel, description, website, reminder_interval, account, teamUser_filler);
+            teamCard.setTeamUser_sender(teamUser_connected);
             if (generateMagicLink && account == null) {
                 sm.saveOrUpdate(teamCard);
                 ((TeamSingleCard)teamCard).generateMagicLink();

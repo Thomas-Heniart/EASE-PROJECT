@@ -38,6 +38,9 @@ public class AddTeamLinkCardReceiver extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "no such team link card");
             Team team = teamLinkCard.getTeam();
             sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamLinkCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             App app;
             if (teamUser.isVerified()) {
@@ -48,7 +51,6 @@ public class AddTeamLinkCardReceiver extends HttpServlet {
             } else
                 app = AppFactory.getInstance().createLinkApp(teamLinkCard.getName(), teamLinkCard.getUrl(), teamLinkCard.getImg_url());
             TeamCardReceiver teamCardReceiver = new TeamLinkCardReceiver(app, teamLinkCard, teamUser);
-            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_connected.equals(teamUser))
                 NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             sm.saveOrUpdate(teamCardReceiver);

@@ -8,6 +8,7 @@ import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -37,7 +38,10 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "no such teamCard");
             Team team = teamEnterpriseCard.getTeam();
             sm.initializeTeamWithContext(team);
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamEnterpriseCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
