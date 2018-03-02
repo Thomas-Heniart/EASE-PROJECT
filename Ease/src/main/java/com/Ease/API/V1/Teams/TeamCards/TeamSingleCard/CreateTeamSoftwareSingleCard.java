@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 
 @WebServlet("/api/v1/teams/CreateTeamSoftwareSingleCard")
 public class CreateTeamSoftwareSingleCard extends HttpServlet {
@@ -76,8 +77,10 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 Boolean generateMagicLink = sm.getBooleanParam("generate_magic_link", true, true);
                 if (generateMagicLink == null)
                     generateMagicLink = false;
-                if (generateMagicLink)
+                if (generateMagicLink) {
                     teamSingleSoftwareCard.generateMagicLink();
+                    account = AccountFactory.getInstance().createAccountFromMap(new HashMap<>(), teamKey, password_reminder_interval, sm.getHibernateQuery());
+                }
             } else {
                 account_information = software.getAllCredentialsFromJson(account_information);
                 account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, hibernateQuery);
@@ -87,7 +90,6 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             for (Object object : receivers.keySet()) {
                 String key = String.valueOf(object);
-                JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
                 Boolean allowed_to_see_password = true; //value.getBoolean("allowed_to_see_password");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);

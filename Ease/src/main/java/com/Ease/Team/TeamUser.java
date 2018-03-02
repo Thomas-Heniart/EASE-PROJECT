@@ -438,6 +438,9 @@ public class TeamUser {
     }
 
     public String getDecipheredTeamKey(String userKey) throws HttpServletException {
+        System.out.println(userKey);
+        System.out.println(this.getTeamKey());
+        System.out.println(this.state);
         if (this.isVerified() && !this.isDisabled())
             return AES.decrypt(this.getTeamKey(), userKey);
         throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to decipher the team key");

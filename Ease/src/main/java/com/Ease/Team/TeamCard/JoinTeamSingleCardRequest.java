@@ -33,7 +33,7 @@ public class JoinTeamSingleCardRequest extends JoinTeamCardRequest {
     @Override
     public TeamCardReceiver accept(String symmetric_key, HibernateQuery hibernateQuery) throws HttpServletException {
         TeamCard teamCard = this.getTeamCard();
-        Account account = AccountFactory.getInstance().createAccountFromAccount(teamCard.getAccount(), symmetric_key, hibernateQuery);
+        Account account = AccountFactory.getInstance().createAccountFromAccount(teamCard.getAccount(), hibernateQuery);
         App app;
         if (teamCard.isTeamSoftwareCard())
             app = new SoftwareApp(new AppInformation(teamCard.getName()), ((TeamSingleSoftwareCard) teamCard).getSoftware(), account);

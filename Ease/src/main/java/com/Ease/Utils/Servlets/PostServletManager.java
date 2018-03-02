@@ -131,8 +131,8 @@ public class PostServletManager extends ServletManager {
     public Boolean getBooleanParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
             if (canBeNull) {
-                Boolean val = params.getBoolean(paramName);
-                return !val ? null : val;
+                Boolean val = params.optBoolean(paramName);
+                return !val ? null : true;
             } else
                 return params.getBoolean(paramName);
         } catch (Exception e) {

@@ -34,16 +34,15 @@ public class AccountFactory {
         return account;
     }
 
-    public Account createAccountFromAccount(Account account, String symmetric_key, HibernateQuery hibernateQuery) throws HttpServletException {
+    public Account createAccountFromAccount(Account account, HibernateQuery hibernateQuery) throws HttpServletException {
         if (account == null)
             return null;
         Set<AccountInformation> accountToCopyInformationSet = account.getAccountInformationSet();
-        Map.Entry<String, String> public_and_private_key = RSA.generateKeys();
         Set<AccountInformation> accountInformationSet = new HashSet<>();
-        Account new_account = new Account(account.getReminder_interval(), public_and_private_key.getKey(), AES.encrypt(public_and_private_key.getValue(), symmetric_key), accountInformationSet, public_and_private_key.getValue());
+        Account new_account = new Account(account.getReminder_interval(), account.getPublic_key(), account.getPrivate_key(), accountInformationSet, account.getDeciphered_private_key());
         hibernateQuery.saveOrUpdateObject(new_account);
         for (AccountInformation accountInformation : accountToCopyInformationSet) {
-            AccountInformation accountInformation1 = new AccountInformation(accountInformation.getInformation_name(), RSA.Encrypt(accountInformation.getDeciphered_information_value(), public_and_private_key.getKey()), accountInformation.getDeciphered_information_value(), new_account);
+            AccountInformation accountInformation1 = new AccountInformation(accountInformation.getInformation_name(), accountInformation.getInformation_value(), accountInformation.getDeciphered_information_value(), new_account);
             hibernateQuery.saveOrUpdateObject(accountInformation1);
             accountInformationSet.add(accountInformation1);
         }

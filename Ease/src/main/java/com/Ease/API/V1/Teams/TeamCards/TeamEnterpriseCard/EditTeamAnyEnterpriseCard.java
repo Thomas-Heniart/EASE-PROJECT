@@ -65,7 +65,7 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                     String teamKey = sm.getTeamKey(team);
                     for (TeamCardReceiver teamCardReceiver : teamEnterpriseCard.getTeamCardReceiverMap().values()) {
                         AnyApp anyApp = (AnyApp) teamCardReceiver.getApp();
-                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), teamKey, sm.getHibernateQuery());
+                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), sm.getHibernateQuery());
                         App tmp_app = new ClassicApp(new AppInformation(anyApp.getAppInformation().getName()), website, account);
                         tmp_app.setProfile(anyApp.getProfile());
                         tmp_app.setPosition(anyApp.getPosition());

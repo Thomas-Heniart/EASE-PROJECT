@@ -4,6 +4,8 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
+import com.Ease.Utils.Crypto.AES;
+import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -43,6 +45,11 @@ public class ServletLogin extends HttpServlet {
             sm.getUserProperties(user.getDb_id()).put("keyUser", keyUser);
             for (TeamUser teamUser : user.getTeamUsers()) {
                 sm.initializeTeamWithContext(teamUser.getTeam());
+                if (teamUser.isVerified() && teamUser.isDisabled() && teamUser.getTeamKey() != null) {
+                    teamUser.setTeamKey(AES.encrypt(RSA.Decrypt(teamUser.getTeamKey(), user.getUserKeys().getDecipheredPrivateKey(keyUser)), keyUser));
+                    teamUser.setDisabled(false);
+                    sm.saveOrUpdate(teamUser);
+                }
                 if (teamUser.isVerified() && !teamUser.isDisabled()) {
                     String teamKey = teamUser.getDecipheredTeamKey(keyUser);
                     sm.getTeamProperties(teamUser.getTeam().getDb_id()).put("teamKey", teamKey);
