@@ -69,7 +69,7 @@ class FillSimpleCardCredentialsModal extends Component {
       team_card: team_card,
       account_information: transformCredentialsListIntoObject(this.state.credentials)
     })).then(response => {
-      this.props.closeModal();
+      this.close();
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     })
