@@ -13,6 +13,7 @@
 <html lang="${language}">
 <head>
     <title> Ease.space | Le meilleur moyen de se connecter à ses sites préférés.</title>
+    <meta name="google" content="notranslate" />
     <!-- Description shown in Google -->
     <meta name="description"
           content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
@@ -97,7 +98,7 @@
     <!-- End Google Tag Manager -->
 </head>
 
-<body id="landingBody">
+<body id="landingBody" class="notranslate">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8BRML7"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

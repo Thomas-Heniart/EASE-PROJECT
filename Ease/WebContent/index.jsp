@@ -7,6 +7,7 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
     <title>Ease.space</title>
     <meta name="theme-color" content="#373B60"/>
+    <meta name="google" content="notranslate" />
     <!-- Description shown in Google -->
     <!-- Facebook metadata -->
     <meta name="description"
@@ -66,7 +67,7 @@
     </script>
     <script src="/jsMinified.v00023/tracker.js"></script>
 </head>
-<BODY>
+<BODY class="notranslate">
 <div id="app">
 </div>
 <script src="teams_bundle.js?v=75"></script>
