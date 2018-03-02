@@ -34,6 +34,7 @@ import {
 import {addNotification} from "../../actions/notificationBoxActions";
 import {connect} from "react-redux";
 import {testCredentials} from "../../actions/catalogActions";
+import * as api from "../../utils/api";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnection}) => {
   return (
@@ -292,10 +293,24 @@ class SimpleTeamApp extends Component {
     this.setState({users: users, selected_users:selected_users});
   };
   testConnection = () => {
-    this.props.dispatch(testCredentials({
-      account_information: transformCredentialsListIntoObject(this.state.credentials),
-      website_id: this.props.app.website.id
-    }));
+    let account_information = transformCredentialsListIntoObject(this.state.credentials);
+    if (!this.props.app.empty) {
+      api.teamApps.getSingleAppPassword({team_card_id: this.props.app.id}).then(response => {
+        if (account_information.password === '') {
+          account_information.password = response;
+        }
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    }
   };
   setEdit = (state) => {
     if (state){

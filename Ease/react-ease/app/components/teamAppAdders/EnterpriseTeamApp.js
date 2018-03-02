@@ -423,16 +423,47 @@ class EnterpriseTeamApp extends Component {
     }
     this.setState({edit: state, loading: false, show_more: false});
   };
+  // testConnection = (user_id) => {
+  //   let credentials = [];
+  //   this.state.users.map(user => {
+  //     if (user.id === user_id)
+  //       credentials = user.credentials;
+  //   });
+  //   this.props.dispatch(testCredentials({
+  //     account_information: transformCredentialsListIntoObject(credentials),
+  //     website_id: this.props.app.website.id
+  //   }));
+  // };
   testConnection = (user_id) => {
     let credentials = [];
+    let app_id = null;
+    let empty = false;
     this.state.users.map(user => {
-      if (user.id === user_id)
+      if (user.key === user_id) {
         credentials = user.credentials;
+        app_id = user.receiver.app_id;
+        empty = user.receiver.empty;
+      }
     });
-    this.props.dispatch(testCredentials({
-      account_information: transformCredentialsListIntoObject(credentials),
-      website_id: this.props.app.website.id
-    }));
+    let account_information = transformCredentialsListIntoObject(credentials);
+    if (!empty) {
+      api.dashboard.getAppPassword({
+        app_id: app_id
+      }).then(response => {
+        if (account_information.password === '')
+          account_information.password = response.password;
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    }
   };
   modify = (e) => {
     e.preventDefault();
