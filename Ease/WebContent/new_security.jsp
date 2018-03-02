@@ -33,12 +33,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00044/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/securityPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00045/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00045/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00045/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00045/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00045/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00045/securityPage.css"/>
     <script type="text/javascript">
         (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
         ;r.type="text/javascript";r.async=true
@@ -245,7 +245,7 @@
                 <p><fmt:message key="security.whitepaper.text"/></p>
             </div>
             <div style="text-align: center">
-                <a href="/#/registration" class="btn btn-xl signUpButton">
+                <a href="/#/teamCreation?plan_id=0" class="btn btn-xl signUpButton">
                     <fmt:message key="security.button.text"/>
                 </a>
             </div>

@@ -32,7 +32,6 @@ class App extends React.Component {
           <Route path="/teamJoin/:code/:access_code" component={OnBoardingJoinTeam}/>
           <Route path="/teams/:teamId/:itemId?" component={requireAuthentication(TeamView)}/>
           <Route path="/login" component={Login}/>
-          <Route path="/registration" component={Registration}/>
           <Route path="/recover/:email/:code" component={RenewPassword}/>
         </Base>
       </HashRouter>

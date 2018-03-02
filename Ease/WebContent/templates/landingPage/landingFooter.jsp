@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<section id="footer">
+<section id="footer" class="notranslate">
 	<div class="container">
 		<div class="row">
 			<div class="left-part left">
