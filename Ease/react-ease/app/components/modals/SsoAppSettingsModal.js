@@ -25,6 +25,7 @@ class SsoAppSettingsModal extends Component{
       appName: this.props.app.name,
       view: 'Account',
       sso_group: this.props.sso_groups[this.props.app.sso_group_id],
+      isEmpty: this.props.sso_groups[this.props.app.sso_group_id].empty,
       other_apps: [],
       credentials: [],
       loading: false,
@@ -51,17 +52,25 @@ class SsoAppSettingsModal extends Component{
     this.setState({credentials: credentials});
   };
   testConnection = () => {
-    api.dashboard.getAppPassword({
-      app_id: this.props.app.id
-    }).then(response => {
-      let account_information = transformCredentialsListIntoObject(this.state.credentials);
-      if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
-        account_information.password = response.password;
+    let account_information = transformCredentialsListIntoObject(this.state.credentials);
+    if (!this.state.isEmpty) {
+      api.dashboard.getAppPassword({
+        app_id: this.props.app.id
+      }).then(response => {
+        if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
+          account_information.password = response.password;
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
       this.props.dispatch(testCredentials({
         account_information: account_information,
         website_id: this.props.app.website.id
       }));
-    });
+    }
   };
   close = () => {
     this.props.dispatch(showSsoAppSettingsModal({active: false}));
