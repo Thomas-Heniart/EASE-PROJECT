@@ -44,6 +44,17 @@
 
     <link rel="manifest" href="manifest.json">
     <title>Ease.space R.G.P.D</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-75916041-5');
+    </script>
+
     <style>
         @media (min-width: 823px) {
             header {
@@ -61,6 +72,7 @@
             }
         }
     </style>
+
 </head>
 
 <body id="landingBody" style="margin:0;">
@@ -92,6 +104,11 @@
                 <li>
                     <a href="/rgpd">
                         <fmt:message key="landing.header.gdpr" />
+                    </a>
+                </li>
+                <li>
+                    <a href="https://blog.ease.space">
+                        <fmt:message key="landing.header.blog" />
                     </a>
                 </li>
                 <li>

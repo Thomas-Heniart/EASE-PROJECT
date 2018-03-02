@@ -6,7 +6,6 @@ import {StripeProvider} from 'react-stripe-elements';
 import {CookiesProvider, withCookies, Cookies} from 'react-cookie';
 import store from "./store";
 import OnBoardingJoinTeam from './components/onBoarding/OnBoardingJoinTeam';
-
 var TeamView = require('./components/TeamView.js');
 var TeamCreationView = require('./components/teams/TeamCreationView');
 var MainView = require('./components/common/MainView');

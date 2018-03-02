@@ -88,6 +88,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="https://blog.ease.space">
+                        <fmt:message key="landing.header.blog" />
+                    </a>
+                </li>
+                <li>
                     <a href="/?skipLanding=true" id="connexionButton">
                         <fmt:message key="landing.header.connexion-link" />
                     </a>

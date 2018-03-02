@@ -383,6 +383,7 @@ public class TeamUser {
         JSONArray teamCards = new JSONArray();
         this.getTeamCardReceivers().stream().map(TeamCardReceiver::getTeamCard).sorted((t1, t2) -> Long.compare(t2.getCreation_date().getTime(), t1.getCreation_date().getTime())).distinct().forEach(teamCard -> teamCards.put(teamCard.getDb_id()));
         res.put("team_card_ids", teamCards);
+        res.put("admin_id", this.getAdmin_id() == null ? JSONObject.NULL : this.getAdmin_id());
         return res;
     }
 

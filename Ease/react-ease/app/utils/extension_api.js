@@ -105,6 +105,22 @@ const extension_api = {
           }
       )
     });
+  },
+  easeLogin: () => {
+    browser.runtime.sendMessage(
+        extensionId,
+        {
+          type: 'easeLogin'
+        }
+    )
+  },
+  easeLogout: () => {
+    browser.runtime.sendMessage(
+        extensionId,
+        {
+          type: 'easeLogout'
+        }
+    )
   }
 };
 

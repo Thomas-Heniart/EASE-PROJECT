@@ -17,6 +17,9 @@
 						<a href="/rgpd">
 							<fmt:message key="landing.header.gdpr"/>
 						</a>
+						<a href="https://blog.ease.space/">
+							<fmt:message key="landing.header.blog" />
+						</a>
 						<a href="https://easespace.welcomekit.co" target="_blank">
 							<fmt:message key="landing.footer.hiring"/>
 						</a>
