@@ -47,7 +47,7 @@ public class ServletConnection extends HttpServlet {
         try {
             String email = sm.getStringParam("email", true, true);
             String password = sm.getStringParam("password", false, true);
-            String client_ip = IpUtils.getIpAddr(request);
+            /* String client_ip = IpUtils.getIpAddr(request);
             DataBaseConnection db = sm.getDB();
             addIpInDataBase(client_ip, db);
             if (!canConnect(client_ip, db)) {
@@ -57,7 +57,7 @@ public class ServletConnection extends HttpServlet {
                 mailJetBuilder.addTo(email);
                 mailJetBuilder.sendEmail();
                 throw new HttpServletException(HttpStatus.Forbidden, "Too much attempts to connect. Please retry in 5 minutes.");
-            }
+            } */
             if (email == null || !Regex.isEmail(email) || password == null || password.isEmpty())
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong email or password.");
             password = sm.decipher(password);
@@ -80,7 +80,7 @@ public class ServletConnection extends HttpServlet {
                     sm.saveOrUpdate(user.getJsonWebToken());
                 }
             }
-            removeIpFromDataBase(client_ip, db);
+            //removeIpFromDataBase(client_ip, db);
             String jwt = user.getJsonWebToken().getJwt(keyUser);
             Cookie cookie = new Cookie("JWT", jwt);
             cookie.setHttpOnly(true);
@@ -129,7 +129,7 @@ public class ServletConnection extends HttpServlet {
             sm.getSession().setAttribute("webSocketManager", null);
             sm.setSuccess(res);
         } catch (HttpServletException e) {
-            sm.setError(e);
+            sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         } catch (Exception e) {
             e.printStackTrace();
             sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
