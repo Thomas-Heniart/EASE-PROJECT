@@ -156,7 +156,6 @@ class ClassicAppSettingsModal extends Component {
           <div class="display_flex align_items_center">
             <Input
               fluid
-              icon
               disabled={!item.edit && !this.state.isEmpty}
               className="modalInput team-app-input"
               size='large'
