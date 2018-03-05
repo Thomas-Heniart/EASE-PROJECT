@@ -139,7 +139,7 @@ class SecondStep extends React.Component {
     }, {});
     if (this.props.profile_id === 0) {
       this.props.dispatch(createProfile({
-        name: this.props.profileName,
+        name: 'Me',
         column_index: this.chooseColumn()
       })).then(response => {
         this.props.dispatch(catalogAddAnyApp({
@@ -227,6 +227,8 @@ class AddAnyAppModal extends React.Component {
     super(props);
     this.state = {
       view: 1,
+      check: null,
+      checkRoom: null,
       name: this.props.modal.name,
       url: this.props.modal.url,
       img_url: this.props.modal.img_url,
@@ -234,65 +236,31 @@ class AddAnyAppModal extends React.Component {
       loading: false,
       errorMessage: '',
       profiles: [],
-      profileName: '',
-      profileAdded: false,
-      addingProfile: false,
-      profileLoading: false,
       selectedProfile: -1,
       selectedTeam: -1,
       selectedRoom: -1
     }
   }
   handleInput = handleSemanticInput.bind(this);
-  componentWillMount(){
-    this.setState({profileLoading: true});
-    const profiles = Object.keys(this.props.profiles).map(item => {
-      return this.props.profiles[item];
+  selectProfile = () => {
+    let profileChoose = null;
+    Object.keys(this.props.profiles).map(item => {
+      if (profileChoose === null && this.props.profiles[item].team_id === -1)
+        profileChoose = this.props.profiles[item].id;
     });
-    this.setState({profileLoading: false, profiles: profiles});
-  }
-  chooseColumn = () => {
-    const columns = this.props.dashboard.columns.map((column, index) => {
-      let apps = 0;
-      column.map(item => {
-        let tmp = this.props.dashboard.profiles[item].app_ids.length / 3;
-        if (tmp <= Number(tmp.toFixed(0)))
-          tmp = Number(tmp.toFixed(0)) + 1;
-        else if (tmp > Number(tmp.toFixed(0)))
-          tmp = Number(tmp.toFixed(0)) + 2;
-        apps = apps + tmp;
-      });
-      if (apps > 0)
-        return apps;
-      else
-        return 0;
+    this.setState({
+      selectedProfile: profileChoose !== null ? profileChoose : 0,
+      selectedTeam: -1,
+      selectedRoom: -1,
+      check: 'newApp',
+      error: ""
     });
-    let columnChoose = null;
-    columns.map((column, index) => {
-      let test = columns.slice();
-      test.sort();
-      if (column === test[0] && columnChoose === null)
-        columnChoose = index;
-    });
-    return columnChoose;
   };
-  createProfile = () => {
-    const newProfile = {id: 0, name: this.state.profileName};
-    if (this.state.profileName.length === 0)
-      return;
-    this.addProfile(newProfile);
-    this.setState({profileAdded: true});
+  selectRoom = (roomId) => {
+    this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
-  addProfile = (profile) => {
-    let profiles = this.state.profiles.slice();
-    profiles.push(profile);
-    this.setState({profiles: profiles, selectedProfile: profile.id});
-  };
-  selectProfile = (id) => {
-    this.setState({ selectedProfile: id, selectedTeam: -1, selectedRoom: -1 });
-  };
-  selectRoom = (teamId, roomId) => {
-    this.setState({ selectedTeam: teamId, selectedRoom: roomId, selectedProfile: -1 });
+  selectTeam = (teamId) => {
+    this.setState({selectedTeam: teamId, check: teamId, selectedProfile: -1});
   };
   close = () => {
     this.props.modal.reject();
@@ -303,8 +271,6 @@ class AddAnyAppModal extends React.Component {
       this.setState({view: 2});
     else if (this.state.selectedRoom !== -1 && this.state.selectedProfile === -1)
       this.setState({view: 3});
-    else
-      this.createProfile();
   };
   render(){
     return (
@@ -313,20 +279,17 @@ class AddAnyAppModal extends React.Component {
         headerContent={'Setup your App'}>
         {this.state.view === 1 &&
         <ChooseAppLocationModal
-          website={{logo: this.state.img_url}}
-          logoLetter={this.props.modal.logoLetter}
+          bookmark={true}
+          confirm={this.confirm}
+          check={this.state.check}
           appName={this.state.name}
           loading={this.state.loading}
-          profiles={this.state.profiles}
-          handleInput={this.handleInput}
-          selectedProfile={this.state.selectedProfile}
-          selectedRoom={this.state.selectedRoom}
-          profileAdded={this.state.profileAdded}
-          bookmark={true}
-          createProfile={this.createProfile}
-          confirm={this.confirm}
+          selectTeam={this.selectTeam}
+          selectRoom={this.selectRoom}
+          checkRoom={this.state.checkRoom}
           selectProfile={this.selectProfile}
-          selectRoom={this.selectRoom} />}
+          website={{logo: this.state.img_url}}
+          logoLetter={this.props.modal.logoLetter} />}
         {this.state.view === 2 &&
         <SecondStep
           {...this.props}
@@ -334,7 +297,6 @@ class AddAnyAppModal extends React.Component {
           appName={this.state.name}
           url={this.state.url}
           profile_id={this.state.selectedProfile}
-          profileName={this.state.profileName}
           logoLetter={this.props.modal.logoLetter}/>}
         {this.state.view === 3 &&
         <ChooseTypeAppModal

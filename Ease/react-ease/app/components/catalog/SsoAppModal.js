@@ -132,7 +132,7 @@ class ThirdStep extends React.Component {
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
     if (this.props.selectedProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
+      this.props.dispatch(createProfile({name: 'Me', column_index: this.props.chooseColumn()})).then(response => {
         const newProfile = response.id;
         if (this.props.accountGoogleSelected.id === 0) {
           this.props.dispatch(createSsoGroup({
@@ -402,7 +402,7 @@ class AddBookmark extends React.Component {
   confirm = () => {
     this.setState({loading: true, errorMessage: ''});
     if (this.props.selectedProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
+      this.props.dispatch(createProfile({name: 'Me', column_index: this.props.chooseColumn()})).then(response => {
         const newProfile = response.id;
         this.props.catalogAddBookmark({
           name: this.props.name,
@@ -482,6 +482,9 @@ class SsoAppModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      view: 1,
+      check: null,
+      checkRoom: null,
       website: this.props.modal.website,
       name: this.props.modal.website.name,
       credentials: transformWebsiteInfoIntoList(this.props.modal.website.information),
@@ -489,13 +492,9 @@ class SsoAppModal extends React.Component {
       addGoogleAccount: false,
       accountGoogleSelected: [],
       profiles: [],
-      profileName: '',
-      profileAdded: false,
       selectedProfile: -1,
       selectedTeam: -1,
       selectedRoom: -1,
-      addingProfile: false,
-      view: 1,
       ssoSelected: [],
       ssoGroup: [],
       ssoWebsites: []
@@ -633,30 +632,31 @@ class SsoAppModal extends React.Component {
     newSelectedSSO.push({website_id: sso.id, name: e.target.value});
     this.setState({ssoSelected: newSelectedSSO});
   };
-  selectProfile = (id) => {
-    this.setState({selectedProfile: id, selectedTeam: -1, selectedRoom: -1});
+  selectProfile = () => {
+    let profileChoose = null;
+    Object.keys(this.props.dashboard.profiles).map(item => {
+      if (profileChoose === null && this.props.dashboard.profiles[item].team_id === -1)
+        profileChoose = this.props.dashboard.profiles[item].id;
+    });
+    this.setState({
+      selectedProfile: profileChoose !== null ? profileChoose : 0,
+      selectedTeam: -1,
+      selectedRoom: -1,
+      check: 'newApp',
+      error: ""
+    });
   };
-  selectRoom = (teamId, roomId) => {
-    this.setState({selectedTeam: teamId, selectedRoom: roomId, selectedProfile: -1});
+  selectRoom = (roomId) => {
+    this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
-  addProfile = (profile) => {
-    let profiles = this.state.profiles.slice();
-    profiles.push(profile);
-    this.setState({profiles: profiles, selectedProfile: profile.id});
-  };
-  createProfile = () => {
-    const newProfile = {id: 0, name: this.state.profileName};
-    if (this.state.profileName.length === 0)
-      return;
-    this.addProfile(newProfile);
-    this.setState({profileAdded: true});
+  selectTeam = (teamId) => {
+    this.setState({selectedTeam: teamId, check: teamId, selectedProfile: -1});
   };
   showLogin = () => {
-    const login = this.state.credentials.map(item => {
+    return this.state.credentials.map(item => {
       if (item.name === "login")
         return item.value
     });
-    return login;
   };
   showName = () => {
     let name = this.state.ssoSelected.filter(item => {
@@ -673,8 +673,6 @@ class SsoAppModal extends React.Component {
         this.addMainAppToSSOSelected();
       else if (this.state.selectedProfile === -1 && this.state.selectedRoom !== -1)
         this.setState({view: 4});
-      else
-        this.createProfile();
     }
     else if (this.state.addGoogleAccount) {
       this.setState({
@@ -706,20 +704,17 @@ class SsoAppModal extends React.Component {
         }}
         headerContent={'Setup your App'}>
         {this.state.view === 1 &&
-          <ChooseAppLocationModal
-            website={this.state.website}
-            appName={this.state.name}
-            loading={this.state.loading}
-            profiles={this.state.profiles}
-            handleInput={this.handleInput}
-            profileAdded={this.state.profileAdded}
-            createProfile={this.createProfile}
-            selectedProfile={this.state.selectedProfile}
-            selectedRoom={this.state.selectedRoom}
-            addProfile={this.addProfile}
-            confirm={this.confirm}
-            selectProfile={this.selectProfile}
-            selectRoom={this.selectRoom}/>}
+        <ChooseAppLocationModal
+          confirm={this.confirm}
+          check={this.state.check}
+          appName={this.state.name}
+          loading={this.state.loading}
+          website={this.state.website}
+          selectTeam={this.selectTeam}
+          selectRoom={this.selectRoom}
+          checkRoom={this.state.checkRoom}
+          selectProfile={this.selectProfile}
+          logoLetter={this.props.modal.logoLetter} />}
         {(this.state.view === 2 && !this.state.addBookmark && !this.state.addGoogleAccount) &&
           <SecondStep
             {...this.props}
@@ -734,7 +729,6 @@ class SsoAppModal extends React.Component {
             {...this.props}
             logo={this.props.modal.website.logo}
             name={this.showName()}
-            profileName={this.state.profileName}
             accountGoogleSelected={this.state.accountGoogleSelected}
             selectedProfile={this.state.selectedProfile}
             ssoWebsites={this.state.ssoWebsites}

@@ -16,6 +16,8 @@ class AddBookmarkModal extends Component {
   constructor(props){
     super(props);
     this.state = {
+      check: null,
+      checkRoom: null,
       name: this.props.modal.name,
       url: this.props.modal.url,
       img_url: this.props.modal.img_url,
@@ -23,10 +25,6 @@ class AddBookmarkModal extends Component {
       loading: false,
       errorMessage: '',
       profiles: [],
-      profileName: '',
-      profileAdded: false,
-      addingProfile: false,
-      profileLoading: false,
       selectedProfile: -1,
       selectedTeam: -1,
       selectedRoom: -1
@@ -58,23 +56,25 @@ class AddBookmarkModal extends Component {
     });
     return columnChoose;
   };
-  createProfile = () => {
-    const newProfile = {id: 0, name: this.state.profileName};
-    if (this.state.profileName.length === 0)
-      return;
-    this.addProfile(newProfile);
-    this.setState({profileAdded: true});
+  selectProfile = () => {
+    let profileChoose = null;
+    Object.keys(this.props.profiles).map(item => {
+      if (profileChoose === null && this.props.profiles[item].team_id === -1)
+        profileChoose = this.props.profiles[item].id;
+    });
+    this.setState({
+      selectedProfile: profileChoose !== null ? profileChoose : 0,
+      selectedTeam: -1,
+      selectedRoom: -1,
+      check: 'newApp',
+      error: ""
+    });
   };
-  addProfile = (profile) => {
-    let profiles = this.state.profiles.slice();
-    profiles.push(profile);
-    this.setState({profiles: profiles, selectedProfile: profile.id});
+  selectRoom = (roomId) => {
+    this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
-  selectProfile = (id) => {
-    this.setState({ selectedProfile: id, selectedTeam: -1, selectedRoom: -1 });
-  };
-  selectRoom = (teamId, roomId) => {
-    this.setState({ selectedTeam: teamId, selectedRoom: roomId, selectedProfile: -1 });
+  selectTeam = (teamId) => {
+    this.setState({selectedTeam: teamId, check: teamId, selectedProfile: -1});
   };
   close = () => {
     this.props.modal.reject();
@@ -92,12 +92,11 @@ class AddBookmarkModal extends Component {
     });
     this.props.history.push(`/teams/${team_id}/${room_id}`);
   };
-  confirm = (e) => {
-    e.preventDefault();
+  confirm = () => {
     if (this.state.selectedRoom === -1 && this.state.selectedProfile !== -1) {
       this.setState({errorMessage: '', loading: true});
       if (this.state.selectedProfile === 0) {
-        this.props.dispatch(createProfile({name: this.state.profileName, column_index: this.chooseColumn()})).then(response => {
+        this.props.dispatch(createProfile({name: 'Me', column_index: this.chooseColumn()})).then(response => {
           const newProfile = response.id;
           this.props.catalogAddBookmark({
             name: this.state.name,
@@ -134,35 +133,23 @@ class AddBookmarkModal extends Component {
       this.setState({errorMessage: '', loading: true});
       this.catalogToTeamSpace(this.state.selectedTeam, this.state.selectedRoom);
     }
-    else
-      this.createProfile();
   };
-  componentWillMount(){
-    this.setState({profileLoading: true});
-    const profiles = Object.keys(this.props.profiles).map(item => {
-      return this.props.profiles[item];
-    });
-    this.setState({profileLoading: false, profiles: profiles});
-  }
   render(){
     return (
         <SimpleModalTemplate
             onClose={this.close}
             headerContent={'Setup your App'}>
           <ChooseAppLocationModal
-            website={{logo: this.state.img_url}}
+            bookmark={true}
+            confirm={this.confirm}
+            check={this.state.check}
             appName={this.state.name}
             loading={this.state.loading}
-            profiles={this.state.profiles}
-            handleInput={this.handleInput}
-            selectedProfile={this.state.selectedProfile}
-            selectedRoom={this.state.selectedRoom}
-            profileAdded={this.state.profileAdded}
-            bookmark={true}
-            createProfile={this.createProfile}
-            confirm={this.confirm}
+            selectRoom={this.selectRoom}
+            selectTeam={this.selectTeam}
+            checkRoom={this.state.checkRoom}
             selectProfile={this.selectProfile}
-            selectRoom={this.selectRoom} />
+            website={{logo: this.state.img_url}}/>
         </SimpleModalTemplate>
     )
   }

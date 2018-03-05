@@ -47,7 +47,7 @@ class AddBookmarkForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
+      this.props.dispatch(createProfile({name: 'Me', column_index: this.props.chooseColumn()})).then(response => {
         newProfile = response.id;
         this.props.catalogAddBookmark({
           name: this.props.appName,
@@ -123,7 +123,7 @@ class AddClassicAppForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
+      this.props.dispatch(createProfile({name: 'Me', column_index: this.props.chooseColumn()})).then(response => {
         newProfile = response.id;
         this.props.catalogAddClassicApp({
           name: this.props.appName,
@@ -257,7 +257,7 @@ class AddLogWithAppForm extends Component {
     let newProfile = this.props.profile_id;
     this.setState({loading: true, errorMessage: ''});
     if (newProfile === 0) {
-      this.props.dispatch(createProfile({name: this.props.profileName, column_index: this.props.chooseColumn()})).then(response => {
+      this.props.dispatch(createProfile({name: 'Me', column_index: this.props.chooseColumn()})).then(response => {
         newProfile = response.id;
         this.props.catalogAddLogWithApp({
           name: this.props.appName,
@@ -365,6 +365,9 @@ class ClassicAppModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      view: 1,
+      check: null,
+      checkRoom: null,
       website: this.props.modal.website,
       name: this.props.modal.website.name,
       credentials: transformWebsiteInfoIntoList(this.props.modal.website.information),
@@ -376,9 +379,7 @@ class ClassicAppModal extends React.Component {
       profileName: '',
       selectedTeam: -1,
       selectedRoom: -1,
-      view: 1,
       loading: false,
-      profileAdded: false
     }
   }
   chooseLogWith = (logwithId) => {
@@ -443,31 +444,31 @@ class ClassicAppModal extends React.Component {
     });
     return columnChoose;
   };
-  createProfile = () => {
-    const newProfile = {id: 0, name: this.state.profileName};
-    if (this.state.profileName.length === 0)
-      return;
-    this.addProfile(newProfile);
-    this.setState({profileAdded: true});
+  selectProfile = () => {
+    let profileChoose = null;
+    Object.keys(this.props.dashboard.profiles).map(item => {
+      if (profileChoose === null && this.props.dashboard.profiles[item].team_id === -1)
+        profileChoose = this.props.dashboard.profiles[item].id;
+    });
+    this.setState({
+      selectedProfile: profileChoose !== null ? profileChoose : 0,
+      selectedTeam: -1,
+      selectedRoom: -1,
+      check: 'newApp',
+      error: ""
+    });
   };
-  selectProfile = (id) => {
-    this.setState({ selectedProfile: id, selectedTeam: -1, selectedRoom: -1 });
+  selectRoom = (roomId) => {
+    this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
-  selectRoom = (teamId, roomId) => {
-    this.setState({ selectedTeam: teamId, selectedRoom: roomId, selectedProfile: -1 });
-  };
-  addProfile = (profile) => {
-    let profiles = this.state.profiles.slice();
-    profiles.push(profile);
-    this.setState({profiles: profiles, selectedProfile: profile.id});
+  selectTeam = (teamId) => {
+    this.setState({selectedTeam: teamId, check: teamId, selectedProfile: -1});
   };
   changeView = (view) => {
     if (this.state.selectedProfile !== -1)
       this.setState({view: view});
     else if (this.state.selectedProfile === -1 && this.state.selectedRoom !== -1)
       this.setState({view: 4});
-    else
-      this.createProfile();
   };
   testCredentials = () => {
     this.props.dispatch(testCredentials({
@@ -485,18 +486,16 @@ class ClassicAppModal extends React.Component {
             headerContent={'Setup your App'}>
           {this.state.view === 1 &&
           <ChooseAppLocationModal
-              website={this.state.website}
-              appName={this.state.name}
-              loading={this.state.loading}
-              profiles={this.state.profiles}
-              handleInput={this.handleInput}
-              selectedProfile={this.state.selectedProfile}
-              selectedRoom={this.state.selectedRoom}
-              profileAdded={this.state.profileAdded}
-              createProfile={this.createProfile}
-              confirm={this.changeView.bind(null, 2)}
-              selectProfile={this.selectProfile}
-              selectRoom={this.selectRoom} />}
+            check={this.state.check}
+            appName={this.state.name}
+            loading={this.state.loading}
+            website={this.state.website}
+            selectTeam={this.selectTeam}
+            selectRoom={this.selectRoom}
+            checkRoom={this.state.checkRoom}
+            selectProfile={this.selectProfile}
+            confirm={this.changeView.bind(null, 2)}
+            logoLetter={this.props.modal.logoLetter} />}
           {this.state.view === 2 &&
           <SecondStep
               {...this.props}

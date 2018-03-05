@@ -1,9 +1,10 @@
 import React from 'react';
-import { Input, Button, Container, Form, Table, List, Icon } from 'semantic-ui-react';
-import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {dashboard} from "../../utils/post_api";
+import {reduxActionBinder} from "../../actions/index";
 import {handleSemanticInput} from "../../utils/utils";
+import ChooseAppRoomLocationModal from "./ChooseAppRoomLocationModal";
+import { Button, Form, Checkbox, Label, Icon } from 'semantic-ui-react';
 
 @connect(store => ({
     teams: store.teams,
@@ -14,124 +15,90 @@ class ChooseAppLocationModal extends React.Component {
     super(props);
     this.state = {
       view: 1,
-      profiles: [],
-      profileName: ''
     }
   }
+  changeView = () => {
+    if (this.state.view === 1 && this.props.check !== 'newApp')
+      this.setState({view: 2});
+    else
+      this.props.confirm();
+  };
   handleInput = handleSemanticInput.bind(this);
   render() {
     const {
+      check,
       website,
       appName,
-      handleInput,
-      selectedProfile,
-      selectedRoom,
-      confirm,
+      checkRoom,
+      selectTeam,
+      selectRoom,
       selectProfile,
-      selectRoom
     } = this.props;
-    const profiles = this.props.profiles.map(profile => (
-      <List.Item as="a"
-                 key={profile.id}
-                 class="display_flex"
-                 active={selectedProfile === profile.id}
-                 onClick={e => selectProfile(profile.id)}>
-          <strong className="overflow-ellipsis">{profile.name}</strong>
-          &nbsp;&nbsp;
-      </List.Item>
-    ));
-    const teamsList = Object.entries(this.props.teams).map((teams, i) => (
-      teams.map((team) => (
-        team.rooms &&
-        <Table.Row key={team.id}>
-            <Table.Cell style={{backgroundColor: '#e1e1e1', width: '170px'}}>
-                <div style={{display: 'inline-flex'}}>
-                    <Icon name='users'/>
-                    <span className='overflow-ellipsis' style={{maxWidth: '100px'}}>{team.name}</span>
-                </div>
-            </Table.Cell>
-            <Table.Cell verticalAlign='bottom'>
-                <List link style={{width: '180px'}}>
-                  {Object.entries(team.rooms).map(rooms => (
-                    rooms.map(room => (
-                      (room.id && room.team_user_ids.filter(id => (id === team.my_team_user_id)).length > 0) &&
-                      <List.Item as="a"
-                                 class="display_flex"
-                                 active={selectedRoom === room.id}
-                                 onClick={e => selectRoom(team.id, room.id)}
-                                 key={room.id}>
-                          <strong className='overflow-ellipsis'># {room.name}</strong>
-                          &nbsp;&nbsp;
-                      </List.Item>
-                    ))
-                  ))}
-                </List>
-            </Table.Cell>
-        </Table.Row>
-      ))
-    ));
+    const teams = Object.keys(this.props.teams).filter(team_id => {
+      const team = this.props.teams[team_id];
+      return team.onboarding_step === 5 && !team.team_users[team.my_team_user_id].disabled;
+    }).map(team_id => (
+      <Checkbox radio
+                name='check'
+                key={team_id}
+                value={team_id}
+                checked={check === team_id}
+                style={{margin: "0 0 10px 0"}}
+                onChange={e => selectTeam(team_id)}
+                label={this.props.teams[team_id].name}/>));
     return (
-      <Form class="container" id="add_bookmark_form" onSubmit={confirm}>
-          <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
-            {website.logo ?
+      <Form class="container" id="add_bookmark_form" onSubmit={this.changeView}>
+        <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
+          {website.logo ?
             <div className="squared_image_handler">
               <img src={website.logo} alt="Website logo"/>
             </div>
             :
-            <div className="squared_image_handler" style={{backgroundColor:'#373b60',color:'white',fontSize:'24px',backgroundSize:'cover',display:'flex'}}>
-              <div style={{margin:'auto'}}>
-                <p style={{margin:'auto'}}>{this.props.logoLetter}</p>
+            <div className="squared_image_handler" style={{
+              backgroundColor: '#373b60', color: 'white', fontSize: '24px', backgroundSize: 'cover', display: 'flex'
+            }}>
+              <div style={{margin: 'auto'}}>
+                <p style={{margin: 'auto'}}>{this.props.logoLetter}</p>
               </div>
             </div>}
-            <span className="app_name">{appName}</span>
+          {this.state.view === 1 &&
+          <span className="app_name">{appName}</span>}
+          {this.state.view === 2 &&
+          <div className="team_app_settings_name">
+            <div>
+              <span className="app_name">{appName}</span>
+            </div>
+            <div>
+              <Label className="team_name" icon={<Icon name="users" class="mrgnRight5"/>} size="tiny"
+                     content={this.props.teams[Number(check)].name}/>
+            </div>
+          </div>}
+        </Form.Field>
+        {this.state.view === 1 &&
+        <React.Fragment>
+          <div style={{marginBottom: '10px', fontWeight: 'bold'}}>Where would you like to send this app?</div>
+          <Form.Field className='choose_type_app'>
+            {(website.information && Object.keys(website.information).length > 0) && teams}
+            {this.props.bookmark && teams}
+            <Checkbox radio
+                      name='check'
+                      value='newApp'
+                      label='Personal Account'
+                      onChange={selectProfile}
+                      checked={check === 'newApp'}/>
           </Form.Field>
-          <Form.Field>
-              <div style={{marginBottom: '10px'}}>Where would you like to send this app?</div>
-              <Container class="newProfiles pushable">
-                  <Table striped>
-                      <Table.Body>
-                          <Table.Row>
-                              <Table.Cell style={{backgroundColor: '#e1e1e1'}}>
-                                  <div style={{display: 'inline-flex'}}>
-                                      <Icon name='user'/>
-                                      <span className='overflow-ellipsis'
-                                            style={{maxWidth: '100px'}}>Personal Space</span>
-                                  </div>
-                              </Table.Cell>
-                              <Table.Cell verticalAlign='bottom'>
-                                  <List link style={{width: '180px'}}>
-                                    {profiles}
-                                  </List>
-                                {(!this.props.profileAdded) &&
-                                <form style={{marginBottom: 0}} onSubmit={this.props.createProfile}>
-                                    <Input
-                                      value={this.props.profileName}
-                                      style={{fontSize: '14px'}}
-                                      name="profileName"
-                                      required
-                                      transparent
-                                      onChange={handleInput}
-                                      class="create_profile_input"
-                                      icon={<Icon name="plus square" link onClick={this.props.createProfile}/>}
-                                      placeholder='Create new group' />
-                                </form>}
-                              </Table.Cell>
-                          </Table.Row>
-                        {(website.information && Object.keys(website.information).length > 0) && teamsList}
-                        {this.props.bookmark && teamsList}
-                      </Table.Body>
-                  </Table>
-              </Container>
-          </Form.Field>
-          <Button
-            attached='bottom'
-            type="submit"
-            positive
-            loading={this.props.loading}
-            disabled={(selectedProfile === -1 && selectedRoom === -1) || appName.length === 0 || this.props.loading}
-            onClick={confirm}
-            className="modal-button"
-            content="NEXT"/>
+        </React.Fragment>}
+        {this.state.view === 2 &&
+        <ChooseAppRoomLocationModal team_id={Number(check)} checkRoom={checkRoom} handleChange={selectRoom} back={check}/>}
+        <Button
+          attached='bottom'
+          type="submit"
+          positive
+          loading={this.props.loading}
+          disabled={check === null || appName.length === 0 || this.props.loading}
+          onClick={this.changeView}
+          className="modal-button"
+          content="NEXT"/>
       </Form>
     )
   }
