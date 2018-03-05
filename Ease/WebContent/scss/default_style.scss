@@ -1937,7 +1937,8 @@ p {
   flex-direction: column;
   flex-grow: 1;
   border-right: 1px solid #949eb7;
-  margin-left: 30px;
+  align-items: center;
+  justify-content: center;
 }
 .loginContent {
   display: flex;
@@ -1953,10 +1954,10 @@ p {
 .knowUserContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100vh;
   margin-top: 5%;
   margin-bottom: 5%;
+  justify-content: space-between;
 }
 .loginTitle {
   font-size: 30px;
@@ -1966,7 +1967,7 @@ p {
 }
 .LoginErrorMessage {
   color: #eb555c;
-  margin-top: 0;
+  margin-bottom: 5%!important;
 }
 .knowUserOtherLink {
   margin-bottom: 5%;
@@ -1986,8 +1987,11 @@ p {
     text-decoration: underline;
   }
 }
-.loginPasswordInput {
+.mrgBottom5 {
   margin-bottom: 5%;
+}
+.loginPasswordInput input:focus {
+  border-color: #363b60!important;
 }
 .loginLogo {
   padding-top: 50px;

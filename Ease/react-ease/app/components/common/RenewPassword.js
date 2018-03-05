@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import post_api from "../../utils/post_api";
 import {handleSemanticInput, passwordRegexp} from "../../utils/utils";
-import {Icon, Form, Header, Input, Message} from 'semantic-ui-react';
+import {Icon, Form, Header, Input, Message, Button} from 'semantic-ui-react';
 
 class PasswordInput extends Component {
   constructor(props){
@@ -72,33 +72,36 @@ export default class RenewPassword extends Component {
           </div>
 
           <div style={{marginLeft: '30px', marginTop: '30px'}}>
-            <Header as="h1">
-              Setup a new password
-            </Header>
+            <div>
+              <Header as="h1" className="mrgBottom10">
+                Setup your new password
+              </Header>
+            </div>
             <Form error={!!this.state.errorMessage.length} onSubmit={this.confirm}>
-              <Form.Field>
-                Take care of remembering this password. In case you lose it, all passwords on your Ease.space account will be disappear.
-              </Form.Field>
               <Form.Field>
                 <label>New password</label>
                 <PasswordInput
+                  className="mrgBottom5"
                   name="password"
                   required
                   onChange={this.passwordInput}
                   placeholder="New password"/>
-                <span style={{color: this.state.passwordError ? '#E84855': null, display:'block', marginTop: '2px', fontSize: '14px'}}>Your password must contain at least 8 characters, 1 uppercase, 1 lowercase and 1 number</span>
               </Form.Field>
               <Form.Field>
                 <label>Confirm new password</label>
                 <PasswordInput
+                  className="mrgBottom5"
                   name="confirmPassword"
                   required
                   onChange={this.handleInput}
                   placeholder="Confirm new password"/>
               </Form.Field>
               <Message error content={this.state.errorMessage}/>
-              <Form.Button fluid positive content={'Confirm'}/>
             </Form>
+            <span style={{color: this.state.passwordError ? '#E84855': null, display:'block', marginTop: '2px', fontSize: '14px'}}>Your password must contain at least 8 characters, 1 uppercase, 1 lowercase and 1 number</span>
+            <div>
+              <Button className="newPasswordButton" color="green" onClick={this.confirm} content={'Done!'}/>
+            </div>
           </div>
         </div>
       </div>

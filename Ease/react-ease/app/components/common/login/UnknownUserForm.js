@@ -56,21 +56,23 @@ class UnknownUserForm extends React.Component{
         </div>
         <div>
           <form method="POST" onSubmit={this.onSubmit} id="unknownUserForm">
+            <div>
             <p className="LoginInputTitle">Email</p>
-            <Input className="loginPasswordInput" type="email" name="email"
+            <Input className="mrgBottom5" type="email" name="email"
                    placeholder="Email"
                    value={this.state.email}
                    onChange={this.handleInput}
                    required/>
             <p className="LoginInputTitle">Password</p>
-            <Input className="loginPasswordInput" type="password" name="password"
+            <Input className="mrgBottom5" type="password" name="password"
                    placeholder="Password"
                    value={this.state.password}
                    onChange={this.handleInput}
                    required/>
-              <p>{this.state.errorMessage}</p>
+              <p className="LoginErrorMessage">{this.state.errorMessage}</p>
+            </div>
             <div>
-              <Button color="green" type="submit">Login<Icon className="loginIcoButton" name="external"/></Button>
+              <Button icon color="green" type="submit">Login <Icon name='sign in' /></Button>
             </div>
           </form>
         </div>

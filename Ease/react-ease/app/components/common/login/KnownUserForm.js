@@ -64,7 +64,7 @@ class KnownUserForm extends React.Component{
           <form method="POST" onSubmit={this.onSubmit} id="knownUserForm">
             <div>
               <p className="LoginInputTitle">Please type your password</p>
-              <Input className="loginPasswordInput" type="password" name="password" placeholder="Password"
+              <Input className="mrgBottom5" type="password" name="password" placeholder="Password"
                      value={this.state.password}
                      onChange={this.handleInput}
                      autoFocus
@@ -72,7 +72,7 @@ class KnownUserForm extends React.Component{
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
             </div>
             <div>
-              <Button color="green" type="submit">Login<Icon name="external"/></Button>
+              <Button icon color="green" type="submit">Login <Icon name='sign in' /></Button>
             </div>
           </form>
         </div>
