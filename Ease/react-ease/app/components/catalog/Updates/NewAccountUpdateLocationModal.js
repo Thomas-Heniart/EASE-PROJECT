@@ -110,8 +110,7 @@ class NewAccountUpdateLocationModal extends React.Component {
               content="NEXT"
               loading={this.state.loading}
               disabled={this.state.loading || this.state.check === ''}/>
-          </Form>
-          }
+          </Form>}
         </Container>
         {this.state.view === 2 &&
         <ChooseTypeAppModal
@@ -122,8 +121,7 @@ class NewAccountUpdateLocationModal extends React.Component {
           appName={this.props.modal.appName}
           team_id={this.props.modal.team}
           room_id={this.state.check}
-          close={this.close}/>
-        }
+          close={this.close}/>}
       </SimpleModalTemplate>
     )
   }
