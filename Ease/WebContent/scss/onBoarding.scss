@@ -17,6 +17,13 @@
   flex-direction: column;
   overflow: hidden;
 }
+.newPasswordContainer {
+  margin-left: 30px;
+  margin-top: 30px;
+}
+.renewPasswordAsideText {
+  margin-bottom: 45px!important;
+}
 #new_team_creation {
   font-size: 18px;
   display: -webkit-box;
@@ -68,6 +75,10 @@
       left: 50%;
       transform: translateX(-50%);
     }
+  }
+  .formBox {
+    margin-left: 30px;
+    margin-top: 30px;
   }
   #center {
     //display: inline-flex;

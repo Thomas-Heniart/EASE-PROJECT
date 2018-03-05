@@ -1918,11 +1918,88 @@ p {
 .StripeElement--webkit-autofill {
   background-color: #fefde5 !important;
 }
-//Stripe csss end
 
 //Semantic overrides
 .ui.basic.button.textlike {
   padding: 5px;
   border: none;
   box-shadow: none;
+}
+
+// Login Pages
+.containerLogin {
+  display: flex;
+  align-items: stretch;
+  height: 100vh;
+}
+.loginAside {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  border-right: 1px solid #949eb7;
+  margin-left: 30px;
+}
+.loginContent {
+  display: flex;
+  flex-grow: 8;
+  background-image: url('https://source.unsplash.com/collection/392417');
+  background-size: cover;
+}
+.LoginInputTitle {
+  margin-bottom: 0;
+  font-weight: 300;
+  color: #949eb7;
+}
+.knowUserContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+.loginTitle {
+  font-size: 30px;
+  font-weight: bold;
+  color: #949eb7;
+  justify-content: flex-end;
+}
+.LoginErrorMessage {
+  color: #eb555c;
+  margin-top: 0;
+}
+.knowUserOtherLink {
+  margin-bottom: 5%;
+  p {
+    margin-bottom: 5%;
+    color: #949EB7;
+    font-weight: 300;
+    font-size: 17px;
+    cursor: pointer;
+  }
+  a {
+    color: #949EB7;
+    font-weight: 300;
+    font-size: 17px;
+  }
+  a p:hover {
+    text-decoration: underline;
+  }
+}
+.loginPasswordInput {
+  margin-bottom: 5%;
+}
+.loginLogo {
+  padding-top: 50px;
+  width: 200px;
+}
+.LoginAccess {
+  font-size: 20px;
+  font-weight: 300;
+  color: #949eb7;
+}
+.passwordLostText {
+  color: #949EB7;
+  font-weight: 300;
+  font-size: 17px;
 }

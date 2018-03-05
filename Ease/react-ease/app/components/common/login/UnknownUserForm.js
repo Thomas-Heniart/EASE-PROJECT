@@ -2,7 +2,7 @@ import React from 'react';
 import {processConnection} from "../../../actions/commonActions";
 import {withCookies} from 'react-cookie';
 import {connect} from 'react-redux';
-
+import {Input, Button, Icon} from 'semantic-ui-react'
 
 @connect((store)=>({
   authenticated: store.common.authenticated,
@@ -15,19 +15,21 @@ class UnknownUserForm extends React.Component{
       email:'',
       password: '',
       errorMessage: '',
-      error: false
+      error: false,
+      name: this.props.cookies.get('fname')
     };
+    if (!!this.state.name) {
+      this.state.name = atob(this.state.name);
+    }
     this.handleInput = this.handleInput.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
   handleInput(e){
     this.setState({[e.target.name]: e.target.value});
   }
-
   onSubmit(e){
     e.preventDefault();
     this.setState({error: false});
-
     this.props.dispatch(processConnection({
       email:this.state.email,
       password:this.state.password
@@ -37,38 +39,48 @@ class UnknownUserForm extends React.Component{
       this.setState({errorMessage:err, error: true, password: ''});
     });
   }
-
-  componentWillMount(){
-    console.log('UnknowUserForm/PROPS', this.props);
-  }
-
+  userAccount = e => {
+    this.props.history.replace('/login');
+  };
+  passwordLost = () => {
+    this.props.history.replace('/login/passwordLost')
+  };
   render() {
     return (
-      <div>
-        <h1>logo</h1>
-        <h2>ACCESS YOUR ACCOUNT</h2>
-        <form method="POST" onSubmit={this.onSubmit} id="unknownUserForm">
-          <div>
-            <input type="email" name="email" placeholder="Email"
+      <div className="knowUserContainer">
+        <div>
+          <img className="loginLogo" src='/resources/images/ease_logo_blue.svg'/>
+        </div>
+        <div>
+          <p className="loginAccess">ACCESS YOUR ACCOUNT</p>
+        </div>
+        <div>
+          <form method="POST" onSubmit={this.onSubmit} id="unknownUserForm">
+            <p className="LoginInputTitle">Email</p>
+            <Input className="loginPasswordInput" type="email" name="email"
+                   placeholder="Email"
                    value={this.state.email}
                    onChange={this.handleInput}
                    required/>
-            <input type="password" name="password" placeholder="Password"
+            <p className="LoginInputTitle">Password</p>
+            <Input className="loginPasswordInput" type="password" name="password"
+                   placeholder="Password"
                    value={this.state.password}
                    onChange={this.handleInput}
                    required/>
-          </div>
-          <button type="submit">Login</button>
-          <div>
-            <p>Password lost ?</p>
-          </div>
-          <div>
-            <p>{this.state.errorMessage}</p>
-          </div>
-          <div>
-            <a href="/discover">Create an account</a>
-          </div>
-        </form>
+              <p>{this.state.errorMessage}</p>
+            <div>
+              <Button color="green" type="submit">Login<Icon className="loginIcoButton" name="external"/></Button>
+            </div>
+          </form>
+        </div>
+        <div className="knowUserOtherLink">
+          { this.props.cookies.get('fname') &&
+          <p onClick={this.userAccount}>{this.state.name}'s account</p>
+          }
+          <p onClick={this.passwordLost}>Password lost ?</p>
+          <a href="/discover">Create an account</a>
+        </div>
       </div>
     )
   }

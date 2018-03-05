@@ -1,6 +1,5 @@
 import React from 'react';
-import { Grid } from 'semantic-ui-react';
-import { Switch, Route, NavLink } from 'react-router-dom';
+import { Switch, Route} from 'react-router-dom';
 import {connect} from "react-redux";
 import {withCookies} from 'react-cookie';
 import {setLoginRedirectUrl} from "../../../actions/commonActions";
@@ -8,16 +7,14 @@ import UnknownUserForm from "./UnknownUserForm";
 import PasswordLost from "./passwordLost";
 import KnownUserForm from "./KnownUserForm";
 
-
 function Loader(props){
   return (
-    <div class="sk-fading-circle show" id="loading">
-      <div class="ui large active centered inline loader">
+    <div className="sk-fading-circle show" id="loading">
+      <div className="ui large active centered inline loader">
       </div>
     </div>
   )
 }
-
 @connect((store)=>({
   authenticated: store.common.authenticated,
   redirect: store.common.loginRedirectUrl
@@ -45,10 +42,7 @@ class Login extends React.Component {
   }
   componentWillMount(){
     document.title = "Ease.space";
-    console.log('INDEX/LOGIN/PROPS', this.props);
-    console.log("cook", this.state.knownFname);
   }
-
   finishLoggingIn = () => {
     if (this.state.redirect.length > 0) {
       this.props.history.replace(this.state.redirect);
@@ -56,31 +50,27 @@ class Login extends React.Component {
     else
       this.props.history.replace('/main/dashboard');
   };
-
   render(){
     if (this.props.authenticated)
       return null;
     return (
-      <div id="loginBody">
-        <div class="myshow">
-          {this.state.activeView === 'loading' &&
-          <Loader/>}
-        </div>
-
-        <Grid.Column width={6}>
+      <div className="containerLogin">
+        <div className="loginAside">
           <Switch>
             <Route exact path={`/login`} render={(props) => <KnownUserForm {...props} finishLogin={this.finishLoggingIn}/>}/>
             <Route path={`/login/unknownUser`} render={(props) => <UnknownUserForm {...props} finishLogin={this.finishLoggingIn}/>}/>
             <Route path={`/login/passwordLost`} component={PasswordLost}/>
           </Switch>
-        </Grid.Column>
-
-        <Grid.Column width={10}>
-          <p> Lorem ipsum dolor sit ametis </p>
-        </Grid.Column>
+        </div>
+        <div className="loginContent">
+          <div>
+            {this.state.activeView === 'loading' &&
+            <Loader/>}
+          </div>
+        </div>
       </div>
     )
   }
 }
-// render={(props) => <KnownUserForm finishLogin={this.finishLoggingIn}/>}
+
 export default withCookies(Login);
