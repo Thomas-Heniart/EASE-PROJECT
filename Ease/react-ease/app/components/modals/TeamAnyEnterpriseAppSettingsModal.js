@@ -272,7 +272,7 @@ class TeamAnyEnterpriseAppSettingsModal extends Component {
                   onClick={this.toggleUrlEdit}
                   fitted
                   disabled={!meAdmin}
-                  link={{meAdmin}}
+                  link={meAdmin}
                   style={{paddingLeft: '15px'}}/>}
               </div>
             </Form.Field>
