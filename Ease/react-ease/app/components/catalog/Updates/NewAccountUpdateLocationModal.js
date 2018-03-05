@@ -38,8 +38,15 @@ class NewAccountUpdateLocationModal extends React.Component {
   };
   componentWillMount() {
     let roomName = [];
-    Object.keys(this.props.teams[this.props.modal.team].rooms).map(room => {
-      roomName.push(this.props.teams[this.props.modal.team].rooms[room]);
+    const team = this.props.teams[this.props.modal.team];
+    Object.keys(team.rooms).sort((a, b) => {
+      if (team.rooms[a].default)
+        return -1000;
+      else if (team.rooms[b].default)
+        return 1000;
+      return team.rooms[a].name.localeCompare(team.rooms[b].name);
+    }).map(room => {
+      roomName.push(team.rooms[room]);
     });
     this.setState({roomName: roomName});
   }
