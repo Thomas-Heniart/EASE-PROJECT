@@ -10,6 +10,8 @@ import {editClassicApp, deleteApp, validateApp} from "../../actions/dashboardAct
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
+import {testCredentials} from "../../actions/catalogActions";
+import * as api from "../../utils/api";
 
 @connect(store => ({
   app: store.modals.classicAppSettings.app
@@ -44,6 +46,27 @@ class ClassicAppSettingsModal extends Component {
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  testConnection = () => {
+    let account_information = transformCredentialsListIntoObject(this.state.credentials);
+    if (!this.state.isEmpty) {
+      api.dashboard.getAppPassword({
+        app_id: this.props.app.id
+      }).then(response => {
+        if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
+          account_information.password = response.password;
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    }
   };
   close = () => {
     this.props.dispatch(showClassicAppSettingsModal({active: false}));
@@ -91,99 +114,101 @@ class ClassicAppSettingsModal extends Component {
       }));
     this.setState({credentials: credentials});
   }
-  render(){
+  render() {
     const {view, credentials} = this.state;
     const app = this.props.app;
-    const inputs = credentials.map((item,idx) => {
+    const inputs = credentials.map((item, idx) => {
       if (item.name === 'password')
         return (
-            <Form.Field key={idx}>
-              <label>{item.placeholder}</label>
-              <div class="display_flex align_items_center">
-                <Input
-                    fluid
-                    icon
-                    disabled={!item.edit && !this.state.isEmpty}
-                    className="modalInput team-app-input"
-                    size='large'
-                    required={this.state.isEmpty}
-                    type={item.type}
-                    name={item.name}
-                    onChange={this.handleCredentialInput}
-                    value={(item.edit || this.state.isEmpty) ? item.value : '********'}
-                    placeholder={item.placeholder}
-                    labelPosition='left'>
-                  <Label><Icon name="lock"/></Label>
-                  <input/>
-                  {!app.empty &&
-                  <CopyPasswordIcon app_id={app.id}/>}
-                </Input>
-                {!this.state.isEmpty &&
-                <Icon
-                    name="pencil"
-                    onClick={this.toggleCredentialEdit.bind(null, item.name)}
-                    fitted link
-                    style={{paddingLeft: '15px'}}/>}
-              </div>
-            </Form.Field>
-        );
-      return (
           <Form.Field key={idx}>
             <label>{item.placeholder}</label>
             <div class="display_flex align_items_center">
               <Input
-                  fluid
-                  icon
-                  disabled={!item.edit && !this.state.isEmpty}
-                  className="modalInput team-app-input"
-                  size='large'
-                  required={this.state.isEmpty}
-                  type={item.type}
-                  name={item.name}
-                  onChange={this.handleCredentialInput}
-                  label={{ icon: credentialIconType[item.name]}}
-                  value={item.value}
-                  placeholder={item.placeholder}
-                  labelPosition='left'/>
+                fluid
+                icon
+                disabled={!item.edit && !this.state.isEmpty}
+                className="modalInput team-app-input"
+                size='large'
+                required={this.state.isEmpty}
+                type={item.type}
+                name={item.name}
+                onChange={this.handleCredentialInput}
+                value={(item.edit || this.state.isEmpty) ? item.value : '********'}
+                placeholder={item.placeholder}
+                labelPosition='left'>
+                <Label><Icon name="lock"/></Label>
+                <input/>
+                {!app.empty &&
+                <CopyPasswordIcon app_id={app.id}/>}
+              </Input>
               {!this.state.isEmpty &&
               <Icon
-                  name="pencil"
-                  onClick={this.toggleCredentialEdit.bind(null, item.name)}
-                  fitted link
-                  style={{paddingLeft: '15px'}}/>}
+                name="pencil"
+                onClick={this.toggleCredentialEdit.bind(null, item.name)}
+                fitted link
+                style={{paddingLeft: '15px'}}/>}
             </div>
           </Form.Field>
+        );
+      return (
+        <Form.Field key={idx}>
+          <label>{item.placeholder}</label>
+          <div class="display_flex align_items_center">
+            <Input
+              fluid
+              icon
+              disabled={!item.edit && !this.state.isEmpty}
+              className="modalInput team-app-input"
+              size='large'
+              required={this.state.isEmpty}
+              type={item.type}
+              name={item.name}
+              onChange={this.handleCredentialInput}
+              label={{icon: credentialIconType[item.name]}}
+              value={item.value}
+              placeholder={item.placeholder}
+              labelPosition='left'/>
+            {!this.state.isEmpty &&
+            <Icon
+              name="pencil"
+              onClick={this.toggleCredentialEdit.bind(null, item.name)}
+              fitted link
+              style={{paddingLeft: '15px'}}/>}
+          </div>
+        </Form.Field>
       )
     });
     return (
-        <SimpleModalTemplate
-            onClose={this.close}
-            headerContent={"App settings"}>
-          <Container class="app_settings_modal">
-            <div class="app_name_container display-flex align_items_center">
-              <div class="squared_image_handler">
-                <img src={app.website.logo} alt="Website logo"/>
-              </div>
-              <AppSettingsNameInput value={this.state.appName} onChange={this.handleInput}/>
+      <SimpleModalTemplate
+        onClose={this.close}
+        headerContent={"App settings"}>
+        <Container class="app_settings_modal">
+          <div class="app_name_container display-flex align_items_center">
+            <div class="squared_image_handler">
+              <img src={app.website.logo} alt="Website logo"/>
             </div>
-            <AppSettingsMenu view={view} onChange={this.handleInput}/>
-            {view === 'Account' &&
-            <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
-              {inputs}
-              <Message error content={this.state.errorMessage}/>
-              <Button
-                  type="submit"
-                  positive
-                  loading={this.state.loading}
-                  className="modal-button"
-                  content="CONFIRM"/>
-            </Form>}
-            {view === 'Remove' &&
-            <RemoveSection onRemove={this.remove}/>}
-            {view === 'Share' &&
-            <ShareSection/>}
-          </Container>
-        </SimpleModalTemplate>
+            <AppSettingsNameInput value={this.state.appName} onChange={this.handleInput}/>
+          </div>
+          <AppSettingsMenu view={view} onChange={this.handleInput}/>
+          {view === 'Account' &&
+          <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
+            {inputs}
+            <Message error content={this.state.errorMessage}/>
+            {this.state.credentials.filter(item => {return item.edit}).length > 0 &&
+            <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
+            <Button
+              type="submit"
+              positive
+              loading={this.state.loading}
+              className="modal-button"
+              content="CONFIRM"/>
+          </Form>}
+          {view === 'Remove' &&
+          <RemoveSection onRemove={this.remove}/>}
+          {view === 'Share' &&
+          <ShareSection/>}
+        </Container>
+      </SimpleModalTemplate>
     )
   }
 }
