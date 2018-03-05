@@ -573,37 +573,37 @@ export function showNewAccountUpdateModal({state, resolve, reject, website, acco
   }
 }
 
-export function accountUpdateLocationModal(dispatch, website, account_information, team, appName){
-    return new Promise((resolve, reject) => {
-        dispatch(showNewAccountLocationUpdateModal({
-            state: true,
-            website: website,
-            account_information: account_information,
-            team: team,
-            appName: appName,
-            resolve: resolve,
-            reject: reject
-        }));
-    }).then(response => {
-        console.log('resolve');
-    }).catch(err => {
-        dispatch(showNewAccountLocationUpdateModal({state: false}));
-    });
+export function accountUpdateLocationModal(dispatch, website, account_information, team, appName) {
+  return new Promise((resolve, reject) => {
+    dispatch(showNewAccountLocationUpdateModal({
+      state: true,
+      website: website,
+      account_information: account_information,
+      team: team,
+      appName: appName,
+      resolve: resolve,
+      reject: reject
+    }));
+  }).then(response => {
+    dispatch(showNewAccountLocationUpdateModal({state: false}));
+  }).catch(err => {
+    dispatch(showNewAccountLocationUpdateModal({state: false}));
+  });
 }
 
-export function showNewAccountLocationUpdateModal({state, resolve, reject, website, account_information, team, appName}){
-    return {
-        type: 'SHOW_NEW_ACCOUNT_UPDATE_LOCATION_MODAL',
-        payload: {
-            active: state,
-            website: website,
-            team: team,
-            appName: appName,
-            account_information: account_information,
-            resolve: resolve,
-            reject: reject
-        }
+export function showNewAccountLocationUpdateModal({state, resolve, reject, website, account_information, team, appName}) {
+  return {
+    type: 'SHOW_NEW_ACCOUNT_UPDATE_LOCATION_MODAL',
+    payload: {
+      active: state,
+      website: website,
+      team: team,
+      appName: appName,
+      account_information: account_information,
+      resolve: resolve,
+      reject: reject
     }
+  }
 }
 
 export function sendUpdateToAdmin({id, account_information}){
