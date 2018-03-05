@@ -17,6 +17,9 @@ class ChooseAppLocationModal extends React.Component {
       view: 1,
     }
   }
+  back = () => {
+    this.setState({view: 1});
+  };
   changeView = () => {
     if (this.state.view === 1 && this.props.check !== 'newApp')
       this.setState({view: 2});
@@ -89,13 +92,17 @@ class ChooseAppLocationModal extends React.Component {
           </Form.Field>
         </React.Fragment>}
         {this.state.view === 2 &&
-        <ChooseAppRoomLocationModal team_id={Number(check)} checkRoom={checkRoom} handleChange={selectRoom} back={check}/>}
+        <ChooseAppRoomLocationModal
+          team_id={Number(check)}
+          checkRoom={checkRoom}
+          handleChange={selectRoom}
+          back={this.back}/>}
         <Button
           attached='bottom'
           type="submit"
           positive
           loading={this.props.loading}
-          disabled={check === null || appName.length === 0 || this.props.loading}
+          disabled={check === null || appName.length === 0 || this.props.loading || (this.state.view === 2 && !checkRoom)}
           onClick={this.changeView}
           className="modal-button"
           content="NEXT"/>

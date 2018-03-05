@@ -650,7 +650,7 @@ class SsoAppModal extends React.Component {
     this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
   selectTeam = (teamId) => {
-    this.setState({selectedTeam: teamId, check: teamId, selectedProfile: -1});
+    this.setState({selectedTeam: teamId, check: teamId, selectedRoom: -1, checkRoom: null, selectedProfile: -1});
   };
   showLogin = () => {
     return this.state.credentials.map(item => {
