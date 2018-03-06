@@ -93,7 +93,7 @@ const CarouselContent = createReactClass({
           // autoplay={true}
             wrapAround={true}
             decorators={decorators}>
-          <img src="/resources/images/newFeatureUpdates.png" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
+          <img src="/resources/images/newFeatureFillIn.jpg" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
           <img src="/resources/images/extension_popup.jpg"/>
           <img src="/resources/images/google_accounts.jpg"/>
         </Carousel>
@@ -115,7 +115,7 @@ class NewFeatureModal extends React.Component {
           <div className="popover_mask"/>
           <div className="ease_popup ease_new_feature_popup">
             <Header as="h3" attached="top" style={{padding: '20px'}}>
-              <p>Magic is happening for your accounts and passwords 🔐</p>
+              <p>New extension to browse the web faster</p>
             </Header>
             <div className='popup_content'>
               <CarouselContent/>
