@@ -43,7 +43,7 @@ class Login extends React.Component {
     document.title = "Ease.space";
   }
   finishLoggingIn = () => {
-//    extension.easeLogin();
+    extension.easeLogin();
     if (this.state.redirect.length > 0) {
       this.props.history.replace(this.state.redirect);
     }
