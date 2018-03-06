@@ -189,7 +189,10 @@ class NewAccountUpdateModal extends React.Component {
     Object.keys(this.props.modal.website.information).map(item => {
       website.information[item] = {...this.props.modal.website.information[item]}
     });
-    Object.keys(this.props.teams).map(team => {
+    Object.keys(this.props.teams).filter(team_id => {
+      const team = this.props.teams[team_id];
+      return team.onboarding_step === 5 && !team.team_users[team.my_team_user_id].disabled;
+    }).map(team => {
       teamName.push(this.props.teams[team]);
     });
     Object.keys(this.state.account_information).map(item => {
@@ -257,8 +260,7 @@ class NewAccountUpdateModal extends React.Component {
               <div style={{fontWeight: 'bold'}}>I use this account for:</div>
             </Form.Field>
             <Form.Field className='choose_type_app'>
-              {
-                this.state.teamName.map(team => {
+              {this.state.teamName.map(team => {
                   return <Checkbox radio
                                    key={team.id}
                                    style={{margin: "0 0 10px 0"}}
@@ -266,9 +268,7 @@ class NewAccountUpdateModal extends React.Component {
                                    value={team.id}
                                    onChange={this.handleChange}
                                    label={team.name}
-                                   checked={this.state.check === team.id}/>
-                })
-              }
+                                   checked={this.state.check === team.id}/>})}
               <Checkbox radio
                         name='check'
                         value='newApp'

@@ -103,7 +103,6 @@ class TeamLinkAppSettingsModal extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meAdmin = isAdmin(me.role);
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
-
     return (
         <SimpleModalTemplate
             headerContent={"App settings"}

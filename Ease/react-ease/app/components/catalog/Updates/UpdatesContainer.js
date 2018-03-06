@@ -157,7 +157,9 @@ class UpdatesContainer extends React.Component {
       return <span>Account update</span>;
     }
   };
-  removeUpdate = (id) => {
+  removeUpdate = (e, id) => {
+    e.cancelBubble = true;
+    if (e.stopPropagation) e.stopPropagation();
     let loading = {...this.state.loadingDelete};
     loading[id] = true;
     this.setState({loadingDelete: loading});
@@ -183,7 +185,11 @@ class UpdatesContainer extends React.Component {
             const app = item.app_id !== -1 ? this.props.dashboard.apps[item.app_id] : -1;
             const website = this.state.websites[item.id];
             return (
-              <Grid.Column key={item.id} className="showSegment update">
+              <Grid.Column key={item.id} className="showSegment update"
+                           onClick={() => this.openModal({
+                              item: item,
+                              website: website,
+                              account_information: item.account_information})}>
                 <Loader size='small'
                         active={this.state.loadingDelete[item.id]}
                         className='loader_centered'/>
@@ -206,7 +212,7 @@ class UpdatesContainer extends React.Component {
                           || (card.team_user_filler_id === meId || card.team_user_filler_id === -1))) &&
                       <span className='room'>#{this.props.teams[item.team_id].rooms[card.channel_id].name}</span>}
                     </div>
-                    <Icon name="trash" onClick={() => this.removeUpdate(item.id)}/>
+                    <Icon name="trash" onClick={(e) => this.removeUpdate(e, item.id)}/>
                     <a onClick={() => this.openModal({
                       item: item,
                       website: website,

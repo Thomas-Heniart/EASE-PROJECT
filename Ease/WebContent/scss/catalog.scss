@@ -196,6 +196,7 @@
         }
       }
       &.update {
+        cursor: pointer;
         padding: 7px 0 12px 0;
         min-height: 91px;
         .loader_centered {
@@ -554,9 +555,10 @@
       .account {
         width: 700px;
         display: inline-flex;
-        margin: 7px 0 7px 42px;
+        margin: 7px 0 25px 42px;
         .input {
           font-size: 11px;
+          height: 38px;
           i {
             margin-top: 0;
             display: none;
@@ -575,6 +577,26 @@
         .disabled {
           input {
             background-color: #E8ECF1;
+          }
+        }
+        .test_connection {
+          position: absolute;
+          margin-top: 0;
+          font-size: 11px;
+          margin-left: 5px;
+          cursor: pointer;
+          &.disabled {
+            text-decoration: none;
+            cursor: auto;
+            color: #E8ECF1;
+          }
+          &.underline_hover {
+            &:hover {
+              text-decoration: underline;
+              i {
+                text-decoration: none;
+              }
+            }
           }
         }
       }

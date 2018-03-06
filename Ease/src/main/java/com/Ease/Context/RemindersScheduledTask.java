@@ -33,7 +33,7 @@ public class RemindersScheduledTask extends TimerTask {
                 teamIdMap = new ConcurrentHashMap<>();
                 servletContext.setAttribute("teamIdMap", teamIdMap);
             }
-            teamManager.teamUserNotRegisteredReminder(hibernateQuery);
+            //teamManager.teamUserNotRegisteredReminder(hibernateQuery);
             //reminderEmailManager.lunchReminders();
             teamManager.passwordReminder(hibernateQuery, servletContext);
             teamManager.checkDepartureDates(hibernateQuery, servletContext);

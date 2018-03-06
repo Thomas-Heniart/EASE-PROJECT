@@ -2,16 +2,16 @@
 	"name":"gmail",
 	"lastLogin":"",
 	"sso":"Google",
-	"home":"https://gmail.com",
+	"home":"https://mail.google.com",
 	"connect":{
       "todo":[
         {
           "action": "waitfor",
-          "search": "#identifierId, #profileIdentifier + div div[role='button'], #identifierLink"
+          "search": "#identifierId, .a9cric > div[role=button], #identifierLink"
         },
         {
           "action": "trueClick",
-          "search": "#profileIdentifier + div div[role='button']"
+          "search": ".a9cric > div[role=button]"
         },
         {
           "action": "waitfor",
