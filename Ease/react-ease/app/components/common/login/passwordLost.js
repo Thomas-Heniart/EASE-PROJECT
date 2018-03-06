@@ -1,19 +1,17 @@
 import React from 'react';
-import {connect} from "react-redux";
 import {withCookies} from 'react-cookie';
-import {Input, Button} from 'semantic-ui-react'
+import {Input, Button} from 'semantic-ui-react';
 import post_api from "../../../utils/post_api";
+import {NavLink} from 'react-router-dom';
 
-@connect((store)=>({
-  authenticated: store.common.authenticated,
-  redirect: store.common.loginRedirectUrl
-}))
+
 class PasswordLost extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       errorMessage: '',
-      error: false
+      error: false,
+      disable: false
     };
     if (!!this.state.name) {
       this.state.name = atob(this.state.name);
@@ -21,6 +19,7 @@ class PasswordLost extends React.Component{
   }
   onSubmit = (e) => {
     e.preventDefault();
+    this.setState({disable: true});
     this.setState({errorMessage: ''});
     post_api.common.passwordLost({
       email: this.state.email
@@ -59,13 +58,15 @@ class PasswordLost extends React.Component{
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
             </div>
             <div>
-              <Button color="green" type="submit">Reset my password</Button>
+              <Button disable={this.state.disable === true} color="green" type="submit">Reset my password</Button>
             </div>
           </form>
         </div>
         <div className="knowUserOtherLink">
-          <p onClick={this.otherAccount}>Other account</p>
-          <a href="/discover">Create an account</a>
+          <div>
+            <NavLink to="/login/unknownUser">Other account</NavLink>
+          </div>
+            <a href="/discover">Create an account</a>
         </div>
       </div>
     )

@@ -1937,6 +1937,7 @@ p {
   flex-direction: column;
   flex-grow: 1;
   border-right: 1px solid #949eb7;
+  color: #949EB7;
   align-items: center;
   justify-content: center;
 }
@@ -1949,7 +1950,6 @@ p {
 .LoginInputTitle {
   margin-bottom: 0;
   font-weight: 300;
-  color: #949eb7;
 }
 .knowUserContainer {
   display: flex;
@@ -1962,7 +1962,6 @@ p {
 .loginTitle {
   font-size: 30px;
   font-weight: bold;
-  color: #949eb7;
   justify-content: flex-end;
 }
 .LoginErrorMessage {
@@ -1971,12 +1970,8 @@ p {
 }
 .knowUserOtherLink {
   margin-bottom: 5%;
-  p {
-    margin-bottom: 5%;
-    color: #949EB7;
-    font-weight: 300;
-    font-size: 17px;
-    cursor: pointer;
+  div {
+    margin-bottom: 10%;
   }
   a {
     color: #949EB7;

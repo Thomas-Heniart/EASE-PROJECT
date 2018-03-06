@@ -2,7 +2,9 @@ import React from 'react';
 import {processConnection} from "../../../actions/commonActions";
 import {withCookies} from 'react-cookie';
 import {connect} from 'react-redux';
-import {Input, Button, Icon} from 'semantic-ui-react'
+import {Input, Button, Icon} from 'semantic-ui-react';
+import {NavLink} from 'react-router-dom';
+
 
 @connect((store)=>({
   authenticated: store.common.authenticated,
@@ -16,7 +18,8 @@ class UnknownUserForm extends React.Component{
       password: '',
       errorMessage: '',
       error: false,
-      name: this.props.cookies.get('fname')
+      name: this.props.cookies.get('fname'),
+      disable: false
     };
     if (!!this.state.name) {
       this.state.name = atob(this.state.name);
@@ -29,6 +32,7 @@ class UnknownUserForm extends React.Component{
   }
   onSubmit(e){
     e.preventDefault();
+    this.setState({disable: true});
     this.setState({error: false});
     this.props.dispatch(processConnection({
       email:this.state.email,
@@ -39,12 +43,7 @@ class UnknownUserForm extends React.Component{
       this.setState({errorMessage:err, error: true, password: ''});
     });
   }
-  userAccount = e => {
-    this.props.history.replace('/login');
-  };
-  passwordLost = () => {
-    this.props.history.replace('/login/passwordLost')
-  };
+
   render() {
     return (
       <div className="knowUserContainer">
@@ -72,15 +71,19 @@ class UnknownUserForm extends React.Component{
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
             </div>
             <div>
-              <Button icon color="green" type="submit">Login <Icon name='sign in' /></Button>
+              <Button icon color="green" loading={this.state.disable === true} disable={this.state.disable === true} type="submit">Login <Icon name='sign in' /></Button>
             </div>
           </form>
         </div>
         <div className="knowUserOtherLink">
           { this.props.cookies.get('fname') &&
-          <p onClick={this.userAccount}>{this.state.name}'s account</p>
+            <div>
+              <NavLink to="/login">{this.state.name}'s account</NavLink>
+            </div>
           }
-          <p onClick={this.passwordLost}>Password lost ?</p>
+          <div>
+            <NavLink to="/login/passwordLost">Password lost ?</NavLink>
+          </div>
           <a href="/discover">Create an account</a>
         </div>
       </div>

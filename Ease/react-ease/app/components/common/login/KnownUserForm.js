@@ -2,7 +2,8 @@ import React from 'react';
 import {connect} from "react-redux";
 import {withCookies} from 'react-cookie';
 import {processConnection} from "../../../actions/commonActions";
-import {Input, Button, Icon} from 'semantic-ui-react'
+import {Input, Button, Icon} from 'semantic-ui-react';
+import {NavLink} from 'react-router-dom';
 
 @connect((store)=>({
   authenticated: store.common.authenticated,
@@ -16,7 +17,8 @@ class KnownUserForm extends React.Component{
       email: this.props.cookies.get('email'),
       password: '',
       errorMessage: '',
-      error: false
+      error: false,
+      disable: false
     };
     if (!!this.state.name) {
       this.state.name = atob(this.state.name);
@@ -24,6 +26,7 @@ class KnownUserForm extends React.Component{
   }
   onSubmit = e => {
     e.preventDefault();
+    this.setState({disable: true});
     this.setState({error: false});
     this.props.dispatch(processConnection({
       email:this.state.email,
@@ -32,18 +35,10 @@ class KnownUserForm extends React.Component{
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
-      this.props.setView('known');
     });
   };
   handleInput = e => {
     this.setState({[e.target.name]: e.target.value});
-  };
-
-  otherAccount = () => {
-    this.props.history.replace('login/unknownUser');
-  };
-  passwordLost = () => {
-    this.props.history.replace('login/passwordLost')
   };
   componentWillMount(){
     if (!this.props.cookies.get('fname') || !this.props.cookies.get('email')) {
@@ -72,15 +67,19 @@ class KnownUserForm extends React.Component{
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
             </div>
             <div>
-              <Button icon color="green" type="submit">Login <Icon name='sign in' /></Button>
+              <Button icon color="green" loading={this.state.disable === true} disabled={this.state.disable === true} type="submit">Login<Icon name='sign in' /></Button>
             </div>
           </form>
         </div>
         <div className="knowUserOtherLink">
           { this.props.cookies.get('fname') &&
-          <p onClick={this.otherAccount}>Other account</p>
+            <div>
+              <NavLink to="login/unknownUser">Other account</NavLink>
+            </div>
           }
-          <p onClick={this.passwordLost}>Password lost ?</p>
+          <div>
+            <NavLink to="login/passwordLost">Password lost ?</NavLink>
+          </div>
           <a href="/discover">Create an account</a>
         </div>
       </div>

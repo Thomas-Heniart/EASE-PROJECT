@@ -6,6 +6,7 @@ import {setLoginRedirectUrl} from "../../../actions/commonActions";
 import UnknownUserForm from "./UnknownUserForm";
 import PasswordLost from "./passwordLost";
 import KnownUserForm from "./KnownUserForm";
+import extension from "../../../utils/extension_api";
 
 function Loader(props){
   return (
@@ -23,8 +24,6 @@ class Login extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      activeView: 'unknown',
-      lastActive: '',
       knownFname: this.props.cookies.get('fname'),
       knownEmail: this.props.cookies.get('email'),
       knownUser: false,
@@ -44,6 +43,7 @@ class Login extends React.Component {
     document.title = "Ease.space";
   }
   finishLoggingIn = () => {
+//    extension.easeLogin();
     if (this.state.redirect.length > 0) {
       this.props.history.replace(this.state.redirect);
     }
@@ -62,12 +62,7 @@ class Login extends React.Component {
             <Route path={`/login/passwordLost`} component={PasswordLost}/>
           </Switch>
         </div>
-        <div className="loginContent">
-          <div>
-            {this.state.activeView === 'loading' &&
-            <Loader/>}
-          </div>
-        </div>
+        <div className="loginContent"/>
       </div>
     )
   }
