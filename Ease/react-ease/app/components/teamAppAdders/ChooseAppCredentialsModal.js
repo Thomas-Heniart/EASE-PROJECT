@@ -28,6 +28,85 @@ const CredentialInput = ({item, onChange}) => {
   )
 };
 
+class ChooseHow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      errorMessage: ''
+    }
+  }
+  checkValueInput = () => {
+    let i = 0;
+    let j = 0;
+    this.props.credentials.filter(item => {
+      i++;
+      if (item.value.length > 0) {
+        j++;
+        return item;
+      }
+    });
+    return j === i;
+  };
+  render() {
+    const {
+      check,
+      change,
+      website,
+      credentials,
+      testCredentials,
+      confirm,
+      appName,
+      loading,
+      handleCredentialInput
+    } = this.props;
+    const credentialsInputs = credentials.map(item => {
+      return <CredentialInput key={item.priority} onChange={handleCredentialInput} item={item}/>;
+    });
+    return (
+      <Container>
+        <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
+          <div className="squared_image_handler">
+            <img src={website.logo} alt="Website logo"/>
+          </div>
+          <span className="app_name">{appName}</span>
+        </div>
+        <Form  onSubmit={confirm} error={this.state.errorMessage.length > 0}>
+          <Checkbox radio
+                    label={`Enter login and password myself`}
+                    name='checkboxRadioGroup'
+                    value={1}
+                    checked={check === 1}
+                    onChange={change} />
+          {credentialsInputs}
+          <Message error content={this.state.errorMessage}/>
+          <span id='test_credentials' onClick={testCredentials}>Test connection <Icon color='green' name='magic'/></span>
+          <Checkbox radio
+                    label={`Ask login and password from a team member`}
+                    name='checkboxRadioGroup'
+                    value={2}
+                    checked={check === 2}
+                    onChange={change} />
+          <Checkbox radio
+                    label={`Ask login and password from outside my team`}
+                    name='checkboxRadioGroup'
+                    value={3}
+                    checked={check === 3}
+                    onChange={change} />
+          <Button
+            type="submit"
+            loading={loading}
+            disabled={loading || !this.checkValueInput()}
+            onClick={confirm}
+            positive
+            className="modal-button uppercase"
+            content={'DONE'}/>
+        </Form>
+      </Container>
+    )
+  }
+}
+
 class AddCardForm extends React.Component {
   constructor(props) {
     super(props);
@@ -171,7 +250,8 @@ class ChooseAppCredentialsModal extends React.Component {
       view: 1,
       userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
       me: null,
-      users: null
+      users: null,
+      check: 1
     }
   }
   componentWillMount() {
@@ -196,6 +276,7 @@ class ChooseAppCredentialsModal extends React.Component {
     this.setState({credentials: credentials});
   };
   handleChange = (e, { value }) => this.setState({ userSelected: value });
+  handleChangeCheck = (e, {value}) => this.setState({check: value});
   testCredentials = () => {
     this.props.dispatch(testCredentials({
       account_information: transformCredentialsListIntoObject(this.state.credentials),
@@ -270,6 +351,16 @@ class ChooseAppCredentialsModal extends React.Component {
         onClose={this.close}
         headerContent={'App Credentials'}>
         {this.state.view === 1 &&
+        <ChooseHow check={this.state.check}
+                   change={this.handleChangeCheck}
+                   credentials={this.state.credentials}
+                   loading={this.state.loading}
+                   handleCredentialInput={this.handleCredentialInput}
+                   website={this.props.card.app}
+                   appName={this.props.settingsCard.card_name}
+                   testCredentials={this.testCredentials}
+                   confirm={this.confirm} />}
+        {this.state.view === 2 &&
         <ChoosePersonWhoHasCredentials website={this.props.card.app}
                                        appName={this.props.settingsCard.card_name}
                                        me={this.state.me}
@@ -279,7 +370,7 @@ class ChooseAppCredentialsModal extends React.Component {
                                        loading={this.state.loading}
                                        change={this.handleChange}
                                        confirm={this.confirm} />}
-        {this.state.view === 2 &&
+        {this.state.view === 3 &&
         <AddCardForm credentials={this.state.credentials}
                      loading={this.state.loading}
                      handleCredentialInput={this.handleCredentialInput}
