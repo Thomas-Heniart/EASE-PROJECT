@@ -89,10 +89,10 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00044/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00045/lib/fonts/museo-font.css"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00044/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00045/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00045/bootstrap.css"/>
     <link rel="manifest" href="manifest.json">
     <script type="text/javascript">
       (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
@@ -132,18 +132,8 @@
         <%@ include file="/templates/Logout.html" %>
         <div class="popupHandler myshow">
             <div class="sk-fading-circle" id="loading">
-                <div class="sk-circle1 sk-circle"></div>
-                <div class="sk-circle2 sk-circle"></div>
-                <div class="sk-circle3 sk-circle"></div>
-                <div class="sk-circle4 sk-circle"></div>
-                <div class="sk-circle5 sk-circle"></div>
-                <div class="sk-circle6 sk-circle"></div>
-                <div class="sk-circle7 sk-circle"></div>
-                <div class="sk-circle8 sk-circle"></div>
-                <div class="sk-circle9 sk-circle"></div>
-                <div class="sk-circle10 sk-circle"></div>
-                <div class="sk-circle11 sk-circle"></div>
-                <div class="sk-circle12 sk-circle"></div>
+                <div class="ui large active centered inline loader">
+                </div>
             </div>
             <!-- known user popup -->
             <% if (knownUser) {%>

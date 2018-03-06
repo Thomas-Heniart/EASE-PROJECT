@@ -197,7 +197,6 @@ class TeamAnyEnterpriseAppSettingsModal extends Component {
           <div className="display_flex align_items_center">
             <Input
               fluid
-              icon
               disabled={!item.edit && !this.state.isEmpty}
               className="modalInput team-app-input"
               size='large'
@@ -254,7 +253,6 @@ class TeamAnyEnterpriseAppSettingsModal extends Component {
               <div className="display_flex align_items_center">
                 <Input
                   fluid
-                  icon
                   disabled={(!this.state.editUrl && !this.state.isEmpty) || !meAdmin}
                   className="modalInput team-app-input"
                   size='large'
@@ -272,7 +270,7 @@ class TeamAnyEnterpriseAppSettingsModal extends Component {
                   onClick={this.toggleUrlEdit}
                   fitted
                   disabled={!meAdmin}
-                  link={{meAdmin}}
+                  link={meAdmin}
                   style={{paddingLeft: '15px'}}/>}
               </div>
             </Form.Field>

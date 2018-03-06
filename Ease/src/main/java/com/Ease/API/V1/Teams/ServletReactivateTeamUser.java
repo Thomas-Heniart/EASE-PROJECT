@@ -30,13 +30,17 @@ public class ServletReactivateTeamUser extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+            System.out.println(teamUser.getAdmin_id());
+            System.out.println(teamUser_connected.getDb_id());
+            if (!(teamUser_connected.isTeamAdmin() || teamUser_connected.isTeamOwner() || teamUser_connected.getDb_id().equals(teamUser.getAdmin_id())))
+                throw new HttpServletException(HttpStatus.BadRequest, "You don't have this right");
             if (!teamUser.isDisabled())
                 throw new HttpServletException(HttpStatus.BadRequest, "This user isn't disabled");
-            TeamUser teamUser_connected = sm.getTeamUser(team);
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-            if (teamUser.getUser() == null || !teamUser.getUser().getUserStatus().isRegistered())
+            if (teamUser.getUser() == null || !teamUser.isRegistered())
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is not registered");
             String keyUser = (String) sm.getUserProperties(teamUser.getUser().getDb_id()).get("keyUser");
             if (keyUser == null) {

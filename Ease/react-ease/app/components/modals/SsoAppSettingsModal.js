@@ -10,6 +10,8 @@ import {deleteSsoApp, validateApp, editAppName, editSsoGroup} from "../../action
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
+import {testCredentials} from "../../actions/catalogActions";
+import * as api from "../../utils/api";
 
 @connect(store => ({
   app: store.modals.ssoAppSettings.app,
@@ -23,6 +25,7 @@ class SsoAppSettingsModal extends Component{
       appName: this.props.app.name,
       view: 'Account',
       sso_group: this.props.sso_groups[this.props.app.sso_group_id],
+      isEmpty: this.props.sso_groups[this.props.app.sso_group_id].empty,
       other_apps: [],
       credentials: [],
       loading: false,
@@ -47,6 +50,27 @@ class SsoAppSettingsModal extends Component{
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  testConnection = () => {
+    let account_information = transformCredentialsListIntoObject(this.state.credentials);
+    if (!this.state.isEmpty) {
+      api.dashboard.getAppPassword({
+        app_id: this.props.app.id
+      }).then(response => {
+        if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
+          account_information.password = response.password;
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    }
   };
   close = () => {
     this.props.dispatch(showSsoAppSettingsModal({active: false}));
@@ -150,7 +174,6 @@ class SsoAppSettingsModal extends Component{
             <div class="display_flex align_items_center">
               <Input
                   fluid
-                  icon
                   disabled={!item.edit && !this.state.sso_group.empty}
                   className="modalInput team-app-input"
                   size='large'
@@ -187,6 +210,8 @@ class SsoAppSettingsModal extends Component{
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
               {inputs}
+              {this.state.credentials.filter(item => {return item.edit}).length > 0 &&
+              <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
               {!!other_apps.length &&
               <Form.Field>
                 <span>Modifications will also apply to:</span>

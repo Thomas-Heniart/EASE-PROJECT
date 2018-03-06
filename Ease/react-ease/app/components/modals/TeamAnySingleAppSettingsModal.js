@@ -227,7 +227,6 @@ class TeamAnySingleAppSettingsModal extends Component{
             <Input
               fluid
               id={item.priority}
-              icon
               disabled={!item.edit && !this.state.isEmpty}
               className="modalInput team-app-input"
               size='large'
@@ -287,7 +286,6 @@ class TeamAnySingleAppSettingsModal extends Component{
               <div className="display_flex align_items_center">
                 <Input
                   fluid
-                  icon
                   disabled={!this.state.editUrl && !this.state.isEmpty}
                   className="modalInput team-app-input"
                   size='large'

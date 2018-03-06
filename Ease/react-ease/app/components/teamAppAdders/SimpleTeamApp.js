@@ -33,21 +33,35 @@ import {
 } from "../../utils/helperFunctions";
 import {addNotification} from "../../actions/notificationBoxActions";
 import {connect} from "react-redux";
+import {testCredentials} from "../../actions/catalogActions";
+import * as api from "../../utils/api";
 
-const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
-  return <Input size="mini"
-                class="team-app-input"
-                required={item.name !== 'password'}
-                readOnly={readOnly}
-                disabled={disabled}
-                name={item.name}
-                onChange={onChange}
-                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-                labelPosition="left"
-                placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
-                value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
-                type={item.type}>
-  </Input>
+const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnection}) => {
+  return (
+    <div className='credentials_single_card'>
+      <Input size="mini"
+             class="team-app-input"
+             required={item.name !== 'password'}
+             readOnly={readOnly}
+             disabled={disabled}
+             name={item.name}
+             onChange={onChange}
+             labelPosition="left"
+             label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+             placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
+             value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
+             type={item.type}/>
+      {(item.name === 'password' && !readOnly) &&
+      <Popup
+        inverted
+        trigger={
+          <p
+            className='underline_hover test_connection'
+            onClick={e => testConnection()}>
+            <Icon name='magic'/>Test this password
+          </p>}
+        content='We will open a new tab to test if the password works or not.'/>}
+    </div>);
 };
 
 const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
@@ -278,6 +292,26 @@ class SimpleTeamApp extends Component {
     });
     this.setState({users: users, selected_users:selected_users});
   };
+  testConnection = () => {
+    let account_information = transformCredentialsListIntoObject(this.state.credentials);
+    if (!this.props.app.empty) {
+      api.teamApps.getSingleAppPassword({team_card_id: this.props.app.id}).then(response => {
+        if (account_information.password === '') {
+          account_information.password = response;
+        }
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    }
+  };
   setEdit = (state) => {
     if (state){
       const app = this.props.app;
@@ -330,6 +364,7 @@ class SimpleTeamApp extends Component {
                                            item={item}/>
           }) : this.state.credentials.map(item => {
             return <TeamAppCredentialInput key={item.priority}
+                                           testConnection={this.testConnection}
                                            onChange={this.handleCredentialInput}
                                            item={item}/>
           });
@@ -364,7 +399,7 @@ class SimpleTeamApp extends Component {
                 </div>
               </div>
               <div class="main_column">
-                <div class="credentials">
+                <div class="credentials" style={this.state.edit && this.props.app.team_user_filler_id === -1 ? {marginBottom:'20px'} : null}>
                   {credentials}
                   {(!app.empty && ((!!meReceiver && meReceiver.allowed_to_see_password) || me.id === room_manager.id)) &&
                   <SingleAppCopyPasswordButton team_card_id={app.id}/>}

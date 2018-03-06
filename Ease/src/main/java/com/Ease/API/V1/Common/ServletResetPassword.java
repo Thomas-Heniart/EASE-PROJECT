@@ -3,7 +3,6 @@ package com.Ease.API.V1.Common;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.NewDashboard.ClassicApp;
 import com.Ease.NewDashboard.LogWithApp;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.SsoApp;
@@ -83,7 +82,9 @@ public class ServletResetPassword extends HttpServlet {
                 teamUser.setDisabledDate(new Date());
                 sm.saveOrUpdate(teamUser);
                 Team team = teamUser.getTeam();
-                if (teamUser.isTeamOwner() && team.getTeamUsers().size() == 1) {
+                if (!team.isActive())
+                    continue;
+                if (teamUser.isTeamOwner() && team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && teamUser1.isRegistered()).count() == 0) {
                     String teamKey = AES.keyGenerator();
                     teamUser.setTeamKey(AES.encrypt(teamKey, keyUser));
                     teamUser.setDisabled(false);
@@ -91,26 +92,22 @@ public class ServletResetPassword extends HttpServlet {
                     for (TeamCard teamCard : team.getTeamCardSet()) {
                         if (teamCard.isTeamSingleCard()) {
                             ((TeamSingleCard) teamCard).setAccount(null);
-                            teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> ((ClassicApp) teamCardReceiver.getApp()).setAccount(null));
+                            teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> teamCardReceiver.getApp().setAccount(null));
                         } else if (teamCard.isTeamEnterpriseCard()) {
-                            teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> ((ClassicApp) teamCardReceiver.getApp()).setAccount(null));
+                            teamCard.getTeamCardReceiverMap().values().forEach(teamCardReceiver -> teamCardReceiver.getApp().setAccount(null));
                         }
                         sm.saveOrUpdate(teamCard);
                     }
-                } else if (teamUser.isTeamOwner()) {
-                    mailJetBuilder = new MailJetBuilder();
-                    mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
-                    mailJetBuilder.setTemplateId(211068);
-                    mailJetBuilder.addTo("benjamin@ease.space");
-                    mailJetBuilder.addVariable("first_name", teamUser.getUser().getPersonalInformation().getFirst_name());
-                    mailJetBuilder.addVariable("last_name", teamUser.getUser().getPersonalInformation().getLast_name());
-                    mailJetBuilder.addVariable("team_name", team.getName());
-                    mailJetBuilder.addVariable("team_email", teamUser.getEmail());
-                    mailJetBuilder.addVariable("email", email);
-                    mailJetBuilder.addVariable("phone_number", teamUser.getUser().getPersonalInformation().getPhone_number());
-                    mailJetBuilder.sendEmail();
                 } else {
-                    TeamUser admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                    TeamUser admin;
+                    if (teamUser.isTeamOwner()) {
+                        admin = team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && !teamUser1.equals(teamUser) && teamUser1.isRegistered() && teamUser1.isTeamAdmin()).sorted((t1, t2) -> t2.getUser().getUserStatus().getLast_connection().compareTo(t1.getUser().getUserStatus().getLast_connection())).findFirst().orElse(null);
+                        if (admin == null)
+                            admin = team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && !teamUser1.equals(teamUser) && teamUser1.isRegistered()).sorted((t1, t2) -> t2.getUser().getUserStatus().getLast_connection().compareTo(t1.getUser().getUserStatus().getLast_connection())).findFirst().get();
+                        teamUser.setAdmin_id(admin.getDb_id());
+                        sm.saveOrUpdate(teamUser);
+                    } else
+                        admin = team.getTeamUserWithId(teamUser.getAdmin_id());
                     mailJetBuilder = new MailJetBuilder();
                     mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                     mailJetBuilder.addTo(admin.getEmail());
@@ -126,8 +123,8 @@ public class ServletResetPassword extends HttpServlet {
             user.getProfileSet().stream().flatMap(Profile::getApps).forEach(app -> {
                 if (app.getTeamCardReceiver() != null) {
 
-                } else if (app.isClassicApp()) {
-                    ((ClassicApp) app).setAccount(null);
+                } else if (app.isClassicApp() || app.isAnyApp()) {
+                    app.setAccount(null);
                     sm.saveOrUpdate(app);
                 } else if (app.isLogWithApp()) {
                     ((LogWithApp) app).setLoginWith_app(null);

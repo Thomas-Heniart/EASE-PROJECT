@@ -212,7 +212,6 @@ class TeamSoftwareSingleAppSettingsModal extends Component{
             <Input
               fluid
               id={item.priority}
-              icon
               disabled={!item.edit && !this.state.isEmpty}
               className="modalInput team-app-input"
               size='large'
