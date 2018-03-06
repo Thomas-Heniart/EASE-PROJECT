@@ -106,6 +106,17 @@ const extension_api = {
       )
     });
   },
+  fillActiveTab: ({app_id}) => {
+    browser.runtime.sendMessage(
+        extensionId,
+        {
+          type: 'fillActiveTab',
+          data: {
+            app_id: app_id
+          }
+        }
+    )
+  },
   easeLogin: () => {
     browser.runtime.sendMessage(
         extensionId,

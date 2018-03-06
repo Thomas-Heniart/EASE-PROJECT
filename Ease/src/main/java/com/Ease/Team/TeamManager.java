@@ -77,7 +77,7 @@ public class TeamManager {
         List<TeamUser> twelve_days_teamUsers = new LinkedList<>();
         for (Team team : this.getTeams(hibernateQuery)) {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
-                if (teamUser.isRegistered())
+                if (teamUser.isRegistered() || !teamUser.getTeamUserStatus().isInvitation_sent())
                     continue;
                 if (DateComparator.wasDaysAgo(teamUser.getCreation_date(), 3))
                     three_days_teamUsers.add(teamUser);
