@@ -12,7 +12,7 @@ import TeamCreationView from "./components/teams/TeamCreationView.js";
 import MainView from "./components/common/MainView";
 import TeamJoinView from "./components/teams/TeamJoinView";
 import Base from "./components/common/Base.js";
-import Login from "./components/common/login";
+import Login from "./components/common/login/index";
 import Root from "./components/common/Root";
 import RenewPassword from "./components/common/RenewPassword";
 import Registration from "./components/common/Registration";
