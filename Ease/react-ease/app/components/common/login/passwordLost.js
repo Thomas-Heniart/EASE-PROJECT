@@ -27,6 +27,7 @@ class PasswordLost extends React.Component{
       this.setState({errorMessage: response.msg});
     }).catch(err => {
       this.setState({errorMessage: err});
+      this.setState({disable: false});
     });
   };
   handleInput = e => {
@@ -58,7 +59,7 @@ class PasswordLost extends React.Component{
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
             </div>
             <div>
-              <Button disable={this.state.disable === true} color="green" type="submit">Reset my password</Button>
+              <Button disabled={this.state.disable === true} loading={this.state.disable === true} color="green" type="submit">Reset my password</Button>
             </div>
           </form>
         </div>

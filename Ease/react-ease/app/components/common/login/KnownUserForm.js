@@ -35,6 +35,7 @@ class KnownUserForm extends React.Component{
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
+      this.setState({disable: false});
     });
   };
   handleInput = e => {
@@ -59,7 +60,7 @@ class KnownUserForm extends React.Component{
           <form method="POST" onSubmit={this.onSubmit} id="knownUserForm">
             <div>
               <p className="LoginInputTitle">Please type your password</p>
-              <Input className="mrgBottom5" type="password" name="password" placeholder="Password"
+              <Input className="mrgBottom5 loginPasswordInput" type="password" name="password" placeholder="Password"
                      value={this.state.password}
                      onChange={this.handleInput}
                      autoFocus

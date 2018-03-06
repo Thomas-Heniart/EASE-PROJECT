@@ -41,6 +41,7 @@ class UnknownUserForm extends React.Component{
       this.props.finishLogin();
     }).catch(err => {
       this.setState({errorMessage:err, error: true, password: ''});
+      this.setState({disable: false});
     });
   }
 
@@ -57,13 +58,13 @@ class UnknownUserForm extends React.Component{
           <form method="POST" onSubmit={this.onSubmit} id="unknownUserForm">
             <div>
             <p className="LoginInputTitle">Email</p>
-            <Input className="mrgBottom5" type="email" name="email"
+            <Input className="mrgBottom5 loginPasswordInput" type="email" name="email"
                    placeholder="Email"
                    value={this.state.email}
                    onChange={this.handleInput}
                    required/>
             <p className="LoginInputTitle">Password</p>
-            <Input className="mrgBottom5" type="password" name="password"
+            <Input className="mrgBottom5 loginPasswordInput" type="password" name="password"
                    placeholder="Password"
                    value={this.state.password}
                    onChange={this.handleInput}
@@ -71,7 +72,7 @@ class UnknownUserForm extends React.Component{
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
             </div>
             <div>
-              <Button icon color="green" loading={this.state.disable === true} disable={this.state.disable === true} type="submit">Login <Icon name='sign in' /></Button>
+              <Button icon color="green" loading={this.state.disable === true} disabled={this.state.disable === true} type="submit">Login <Icon name='sign in' /></Button>
             </div>
           </form>
         </div>
