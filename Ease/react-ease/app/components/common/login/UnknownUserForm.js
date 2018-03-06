@@ -18,6 +18,8 @@ class UnknownUserForm extends React.Component{
       password: '',
       errorMessage: '',
       error: false,
+      inputEmail: false,
+      inputPassword: false,
       name: this.props.cookies.get('fname'),
       disable: false
     };
@@ -27,6 +29,18 @@ class UnknownUserForm extends React.Component{
     this.handleInput = this.handleInput.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
+  focusInputInEmail = () => {
+    this.setState({inputEmail: true});
+  };
+  focusInputOutEmail = () => {
+    this.setState({inputEmail: false});
+  };
+  focusInputInPassword = () => {
+    this.setState({inputPassword: true});
+  };
+  focusInputOutPassword = () => {
+    this.setState({inputPassword: false});
+  };
   handleInput(e){
     this.setState({[e.target.name]: e.target.value});
   }
@@ -53,20 +67,22 @@ class UnknownUserForm extends React.Component{
         </div>
         <div>
           <p className="loginAccess">ACCESS YOUR ACCOUNT</p>
-        </div>
-        <div>
           <form method="POST" onSubmit={this.onSubmit} id="unknownUserForm">
             <div>
-            <p className="LoginInputTitle">Email</p>
+            <p className="LoginInputTitle" style={{color: this.state.inputEmail ? 'black' : null}}>Email</p>
             <Input className="mrgBottom5 loginPasswordInput" type="email" name="email"
                    placeholder="Email"
                    value={this.state.email}
+                   onFocus={this.focusInputInEmail}
+                   onBlur={this.focusInputOutEmail}
                    onChange={this.handleInput}
                    required/>
-            <p className="LoginInputTitle">Password</p>
+            <p className="LoginInputTitle" style={{color: this.state.inputPassword ? 'black' : null}}>Password</p>
             <Input className="mrgBottom5 loginPasswordInput" type="password" name="password"
                    placeholder="Password"
                    value={this.state.password}
+                   onFocus={this.focusInputInPassword}
+                   onBlur={this.focusInputOutPassword}
                    onChange={this.handleInput}
                    required/>
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>

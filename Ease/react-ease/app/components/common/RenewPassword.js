@@ -97,6 +97,7 @@ export default class RenewPassword extends Component {
                   placeholder="Confirm new password"/>
               </Form.Field>
               <Message error content={this.state.errorMessage}/>
+              <Button className="fakeButton" color="white" onClick={this.confirm}/>
             </Form>
             <span style={{color: this.state.passwordError ? '#E84855': null, display:'block', marginTop: '2px', fontSize: '14px'}}>Your password must contain at least 8 characters, 1 uppercase, 1 lowercase and 1 number</span>
             <div>

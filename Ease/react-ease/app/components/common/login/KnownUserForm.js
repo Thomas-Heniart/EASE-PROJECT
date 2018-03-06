@@ -17,6 +17,7 @@ class KnownUserForm extends React.Component{
       email: this.props.cookies.get('email'),
       password: '',
       errorMessage: '',
+      inputFocus: false,
       error: false,
       disable: false
     };
@@ -24,6 +25,12 @@ class KnownUserForm extends React.Component{
       this.state.name = atob(this.state.name);
     }
   }
+  focusInputIn = () => {
+    this.setState({inputFocus: true});
+  };
+  focusInputOut = () => {
+    this.setState({inputFocus: false});
+  };
   onSubmit = e => {
     e.preventDefault();
     this.setState({disable: true});
@@ -54,15 +61,15 @@ class KnownUserForm extends React.Component{
         </div>
         <div>
           <p className="LoginAccess">ACCESS YOUR ACCOUNT</p>
-        </div>
-        <div>
           <p className="loginTitle">Hello {this.state.name}</p>
           <form method="POST" onSubmit={this.onSubmit} id="knownUserForm">
             <div>
-              <p className="LoginInputTitle">Please type your password</p>
+              <p className="LoginInputTitle" style={{color: this.state.inputFocus ? 'black' : null}}>Please type your password</p>
               <Input className="mrgBottom5 loginPasswordInput" type="password" name="password" placeholder="Password"
                      value={this.state.password}
                      onChange={this.handleInput}
+                     onFocus={this.focusInputIn}
+                     onBlur={this.focusInputOut}
                      autoFocus
                      required/>
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>

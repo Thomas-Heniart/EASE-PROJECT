@@ -50,10 +50,12 @@ class PasswordLost extends React.Component{
             your team passwords</p>
           <form method="POST" onSubmit={this.onSubmit} id="knownUserForm">
             <div>
-              <p className="LoginInputTitle">Email</p>
+              <p className="LoginInputTitle" style={{color: this.state.inputFocus ? 'black' : null}}>Email</p>
               <Input className="loginPasswordInput" type="email" name="email" placeholder="Email"
                      value={this.state.password}
                      onChange={this.handleInput}
+                     onFocus={this.focusInputIn}
+                     onBlur={this.focusInputOut}
                      autoFocus
                      required/>
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
