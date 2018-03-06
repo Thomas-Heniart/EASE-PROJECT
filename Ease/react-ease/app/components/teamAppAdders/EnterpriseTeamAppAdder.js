@@ -90,7 +90,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) =
 
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe, addFields, removeField, classic, first, testConnection}) => {
   return (
-      <div class="receiver" style={isMe ? {marginBottom:'27px'} : null}>
+      <div class="receiver" style={isMe && classic ? {marginBottom:'27px'} : null}>
         <Label class="receiver-label">
           <span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
         </Label>
