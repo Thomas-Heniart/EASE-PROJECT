@@ -16,6 +16,8 @@ export default function (props) {
         <ReactCSSTransitionGroup
             transitionName="ease-modal"
             transitionAppear={true}
+            transitionEnterTimeout={0}
+            transitionLeaveTimeout={0}
             transitionAppearTimeout={295}>
           <div class="ease_popup ease_team_popup">
             {!!onClose &&

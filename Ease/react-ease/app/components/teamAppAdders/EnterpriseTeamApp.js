@@ -32,6 +32,7 @@ import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
 import * as api from "../../utils/api";
+import {testCredentials} from "../../actions/catalogActions";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
@@ -213,7 +214,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
   )
 };
 
-const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
+const TeamAppCredentialInput = ({item, onChange, receiver, myId, testConnection}) => {
   const isRequired = receiver.user.id === myId && item.name !== 'password';
   const label = <Label><Icon name={credentialIconType[item.name]}/></Label>;
   let placeholder = item.placeholder;
@@ -222,21 +223,34 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
   if (receiver.user.id !== myId && receiver.empty)
     placeholder = `${placeholder} (Optional)`;
 
-  return <Input size="mini"
-                class="team-app-input"
-                name={item.name}
-                required={isRequired}
-                onChange={(e, data) => {onChange(receiver.user.id, data)}}
-                label={label}
-                labelPosition="left"
-                placeholder={placeholder}
-                value={item.value}
-                type={item.type}/>;
+  return (
+    <div>
+      <Input size="mini"
+             class="team-app-input"
+             name={item.name}
+             required={isRequired}
+             onChange={(e, data) => {onChange(receiver.user.id, data)}}
+             label={label}
+             labelPosition="left"
+             placeholder={placeholder}
+             value={item.value}
+             type={item.type}/>
+      {(receiver.user.id === myId && item.name === 'password') &&
+      <Popup
+        inverted
+        trigger={
+          <p
+            className='underline_hover test_connection'
+            onClick={e => testConnection(receiver.user.id)}>
+            <Icon name='magic'/>Test this password
+          </p>}
+        content='We will open a new tab to test if the password works or not.'/>}
+    </div>);
 };
 
-const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, password_reminder_interval}) => {
+const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, password_reminder_interval, testConnection}) => {
   return (
-      <div class={classnames('receiver', receiver.empty ? 'empty':null)}>
+      <div class={classnames('receiver', receiver.empty ? 'empty':null)} style={receiver.user.id === myId ? {marginBottom:'27px'} : null}>
         <EnterpriseAppEditReceiverLabel
             receiver={receiver}
             reminder_interval={password_reminder_interval}
@@ -244,23 +258,25 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, p
         {
           receiver.credentials.map(item => {
             return <TeamAppCredentialInput
-                empty={receiver.empty}
-                myId={myId}
-                receiver={receiver}
-                key={item.priority}
-                onChange={onChange}
-                item={item}/>
+              testConnection={testConnection}
+              empty={receiver.empty}
+              myId={myId}
+              receiver={receiver}
+              key={item.priority}
+              onChange={onChange}
+              item={item}/>
           })
         }
       </div>
   )
 };
 
-const Receivers = ({receivers, onChange, onDelete, myId, password_reminder_interval}) => {
+const Receivers = ({receivers, onChange, onDelete, myId, password_reminder_interval, testConnection}) => {
   return (
       <div class="receivers">
         {receivers.map(item => {
           return <ExtendedReceiverCredentialsInput key={item.user.id}
+                                                   testConnection={testConnection}
                                                    password_reminder_interval={password_reminder_interval}
                                                    myId={myId}
                                                    receiver={item}
@@ -407,6 +423,48 @@ class EnterpriseTeamApp extends Component {
     }
     this.setState({edit: state, loading: false, show_more: false});
   };
+  // testConnection = (user_id) => {
+  //   let credentials = [];
+  //   this.state.users.map(user => {
+  //     if (user.id === user_id)
+  //       credentials = user.credentials;
+  //   });
+  //   this.props.dispatch(testCredentials({
+  //     account_information: transformCredentialsListIntoObject(credentials),
+  //     website_id: this.props.app.website.id
+  //   }));
+  // };
+  testConnection = (user_id) => {
+    let credentials = [];
+    let app_id = null;
+    let empty = false;
+    this.state.users.map(user => {
+      if (user.key === user_id) {
+        credentials = user.credentials;
+        app_id = user.receiver.app_id;
+        empty = user.receiver.empty;
+      }
+    });
+    let account_information = transformCredentialsListIntoObject(credentials);
+    if (!empty) {
+      api.dashboard.getAppPassword({
+        app_id: app_id
+      }).then(response => {
+        if (account_information.password === '')
+          account_information.password = response.password;
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    }
+  };
   modify = (e) => {
     e.preventDefault();
     this.setState({loading: true});
@@ -552,6 +610,7 @@ class EnterpriseTeamApp extends Component {
                            password_reminder_interval={this.state.password_reminder_interval}
                            onChange={this.handleReceiverInput}
                            onDelete={this.deleteReceiver}
+                           testConnection={this.testConnection}
                            myId={me.id}/>}
                 {this.state.edit &&
                 <Dropdown

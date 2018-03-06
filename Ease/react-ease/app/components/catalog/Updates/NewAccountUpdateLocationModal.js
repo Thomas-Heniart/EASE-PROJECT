@@ -8,8 +8,8 @@ import {newAccountUpdateModal} from "../../../actions/catalogActions";
 import {Container, Form, Message, Button, Checkbox, Label, Icon} from 'semantic-ui-react';
 
 @connect(store => ({
-    teams: store.teams,
-    modal: store.modals.newAccountUpdateLocation
+  teams: store.teams,
+  modal: store.modals.newAccountUpdateLocation
 }))
 class NewAccountUpdateLocationModal extends React.Component {
   constructor(props) {
@@ -38,16 +38,22 @@ class NewAccountUpdateLocationModal extends React.Component {
   };
   componentWillMount() {
     let roomName = [];
-    Object.keys(this.props.teams[this.props.modal.team].rooms).map(room => {
-      roomName.push(this.props.teams[this.props.modal.team].rooms[room]);
+    const team = this.props.teams[this.props.modal.team];
+    Object.keys(team.rooms).sort((a, b) => {
+      if (team.rooms[a].default)
+        return -1000;
+      else if (team.rooms[b].default)
+        return 1000;
+      return team.rooms[a].name.localeCompare(team.rooms[b].name);
+    }).map(room => {
+      roomName.push(team.rooms[room]);
     });
     this.setState({roomName: roomName});
   }
   previousModal = () => {
-    console.log(this.props);
     newAccountUpdateModal(
       this.props.dispatch,
-       this.props.modal.website,
+      this.props.modal.website,
       this.props.modal.account_information
     ).then(response => {
     });
@@ -111,8 +117,7 @@ class NewAccountUpdateLocationModal extends React.Component {
               content="NEXT"
               loading={this.state.loading}
               disabled={this.state.loading || this.state.check === ''}/>
-          </Form>
-          }
+          </Form>}
         </Container>
         {this.state.view === 2 &&
         <ChooseTypeAppModal
@@ -123,8 +128,7 @@ class NewAccountUpdateLocationModal extends React.Component {
           appName={this.props.modal.appName}
           team_id={this.props.modal.team}
           room_id={this.state.check}
-          close={this.close}/>
-        }
+          close={this.close}/>}
       </SimpleModalTemplate>
     )
   }

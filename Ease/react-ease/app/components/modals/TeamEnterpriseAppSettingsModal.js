@@ -12,6 +12,8 @@ import {connect} from "react-redux";
 import {CopyPasswordIcon} from "../dashboard/utils";
 import {removeTeamCardReceiver, teamEditEnterpriseCardReceiver} from "../../actions/appsActions";
 import {addNotification} from "../../actions/notificationBoxActions";
+import {testCredentials} from "../../actions/catalogActions";
+import * as api from "../../utils/api";
 
 @connect(store => ({
   teams: store.teams,
@@ -55,6 +57,27 @@ class TeamEnterpriseAppSettingsModal extends Component {
       return item;
     });
     this.setState({credentials: credentials});
+  };
+  testConnection = () => {
+    let account_information = transformCredentialsListIntoObject(this.state.credentials);
+    if (!this.state.isEmpty) {
+      api.dashboard.getAppPassword({
+        app_id: this.props.app.id
+      }).then(response => {
+        if (this.state.credentials.filter(item => {return item.name === 'password' && !item.edit}).length > 0)
+          account_information.password = response.password;
+        this.props.dispatch(testCredentials({
+          account_information: account_information,
+          website_id: this.props.app.website.id
+        }));
+      });
+    }
+    else {
+      this.props.dispatch(testCredentials({
+        account_information: account_information,
+        website_id: this.props.app.website.id
+      }));
+    }
   };
   close = () => {
     this.props.dispatch(showTeamEnterpriseAppSettingsModal({active: false}));
@@ -111,7 +134,6 @@ class TeamEnterpriseAppSettingsModal extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, meReceiver.account_information).map(item => {
       return {
         ...item,
@@ -172,7 +194,6 @@ class TeamEnterpriseAppSettingsModal extends Component {
             <div class="display_flex align_items_center">
               <Input
                   fluid
-                  icon
                   disabled={!item.edit && !this.state.isEmpty}
                   className="modalInput team-app-input"
                   size='large'
@@ -226,6 +247,8 @@ class TeamEnterpriseAppSettingsModal extends Component {
               </Form.Field>}
               {inputs}
               <Message error content={this.state.errorMessage}/>
+              {(this.state.credentials.filter(item => {return item.edit}).length > 0 || this.state.isEmpty) &&
+              <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
               <Button
                   type="submit"
                   positive

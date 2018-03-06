@@ -5,6 +5,7 @@ import {clickOnAppMetric, validateApp} from '../../actions/dashboardActions';
 import {showAnyAppSettingsModal} from "../../actions/modalActions";
 import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"
 import api from "../../utils/api";
+import extension from "../../utils/extension_api";
 import {connect} from "react-redux";
 
 @connect(store => ({
@@ -21,8 +22,20 @@ class AnyApp extends Component {
     };
     this.password = '';
   }
+  connect = () => {
+    const {app} = this.props;
+
+    if (app.new)
+      this.props.dispatch(validateApp({app_id: app.id}));
+    window.open(app.website.login_url);
+    extension.fillActiveTab({app_id: app.id});
+  };
   handleOpenClose = () => {
-    if (!this.props.active) {
+    const {app} = this.props;
+
+    window.open(app.website.login_url);
+    extension.fillActiveTab({app_id: app.id});
+/*    if (!this.props.active) {
       if (this.state.isOpen === false) {
         if (this.props.app.new)
           this.props.dispatch(validateApp({app_id: this.props.app.id}));
@@ -35,7 +48,7 @@ class AnyApp extends Component {
         });
       }
       this.setState({isOpen: !this.state.isOpen});
-    }
+    }*/
   };
   clickOnSettings = (e) => {
     e.stopPropagation();
@@ -105,16 +118,16 @@ class AnyApp extends Component {
       )
     });
     return (
-      <Popup
+/*      <Popup
         size="tiny"
         className='dashboard_popup_soft_and_any'
         position="top center"
         on='click'
         open={(this.props.active || app.empty) ? false : this.state.isOpen}
-        onClose={this.handleOpenClose}
+//        onClose={this.handleOpenClose}
         onOpen={this.handleOpenClose}
         hideOnScroll
-        trigger={
+        trigger={*/
           <div className='app'>
             <div className="logo_area">
               {this.state.loading &&
@@ -124,14 +137,14 @@ class AnyApp extends Component {
               {app.new &&
               <NewAppLabel/>}
               <div className="logo_handler">
-                <img className="logo" src={app.logo}/>
+                <img className="logo" src={app.logo} onClick={this.connect}/>
                 <button className="settings_button" onClick={this.clickOnSettings}>
                   Settings
                 </button>
               </div>
             </div>
             <span className="app_name overflow-ellipsis">{app.name}</span>
-          </div>}
+          </div>/*}
         content={
           <div>
             {inputs}
@@ -146,7 +159,7 @@ class AnyApp extends Component {
                   Go to <Icon name='external'/>
                 </Label>}/>
           </div>
-        }/>
+        }/>*/
     )
   }
 }

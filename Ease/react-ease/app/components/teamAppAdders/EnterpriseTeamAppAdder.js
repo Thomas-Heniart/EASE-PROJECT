@@ -10,11 +10,11 @@ import {requestWebsite} from "../../actions/teamModalActions";
 import {teamCreateEnterpriseCard, teamCreateAnyEnterpriseCard, teamCreateSoftwareEnterpriseCard} from "../../actions/appsActions";
 import {connect} from "react-redux";
 import {setUserDropdownText, PasswordChangeDropdownEnterprise} from "./common";
-import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
+import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button, Popup } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
-import {deleteUpdate} from "../../actions/catalogActions";
+import {deleteUpdate, testCredentials} from "../../actions/catalogActions";
 
-const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, first}) => {
+const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, classic, first, testConnection}) => {
   return (
       <div style={{position: 'relative'}}>
         {first &&
@@ -35,6 +35,16 @@ const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, is
                placeholder={isMe ? item.placeholder : `${item.placeholder} (Optional)`}
                value={item.value}
                type={item.type}/>
+        {(isMe && item.name === 'password' && classic) &&
+        <Popup
+          inverted
+          trigger={
+            <p
+              className='underline_hover test_connection'
+              onClick={e => testConnection(receiver_id)}>
+              <Icon name='magic'/>Test this password
+            </p>}
+          content='We will open a new tab to test if the password works or not.'/>}
       </div>
   )
 };
@@ -78,18 +88,36 @@ const TeamAppCredentialInput = ({item, onChange, receiver_id, readOnly, isMe}) =
                 type={item.type}/>;
 };
 
-const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe, addFields, removeField, first}) => {
+const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnly, isMe, addFields, removeField, classic, first, testConnection}) => {
   return (
-      <div class="receiver">
+      <div class="receiver" style={isMe && classic ? {marginBottom:'27px'} : null}>
         <Label class="receiver-label">
           <span>{receiver.username}</span> <Icon name="delete" link onClick={onDelete.bind(null, receiver.id)}/>
         </Label>
         {
           receiver.credentials.map(item => {
             if (item.name !== 'login' && item.name !== 'password' && !item.placeholderIcon)
-              return <OtherInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item} removeField={removeField} first={first}/>;
+              return <OtherInput
+                readOnly={readOnly}
+                receiver_id={receiver.id}
+                isMe={isMe}
+                key={item.priority}
+                onChange={onChange}
+                item={item}
+                removeField={removeField}
+                first={first}/>;
             else
-              return <CredentialInput readOnly={readOnly} receiver_id={receiver.id} isMe={isMe} key={item.priority} onChange={onChange} item={item} removeField={removeField} first={first}/>;
+              return <CredentialInput
+                readOnly={readOnly}
+                receiver_id={receiver.id}
+                isMe={isMe}
+                key={item.priority}
+                onChange={onChange}
+                item={item}
+                removeField={removeField}
+                classic={classic}
+                first={first}
+                testConnection={testConnection}/>;
           })
         }
         {first &&
@@ -98,7 +126,7 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, readOnl
   )
 };
 
-const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField, classic}) => {
+const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField, classic, testConnection}) => {
   return (
       <div class="receivers">
         {receivers.map((item, idx) => {
@@ -110,6 +138,8 @@ const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField,
               onDelete={onDelete}
               addFields={addFields}
               removeField={removeField}
+              classic={classic}
+              testConnection={testConnection}
               first={idx === 0 && !classic}/>;
         })}
       </div>
@@ -271,6 +301,17 @@ class EnterpriseTeamAppAdder extends Component {
     });
     this.setState({users: users});
   };
+  testConnection = (user_id) => {
+    let credentials = [];
+    this.state.users.map(user => {
+      if (user.id === user_id)
+        credentials = user.credentials;
+    });
+    this.props.dispatch(testCredentials({
+      account_information: transformCredentialsListIntoObject(credentials),
+      website_id: this.state.app.id
+    }));
+  };
   finish = () => {
     if (this.props.card.app.update_id) {
       this.props.dispatch(deleteUpdate({id: this.props.card.app.update_id})).then(() => {
@@ -406,11 +447,11 @@ class EnterpriseTeamAppAdder extends Component {
                                labelPosition="left"
                                required/>}
                         <PasswordChangeDropdownEnterprise
-                            team={team}
-                            dispatch={this.props.dispatch}
-                            value={this.state.password_reminder_interval}
-                            onChange={this.handleInput}
-                            roomManager={room_manager.username}/>
+                          team={team}
+                          dispatch={this.props.dispatch}
+                          value={this.state.password_reminder_interval}
+                          onChange={this.handleInput}
+                          roomManager={room_manager.username}/>
                       </div>
                     </div>
                     <Receivers
@@ -420,6 +461,7 @@ class EnterpriseTeamAppAdder extends Component {
                         onChange={this.handleReceiverInput}
                         removeField={this.removeField}
                         addFields={this.addFields}
+                        testConnection={this.testConnection}
                         classic={this.props.card.subtype === 'classic'}/>
                     <div>
                       {this.state.selected_users.length !== this.state.users.length &&

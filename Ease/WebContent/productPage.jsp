@@ -33,13 +33,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00044/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/securityPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00044/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00046/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00046/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00046/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00046/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00046/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00046/securityPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00046/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -85,6 +85,11 @@
                 <li>
                     <a href="/rgpd">
                         <fmt:message key="landing.header.gdpr" />
+                    </a>
+                </li>
+                <li>
+                    <a href="https://blog.ease.space">
+                        <fmt:message key="landing.header.blog" />
                     </a>
                 </li>
                 <li>
