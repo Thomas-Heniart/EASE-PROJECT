@@ -23,13 +23,13 @@
 						<a href="https://easespace.welcomekit.co" target="_blank">
 							<fmt:message key="landing.footer.hiring"/>
 						</a>
-						<a href="/?skipLanding=true">
-							<fmt:message key="landing.header.connexion-link"/>
-						</a>
 					</div>
 				</div>
 				<div class="right-menu ui row menu-column">
 					<div class="links">
+						<a href="/?skipLanding=true">
+							<fmt:message key="landing.header.connexion-link"/>
+						</a>
 						<a href="/#/teamCreation?plan_id=0">
 							<fmt:message key="landing.footer.link.create-account"/>
 						</a>
