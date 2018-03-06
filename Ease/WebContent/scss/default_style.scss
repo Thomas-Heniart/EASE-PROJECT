@@ -248,7 +248,7 @@ input[type=number]::-webkit-inner-spin-button {
 #app {
   @include display-flex();
   width: 100%;
-  height:100%;
+  min-height:100%;
 }
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
@@ -1930,7 +1930,7 @@ p {
 .containerLogin {
   display: flex;
   align-items: stretch;
-  height: 100vh;
+  min-height: 100%;
 }
 .loginAside {
   display: flex;
@@ -1948,13 +1948,13 @@ p {
   background-size: cover;
 }
 .LoginInputTitle {
-  margin-bottom: 0;
+  margin-bottom: 8px;
   font-weight: 300;
 }
 .knowUserContainer {
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
-  height: 100vh;
   margin-top: 5%;
   margin-bottom: 5%;
   justify-content: space-between;
@@ -1987,6 +1987,7 @@ p {
 }
 .loginPasswordInput input:focus {
   border-color: #363b60!important;
+  box-shadow: none!important;
 }
 .loginLogo {
   padding-top: 50px;
@@ -1996,6 +1997,7 @@ p {
   font-size: 20px;
   font-weight: 300;
   color: #949eb7;
+  margin-bottom: 25%;
 }
 .passwordLostText {
   color: #949EB7;
