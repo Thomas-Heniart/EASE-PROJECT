@@ -2,13 +2,12 @@ import React from 'react';
 import { Grid, Menu, Header } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, NavLink } from 'react-router-dom';
 import Preferences from './Preferences';
 import PersonalInfo from './PersonalInfo';
 import Password from './Password';
 import Deactivation from './Deactivation';
 import DoubleFactor from './DoubleFactor';
-import { NavLink } from 'react-router-dom';
 
 @connect(store => ({
     common: store.common
@@ -102,8 +101,7 @@ class Settings extends React.Component {
               <Grid.Column width={11}>
                   <Switch>
                       <Route exact path={`/main/settings`} component={Preferences}/>
-                      <Route path={`/main/settings/personalInfo`}
-                             render={(props) => <PersonalInfo userInfo={this.props.common.user}/>}/>
+                      <Route path={`/main/settings/personalInfo`} render={(props) => <PersonalInfo userInfo={this.props.common.user}/>}/>
                       <Route path={`/main/settings/password`} component={Password}/>
                       <Route path={`/main/settings/deactivation`} component={Deactivation}/>
                   </Switch>
