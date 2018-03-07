@@ -599,4 +599,8 @@ public abstract class ServletManager {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public Map<String, String> getArgs() {
+        return this.args;
+    }
 }

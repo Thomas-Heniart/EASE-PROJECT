@@ -84,7 +84,7 @@ public class OnStart implements ServletContextListener {
                 PostRegistrationEmailScheduledTask postRegistrationEmailScheduledTask = new PostRegistrationEmailScheduledTask();
                 time.schedule(postRegistrationEmailScheduledTask, next_clock, 24 * 60 * 60 * 1000);
                 StatsScheduledTask statsScheduledTask = new StatsScheduledTask();
-                time.schedule(statsScheduledTask, 0 /* next_clock */, 24 * 60 * 60 * 1000);
+                time.schedule(statsScheduledTask, next_clock, 24 * 60 * 60 * 1000);
 
                 Calendar delay_six_pm = Calendar.getInstance();
                 hour = delay_six_pm.get(Calendar.HOUR_OF_DAY);
