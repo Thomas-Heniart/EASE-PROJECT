@@ -58,11 +58,14 @@ class MagicLink extends React.Component {
           <p>Send this link to ask the login and password</p>
         </div>
         <Form onSubmit={confirm}>
-          <Button as='div' labelPosition='right' size='mini'>
-            <Button icon>
+          <Button as='div' labelPosition='right' size='mini' onClick={() => console.log('[COPY]')}>
+            <Button type='button' icon style={{width:'max-content',fontSize:'14px',backgroundColor:'#45c997',color:'white',fontWeight:'300'}}>
               Copy link <Icon name='copy' />
             </Button>
-            <Label as='a' basic>https://ease.space/12EBV4567gsu%^@</Label>
+            <Label as='button' type='button' basic
+                   style={{fontWeight:'300',width:'270px',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap',display:'block',borderColor:'#45c997'}}>
+              https://ease.space/12EBV4567gsu%^@
+            </Label>
           </Button>
           <p style={{fontSize:'14px',color:'#949eb7'}}>The link will be valid until request is answered, or for 24 hours maximum.</p>
           <Button
@@ -286,43 +289,18 @@ class ChooseAppCredentialsModal extends React.Component {
   confirm = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    if (this.state.view === 1) {
-      if (this.state.check === 2)
-        this.setState({view: 2, loading: false});
-      else if (this.state.check === 3)
-        this.setState({view: 3, loading: false});
-      else {
-        const receivers = this.props.receivers.map(item => ({
-          [item.id]: {allowed_to_see_password: item.can_see_information}
-        }));
-        const newReceivers = receivers.reduce(function (result, item) {
-          result = Object.assign(result, item);
-          return result;
-        }, {});
-        this.props.dispatch(teamCreateSingleApp({
-          team_id: this.props.card.team_id,
-          channel_id: this.props.card.channel_id,
-          website_id: this.props.card.app.id,
-          name: this.props.settingsCard.card_name,
-          description: this.props.settingsCard.description,
-          password_reminder_interval: this.props.settingsCard.password_reminder_interval,
-          account_information: transformCredentialsListIntoObject(this.state.credentials),
-          receivers: newReceivers
-        })).then(response => {
-          this.setState({loading: false});
-          this.close();
-          this.props.resetTeamCard();
-        });
-      }
-    }
-    else if (this.state.view === 2) {
-      const receivers = this.props.receivers.map(item => ({
-        [item.id]: {allowed_to_see_password: item.can_see_information}
-      }));
-      const newReceivers = receivers.reduce(function (result, item) {
-        result = Object.assign(result, item);
-        return result;
-      }, {});
+    const receivers = this.props.receivers.map(item => ({
+      [item.id]: {allowed_to_see_password: item.can_see_information}
+    }));
+    const newReceivers = receivers.reduce(function (result, item) {
+      result = Object.assign(result, item);
+      return result;
+    }, {});
+    if (this.state.view === 1 && this.state.check === 2)
+      this.setState({view: 2, loading: false});
+    // else if (this.state.view === 1 && this.state.check === 3)
+    //   this.setState({view: 3, loading: false});
+    else {
       this.props.dispatch(teamCreateSingleApp({
         team_id: this.props.card.team_id,
         channel_id: this.props.card.channel_id,
@@ -330,17 +308,19 @@ class ChooseAppCredentialsModal extends React.Component {
         name: this.props.settingsCard.card_name,
         description: this.props.settingsCard.description,
         password_reminder_interval: this.props.settingsCard.password_reminder_interval,
-        team_user_filler_id: this.state.userSelected,
-        account_information: {},
-        receivers: newReceivers
+        account_information: this.state.check === 1 ? transformCredentialsListIntoObject(this.state.credentials) : {},
+        team_user_filler_id: this.state.view === 2 ? this.state.userSelected : null,
+        receivers: newReceivers,
+        generate_magic_link: this.state.check === 3
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
-        this.props.resetTeamCard();
+        if (this.state.check === 3)
+          this.setState({view: 3, loading: false, link: response.magic_link});
+        else {
+          this.setState({loading: false});
+          this.close();
+          this.props.resetTeamCard();
+        }
       });
-    }
-    else {
-      console.log('[MAGICLINK]');
     }
   };
   render() {
