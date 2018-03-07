@@ -36,6 +36,7 @@ class MagicLink extends React.Component {
   render() {
     const {
       back,
+      link,
       website,
       appName,
       loading,
@@ -64,7 +65,7 @@ class MagicLink extends React.Component {
             </Button>
             <Label as='button' type='button' basic
                    style={{fontWeight:'300',width:'270px',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap',display:'block',borderColor:'#45c997'}}>
-              https://ease.space/12EBV4567gsu%^@
+              {link}
             </Label>
           </Button>
           <p style={{fontSize:'14px',color:'#949eb7'}}>The link will be valid until request is answered, or for 24 hours maximum.</p>
@@ -352,6 +353,7 @@ class ChooseAppCredentialsModal extends React.Component {
         {this.state.view === 3 &&
         <MagicLink back={this.back}
                    me={this.state.me}
+                   link={this.state.link}
                    confirm={this.confirm}
                    change={this.handleChange}
                    loading={this.state.loading}
