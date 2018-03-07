@@ -1935,11 +1935,10 @@ p {
 .loginAside {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   border-right: 1px solid #949eb7;
   color: #949EB7;
-  align-items: center;
   justify-content: center;
+  width: 400px;
 }
 .loginContent {
   display: flex;
@@ -1957,7 +1956,13 @@ p {
   flex-direction: column;
   margin-top: 5%;
   margin-bottom: 5%;
+  padding-left: 50px;
+  padding-right: 50px;
   justify-content: space-between;
+  width: 100%;
+  input {
+    width: 300px;
+  }
 }
 .loginTitle {
   font-size: 30px;
