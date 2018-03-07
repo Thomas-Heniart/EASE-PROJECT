@@ -95,7 +95,10 @@ public class MailjetContactWrapper {
         mailjetResponse = mailjetClient.post(new MailjetRequest(ContactslistManageContact.resource, listId).setBody(new JSONObject()
                 .put("Email", email)
                 .put("Action", "addnoforce")));
-        System.out.println(mailjetResponse.getStatus());
-        System.out.println(mailjetResponse.getData());
+    }
+
+    public void addContactToList(JSONObject contactData, Long listId) throws MailjetSocketTimeoutException, MailjetException {
+        contactData.put("Action", "addnoforce");
+        mailjetResponse = mailjetClient.post(new MailjetRequest(ContactslistManageContact.resource, listId).setBody(contactData));
     }
 }
