@@ -4,7 +4,10 @@ import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container
 import {teamCreateSingleApp} from "../../actions/appsActions";
 import {testCredentials} from "../../actions/catalogActions";
 import {showChooseAppCredentialsModal} from "../../actions/modalActions";
-import {transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
+import {
+  transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject,
+  copyTextToClipboard
+} from "../../utils/utils";
 import {connect} from "react-redux";
 import {reduxActionBinder} from "../../actions/index";
 
@@ -31,8 +34,17 @@ const CredentialInput = ({item, onChange}) => {
 class MagicLink extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      copied: false
+    }
   }
+  copyPassword = () => {
+    copyTextToClipboard(this.props.link);
+    this.setState({copied: true});
+    setTimeout(() => {
+      this.setState({copied: false});
+    }, 2000);
+  };
   render() {
     const {
       back,
@@ -59,7 +71,8 @@ class MagicLink extends React.Component {
           <p>Send this link to ask the login and password</p>
         </div>
         <Form onSubmit={confirm}>
-          <Button as='div' labelPosition='right' size='mini' onClick={() => console.log('[COPY]')}>
+          {!this.state.copied &&
+          <Button as='div' labelPosition='right' size='mini' onClick={this.copyPassword}>
             <Button type='button' icon style={{width:'max-content',fontSize:'14px',backgroundColor:'#45c997',color:'white',fontWeight:'300'}}>
               Copy link <Icon name='copy' />
             </Button>
@@ -67,7 +80,7 @@ class MagicLink extends React.Component {
                    style={{fontWeight:'300',width:'270px',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap',display:'block',borderColor:'#45c997'}}>
               {link}
             </Label>
-          </Button>
+          </Button>}
           <p style={{fontSize:'14px',color:'#949eb7'}}>The link will be valid until request is answered, or for 24 hours maximum.</p>
           <Button
             type="submit"
@@ -244,6 +257,7 @@ class ChooseAppCredentialsModal extends React.Component {
     super(props);
     this.state = {
       loading: false,
+      website: this.props.card.app,
       credentials: transformWebsiteInfoIntoList(this.props.card.app.information),
       view: 1,
       userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
@@ -319,8 +333,8 @@ class ChooseAppCredentialsModal extends React.Component {
         else {
           this.setState({loading: false});
           this.close();
-          this.props.resetTeamCard();
         }
+        this.props.resetTeamCard();
       });
     }
   };
@@ -357,7 +371,7 @@ class ChooseAppCredentialsModal extends React.Component {
                    confirm={this.confirm}
                    change={this.handleChange}
                    loading={this.state.loading}
-                   website={this.props.card.app}
+                   website={this.state.website}
                    appName={this.props.settingsCard.card_name} />}
       </SimpleModalTemplate>
     )
