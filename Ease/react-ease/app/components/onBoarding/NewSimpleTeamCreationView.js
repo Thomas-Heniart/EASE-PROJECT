@@ -373,7 +373,7 @@ class NewSimpleTeamCreationView extends React.Component {
       return <p>Remember, a Room groups passwords together so people can access them easily. People can be in more than one room.</p>;
     else if (this.state.view === 5) {
       if (this.state.viewAccounts === 1)
-        return <p>We have done our best to make your account importation seamless.<br/>Choose a tool to import or justmanage manually</p>;
+        return <p>We have done our best to make your account importation seamless.<br/>Choose a tool to import or just manage manually.</p>;
       else if (this.state.viewAccounts === 2 && this.state.currentRoom === 0)
         return <p>Is there tools all your team uses?<br/>If yes, they will be in a special Room called #openspace</p>;
       else if (this.state.viewAccounts === 2 && this.state.currentRoom > 0)
@@ -572,7 +572,7 @@ class NewSimpleTeamCreationView extends React.Component {
                   login: this.state.credentialsSingleApps[app_id].login,
                   password: this.state.credentialsSingleApps[app_id].password
                 } : {},
-                receivers: receivers,
+                receivers: receivers
               })));
             });
           });
