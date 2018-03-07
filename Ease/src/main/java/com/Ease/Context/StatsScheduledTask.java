@@ -17,27 +17,30 @@ public class StatsScheduledTask extends TimerTask {
     public void run() {
         System.out.println("Start StatsScheduledTask");
         Calendar calendar = Calendar.getInstance();
-        /* if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+        if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
             System.out.println("End StatsScheduledTask");
             return;
-        } */
+        }
         Calendar last_week = Calendar.getInstance();
-        last_week.add(Calendar.WEEK_OF_YEAR, -1);
-        Date this_week = calendar.getTime();
-        Date last_week_date = last_week.getTime();
+        last_week.add(Calendar.WEEK_OF_YEAR, -4);
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
             JSONArray rows = new JSONArray();
-
+            for (int i = 0; i < 3; i++) {
+                rows.put(WeeklyStats.retrieveWeeklyStats(last_week.get(Calendar.YEAR), last_week.get(Calendar.WEEK_OF_YEAR), hibernateQuery).getJson());
+                last_week.add(Calendar.WEEK_OF_YEAR, 1);
+            }
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathepower");
             mailJetBuilder.addTo("thomas@ease.space");
             mailJetBuilder.setTemplateId(330444);
-            /* mailJetBuilder.addTo("benjamin@ease.space");
+            mailJetBuilder.addTo("benjamin@ease.space");
             mailJetBuilder.addTo("victor@ease.space");
             mailJetBuilder.addTo("sergii@ease.space");
             mailJetBuilder.addTo("victorien@ease.space");
-            mailJetBuilder.addTo("clement@ease.space"); */
+            mailJetBuilder.addTo("clement@ease.space");
+            Date this_week = calendar.getTime();
+            Date last_week_date = last_week.getTime();
             WeeklyStats weeklyStats = this.generateWeeklyStats(hibernateQuery, last_week_date, this_week, last_week);
             rows.put(weeklyStats.getJson());
             mailJetBuilder.addVariable("rows", rows);
