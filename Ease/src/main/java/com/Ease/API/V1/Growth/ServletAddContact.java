@@ -1,5 +1,7 @@
 package com.Ease.API.V1.Growth;
 
+import com.Ease.Context.Variables;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -25,6 +27,16 @@ public class ServletAddContact extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "No referer");
             MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
             mailjetContactWrapper.addContactToList(this.getContactDataFromArgs(params), listId);
+            if (listId.equals(36759L)) {
+                new MailjetContactWrapper().addEmailToList(params.getString("Email"), 36180L);
+                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
+                mailJetBuilder.addTo(params.getString("Email"));
+                mailJetBuilder.setTemplateId(324084);
+                mailJetBuilder.addVariable("url", Variables.URL_PATH + "resources/rgpd.pdf");
+                mailJetBuilder.sendEmail();
+                sm.setSuccess("Done");
+            }
             sm.setSuccess("Finish");
         } catch (Exception e) {
             e.printStackTrace();
