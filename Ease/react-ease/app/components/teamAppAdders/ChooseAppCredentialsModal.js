@@ -47,7 +47,6 @@ class MagicLink extends React.Component {
   };
   render() {
     const {
-      back,
       link,
       website,
       appName,
@@ -63,16 +62,11 @@ class MagicLink extends React.Component {
           <span className="app_name">{appName}</span>
         </div>
         <div>
-          <p style={{cursor:'pointer'}} onClick={back} className="back_modal">
-            <Icon name="arrow left"/>Back
-          </p>
-        </div>
-        <div>
           <p>Send this link to ask the login and password</p>
         </div>
         <Form onSubmit={confirm}>
           {!this.state.copied &&
-          <Button as='div' labelPosition='right' size='mini' onClick={this.copyPassword}>
+          <Button as='div' labelPosition='right' size='mini' onClick={this.copyPassword} style={{margin:'10px 0'}}>
             <Button type='button' icon style={{width:'max-content',fontSize:'14px',backgroundColor:'#45c997',color:'white',fontWeight:'300'}}>
               Copy link <Icon name='copy' />
             </Button>
@@ -81,6 +75,11 @@ class MagicLink extends React.Component {
               {link}
             </Label>
           </Button>}
+          {this.state.copied &&
+          <Segment
+            size='mini'
+            className='magic_link'
+            content={'Copied!'}/>}
           <p style={{fontSize:'14px',color:'#949eb7'}}>The link will be valid until request is answered, or for 24 hours maximum.</p>
           <Button
             type="submit"
@@ -313,8 +312,8 @@ class ChooseAppCredentialsModal extends React.Component {
     }, {});
     if (this.state.view === 1 && this.state.check === 2)
       this.setState({view: 2, loading: false});
-    // else if (this.state.view === 1 && this.state.check === 3)
-    //   this.setState({view: 3, loading: false});
+    else if (this.state.view === 3)
+      this.setState({loading: false}, this.close());
     else {
       this.props.dispatch(teamCreateSingleApp({
         team_id: this.props.card.team_id,
@@ -330,10 +329,8 @@ class ChooseAppCredentialsModal extends React.Component {
       })).then(response => {
         if (this.state.check === 3)
           this.setState({view: 3, loading: false, link: response.magic_link});
-        else {
-          this.setState({loading: false});
-          this.close();
-        }
+        else
+          this.setState({loading: false}, this.close());
         this.props.resetTeamCard();
       });
     }
@@ -365,8 +362,7 @@ class ChooseAppCredentialsModal extends React.Component {
                                        userSelected={this.state.userSelected}
                                        appName={this.props.settingsCard.card_name} />}
         {this.state.view === 3 &&
-        <MagicLink back={this.back}
-                   me={this.state.me}
+        <MagicLink me={this.state.me}
                    link={this.state.link}
                    confirm={this.confirm}
                    change={this.handleChange}
