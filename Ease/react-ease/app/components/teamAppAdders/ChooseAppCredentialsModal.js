@@ -35,10 +35,12 @@ class MagicLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      copied: false
+      copied: false,
+      disabled: true
     }
   }
   copyPassword = () => {
+    this.setState({disabled: false});
     copyTextToClipboard(this.props.link);
     this.setState({copied: true});
     setTimeout(() => {
@@ -66,7 +68,7 @@ class MagicLink extends React.Component {
         </div>
         <Form onSubmit={confirm}>
           {!this.state.copied &&
-          <Button as='div' labelPosition='right' size='mini' onClick={this.copyPassword} style={{margin:'10px 0'}}>
+          <Button as='div' labelPosition='right' size='mini' onClick={this.copyPassword} style={{margin:'10px 0 0 0'}}>
             <Button type='button' icon style={{width:'max-content',fontSize:'14px',backgroundColor:'#45c997',color:'white',fontWeight:'300'}}>
               Copy link <Icon name='copy' />
             </Button>
@@ -84,7 +86,7 @@ class MagicLink extends React.Component {
           <Button
             type="submit"
             loading={loading}
-            disabled={loading}
+            disabled={loading || this.state.disabled}
             positive
             className="modal-button uppercase"
             content={`DONE`}/>
