@@ -1,5 +1,6 @@
 import * as api from '../utils/api';
 import * as post_api from '../utils/post_api'
+import {teamCardChangedAction} from "./appsActions";
 
 export function getTeamCardFromMagicLink({card_id, uuid}) {
   return (dispatch, getState) => {
@@ -37,7 +38,10 @@ export function renewMagicLink({team_id, team_card_id}) {
       team_card_id: team_card_id,
       ws_id: getState().common.ws_id
     }).then(response => {
-      console.log('[RESPONSE][MAGICLINK][POST][RENEWLINK]: ', response);
+      dispatch(teamCardChangedAction({
+        team_card: response
+      }));
+      return response
     }).catch(error => {})
   }
 }

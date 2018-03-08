@@ -7,6 +7,7 @@ import React, {Component} from "react";
 import post_api from "../../utils/post_api";
 import {isAdmin} from "../../utils/helperFunctions";
 import {connect} from "react-redux";
+import {renewMagicLink} from "../../actions/magicLinkActions";
 
 export class EmptyCredentialsSimpleAppIndicator extends Component {
   constructor(props){
@@ -31,6 +32,14 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
         this.setState({reminderSent: false});
       }, 2000);
     });
+  };
+  renewLink = () => {
+    this.props.dispatch(renewMagicLink({
+      team_id: this.props.team_card.team_id,
+      team_card_id: this.props.team_card.id
+    })).then(response => {
+      // ouvrir popup
+    })
   };
   chooseMember = () => {
     this.props.dispatch(showSimpleAppFillerChooserModal({
@@ -62,7 +71,7 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
           {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date > new Date().getTime()) &&
           <span>Waiting for login and password. <u onClick={this.fillCredentials}>Manage request link</u></span>}
           {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date < new Date().getTime()) &&
-          <span>Link has expired. <u onClick={this.fillCredentials}>Get a new link</u></span>}
+          <span>Link has expired. <u onClick={this.renewLink}>Get a new link</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
               <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&
