@@ -51,14 +51,18 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
         <Button
             as='div'
             icon
-            class="empty_app_indicator"
+            className={team_card.magic_link !== '' && team_card.magic_link_expiration_date < new Date().getTime() ? "empty_app_indicator link_expired" : "empty_app_indicator"}
             size="mini"
             labelPosition='left'>
           <Icon name="user"/>
-          {team_card.team_user_filler_id === -1 &&
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link === '') &&
           <u onClick={this.chooseMember}>
             Choose a user to fill connection info.
           </u>}
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date > new Date().getTime()) &&
+          <span>Waiting for login and password. <u onClick={this.fillCredentials}>Manage request link</u></span>}
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date < new Date().getTime()) &&
+          <span>Link has expired. <u onClick={this.fillCredentials}>Get a new link</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
               <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&

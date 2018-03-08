@@ -841,6 +841,13 @@ i.icon.pin_button {
           & > .icon {
             background-color: $themeOrangeColor;
           }
+          &.link_expired {
+            border-color: #eb555c;
+            color: #eb555c;
+            & > .icon {
+              background-color: #eb555c;
+            }
+          }
           u {
             margin-left: 5px;
             cursor: pointer;
