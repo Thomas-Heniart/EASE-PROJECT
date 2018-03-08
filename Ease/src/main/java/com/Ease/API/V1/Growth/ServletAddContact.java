@@ -13,47 +13,51 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @WebServlet("/addContactToList")
 public class ServletAddContact extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Map<String, String> args = sm.getArgs();
-            String listId = args.get("listId");
-            if (listId == null || listId.isEmpty())
+            JSONObject params = sm.getParams();
+            Long listId = params.optLong("listId");
+            if (listId.equals(0L))
                 throw new HttpServletException(HttpStatus.BadRequest, "No referer");
-            System.out.println(listId);
             MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();
-            mailjetContactWrapper.addContactToList(this.getContactDataFromArgs(args), Long.valueOf(listId));
+            mailjetContactWrapper.addContactToList(this.getContactDataFromArgs(params), listId);
             sm.setSuccess("Finish");
         } catch (Exception e) {
+            e.printStackTrace();
             sm.setError(e);
         }
         sm.sendResponse();
     }
 
-    private JSONObject getContactDataFromArgs(Map<String, String> args) throws HttpServletException {
+    private JSONObject getContactDataFromArgs(JSONObject params) throws HttpServletException {
         JSONObject contactData = new JSONObject();
         JSONObject contactProperties = new JSONObject();
-        System.out.println(args.isEmpty());
-        for (Map.Entry<String, String> entry : args.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            System.out.println(value);
-            if (value == null || value.isEmpty())
-                throw new HttpServletException(HttpStatus.BadRequest, "Missing value");
+        for (Object object : params.keySet()) {
+            String key = (String) object;
+            Object val = params.get(key);
+            if (!(val instanceof String))
+                continue;
+            String value = params.getString(key);
+            if (value.isEmpty() && key.contains("email"))
+                throw new HttpServletException(HttpStatus.BadRequest, "Missing email");
+            if (value.isEmpty())
+                continue;
             if (key.contains("email"))
                 contactData.put("Email", value);
             else if (key.contains("company"))
                 contactProperties.put("company_name", value);
             else if (key.contains("phone_number"))
-                contactProperties.put("phone_number", value);
-            else if (key.contains("firstName") && key.contains("lastName"))
+                contactProperties.put("_phone_", value);
+            else if (key.contains("firstname") && key.contains("lastname"))
                 contactProperties.put("full_name", value);
-            contactData.put("Properties", contactProperties);
         }
+        contactData.put("Properties", contactProperties);
+        if (!contactData.has("Email"))
+            throw new HttpServletException(HttpStatus.BadRequest, "Missing email");
         return contactData;
     }
 
