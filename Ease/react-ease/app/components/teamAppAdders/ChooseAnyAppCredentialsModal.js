@@ -62,6 +62,9 @@ class ChooseHow extends React.Component {
       errorMessage: ''
     }
   }
+  handleFocus = (e) => {
+    e.target.select();
+  };
   checkValueInput = () => {
     let i = 0;
     let j = 0;
