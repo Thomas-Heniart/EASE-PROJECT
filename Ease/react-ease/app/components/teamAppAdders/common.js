@@ -1,7 +1,10 @@
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import classnames from "classnames";
 import api from "../../utils/api";
-import {showTeamEditEnterpriseAppModal, showFillSimpleCardCredentialsModal, showUpgradeTeamPlanModal, showSimpleAppFillerChooserModal} from "../../actions/teamModalActions";
+import {
+  showTeamEditEnterpriseAppModal, showFillSimpleCardCredentialsModal, showUpgradeTeamPlanModal,
+  showSimpleAppFillerChooserModal, showManageMagicLinkModal
+} from "../../actions/teamModalActions";
 import {passwordChangeOptions, passwordChangeValues, copyTextToClipboard} from "../../utils/utils";
 import React, {Component} from "react";
 import post_api from "../../utils/post_api";
@@ -13,8 +16,12 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
   constructor(props){
     super(props);
     this.state = {
-      reminderSent: false
+      reminderSent: false,
+      timestamp: null
     }
+  }
+  componentWillMount() {
+    this.getTime();
   }
   sendReminder = () => {
     const {team_card} = this.props;
@@ -38,8 +45,8 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
       team_id: this.props.team_card.team_id,
       team_card_id: this.props.team_card.id
     })).then(response => {
-      // ouvrir popup
-    })
+      this.getTime();
+    });
   };
   chooseMember = () => {
     this.props.dispatch(showSimpleAppFillerChooserModal({
@@ -53,9 +60,18 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
       team_card: this.props.team_card
     }));
   };
+  getTime = () => {
+    if (this.props.team_card.magic_link !== '' && this.props.team_card.magic_link_expiration_date > this.state.timestamp) {
+      setTimeout(() => {
+        this.getTime();
+      }, 1000);
+      this.setState({timestamp: new Date().getTime()});
+    }
+    else
+      this.setState({timestamp: null});
+  };
   render(){
     const {team_card, team_users, meReceiver, me} = this.props;
-
     return (
         <Button
             as='div'
@@ -69,7 +85,7 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
             Choose a user to fill connection info.
           </u>}
           {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date > new Date().getTime()) &&
-          <span>Waiting for login and password. <u onClick={this.fillCredentials}>Manage request link</u></span>}
+          <span>Waiting for login and password. <u onClick={() => this.props.dispatch(showManageMagicLinkModal({active: true, team_card: team_card}))}>Manage request link</u></span>}
           {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date < new Date().getTime()) &&
           <span>Link has expired. <u onClick={this.renewLink}>Get a new link</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&

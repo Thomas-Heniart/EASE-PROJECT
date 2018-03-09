@@ -1,6 +1,7 @@
 import * as api from '../utils/api';
 import * as post_api from '../utils/post_api'
 import {teamCardChangedAction} from "./appsActions";
+import {showManageMagicLinkModal} from "./teamModalActions";
 
 export function getTeamCardFromMagicLink({card_id, uuid}) {
   return (dispatch, getState) => {
@@ -39,6 +40,10 @@ export function renewMagicLink({team_id, team_card_id}) {
       ws_id: getState().common.ws_id
     }).then(response => {
       dispatch(teamCardChangedAction({
+        team_card: response
+      }));
+      dispatch(showManageMagicLinkModal({
+        active: true,
         team_card: response
       }));
       return response

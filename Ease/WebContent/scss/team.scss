@@ -129,12 +129,16 @@ button.only-text-button {
       }
     }
     &.magic_link {
+      height: 36px;
       margin: 10px 0 0;
       padding: 8px !important;
       background-color: #45c997;
       color: white;
       text-align: center;
       border: none;
+    }
+    &.popup_magic_link {
+      padding: 10px 20px !important;
     }
   }
 }
