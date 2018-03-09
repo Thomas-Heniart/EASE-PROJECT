@@ -180,9 +180,9 @@ class ChoosePersonWhoHasCredentials extends React.Component {
 }
 
 @connect(store => ({
-  card: store.teamCard,
   teams: store.teams,
   modal: store.modals,
+  card: store.teamCard,
   settingsCard: store.modals.chooseAppCredentials,
   receivers: store.modals.chooseAppCredentials.receivers
 }), reduxActionBinder)
@@ -190,14 +190,14 @@ class ChooseAppCredentialsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      website: this.props.card.app,
-      credentials: transformWebsiteInfoIntoList(this.props.card.app.information),
       view: 1,
-      userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
+      check: 1,
       me: null,
       users: null,
-      check: 1
+      loading: false,
+      website: this.props.card.app,
+      userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
+      credentials: transformWebsiteInfoIntoList(this.props.card.app.information)
     }
   }
   componentWillMount() {
