@@ -55,9 +55,7 @@ class ManageMagicLinkModal extends React.Component {
     this.props.dispatch(showManageMagicLinkModal({active: false}));
   };
   render() {
-    const {
-      team_card
-    } = this.props.modal;
+    const {team_card} = this.props.modal;
     const hours = new Date(team_card.magic_link_expiration_date - this.state.time).getHours();
     const minutes = new Date(team_card.magic_link_expiration_date - this.state.time).getMinutes();
     const seconds = new Date(team_card.magic_link_expiration_date - this.state.time).getSeconds();

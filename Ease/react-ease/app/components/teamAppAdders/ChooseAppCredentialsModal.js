@@ -1,15 +1,13 @@
 import React from 'react';
-import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
-import {teamCreateSingleApp} from "../../actions/appsActions";
-import {testCredentials} from "../../actions/catalogActions";
-import {showChooseAppCredentialsModal} from "../../actions/modalActions";
-import {
-  transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject,
-  copyTextToClipboard
-} from "../../utils/utils";
 import {connect} from "react-redux";
 import {reduxActionBinder} from "../../actions/index";
+import MagicLinkAdderModal from "./MagicLinkAdderModal";
+import {testCredentials} from "../../actions/catalogActions";
+import {teamCreateSingleApp} from "../../actions/appsActions";
+import SimpleModalTemplate from "../common/SimpleModalTemplate";
+import {showChooseAppCredentialsModal} from "../../actions/modalActions";
+import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
+import {transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 
 const CredentialInput = ({item, onChange}) => {
   return (
@@ -30,71 +28,6 @@ const CredentialInput = ({item, onChange}) => {
     </Form.Field>
   )
 };
-
-class MagicLink extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      copied: false,
-      disabled: true
-    }
-  }
-  copyPassword = () => {
-    this.setState({disabled: false});
-    copyTextToClipboard(this.props.link);
-    this.setState({copied: true});
-    setTimeout(() => {
-      this.setState({copied: false});
-    }, 2000);
-  };
-  render() {
-    const {
-      link,
-      website,
-      appName,
-      loading,
-      confirm
-    } = this.props;
-    return (
-      <Container id="popup_team_single_card">
-        <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
-          <div className="squared_image_handler">
-            <img src={website.logo} alt="Website logo"/>
-          </div>
-          <span className="app_name">{appName}</span>
-        </div>
-        <div>
-          <p>Send this link to ask the login and password</p>
-        </div>
-        <Form onSubmit={confirm}>
-          {!this.state.copied &&
-          <Button as='div' labelPosition='right' size='mini' onClick={this.copyPassword} style={{margin:'10px 0 0 0'}}>
-            <Button type='button' icon style={{width:'max-content',fontSize:'14px',backgroundColor:'#45c997',color:'white',fontWeight:'300'}}>
-              Copy link <Icon name='copy' />
-            </Button>
-            <Label as='button' type='button' basic
-                   style={{fontWeight:'300',width:'270px',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap',display:'block',borderColor:'#45c997'}}>
-              {link}
-            </Label>
-          </Button>}
-          {this.state.copied &&
-          <Segment
-            size='mini'
-            className='magic_link'
-            content={'Copied!'}/>}
-          <p style={{fontSize:'14px',color:'#949eb7'}}>The link will be valid until request is answered, or for 24 hours maximum.</p>
-          <Button
-            type="submit"
-            loading={loading}
-            disabled={loading || this.state.disabled}
-            positive
-            className="modal-button uppercase"
-            content={`DONE`}/>
-        </Form>
-      </Container>
-    )
-  }
-}
 
 class ChooseHow extends React.Component {
   constructor(props) {
@@ -364,13 +297,13 @@ class ChooseAppCredentialsModal extends React.Component {
                                        userSelected={this.state.userSelected}
                                        appName={this.props.settingsCard.card_name} />}
         {this.state.view === 3 &&
-        <MagicLink me={this.state.me}
-                   link={this.state.link}
-                   confirm={this.confirm}
-                   change={this.handleChange}
-                   loading={this.state.loading}
-                   website={this.state.website}
-                   appName={this.props.settingsCard.card_name} />}
+        <MagicLinkAdderModal me={this.state.me}
+                             link={this.state.link}
+                             confirm={this.confirm}
+                             change={this.handleChange}
+                             loading={this.state.loading}
+                             website={this.state.website}
+                             appName={this.props.settingsCard.card_name} />}
       </SimpleModalTemplate>
     )
   }
