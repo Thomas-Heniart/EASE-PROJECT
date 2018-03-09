@@ -314,7 +314,7 @@ class ChooseAnyAppCredentialsModal extends React.Component {
       result = Object.assign(result, item);
       return result;
     }, {});
-    const connection_information = this.state.view === 1 ? {
+    const connection_information = this.state.check !== 1 ? {
         login: {placeholder: "Login", priority: 0, type: "text", value: ""},
         password: {placeholder: "Password", priority: 1, type: "password", value: ""}
       }
