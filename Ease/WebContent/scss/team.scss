@@ -3407,6 +3407,17 @@ button.big-blue-button {
   }
 }
 
+.createRoomButton {
+ background-color: #1FC38E;
+  color: white;
+}
+.HeaderAllRoomModal {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
 button.big-button {
   padding: 10px 10px 10px 10px;
   transition: background-color .3s;
