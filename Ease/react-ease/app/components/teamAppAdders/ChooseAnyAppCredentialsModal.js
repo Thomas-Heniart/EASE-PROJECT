@@ -335,7 +335,7 @@ class ChooseAnyAppCredentialsModal extends React.Component {
         name: this.props.settingsCard.card_name,
         description: this.props.settingsCard.description,
         password_reminder_interval: this.props.settingsCard.password_reminder_interval,
-        team_user_filler_id: this.state.check === 1 ? this.state.userSelected : null,
+        team_user_filler_id: this.state.view === 2 ? this.state.userSelected : null,
         account_information: this.state.check !== 1 ? {} : transformCredentialsListIntoObject(this.state.credentials),
         url: this.props.settingsCard.url,
         img_url: this.props.settingsCard.img_url,
