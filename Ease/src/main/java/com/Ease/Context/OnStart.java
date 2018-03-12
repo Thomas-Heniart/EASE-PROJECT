@@ -6,7 +6,6 @@ import com.Ease.Metrics.MetricsSchedulerTask;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.*;
-import com.Ease.Utils.Slack.SlackMessage;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -64,10 +63,6 @@ public class OnStart implements ServletContextListener {
                 context.setAttribute("userIdMap", userIdMap);
                 context.setAttribute("teamIdMap", teamIdMap);
 
-                System.out.println("Test API");
-                System.out.println(SlackMessage.getInstance().postMessage("D2A2JAQL8", "Test from API"));
-                System.out.println("End Test API");
-
                 Timer time = new Timer();
                 Calendar delay = Calendar.getInstance();
                 int hour = delay.get(Calendar.HOUR_OF_DAY);
@@ -101,6 +96,8 @@ public class OnStart implements ServletContextListener {
                 next_clock = delay_six_pm.getTimeInMillis() - new Date().getTime();
                 AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask(teamIdMap);
                 time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000);
+                SlackScheduledTask slackScheduledTask = new SlackScheduledTask();
+                time.schedule(slackScheduledTask, next_clock, 24 * 60 * 60 * 1000);
 
                 Calendar delay_six_am = Calendar.getInstance();
                 hour = delay_six_am.get(Calendar.HOUR_OF_DAY);

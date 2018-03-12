@@ -51,7 +51,6 @@
     <orderEntry type="library" name="Maven: org.hibernate.common:hibernate-commons-annotations:5.0.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-ehcache:5.2.12.Final" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.10.3" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: com.stripe:stripe-java:5.25.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.4" level="project" />
     <orderEntry type="library" name="Maven: com.mailjet:mailjet-client:4.1.1" level="project" />
@@ -100,19 +99,9 @@
     <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.github.allbegray:slack-api:v1.5.1.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpmime:4.3.6" level="project" />
-    <orderEntry type="library" name="Maven: org.asynchttpclient:async-http-client:2.0.5" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.0.36.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.0.36.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.0.36.Final" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.0.36.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.asynchttpclient:netty-resolver-dns:2.0.5" level="project" />
-    <orderEntry type="library" name="Maven: org.asynchttpclient:netty-resolver:2.0.5" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-common:4.0.36.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.asynchttpclient:netty-codec-dns:2.0.5" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.0.36.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.typesafe.netty:netty-reactive-streams:1.0.6" level="project" />
+    <orderEntry type="library" name="Maven: com.github.seratch:jslack:1.0.26" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.9.1" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.13.0" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
   </component>
 </module>
