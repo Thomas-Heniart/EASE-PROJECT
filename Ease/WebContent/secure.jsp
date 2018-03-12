@@ -110,14 +110,26 @@
     <meta content='https://d2zc23renulrga.cloudfront.net/assets/1320/8g6hpeszfluqm9l0fsb3/logo%20ease%20SMALL.jpg'
           property='og:image'>
     <meta content="Security" name="description">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@Ease_app">
-    <meta name="twitter:title" content="Ease: We secure your web-life">
-    <meta name="twitter:description" content="">
-    <meta name="twitter:image"
-          content="https://d2zc23renulrga.cloudfront.net/assets/1320/8g6hpeszfluqm9l0fsb3/logo%2520ease%2520SMALL.jpg">
-
-    <meta content="website" property="og:type">
+    <!-- Description shown in Google -->
+    <!-- Facebook metadata -->
+    <meta name="description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta property="og:url" content="https://ease.space/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+    <meta property="og:image" content="https://ease.space/resources/metadescription.png"/>
+    <meta property="og:logo" content="https://ease.space/resources/icons/APPEASE.png"/>
+    <meta property="og:description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta property="og:image" content="https://ease.space/resources/images/metadescription.png"/>
+    <!-- Twitter metadata -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@ease_space"/>
+    <meta name="twitter:creator" content="@ease_space"/>
+    <meta name="twitter:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+    <meta name="twitter:description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
 
     <style>

@@ -20,6 +20,8 @@ public class PostRegistrationEmailScheduledTask extends TimerTask {
             Calendar calendar = Calendar.getInstance();
             MailJetBuilder mailJetBuilder;
             for (User user : users) {
+                if (!user.getUserStatus().isRegistered())
+                    continue;
                 Calendar user_calendar = Calendar.getInstance();
                 user_calendar.setTime(user.getRegistration_date());
                 user_calendar.add(Calendar.DAY_OF_YEAR, 2);

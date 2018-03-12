@@ -4,8 +4,26 @@ pageEncoding="UTF-8"%>
 <html>
 <head>
   <title> Ease.space | The easiest way to connect to your professional and personal web.</title>
-	<!-- Description shown in Google -->
-	<meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">
+    <!-- Description shown in Google -->
+    <!-- Facebook metadata -->
+    <meta name="description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta property="og:url" content="https://ease.space/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+    <meta property="og:image" content="https://ease.space/resources/metadescription.png"/>
+    <meta property="og:logo" content="https://ease.space/resources/icons/APPEASE.png"/>
+    <meta property="og:description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta property="og:image" content="https://ease.space/resources/images/metadescription.png"/>
+    <!-- Twitter metadata -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@ease_space"/>
+    <meta name="twitter:creator" content="@ease_space"/>
+    <meta name="twitter:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+    <meta name="twitter:description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
   <style type="text/css">
         @import url('https://themes.googleusercontent.com/fonts/css?kit=fpjTOVmNbO4Lz34iLyptLUXza5VhXqVC6o75Eld_V98');
         body {
