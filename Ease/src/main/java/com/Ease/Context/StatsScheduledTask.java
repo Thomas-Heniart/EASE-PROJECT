@@ -55,20 +55,20 @@ public class StatsScheduledTask extends TimerTask {
 
     private WeeklyStats generateWeeklyStats(HibernateQuery hibernateQuery, Date last_week_date, Date this_week, Calendar last_week) {
         hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active IS true AND t.subscription_date >= :date_start AND t.subscription_date < :date_end");
-        hibernateQuery.setDate("date_start", last_week_date);
-        hibernateQuery.setDate("date_end", this_week);
+        hibernateQuery.setTimestamp("date_start", last_week_date);
+        hibernateQuery.setTimestamp("date_end", this_week);
         int new_companies = hibernateQuery.list().size();
         hibernateQuery.queryString("SELECT u FROM User u WHERE u.registration_date >= :date_start AND u.registration_date < :date_end");
-        hibernateQuery.setDate("date_start", last_week_date);
-        hibernateQuery.setDate("date_end", this_week);
+        hibernateQuery.setTimestamp("date_start", last_week_date);
+        hibernateQuery.setTimestamp("date_end", this_week);
         int new_users = hibernateQuery.list().size();
         hibernateQuery.queryString("SELECT a FROM App a LEFT JOIN a.teamCardReceiver as r WHERE r IS NULL AND a.insert_date >= :date_start AND a.insert_date < :date_end");
-        hibernateQuery.setDate("date_start", last_week_date);
-        hibernateQuery.setDate("date_end", this_week);
+        hibernateQuery.setTimestamp("date_start", last_week_date);
+        hibernateQuery.setTimestamp("date_end", this_week);
         int new_apps = hibernateQuery.list().size();
         hibernateQuery.queryString("SELECT a FROM App a LEFT JOIN a.teamCardReceiver as r WHERE r IS NOT NULL AND a.insert_date >= :date_start AND a.insert_date < :date_end AND r.teamCard.team.active IS true");
-        hibernateQuery.setDate("date_start", last_week_date);
-        hibernateQuery.setDate("date_end", this_week);
+        hibernateQuery.setTimestamp("date_start", last_week_date);
+        hibernateQuery.setTimestamp("date_end", this_week);
         int new_team_apps = hibernateQuery.list().size();
         hibernateQuery.queryString("SELECT m FROM ClickOnApp m WHERE m.week_of_year = :week_of_year AND m.year = :year");
         hibernateQuery.setParameter("week_of_year", last_week.get(Calendar.WEEK_OF_YEAR));
