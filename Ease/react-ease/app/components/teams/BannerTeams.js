@@ -5,7 +5,6 @@ import {isAdmin} from "../../utils/helperFunctions";
 import {List, Icon, Label, Segment} from 'semantic-ui-react';
 
 function ChannelJoinRequestList(props){
-  console.log("-----------------------------",props);
   const {room, team} = props;
   const requests = room.join_requests;
 
@@ -48,9 +47,6 @@ function ChannelJoinRequestList(props){
 class BannerTeams extends Component {
   constructor(props){
     super(props);
-  }
-  componentWillMount(){
-    console.log("COMPONENT WILL MOUNT",this.props);
   }
   render(){
     const {team, me, room} = this.props;
