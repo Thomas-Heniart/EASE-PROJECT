@@ -30,7 +30,7 @@ public class AccountsToFillScheduledTask extends TimerTask {
         Long now = new Date().getTime();
         try {
             hibernateQuery.queryString("SELECT tcr FROM TeamCardReceiver tcr WHERE tcr.sharing_date >= :date");
-            hibernateQuery.setDate("date", calendar.getTime());
+            hibernateQuery.setTimestamp("date", calendar.getTime());
             List<TeamCardReceiver> teamCardReceivers = hibernateQuery.list();
             Map<TeamUser, Set<TeamCardReceiver>> teamUserSetMap = new HashMap<>();
             for (TeamCardReceiver teamCardReceiver : teamCardReceivers) {

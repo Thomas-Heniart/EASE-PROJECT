@@ -7,9 +7,11 @@ import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Metrics.ClickOnApp;
 import com.Ease.Metrics.TeamMetrics;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.DateUtils;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Slack.SlackAPIWrapper;
+import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -17,8 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -241,6 +245,22 @@ public class Team {
 
     public void addTeamCard(TeamCard teamCard) {
         this.getTeamCardSet().add(teamCard);
+        Stream<TeamCard> stream = this.getTeamCardSet().stream().filter(teamCard1 -> teamCard1.getTeamCardReceiverMap().size() > 0);
+        long count = stream.count();
+        if (count == 15L || count == 30L) {
+            StringBuilder stringBuilder = new StringBuilder("*✅Company with ")
+                    .append(count)
+                    .append(" cards*\nThis company has now ")
+                    .append(count)
+                    .append(" cards on its team space (with tags) : ")
+                    .append(this.getName())
+                    .append("\n=======\n=======\n=======");
+            try {
+                SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+            } catch (IOException | SlackApiException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void removeTeamCard(TeamCard teamCard) {
@@ -394,7 +414,7 @@ public class Team {
         res.put("plan_id", plan_id);
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
-        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateComparator.isOutdated(this.getSubscription_date(), 0, 1));
+        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateUtils.isOutdated(this.getSubscription_date(), 0, 1));
         res.put("extra_members", this.getInvitedFriendMap().size());
         return res;
     }
@@ -554,7 +574,7 @@ public class Team {
                 return;
             String link = Variables.URL_PATH + "#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
-            if (DateComparator.isInDays(new Date(trialEnd), 5)) {
+            if (DateUtils.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
                 mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setTemplateId(208643);
@@ -563,7 +583,7 @@ public class Team {
                 mailJetBuilder.addVariable("teamName", this.getName());
                 mailJetBuilder.addVariable("link", link);
                 mailJetBuilder.sendEmail();
-            } else if (DateComparator.isInDays(new Date(trialEnd), 1)) {
+            } else if (DateUtils.isInDays(new Date(trialEnd), 1)) {
                 System.out.println(this.getName() + " trial will end in 1 day.");
                 mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setTemplateId(208644);

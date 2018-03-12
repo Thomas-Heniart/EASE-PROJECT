@@ -12,6 +12,7 @@ public class Variables {
     public static final String SOFTWARE_FOLDER_PATH = System.getenv("EASE_RESOURCES_FOLDER") + "software/";
     public static final String BACKGROUND_PATH = System.getenv("BACKGROUND_PATH");
     public static final String RGDP_EBOOK_PATH = System.getenv("EASE_RESOURCES_FOLDER");
+    public static final String SLACK_API_KEY = System.getenv("SLACK_API_KEY");
 
     //Prod
     /*

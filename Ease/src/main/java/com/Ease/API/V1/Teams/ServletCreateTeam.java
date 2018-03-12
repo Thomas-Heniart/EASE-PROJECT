@@ -3,7 +3,7 @@ package com.Ease.API.V1.Teams;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
-import com.Ease.Mail.NewTeamMailThread;
+import com.Ease.Mail.NewTeamThread;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
@@ -144,7 +144,7 @@ public class ServletCreateTeam extends HttpServlet {
             mailjetContactWrapper.updateUserContactLists(user);
             JSONObject tmp = team.getJson();
             tmp.put("my_team_user_id", owner.getDb_id());
-            new NewTeamMailThread(team).start();
+            new NewTeamThread(team).start();
             sm.setSuccess(tmp);
         } catch (StripeException e) {
             sm.setError(e);
