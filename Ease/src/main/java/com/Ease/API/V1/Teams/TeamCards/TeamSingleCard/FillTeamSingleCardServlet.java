@@ -8,6 +8,7 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -79,7 +80,7 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                     software = SoftwareFactory.getInstance().createSoftwareAndLogo(software.getName(), software.getFolder(), software.getLogo_url(), connection_information, hibernateQuery);
                     teamSingleSoftwareCard.setSoftware(software);
                     for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
-                        ((SoftwareApp)teamCardReceiver.getApp()).setSoftware(software);
+                        ((SoftwareApp) teamCardReceiver.getApp()).setSoftware(software);
                 }
                 teamSingleSoftwareCard.getAccount().edit(account_information, teamSingleSoftwareCard.getPassword_reminder_interval(), hibernateQuery);
                 for (TeamCardReceiver teamCardReceiver : teamSingleSoftwareCard.getTeamCardReceiverMap().values())
@@ -103,7 +104,17 @@ public class FillTeamSingleCardServlet extends HttpServlet {
             String uuid = sm.getParam("uuid", true, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamCard teamCard = this.getTeamCard(card_id, uuid, hibernateQuery);
-            sm.setSuccess(teamCard.getJson());
+            TeamUser teamUser = teamCard.getTeamUser_sender();
+            JSONObject res = teamCard.getJson();
+            if (teamUser != null) {
+                JSONObject extra = new JSONObject();
+                extra
+                        .put("email", teamUser.getEmail())
+                        .put("username", teamUser.getUsername())
+                        .put("team_name", teamUser.getTeam().getName());
+                res.put("extra_information", extra);
+            }
+            sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
         }
@@ -124,9 +135,9 @@ public class FillTeamSingleCardServlet extends HttpServlet {
         if (teamCard == null)
             throw new HttpServletException(HttpStatus.BadRequest, "Link expired");
         Long now = new Date().getTime();
-        if (teamCard.isTeamWebsiteCard() && ((TeamSingleCard)teamCard).getMagicLinkExpirationDate().getTime() <= now)
+        if (teamCard.isTeamWebsiteCard() && ((TeamSingleCard) teamCard).getMagicLinkExpirationDate().getTime() <= now)
             throw new HttpServletException(HttpStatus.BadRequest, "Link expired");
-        if (teamCard.isTeamSoftwareCard() && ((TeamSingleSoftwareCard)teamCard).getMagicLinkExpirationDate().getTime() <= now)
+        if (teamCard.isTeamSoftwareCard() && ((TeamSingleSoftwareCard) teamCard).getMagicLinkExpirationDate().getTime() <= now)
             throw new HttpServletException(HttpStatus.BadRequest, "Link expired");
         return teamCard;
     }
