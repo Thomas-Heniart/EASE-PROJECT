@@ -1,11 +1,12 @@
 import React from 'react';
-import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
-import {teamCreateSoftwareSingleCard} from "../../actions/appsActions";
-import {showChooseSoftwareAppCredentialsModal} from "../../actions/modalActions";
-import {handleSemanticInput, transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 import {connect} from "react-redux";
 import {reduxActionBinder} from "../../actions/index";
+import MagicLinkAdderModal from "./MagicLinkAdderModal";
+import SimpleModalTemplate from "../common/SimpleModalTemplate";
+import {teamCreateSoftwareSingleCard} from "../../actions/appsActions";
+import {showChooseSoftwareAppCredentialsModal} from "../../actions/modalActions";
+import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
+import {handleSemanticInput, transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 
 const CredentialInput = ({item, onChange, removeField}) => {
   return (
@@ -53,7 +54,7 @@ const OtherInput = ({item, onChange, onChangePlaceholder, onFocus, removeField})
   )
 };
 
-class AddCardForm extends React.Component {
+class ChooseHow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -79,15 +80,17 @@ class AddCardForm extends React.Component {
   render() {
     const {
       logo,
-      logoLetter,
-      credentials,
+      check,
+      change,
       confirm,
       appName,
       loading,
-      handleCredentialInput,
-      handlePlaceholder,
       addFields,
-      removeField
+      logoLetter,
+      credentials,
+      removeField,
+      handlePlaceholder,
+      handleCredentialInput
     } = this.props;
     const credentialsInputs = credentials.map(item => {
       if (item.name !== 'login' && item.name !== 'password')
@@ -111,22 +114,44 @@ class AddCardForm extends React.Component {
           <span className="app_name">{appName}</span>
         </div>
         <Form  onSubmit={confirm} error={this.state.errorMessage.length > 0}>
+          <Checkbox radio
+                    style={{fontSize:'16px',marginBottom:'10px'}}
+                    label={<label><strong>Enter</strong> login & password <strong>myself</strong></label>}
+                    name='checkboxRadioGroup'
+                    value={1}
+                    checked={check === 1}
+                    onChange={change} />
           {credentialsInputs}
           <p><span onClick={addFields} className='add_field'><Icon name='plus circle'/>Add a field</span></p>
           <Message error content={this.state.errorMessage}/>
+          <Checkbox radio
+                    style={{fontSize:'16px',marginBottom:'10px'}}
+                    label={<label><strong>Ask</strong> login & password from <strong>a team member</strong></label>}
+                    name='checkboxRadioGroup'
+                    value={2}
+                    checked={check === 2}
+                    onChange={change} />
+          <Checkbox radio
+                    style={{fontSize:'16px'}}
+                    label={<label><strong>Ask</strong> login & password from <strong>outside my team</strong></label>}
+                    name='checkboxRadioGroup'
+                    value={3}
+                    checked={check === 3}
+                    onChange={change} />
           <Button
             type="submit"
             loading={loading}
-            disabled={loading || !this.checkValueInput()}
+            disabled={loading || (check === 1 && !this.checkValueInput()) || credentials.length < 1}
             onClick={confirm}
             positive
             className="modal-button uppercase"
-            content={'DONE'}/>
+            content={'NEXT'}/>
         </Form>
       </Container>
     )
   }
 }
+
 
 class ChoosePersonWhoHasCredentials extends React.Component {
   constructor(props) {
@@ -214,13 +239,14 @@ class ChooseSoftwareAppCredentialsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      credentials: transformWebsiteInfoIntoList(this.props.card.app.information),
-      priority: 2,
       view: 1,
-      userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
+      check: 1,
       me: null,
-      users: null
+      users: null,
+      priority: 2,
+      loading: false,
+      userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
+      credentials: transformWebsiteInfoIntoList(this.props.card.app.information)
     }
   }
   componentWillMount() {
@@ -237,6 +263,7 @@ class ChooseSoftwareAppCredentialsModal extends React.Component {
     this.setState({ me: me, users: users });
   }
   handleInput = handleSemanticInput.bind(this);
+  handleChangeCheck = (e, {value}) => this.setState({check: value});
   handleCredentialInput = (e, {id, value}) => {
     let credentials = this.state.credentials.map(item => {
       if (id === item.priority)
@@ -278,64 +305,42 @@ class ChooseSoftwareAppCredentialsModal extends React.Component {
   confirm = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    if (this.state.view === 1) {
-      if (this.state.userSelected === this.state.me.id)
-        this.setState({view: 2, loading: false});
-      else {
-        const receivers = this.props.receivers
-          .map(item => ({
-            [item.id]: {allowed_to_see_password: item.can_see_information}
-          }));
-        const newReceivers = receivers.reduce(function (result, item) {
-          result = Object.assign(result, item);
-          return result;
-        }, {});
-        this.props.dispatch(teamCreateSoftwareSingleCard({
-          team_id: this.props.card.team_id,
-          channel_id: this.props.card.channel_id,
-          name: this.props.settingsCard.card_name,
-          description: this.props.settingsCard.description,
-          password_reminder_interval: this.props.settingsCard.password_reminder_interval,
-          team_user_filler_id: this.state.userSelected,
-          account_information: {},
-          logo_url: this.props.settingsCard.img_url,
-          connection_information: {
-            login: {placeholder: "Login", priority: 0, type: "text", value:""},
-            password: {placeholder:"Password", priority:1, type:"password", value:""}
-          },
-          receivers: newReceivers
-        })).then(response => {
-          this.setState({loading: false});
-          this.close();
-          this.props.resetTeamCard();
-        });
+    const receivers = this.props.receivers.map(item => ({
+      [item.id]: {allowed_to_see_password: item.can_see_information}
+    }));
+    const newReceivers = receivers.reduce(function (result, item) {
+      result = Object.assign(result, item);
+      return result;
+    }, {});
+    const connection_information = this.state.check !== 1 ? {
+        login: {placeholder: "Login", priority: 0, type: "text", value: ""},
+        password: {placeholder: "Password", priority: 1, type: "password", value: ""}
       }
-    }
+      : this.state.credentials.reduce((prev, curr) => {
+        return {...prev, [curr.name]: {type: curr.type, priority: curr.priority, placeholder: curr.placeholder}}
+      }, {});
+    if (this.state.view === 1 && this.state.check === 2)
+      this.setState({view: 2, loading: false});
+    else if (this.state.view === 3)
+      this.setState({loading: false}, this.close());
     else {
-      const receivers = this.props.receivers
-        .map(item => ({
-          [item.id]: {allowed_to_see_password: item.can_see_information}
-        }));
-      const newReceivers = receivers.reduce(function (result, item) {
-        result = Object.assign(result, item);
-        return result;
-      }, {});
-      const connection_information = this.state.credentials.reduce((prev, curr) =>{
-        return {...prev, [curr.name]: {type:curr.type,priority:curr.priority,placeholder:curr.placeholder}}
-      }, {});
       this.props.dispatch(teamCreateSoftwareSingleCard({
         team_id: this.props.card.team_id,
         channel_id: this.props.card.channel_id,
         name: this.props.settingsCard.card_name,
         description: this.props.settingsCard.description,
         password_reminder_interval: this.props.settingsCard.password_reminder_interval,
+        team_user_filler_id: this.state.view === 2 ? this.state.userSelected : null,
+        account_information: this.state.check !== 1 ? {} : transformCredentialsListIntoObject(this.state.credentials),
         logo_url: this.props.settingsCard.img_url,
         connection_information: connection_information,
-        account_information: transformCredentialsListIntoObject(this.state.credentials),
-        receivers: newReceivers
+        receivers: newReceivers,
+        generate_magic_link: this.state.check === 3
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
+        if (this.state.check === 3)
+          this.setState({view: 3, loading: false, link: response.magic_link, website: response.software});
+        else
+          this.setState({loading: false}, this.close());
         this.props.resetTeamCard();
       });
     }
@@ -346,27 +351,39 @@ class ChooseSoftwareAppCredentialsModal extends React.Component {
         onClose={this.close}
         headerContent={'App Credentials'}>
         {this.state.view === 1 &&
-        <ChoosePersonWhoHasCredentials logo={this.props.settingsCard.img_url}
-                                       logoLetter={this.props.settingsCard.logoLetter}
-                                       appName={this.props.settingsCard.card_name}
-                                       me={this.state.me}
-                                       users={this.state.users}
-                                       receivers={this.props.receivers}
-                                       userSelected={this.state.userSelected}
-                                       loading={this.state.loading}
-                                       change={this.handleChange}
-                                       confirm={this.confirm} />}
+        <ChooseHow confirm={this.confirm}
+                   check={this.state.check}
+                   addFields={this.addFields}
+                   loading={this.state.loading}
+                   website={this.props.card.app}
+                   handleInput={this.handleInput}
+                   removeField={this.removeField}
+                   change={this.handleChangeCheck}
+                   credentials={this.state.credentials}
+                   logo={this.props.settingsCard.img_url}
+                   handlePlaceholder={this.handlePlaceholder}
+                   appName={this.props.settingsCard.card_name}
+                   logoLetter={this.props.settingsCard.logoLetter}
+                   handleCredentialInput={this.handleCredentialInput} />}
         {this.state.view === 2 &&
-        <AddCardForm credentials={this.state.credentials}
-                     loading={this.state.loading}
-                     logo={this.props.settingsCard.img_url}
-                     logoLetter={this.props.settingsCard.logoLetter}
-                     appName={this.props.settingsCard.card_name}
-                     handleCredentialInput={this.handleCredentialInput}
-                     handlePlaceholder={this.handlePlaceholder}
-                     addFields={this.addFields}
-                     removeField={this.removeField}
-                     confirm={this.confirm} />}
+        <ChoosePersonWhoHasCredentials me={this.state.me}
+                                       confirm={this.confirm}
+                                       users={this.state.users}
+                                       change={this.handleChange}
+                                       loading={this.state.loading}
+                                       receivers={this.props.receivers}
+                                       logo={this.props.settingsCard.img_url}
+                                       userSelected={this.state.userSelected}
+                                       appName={this.props.settingsCard.card_name}
+                                       logoLetter={this.props.settingsCard.logoLetter} />}
+        {this.state.view === 3 &&
+        <MagicLinkAdderModal me={this.state.me}
+                             link={this.state.link}
+                             confirm={this.confirm}
+                             change={this.handleChange}
+                             loading={this.state.loading}
+                             website={this.state.website}
+                             appName={this.props.settingsCard.card_name}/>}
       </SimpleModalTemplate>
     )
   }
