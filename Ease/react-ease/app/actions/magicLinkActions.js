@@ -11,7 +11,9 @@ export function getTeamCardFromMagicLink({card_id, uuid}) {
     }).then(response => {
       console.log('[RESPONSE][MAGICLINK][GET]: ', response);
       return response;
-    })
+    }).catch(error => {
+      throw error;
+    });
   }
 }
 
@@ -28,7 +30,10 @@ export function sendCredentialsToTeam({card_id, uuid, account_information, type,
       ws_id: getState().common.ws_id
     }).then(response => {
       console.log('[RESPONSE][MAGICLINK][POST][SENDCREDENTIALS]: ', response);
-    }).catch(error => {})
+      return response;
+    }).catch(error => {
+      throw error;
+    });
   }
 }
 
