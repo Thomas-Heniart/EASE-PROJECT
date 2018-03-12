@@ -73,7 +73,6 @@ class TeamAppsContainer extends React.Component{
     }
   }
   render() {
-    console.log("TEAM APPS CONTAINER", this.props);
     const item = this.props.item;
     const {team} = this.props;
     const users = Object.keys(team.team_users).map(id => {
