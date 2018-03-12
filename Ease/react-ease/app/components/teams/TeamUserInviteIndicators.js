@@ -3,8 +3,9 @@ import {withRouter, NavLink} from "react-router-dom";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 import {sendInvitationToTeamUserList, reInviteAllInvitedTeamUsers, sendTeamUserInvitation, inviteAllUninvitedTeamUsers} from "../../actions/userActions";
 import {connect} from "react-redux";
-import { Icon, Segment, Loader } from 'semantic-ui-react';
+import { Icon, Segment} from 'semantic-ui-react';
 import {basicDateFormat, reflect} from "../../utils/utils";
+
 
 class TeamUserInviteLimitReachedSegment extends Component {
   constructor(props){
