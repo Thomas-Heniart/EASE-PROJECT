@@ -6,6 +6,7 @@ import com.Ease.Metrics.MetricsSchedulerTask;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.*;
+import com.Ease.Utils.Slack.SlackMessage;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -62,6 +63,10 @@ public class OnStart implements ServletContextListener {
                 Map<Integer, Map<String, Object>> teamIdMap = new ConcurrentHashMap<>();
                 context.setAttribute("userIdMap", userIdMap);
                 context.setAttribute("teamIdMap", teamIdMap);
+
+                System.out.println("Test API");
+                System.out.println(SlackMessage.getInstance().postMessage("D2A2JAQL8", "Test from API"));
+                System.out.println("End Test API");
 
                 Timer time = new Timer();
                 Calendar delay = Calendar.getInstance();
