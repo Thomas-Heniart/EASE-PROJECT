@@ -867,7 +867,7 @@ class NewTeamCreationView extends React.Component {
                     || (this.state.viewInfo === 3 && !this.checkPassword())
                     || (this.state.viewInfo === 4
                       && (!this.state.checkCGU || this.state.companyName === '' || this.state.companySize === ''
-                        || this.state.firstName === '' || this.state.lastName === ''))
+                        || this.state.companySize === '0' || this.state.firstName === '' || this.state.lastName === ''))
                     || (this.state.view === 2 && this.state.roomsSelected.length < 3)
                     || (this.state.view === 3 && (!this.invitationsReady() || this.checkNoDuplicateEmails()))
                     || (this.state.view === 5 && this.state.viewAccounts === 1 && this.state.passwordManagerSelected === 0)}>
